@@ -29,7 +29,7 @@ const SuccinctTimeReport = ({routeId} ) => {
     
     const fetchData = () => (
       fetchEtasViaApi({
-        route: routeNo, routeStops: stops, seq: parseInt(seq) + 1, bound, serviceType, co
+        route: routeNo, routeStops: stops, seq: parseInt(seq, 10) + 1, bound, serviceType, co
       }).then ( _etas => {
         if (isMounted) setEtas(_etas)
       })

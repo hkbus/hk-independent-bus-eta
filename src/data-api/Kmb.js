@@ -23,7 +23,7 @@ const KmbApi = {
             zh: element.dest_tc.replace('/','／')
           },
           stops: [],
-          serviceType: parseInt(element.service_type)
+          serviceType: parseInt(element.service_type, 10)
         }
         return routeList
       }, {})

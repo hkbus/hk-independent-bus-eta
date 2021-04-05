@@ -8,7 +8,7 @@ export const AppContextProvider = ( props ) => {
   // route list & stop list & route-stop list
   const [routeList, setRouteList] = useState(JSON.parse(localStorage.getItem('routeList')))
   const [stopList, setStopList] = useState(JSON.parse(localStorage.getItem('stopList')))
-  const [updateTime, setUpdateTime] = useState(parseInt(localStorage.getItem('updateTime')))
+  const [updateTime, setUpdateTime] = useState(parseInt(localStorage.getItem('updateTime'), 10))
   // search route
   const [searchRoute, setSearchRoute] = useState("")
   // selected route for bottom navigation shortcut

@@ -16,7 +16,7 @@ import {
 
 const RouteEta = () => {
   const { id, panel } = useParams()
-  const [ expanded, setExpanded ] = useState(parseInt(panel))
+  const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
   const { 
     routeList, stopList, 
     updateNewlyFetchedRouteStops, updateSelectedRoute
