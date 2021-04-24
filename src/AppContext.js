@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
+import { KmbApi, NwfbApi, CtbApi } from './data-api'
 
 const AppContext = React.createContext()
 
@@ -59,30 +60,37 @@ const fetchRouteList = async () => {
   if ( localStorage.getItem('routeList') == null || 
     localStorage.getItem('routeListDbTime') < moment().subtract(1, 'days').format("YYYY-MM-DDTHH:mm:ssZZ")
   ) {
-    // KMB
     let routeList = {}
-    let response = await fetch("https://data.etabus.gov.hk/v1/transport/kmb/route/")
-    let result = await response.json()
-    result.data.forEach(element => {
-      routeList[element.route+'+'+element.service_type+"+"+element.bound+'+kmb'] = {
-        orig: {
-          en: element.orig_en,
-          zh: element.orig_tc
-        },
-        dest: {
-          en: element.dest_en,
-          zh: element.dest_tc
-        },
-        stops: []
-      }
+    let generated_timestamp = '3000'
+    for ( const api of [KmbApi, NwfbApi, CtbApi] ) {
+        let [_routeList, _generated_timestamp] = await api.fetchRouteList()
+        // merging routes from different service provider
+        for ( const route of Object.entries(_routeList) ) {
+          if ( route[0] in routeList ) {
+            if ( route[1].orig.zh === routeList[route[0]].orig.zh ) {
+              // same route
+              routeList[route[0]].co.push(api.co)
+            } else {
+              // new route with same route number
+              routeList[route[0]+'+'+api.co] = route[1]
+            }
+          } else {
+            // new route
+            routeList[route[0]] = route[1]
+          }
+        }
+        generated_timestamp = _generated_timestamp < generated_timestamp ? _generated_timestamp : generated_timestamp
+    }
+    // sort the routeList
+    let _routeList = routeList
+    routeList = {}
+    Object.entries(_routeList).sort((a,b) => (a[0] < b[0] ? -1 : 1)).forEach(route => {
+      routeList[route[0]] = route[1]
     })
-    response = await fetch("https://data.etabus.gov.hk/v1/transport/kmb/route-stop/")
-    result = await response.json()
-    result.data.forEach(element => {
-      routeList[element.route+'+'+element.service_type+'+'+element.bound+'+kmb'].stops.push(element.stop)
-    })
+    
+    // save to local storage
     localStorage.setItem('routeList', JSON.stringify(routeList))
-    localStorage.setItem('routeListDbTime', result.generated_timestamp)
+    localStorage.setItem('routeListDbTime', generated_timestamp)
   } 
 }
 
@@ -91,23 +99,9 @@ const fetchStopList = async () => {
     localStorage.getItem('stopDbTime') < moment().subtract(1, 'days').format("YYYY-MM-DDTHH:mm:ssZZ")
   ) {
     // KMB
-    let stopList = {}
-    const response = await fetch("https://data.etabus.gov.hk/v1/transport/kmb/stop")
-    const result = await response.json()
-    result.data.forEach(element => {
-      stopList[element.stop] = {
-        name: {
-          en: element.name_en,
-          zh: element.name_tc
-        },
-        location: {
-          lat: element.lat,
-          long: element.long
-        }
-      }
-    })
+    let [stopList, generated_timestamp] = await KmbApi.fetchStopList()
     localStorage.setItem('stopList', JSON.stringify(stopList))
-    localStorage.setItem('stopDbTime', result.generated_timestamp)
+    localStorage.setItem('stopDbTime', generated_timestamp)
   }
 }
 

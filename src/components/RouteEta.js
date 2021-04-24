@@ -6,36 +6,26 @@ import MuiAccordionDetails from'@material-ui/core/AccordionDetails'
 import {
   Box, Typography
 } from '@material-ui/core'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
 import AppContext from '../AppContext'
 import moment from 'moment'
 import { useTranslation } from 'react-i18next'
 
 const RouteEta = () => {
   const { id } = useParams()
-  const [ stations, setStations ] = useState(null)
   const [ expanded, setExpanded ] = useState(false)
   const { routeList, stopList } = useContext ( AppContext )
-  const [route, service_type, bound, co] = id.split('+')
+  const [route, service_type] = id.split('+').slice(0,2)
+  const { t, i18n } = useTranslation()
 
-  useEffect (async () => {
-    if ( co === 'kmb' ) {
-      const response = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-eta/${route}/${service_type}`)
-      const result = await response.json()
-      setStations(result.data.filter(eta => eta.dir === bound))
-    }
-  }, [])
-  if ( stations === null ) {
-    return (
-      <div>Loading</div>
-    )
-  }
   const handleChange = ( panel ) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false)
   } 
 
+  const classes = useStyles()
+
   return (
-    <Box>
+    <Box className={classes.boxContainer}>
       {
         routeList[id].stops.map((stop, idx) => (
           <Accordion 
@@ -44,7 +34,7 @@ const RouteEta = () => {
             onChange={handleChange(idx)}
             TransitionProps={{unmountOnExit: true}}
           >
-            <AccordionSummary>{stopList[stop].name.zh}</AccordionSummary>
+            <AccordionSummary>{stopList[stop].name[i18n.language]}</AccordionSummary>
             <AccordionDetails>
               <TimeReport 
                 route={route}
@@ -63,39 +53,67 @@ export default RouteEta
 
 const TimeReport = ( props ) => {
   const { t, i18n } = useTranslation()
-  const [ eta, setEta ] = useState(null)
+  const [ etas, setEtas ] = useState(null)
   const { route, stopId, serviceType } = props
-  useEffect( async () => {
-    const response = await fetch(
-      `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`
-    )
-    const result = await response.json()
-    let _eta = []
-    result.data.forEach(e => {
-      _eta.push( {
-        eta: Math.trunc(moment(e.eta).diff(moment()) / 60 / 1000),
-        remark: {
-          zh: e.rmk_tc,
-          en: e.rmk_en
-        }
+
+  const fetchEta = () => {
+    const fetchData = async () => {
+      const response = await fetch(
+        `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`
+      )
+      const result = await response.json()
+      let _etas = []
+      result.data.forEach(e => {
+        _etas.push( {
+          eta: e.eta ? Math.trunc(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+          remark: {
+            zh: e.rmk_tc,
+            en: e.rmk_en
+          }
+        })
       })
-    })
-    console.log(_eta)
-    setEta(_eta)
+      setEtas(_etas)
+    }
+    fetchData()
+  }
+
+  useEffect( () => {
+    fetchEta()
+    const fetchEtaInterval = setInterval(() => {
+      fetchEta()
+    }, 30000)
+
+    return () => clearInterval(fetchEtaInterval)
   }, [])
-  if ( eta == null ) {
+
+  if ( etas == null ) {
     return (
-      <></>
+      <>　</>
     )
   }
-  console.log(eta)
+
+  const displayMsg = (eta, t) => {
+    let ret = ''
+    switch (eta) {
+      case null: 
+        break
+      case 0: 
+        ret = '- '+t('分鐘')
+        break
+      default:
+        ret = eta + t('分鐘')
+        break
+    }
+    return ret
+  }
+
   return (
     <div>
       {
-        eta.length == 0 ? t('暫無班次') : (
-          eta.map(t => (
-            <Typography variant="subtitle1">
-              {t.eta || '-'}分鐘 - {t.remark[i18n.language]}
+        etas.length === 0 ? t('暫無班次') : (
+          etas.map(eta => (
+            <Typography variant="subtitle1" key={`route-${stopId}`}>
+              {displayMsg(eta.eta, t)} - {eta.remark[i18n.language]}
             </Typography>
           ))
         )
@@ -144,3 +162,10 @@ const AccordionDetails = withStyles((theme) => ({
     padding: theme.spacing(2),
   },
 }))(MuiAccordionDetails);
+
+const useStyles = makeStyles(theme => ({
+  boxContainer: {
+    height: '500px',
+    overflowY: 'scroll'
+  }
+}))

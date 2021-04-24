@@ -3,12 +3,8 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  Container,
   Typography
 } from '@material-ui/core'
-import {
-  makeStyles
-} from '@material-ui/styles'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList as List, areEqual } from 'react-window'
@@ -17,17 +13,19 @@ import RouteInputPad from './RouteInputPad'
 import { Link } from  'react-router-dom'
 
 const RouteRow = React.memo(( {data, index, style} ) => {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { routeList } = data
   const route = routeList[index]
-  
+  const [routeNo, service_type] = route[0].split('+').slice(0,2)
+
   return (
     <Link to={'/'+i18n.language+'/route/'+route[0]}>
-      <Card variant="outlined" key={route[0]} style={style}>
+      <Card variant="outlined" key={route[0]} style={style} square>
         <CardActionArea>
           <CardContent>
-            <Typography variant="h5">{route[0].replace(/\+.*/, '')}</Typography>
+            <Typography variant="h5">{routeNo}</Typography>
             <Typography variant="subtitle2">{route[1].orig[i18n.language]} ➔ {route[1].dest[i18n.language]}</Typography>
+            <Typography variant="caption">{service_type === '2' ? t('特別班次') : '　'}</Typography>
           </CardContent>
         </CardActionArea>
       </Card>
@@ -48,7 +46,7 @@ const RouteList = () => {
     <List
       height={300}
       itemCount={targetRouteList.length}
-      itemSize={85}
+      itemSize={104}
       width="100%"
       itemData={itemData}
     >
@@ -58,8 +56,6 @@ const RouteList = () => {
 }
 
 const RouteBoard = () => {
-  const classes = useStyles()
-
   return (
     <>
       <RouteList />
@@ -70,9 +66,3 @@ const RouteBoard = () => {
 }
 
 export default RouteBoard
-
-const useStyles = makeStyles(theme => ({
-  container: {
-    background: 'white'
-  }
-}))

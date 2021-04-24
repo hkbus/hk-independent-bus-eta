@@ -35,8 +35,8 @@ const App = () => {
   navigator.geolocation.getCurrentPosition(position => {
     console.log(position.coords.latitude, position.coords.longitude)
   })
-  const { routeList } = useContext( AppContext )
-  if ( routeList == null ) {
+  const { routeList, stopList } = useContext( AppContext )
+  if ( routeList == null || stopList == null ) {
     return (
       <>Loading</>
     )
@@ -44,7 +44,7 @@ const App = () => {
   return (
     <MuiThemeProvider theme={Theme}>
       <Container maxWidth='xs' disableGutters>
-        <Router>
+        <Router basename={process.env.PUBLIC_URL}>
           <Route exact path="/">
             <Redirect to="/zh/" />
           </Route>
