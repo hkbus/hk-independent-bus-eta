@@ -11,7 +11,9 @@ import {
 import {
   CircularProgress,
   Container,
-  CssBaseline
+  CssBaseline,
+  Paper,
+  Typography
 } from '@material-ui/core'
 import {
   makeStyles
@@ -21,6 +23,7 @@ import RouteBoard from './components/RouteBoard'
 import RouteEta from './components/RouteEta'
 import AppContext from './AppContext'
 import Footer from './Footer'
+import Countdown from 'react-countdown'
 
 const PageSwitch = () => {
   const { path } = useRouteMatch()
@@ -46,8 +49,29 @@ const App = () => {
   const { routeList, stopList } = useContext( AppContext )
   if ( routeList == null || stopList == null ) {
     return (
-      <Container maxWidth='xs' disableGutters className={classes.container}>
-        <CircularProgress size={40} className={classes.loading} />
+      <Container maxWidth='xs' disableGutters className={classes.loadingContainer}>
+        <CircularProgress size={40} />
+        <br />
+        <br />
+        <Paper className={classes.loadingTextContainer} elevation={0}>
+          <Countdown 
+            date={Date.now() + 20000}
+            renderer={({seconds, completed}) => {
+              if ( completed ) {
+                return <Typography variant="subtitle2" align="center">介面開啟中...</Typography>
+              } else {
+                return (
+                  <>
+                    <Typography variant="subtitle2" align="center">初始設定...</Typography>
+                    <Typography variant="subtitle2" align="center">正在更新巴士路線資料...</Typography>
+                    <Typography variant="subtitle2" align="center">約需{seconds}秒</Typography>
+                  </>
+                )
+              }
+            }}
+          />
+            
+        </Paper>
       </Container>
     )
   } 
@@ -91,8 +115,14 @@ const useStyles = makeStyles( theme => ({
     justifyContent: 'space-between',
     height: '100vh'
   },
-  loading: {
-    alignSelf: 'center',
-    margin: 'auto'
+  loadingContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh'
+  },
+  loadingText: {
+
   }
 }))
