@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import AppContext from './AppContext'
 
 const Footer = () => {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const location = useLocation()
   const { selectedRoute } = useContext ( AppContext ) 
   
@@ -18,9 +18,10 @@ const Footer = () => {
     <BottomNavigation
       value={location.pathname}
       onChange={(e) => {console.log(e)}}
+      showLabels={true}
     >
       <BottomNavigationAction 
-        label="Search" 
+        label={t("搜尋")}
         component={Link}
         to={`/${i18n.language}/search`}
         value={`/${i18n.language}/search`}

@@ -55,7 +55,7 @@ const App = () => {
   return (
     <MuiThemeProvider theme={Theme}>
       <Container maxWidth='xs' disableGutters className={classes.container}>
-        <Router basename={process.env.PUBLIC_URL}>
+        <Router>
           <Route exact path="/">
             <Redirect to="/zh/search" />
           </Route>

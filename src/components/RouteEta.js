@@ -197,7 +197,6 @@ const AccordionDetails = withStyles((theme) => ({
 
 const useStyles = makeStyles(theme => ({
   boxContainer: {
-    height: '500px',
     overflowY: 'scroll'
   },
   loadingContainer: {
