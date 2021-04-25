@@ -32,9 +32,11 @@ const PageSwitch = () => {
 }
 
 const App = () => {
+  /*
   navigator.geolocation.getCurrentPosition(position => {
     console.log(position.coords.latitude, position.coords.longitude)
   })
+  */
   const { routeList, stopList } = useContext( AppContext )
   if ( routeList == null || stopList == null ) {
     return (

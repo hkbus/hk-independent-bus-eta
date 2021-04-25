@@ -4,30 +4,73 @@ import MuiAccordion from'@material-ui/core/Accordion'
 import MuiAccordionSummary from'@material-ui/core/AccordionSummary'
 import MuiAccordionDetails from'@material-ui/core/AccordionDetails'
 import {
-  Box, Typography
+  Box, CircularProgress, Typography
 } from '@material-ui/core'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import AppContext from '../AppContext'
-import moment from 'moment'
 import { useTranslation } from 'react-i18next'
+import { 
+  fetchRouteStops as fetchRouteStopsViaApi,
+  fetchEtas as fetchEtasViaApi 
+} from '../data-api'
+import { LocalConvenienceStoreOutlined } from '@material-ui/icons'
 
 const RouteEta = () => {
   const { id } = useParams()
   const [ expanded, setExpanded ] = useState(false)
-  const { routeList, stopList } = useContext ( AppContext )
-  const [route, service_type] = id.split('+').slice(0,2)
-  const { t, i18n } = useTranslation()
+  const { routeList, stopList, setRouteList, setStopList } = useContext ( AppContext )
+  const [ route, serviceType, bound ] = id.split('+').slice(0,3)
+  const { i18n } = useTranslation()
+
+  const routeObj = routeList[id]
 
   const handleChange = ( panel ) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false)
-  } 
+  }
+
+  useEffect(() => {
+    // check if stops not fetched
+    if ( routeObj.co.filter(co => routeObj.stops[co] == null).length ) {
+      // fetch in parallel
+      Promise.all(
+        routeObj.co.map(co => {
+          if ( routeObj.stops[co] !== null ) return null;
+          return fetchRouteStopsViaApi({
+            route, serviceType, bound, co
+          })
+        }).filter(v => v)
+      ).then(objs => {
+        // set stop list
+        let _stopList = {}
+        objs.forEach( obj => {
+          _stopList = {..._stopList, ...obj.stopList}
+        } )
+        setStopList({...stopList, ..._stopList})
+
+        // set route list
+        setRouteList(prevRouteList => {
+          let _routeList = JSON.parse(JSON.stringify(prevRouteList))
+          objs.forEach(obj => _routeList[id].stops[obj.co] = obj.routeStops)
+          return _routeList
+        })
+      })
+    }
+  },[])
 
   const classes = useStyles()
+
+  if ( routeObj.stops[routeObj.co[0]] == null ) {
+    return (
+      <Box className={classes.loadingContainer}>
+        <CircularProgress size={30} />
+      </Box>
+    )
+  }
 
   return (
     <Box className={classes.boxContainer}>
       {
-        routeList[id].stops.map((stop, idx) => (
+        routeObj.stops[routeObj.co[0]].map((stop, idx) => (
           <Accordion 
             key={'stop-'+idx} 
             expanded={expanded === idx}
@@ -38,8 +81,12 @@ const RouteEta = () => {
             <AccordionDetails>
               <TimeReport 
                 route={route}
-                stopId={stop}
-                serviceType={service_type}
+                seq={idx + 1}
+                routeStops={routeObj.stops}
+                serviceType={serviceType}
+                bound={bound}
+                co={routeList[id].co}
+                routeSize={routeObj.stops[routeObj.co[0]].length}
               />
             </AccordionDetails>
           </Accordion>
@@ -51,36 +98,21 @@ const RouteEta = () => {
 
 export default RouteEta
 
-const TimeReport = ( props ) => {
+const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, routeSize } ) => {
   const { t, i18n } = useTranslation()
   const [ etas, setEtas ] = useState(null)
-  const { route, stopId, serviceType } = props
 
-  const fetchEta = () => {
+  const fetchEtas = () => {
     const fetchData = async () => {
-      const response = await fetch(
-        `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`
-      )
-      const result = await response.json()
-      let _etas = []
-      result.data.forEach(e => {
-        _etas.push( {
-          eta: e.eta ? Math.trunc(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
-          remark: {
-            zh: e.rmk_tc,
-            en: e.rmk_en
-          }
-        })
-      })
-      setEtas(_etas)
+      setEtas( await fetchEtasViaApi({route, routeStops, seq, bound, serviceType, co, routeSize}) )
     }
     fetchData()
   }
 
   useEffect( () => {
-    fetchEta()
+    fetchEtas()
     const fetchEtaInterval = setInterval(() => {
-      fetchEta()
+      fetchEtas()
     }, 30000)
 
     return () => clearInterval(fetchEtaInterval)
@@ -88,11 +120,11 @@ const TimeReport = ( props ) => {
 
   if ( etas == null ) {
     return (
-      <>　</>
+      <CircularProgress size={20} style={{}} />
     )
   }
 
-  const displayMsg = (eta, t) => {
+  const displayMsg = (eta) => {
     let ret = ''
     switch (eta) {
       case null: 
@@ -106,14 +138,14 @@ const TimeReport = ( props ) => {
     }
     return ret
   }
-
+  
   return (
     <div>
       {
         etas.length === 0 ? t('暫無班次') : (
-          etas.map(eta => (
-            <Typography variant="subtitle1" key={`route-${stopId}`}>
-              {displayMsg(eta.eta, t)} - {eta.remark[i18n.language]}
+          etas.map((eta, idx) => (
+            <Typography variant="subtitle1" key={`route-${idx}`}>
+              {displayMsg(eta.eta)} {eta.remark[i18n.language] ? ' - ' + eta.remark[i18n.language] : '' }
             </Typography>
           ))
         )
@@ -167,5 +199,9 @@ const useStyles = makeStyles(theme => ({
   boxContainer: {
     height: '500px',
     overflowY: 'scroll'
+  },
+  loadingContainer: {
+    display: 'flex',
+    justifyContent: 'center'
   }
 }))

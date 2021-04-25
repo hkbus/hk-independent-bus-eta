@@ -67,9 +67,10 @@ const fetchRouteList = async () => {
         // merging routes from different service provider
         for ( const route of Object.entries(_routeList) ) {
           if ( route[0] in routeList ) {
-            if ( route[1].orig.zh === routeList[route[0]].orig.zh ) {
+            if ( route[1].orig.en.toUpperCase() === routeList[route[0]].orig.en.toUpperCase() ) {
               // same route
               routeList[route[0]].co.push(api.co)
+              routeList[route[0]].stops[api.co] = route[1].stops[api.co]
             } else {
               // new route with same route number
               routeList[route[0]+'+'+api.co] = route[1]

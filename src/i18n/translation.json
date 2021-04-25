@@ -1,7 +1,16 @@
 {
   "en": {
     "translation": {
-      
+      "kmb": "KMB",
+      "ctb": "CTB",
+      "nwfb": "NWFB"
+    }
+  },
+  "zh": {
+    "translation": {
+      "kmb": "九巴",
+      "ctb": "城巴",
+      "nwfb": "新巴"
     }
   }
 }
