@@ -9,9 +9,13 @@ import {
   useRouteMatch
 } from "react-router-dom";
 import {
+  CircularProgress,
   Container,
   CssBaseline
 } from '@material-ui/core'
+import {
+  makeStyles
+} from '@material-ui/core/styles'
 import Header from './components/Header'
 import RouteBoard from './components/RouteBoard'
 import RouteEta from './components/RouteEta'
@@ -38,15 +42,19 @@ const App = () => {
     console.log(position.coords.latitude, position.coords.longitude)
   })
   */
+  const classes = useStyles()
   const { routeList, stopList } = useContext( AppContext )
   if ( routeList == null || stopList == null ) {
     return (
-      <>Loading</>
+      <Container maxWidth='xs' disableGutters className={classes.container}>
+        <CircularProgress size={40} className={classes.loading} />
+      </Container>
     )
   } 
+
   return (
     <MuiThemeProvider theme={Theme}>
-      <Container maxWidth='xs' disableGutters>
+      <Container maxWidth='xs' disableGutters className={classes.container}>
         <Router basename={process.env.PUBLIC_URL}>
           <Route exact path="/">
             <Redirect to="/zh/search" />
@@ -75,3 +83,16 @@ const Theme = createMuiTheme({
     }
   }
 })
+
+const useStyles = makeStyles( theme => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '100vh'
+  },
+  loading: {
+    alignSelf: 'center',
+    margin: 'auto'
+  }
+}))

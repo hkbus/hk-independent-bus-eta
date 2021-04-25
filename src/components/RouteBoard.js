@@ -25,7 +25,8 @@ const RouteRow = React.memo(( {data, index, style} ) => {
           <CardContent>
             <Typography variant="h5" display="inline">{routeNo}</Typography>
             <Typography variant="caption"> - {route[1].co.map(co => t(co)).join('+')}</Typography>
-            <Typography variant="subtitle2">{t('往')} {route[1].dest[i18n.language]}</Typography>
+            <br/>
+            <Typography variant="subtitle2" display="inline">{t('往')} {route[1].dest[i18n.language]}  </Typography>
             <Typography variant="caption">{service_type === '2' ? t('特別班次') : '　'}</Typography>
           </CardContent>
         </CardActionArea>
@@ -45,9 +46,9 @@ const RouteList = () => {
   const itemData = createItemData(targetRouteList)
   return (
     <List
-      height={300}
+      height={358}
       itemCount={targetRouteList.length}
-      itemSize={104}
+      itemSize={85}
       width="100%"
       itemData={itemData}
     >

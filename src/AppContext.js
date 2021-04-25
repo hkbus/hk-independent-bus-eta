@@ -12,7 +12,7 @@ export const AppContextProvider = ( props ) => {
   // search route
   const [searchRoute, setSearchRoute] = useState("")
   // selected route for bottom navigation shortcut
-  const [selectedRoute, setSelectedRoute] = useState("")
+  const [selectedRoute, setSelectedRoute] = useState("1+1+I")
 
   // possible Char for RouteInputPad
   const [possibleChar, setPossibleChar] = useState([])
