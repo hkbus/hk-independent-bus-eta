@@ -13,12 +13,11 @@ import {
   fetchRouteStops as fetchRouteStopsViaApi,
   fetchEtas as fetchEtasViaApi 
 } from '../data-api'
-import { LocalConvenienceStoreOutlined } from '@material-ui/icons'
 
 const RouteEta = () => {
   const { id } = useParams()
   const [ expanded, setExpanded ] = useState(false)
-  const { routeList, stopList, setRouteList, setStopList } = useContext ( AppContext )
+  const { routeList, stopList, setRouteList, setStopList, setSelectedRoute } = useContext ( AppContext )
   const [ route, serviceType, bound ] = id.split('+').slice(0,3)
   const { i18n } = useTranslation()
 
@@ -55,6 +54,7 @@ const RouteEta = () => {
         })
       })
     }
+    setSelectedRoute(id)
   },[])
 
   const classes = useStyles()
@@ -145,7 +145,7 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, routeSize
         etas.length === 0 ? t('暫無班次') : (
           etas.map((eta, idx) => (
             <Typography variant="subtitle1" key={`route-${idx}`}>
-              {displayMsg(eta.eta)} {eta.remark[i18n.language] ? ' - ' + eta.remark[i18n.language] : '' }
+              {displayMsg(eta.eta)} {eta.remark[i18n.language] ? ' - ' + eta.remark[i18n.language] : '' } {t(eta.co)}
             </Typography>
           ))
         )

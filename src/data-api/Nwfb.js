@@ -8,7 +8,8 @@ const NwfbApi = {
       .then(({data, generated_timestamp}) => {
         let routeList = {}
         data.forEach(element => {
-          routeList[[element.route,'1','O'].join('+')] = {
+          // the bound direction is reverted to fit KMB route
+          routeList[[element.route,'1','I'].join('+')] = {
             orig: {
               en: element.orig_en,
               zh: element.orig_tc
@@ -22,7 +23,7 @@ const NwfbApi = {
               nwfb: null
             }
           }
-          routeList[[element.route,'1','I'].join('+')] = {
+          routeList[[element.route,'1','O'].join('+')] = {
             dest: {
               en: element.orig_en,
               zh: element.orig_tc
@@ -42,7 +43,8 @@ const NwfbApi = {
   ),
   fetchRouteStops: ({route, bound, routeList}) => {
     // fetch route stop first
-    const dir = bound === 'I' ? 'inbound' : 'outbound'
+    // the bound direction is reverted to fit KMB route
+    const dir = bound === 'I' ? 'outbound' : 'inbound'
     return fetch(
       `https://rt.data.gov.hk/v1/transport/citybus-nwfb/route-stop/NWFB/${route}/${dir}`
     ).then( response => 
@@ -73,14 +75,16 @@ const NwfbApi = {
     })
   },
   fetchEtas: ({stopId, route, bound }) => {
+    // the bound direction is reverted to fit KMB route
     return fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NWFB/${stopId}?lang=zh-hant`).then(
       response => response.json()
-    ).then(({data}) => data.filter(eta => eta.route === route && eta.dir === bound && eta.eta).map(e => ({
+    ).then(({data}) => data.filter(eta => eta.route === route && eta.dir !== bound && eta.eta).map(e => ({
         eta: e.eta ? Math.trunc(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
         remark: {
           zh: e.rmk,
           en: e.rmk
-        }
+        },
+        co: 'nwfb'
       }))
     )
   }

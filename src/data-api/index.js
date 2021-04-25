@@ -20,7 +20,7 @@ const fetchEtas = async ( {route, routeStops, bound, seq, serviceType, co, route
       _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: routeStops.nwfb[seq-1], route, bound }))
     }
   }
-  return _etas.sort((a,b) => a.eta < b.eta ? -1 : 1)
+  return _etas.sort((a,b) => a.eta < b.eta ? -1 : 1).filter(e => !Number.isInteger(e.eta) || e.eta > 1 )
 }
 
 const fetchRouteStops = async ( {route, serviceType, bound, co} ) => {

@@ -16,6 +16,7 @@ import Header from './components/Header'
 import RouteBoard from './components/RouteBoard'
 import RouteEta from './components/RouteEta'
 import AppContext from './AppContext'
+import Footer from './Footer'
 
 const PageSwitch = () => {
   const { path } = useRouteMatch()
@@ -24,7 +25,7 @@ const PageSwitch = () => {
       <Route path={`${path}/route/:id?`}>
         <RouteEta />
       </Route>
-      <Route >
+      <Route path={`${path}/search`}>
         <RouteBoard />
       </Route>
     </Switch>
@@ -48,12 +49,13 @@ const App = () => {
       <Container maxWidth='xs' disableGutters>
         <Router basename={process.env.PUBLIC_URL}>
           <Route exact path="/">
-            <Redirect to="/zh/" />
+            <Redirect to="/zh/search" />
           </Route>
           <Route path="/:lang">
             <CssBaseline />
             <Header />
             <PageSwitch />
+            <Footer />
           </Route>
         </Router>
       </Container>

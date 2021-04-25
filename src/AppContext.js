@@ -5,16 +5,19 @@ import { KmbApi, NwfbApi, CtbApi } from './data-api'
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
+  const [version, setVersion] = useState(localStorage.getItem('version'))
   // route list & stop list & route-stop list
   const [routeList, setRouteList] = useState(null)
   const [stopList, setStopList] = useState(null)
   // search route
   const [searchRoute, setSearchRoute] = useState("")
+  // selected route for bottom navigation shortcut
+  const [selectedRoute, setSelectedRoute] = useState("")
 
   // possible Char for RouteInputPad
   const [possibleChar, setPossibleChar] = useState([])
   
-  useEffect(() => {
+  const renewStorage = () => {
     fetchRouteList().then(() => {
       let _routeList = JSON.parse(localStorage.getItem('routeList'))
       setRouteList(_routeList)
@@ -24,6 +27,23 @@ export const AppContextProvider = ( props ) => {
       let _stopList = JSON.parse(localStorage.getItem('stopList'))
       setStopList(_stopList)
     }) 
+  }
+
+  useEffect(() => {
+    // check app version and flush localstorage if outdated
+    fetch(
+      'https://api.github.com/repos/chunlaw/hk-independent-bus-eta/commits/gh-pages'
+    ).then(
+      response => response.json()
+    ).then(({sha}) => {
+      console.log(sha === version) 
+      if ( version !== sha ) {
+        localStorage.clear()
+        setVersion(sha)
+        localStorage.setItem('version', sha)
+      }
+    })
+    renewStorage()  
   }, [])
 
   useEffect(() => {
@@ -47,6 +67,7 @@ export const AppContextProvider = ( props ) => {
     <AppContext.Provider value={{
         routeList, setRouteList, stopList, setStopList,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
+        selectedRoute, setSelectedRoute,
         possibleChar
       }}>
       {props.children}
