@@ -36,7 +36,6 @@ export const AppContextProvider = ( props ) => {
     ).then(
       response => response.json()
     ).then(({sha}) => {
-      console.log(sha === version) 
       if ( version !== sha ) {
         localStorage.clear()
         setVersion(sha)

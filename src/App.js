@@ -2,7 +2,7 @@ import './App.css'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import React, { useContext } from 'react'
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Redirect,
   Switch,
   Route,
