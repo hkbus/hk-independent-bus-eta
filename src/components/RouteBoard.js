@@ -29,7 +29,7 @@ const RouteRow = React.memo(( {data, index, style} ) => {
             <Typography variant="caption"> - {route[1].co.map(co => t(co)).join('+')}</Typography>
             <br/>
             <Typography variant="subtitle2" display="inline">{t('往')} {route[1].dest[i18n.language]}  </Typography>
-            <Typography variant="caption">{service_type === '2' ? t('特別班次') : '　'}</Typography>
+            <Typography variant="caption">{service_type >= '2' ? t('特別班次') : '　'}</Typography>
           </CardContent>
         </CardActionArea>
       </Card>

@@ -56,7 +56,8 @@ const KmbApi = {
           }
         }
       })
-      return [stopList, generated_timestamp]
+      
+      return stopList
     })
   },
   /*

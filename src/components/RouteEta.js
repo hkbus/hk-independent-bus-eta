@@ -17,7 +17,7 @@ import {
 const RouteEta = () => {
   const { id, panel } = useParams()
   const [ expanded, setExpanded ] = useState(false)
-  const { routeList, stopList, setRouteList, setStopList, setSelectedRoute } = useContext ( AppContext )
+  const { routeList, stopList, updateRouteList, updateStopList, setSelectedRoute } = useContext ( AppContext )
   const [ route, serviceType, bound ] = id.split('+').slice(0,3)
   const { i18n } = useTranslation()
   const history = useHistory()
@@ -29,12 +29,10 @@ const RouteEta = () => {
     setExpanded(newExpanded ? panel : false)
     if ( newExpanded ) {
       history.replace(`/${i18n.language}/route/${id}/${panel}`)
+      setSelectedRoute(`${id}/${panel}`)
+      return
     }
   }
-
-  useEffect(() => {
-    setSelectedRoute(`${id}/${expanded}`)
-  }, [expanded])
 
   useEffect(() => {
     // check if stops not fetched
@@ -53,10 +51,10 @@ const RouteEta = () => {
         objs.forEach( obj => {
           _stopList = {..._stopList, ...obj.stopList}
         } )
-        setStopList({...stopList, ..._stopList})
+        updateStopList({...stopList, ..._stopList})
 
         // set route list
-        setRouteList(prevRouteList => {
+        updateRouteList(prevRouteList => {
           let _routeList = JSON.parse(JSON.stringify(prevRouteList))
           objs.forEach(obj => _routeList[id].stops[obj.co] = obj.routeStops)
           return _routeList
@@ -64,7 +62,7 @@ const RouteEta = () => {
       })
     }
 
-    if ( parseInt(panel) ) {
+    if ( parseInt(panel) && accordionRef.current[parseInt(panel)] ) {
       setExpanded(parseInt(panel))
       accordionRef.current[parseInt(panel)].scrollIntoView({behavior: 'smooth', block: 'nearest'})
     }

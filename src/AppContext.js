@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import moment from 'moment'
-import { KmbApi, NwfbApi, CtbApi } from './data-api'
+import { KmbApi, fetchRouteList } from './data-api'
 
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
   const [version, setVersion] = useState(localStorage.getItem('version'))
   // route list & stop list & route-stop list
-  const [routeList, setRouteList] = useState(null)
-  const [stopList, setStopList] = useState(null)
+  const [routeList, setRouteList] = useState(JSON.parse(localStorage.getItem('routeList')))
+  const [stopList, setStopList] = useState(JSON.parse(localStorage.getItem('stopList')))
+  const [updateTime, setUpdateTime] = useState(parseInt(localStorage.getItem('updateTime')))
   // search route
   const [searchRoute, setSearchRoute] = useState("")
   // selected route for bottom navigation shortcut
@@ -18,37 +18,55 @@ export const AppContextProvider = ( props ) => {
   const [possibleChar, setPossibleChar] = useState([])
   
   const renewStorage = () => {
-    fetchRouteList().then(() => {
-      let _routeList = JSON.parse(localStorage.getItem('routeList'))
-      setRouteList(_routeList)
-      setPossibleChar(getPossibleChar('', _routeList))
-    })
-    fetchStopList().then(() => {
-      let _stopList = JSON.parse(localStorage.getItem('stopList'))
-      setStopList(_stopList)
-    }) 
+    fetchRouteList().then( _routeList => updateRouteList(_routeList) ).then(() =>
+      // fetch only KMB stop list as the api return is succinct enough
+      // on-the-fly fetching for other service providers' stops
+      KmbApi.fetchStopList().then( _stopList => {
+        updateStopList(_stopList)
+        const _updateTime = Date.now()
+        setUpdateTime ( _updateTime )
+        localStorage.setItem('updateTime', _updateTime)
+      } )
+    )
   }
 
   useEffect(() => {
     // check app version and flush localstorage if outdated
-    fetch(
-      'https://api.github.com/repos/chunlaw/hk-independent-bus-eta/commits/gh-pages'
-    ).then(
-      response => response.json()
-    ).then(({sha}) => {
-      if ( version !== sha ) {
-        localStorage.clear()
-        setVersion(sha)
-        localStorage.setItem('version', sha)
+    fetch( process.env.PUBLIC_URL + '/schema-version.txt').then(
+      response => response.text()
+    ).then( schemaVersion => {
+      let needRenew = false
+      if ( version !== schemaVersion ) {
+        setVersion(schemaVersion)
+        localStorage.setItem('version', schemaVersion)
+        needRenew = true
+      }
+      needRenew = needRenew || routeList == null || stopList == null || updateTime == null || updateTime < Date.now() - 7 * 24 * 60 * 60 * 1000
+      if (needRenew) {
+        renewStorage()
       }
     })
-    renewStorage()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     setPossibleChar(getPossibleChar(searchRoute, routeList))
   }, [searchRoute, routeList])
+
+  const updateStopList = (_stopList) => {
+    // caching localStorage
+    localStorage.setItem('stopList', JSON.stringify(_stopList))
+    setStopList(_stopList)
+  }
+
+  const updateRouteList = (_routeList) => {
+    if ( typeof(_routeList) === 'function' ) {
+      _routeList = _routeList(routeList)
+    }
+    // caching localStorage
+    localStorage.setItem('routeList', JSON.stringify(_routeList))
+    setRouteList(_routeList)
+  }
 
   const updateSearchRouteByButton = (buttonValue) => {
     switch (buttonValue) {
@@ -65,7 +83,7 @@ export const AppContextProvider = ( props ) => {
 
   return (
     <AppContext.Provider value={{
-        routeList, setRouteList, stopList, setStopList,
+        routeList, updateRouteList, stopList, updateStopList,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
         selectedRoute, setSelectedRoute,
         possibleChar
@@ -76,58 +94,6 @@ export const AppContextProvider = ( props ) => {
 }
 
 export default AppContext
-
-const checkSameLocationNaming = (a, b) => a.includes(b) || b.includes(a)
-
-const fetchRouteList = async () => {
-  if ( localStorage.getItem('routeList') == null || 
-    localStorage.getItem('routeListDbTime') < moment().subtract(1, 'days').format("YYYY-MM-DDTHH:mm:ssZZ")
-  ) {
-    let routeList = {}
-    let generated_timestamp = '3000'
-    for ( const api of [KmbApi, NwfbApi, CtbApi] ) {
-        let [_routeList, _generated_timestamp] = await api.fetchRouteList()
-        // merging routes from different service provider
-        for ( const route of Object.entries(_routeList) ) {
-          if ( route[0] in routeList ) {
-            if ( checkSameLocationNaming(route[1].orig.en.toUpperCase(), routeList[route[0]].orig.en.toUpperCase() ) ) {
-              // same route
-              routeList[route[0]].co.push(api.co)
-              routeList[route[0]].stops[api.co] = route[1].stops[api.co]
-            } else {
-              // new route with same route number
-              routeList[route[0]+'+'+api.co] = route[1]
-            }
-          } else {
-            // new route
-            routeList[route[0]] = route[1]
-          }
-        }
-        generated_timestamp = _generated_timestamp < generated_timestamp ? _generated_timestamp : generated_timestamp
-    }
-    // sort the routeList
-    let _routeList = routeList
-    routeList = {}
-    Object.entries(_routeList).sort((a,b) => (a[0] < b[0] ? -1 : 1)).forEach(route => {
-      routeList[route[0]] = route[1]
-    })
-    
-    // save to local storage
-    localStorage.setItem('routeList', JSON.stringify(routeList))
-    localStorage.setItem('routeListDbTime', generated_timestamp)
-  } 
-}
-
-const fetchStopList = async () => {
-  if ( localStorage.getItem('stopList') == null ||
-    localStorage.getItem('stopDbTime') < moment().subtract(1, 'days').format("YYYY-MM-DDTHH:mm:ssZZ")
-  ) {
-    // KMB
-    let [stopList, generated_timestamp] = await KmbApi.fetchStopList()
-    localStorage.setItem('stopList', JSON.stringify(stopList))
-    localStorage.setItem('stopDbTime', generated_timestamp)
-  }
-}
 
 const getPossibleChar = ( searchRoute, routeList ) => {
   if ( routeList == null ) return []
