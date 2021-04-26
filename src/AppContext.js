@@ -42,7 +42,8 @@ export const AppContextProvider = ( props ) => {
         localStorage.setItem('version', sha)
       }
     })
-    renewStorage()  
+    renewStorage()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -76,6 +77,8 @@ export const AppContextProvider = ( props ) => {
 
 export default AppContext
 
+const checkSameLocationNaming = (a, b) => a.includes(b) || b.includes(a)
+
 const fetchRouteList = async () => {
   if ( localStorage.getItem('routeList') == null || 
     localStorage.getItem('routeListDbTime') < moment().subtract(1, 'days').format("YYYY-MM-DDTHH:mm:ssZZ")
@@ -87,7 +90,7 @@ const fetchRouteList = async () => {
         // merging routes from different service provider
         for ( const route of Object.entries(_routeList) ) {
           if ( route[0] in routeList ) {
-            if ( route[1].orig.en.toUpperCase() === routeList[route[0]].orig.en.toUpperCase() ) {
+            if ( checkSameLocationNaming(route[1].orig.en.toUpperCase(), routeList[route[0]].orig.en.toUpperCase() ) ) {
               // same route
               routeList[route[0]].co.push(api.co)
               routeList[route[0]].stops[api.co] = route[1].stops[api.co]

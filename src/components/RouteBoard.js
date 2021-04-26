@@ -5,6 +5,7 @@ import {
   CardContent,
   Typography
 } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList as List, areEqual } from 'react-window'
@@ -17,12 +18,13 @@ const RouteRow = React.memo(( {data, index, style} ) => {
   const { routeList } = data
   const route = routeList[index]
   const [routeNo, service_type] = route[0].split('+').slice(0,2)
+  const classes = useStyles()
 
   return (
     <Link to={'/'+i18n.language+'/route/'+route[0]}>
       <Card variant="outlined" key={route[0]} style={style} square>
         <CardActionArea>
-          <CardContent>
+          <CardContent className={classes.cardContent}>
             <Typography variant="h5" display="inline">{routeNo}</Typography>
             <Typography variant="caption"> - {route[1].co.map(co => t(co)).join('+')}</Typography>
             <br/>
@@ -48,7 +50,7 @@ const RouteList = () => {
     <List
       height={358}
       itemCount={targetRouteList.length}
-      itemSize={85}
+      itemSize={69}
       width="100%"
       itemData={itemData}
     >
@@ -68,3 +70,9 @@ const RouteBoard = () => {
 }
 
 export default RouteBoard
+
+const useStyles = makeStyles (theme => ({
+  cardContent: {
+    padding: '8px 16px',
+  }
+}))

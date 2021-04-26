@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useState, useEffect, useContext, useRef } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
 import MuiAccordion from'@material-ui/core/Accordion'
 import MuiAccordionSummary from'@material-ui/core/AccordionSummary'
 import MuiAccordionDetails from'@material-ui/core/AccordionDetails'
@@ -15,17 +15,26 @@ import {
 } from '../data-api'
 
 const RouteEta = () => {
-  const { id } = useParams()
+  const { id, panel } = useParams()
   const [ expanded, setExpanded ] = useState(false)
   const { routeList, stopList, setRouteList, setStopList, setSelectedRoute } = useContext ( AppContext )
   const [ route, serviceType, bound ] = id.split('+').slice(0,3)
   const { i18n } = useTranslation()
+  const history = useHistory()
+  const accordionRef = useRef([])
 
   const routeObj = routeList[id]
 
   const handleChange = ( panel ) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false)
+    if ( newExpanded ) {
+      history.replace(`/${i18n.language}/route/${id}/${panel}`)
+    }
   }
+
+  useEffect(() => {
+    setSelectedRoute(`${id}/${expanded}`)
+  }, [expanded])
 
   useEffect(() => {
     // check if stops not fetched
@@ -54,8 +63,13 @@ const RouteEta = () => {
         })
       })
     }
-    setSelectedRoute(id)
-  },[])
+
+    if ( parseInt(panel) ) {
+      setExpanded(parseInt(panel))
+      accordionRef.current[parseInt(panel)].scrollIntoView({behavior: 'smooth', block: 'nearest'})
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const classes = useStyles()
 
@@ -76,6 +90,7 @@ const RouteEta = () => {
             expanded={expanded === idx}
             onChange={handleChange(idx)}
             TransitionProps={{unmountOnExit: true}}
+            ref={el => {accordionRef.current[idx] = el}}
           >
             <AccordionSummary>{stopList[stop].name[i18n.language]}</AccordionSummary>
             <AccordionDetails>
@@ -116,6 +131,7 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, routeSize
     }, 30000)
 
     return () => clearInterval(fetchEtaInterval)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if ( etas == null ) {
@@ -133,7 +149,7 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, routeSize
         ret = '- '+t('分鐘')
         break
       default:
-        ret = eta + t('分鐘')
+        ret = eta + " " + t('分鐘')
         break
     }
     return ret

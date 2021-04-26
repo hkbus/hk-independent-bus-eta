@@ -17,6 +17,7 @@ const KeyButton = ({k, handleClick, disabled = false}) => {
   const { t } = useTranslation()
   return (
     <Button 
+      size="large"
       variant="contained" 
       className={classes.button}
       onClick={() => handleClick(k)}
@@ -32,7 +33,7 @@ const RouteNumPad = () => {
   const { searchRoute, updateSearchRouteByButton, possibleChar } = useContext( AppContext )
 
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={0}>
     {
       '789456123-0b'.split('').map( k => (
         <Grid item xs={4} key={'input-'+k}>
@@ -107,6 +108,8 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'scroll'
   },
   button: {
-    width: '100%'
+    width: '100%',
+    height: 42,
+    borderRadius: 'unset'
   }
 }))

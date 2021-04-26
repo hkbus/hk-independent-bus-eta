@@ -29,7 +29,7 @@ const PageSwitch = () => {
   const { path } = useRouteMatch()
   return (
     <Switch>
-      <Route path={`${path}/route/:id?`}>
+      <Route path={`${path}/route/:id/:panel?`}>
         <RouteEta />
       </Route>
       <Route path={`${path}/search`}>

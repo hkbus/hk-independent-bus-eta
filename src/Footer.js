@@ -17,7 +17,6 @@ const Footer = () => {
   return (
     <BottomNavigation
       value={location.pathname}
-      onChange={(e) => {console.log(e)}}
       showLabels={true}
     >
       <BottomNavigationAction 

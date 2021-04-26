@@ -76,10 +76,10 @@ const NwfbApi = {
   },
   fetchEtas: ({stopId, route, bound }) => {
     // the bound direction is reverted to fit KMB route
-    return fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NWFB/${stopId}?lang=zh-hant`).then(
+    return fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NWFB/${stopId}?lang=zh-hant`, { cache: "no-store" }).then(
       response => response.json()
     ).then(({data}) => data.filter(eta => eta.route === route && eta.dir !== bound && eta.eta).map(e => ({
-        eta: e.eta ? Math.trunc(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+        eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
         remark: {
           zh: e.rmk,
           en: e.rmk

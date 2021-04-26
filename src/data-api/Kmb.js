@@ -71,10 +71,11 @@ const KmbApi = {
   */
   fetchEtas: ({stopId, route, seq, serviceType, bound}) => {
     return fetch(
-      `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`
+      `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`,
+      { cache: "no-store" }
     ).then( response => response.json() )
     .then(({data}) => data.filter(e => e.dir === bound && e.seq === seq).map(e => ({
-        eta: e.eta ? Math.trunc(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+        eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
         remark: {
           zh: e.rmk_tc,
           en: e.rmk_en
