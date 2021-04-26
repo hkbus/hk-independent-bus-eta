@@ -7,7 +7,7 @@ import {
   Typography
 } from "@material-ui/core"
 import { withStyles, makeStyles } from '@material-ui/core/styles'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation, useHistory, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useRouteMatch } from 'react-router-dom'
 import AppContext from '../AppContext'
@@ -30,9 +30,15 @@ const Header = (props) => {
     <Toolbar
       className={classes.toolbar}
     >
-      <div>
-        <Typography variant="h6">香港</Typography>
-        <Typography variant='subtitle2'>獨立巴士預報</Typography>
+      <div className={classes.tabsContainer}>
+        <Link
+          to={{
+            pathname: `/${i18n.language}/search`
+          }}
+        >
+          <Typography variant="h6">香港</Typography>
+          <Typography variant='subtitle2'>獨立巴士預報</Typography>
+        </Link>
       </div>
       <Input 
         type="text"
@@ -64,6 +70,10 @@ const useStyles = makeStyles(theme => ({
     }
   },
   toolbar: {
+    '& a': {
+      color: 'black',
+      textDecoration: 'none',
+    },
     display: 'flex',
     justifyContent: 'space-between',
     zIndex: theme.zIndex.drawer * 2
