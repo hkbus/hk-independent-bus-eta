@@ -21,6 +21,7 @@ import {
 import Header from './components/Header'
 import RouteBoard from './components/RouteBoard'
 import RouteEta from './components/RouteEta'
+import Settings from './components/Settings'
 import AppContext from './AppContext'
 import Footer from './Footer'
 import Countdown from 'react-countdown'
@@ -32,6 +33,9 @@ const PageSwitch = () => {
       <Route path={`${path}/route/:id/:panel?`}>
         <RouteEta />
       </Route>
+      <Route path={`${path}/settings`}>
+        <Settings />
+      </Route>      
       <Route path={`${path}/search`}>
         <RouteBoard />
       </Route>
@@ -45,6 +49,7 @@ const App = () => {
     console.log(position.coords.latitude, position.coords.longitude)
   })
   */
+  
   const classes = useStyles()
   const { routeList, stopList } = useContext( AppContext )
   if ( routeList == null || stopList == null ) {
@@ -103,7 +108,7 @@ const Theme = createMuiTheme({
   },
   palette: {
     background: {
-      default: "yellow"
+      default: "#ffff00" // yellow
     }
   }
 })

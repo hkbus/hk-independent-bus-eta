@@ -4,7 +4,7 @@ import { KmbApi, fetchRouteList } from './data-api'
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
-  const [version, setVersion] = useState(localStorage.getItem('version'))
+  const [schemaVersion, setSchemaVersion] = useState(localStorage.getItem('schemaVersion'))
   // route list & stop list & route-stop list
   const [routeList, setRouteList] = useState(JSON.parse(localStorage.getItem('routeList')))
   const [stopList, setStopList] = useState(JSON.parse(localStorage.getItem('stopList')))
@@ -13,11 +13,13 @@ export const AppContextProvider = ( props ) => {
   const [searchRoute, setSearchRoute] = useState("")
   // selected route for bottom navigation shortcut
   const [selectedRoute, setSelectedRoute] = useState("1+1+I")
+  // Geo Permission for UX
+  const [ geoPermission, setGeoPermission ] = useState( localStorage.getItem('geoPermission') ) 
 
   // possible Char for RouteInputPad
   const [possibleChar, setPossibleChar] = useState([])
   
-  const renewStorage = () => {
+  const renewDb = () => {
     fetchRouteList().then( _routeList => updateRouteList(_routeList) ).then(() =>
       // fetch only KMB stop list as the api return is succinct enough
       // on-the-fly fetching for other service providers' stops
@@ -34,16 +36,16 @@ export const AppContextProvider = ( props ) => {
     // check app version and flush localstorage if outdated
     fetch( process.env.PUBLIC_URL + '/schema-version.txt').then(
       response => response.text()
-    ).then( schemaVersion => {
+    ).then( _schemaVersion => {
       let needRenew = false
-      if ( version !== schemaVersion ) {
-        setVersion(schemaVersion)
-        localStorage.setItem('version', schemaVersion)
+      if ( schemaVersion !== _schemaVersion ) {
+        setSchemaVersion(_schemaVersion)
+        localStorage.setItem('schemaVersion', _schemaVersion)
         needRenew = true
       }
       needRenew = needRenew || routeList == null || stopList == null || updateTime == null || updateTime < Date.now() - 7 * 24 * 60 * 60 * 1000
       if (needRenew) {
-        renewStorage()
+        renewDb()
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,13 +83,23 @@ export const AppContextProvider = ( props ) => {
     }
   }
 
+
+  const updateGeoPermission = ( state ) => {
+    setGeoPermission(state)
+    localStorage.setItem('geoPermission', state)
+  }
+
   return (
     <AppContext.Provider value={{
         routeList, updateRouteList, stopList, updateStopList,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
         selectedRoute, setSelectedRoute,
-        possibleChar
-      }}>
+        possibleChar,
+        // settings
+        renewDb, schemaVersion, updateTime,
+        geoPermission, updateGeoPermission 
+      }}
+    >
       {props.children}
     </AppContext.Provider>
   )

@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import TimerIcon from '@material-ui/icons/Timer'
+import SettingsIcon from '@material-ui/icons/Settings';
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AppContext from './AppContext'
@@ -32,6 +33,13 @@ const Footer = () => {
        to={`/${i18n.language}/route/${selectedRoute}`}
        value={`/${i18n.language}/route/${selectedRoute}`}
        icon={<TimerIcon />} 
+      />
+      <BottomNavigationAction
+       label={t("設定")}
+       component={Link}
+       to={`/${i18n.language}/settings`}
+       value={`/${i18n.language}/settings`}
+       icon={<SettingsIcon />} 
       />
     </BottomNavigation>
   )
