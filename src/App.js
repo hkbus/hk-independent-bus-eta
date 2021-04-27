@@ -19,6 +19,7 @@ import {
   makeStyles
 } from '@material-ui/core/styles'
 import Header from './Header'
+import Home from './components/Home'
 import RouteBoard from './components/RouteBoard'
 import RouteEta from './components/RouteEta'
 import Settings from './components/Settings'
@@ -38,6 +39,9 @@ const PageSwitch = () => {
       </Route>      
       <Route path={`${path}/search`}>
         <RouteBoard />
+      </Route>
+      <Route path={`${path}`}>
+        <Home />
       </Route>
     </Switch>
   )
@@ -86,7 +90,7 @@ const App = () => {
       <Container maxWidth='xs' disableGutters className={classes.container}>
         <Router>
           <Route exact path="/">
-            <Redirect to="/zh/search" />
+            <Redirect to="/zh/" />
           </Route>
           <Route path="/:lang">
             <CssBaseline />

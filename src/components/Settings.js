@@ -17,10 +17,14 @@ import LocationOffIcon from '@material-ui/icons/LocationOff'
 import { useTranslation } from 'react-i18next'
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
 import DataUsageIcon from '@material-ui/icons/DataUsage'
+import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment'
 
 const Settings = () => {
-  const { schemaVersion, updateTime, geoPermission, updateGeoPermission, renewDb } = useContext ( AppContext )
+  const { 
+    schemaVersion, updateTime, geoPermission, 
+    updateGeoPermission, renewDb, resetUsageRecord
+  } = useContext ( AppContext )
   const [ updating, setUpdating ] = useState(false)
 
   const { t, i18n } = useTranslation()
@@ -63,6 +67,18 @@ const Settings = () => {
           <ListItemText 
             primary={t("地理位置定位功能")} 
             secondary={t(geoPermission === 'granted' ? '開啟' : '關閉') } 
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {resetUsageRecord()}}
+        >
+          <ListItemAvatar>
+            <Avatar><DeleteIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={t("一鍵清空用戶紀錄")} 
+            secondary={t("包括鎖定和常用報時")}
           />
         </ListItem>
         <Divider />

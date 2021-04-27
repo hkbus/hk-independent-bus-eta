@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import MuiAccordion from'@material-ui/core/Accordion'
-import MuiAccordionSummary from'@material-ui/core/AccordionSummary'
-import MuiAccordionDetails from'@material-ui/core/AccordionDetails'
+import RouteMap from './RouteMap'
 import {
-  Box, CircularProgress, Typography
+  Accordion as MuiAccordion,
+  AccordionSummary as MuiAccordionSummary, 
+  AccordionDetails as MuiAccordionDetails,
+  Box, 
+  CircularProgress,
+  IconButton, 
+  Typography
 } from '@material-ui/core'
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
@@ -16,10 +22,14 @@ import {
 
 const RouteEta = () => {
   const { id, panel } = useParams()
-  const [ expanded, setExpanded ] = useState(false)
-  const { routeList, stopList, updateRouteList, updateStopList, setSelectedRoute } = useContext ( AppContext )
-  const { route, serviceType, bound, stops, co } = routeList[id]
-  const { i18n } = useTranslation()
+  const [ expanded, setExpanded ] = useState(parseInt(panel))
+  const { 
+    routeList, stopList, savedEtas, geolocation,
+    updateNewlyFetchedRouteStops, updateSelectedRoute, updateSavedEtas
+  } = useContext ( AppContext )
+
+  const { route, serviceType, bound, stops, co, dest } = routeList[id]
+  const { t, i18n } = useTranslation()
   const history = useHistory()
   const accordionRef = useRef([])
 
@@ -27,43 +37,22 @@ const RouteEta = () => {
     setExpanded(newExpanded ? panel : false)
     if ( newExpanded ) {
       history.replace(`/${i18n.language}/route/${id}/${panel}`)
-      setSelectedRoute(`${id}/${panel}`)
+      updateSelectedRoute( id, panel )
       return
     }
   }
 
   useEffect(() => {
-    setSelectedRoute(`${id}`)
-    // check if stops not fetched
-    if ( co.filter(company => stops[company] == null).length ) {
-      // fetch in parallel
-      Promise.all(
-        co.map(company => {
-          if ( stops[company] !== null ) return null;
-          return fetchRouteStopsViaApi({
-            route, serviceType, bound: bound[company], co: company
-          })
-        }).filter(v => v)
-      ).then(objs => {
-        // set stop list
-        let _stopList = {}
-        objs.forEach( obj => {
-          _stopList = {..._stopList, ...obj.stopList}
-        } )
-        updateStopList({...stopList, ..._stopList})
+    updateSelectedRoute( id )
 
-        // set route list
-        updateRouteList(prevRouteList => {
-          let _routeList = JSON.parse(JSON.stringify(prevRouteList))
-          objs.forEach(obj => _routeList[id].stops[obj.co] = obj.routeStops)
-          return _routeList
-        })
-      })
-    }
+    // fetch stops
+    fetchRouteStopsViaApi({route, bound}).then( objs => 
+      updateNewlyFetchedRouteStops(id, objs)
+    )
 
     if ( parseInt(panel) && accordionRef.current[parseInt(panel)] ) {
       setExpanded(parseInt(panel))
-      accordionRef.current[parseInt(panel)].scrollIntoView({behavior: 'smooth', block: 'nearest'})
+      accordionRef.current[parseInt(panel)].scrollIntoView({behavior: 'smooth', block: 'start'})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -78,56 +67,74 @@ const RouteEta = () => {
     )
   }
 
+  const toggleSavedRoute = (key) => updateSavedEtas(key)
+  console.log(stopList[stops[co[0]][expanded]].location)
   return (
-    <Box className={classes.boxContainer}>
-      {
-        stops[co[0]].map((stop, idx) => (
-          <Accordion 
-            key={'stop-'+idx} 
-            expanded={expanded === idx}
-            onChange={handleChange(idx)}
-            TransitionProps={{unmountOnExit: true}}
-            ref={el => {accordionRef.current[idx] = el}}
-          >
-            <AccordionSummary>{stopList[stop].name[i18n.language]}</AccordionSummary>
-            <AccordionDetails>
-              <TimeReport 
-                route={route}
-                seq={idx + 1}
-                routeStops={stops}
-                serviceType={serviceType}
-                bound={bound}
-                co={co}
-                routeSize={stops[co[0]].length}
-              />
-            </AccordionDetails>
-          </Accordion>
-        ))
-      }
-    </Box>
+    <>
+      <Typography variant="subtitle1" align='center'>
+        {route}
+      </Typography>
+      <Typography variant="caption" align='center'>
+        {t('往')} {dest[i18n.language]}
+      </Typography>
+      <RouteMap 
+        geolocation={geolocation}
+        position={stopList[stops[co[0]][expanded]].location}
+      />
+      <Box className={classes.boxContainer}>
+        {
+          stops[co[0]].map((stop, idx) => (
+            <Accordion 
+              key={'stop-'+idx} 
+              expanded={expanded === idx}
+              onChange={handleChange(idx)}
+              TransitionProps={{unmountOnExit: true}}
+              ref={el => {accordionRef.current[idx] = el}}
+            >
+              <AccordionSummary>{stopList[stop].name[i18n.language]}</AccordionSummary>
+              <AccordionDetails>
+                <TimeReport 
+                  route={route}
+                  seq={idx + 1}
+                  routeStops={stops}
+                  serviceType={serviceType}
+                  bound={bound}
+                  co={co}
+                />
+                <IconButton aria-label="favourite" onClick={() => toggleSavedRoute(`${id}/${panel}`)}>
+                  {savedEtas.includes(`${id}/${panel}`) ? <StarIcon/> : <StarBorderIcon />}
+                </IconButton>
+              </AccordionDetails>
+            </Accordion>
+          ))
+        }
+      </Box>
+    </>
   )
 }
 
 export default RouteEta
 
-const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, routeSize } ) => {
+const TimeReport = ( { route, routeStops, seq, bound, serviceType, co } ) => {
   const { t, i18n } = useTranslation()
   const [ etas, setEtas ] = useState(null)
 
-  const fetchEtas = () => {
-    const fetchData = async () => {
-      setEtas( await fetchEtasViaApi({route, routeStops, seq, bound, serviceType, co, routeSize}) )
+  useEffect( () => {
+    let isMounted = true
+    const fetchData = () => {
+      fetchEtasViaApi({route, routeStops, seq, bound, serviceType, co}).then(_etas => {
+        if (isMounted) setEtas(_etas)
+      })
     }
     fetchData()
-  }
-
-  useEffect( () => {
-    fetchEtas()
     const fetchEtaInterval = setInterval(() => {
-      fetchEtas()
+      fetchData()
     }, 30000)
 
-    return () => clearInterval(fetchEtaInterval)
+    return () => {
+      isMounted = false
+      clearInterval(fetchEtaInterval)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -158,7 +165,7 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, routeSize
         etas.length === 0 ? t('暫無班次') : (
           etas.map((eta, idx) => (
             <Typography variant="subtitle1" key={`route-${idx}`}>
-              {displayMsg(eta.eta)} {eta.remark[i18n.language] ? ' - ' + eta.remark[i18n.language] : '' } {t(eta.co)}
+              {displayMsg(eta.eta)} - { eta.remark[i18n.language] ? eta.remark[i18n.language] : '' } {t(eta.co)}
             </Typography>
           ))
         )
@@ -205,6 +212,7 @@ const AccordionSummary = withStyles({
 const AccordionDetails = withStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
+    justifyContent: 'space-between'
   },
 }))(MuiAccordionDetails);
 

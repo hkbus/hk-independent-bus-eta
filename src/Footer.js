@@ -3,6 +3,7 @@ import {
   BottomNavigation,
   BottomNavigationAction
 } from '@material-ui/core'
+import HomeIcon from '@material-ui/icons/Home'
 import SearchIcon from '@material-ui/icons/Search'
 import TimerIcon from '@material-ui/icons/Timer'
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -20,6 +21,13 @@ const Footer = () => {
       value={location.pathname}
       showLabels={true}
     >
+      <BottomNavigationAction
+        label={t("常用")}
+        component={Link}
+        to={`/${i18n.language}`}
+        value={`/${i18n.language}`}
+        icon={<HomeIcon />}
+      />
       <BottomNavigationAction 
         label={t("搜尋")}
         component={Link}

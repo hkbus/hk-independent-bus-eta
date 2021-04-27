@@ -12,9 +12,14 @@ export const AppContextProvider = ( props ) => {
   // search route
   const [searchRoute, setSearchRoute] = useState("")
   // selected route for bottom navigation shortcut
-  const [selectedRoute, setSelectedRoute] = useState("1+1+I")
+  const [selectedRoute, setSelectedRoute] = useState('1+1+CHUK YUEN ESTATE+STAR FERRY')
   // Geo Permission for UX
   const [ geoPermission, setGeoPermission ] = useState( localStorage.getItem('geoPermission') ) 
+  const [ geolocation, setGeoLocation ] = useState (JSON.parse(localStorage.getItem('geolocation')) || {})
+
+  // hot query count
+  const [ hotRoute, setHotRoute ] = useState( JSON.parse(localStorage.getItem('hotRoute')) || {} )
+  const [ savedEtas, setSavedEtas ] = useState ( JSON.parse(localStorage.getItem('savedEtas')) || [] )
 
   // possible Char for RouteInputPad
   const [possibleChar, setPossibleChar] = useState([])
@@ -48,16 +53,48 @@ export const AppContextProvider = ( props ) => {
         renewDb()
       }
     })
+
+    if ( geoPermission === 'granted' ) {
+      navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
+        setGeoLocation({lat: latitude, lng: longitude})
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if ( geoPermission === 'granted' ) {
+      navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
+        setGeoLocation({lat: latitude, lng: longitude})
+      })
+    }
+  }, [geoPermission])
 
   useEffect(() => {
     setPossibleChar(getPossibleChar(searchRoute, routeList))
   }, [searchRoute, routeList])
 
+  useEffect(() => {
+    localStorage.setItem('savedEtas', JSON.stringify(savedEtas))
+  }, [savedEtas])
+
+  useEffect(() => {
+    localStorage.setItem('stopList', JSON.stringify(stopList))
+  }, [stopList])
+
+  useEffect(() => {
+    localStorage.setItem('routeList', JSON.stringify(routeList))
+  }, [routeList])
+
+  useEffect(() => {
+    localStorage.setItem('geolocation', JSON.stringify(geolocation))
+  }, [geolocation])
+
+  useEffect(() => {
+    localStorage.setItem('geoPermission', geoPermission)
+  }, [geoPermission])
+
   const updateStopList = (_stopList) => {
-    // caching localStorage
-    localStorage.setItem('stopList', JSON.stringify(_stopList))
     setStopList(_stopList)
   }
 
@@ -65,9 +102,24 @@ export const AppContextProvider = ( props ) => {
     if ( typeof(_routeList) === 'function' ) {
       _routeList = _routeList(routeList)
     }
-    // caching localStorage
-    localStorage.setItem('routeList', JSON.stringify(_routeList))
     setRouteList(_routeList)
+  }
+
+  const updateNewlyFetchedRouteStops = ( routeId, objs ) => {
+    if ( objs.length === 0 ) return
+    // set stop list
+    let _stopList = {}
+    objs.forEach( obj => {
+      _stopList = {..._stopList, ...obj.stopList}
+    } )
+    updateStopList({...stopList, ..._stopList})
+
+    // set route list
+    updateRouteList(prevRouteList => {
+      let _routeList = JSON.parse(JSON.stringify(prevRouteList))
+      objs.forEach(obj => _routeList[routeId].stops[obj.co] = obj.routeStops)
+      return _routeList
+    })
   }
 
   const updateSearchRouteByButton = (buttonValue) => {
@@ -83,18 +135,43 @@ export const AppContextProvider = ( props ) => {
     }
   }
 
-
   const updateGeoPermission = ( state ) => {
     setGeoPermission(state)
-    localStorage.setItem('geoPermission', state)
+  }
+
+  const updateSelectedRoute = ( route, seq = '' ) => {
+    setSelectedRoute ( `${route}/${seq}` )
+    if ( seq ) {
+      setHotRoute( prevHotRoute => {
+        prevHotRoute[route+'/'+seq] = hotRoute[route+'/'+seq] ? hotRoute[route+'/'+seq] + 1 : 1
+        localStorage.setItem('hotRoute', JSON.stringify(prevHotRoute))
+        return prevHotRoute
+      })
+    }
+  }
+
+  const updateSavedEtas = ( key ) => {
+    setSavedEtas ( prevSavedEtas => {
+      if ( prevSavedEtas.includes(key) ) return prevSavedEtas.filter(k => k !== key)
+      else return prevSavedEtas.concat(key)
+    })
+  }
+
+  const resetUsageRecord = () => {
+    setHotRoute({})
+    localStorage.setItem('hotRoute', null)
   }
 
   return (
     <AppContext.Provider value={{
-        routeList, updateRouteList, stopList, updateStopList,
+        routeList, stopList, updateNewlyFetchedRouteStops,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
-        selectedRoute, setSelectedRoute,
+        selectedRoute, updateSelectedRoute,
         possibleChar,
+        // UX
+        hotRoute, geolocation,
+        savedEtas, updateSavedEtas,
+        resetUsageRecord,
         // settings
         renewDb, schemaVersion, updateTime,
         geoPermission, updateGeoPermission 

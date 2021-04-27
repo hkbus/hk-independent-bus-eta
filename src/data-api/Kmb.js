@@ -52,14 +52,18 @@ const KmbApi = {
             zh: nameEncodingHandling( element.name_tc )
           },
           location: {
-            lat: element.lat,
-            long: element.long
+            lat: parseFloat(element.lat),
+            lng: parseFloat(element.long)
           }
         }
       })
       
       return stopList
     })
+  },
+  fetchRouteStops: ({route, bound, serviceType}) => {
+    // already fetched in the app start
+    return null
   },
   /*
     @fetchEtas
@@ -85,7 +89,26 @@ const KmbApi = {
         co: 'kmb'
       }))
     )
-  }
+  },
+  fetchStopEtas: ( stopId ) => (
+    fetch(`https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${stopId}`, { cache: "no-store" })
+    .then(response => response.json())
+    .then(({data}) => data.map( e => ({
+      route: e.route,
+      bound: e.dir,
+      seq: e.seq,
+      eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+      dest: {
+        zh: e.dest_tc,
+        en: e.dest_en
+      },
+      remark: {
+        zh: e.rmk,
+        en: e.rmk
+      },
+      co: 'kmb'
+    })))
+  )
 }
 
 export default KmbApi

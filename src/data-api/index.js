@@ -2,14 +2,14 @@ import KmbApi from './Kmb'
 import NwfbApi from './Nwfb'
 import CtbApi from './Ctb'
 
-const fetchEtas = async ( {route, routeStops, bound, seq, serviceType, co, routeSize}) => {
+const fetchEtas = async ( {route, routeStops, bound, seq, serviceType, co }) => {
   let _etas = []
   for ( const company_id of co ) {
     if (company_id === 'kmb' && routeStops.kmb ){
       _etas = _etas.concat( await KmbApi.fetchEtas({
         route,
         stopId: routeStops.kmb[seq-1], 
-        seq: (seq === routeSize ? 1000 : seq), 
+        seq: (seq === routeStops.kmb.length ? 1000 : seq), 
         serviceType, bound: bound[company_id]}) 
       )
     }
@@ -23,17 +23,11 @@ const fetchEtas = async ( {route, routeStops, bound, seq, serviceType, co, route
   return _etas.sort((a,b) => a.eta < b.eta ? -1 : 1).filter(e => !Number.isInteger(e.eta) || e.eta > 1 )
 }
 
-const fetchRouteStops = async ( {route, serviceType, bound, co} ) => {
-  let api
-  if (co === 'kmb') api = KmbApi
-  else if (co === 'nwfb') api = NwfbApi
-  else if (co === 'ctb') api = CtbApi
-  else {
-    console.error(co+' is not a valid company id')
-    return null
-  }
-  return await api.fetchRouteStops({route, serviceType, bound})
-}
+const fetchRouteStops = ( {route, bound} ) => (
+  Promise.all([KmbApi, NwfbApi, CtbApi].map(api => {
+    return api.fetchRouteStops( { route, bound: bound[api.co] } )
+  }).filter(v => v))
+)
 
 const checkSameRoute = (route1, route2) => (
   route1.route === route2.route && route1.co !== route2.co && ['orig', 'dest'].map ( end => {
@@ -79,7 +73,7 @@ const fetchRouteList = () => (
       let routeObj = convertRouteObj(routes[i])
       for ( j = i + 1; j < routes.length; ++j ) {
         if ( routes[i].route !== routes[j].route ) break
-        if ( routes[j].route.imported ) continue
+        if ( routes[j].imported ) continue
         if ( checkSameRoute(routes[i], routes[j]) ) {
           routeObj.co.push(routes[j].co)
           routeObj.stops[routes[j].co] = routes[j].stops
@@ -103,4 +97,22 @@ const fetchRouteList = () => (
   })
 )
 
-export { KmbApi, NwfbApi, CtbApi, fetchEtas, fetchRouteStops, fetchRouteList }
+const fetchStopEtas = ( stopId, routeList ) => (
+  // [KmbApi, NwfbApi, CtbApi].map( api => (
+  Promise.all([KmbApi].map( api => 
+    api.fetchStopEtas(stopId)
+  )).then(arr => [].concat.apply([], arr))
+  .then(etas => 
+    Object.entries(routeList)
+    .map( ([routeId]) => {
+      for ( const eta of etas) {
+        if (routeId.startsWith(`${eta.route}+`) && routeId.endsWith(`+${eta.dest.en}`)) {
+          return `${routeId}/${eta.seq-1}`
+        } 
+      }
+      return null
+    }).filter(routeId => routeId)
+  )
+)
+
+export { KmbApi, NwfbApi, CtbApi, fetchEtas, fetchRouteStops, fetchRouteList, fetchStopEtas }

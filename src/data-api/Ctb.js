@@ -39,7 +39,8 @@ const CtbApi = {
         ), [])
       ))
   ),
-  fetchRouteStops: ({route, bound, routeList}) => {
+  fetchRouteStops: ({route, bound}) => {
+    if ( !bound ) return null // route not exist in this company
     const dir = bound === 'I' ? 'inbound' : 'outbound'
     return fetch(
       `https://rt.data.gov.hk/v1/transport/citybus-nwfb/route-stop/CTB/${route}/${dir}`
@@ -59,14 +60,13 @@ const CtbApi = {
               en: data.name_en
             },
             location: {
-              lat: data.lat,
-              long: data.long
+              lat: parseFloat(data.lat),
+              lng: parseFloat(data.long)
             }
           }))
         )).then( stops => {
           let stopList = {};
           stops.forEach(stop => stopList[stop.stopId] = stop)
-          console.log(stopList)
           return {routeStops, stopList, co: 'ctb'}
         })
     })
@@ -74,7 +74,7 @@ const CtbApi = {
   fetchEtas: ({stopId, route, bound }) => {
     return fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/${stopId}?lang=zh-hant`, { cache: "no-store" }).then(
       response => response.json()
-    ).then(({data}) => data.filter(eta => eta.route === route && eta.dir === bound).map(e => ({
+    ).then(({data}) => data.filter(eta => eta.eta && eta.route === route && eta.dir === bound).map(e => ({
         eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
         remark: {
           zh: e.rmk,
@@ -83,7 +83,19 @@ const CtbApi = {
         co: 'ctb'
       }))
     )
-  }
+  },
+  fetchStopEtas: ( stopId ) => (
+    fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/${stopId}?lang=zh-hant`, { cache: "no-store" })
+    .then(response => response.json())
+    .then(({data}) => data.map( e => ({
+      eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+      remark: {
+        zh: e.rmk,
+        en: e.rmk
+      },
+      co: 'ctb'
+    })) )
+  )
 }
 
 export default CtbApi

@@ -39,7 +39,8 @@ const NwfbApi = {
         ), [])
       ))
   ),
-  fetchRouteStops: ({route, bound, routeList}) => {
+  fetchRouteStops: ({route, bound}) => {
+    if ( !bound ) return null // route not exist in this company
     const dir = bound === 'I' ? 'inbound' : 'outbound'
     return fetch(
       `https://rt.data.gov.hk/v1/transport/citybus-nwfb/route-stop/NWFB/${route}/${dir}`
@@ -59,8 +60,8 @@ const NwfbApi = {
               en: data.name_en
             },
             location: {
-              lat: data.lat,
-              long: data.long
+              lat: parseFloat(data.lat),
+              lng: parseFloat(data.long)
             }
           }))
         )).then( stops => {
@@ -70,11 +71,10 @@ const NwfbApi = {
         })
     })
   },
-  fetchEtas: ({stopId, route, bound }) => {
-    console.log(stopId, route, bound)
-    return fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NWFB/${stopId}?lang=zh-hant`, { cache: "no-store" }).then(
+  fetchEtas: ({stopId, route, bound }) => (
+    fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NWFB/${stopId}?lang=zh-hant`, { cache: "no-store" }).then(
       response => response.json()
-    ).then(({data}) => data.filter(eta => eta.route === route && eta.dir === bound && eta.eta).map(e => ({
+    ).then(({data}) => data.filter(eta => eta.eta && eta.route === route && eta.dir === bound && eta.eta).map(e => ({
         eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
         remark: {
           zh: e.rmk,
@@ -83,7 +83,7 @@ const NwfbApi = {
         co: 'nwfb'
       }))
     )
-  }
+  )
 }
 
 export default NwfbApi

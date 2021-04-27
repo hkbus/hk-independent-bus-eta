@@ -48,7 +48,7 @@ const RouteList = () => {
   const itemData = createItemData(targetRouteList)
   return (
     <List
-      height={358}
+      height={330}
       itemCount={targetRouteList.length}
       itemSize={69}
       width="100%"
