@@ -10,14 +10,14 @@ const fetchEtas = async ( {route, routeStops, bound, seq, serviceType, co, route
         route,
         stopId: routeStops.kmb[seq-1], 
         seq: (seq === routeSize ? 1000 : seq), 
-        serviceType, bound}) 
+        serviceType, bound: bound[company_id]}) 
       )
     }
     else if ( company_id === 'ctb' && routeStops.ctb ) {
-      _etas = _etas.concat( await CtbApi.fetchEtas({stopId: routeStops.ctb[seq-1], route, bound }))
+      _etas = _etas.concat( await CtbApi.fetchEtas({stopId: routeStops.ctb[seq-1], route, bound: bound[company_id] }))
     }
     else if ( company_id === 'nwfb' && routeStops.nwfb ) {
-      _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: routeStops.nwfb[seq-1], route, bound }))
+      _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: routeStops.nwfb[seq-1], route, bound: bound[company_id] }))
     }
   }
   return _etas.sort((a,b) => a.eta < b.eta ? -1 : 1).filter(e => !Number.isInteger(e.eta) || e.eta > 1 )
@@ -35,39 +35,62 @@ const fetchRouteStops = async ( {route, serviceType, bound, co} ) => {
   return await api.fetchRouteStops({route, serviceType, bound})
 }
 
-const checkSameRoute = (route1, route2) => {
-  const name_a = route1.orig.en.toUpperCase()
-  const name_b = route2.orig.en.toUpperCase()
-  return name_a.includes(name_b) || name_b.includes(name_a)
+const checkSameRoute = (route1, route2) => (
+  route1.route === route2.route && route1.co !== route2.co && ['orig', 'dest'].map ( end => {
+    // check if either orig or dest name is the same
+    const name_a = route1[end].en.toUpperCase()
+    const name_b = route2[end].en.toUpperCase()
+    return name_a.includes(name_b) || name_b.includes(name_a)
+  }).includes(true)
+)
+
+const convertRouteObj = (routeObj) => {
+  let ret = {
+    route: routeObj.route,
+    co: [routeObj.co],
+    bound: {},
+    orig: {
+      en: routeObj.orig.en,
+      zh: routeObj.orig.zh
+    },
+    dest: {
+      en: routeObj.dest.en,
+      zh: routeObj.dest.zh
+    },
+    stops: {},
+    serviceType: routeObj.serviceType
+  }
+  ret.stops[routeObj.co] = routeObj.stops
+  ret.bound[routeObj.co] = routeObj.bound
+  return ret
 }
 
 const fetchRouteList = () => (
   Promise.all([KmbApi, NwfbApi, CtbApi].map(api => api.fetchRouteList()))
-  .then( routeLists => {
+  .then( companyRoutes => {
     let routeList = {}
-    let generated_timestamp = '3000'
-    
-    routeLists.forEach( companyData => {
-      let [companyRouteList, _generated_timestamp] = companyData
-      // merging routes from different service provider
-      Object.entries(companyRouteList).forEach( ([routeNo, route]) => {
-        const co = route.co[0]
-        if ( routeNo in routeList ) {
-          if ( checkSameRoute(route, routeList[routeNo] ) ) {
-            // same route
-            routeList[routeNo].co.push(co)
-            routeList[routeNo].stops[co] = route.stops[co]
-          } else {
-            // new route with same route number
-            routeList[routeNo+'+'+co] = route
-          }
-        } else {
-          // new route
-          routeList[routeNo] = route
-        }
-      })
-      generated_timestamp = _generated_timestamp < generated_timestamp ? _generated_timestamp : generated_timestamp
+    const routes = companyRoutes.reduce((acc, list) => acc.concat(list)).sort((a, b) => {
+      return a.route < b.route ? -1 : 0
     })
+    let i, j
+    for ( i = 0; i < routes.length; ++i ){
+      // ignore imported routes
+      if ( routes[i].imported ) continue
+      let routeObj = convertRouteObj(routes[i])
+      for ( j = i + 1; j < routes.length; ++j ) {
+        if ( routes[i].route !== routes[j].route ) break
+        if ( routes[j].route.imported ) continue
+        if ( checkSameRoute(routes[i], routes[j]) ) {
+          routeObj.co.push(routes[j].co)
+          routeObj.stops[routes[j].co] = routes[j].stops
+          routeObj.bound[routes[j].co] = routes[j].bound
+          // mark imported
+          routes[j].imported = true
+        }
+      }
+      
+      routeList[`${routeObj.route}+${routeObj.serviceType}+${routeObj.orig.en}+${routeObj.dest.en}`] = routeObj
+    }
     
     // sort the routeList by route no.
     let _routeList = routeList

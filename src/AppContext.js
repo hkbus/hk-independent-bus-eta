@@ -112,7 +112,8 @@ const getPossibleChar = ( searchRoute, routeList ) => {
   let possibleChar = {}
   Object.entries(routeList).forEach(route => {
     if ( route[0].startsWith(searchRoute.toUpperCase()) ) {
-      possibleChar[route[0].slice(searchRoute.length, searchRoute.length+1)] = true
+      let c = route[0].slice(searchRoute.length, searchRoute.length+1)
+      possibleChar[c] = isNaN(possibleChar[c]) ? 1 : ( possibleChar[c] + 1)
     }
   })
   return Object.entries(possibleChar).map(k => k[0]).filter(k => k !== '+')

@@ -18,7 +18,7 @@ import {
 import {
   makeStyles
 } from '@material-ui/core/styles'
-import Header from './components/Header'
+import Header from './Header'
 import RouteBoard from './components/RouteBoard'
 import RouteEta from './components/RouteEta'
 import Settings from './components/Settings'

@@ -40,6 +40,7 @@ const RouteNumPad = () => {
           <KeyButton
             k={k}
             handleClick={updateSearchRouteByButton}
+            style={{fontSize: '0.6rem'}}
             disabled={
               (k === 'b' && searchRoute === '') 
               || ( !'b-'.includes(k) && !possibleChar.includes(k))

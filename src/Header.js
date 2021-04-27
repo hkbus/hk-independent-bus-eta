@@ -10,7 +10,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles'
 import { useLocation, useHistory, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useRouteMatch } from 'react-router-dom'
-import AppContext from '../AppContext'
+import AppContext from './AppContext'
 
 const Header = (props) => {
   const { searchRoute, setSearchRoute } = useContext( AppContext )
@@ -30,45 +30,34 @@ const Header = (props) => {
     <Toolbar
       className={classes.toolbar}
     >
-      <div className={classes.tabsContainer}>
-        <Link
-          to={{
-            pathname: `/${i18n.language}/search`
-          }}
-        >
-          <Typography variant="h6">香港</Typography>
-          <Typography variant='subtitle2'>獨立巴士預報</Typography>
-        </Link>
-      </div>
+      <Link
+        to={{
+          pathname: `/${i18n.language}/search`
+        }}
+      >
+        <Typography variant="h6">香港</Typography>
+        <Typography variant='subtitle2'>獨立巴士預報</Typography>
+      </Link> 
       <Input 
+        className={classes.searchRouteInput}
         type="text"
         value={searchRoute}
-        placeholder={t('搜尋巴士線')}
+        placeholder={t('巴士線')}
         onChange={e => setSearchRoute(e.target.value)}
         disabled={path.includes('route')}
       />
-      <div
-        className={classes.tabsContainer}
-      >
-        <LanguageTabs
-            value={i18n.language}
-            onChange={(e, v) => handleLanguageChange(v)}
-          >
-          <LanguageTab value="en" label="En" />
-          <LanguageTab value="zh" label="繁" />
-        </LanguageTabs>
-      </div>
+      <LanguageTabs
+          value={i18n.language}
+          onChange={(e, v) => handleLanguageChange(v)}
+        >
+        <LanguageTab value="en" label="En" />
+        <LanguageTab value="zh" label="繁" />
+      </LanguageTabs>
     </Toolbar>
   );
 }
 
 const useStyles = makeStyles(theme => ({
-  tabsContainer: {
-    display: 'flex',
-    [theme.breakpoints.down('sm')]:{
-      flexDirection: "row-reverse"
-    }
-  },
   toolbar: {
     '& a': {
       color: 'black',
@@ -77,6 +66,12 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'space-between',
     zIndex: theme.zIndex.drawer * 2
+  },
+  searchRouteInput: {
+    maxWidth: '50px',
+    "& input": {
+      textAlign: 'center'
+    }
   }
 }))
 
@@ -110,7 +105,7 @@ const LanguageTab = withStyles((theme) => ({
     color: '#3B3C45',
     borderRadius: '30px',
     padding: '2px 10px 0px 10px'
-  },
+  }
 }))((props) => <Tab disableRipple {...props} />);
 
 export default Header;

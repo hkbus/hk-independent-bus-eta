@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import AppContext from '../AppContext'
 import {
   Avatar,
+  Divider,
   List,
   ListItem,
   ListItemAvatar,
@@ -14,7 +15,8 @@ import BuildIcon from '@material-ui/icons/Build'
 import LocationOnIcon from '@material-ui/icons/LocationOn'
 import LocationOffIcon from '@material-ui/icons/LocationOff'
 import { useTranslation } from 'react-i18next'
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
+import DataUsageIcon from '@material-ui/icons/DataUsage'
 import moment from 'moment'
 
 const Settings = () => {
@@ -43,8 +45,6 @@ const Settings = () => {
             secondary={t('更新時間：') + " " + moment(updateTime).format('YYYY-MM-DD HH:mm:ss')} 
           />
         </ListItem>
-      </List>
-      <List>
         <ListItem
           button
           onClick={() => {
@@ -65,9 +65,8 @@ const Settings = () => {
             secondary={t(geoPermission === 'granted' ? '開啟' : '關閉') } 
           />
         </ListItem>
-      </List>
-      <List>
-      <ListItem
+        <Divider />
+        <ListItem
           button
           component='a'
           href={`https://donate.612fund.hk/${i18n.language}/`}
@@ -79,6 +78,16 @@ const Settings = () => {
           <ListItemText 
             primary={t("捐款支持")} 
             secondary={t('請捐款到 612 人道支援基金') } 
+          />
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar><DataUsageIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={t("資料來源")} 
+            secondary={t('資料一線通') + "  https://data.gov.hk" } 
           />
         </ListItem>
       </List>

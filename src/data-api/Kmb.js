@@ -6,12 +6,14 @@ const KmbApi = {
     // fetch route data
     fetch(
       "https://data.etabus.gov.hk/v1/transport/kmb/route/"
-    ).then(response => response.json())
-    .then( ({data}) => {
-      let routeList = {}
-      data.forEach(element => {
+    ).then(
+      response => response.json()
+    ).then( ({data}) => 
+      data.reduce( (routeList, element) => {
         routeList[[element.route, element.service_type, element.bound].join('+')] = {
-          co: ['kmb'],
+          route: element.route,
+          co: 'kmb',
+          bound: element.bound,
           orig: {
             en: element.orig_en,
             zh: element.orig_tc
@@ -20,22 +22,21 @@ const KmbApi = {
             en: element.dest_en,
             zh: element.dest_tc
           },
-          stops: {
-            kmb: []
-          }
+          stops: [],
+          serviceType: element.service_type
         }
-      })
-      return routeList
-    }).then( routeList => (
+        return routeList
+      }, {})
+    ).then( routeList => (
       // fetch route stop data
       fetch("https://data.etabus.gov.hk/v1/transport/kmb/route-stop/").then(response => response.json())
       .then(({data, generated_timestamp}) => {
         data.forEach(element => {
-          routeList[[element.route, element.service_type, element.bound].join('+')].stops.kmb.push(
+          routeList[[element.route, element.service_type, element.bound].join('+')].stops.push(
             element.stop
           )
         })
-        return [routeList, generated_timestamp]
+        return Object.entries(routeList).map(([id, obj]) => obj)
       })
     ))
   ),
@@ -48,7 +49,7 @@ const KmbApi = {
         stopList[element.stop] = {
           name: {
             en: element.name_en,
-            zh: element.name_tc
+            zh: nameEncodingHandling( element.name_tc )
           },
           location: {
             lat: element.lat,
@@ -88,3 +89,9 @@ const KmbApi = {
 }
 
 export default KmbApi
+
+const nameEncodingHandling = (name) => {
+  if ( name === '瘝嗵眎�𧨾���' ) return '沙田坳道'
+  else if ( name === '暺�憭找�嗵��' ) return '黃大仙站'
+  else return name
+}

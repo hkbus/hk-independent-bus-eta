@@ -18,12 +18,10 @@ const RouteEta = () => {
   const { id, panel } = useParams()
   const [ expanded, setExpanded ] = useState(false)
   const { routeList, stopList, updateRouteList, updateStopList, setSelectedRoute } = useContext ( AppContext )
-  const [ route, serviceType, bound ] = id.split('+').slice(0,3)
+  const { route, serviceType, bound, stops, co } = routeList[id]
   const { i18n } = useTranslation()
   const history = useHistory()
   const accordionRef = useRef([])
-
-  const routeObj = routeList[id]
 
   const handleChange = ( panel ) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false)
@@ -35,14 +33,15 @@ const RouteEta = () => {
   }
 
   useEffect(() => {
+    setSelectedRoute(`${id}`)
     // check if stops not fetched
-    if ( routeObj.co.filter(co => routeObj.stops[co] == null).length ) {
+    if ( co.filter(company => stops[company] == null).length ) {
       // fetch in parallel
       Promise.all(
-        routeObj.co.map(co => {
-          if ( routeObj.stops[co] !== null ) return null;
+        co.map(company => {
+          if ( stops[company] !== null ) return null;
           return fetchRouteStopsViaApi({
-            route, serviceType, bound, co
+            route, serviceType, bound: bound[company], co: company
           })
         }).filter(v => v)
       ).then(objs => {
@@ -71,7 +70,7 @@ const RouteEta = () => {
 
   const classes = useStyles()
 
-  if ( routeObj.stops[routeObj.co[0]] == null ) {
+  if ( stops[co[0]] == null ) {
     return (
       <Box className={classes.loadingContainer}>
         <CircularProgress size={30} />
@@ -82,7 +81,7 @@ const RouteEta = () => {
   return (
     <Box className={classes.boxContainer}>
       {
-        routeObj.stops[routeObj.co[0]].map((stop, idx) => (
+        stops[co[0]].map((stop, idx) => (
           <Accordion 
             key={'stop-'+idx} 
             expanded={expanded === idx}
@@ -95,11 +94,11 @@ const RouteEta = () => {
               <TimeReport 
                 route={route}
                 seq={idx + 1}
-                routeStops={routeObj.stops}
+                routeStops={stops}
                 serviceType={serviceType}
                 bound={bound}
-                co={routeList[id].co}
-                routeSize={routeObj.stops[routeObj.co[0]].length}
+                co={co}
+                routeSize={stops[co[0]].length}
               />
             </AccordionDetails>
           </Accordion>

@@ -5,11 +5,11 @@ const NwfbApi = {
   fetchRouteList: () => (
     fetch("https://rt.data.gov.hk/v1/transport/citybus-nwfb/route/nwfb")
       .then(response => response.json())
-      .then(({data, generated_timestamp}) => {
-        let routeList = {}
-        data.forEach(element => {
-          // the bound direction is reverted to fit KMB route
-          routeList[[element.route,'1','I'].join('+')] = {
+      .then(({data}) => (
+        data.reduce((acc, element) => (
+          acc.concat([ {
+            route: element.route,
+            bound: 'O',
             orig: {
               en: element.orig_en,
               zh: element.orig_tc
@@ -18,33 +18,29 @@ const NwfbApi = {
               en: element.dest_en,
               zh: element.dest_tc
             },
-            co: ['nwfb'],
-            stops: {
-              nwfb: null
-            }
-          }
-          routeList[[element.route,'1','O'].join('+')] = {
-            dest: {
-              en: element.orig_en,
-              zh: element.orig_tc
-            },
+            co: 'nwfb',
+            stops: null,
+            serviceType: 1
+          },{
+            route: element.route,
+            bound: 'I',
             orig: {
               en: element.dest_en,
               zh: element.dest_tc
             },
-            co: ['nwfb'],
-            stops: {
-              nwfb: null
-            }
-          }
-        })
-        return [routeList, generated_timestamp]
-      })
+            dest: {
+              en: element.orig_en,
+              zh: element.orig_tc
+            },
+            co: 'nwfb',
+            stops: null,
+            serviceType: 1
+          }])
+        ), [])
+      ))
   ),
   fetchRouteStops: ({route, bound, routeList}) => {
-    // fetch route stop first
-    // the bound direction is reverted to fit KMB route
-    const dir = bound === 'I' ? 'outbound' : 'inbound'
+    const dir = bound === 'I' ? 'inbound' : 'outbound'
     return fetch(
       `https://rt.data.gov.hk/v1/transport/citybus-nwfb/route-stop/NWFB/${route}/${dir}`
     ).then( response => 
@@ -75,10 +71,10 @@ const NwfbApi = {
     })
   },
   fetchEtas: ({stopId, route, bound }) => {
-    // the bound direction is reverted to fit KMB route
+    console.log(stopId, route, bound)
     return fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NWFB/${stopId}?lang=zh-hant`, { cache: "no-store" }).then(
       response => response.json()
-    ).then(({data}) => data.filter(eta => eta.route === route && eta.dir !== bound && eta.eta).map(e => ({
+    ).then(({data}) => data.filter(eta => eta.route === route && eta.dir === bound && eta.eta).map(e => ({
         eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
         remark: {
           zh: e.rmk,
