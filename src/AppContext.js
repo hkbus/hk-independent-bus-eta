@@ -15,7 +15,7 @@ export const AppContextProvider = ( props ) => {
   const [selectedRoute, setSelectedRoute] = useState('1+1+CHUK YUEN ESTATE+STAR FERRY')
   // Geo Permission for UX
   const [ geoPermission, setGeoPermission ] = useState( localStorage.getItem('geoPermission') ) 
-  const [ geolocation, setGeoLocation ] = useState (JSON.parse(localStorage.getItem('geolocation')) || {})
+  const [ geolocation, setGeoLocation ] = useState (JSON.parse(localStorage.getItem('geolocation')) || {lat: 22.302711, lng: 114.177216})
 
   // hot query count
   const [ hotRoute, setHotRoute ] = useState( JSON.parse(localStorage.getItem('hotRoute')) || {} )

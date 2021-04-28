@@ -68,7 +68,7 @@ const RouteEta = () => {
   }
 
   const toggleSavedRoute = (key) => updateSavedEtas(key)
-  console.log(stopList[stops[co[0]][expanded]].location)
+
   return (
     <>
       <Typography variant="subtitle1" align='center'>
@@ -79,7 +79,7 @@ const RouteEta = () => {
       </Typography>
       <RouteMap 
         geolocation={geolocation}
-        position={stopList[stops[co[0]][expanded]].location}
+        position={!isNaN(expanded) ? stopList[stops[co[0]][expanded]].location : geolocation} 
       />
       <Box className={classes.boxContainer}>
         {
