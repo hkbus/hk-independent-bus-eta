@@ -29,49 +29,49 @@ const Home = () => {
 
   useEffect (() => {
     let isMounted = true
-    if ( geoPermission === 'granted') {
-      Object.entries(stopList).map(stop => 
-        // potentially could be optimized by other distance function
-        stop.concat(getDistance(stop[1].location, geolocation))
-      ).filter(stop => 
-        // keep only nearby 200m stops
-        stop[2] < 1000
-      ).sort((a, b) => 
-        a[2] - b[2]
-      ).slice(0, 5).forEach(([stopId]) => {
-        // keep only max. 5 stops
-        // fetch route stops if not in database
-        fetchStopRoutesViaApi(stopId, routeList).then(routeLinks => 
-          Promise.all(
-            routeLinks.map(routeLink => routeLink.split('/')).map(([routeId, seq]) => (
-              fetchRouteStopsViaApi(routeList[routeId]).then(stopDetails => [routeId, seq, stopDetails])
-            ))
-          ).then( arr => {
-            let _routeList = JSON.parse(JSON.stringify(routeList))
-            let _stopList = JSON.parse(JSON.stringify(stopList))
-            let isUpdated = false
-            arr.forEach(([routeId, seq, stopDetails]) => {
-              stopDetails.forEach( routeStopInfo => {
-                _routeList[routeId].stops[routeStopInfo.co] = routeStopInfo.routeStops
-                _stopList = {..._stopList, ...routeStopInfo.stopList}
-              })
-              isUpdated = true
+    
+    Object.entries(stopList).map(stop => 
+      // potentially could be optimized by other distance function
+      stop.concat(getDistance(stop[1].location, geolocation))
+    ).filter(stop => 
+      // keep only nearby 200m stops
+      stop[2] < 1000
+    ).sort((a, b) => 
+      a[2] - b[2]
+    ).slice(0, 5).forEach(([stopId]) => {
+      // keep only max. 5 stops
+      // fetch route stops if not in database
+      fetchStopRoutesViaApi(stopId, routeList).then(routeLinks => 
+        Promise.all(
+          routeLinks.map(routeLink => routeLink.split('/')).map(([routeId, seq]) => (
+            fetchRouteStopsViaApi(routeList[routeId]).then(stopDetails => [routeId, seq, stopDetails])
+          ))
+        ).then( arr => {
+          let _routeList = JSON.parse(JSON.stringify(routeList))
+          let _stopList = JSON.parse(JSON.stringify(stopList))
+          let isUpdated = false
+          arr.forEach(([routeId, seq, stopDetails]) => {
+            stopDetails.forEach( routeStopInfo => {
+              _routeList[routeId].stops[routeStopInfo.co] = routeStopInfo.routeStops
+              _stopList = {..._stopList, ...routeStopInfo.stopList}
             })
-            if ( isUpdated ) {
-              setStopList(_stopList)
-              setRouteList(_routeList)
-            }
-            
-            // add nearby routes to display
-            if ( isMounted ) {
-              setSelectedRoute(prevSelectedRoutes => 
-                prevSelectedRoutes.concat(routeLinks).filter( (v, i, s) => s.indexOf(v) === i ).slice(0,20)
-              )
-            }
+            isUpdated = true
           })
-        )
-      })
-    }
+          if ( isUpdated ) {
+            setStopList(_stopList)
+            setRouteList(_routeList)
+          }
+          
+          // add nearby routes to display
+          if ( isMounted ) {
+            setSelectedRoute(prevSelectedRoutes => 
+              prevSelectedRoutes.concat(routeLinks).filter( (v, i, s) => s.indexOf(v) === i ).slice(0,20)
+            )
+          }
+        })
+      )
+    })
+    
     return () => {
       isMounted = false
     }

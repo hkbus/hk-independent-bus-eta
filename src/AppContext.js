@@ -15,7 +15,7 @@ export const AppContextProvider = ( props ) => {
   const [selectedRoute, setSelectedRoute] = useState('1+1+CHUK YUEN ESTATE+STAR FERRY')
   // Geo Permission for UX
   const [ geoPermission, setGeoPermission ] = useState( localStorage.getItem('geoPermission') ) 
-  const [ geolocation, setGeoLocation ] = useState (JSON.parse(localStorage.getItem('geolocation')) || {lat: 22.302711, lng: 114.177216})
+  const [ geolocation, setGeolocation ] = useState (JSON.parse(localStorage.getItem('geolocation')) || {lat: 22.302711, lng: 114.177216})
   const [ geoWatcherId, setGeoWatcherId ] = useState ( null )
 
   // hot query count
@@ -57,7 +57,7 @@ export const AppContextProvider = ( props ) => {
 
     if ( geoPermission === 'granted' ) {
       const _geoWatcherId = navigator.geolocation.watchPosition(({coords: {latitude, longitude}}) => {
-        setGeoLocation({lat: latitude, lng: longitude})
+        setGeolocation({lat: latitude, lng: longitude})
       })
       setGeoWatcherId ( _geoWatcherId )
     }
@@ -70,7 +70,7 @@ export const AppContextProvider = ( props ) => {
   useEffect(() => {
     if ( geoPermission === 'granted' ) {
       const _geoWatcherId = navigator.geolocation.watchPosition(({coords: {latitude, longitude}}) => {
-        setGeoLocation({lat: latitude, lng: longitude})
+        setGeolocation({lat: latitude, lng: longitude})
       })
       setGeoWatcherId ( _geoWatcherId )
     } else if ( geoWatcherId ) {
@@ -158,7 +158,7 @@ export const AppContextProvider = ( props ) => {
 
   const resetUsageRecord = () => {
     setHotRoute({})
-    setGeoLocation(null)
+    setGeolocation({lat: 22.302711, lng: 114.177216})
     setSavedEtas([])
   }
 
