@@ -8,8 +8,7 @@ import {
   makeStyles
 } from '@material-ui/styles'
 import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
-
-import AppContext from '../AppContext'
+import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next';
 
 const KeyButton = ({k, handleClick, disabled = false}) => {

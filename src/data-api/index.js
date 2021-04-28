@@ -34,12 +34,16 @@ const fetchRouteStops = ( {route, bound, stops} ) => (
   ).filter(v => v))
 )
 
+const checkSameName = ( a, b ) => {
+  const name_a = a.toUpperCase()
+  const name_b = b.toUpperCase()
+  return name_a.includes(name_b) || name_b.includes(name_a)
+}
+
 const checkSameRoute = (route1, route2) => (
   route1.route === route2.route && route1.co !== route2.co && ['orig', 'dest'].map ( end => {
     // check if either orig or dest name is the same
-    const name_a = route1[end].en.toUpperCase()
-    const name_b = route2[end].en.toUpperCase()
-    return name_a.includes(name_b) || name_b.includes(name_a)
+    return checkSameName(route1[end].en, route2[end].en)
   }).includes(true)
 )
 
@@ -102,22 +106,26 @@ const fetchRouteList = () => (
   })
 )
 
-const fetchStopEtas = ( stopId, routeList ) => (
-  // [KmbApi, NwfbApi, CtbApi].map( api => (
-  Promise.all([KmbApi].map( api => 
+const fetchStopRoutes = ( stopId, routeList ) => (
+  Promise.all([KmbApi, NwfbApi, CtbApi].map( api => 
+  //Promise.all([NwfbApi].map( api => 
     api.fetchStopEtas(stopId)
   )).then(arr => [].concat.apply([], arr))
-  .then(etas => 
+  .then(etas => (
     Object.entries(routeList)
-    .map( ([routeId]) => {
+    .map( ([routeId, routeObj]) => {
       for ( const eta of etas) {
-        if (routeId.startsWith(`${eta.route}+`) && routeId.endsWith(`+${eta.dest.en}`)) {
+        if (routeObj.route === eta.route
+          && routeObj.serviceType === eta.serviceType
+          && routeObj.bound[eta.co] === eta.bound
+          && checkSameName(routeObj.dest.en, eta.dest.en)
+        ) {
           return `${routeId}/${eta.seq-1}`
         } 
       }
       return null
-    }).filter(routeId => routeId)
-  )
+    }).filter(routeId => routeId) 
+  ))
 )
 
-export { KmbApi, NwfbApi, CtbApi, fetchEtas, fetchRouteStops, fetchRouteList, fetchStopEtas }
+export { KmbApi, NwfbApi, CtbApi, fetchEtas, fetchRouteStops, fetchRouteList, fetchStopRoutes }

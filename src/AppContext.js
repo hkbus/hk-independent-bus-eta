@@ -16,6 +16,7 @@ export const AppContextProvider = ( props ) => {
   // Geo Permission for UX
   const [ geoPermission, setGeoPermission ] = useState( localStorage.getItem('geoPermission') ) 
   const [ geolocation, setGeoLocation ] = useState (JSON.parse(localStorage.getItem('geolocation')) || {lat: 22.302711, lng: 114.177216})
+  const [ geoWatcherId, setGeoWatcherId ] = useState ( null )
 
   // hot query count
   const [ hotRoute, setHotRoute ] = useState( JSON.parse(localStorage.getItem('hotRoute')) || {} )
@@ -25,11 +26,11 @@ export const AppContextProvider = ( props ) => {
   const [possibleChar, setPossibleChar] = useState([])
   
   const renewDb = () => {
-    fetchRouteList().then( _routeList => updateRouteList(_routeList) ).then(() =>
+    fetchRouteList().then( _routeList => setRouteList(_routeList) ).then(() =>
       // fetch only KMB stop list as the api return is succinct enough
       // on-the-fly fetching for other service providers' stops
       KmbApi.fetchStopList().then( _stopList => {
-        updateStopList(_stopList)
+        setStopList(_stopList)
         const _updateTime = Date.now()
         setUpdateTime ( _updateTime )
         localStorage.setItem('updateTime', _updateTime)
@@ -55,19 +56,28 @@ export const AppContextProvider = ( props ) => {
     })
 
     if ( geoPermission === 'granted' ) {
-      navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
+      const _geoWatcherId = navigator.geolocation.watchPosition(({coords: {latitude, longitude}}) => {
         setGeoLocation({lat: latitude, lng: longitude})
       })
+      setGeoWatcherId ( _geoWatcherId )
+    }
+    return () => {
+      if ( geoWatcherId ) navigator.geolocation.clearWatch(geoWatcherId)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     if ( geoPermission === 'granted' ) {
-      navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
+      const _geoWatcherId = navigator.geolocation.watchPosition(({coords: {latitude, longitude}}) => {
         setGeoLocation({lat: latitude, lng: longitude})
       })
+      setGeoWatcherId ( _geoWatcherId )
+    } else if ( geoWatcherId ) {
+      navigator.geolocation.clearWatch(geoWatcherId)
+      setGeoWatcherId(null)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geoPermission])
 
   useEffect(() => {
@@ -94,17 +104,6 @@ export const AppContextProvider = ( props ) => {
     localStorage.setItem('geoPermission', geoPermission)
   }, [geoPermission])
 
-  const updateStopList = (_stopList) => {
-    setStopList(_stopList)
-  }
-
-  const updateRouteList = (_routeList) => {
-    if ( typeof(_routeList) === 'function' ) {
-      _routeList = _routeList(routeList)
-    }
-    setRouteList(_routeList)
-  }
-
   const updateNewlyFetchedRouteStops = ( routeId, objs ) => {
     if ( objs.length === 0 ) return
     // set stop list
@@ -112,10 +111,10 @@ export const AppContextProvider = ( props ) => {
     objs.forEach( obj => {
       _stopList = {..._stopList, ...obj.stopList}
     } )
-    updateStopList({...stopList, ..._stopList})
+    setStopList({...stopList, ..._stopList})
 
     // set route list
-    updateRouteList(prevRouteList => {
+    setRouteList(prevRouteList => {
       let _routeList = JSON.parse(JSON.stringify(prevRouteList))
       objs.forEach(obj => _routeList[routeId].stops[obj.co] = obj.routeStops)
       return _routeList
@@ -165,7 +164,9 @@ export const AppContextProvider = ( props ) => {
 
   return (
     <AppContext.Provider value={{
-        routeList, stopList, updateNewlyFetchedRouteStops,
+        routeList, stopList, 
+        setRouteList, setStopList,
+        updateNewlyFetchedRouteStops,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
         selectedRoute, updateSelectedRoute,
         possibleChar,

@@ -18,13 +18,14 @@ import {
 import {
   makeStyles
 } from '@material-ui/core/styles'
-import Header from './Header'
+import { useTranslation } from 'react-i18next'
+import Header from './components/layout/Header'
 import Home from './components/Home'
 import RouteBoard from './components/RouteBoard'
 import RouteEta from './components/RouteEta'
 import Settings from './components/Settings'
 import AppContext from './AppContext'
-import Footer from './Footer'
+import Footer from './components/layout/Footer'
 import Countdown from 'react-countdown'
 
 const PageSwitch = () => {
@@ -47,15 +48,11 @@ const PageSwitch = () => {
   )
 }
 
-const App = () => {
-  /*
-  navigator.geolocation.getCurrentPosition(position => {
-    console.log(position.coords.latitude, position.coords.longitude)
-  })
-  */
-  
-  const classes = useStyles()
+const App = () => { 
   const { routeList, stopList } = useContext( AppContext )
+  const { t } = useTranslation()
+  const classes = useStyles()
+
   if ( routeList == null || stopList == null ) {
     return (
       <Container maxWidth='xs' disableGutters className={classes.loadingContainer}>
@@ -67,13 +64,13 @@ const App = () => {
             date={Date.now() + 20000}
             renderer={({seconds, completed}) => {
               if ( completed ) {
-                return <Typography variant="subtitle2" align="center">介面開啟中...</Typography>
+                return <Typography variant="subtitle2" align="center">{t('介面開啟中')}...</Typography>
               } else {
                 return (
                   <>
-                    <Typography variant="subtitle2" align="center">初始設定...</Typography>
-                    <Typography variant="subtitle2" align="center">正在更新巴士路線資料...</Typography>
-                    <Typography variant="subtitle2" align="center">約需{seconds}秒</Typography>
+                    <Typography variant="subtitle2" align="center">{t('初始設定')}...</Typography>
+                    <Typography variant="subtitle2" align="center">{t('正在更新巴士路線資料')}...</Typography>
+                    <Typography variant="subtitle2" align="center">{t('約需')}{seconds}{t('秒')}</Typography>
                   </>
                 )
               }

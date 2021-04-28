@@ -11,12 +11,12 @@ const CtbApi = {
             route: element.route,
             bound: 'O',
             orig: {
-              en: element.orig_en,
-              zh: element.orig_tc
+              en: element.orig_en.replace('/','／'),
+              zh: element.orig_tc.replace('/','／')
             },
             dest: {
-              en: element.dest_en,
-              zh: element.dest_tc
+              en: element.dest_en.replace('/','／'),
+              zh: element.dest_tc.replace('/','／')
             },
             co: 'ctb',
             stops: null,
@@ -25,12 +25,12 @@ const CtbApi = {
             route: element.route,
             bound: 'I',
             orig: {
-              en: element.dest_en,
-              zh: element.dest_tc
+              en: element.dest_en.replace('/','／'),
+              zh: element.dest_tc.replace('/','／')
             },
             dest: {
-              en: element.orig_en,
-              zh: element.orig_tc
+              en: element.orig_en.replace('/','／'),
+              zh: element.orig_tc.replace('/','／')
             },
             co: 'ctb',
             stops: null,
@@ -56,8 +56,8 @@ const CtbApi = {
           ).then ( ({data}) => ({
             stopId: stopId,
             name: {
-              zh: data.name_tc,
-              en: data.name_en
+              zh: data.name_tc.replace('/','／'),
+              en: data.name_en.replace('/','／')
             },
             location: {
               lat: parseFloat(data.lat),
@@ -85,16 +85,22 @@ const CtbApi = {
     )
   },
   fetchStopEtas: ( stopId ) => (
-    fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/${stopId}?lang=zh-hant`, { cache: "no-store" })
-    .then(response => response.json())
-    .then(({data}) => data.map( e => ({
+    fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/${stopId}`, { cache: "no-store" }).then(
+      response => response.json()
+    ).then(({data}) => data.map( e => ({
+      route: e.route,
+      bound: e.dir,
+      seq: e.seq,
       eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+      dest: {
+        en: e.dest.replace('/','／')
+      },
       remark: {
-        zh: e.rmk,
         en: e.rmk
       },
+      serviceType: 1,
       co: 'ctb'
-    })) )
+    })))
   )
 }
 

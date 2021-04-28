@@ -9,7 +9,7 @@ import TimerIcon from '@material-ui/icons/Timer'
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import AppContext from './AppContext'
+import AppContext from '../../AppContext'
 
 const Footer = () => {
   const { t, i18n } = useTranslation()

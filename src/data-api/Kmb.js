@@ -15,15 +15,15 @@ const KmbApi = {
           co: 'kmb',
           bound: element.bound,
           orig: {
-            en: element.orig_en,
-            zh: element.orig_tc
+            en: element.orig_en.replace('/','／'),
+            zh: element.orig_tc.replace('/','／')
           },
           dest: {
-            en: element.dest_en,
-            zh: element.dest_tc
+            en: element.dest_en.replace('/','／'),
+            zh: element.dest_tc.replace('/','／')
           },
           stops: [],
-          serviceType: element.service_type
+          serviceType: parseInt(element.service_type)
         }
         return routeList
       }, {})
@@ -48,8 +48,8 @@ const KmbApi = {
       data.forEach(element => {
         stopList[element.stop] = {
           name: {
-            en: element.name_en,
-            zh: nameEncodingHandling( element.name_tc )
+            en: element.name_en.replace('/','／'),
+            zh: nameEncodingHandling( element.name_tc ).replace('/','／')
           },
           location: {
             lat: parseFloat(element.lat),
@@ -106,6 +106,7 @@ const KmbApi = {
         zh: e.rmk,
         en: e.rmk
       },
+      serviceType: e.service_type,
       co: 'kmb'
     })))
   )

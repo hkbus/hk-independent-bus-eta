@@ -10,7 +10,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles'
 import { useLocation, useHistory, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useRouteMatch } from 'react-router-dom'
-import AppContext from './AppContext'
+import AppContext from '../../AppContext'
 
 const Header = (props) => {
   const { searchRoute, setSearchRoute } = useContext( AppContext )

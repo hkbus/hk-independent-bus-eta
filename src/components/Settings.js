@@ -110,7 +110,7 @@ const Settings = () => {
       <Snackbar
         anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
         open={updating}
-        message={t('資料更新中...')}
+        message={t('資料更新中')+'...'}
       />
     </Paper>
   )

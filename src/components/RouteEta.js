@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import RouteMap from './RouteMap'
+import RouteMap from './route-eta/RouteMap'
 import {
   Accordion as MuiAccordion,
   AccordionSummary as MuiAccordionSummary, 
@@ -16,15 +16,16 @@ import { makeStyles, withStyles } from '@material-ui/core/styles'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
 import { 
-  fetchRouteStops as fetchRouteStopsViaApi,
-  fetchEtas as fetchEtasViaApi 
+  fetchRouteStops as fetchRouteStopsViaApi
 } from '../data-api'
+import { getDistance } from '../utils'
+import TimeReport from './route-eta/TimeReport'
 
 const RouteEta = () => {
   const { id, panel } = useParams()
   const [ expanded, setExpanded ] = useState(parseInt(panel))
   const { 
-    routeList, stopList, savedEtas,
+    routeList, stopList, savedEtas, geoPermission, geolocation,
     updateNewlyFetchedRouteStops, updateSelectedRoute, updateSavedEtas
   } = useContext ( AppContext )
 
@@ -33,14 +34,39 @@ const RouteEta = () => {
   const history = useHistory()
   const accordionRef = useRef([])
 
-  const handleChange = ( panel ) => (event, newExpanded) => {
+  const handleChange = ( panel ) => (event, newExpanded, isFromMap) => {
     setExpanded(newExpanded ? panel : false)
     if ( newExpanded ) {
       history.replace(`/${i18n.language}/route/${id}/${panel}`)
       updateSelectedRoute( id, panel )
+      if ( isFromMap ) {
+        accordionRef.current[parseInt(panel)].scrollIntoView({behavior: 'smooth', block: 'start'})
+      }
       return
     }
   }
+
+  const autoSetPanel = () => {
+    if ( parseInt(panel) && accordionRef.current[parseInt(panel)] ) {
+      setExpanded(parseInt(panel))
+      accordionRef.current[parseInt(panel)].scrollIntoView({behavior: 'smooth', block: 'start'})
+    } else if ( geoPermission && stops[co[0]] ) {
+      const nearbyStop = stops[co[0]]
+        .map((stopId, idx) => [stopId, idx, getDistance(geolocation, stopList[stopId].location)])
+        .filter( ([stopId, idx, dist]) => dist < 1000 )
+        .sort((a,b) => a[2] - b[2])[0]
+      if ( nearbyStop ) {
+        const idx = nearbyStop[1]
+        setExpanded(idx) 
+        accordionRef.current[idx].scrollIntoView({behavior: 'smooth', block: 'start'})
+      }
+    }
+  }
+
+  useEffect(() => {
+    autoSetPanel()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routeList])
 
   useEffect(() => {
     updateSelectedRoute( id )
@@ -50,10 +76,7 @@ const RouteEta = () => {
       updateNewlyFetchedRouteStops(id, objs)
     )
 
-    if ( parseInt(panel) && accordionRef.current[parseInt(panel)] ) {
-      setExpanded(parseInt(panel))
-      accordionRef.current[parseInt(panel)].scrollIntoView({behavior: 'smooth', block: 'start'})
-    }
+    autoSetPanel()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -80,7 +103,8 @@ const RouteEta = () => {
       <RouteMap 
         stops={stops[co[0]]}
         stopList={stopList}
-        position={expanded && stops[co[0]] ? stopList[stops[co[0]][expanded]].location : null}
+        stopIdx={expanded}
+        onMarkerClick={handleChange}
       />
       <Box className={classes.boxContainer}>
         {
@@ -115,65 +139,6 @@ const RouteEta = () => {
 }
 
 export default RouteEta
-
-const TimeReport = ( { route, routeStops, seq, bound, serviceType, co } ) => {
-  const { t, i18n } = useTranslation()
-  const [ etas, setEtas ] = useState(null)
-
-  useEffect( () => {
-    let isMounted = true
-    const fetchData = () => {
-      fetchEtasViaApi({route, routeStops, seq, bound, serviceType, co}).then(_etas => {
-        if (isMounted) setEtas(_etas)
-      })
-    }
-    fetchData()
-    const fetchEtaInterval = setInterval(() => {
-      fetchData()
-    }, 30000)
-
-    return () => {
-      isMounted = false
-      clearInterval(fetchEtaInterval)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  if ( etas == null ) {
-    return (
-      <CircularProgress size={20} style={{}} />
-    )
-  }
-
-  const displayMsg = (eta) => {
-    let ret = ''
-    switch (eta) {
-      case null: 
-        break
-      case 0: 
-        ret = '- '+t('分鐘')
-        break
-      default:
-        ret = eta + " " + t('分鐘')
-        break
-    }
-    return ret
-  }
-  
-  return (
-    <div>
-      {
-        etas.length === 0 ? t('暫無班次') : (
-          etas.map((eta, idx) => (
-            <Typography variant="subtitle1" key={`route-${idx}`}>
-              {displayMsg(eta.eta)} - { eta.remark[i18n.language] ? eta.remark[i18n.language] : '' } {t(eta.co)}
-            </Typography>
-          ))
-        )
-      }
-    </div>
-  )
-}
 
 const Accordion = withStyles({
   root: {
