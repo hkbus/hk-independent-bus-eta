@@ -37,7 +37,7 @@ const SuccintTimeReport = ({routeId} ) => {
       })
     )
     // fetch stops
-    fetchRouteStopsViaApi({route: routeNo, bound}).then( objs => {
+    fetchRouteStopsViaApi({route: routeNo, bound, stops}).then( objs => {
       updateNewlyFetchedRouteStops(routeKey, objs)
       fetchData()
     })
