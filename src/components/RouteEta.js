@@ -24,7 +24,7 @@ const RouteEta = () => {
   const { id, panel } = useParams()
   const [ expanded, setExpanded ] = useState(parseInt(panel))
   const { 
-    routeList, stopList, savedEtas, geolocation,
+    routeList, stopList, savedEtas,
     updateNewlyFetchedRouteStops, updateSelectedRoute, updateSavedEtas
   } = useContext ( AppContext )
 
@@ -46,7 +46,7 @@ const RouteEta = () => {
     updateSelectedRoute( id )
 
     // fetch stops
-    fetchRouteStopsViaApi({route, bound}).then( objs => 
+    fetchRouteStopsViaApi({route, bound, stops}).then( objs => 
       updateNewlyFetchedRouteStops(id, objs)
     )
 
@@ -78,8 +78,9 @@ const RouteEta = () => {
         {t('往')} {dest[i18n.language]}
       </Typography>
       <RouteMap 
-        geolocation={geolocation}
-        position={!isNaN(expanded) ? stopList[stops[co[0]][expanded]].location : geolocation} 
+        stops={stops[co[0]]}
+        stopList={stopList}
+        position={expanded && stops[co[0]] ? stopList[stops[co[0]][expanded]].location : null}
       />
       <Box className={classes.boxContainer}>
         {

@@ -20,13 +20,18 @@ const fetchEtas = async ( {route, routeStops, bound, seq, serviceType, co }) => 
       _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: routeStops.nwfb[seq-1], route, bound: bound[company_id] }))
     }
   }
-  return _etas.sort((a,b) => a.eta < b.eta ? -1 : 1).filter(e => !Number.isInteger(e.eta) || e.eta > 1 )
+
+  return _etas.sort((a,b) => { 
+    if ( !a.eta ) return 1
+    else if (!b.eta) return -1
+    return a.eta < b.eta ? -1 : 1
+  }).filter(e => !Number.isInteger(e.eta) || e.eta > 1 )
 }
 
-const fetchRouteStops = ( {route, bound} ) => (
-  Promise.all([KmbApi, NwfbApi, CtbApi].map(api => {
-    return api.fetchRouteStops( { route, bound: bound[api.co] } )
-  }).filter(v => v))
+const fetchRouteStops = ( {route, bound, stops} ) => (
+  Promise.all([KmbApi, NwfbApi, CtbApi].map(api => 
+    !stops[api.co] ? api.fetchRouteStops( { route, bound: bound[api.co] } ) : null
+  ).filter(v => v))
 )
 
 const checkSameRoute = (route1, route2) => (

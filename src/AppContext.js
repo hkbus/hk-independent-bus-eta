@@ -159,7 +159,8 @@ export const AppContextProvider = ( props ) => {
 
   const resetUsageRecord = () => {
     setHotRoute({})
-    localStorage.setItem('hotRoute', null)
+    setGeoLocation(null)
+    setSavedEtas([])
   }
 
   return (
