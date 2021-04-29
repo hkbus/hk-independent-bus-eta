@@ -109,7 +109,7 @@ const Theme = createMuiTheme({
   },
   palette: {
     background: {
-      default: "#ffff00" // yellow
+      default: "#ffff90" // yellow
     }
   }
 })
