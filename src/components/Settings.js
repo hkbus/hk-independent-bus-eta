@@ -17,7 +17,8 @@ import LocationOffIcon from '@material-ui/icons/LocationOff'
 import { useTranslation } from 'react-i18next'
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
 import DataUsageIcon from '@material-ui/icons/DataUsage'
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete'
+import GitHubIcon from '@material-ui/icons/GitHub'
 import moment from 'moment'
 
 const Settings = () => {
@@ -85,28 +86,42 @@ const Settings = () => {
         <ListItem
           button
           component='a'
-          href={`https://donate.612fund.hk/${i18n.language}/`}
+          href={`https://github.com/chunlaw/hk-independent-bus-eta`}
           target="_blank"
         >
           <ListItemAvatar>
-            <Avatar><MonetizationOnIcon /></Avatar>
+            <Avatar><GitHubIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("捐款支持")} 
-            secondary={t('請捐款到 612 人道支援基金') } 
+            primary={"Source Code"} 
+            secondary={"GPL-3.0 License"} 
           />
         </ListItem>
-        <Divider />
         <ListItem>
           <ListItemAvatar>
             <Avatar><DataUsageIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("資料來源")} 
+            primary={t("交通資料來源")} 
             secondary={t('資料一線通') + "  https://data.gov.hk" } 
           />
         </ListItem>
       </List>
+      <Divider />
+      <ListItem
+        button
+        component='a'
+        href={`https://donate.612fund.hk/${i18n.language}/`}
+        target="_blank"
+      >
+        <ListItemAvatar>
+          <Avatar><MonetizationOnIcon /></Avatar>
+        </ListItemAvatar>
+        <ListItemText 
+          primary={t("捐款支持")} 
+          secondary={t('請捐款到 612 人道支援基金') } 
+        />
+      </ListItem>
       <Snackbar
         anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
         open={updating}
