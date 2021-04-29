@@ -26,12 +26,14 @@ const CenterControl = ( {onClick}) => {
 }
 
 const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
-  const { geolocation, geoPermission } = useContext ( AppContext )
+  const { geolocation, geoPermission, setGeoPermission } = useContext ( AppContext )
   const classes = useStyles()
   const [center, setCenter] = useState(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {})
   
   useEffect ( () => {
-    setCenter(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {})
+    setCenter(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : 
+      stopList[stops[Math.round(stops.length/2)]].location
+    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stopIdx])
 
@@ -73,7 +75,16 @@ const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
           radius={25}
         />}
         <CenterControl 
-          onClick={() => setCenter(geolocation)}
+          onClick={() => {
+            if ( geoPermission === 'granted' ) {
+              setCenter(geolocation)
+            } else if ( geoPermission !== 'denied' ) {
+              navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
+                setCenter( {lat: latitude, lng: longitude} )
+                setGeoPermission('granted')
+              })
+            }
+          }}
         />
       </MapContainer>
     </Box>

@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { 
   fetchEtas as fetchEtasViaApi
 } from '../../data-api'
+import moment from 'moment'
 
 const SuccinctTimeReport = ({routeId} ) => {
   const { t, i18n } = useTranslation()
@@ -49,19 +50,16 @@ const SuccinctTimeReport = ({routeId} ) => {
 
   const getEtaString = (eta) => {
     if ( !eta ) return ''
-    let ret = ''
-    switch (eta.eta) {
-      case null: 
-        ret = eta.remark[i18n.language]
-        break
-      case 0: 
-        ret = '- '+t('分鐘')
-        break
-      default:
-        ret = eta.eta + " " + t('分鐘')
-        break
+    else {
+      const waitTime = Math.round(moment(eta.eta).diff(moment()) / 60 / 1000)
+      if ( waitTime < 1 ) {
+        return '- '+t('分鐘')
+      } else if ( Number.isInteger(waitTime) ) {
+        return waitTime+" "+t('分鐘')
+      } else {
+        return eta.remark[i18n.language]
+      }
     }
-    return ret
   }
   
   return (

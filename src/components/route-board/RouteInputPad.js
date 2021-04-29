@@ -11,14 +11,14 @@ import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next';
 
-const KeyButton = ({k, handleClick, disabled = false}) => {
+const KeyButton = ({k, handleClick, disabled = false, className}) => {
   const classes = useStyles()
   const { t } = useTranslation()
   return (
     <Button 
       size="large"
       variant="contained" 
-      className={classes.button}
+      className={`${classes.button} ${className}`}
       onClick={() => handleClick(k)}
       disabled={disabled}
     >
@@ -39,7 +39,6 @@ const RouteNumPad = () => {
           <KeyButton
             k={k}
             handleClick={updateSearchRouteByButton}
-            style={{fontSize: '0.6rem'}}
             disabled={
               (k === 'b' && searchRoute === '') 
               || ( !'b-'.includes(k) && !possibleChar.includes(k))
@@ -55,7 +54,8 @@ const RouteNumPad = () => {
 
 const RouteAlphabetPad = () => {
   const { updateSearchRouteByButton, possibleChar } = useContext( AppContext )
-  
+  const classes = useStyles()
+
   return (
     <Grid container spacing={1}>
       {
@@ -64,6 +64,7 @@ const RouteAlphabetPad = () => {
             <KeyButton
               k={k}
               handleClick={updateSearchRouteByButton}
+              className={classes.alphabetButton}
             />
           </Grid>
         )) 
@@ -109,7 +110,11 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     width: '100%',
-    height: 42,
+    height: '42px',
+    fontSize: '1.2em',
     borderRadius: 'unset'
+  },
+  alphabetButton: {
+    height: '42px'
   }
 }))

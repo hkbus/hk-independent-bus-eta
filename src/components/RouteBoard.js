@@ -31,7 +31,6 @@ const RouteBoard = () => {
   return (
     <>
       <RouteList />
-      <hr/>
       <RouteInputPad />
     </>
   )

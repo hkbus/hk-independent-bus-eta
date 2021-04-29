@@ -74,14 +74,16 @@ const NwfbApi = {
   fetchEtas: ({stopId, route, bound }) => (
     fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NWFB/${stopId}?lang=zh-hant`, { cache: "no-store" }).then(
       response => response.json()
-    ).then(({data}) => data.filter(eta => eta.eta && eta.route === route && eta.dir === bound && eta.eta).map(e => ({
-        eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+    ).then(({data}) => 
+      data.filter(eta => eta.eta && eta.route === route && eta.dir === bound )
+      .map(e => ({
+        eta: e.eta,
         remark: {
           zh: e.rmk,
           en: e.rmk
         },
         co: 'nwfb'
-      }))
+      }))  
     )
   ),
   fetchStopEtas: ( stopId ) => (

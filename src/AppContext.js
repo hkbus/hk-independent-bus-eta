@@ -134,10 +134,6 @@ export const AppContextProvider = ( props ) => {
     }
   }
 
-  const updateGeoPermission = ( state ) => {
-    setGeoPermission(state)
-  }
-
   const updateSelectedRoute = ( route, seq = '' ) => {
     setSelectedRoute ( `${route}/${seq}` )
     if ( seq ) {
@@ -176,7 +172,7 @@ export const AppContextProvider = ( props ) => {
         resetUsageRecord,
         // settings
         renewDb, schemaVersion, updateTime,
-        geoPermission, updateGeoPermission 
+        geoPermission, setGeoPermission 
       }}
     >
       {props.children}

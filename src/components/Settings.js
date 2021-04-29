@@ -23,7 +23,7 @@ import moment from 'moment'
 const Settings = () => {
   const { 
     schemaVersion, updateTime, geoPermission, 
-    updateGeoPermission, renewDb, resetUsageRecord
+    setGeoPermission, renewDb, resetUsageRecord
   } = useContext ( AppContext )
   const [ updating, setUpdating ] = useState(false)
 
@@ -53,10 +53,10 @@ const Settings = () => {
           button
           onClick={() => {
             if ( geoPermission === 'granted' ) {
-              updateGeoPermission('closed')
+              setGeoPermission('closed')
             } else {
               navigator.geolocation.getCurrentPosition(position => {
-                updateGeoPermission('granted')
+                setGeoPermission('granted')
               })
             }
           }}

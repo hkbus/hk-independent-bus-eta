@@ -14,7 +14,7 @@ import SuccinctTimeReport from './home/SuccinctTimeReport'
 
 const Home = () => {
   const { 
-    hotRoute, savedEtas, geoPermission, geolocation, routeList, stopList,
+    hotRoute, savedEtas, geolocation, routeList, stopList,
     setStopList, setRouteList
   } = useContext ( AppContext )
 

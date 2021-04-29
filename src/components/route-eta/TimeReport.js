@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { 
   fetchEtas as fetchEtasViaApi 
 } from '../../data-api'
+import moment from 'moment'
 
 const TimeReport = ( { route, routeStops, seq, bound, serviceType, co } ) => {
   const { t, i18n } = useTranslation()
@@ -38,24 +39,21 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co } ) => {
   }
 
   const displayMsg = (eta) => {
-    let ret = ''
-    switch (eta) {
-      case null: 
-        break
-      case 0: 
-        ret = '- '+t('分鐘')
-        break
-      default:
-        ret = eta + " " + t('分鐘')
-        break
+    if ( eta === '' ) return ''
+    else {
+      const waitTime = Math.round(moment(eta).diff(moment()) / 60 / 1000)
+      if ( waitTime < 1 ) {
+        return '- '+t('分鐘')
+      } else if ( Number.isInteger(waitTime) ) {
+        return waitTime+" "+t('分鐘')
+      }
     }
-    return ret
   }
-  
+
   return (
     <div>
       {
-        etas.length === 0 ? t('暫無班次') : (
+        etas.length === 0 ? t('未有班次資料') : (
           etas.map((eta, idx) => (
             <Typography variant="subtitle1" key={`route-${idx}`}>
               {displayMsg(eta.eta)} - { eta.remark[i18n.language] ? eta.remark[i18n.language] : '' } {t(eta.co)}

@@ -81,7 +81,7 @@ const KmbApi = {
       { cache: "no-store" }
     ).then( response => response.json() )
     .then(({data}) => data.filter(e => e.dir === bound && e.seq === seq).map(e => ({
-        eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+        eta: e.eta,
         remark: {
           zh: e.rmk_tc,
           en: e.rmk_en

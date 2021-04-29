@@ -53,7 +53,6 @@ const RouteEta = () => {
     } else if ( geoPermission && stops[co[0]] ) {
       const nearbyStop = stops[co[0]]
         .map((stopId, idx) => [stopId, idx, getDistance(geolocation, stopList[stopId].location)])
-        .filter( ([stopId, idx, dist]) => dist < 1000 )
         .sort((a,b) => a[2] - b[2])[0]
       if ( nearbyStop ) {
         const idx = nearbyStop[1]
@@ -126,7 +125,11 @@ const RouteEta = () => {
                   bound={bound}
                   co={co}
                 />
-                <IconButton aria-label="favourite" onClick={() => toggleSavedRoute(`${id}/${panel}`)}>
+                <IconButton 
+                  aria-label="favourite" 
+                  onClick={() => toggleSavedRoute(`${id}/${panel}`)}
+                  style={{ backgroundColor: 'transparent' }} 
+                >
                   {savedEtas.includes(`${id}/${panel}`) ? <StarIcon/> : <StarBorderIcon />}
                 </IconButton>
               </AccordionDetails>

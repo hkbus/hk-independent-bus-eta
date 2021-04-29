@@ -7,9 +7,8 @@ import {
   Typography
 } from "@material-ui/core"
 import { withStyles, makeStyles } from '@material-ui/core/styles'
-import { useLocation, useHistory, Link } from 'react-router-dom'
+import { Link, useLocation, useHistory, useRouteMatch } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useRouteMatch } from 'react-router-dom'
 import AppContext from '../../AppContext'
 
 const Header = (props) => {
@@ -44,6 +43,7 @@ const Header = (props) => {
         value={searchRoute}
         placeholder={t('巴士線')}
         onChange={e => setSearchRoute(e.target.value)}
+        onFocus={e => {history.replace(`/${i18n.language}/search`)}}
         disabled={path.includes('route')}
       />
       <LanguageTabs

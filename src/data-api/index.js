@@ -22,10 +22,10 @@ const fetchEtas = async ( {route, routeStops, bound, seq, serviceType, co }) => 
   }
 
   return _etas.sort((a,b) => { 
-    if ( !a.eta ) return 1
-    else if (!b.eta) return -1
+    if ( a.eta === '' ) return 1
+    else if ( b.eta === '' ) return -1
     return a.eta < b.eta ? -1 : 1
-  }).filter(e => !Number.isInteger(e.eta) || e.eta > 1 )
+  })
 }
 
 const fetchRouteStops = ( {route, bound, stops} ) => (
