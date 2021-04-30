@@ -1,5 +1,8 @@
 import './App.css'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { 
+  MuiThemeProvider, 
+  unstable_createMuiStrictModeTheme as createMuiTheme 
+} from '@material-ui/core/styles'
 import React, { useContext } from 'react'
 import {
   HashRouter as Router,

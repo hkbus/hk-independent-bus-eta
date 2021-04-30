@@ -1,14 +1,28 @@
 import { useContext, useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Polyline, Circle, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Polyline, Circle, useMap } from 'react-leaflet'
+import Marker from 'react-leaflet-enhanced-marker'
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
-import MyLocationIcon from '@material-ui/icons/MyLocation';
+import MyLocationIcon from '@material-ui/icons/MyLocation'
 
 const ChangeMapCenter = ( {center, zoom} ) => {
   const map = useMap()
   map.flyTo(checkPosition(center))
   return <></>
+}
+
+const SelfCircle = () => {
+  const { geolocation, geoPermission } = useContext ( AppContext )
+  if ( geoPermission !== 'granted' ) {
+    return null
+  }
+  return (
+    <Circle 
+      center={checkPosition(geolocation)}
+      radius={25}
+    />
+  )
 }
 
 const CenterControl = ( {onClick}) => {
@@ -26,7 +40,7 @@ const CenterControl = ( {onClick}) => {
 }
 
 const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
-  const { geolocation, geoPermission, setGeoPermission } = useContext ( AppContext )
+  const { geoPermission, setGeoPermission, setGeolocation } = useContext ( AppContext )
   const classes = useStyles()
   const [center, setCenter] = useState(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {})
   
@@ -51,9 +65,11 @@ const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
               <Marker 
                 key={stopId} 
                 position={stopList[stopId].location} 
+                icon={<BusStopMarker passed={idx < stopIdx} />}
                 eventHandlers={{
                   click: (e) => {onMarkerClick(idx)(e, true, true)}
                 }}
+                
               />
           )
         }
@@ -66,20 +82,21 @@ const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
                 getPoint(stopList[stops[idx]].location),
                 getPoint(stopList[stopId].location)
               ]}
-              color={'#e55074'}
+              color={'#FF9090'}
             />
           )
         }
-        { geoPermission !== 'granted' ? <></>:<Circle 
-          center={checkPosition(geolocation)}
-          radius={25}
-        />}
+        <SelfCircle />
         <CenterControl 
           onClick={() => {
-            if ( geoPermission === 'granted' ) {
-              setCenter(geolocation)
+            if (geoPermission === 'granted') {
+              // load from cache to avoid unintentional re-rending 
+              // becoz geolocation is updated frequently 
+              setCenter(checkPosition(JSON.parse(localStorage.getItem('geolocation'))))
             } else if ( geoPermission !== 'denied' ) {
+              // ask for loading geolocation
               navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
+                setGeolocation( {lat: latitude, lng: longitude} )
                 setCenter( {lat: latitude, lng: longitude} )
                 setGeoPermission('granted')
               })
@@ -105,12 +122,29 @@ const checkPosition = (position) => {
 
 const getPoint = ({lat, lng}) => [lat, lng]
 
+const BusStopMarker = ( {passed} ) => {
+  return (
+    <img 
+      src="https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon.png"
+      alt="" 
+      tabIndex="0" 
+      style={{
+        marginLeft: '38px',
+        marginTop: '-14px',
+        width: '25px',
+        height: '41px',
+        zIndex: 618,
+        outline: 'none',
+        filter: passed ? 'grayscale(100%)' : 'hue-rotate(130deg)'
+      }}
+    />
+    
+  )
+}
+
 const useStyles = makeStyles ( theme => ({
   mapContainer: {
-    height: '30vh',
-    '& .leaflet-marker-pane': {
-      filter: 'hue-rotate(130deg)' // tricky color change to marker
-    }
+    height: '30vh'
   },
   centerControl: {
     padding: '5px',

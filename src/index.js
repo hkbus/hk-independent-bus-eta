@@ -8,12 +8,11 @@ import { AppContextProvider } from './AppContext'
 import './i18n'
 
 ReactDOM.render(
-  //<React.StrictMode>
+  <React.StrictMode>
     <AppContextProvider>
       <App />
     </AppContextProvider>
-  //</React.StrictMode>,
-  ,
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

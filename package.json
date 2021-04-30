@@ -18,6 +18,7 @@
     "react-dom": "^17.0.2",
     "react-i18next": "^11.8.13",
     "react-leaflet": "^3.1.0",
+    "react-leaflet-enhanced-marker": "^1.0.19",
     "react-moment": "^1.1.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
