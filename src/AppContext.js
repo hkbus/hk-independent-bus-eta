@@ -167,7 +167,7 @@ export const AppContextProvider = ( props ) => {
         selectedRoute, updateSelectedRoute,
         possibleChar,
         // UX
-        hotRoute, geolocation,
+        hotRoute, geolocation, setGeolocation,
         savedEtas, updateSavedEtas,
         resetUsageRecord,
         // settings

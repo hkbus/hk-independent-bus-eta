@@ -25,7 +25,7 @@ const RouteEta = () => {
   const { id, panel } = useParams()
   const [ expanded, setExpanded ] = useState(parseInt(panel))
   const { 
-    routeList, stopList, savedEtas, geoPermission, geolocation,
+    routeList, stopList, savedEtas, geoPermission,
     updateNewlyFetchedRouteStops, updateSelectedRoute, updateSavedEtas
   } = useContext ( AppContext )
 
@@ -51,6 +51,9 @@ const RouteEta = () => {
       setExpanded(parseInt(panel))
       accordionRef.current[parseInt(panel)].scrollIntoView({behavior: 'smooth', block: 'start'})
     } else if ( geoPermission && stops[co[0]] ) {
+      // load from local storage to avoid unitentional re-rendering
+      const geolocation = JSON.parse(localStorage.getItem('geolocation'))
+      console.log(geolocation)
       const nearbyStop = stops[co[0]]
         .map((stopId, idx) => [stopId, idx, getDistance(geolocation, stopList[stopId].location)])
         .sort((a,b) => a[2] - b[2])[0]
