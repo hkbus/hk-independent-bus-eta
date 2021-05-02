@@ -19,6 +19,7 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
 import DataUsageIcon from '@material-ui/icons/DataUsage'
 import DeleteIcon from '@material-ui/icons/Delete'
 import GitHubIcon from '@material-ui/icons/GitHub'
+import ShareIcon from '@material-ui/icons/Share'
 import moment from 'moment'
 
 const Settings = () => {
@@ -27,6 +28,7 @@ const Settings = () => {
     setGeoPermission, renewDb, resetUsageRecord
   } = useContext ( AppContext )
   const [ updating, setUpdating ] = useState(false)
+  const [ isCopied, setIsCopied ] = useState(false)
 
   const { t, i18n } = useTranslation()
   const classes = useStyles()
@@ -106,26 +108,57 @@ const Settings = () => {
             secondary={t('資料一線通') + "  https://data.gov.hk" } 
           />
         </ListItem>
+        <Divider />
+        <ListItem
+          button
+          component='a'
+          href={`https://donate.612fund.hk/${i18n.language}/`}
+          target="_blank"
+        >
+          <ListItemAvatar>
+            <Avatar><MonetizationOnIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={t("捐款支持")} 
+            secondary={t('請捐款到 612 人道支援基金') } 
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            if ( navigator.clipboard ) {
+              navigator.clipboard.writeText(`${window.location.hostname}${process.env.PUBLIC_URL}`)
+              .then(() => {
+                setIsCopied(true)
+              })
+            }
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar><ShareIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={t("複製應用程式鏈結")} 
+            secondary={t('經不同媒介分享給親友') } 
+          />
+        </ListItem>
       </List>
-      <Divider />
-      <ListItem
-        button
-        component='a'
-        href={`https://donate.612fund.hk/${i18n.language}/`}
-        target="_blank"
-      >
-        <ListItemAvatar>
-          <Avatar><MonetizationOnIcon /></Avatar>
-        </ListItemAvatar>
-        <ListItemText 
-          primary={t("捐款支持")} 
-          secondary={t('請捐款到 612 人道支援基金') } 
-        />
-      </ListItem>
       <Snackbar
         anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
         open={updating}
         message={t('資料更新中')+'...'}
+      />
+      <Snackbar
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+        open={isCopied}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          if (reason === 'clickaway') {
+            return;
+          }
+          setIsCopied(false);
+        }}
+        message={t('鏈結已複製到剪貼簿')}
       />
     </Paper>
   )
