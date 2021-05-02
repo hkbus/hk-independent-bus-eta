@@ -43,7 +43,8 @@ const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
   const { geoPermission, setGeoPermission, setGeolocation } = useContext ( AppContext )
   const classes = useStyles()
   const [center, setCenter] = useState(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {})
-  
+  const [map, setMap] = useState(null)
+
   useEffect ( () => {
     setCenter(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : 
       stopList[stops[Math.round(stops.length/2)]].location
@@ -51,9 +52,28 @@ const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stopIdx])
 
+  const updateCenter = (e) => {
+    setCenter(map.getCenter())
+  }
+
+  useEffect ( () => {
+    if ( !map ) return
+    map.on('dragend', updateCenter)
+    return () => {
+      map.off('dragend', updateCenter)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map])
+
   return (
     <Box className={`${classes.mapContainer}`}>
-      <MapContainer center={checkPosition(center)} zoom={16} scrollWheelZoom={false} className={classes.mapContainer}>
+      <MapContainer 
+        center={checkPosition(center)} 
+        zoom={16} 
+        scrollWheelZoom={false} 
+        className={classes.mapContainer}
+        whenCreated={setMap}
+      >
         <ChangeMapCenter center={checkPosition(center)} zoom={16} />
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
