@@ -49,7 +49,7 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText 
             primary={t("架構版本")+": "+schemaVersion} 
-            secondary={t('更新時間：') + " " + moment(updateTime).format('YYYY-MM-DD HH:mm:ss')} 
+            secondary={t('更新時間') + ": " + moment(updateTime).format('YYYY-MM-DD HH:mm:ss')} 
           />
         </ListItem>
         <ListItem
@@ -80,7 +80,7 @@ const Settings = () => {
             <Avatar><DeleteIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("一鍵清空用戶紀錄")} 
+            primary={t("一鍵清空用戶記錄")} 
             secondary={t("包括鎖定和常用報時")}
           />
         </ListItem>

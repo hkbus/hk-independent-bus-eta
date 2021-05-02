@@ -71,19 +71,19 @@ const CtbApi = {
         })
     })
   },
-  fetchEtas: ({stopId, route, bound }) => {
-    return fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/${stopId}?lang=zh-hant`, { cache: "no-store" }).then(
+  fetchEtas: ({stopId, route, bound }) => (
+    fetch(`https://rt.data.gov.hk//v1/transport/citybus-nwfb/eta/CTB/${stopId}/${route}`, {cache: 'no-store'}).then(
       response => response.json()
-    ).then(({data}) => data.filter(eta => eta.eta && eta.route === route && eta.dir === bound).map(e => ({
+    ).then(({data}) => data.filter(eta => eta.eta && eta.dir === bound).map(e => ({
         eta: e.eta,
         remark: {
-          zh: e.rmk,
-          en: e.rmk
+          zh: e.rmk_tc,
+          en: e.rmk_en
         },
         co: 'ctb'
       }))
     )
-  },
+  ),
   fetchStopEtas: ( stopId ) => (
     fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/${stopId}`, { cache: "no-store" }).then(
       response => response.json()

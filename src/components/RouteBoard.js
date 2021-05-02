@@ -8,10 +8,11 @@ import RouteRow from './route-board/RouteRow'
 const createItemData = memorize((routeList) => ({routeList}))
 
 const RouteList = () => {
-  const { routeList, searchRoute } = useContext(AppContext)
+  const { routeList, searchRoute } = useContext ( AppContext )
   const targetRouteList = Object.entries(routeList).filter(
-    element => element[0].startsWith(searchRoute.toUpperCase())
-  ) 
+    ([routeNo, {stops, co}]) => routeNo.startsWith(searchRoute.toUpperCase()) && 
+      (stops[co[0]] == null || stops[co[0]].length > 0)
+  )
 
   const itemData = createItemData(targetRouteList)
   return (

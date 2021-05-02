@@ -63,7 +63,7 @@ const App = () => {
         <br />
         <br />
         <Paper className={classes.loadingTextContainer} elevation={0}>
-          <Countdown 
+          { stopList == null ? <Countdown 
             date={Date.now() + 20000}
             renderer={({seconds, completed}) => {
               if ( completed ) {
@@ -78,8 +78,8 @@ const App = () => {
                 )
               }
             }}
-          />
-            
+          /> : <>{t('啟動中')}</>
+          }
         </Paper>
       </Container>
     )

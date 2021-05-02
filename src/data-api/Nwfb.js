@@ -72,18 +72,16 @@ const NwfbApi = {
     })
   },
   fetchEtas: ({stopId, route, bound }) => (
-    fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NWFB/${stopId}?lang=zh-hant`, { cache: "no-store" }).then(
+    fetch(`https://rt.data.gov.hk//v1/transport/citybus-nwfb/eta/NWFB/${stopId}/${route}`, {cache: 'no-store'}).then(
       response => response.json()
-    ).then(({data}) => 
-      data.filter(eta => eta.eta && eta.route === route && eta.dir === bound )
-      .map(e => ({
+    ).then(({data}) => data.filter(eta => eta.eta && eta.dir === bound).map(e => ({
         eta: e.eta,
         remark: {
-          zh: e.rmk,
-          en: e.rmk
+          zh: e.rmk_tc,
+          en: e.rmk_en
         },
         co: 'nwfb'
-      }))  
+      }))
     )
   ),
   fetchStopEtas: ( stopId ) => (
