@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import {
+  CircularProgress,
   List,
   Paper
 } from '@material-ui/core'
@@ -26,6 +27,7 @@ const Home = () => {
     ).filter((routeId, index, self) => self.indexOf(routeId) === index)
     .slice(0,20)
   )
+  const [doneGeoRoutes, setDoneGeoRoutes] = useState(false)
 
   useEffect (() => {
     let isMounted = true
@@ -35,22 +37,22 @@ const Home = () => {
       stop.concat(getDistance(stop[1].location, geolocation))
     ).filter(stop => 
       // keep only nearby 200m stops
-      stop[2] < 1000
+      stop[2] < 200
     ).sort((a, b) => 
       a[2] - b[2]
     ).slice(0, 5).forEach(([stopId]) => {
       // keep only max. 5 stops
       // fetch route stops if not in database
-      fetchStopRoutesViaApi(stopId, routeList).then(routeLinks => 
+      fetchStopRoutesViaApi(stopId, routeList).then(routeIds => {
         Promise.all(
-          routeLinks.map(routeLink => routeLink.split('/')).map(([routeId, seq]) => (
-            fetchRouteStopsViaApi(routeList[routeId]).then(stopDetails => [routeId, seq, stopDetails])
+          routeIds.map( routeId => (
+            fetchRouteStopsViaApi(routeList[routeId]).then(stopDetails => [routeId, stopDetails])
           ))
         ).then( arr => {
           let _routeList = JSON.parse(JSON.stringify(routeList))
           let _stopList = JSON.parse(JSON.stringify(stopList))
           let isUpdated = false
-          arr.forEach(([routeId, seq, stopDetails]) => {
+          arr.forEach(([routeId, stopDetails]) => {
             stopDetails.forEach( routeStopInfo => {
               _routeList[routeId].stops[routeStopInfo.co] = routeStopInfo.routeStops
               _stopList = {..._stopList, ...routeStopInfo.stopList}
@@ -65,11 +67,18 @@ const Home = () => {
           // add nearby routes to display
           if ( isMounted ) {
             setSelectedRoute(prevSelectedRoutes => 
-              prevSelectedRoutes.concat(routeLinks).filter( (v, i, s) => s.indexOf(v) === i ).slice(0,20)
+              prevSelectedRoutes.concat(
+                routeIds.map(routeId => {
+                  setDoneGeoRoutes(true)
+                  return routeId + '/' + Object.entries(_routeList[routeId].stops).map(
+                    ([co, stops]) => stops.indexOf(stopId)
+                  ).filter(v => v >= 0)[0] 
+                })
+              ).filter( (v, i, s) => s.indexOf(v) === i ).slice(0,20)
             )
           }
         })
-      )
+      })
     })
     
     return () => {
@@ -88,6 +97,9 @@ const Home = () => {
          ) )
       }
       </List>
+      {
+        !doneGeoRoutes ? <CircularProgress size={20} /> : <></>
+      }
     </Paper>
   )
 }
@@ -98,7 +110,8 @@ const useStyles = makeStyles ( theme => ({
   root: {
     background: 'white',
     height: 'calc(100vh - 120px)',
-    overflowY: 'scroll'
+    overflowY: 'scroll',
+    textAlign: 'center'
   }
 }))
 

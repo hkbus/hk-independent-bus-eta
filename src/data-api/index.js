@@ -2,22 +2,23 @@ import KmbApi from './Kmb'
 import NwfbApi from './Nwfb'
 import CtbApi from './Ctb'
 
+// seq is 0-based here
 const fetchEtas = async ( {route, routeStops, bound, seq, serviceType, co }) => {
   let _etas = []
   for ( const company_id of co ) {
     if (company_id === 'kmb' && routeStops.kmb ){
       _etas = _etas.concat( await KmbApi.fetchEtas({
         route,
-        stopId: routeStops.kmb[seq-1], 
-        seq: (seq === routeStops.kmb.length ? 1000 : seq), 
+        stopId: routeStops.kmb[seq], 
+        seq: (seq + 1 === routeStops.kmb.length ? 1000 : seq), 
         serviceType, bound: bound[company_id]}) 
       )
     }
     else if ( company_id === 'ctb' && routeStops.ctb ) {
-      _etas = _etas.concat( await CtbApi.fetchEtas({stopId: routeStops.ctb[seq-1], route, bound: bound[company_id] }))
+      _etas = _etas.concat( await CtbApi.fetchEtas({stopId: routeStops.ctb[seq], route, bound: bound[company_id] }))
     }
     else if ( company_id === 'nwfb' && routeStops.nwfb ) {
-      _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: routeStops.nwfb[seq-1], route, bound: bound[company_id] }))
+      _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: routeStops.nwfb[seq], route, bound: bound[company_id] }))
     }
   }
 
@@ -120,7 +121,7 @@ const fetchStopRoutes = ( stopId, routeList ) => (
           && routeObj.bound[eta.co] === eta.bound
           && checkSameName(routeObj.dest.en, eta.dest.en)
         ) {
-          return `${routeId}/${eta.seq-1}`
+          return routeId
         } 
       }
       return null

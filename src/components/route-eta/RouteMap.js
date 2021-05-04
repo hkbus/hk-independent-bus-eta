@@ -83,7 +83,7 @@ const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
           // plot stops
           stops.map((stopId, idx, self) => 
               <Marker 
-                key={stopId} 
+                key={`${stopId}-${idx}`} 
                 position={stopList[stopId].location} 
                 icon={<BusStopMarker passed={idx < stopIdx} />}
                 eventHandlers={{

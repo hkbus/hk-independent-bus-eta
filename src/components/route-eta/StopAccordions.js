@@ -75,7 +75,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
             <AccordionDetails>
               <TimeReport 
                 route={route}
-                seq={idx + 1}
+                seq={idx}
                 routeStops={stops}
                 serviceType={serviceType}
                 bound={bound}

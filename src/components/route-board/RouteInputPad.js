@@ -23,7 +23,7 @@ const KeyButton = ({k, handleClick, disabled = false, className}) => {
       disabled={disabled}
     >
       {k === 'b' ? <BackspaceOutlinedIcon/> : 
-        k === '-' ? t('取消') : k}
+        k === '-' ? t('C') : k}
     </Button>
   )
 }

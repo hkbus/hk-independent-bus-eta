@@ -67,6 +67,7 @@ const KmbApi = {
   },
   /*
     @fetchEtas
+    input: seq is 0-based
     return array of Object with props {
       eta: (int) minute or null,
       remark: {
@@ -80,7 +81,10 @@ const KmbApi = {
       `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`,
       { cache: "no-store" }
     ).then( response => response.json() )
-    .then(({data}) => data.filter(e => e.dir === bound && e.seq === seq).map(e => ({
+    .then(({data}) => data.filter(e => 
+      e.dir === bound 
+      && e.seq === seq + 1 // api return 1-based seq
+    ).map(e => ({
         eta: e.eta,
         remark: {
           zh: e.rmk_tc,

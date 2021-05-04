@@ -12,7 +12,17 @@ import { useTranslation } from 'react-i18next'
 import { 
   fetchEtas as fetchEtasViaApi
 } from '../../data-api'
+import { getDistance } from '../../utils'
 import moment from 'moment'
+
+const Dist = ({name, location}) => {
+  const { t } = useTranslation ()
+  const { geoPermission, geolocation } = useContext ( AppContext )
+  if ( geoPermission !== 'granted' ) {
+    return name
+  }
+  return name + ' ('+getDistance(location, geolocation).toFixed(0)+t('米')+')'
+}
 
 const SuccinctTimeReport = ({routeId} ) => {
   const { t, i18n } = useTranslation()
@@ -20,7 +30,7 @@ const SuccinctTimeReport = ({routeId} ) => {
   const [ routeNo, serviceType ] = routeId.split('+')
   const [ routeKey, seq ] = routeId.split('/')
   const { co, stops, dest, bound } = routeList[routeKey]
-  const stop = stopList[stops[co[0]] ? stops[co[0]][seq] : null]
+  const stop = stopList[stops[co[0]] ? stops[co[0]][parseInt(seq, 10)] : null]
   const [ etas, setEtas ] = useState(null)
   const classes = useStyles()
 
@@ -29,7 +39,7 @@ const SuccinctTimeReport = ({routeId} ) => {
     
     const fetchData = () => (
       fetchEtasViaApi({
-        route: routeNo, routeStops: stops, seq: parseInt(seq, 10) + 1, bound, serviceType, co
+        route: routeNo, routeStops: stops, seq: parseInt(seq, 10), bound, serviceType, co
       }).then ( _etas => {
         if (isMounted) setEtas(_etas)
       })
@@ -77,7 +87,7 @@ const SuccinctTimeReport = ({routeId} ) => {
       {
         stop ? <ListItemText 
           primary={t('往')+' '+dest[i18n.language]}
-          secondary={stop.name[i18n.language]} 
+          secondary={<Dist name={stop.name[i18n.language]} location={stop.location} />}
           className={classes.routeDest}
         /> : <CircularProgress size={15} />
       }
