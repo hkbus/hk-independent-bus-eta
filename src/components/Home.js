@@ -15,7 +15,7 @@ import SuccinctTimeReport from './home/SuccinctTimeReport'
 
 const Home = () => {
   const { 
-    hotRoute, savedEtas, geolocation, routeList, stopList,
+    hotRoute, savedEtas, routeList, stopList,
     setStopList, setRouteList
   } = useContext ( AppContext )
 
@@ -31,7 +31,9 @@ const Home = () => {
 
   useEffect (() => {
     let isMounted = true
-    
+    // to enhance performance, we used cached geolocation
+    const geolocation = JSON.parse(localStorage.getItem('geolocation'))
+
     Object.entries(stopList).map(stop => 
       // potentially could be optimized by other distance function
       stop.concat(getDistance(stop[1].location, geolocation))
@@ -85,7 +87,7 @@ const Home = () => {
       isMounted = false
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geolocation])
+  }, [])
 
   const classes = useStyles()
   return (

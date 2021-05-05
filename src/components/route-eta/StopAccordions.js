@@ -83,10 +83,10 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
               />
               <IconButton 
                 aria-label="favourite" 
-                onClick={() => toggleSavedRoute(`${id}/${panel}`)}
+                onClick={() => toggleSavedRoute(`${id}/${idx}`)}
                 style={{ backgroundColor: 'transparent' }} 
               >
-                {savedEtas.includes(`${id}/${panel}`) ? <StarIcon/> : <StarBorderIcon />}
+                {savedEtas.includes(`${id}/${idx}`) ? <StarIcon/> : <StarBorderIcon />}
               </IconButton>
             </AccordionDetails>
           </Accordion>
