@@ -43,7 +43,10 @@ const Header = (props) => {
         value={searchRoute}
         placeholder={t('巴士線')}
         onChange={e => setSearchRoute(e.target.value)}
-        onFocus={e => {history.replace(`/${i18n.language}/search`)}}
+        onFocus={e => {
+          document.activeElement.blur();
+          history.replace(`/${i18n.language}/search`)
+        }}
         disabled={path.includes('route')}
       />
       <LanguageTabs

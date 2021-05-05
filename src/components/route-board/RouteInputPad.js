@@ -23,7 +23,7 @@ const KeyButton = ({k, handleClick, disabled = false, className}) => {
       disabled={disabled}
     >
       {k === 'b' ? <BackspaceOutlinedIcon/> : 
-        k === '-' ? t('C') : k}
+        k === '-' ? <div className={classes.cancelButton}>{t('取消')}</div> : k}
     </Button>
   )
 }
@@ -113,6 +113,9 @@ const useStyles = makeStyles(theme => ({
     height: '42px',
     fontSize: '1.2em',
     borderRadius: 'unset'
+  },
+  cancelButton: {
+    fontSize: '0.8em',
   },
   alphabetButton: {
     height: '42px'
