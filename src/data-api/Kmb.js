@@ -2,80 +2,6 @@ import moment from 'moment'
 
 const KmbApi = {
   co: 'kmb',
-  fetchRouteList: () => (
-    // fetch route data
-    fetch(
-      "https://data.etabus.gov.hk/v1/transport/kmb/route/"
-    ).then(
-      response => response.json()
-    ).then( ({data}) => 
-      data.reduce( (routeList, element) => {
-        routeList[[element.route, element.service_type, element.bound].join('+')] = {
-          route: element.route,
-          co: 'kmb',
-          bound: element.bound,
-          orig: {
-            en: element.orig_en.replace('/','／'),
-            zh: element.orig_tc.replace('/','／')
-          },
-          dest: {
-            en: element.dest_en.replace('/','／'),
-            zh: element.dest_tc.replace('/','／')
-          },
-          stops: [],
-          serviceType: parseInt(element.service_type, 10)
-        }
-        return routeList
-      }, {})
-    ).then( routeList => (
-      // fetch route stop data
-      fetch("https://data.etabus.gov.hk/v1/transport/kmb/route-stop/").then(response => response.json())
-      .then(({data, generated_timestamp}) => {
-        data.forEach(element => {
-          routeList[[element.route, element.service_type, element.bound].join('+')].stops.push(
-            element.stop
-          )
-        })
-        return Object.entries(routeList).map(([id, obj]) => obj)
-      })
-    ))
-  ),
-  fetchStopList: () => {
-    return fetch("https://data.etabus.gov.hk/v1/transport/kmb/stop").then(
-      response => response.json()
-    ).then(({data, generated_timestamp}) => {
-      let stopList = {}
-      data.forEach(element => {
-        stopList[element.stop] = {
-          name: {
-            en: element.name_en.replace('/','／'),
-            zh: nameEncodingHandling( element.name_tc ).replace('/','／')
-          },
-          location: {
-            lat: parseFloat(element.lat),
-            lng: parseFloat(element.long)
-          }
-        }
-      })
-      
-      return stopList
-    })
-  },
-  fetchRouteStops: ({route, bound, serviceType}) => {
-    // already fetched in the app start
-    return null
-  },
-  /*
-    @fetchEtas
-    input: seq is 0-based
-    return array of Object with props {
-      eta: (int) minute or null,
-      remark: {
-        zh: string
-        en: string
-      }
-    }
-  */
   fetchEtas: ({stopId, route, seq, serviceType, bound}) => (
     fetch(
       `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`,
@@ -117,9 +43,3 @@ const KmbApi = {
 }
 
 export default KmbApi
-
-const nameEncodingHandling = (name) => {
-  if ( name === '瘝嗵眎�𧨾���' ) return '沙田坳道'
-  else if ( name === '暺�憭找�嗵��' ) return '黃大仙站'
-  else return name
-}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import RouteMap from './route-eta/RouteMap'
 import StopAccordions from './route-eta/StopAccordions'
+import StopDialog from './route-eta/StopDialog'
 import {
   Box, 
   CircularProgress,
@@ -10,19 +11,14 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
-import { 
-  fetchRouteStops as fetchRouteStopsViaApi
-} from '../data-api'
 
 const RouteEta = () => {
   const { id, panel } = useParams()
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
-  const { 
-    routeList, 
-    updateNewlyFetchedRouteStops, updateSelectedRoute
-  } = useContext ( AppContext )
+  const [ dialogStop, setDialogStop ] = useState(undefined)
+  const { routeList, stopMap, updateSelectedRoute } = useContext ( AppContext )
 
-  const { route, bound, stops, co, dest } = routeList[id]
+  const { route, stops, co, dest } = routeList[id]
   const { t, i18n } = useTranslation()
   const history = useHistory()
 
@@ -34,13 +30,24 @@ const RouteEta = () => {
     }
   }
 
+  const onMarkerClick = (panel) => {
+    if ( expanded === panel ) {
+      setDialogStop ( [[co[0], stops[co[0]][panel]]].concat(stopMap[stops[co[0]][panel]] || []) )
+    }
+    return handleChange(panel)
+  }
+
+  const handleCloseDialog = () => {
+    setDialogStop(undefined)
+  }
+
+  useEffect( () => {
+    setDialogStop(undefined)
+    setExpanded(parseInt(panel,10))
+  }, [id, panel])
+
   useEffect(() => {
     updateSelectedRoute( id )
-
-    // fetch stops
-    fetchRouteStopsViaApi({route, bound, stops}).then( objs => 
-      updateNewlyFetchedRouteStops(id, objs)
-    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -75,12 +82,16 @@ const RouteEta = () => {
       <RouteMap 
         stops={stops[co[0]]}
         stopIdx={expanded}
-        onMarkerClick={handleChange}
+        onMarkerClick={onMarkerClick}
       />
       <StopAccordions 
         expanded={expanded}
         setExpanded={setExpanded}
         handleChange={handleChange}
+      />
+      <StopDialog
+        stops={dialogStop}
+        handleClose={handleCloseDialog}
       />
     </>
   )

@@ -8,6 +8,7 @@ export const AppContextProvider = ( props ) => {
   // route list & stop list & route-stop list
   const [routeList, setRouteList] = useState(JSON.parse(localStorage.getItem('routeList')))
   const [stopList, setStopList] = useState(JSON.parse(localStorage.getItem('stopList')))
+  const [stopMap, setStopMap] = useState(JSON.parse(localStorage.getItem('stopMap')))
   const [updateTime, setUpdateTime] = useState(parseInt(localStorage.getItem('updateTime'), 10))
   // search route
   const [searchRoute, setSearchRoute] = useState("")
@@ -28,9 +29,10 @@ export const AppContextProvider = ( props ) => {
   const renewDb = () => {
     fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.json").then(
       res => res.json()
-    ).then( ({routeList, stopList}) => {
+    ).then( ({routeList, stopList, stopMap}) => {
       setRouteList(routeList)
       setStopList(stopList)
+      setStopMap(stopMap)
       setUpdateTime( Date.now() )
     })
   }
@@ -97,6 +99,10 @@ export const AppContextProvider = ( props ) => {
   }, [stopList])
 
   useEffect(() => {
+    localStorage.setItem('stopMap', JSON.stringify(stopMap))
+  }, [stopMap])
+
+  useEffect(() => {
     localStorage.setItem('routeList', JSON.stringify(routeList))
   }, [routeList])
 
@@ -111,23 +117,6 @@ export const AppContextProvider = ( props ) => {
   useEffect(() => {
     localStorage.setItem('geoPermission', geoPermission)
   }, [geoPermission])
-
-  const updateNewlyFetchedRouteStops = ( routeId, objs ) => {
-    if ( objs.length === 0 ) return
-    // set stop list
-    let _stopList = {}
-    objs.forEach( obj => {
-      _stopList = {..._stopList, ...obj.stopList}
-    } )
-    setStopList({...stopList, ..._stopList})
-
-    // set route list
-    setRouteList(prevRouteList => {
-      let _routeList = JSON.parse(JSON.stringify(prevRouteList))
-      objs.forEach(obj => _routeList[routeId].stops[obj.co] = obj.routeStops)
-      return _routeList
-    })
-  }
 
   const updateSearchRouteByButton = (buttonValue) => {
     switch (buttonValue) {
@@ -168,9 +157,8 @@ export const AppContextProvider = ( props ) => {
 
   return (
     <AppContext.Provider value={{
-        routeList, stopList, 
+        routeList, stopList, stopMap,
         setRouteList, setStopList,
-        updateNewlyFetchedRouteStops,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
         selectedRoute, updateSelectedRoute,
         possibleChar,
