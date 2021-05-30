@@ -1,0 +1,15 @@
+brotlipy==0.7.0
+certifi==2020.12.5
+cffi==1.14.5
+chardet==4.0.0
+cryptography==3.4.7
+haversine==2.3.0
+idna==2.10
+pip==21.0.1
+pycparser==2.20
+pyOpenSSL==20.0.1
+PySocks==1.7.1
+requests==2.25.1
+six==1.15.0
+urllib3==1.26.4
+wheel==0.36.2
