@@ -39,8 +39,8 @@ const CenterControl = ( {onClick}) => {
   )
 }
 
-const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
-  const { geoPermission, setGeoPermission, setGeolocation } = useContext ( AppContext )
+const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
+  const { stopList, geoPermission, setGeoPermission, setGeolocation } = useContext ( AppContext )
   const classes = useStyles()
   const [center, setCenter] = useState(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {})
   const [map, setMap] = useState(null)

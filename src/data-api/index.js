@@ -109,9 +109,9 @@ const fetchRouteList = () => (
 
 const fetchStopRoutes = ( stopId, routeList ) => (
   Promise.all([KmbApi, NwfbApi, CtbApi].map( api => 
-  //Promise.all([NwfbApi].map( api => 
     api.fetchStopEtas(stopId)
-  )).then(arr => [].concat.apply([], arr))
+  ))
+  .then(arr => [].concat.apply([], arr))
   .then(etas => (
     Object.entries(routeList)
     .map( ([routeId, routeObj]) => {

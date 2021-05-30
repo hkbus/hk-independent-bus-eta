@@ -22,5 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-crawl/*.json
-crawl/*.xml
+crawlAll/*.json
+crawlAll/*.xml

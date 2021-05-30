@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { KmbApi, fetchRouteList } from './data-api'
 
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
   const [schemaVersion, setSchemaVersion] = useState(localStorage.getItem('schemaVersion'))
+  const [versionMd5, setVersionMd5] = useState(localStorage.getItem('versionMd5'))
   // route list & stop list & route-stop list
   const [routeList, setRouteList] = useState(JSON.parse(localStorage.getItem('routeList')))
   const [stopList, setStopList] = useState(JSON.parse(localStorage.getItem('stopList')))
@@ -26,30 +26,34 @@ export const AppContextProvider = ( props ) => {
   const [possibleChar, setPossibleChar] = useState([])
   
   const renewDb = () => {
-    fetchRouteList().then( _routeList => setRouteList(_routeList) ).then(() =>
-      // fetch only KMB stop list as the api return is succinct enough
-      // on-the-fly fetching for other service providers' stops
-      KmbApi.fetchStopList().then( _stopList => {
-        setStopList(_stopList)
-        const _updateTime = Date.now()
-        setUpdateTime ( _updateTime )
-        localStorage.setItem('updateTime', _updateTime)
-      } )
-    )
+    fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.json").then(
+      res => res.json()
+    ).then( ({routeList, stopList}) => {
+      setRouteList(routeList)
+      setStopList(stopList)
+      setUpdateTime( Date.now() )
+    })
   }
 
   useEffect(() => {
     // check app version and flush localstorage if outdated
-    fetch( process.env.PUBLIC_URL + '/schema-version.txt').then(
-      response => response.text()
-    ).then( _schemaVersion => {
+    Promise.all([process.env.PUBLIC_URL+'/schema-version.txt', 'https://hkbus.github.io/hk-bus-crawling/routeFareList.md5'].map( url => 
+      fetch(url).then(
+        response => response.text()
+      )
+    )).then( ([_schemaVersion, _md5] ) => {
       let needRenew = false
       if ( schemaVersion !== _schemaVersion ) {
         setSchemaVersion(_schemaVersion)
         localStorage.setItem('schemaVersion', _schemaVersion)
         needRenew = true
       }
-      needRenew = needRenew || routeList == null || stopList == null || updateTime == null || updateTime < Date.now() - 7 * 24 * 60 * 60 * 1000
+      if ( versionMd5 !== _md5 ) {
+        setVersionMd5(_md5)
+        localStorage.setItem('versionMd5', _md5)
+        needRenew = true
+      }
+      needRenew = needRenew || routeList == null || stopList == null
       if (needRenew) {
         renewDb()
       }
@@ -95,6 +99,10 @@ export const AppContextProvider = ( props ) => {
   useEffect(() => {
     localStorage.setItem('routeList', JSON.stringify(routeList))
   }, [routeList])
+
+  useEffect(() => {
+    localStorage.setItem('updateTime', updateTime)
+  }, [updateTime])
 
   useEffect(() => {
     localStorage.setItem('geolocation', JSON.stringify(geolocation))
@@ -171,7 +179,7 @@ export const AppContextProvider = ( props ) => {
         savedEtas, updateSavedEtas,
         resetUsageRecord,
         // settings
-        renewDb, schemaVersion, updateTime,
+        renewDb, schemaVersion, versionMd5, updateTime,
         geoPermission, setGeoPermission 
       }}
     >

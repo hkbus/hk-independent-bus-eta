@@ -24,7 +24,7 @@ import moment from 'moment'
 
 const Settings = () => {
   const { 
-    schemaVersion, updateTime, geoPermission, 
+    schemaVersion, versionMd5, updateTime, geoPermission, 
     setGeoPermission, renewDb, resetUsageRecord
   } = useContext ( AppContext )
   const [ updating, setUpdating ] = useState(false)
@@ -48,7 +48,7 @@ const Settings = () => {
             <Avatar><BuildIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("架構版本")+": "+schemaVersion} 
+            primary={t("架構版本")+": "+schemaVersion+" - "+versionMd5.substr(0,6)} 
             secondary={t('更新時間') + ": " + moment(updateTime).format('YYYY-MM-DD HH:mm:ss')} 
           />
         </ListItem>

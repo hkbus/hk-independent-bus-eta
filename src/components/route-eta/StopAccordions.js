@@ -6,6 +6,7 @@ import {
   AccordionDetails as MuiAccordionDetails,
   Box, 
   IconButton, 
+  Typography
 } from '@material-ui/core'
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder'
@@ -22,8 +23,8 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
     updateSavedEtas
   } = useContext ( AppContext )
 
-  const { route, serviceType, bound, stops, co } = routeList[id]
-  const { i18n } = useTranslation()
+  const { route, serviceType, bound, stops, co, fares } = routeList[id]
+  const { t, i18n } = useTranslation()
   const accordionRef = useRef([])
 
   const autoSetPanel = () => {
@@ -71,7 +72,10 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
             TransitionProps={{unmountOnExit: true}}
             ref={el => {accordionRef.current[idx] = el}}
           >
-            <AccordionSummary>{stopList[stop].name[i18n.language]}</AccordionSummary>
+            <AccordionSummary>
+              <Typography variant='body1'>{stopList[stop].name[i18n.language]}</Typography>
+              <Typography variant='caption'>{fares && fares[idx] ? t('車費')+': $'+fares[idx] : ''}</Typography>
+            </AccordionSummary>
             <AccordionDetails>
               <TimeReport 
                 route={route}
@@ -123,12 +127,13 @@ const AccordionSummary = withStyles({
     minHeight: 56,
     '&$expanded': {
       minHeight: 56,
-    },
+    }
   },
   content: {
     '&$expanded': {
       margin: '12px 0',
     },
+    flexDirection: 'column'
   },
   expanded: {},
 })(MuiAccordionSummary);

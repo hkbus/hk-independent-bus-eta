@@ -18,7 +18,7 @@ const RouteEta = () => {
   const { id, panel } = useParams()
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
   const { 
-    routeList, stopList, 
+    routeList, 
     updateNewlyFetchedRouteStops, updateSelectedRoute
   } = useContext ( AppContext )
 
@@ -74,7 +74,6 @@ const RouteEta = () => {
       </Typography>
       <RouteMap 
         stops={stops[co[0]]}
-        stopList={stopList}
         stopIdx={expanded}
         onMarkerClick={handleChange}
       />
