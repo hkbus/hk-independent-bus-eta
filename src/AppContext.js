@@ -83,6 +83,7 @@ export const AppContextProvider = ( props ) => {
       navigator.geolocation.clearWatch(geoWatcherId)
       setGeoWatcherId(null)
     }
+    localStorage.setItem('geoPermission', geoPermission)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geoPermission])
 
@@ -113,10 +114,6 @@ export const AppContextProvider = ( props ) => {
   useEffect(() => {
     localStorage.setItem('geolocation', JSON.stringify(geolocation))
   }, [geolocation])
-
-  useEffect(() => {
-    localStorage.setItem('geoPermission', geoPermission)
-  }, [geoPermission])
 
   const updateSearchRouteByButton = (buttonValue) => {
     switch (buttonValue) {

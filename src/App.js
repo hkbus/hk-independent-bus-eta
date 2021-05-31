@@ -29,7 +29,6 @@ import RouteEta from './components/RouteEta'
 import Settings from './components/Settings'
 import AppContext from './AppContext'
 import Footer from './components/layout/Footer'
-import Countdown from 'react-countdown'
 
 const PageSwitch = () => {
   const { path } = useRouteMatch()
@@ -63,22 +62,12 @@ const App = () => {
         <br />
         <br />
         <Paper className={classes.loadingTextContainer} elevation={0}>
-          { stopList == null ? <Countdown 
-            date={Date.now() + 20000}
-            renderer={({seconds, completed}) => {
-              if ( completed ) {
-                return <Typography variant="subtitle2" align="center">{t('介面開啟中')}...</Typography>
-              } else {
-                return (
-                  <>
-                    <Typography variant="subtitle2" align="center">{t('初始設定')}...</Typography>
-                    <Typography variant="subtitle2" align="center">{t('正在更新巴士路線資料')}...</Typography>
-                    <Typography variant="subtitle2" align="center">{t('約需')}{seconds}{t('秒')}</Typography>
-                  </>
-                )
-              }
-            }}
-          /> : <>{t('啟動中')}</>
+          { stopList == null ? 
+              <>
+                <Typography variant="subtitle2" align="center">{t('初始設定')}...</Typography>
+                <Typography variant="subtitle2" align="center">{t('正在更新巴士路線資料')}...</Typography>
+              </>      
+          : <>{t('啟動中')}</>
           }
         </Paper>
       </Container>
@@ -130,8 +119,5 @@ const useStyles = makeStyles( theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100vh'
-  },
-  loadingText: {
-
   }
 }))

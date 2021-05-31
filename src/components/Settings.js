@@ -28,6 +28,7 @@ const Settings = () => {
     setGeoPermission, renewDb, resetUsageRecord
   } = useContext ( AppContext )
   const [ updating, setUpdating ] = useState(false)
+  const [ showGeoPermissionDenied, setShowGeoPermissionDenied ] = useState(false)
   const [ isCopied, setIsCopied ] = useState(false)
 
   const { t, i18n } = useTranslation()
@@ -58,8 +59,12 @@ const Settings = () => {
             if ( geoPermission === 'granted' ) {
               setGeoPermission('closed')
             } else {
+              setGeoPermission('opening')
               navigator.geolocation.getCurrentPosition(position => {
                 setGeoPermission('granted')
+              }, () => {
+                setGeoPermission('denied')
+                setShowGeoPermissionDenied(true)
               })
             }
           }}
@@ -69,7 +74,7 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText 
             primary={t("地理位置定位功能")} 
-            secondary={t(geoPermission === 'granted' ? '開啟' : '關閉') } 
+            secondary={t(geoPermission === 'granted' ? '開啟' : ( geoPermission === 'opening' ? '開啟中...' : '關閉' )) } 
           />
         </ListItem>
         <ListItem
@@ -150,12 +155,18 @@ const Settings = () => {
       />
       <Snackbar
         anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+        open={showGeoPermissionDenied}
+        autoHideDuration={1500}
+        onClose={(e, reason) => {
+          setShowGeoPermissionDenied(false)
+        }}
+        message={t('無法獲得地理位置定位功能權限')}
+      />
+      <Snackbar
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
         open={isCopied}
-        autoHideDuration={3000}
+        autoHideDuration={1500}
         onClose={(event, reason) => {
-          if (reason === 'clickaway') {
-            return;
-          }
           setIsCopied(false);
         }}
         message={t('鏈結已複製到剪貼簿')}
