@@ -9,14 +9,14 @@ import {
 } from '../../data-api'
 import moment from 'moment'
 
-const TimeReport = ( { route, routeStops, seq, bound, serviceType, co } ) => {
+const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId } ) => {
   const { t, i18n } = useTranslation()
   const [ etas, setEtas ] = useState(null)
 
   useEffect( () => {
     let isMounted = true
     const fetchData = () => {
-      fetchEtasViaApi({route, routeStops, seq, bound, serviceType, co}).then(_etas => {
+      fetchEtasViaApi({route, routeStops, seq, bound, serviceType, co, nlbId}).then(_etas => {
         if (isMounted) setEtas(_etas)
       })
     }

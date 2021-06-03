@@ -4,6 +4,7 @@
       "kmb": "KMB",
       "ctb": "CTB",
       "nwfb": "NWFB",
+      "nlb": "NLB",
       "初始設定": "Initizaling",
       "正在更新巴士路線資料": "ppdating route database",
       "約需": "approx. ",
@@ -40,7 +41,8 @@
     "translation": {
       "kmb": "九巴",
       "ctb": "城巴",
-      "nwfb": "新巴"
+      "nwfb": "新巴",
+      "nlb": "新大嶼山巴"
     }
   }
 }

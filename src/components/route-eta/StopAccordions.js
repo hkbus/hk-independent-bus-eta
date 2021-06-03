@@ -23,7 +23,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
     updateSavedEtas
   } = useContext ( AppContext )
 
-  const { route, serviceType, bound, stops, co, fares } = routeList[id]
+  const { route, serviceType, bound, stops, co, fares, faresHoliday, nlbId } = routeList[id]
   const { t, i18n } = useTranslation()
   const accordionRef = useRef([])
 
@@ -74,7 +74,10 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
           >
             <AccordionSummary>
               <Typography variant='body1'>{stopList[stop].name[i18n.language]}</Typography>
-              <Typography variant='caption'>{fares && fares[idx] ? t('車費')+': $'+fares[idx] : ''}</Typography>
+              <Typography variant='caption'>
+                {fares && fares[idx] ? t('車費')+': $'+fares[idx] : ''}
+                {faresHoliday && faresHoliday[idx] ? '　　　　'+t('假日車費')+': $'+faresHoliday[idx] : ''}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <TimeReport 
@@ -84,6 +87,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
                 serviceType={serviceType}
                 bound={bound}
                 co={co}
+                nlbId={nlbId}
               />
               <IconButton 
                 aria-label="favourite" 
