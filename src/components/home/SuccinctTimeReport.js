@@ -21,7 +21,7 @@ const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
   const _fareString = fares && fares[seq] ? '$' + fares[seq] : '';
   const _fareHolidayString = faresHoliday && faresHoliday[seq] ? '$' + faresHoliday[seq] : '';
   const fareString = [_fareString, _fareHolidayString].filter(v => v).join(', ')
-  console.log(fares)
+  
   if ( geoPermission !== 'granted' ) {
     return name + '　' + ( fareString ? "("+fareString+")" : "" )
   }

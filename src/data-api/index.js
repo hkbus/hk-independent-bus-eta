@@ -22,7 +22,6 @@ const fetchEtas = async ( {route, routeStops, bound, seq, serviceType, co, nlbId
       _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: routeStops.nwfb[seq], route, bound: bound[company_id] }))
     }
     else if ( company_id === 'nlb' && routeStops.nlb ) {
-      console.log(nlbId)
       _etas = _etas.concat( await NlbApi.fetchEtas({stopId: routeStops.nlb[seq], nlbId}) )
     }
   }

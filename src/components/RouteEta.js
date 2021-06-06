@@ -43,8 +43,10 @@ const RouteEta = () => {
 
   useEffect( () => {
     setDialogStop(undefined)
-    setExpanded(parseInt(panel,10))
-  }, [id, panel])
+    if ( panel ) {
+      setExpanded(parseInt(panel,10))
+    }
+  }, [route, panel])
 
   useEffect(() => {
     updateSelectedRoute( id )

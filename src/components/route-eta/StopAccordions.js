@@ -30,7 +30,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
   const autoSetPanel = () => {
     if ( parseInt(panel, 10) && accordionRef.current[parseInt(panel, 10)] ) {
       setExpanded(parseInt(panel, 10))
-    } else if ( geoPermission && stops[co[0]] ) {
+    } else if ( geoPermission === 'granted' ) {
       // load from local storage to avoid unitentional re-rendering
       const geolocation = JSON.parse(localStorage.getItem('geolocation'))
       const nearbyStop = stops[co[0]]
