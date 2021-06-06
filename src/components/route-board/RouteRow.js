@@ -10,6 +10,19 @@ import { useTranslation } from 'react-i18next'
 import { areEqual } from 'react-window'
 import { Link } from  'react-router-dom'
 
+const RouteInfo = ( {route} ) => {
+  const { t, i18n } = useTranslation()
+
+  return (
+    <>
+    { route.nlbId ?
+      <Typography variant="subtitle2" display="inline">{t('往')} {route.dest[i18n.language]} {t('由')+" "+route.orig[i18n.language]}</Typography>
+      : <Typography variant="subtitle2" display="inline">{t('往')} {route.dest[i18n.language]}</Typography>
+    }
+    </>
+  )
+}
+
 const RouteRow = React.memo(( {data, index, style} ) => {
   const { t, i18n } = useTranslation()
   const { routeList } = data
@@ -25,7 +38,8 @@ const RouteRow = React.memo(( {data, index, style} ) => {
             <Typography variant="h5" display="inline">{routeNo}</Typography>
             <Typography variant="caption"> - {route[1].co.map(co => t(co)).join('+')}</Typography>
             <br/>
-            <Typography variant="subtitle2" display="inline">{t('往')} {route[1].dest[i18n.language]}  </Typography>
+            <RouteInfo route={route[1]} />
+            
             <Typography variant="caption">{service_type >= 2 ? t('特別班次') : '　'}</Typography>
           </CardContent>
         </CardActionArea>

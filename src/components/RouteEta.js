@@ -18,7 +18,7 @@ const RouteEta = () => {
   const [ dialogStop, setDialogStop ] = useState(undefined)
   const { routeList, stopMap, updateSelectedRoute } = useContext ( AppContext )
 
-  const { route, stops, co, dest } = routeList[id]
+  const { route, stops, co, orig, dest, nlbId } = routeList[id]
   const { t, i18n } = useTranslation()
   const history = useHistory()
 
@@ -79,7 +79,7 @@ const RouteEta = () => {
         {route}
       </Typography>
       <Typography variant="caption" align='center'>
-        {t('往')} {dest[i18n.language]}
+        {t('往')} {dest[i18n.language]} {nlbId ? t('由')+" "+orig[i18n.language] : ""}
       </Typography>
       <RouteMap 
         stops={stops[co[0]]}
