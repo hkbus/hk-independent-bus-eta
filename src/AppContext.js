@@ -27,7 +27,7 @@ export const AppContextProvider = ( props ) => {
   const [possibleChar, setPossibleChar] = useState([])
   
   const renewDb = () => {
-    fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.json").then(
+    fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json").then(
       res => res.json()
     ).then( ({routeList, stopList, stopMap}) => {
       setRouteList(routeList)
