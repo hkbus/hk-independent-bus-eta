@@ -11,7 +11,7 @@ import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
 import { 
   fetchEtas as fetchEtasViaApi
-} from '../../data-api'
+} from 'hk-bus-eta'
 import { getDistance } from '../../utils'
 import moment from 'moment'
 

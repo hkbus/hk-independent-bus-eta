@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^12.1.10",
     "fbjs": "^1.0.0",
     "gh-pages": "^3.1.0",
+    "hk-bus-eta": "^1.0.0",
     "i18next": "^20.2.1",
     "leaflet": "^1.7.1",
     "memorize-one": "^0.0.0",

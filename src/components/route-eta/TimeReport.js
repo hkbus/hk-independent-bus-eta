@@ -6,7 +6,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { 
   fetchEtas as fetchEtasViaApi 
-} from '../../data-api'
+} from 'hk-bus-eta'
 import moment from 'moment'
 
 const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId } ) => {

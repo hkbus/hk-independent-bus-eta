@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta' 
 
 const AppContext = React.createContext()
 
@@ -27,9 +28,7 @@ export const AppContextProvider = ( props ) => {
   const [possibleChar, setPossibleChar] = useState([])
   
   const renewDb = () => {
-    fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json").then(
-      res => res.json()
-    ).then( ({routeList, stopList, stopMap}) => {
+    fetchEtaObj().then( ({routeList, stopList, stopMap}) => {
       setRouteList(routeList)
       setStopList(stopList)
       setStopMap(stopMap)
@@ -39,11 +38,10 @@ export const AppContextProvider = ( props ) => {
 
   useEffect(() => {
     // check app version and flush localstorage if outdated
-    Promise.all([process.env.PUBLIC_URL+'/schema-version.txt', 'https://hkbus.github.io/hk-bus-crawling/routeFareList.md5'].map( url => 
-      fetch(url).then(
-        response => response.text()
-      )
-    )).then( ([_schemaVersion, _md5] ) => {
+    Promise.all([
+      fetch(process.env.PUBLIC_URL+'/schema-version.txt').then(r => r.text()),
+      fetchEtaObjMd5()
+    ]).then( ([_schemaVersion, _md5] ) => {
       let needRenew = false
       if ( schemaVersion !== _schemaVersion ) {
         setSchemaVersion(_schemaVersion)
