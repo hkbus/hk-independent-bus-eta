@@ -11,7 +11,7 @@ import AppContext from '../../AppContext'
 import SuccinctTimeReport from '../home/SuccinctTimeReport'
 
 
-const StopDialog = ({stops, handleClose}) => {
+const StopDialog = ({open, stops, handleClose}) => {
   const { routeList, stopList } = useContext ( AppContext )
   const { i18n } = useTranslation()
   const [ routes, setRoutes ] = useState([])
@@ -37,19 +37,15 @@ const StopDialog = ({stops, handleClose}) => {
   }, [stops])
   
   return (
-    <Dialog open={stops ? true : false} onClose={handleClose} className={classes.dialog}>
-      {stops ? 
-        <>
-          <DialogTitle className={classes.title}>{stopList[stops[0][1]].name[i18n.language]}</DialogTitle>
-          <DialogContent>
-            <List>
-              {routes.map(route => (
-                <SuccinctTimeReport key={route} routeId={route} />
-              ))}
-            </List>
-          </DialogContent>
-        </> : <></>
-      }
+    <Dialog open={open} onClose={handleClose} className={classes.dialog}>
+      <DialogTitle className={classes.title}>{stopList[stops[0][1]].name[i18n.language]}</DialogTitle>
+      <DialogContent>
+        <List>
+          {routes.map(route => (
+            <SuccinctTimeReport key={route} routeId={route} />
+          ))}
+        </List>
+      </DialogContent>
     </Dialog>
   )
 }

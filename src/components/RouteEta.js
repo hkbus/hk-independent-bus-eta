@@ -14,16 +14,18 @@ import { useTranslation } from 'react-i18next'
 
 const RouteEta = () => {
   const { id, panel } = useParams()
-  const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
-  const [ dialogStop, setDialogStop ] = useState(undefined)
   const { routeList, stopMap, updateSelectedRoute } = useContext ( AppContext )
-
   const { route, stops, co, orig, dest, nlbId } = routeList[id]
+  const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
+  const [ isDialogOpen, setIsDialogOpen ] = useState(false) 
+  const [ dialogStop, setDialogStop ] = useState([[co[0], stops[co[0]][0]]].concat(stopMap[stops[co[0]][0]] || []))
+  
   const { t, i18n } = useTranslation()
   const history = useHistory()
 
   const handleChange = ( panel ) => (event, newExpanded, isFromMap) => {
     setExpanded(newExpanded ? panel : false)
+    setDialogStop ( [[co[0], stops[co[0]][panel]]].concat(stopMap[stops[co[0]][panel]] || []) )
     if ( newExpanded ) {
       history.replace(`/${i18n.language}/route/${id}/${panel}`)
       return
@@ -32,20 +34,21 @@ const RouteEta = () => {
 
   const onMarkerClick = (panel) => {
     if ( expanded === panel ) {
-      setDialogStop ( [[co[0], stops[co[0]][panel]]].concat(stopMap[stops[co[0]][panel]] || []) )
+      setIsDialogOpen(true)
     }
     return handleChange(panel)
   }
   
   const handleCloseDialog = () => {
-    setDialogStop(undefined)
+    setIsDialogOpen(false)
   }
 
   useEffect( () => {
-    setDialogStop(undefined)
+    setIsDialogOpen(false)
     if ( panel ) {
       setExpanded(parseInt(panel,10))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route])
 
   useEffect(() => {
@@ -92,6 +95,7 @@ const RouteEta = () => {
         handleChange={handleChange}
       />
       <StopDialog
+        open={isDialogOpen}
         stops={dialogStop}
         handleClose={handleCloseDialog}
       />
