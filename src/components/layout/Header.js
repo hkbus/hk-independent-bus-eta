@@ -10,6 +10,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles'
 import { Link, useLocation, useHistory, useRouteMatch } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
+import { checkMobile } from '../../utils'
 
 const Header = (props) => {
   const { searchRoute, setSearchRoute } = useContext( AppContext )
@@ -44,7 +45,9 @@ const Header = (props) => {
         placeholder={t('巴士線')}
         onChange={e => setSearchRoute(e.target.value)}
         onFocus={e => {
-          document.activeElement.blur();
+          if ( checkMobile() ) {
+            document.activeElement.blur()
+          }
           history.replace(`/${i18n.language}/search`)
         }}
         disabled={path.includes('route')}
