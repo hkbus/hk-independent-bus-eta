@@ -96,7 +96,9 @@ const useStyles = makeStyles(theme => ({
   boxContainer: {
     display: 'flex',
     flexDirection: 'row',
-    height: '180px',
+    height: 'calc(100vh - 330px - 112px)',
+    paddingTop: 'calc(50vh - 165px - 56px - 88px)',
+    paddingBottom: 'calc(50vh - 165px - 56px - 88px)',
     justifyContent: 'space-around'
   },
   numPadContainer: {
@@ -104,13 +106,13 @@ const useStyles = makeStyles(theme => ({
   },
   alphabetPadContainer: {
     width: '20%',
-    height: '100%',
+    height: '176px',
     overflowX: 'hidden',
     overflowY: 'scroll'
   },
   button: {
     width: '100%',
-    height: '42px',
+    height: '44px',
     fontSize: '1.2em',
     borderRadius: 'unset'
   },

@@ -128,15 +128,16 @@ const AccordionSummary = withStyles({
     backgroundColor: 'rgba(0, 0, 0, .03)',
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
     marginBottom: -1,
-    minHeight: 56,
+    minHeight: 44,
     '&$expanded': {
-      minHeight: 56,
+      minHeight: 44,
     }
   },
   content: {
     '&$expanded': {
-      margin: '12px 0',
+      margin: '8px 0',
     },
+    margin: '8px 0',
     flexDirection: 'column'
   },
   expanded: {},
@@ -145,6 +146,8 @@ const AccordionSummary = withStyles({
 const AccordionDetails = withStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     justifyContent: 'space-between'
   },
 }))(MuiAccordionDetails);
