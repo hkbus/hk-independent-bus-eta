@@ -36,7 +36,7 @@ const RouteEta = () => {
     }
     return handleChange(panel)
   }
-
+  
   const handleCloseDialog = () => {
     setDialogStop(undefined)
   }
@@ -46,7 +46,7 @@ const RouteEta = () => {
     if ( panel ) {
       setExpanded(parseInt(panel,10))
     }
-  }, [route, panel])
+  }, [route])
 
   useEffect(() => {
     updateSelectedRoute( id )
