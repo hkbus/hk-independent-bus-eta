@@ -114,16 +114,21 @@ export const AppContextProvider = ( props ) => {
   }, [geolocation])
 
   const updateSearchRouteByButton = (buttonValue) => {
-    switch (buttonValue) {
-      case 'b': 
-        setSearchRoute(searchRoute.slice(0,-1))
-        break
-      case '-':
-        setSearchRoute('')
-        break
-      default: 
-        setSearchRoute(searchRoute+buttonValue)
+    if ( "vibrate" in navigator ) {
+      navigator.vibrate(1)
     }
+    setTimeout(() => {
+      switch (buttonValue) {
+        case 'b': 
+          setSearchRoute(searchRoute => searchRoute.slice(0,-1))
+          break
+        case '-':
+          setSearchRoute('')
+          break
+        default: 
+          setSearchRoute(searchRoute => searchRoute+buttonValue)
+      }
+    }, 0)
   }
 
   const updateSelectedRoute = ( route, seq = '' ) => {
