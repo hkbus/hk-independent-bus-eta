@@ -35,7 +35,6 @@ const Header = (props) => {
           pathname: `/${i18n.language}/search`
         }}
       >
-        <Typography variant="h6">香港</Typography>
         <Typography variant='subtitle2'>獨立巴士預報</Typography>
       </Link> 
       <Input 
