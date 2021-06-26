@@ -103,6 +103,15 @@ const Theme = createMuiTheme({
     background: {
       default: "#ffff90" // yellow
     }
+  },
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        html: {
+          userSelect: 'none'
+        }
+      }
+    }
   }
 })
 
