@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta' 
+import { vibrate } from './utils'
 
 const AppContext = React.createContext()
 
@@ -114,9 +115,7 @@ export const AppContextProvider = ( props ) => {
   }, [geolocation])
 
   const updateSearchRouteByButton = (buttonValue) => {
-    if ( "vibrate" in navigator ) {
-      navigator.vibrate(1)
-    }
+    vibrate(1)
     setTimeout(() => {
       switch (buttonValue) {
         case 'b': 

@@ -8,7 +8,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 import { areEqual } from 'react-window'
-import { Link } from  'react-router-dom'
+import { useHistory } from  'react-router-dom'
+import { vibrate } from '../../utils'
 
 const RouteInfo = ( {route} ) => {
   const { t, i18n } = useTranslation()
@@ -29,9 +30,16 @@ const RouteRow = React.memo(( {data, index, style} ) => {
   const route = routeList[index]
   const [routeNo, service_type] = route[0].split('+').slice(0,2)
   const classes = useStyles()
+  const history = useHistory()
+  const handleClick = () => {
+    vibrate(1)
+    setTimeout(() => {
+      history.push('/'+i18n.language+'/route/'+route[0])
+    }, 0)
+  }
 
   return (
-    <Link to={'/'+i18n.language+'/route/'+route[0]}>
+    <div onClick={handleClick} >
       <Card variant="outlined" key={route[0]} style={style} square>
         <CardActionArea>
           <CardContent className={classes.cardContent}>
@@ -39,12 +47,11 @@ const RouteRow = React.memo(( {data, index, style} ) => {
             <Typography variant="caption"> - {route[1].co.map(co => t(co)).join('+')}</Typography>
             <br/>
             <RouteInfo route={route[1]} />
-            
             <Typography variant="caption">{service_type >= 2 ? t('特別班次') : '　'}</Typography>
           </CardContent>
         </CardActionArea>
       </Card>
-    </Link>
+    </div>
   )
 }, areEqual)
 

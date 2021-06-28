@@ -21,6 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import ShareIcon from '@material-ui/icons/Share'
 import moment from 'moment'
+import { vibrate } from '../utils'
 
 const Settings = () => {
   const { 
@@ -43,7 +44,7 @@ const Settings = () => {
       <List>
         <ListItem
           button
-          onClick={() => {setUpdating(true);renewDb()}}
+          onClick={() => {vibrate(1);setUpdating(true);renewDb()}}
         >
           <ListItemAvatar>
             <Avatar><BuildIcon /></Avatar>
@@ -56,6 +57,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
+            vibrate(1)
             if ( geoPermission === 'granted' ) {
               setGeoPermission('closed')
             } else {
@@ -79,7 +81,7 @@ const Settings = () => {
         </ListItem>
         <ListItem
           button
-          onClick={() => {resetUsageRecord()}}
+          onClick={() => {vibrate(1);resetUsageRecord()}}
         >
           <ListItemAvatar>
             <Avatar><DeleteIcon /></Avatar>
@@ -95,6 +97,7 @@ const Settings = () => {
           component='a'
           href={`https://github.com/chunlaw/hk-independent-bus-eta`}
           target="_blank"
+          onClick={() => {vibrate(1)}}
         >
           <ListItemAvatar>
             <Avatar><GitHubIcon /></Avatar>
@@ -119,6 +122,7 @@ const Settings = () => {
           component='a'
           href={`https://donate.612fund.hk/${i18n.language}/`}
           target="_blank"
+          onClick={() => {vibrate(1)}}
         >
           <ListItemAvatar>
             <Avatar><MonetizationOnIcon /></Avatar>
@@ -131,6 +135,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
+            vibrate(1)
             if ( navigator.clipboard ) {
               navigator.clipboard.writeText(`${window.location.hostname}${process.env.PUBLIC_URL}`)
               .then(() => {

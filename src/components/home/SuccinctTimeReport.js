@@ -5,7 +5,8 @@ import {
   ListItem,
   ListItemText
 } from '@material-ui/core'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { vibrate } from '../../utils'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
@@ -77,13 +78,20 @@ const SuccinctTimeReport = ({routeId} ) => {
       }
     }
   }
+
+  const history = useHistory()
+  const handleClick = () => {
+    vibrate(1)
+    setTimeout(() => {
+      history.push(`/${i18n.language}/route/${routeId}`)
+    }, 0)
+  }
   
   return (
     <>
     <ListItem
       button
-      component={Link}
-      to={`/${i18n.language}/route/${routeId}`}
+      onClick={handleClick}
       className={classes.listItem}
     >
       <ListItemText 
