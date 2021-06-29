@@ -10,11 +10,8 @@ import { vibrate } from '../../utils'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
-import { 
-  fetchEtas as fetchEtasViaApi
-} from 'hk-bus-eta'
+import { fetchEtas } from 'hk-bus-eta'
 import { getDistance } from '../../utils'
-import moment from 'moment'
 
 const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
   const { t } = useTranslation ()
@@ -45,7 +42,7 @@ const SuccinctTimeReport = ({routeId} ) => {
     let isMounted = true
     
     const fetchData = () => (
-      fetchEtasViaApi({
+      fetchEtas({
         route: routeNo, routeStops: stops, seq: parseInt(seq, 10), bound, serviceType, co, nlbId
       }).then ( _etas => {
         if (isMounted) setEtas(_etas)
@@ -68,7 +65,7 @@ const SuccinctTimeReport = ({routeId} ) => {
   const getEtaString = (eta) => {
     if ( !eta ) return ''
     else {
-      const waitTime = Math.round(moment(eta.eta).diff(moment()) / 60 / 1000)
+      const waitTime = Math.round(((new Date(eta.eta)) - (new Date())) / 60 / 1000)
       if ( waitTime < 1 ) {
         return '- '+t('分鐘')
       } else if ( Number.isInteger(waitTime) ) {

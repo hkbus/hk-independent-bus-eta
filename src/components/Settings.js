@@ -20,7 +20,6 @@ import DataUsageIcon from '@material-ui/icons/DataUsage'
 import DeleteIcon from '@material-ui/icons/Delete'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import ShareIcon from '@material-ui/icons/Share'
-import moment from 'moment'
 import { vibrate } from '../utils'
 
 const Settings = () => {
@@ -51,7 +50,7 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText 
             primary={t("架構版本")+": "+schemaVersion+" - "+versionMd5.substr(0,6)} 
-            secondary={t('更新時間') + ": " + moment(updateTime).format('YYYY-MM-DD HH:mm:ss')} 
+            secondary={t('更新時間') + ": " + (new Date(updateTime)).toLocaleString().slice(0,20).replace(',',' ')} 
           />
         </ListItem>
         <ListItem
