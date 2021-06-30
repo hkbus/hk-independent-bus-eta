@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { KmbApi, fetchRouteList } from './data-api'
+import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta' 
+import { vibrate } from './utils'
 
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
   const [schemaVersion, setSchemaVersion] = useState(localStorage.getItem('schemaVersion'))
+  const [versionMd5, setVersionMd5] = useState(localStorage.getItem('versionMd5'))
   // route list & stop list & route-stop list
   const [routeList, setRouteList] = useState(JSON.parse(localStorage.getItem('routeList')))
   const [stopList, setStopList] = useState(JSON.parse(localStorage.getItem('stopList')))
+  const [stopMap, setStopMap] = useState(JSON.parse(localStorage.getItem('stopMap')))
   const [updateTime, setUpdateTime] = useState(parseInt(localStorage.getItem('updateTime'), 10))
   // search route
   const [searchRoute, setSearchRoute] = useState("")
@@ -26,30 +29,32 @@ export const AppContextProvider = ( props ) => {
   const [possibleChar, setPossibleChar] = useState([])
   
   const renewDb = () => {
-    fetchRouteList().then( _routeList => setRouteList(_routeList) ).then(() =>
-      // fetch only KMB stop list as the api return is succinct enough
-      // on-the-fly fetching for other service providers' stops
-      KmbApi.fetchStopList().then( _stopList => {
-        setStopList(_stopList)
-        const _updateTime = Date.now()
-        setUpdateTime ( _updateTime )
-        localStorage.setItem('updateTime', _updateTime)
-      } )
-    )
+    fetchEtaObj().then( ({routeList, stopList, stopMap}) => {
+      setRouteList(routeList)
+      setStopList(stopList)
+      setStopMap(stopMap)
+      setUpdateTime( Date.now() )
+    })
   }
 
   useEffect(() => {
     // check app version and flush localstorage if outdated
-    fetch( process.env.PUBLIC_URL + '/schema-version.txt').then(
-      response => response.text()
-    ).then( _schemaVersion => {
+    Promise.all([
+      fetch(process.env.PUBLIC_URL+'/schema-version.txt').then(r => r.text()),
+      fetchEtaObjMd5()
+    ]).then( ([_schemaVersion, _md5] ) => {
       let needRenew = false
       if ( schemaVersion !== _schemaVersion ) {
         setSchemaVersion(_schemaVersion)
         localStorage.setItem('schemaVersion', _schemaVersion)
         needRenew = true
       }
-      needRenew = needRenew || routeList == null || stopList == null || updateTime == null || updateTime < Date.now() - 7 * 24 * 60 * 60 * 1000
+      if ( versionMd5 !== _md5 ) {
+        setVersionMd5(_md5)
+        localStorage.setItem('versionMd5', _md5)
+        needRenew = true
+      }
+      needRenew = needRenew || routeList == null || stopList == null
       if (needRenew) {
         renewDb()
       }
@@ -77,6 +82,7 @@ export const AppContextProvider = ( props ) => {
       navigator.geolocation.clearWatch(geoWatcherId)
       setGeoWatcherId(null)
     }
+    localStorage.setItem('geoPermission', geoPermission)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geoPermission])
 
@@ -93,45 +99,35 @@ export const AppContextProvider = ( props ) => {
   }, [stopList])
 
   useEffect(() => {
+    localStorage.setItem('stopMap', JSON.stringify(stopMap))
+  }, [stopMap])
+
+  useEffect(() => {
     localStorage.setItem('routeList', JSON.stringify(routeList))
   }, [routeList])
+
+  useEffect(() => {
+    localStorage.setItem('updateTime', updateTime)
+  }, [updateTime])
 
   useEffect(() => {
     localStorage.setItem('geolocation', JSON.stringify(geolocation))
   }, [geolocation])
 
-  useEffect(() => {
-    localStorage.setItem('geoPermission', geoPermission)
-  }, [geoPermission])
-
-  const updateNewlyFetchedRouteStops = ( routeId, objs ) => {
-    if ( objs.length === 0 ) return
-    // set stop list
-    let _stopList = {}
-    objs.forEach( obj => {
-      _stopList = {..._stopList, ...obj.stopList}
-    } )
-    setStopList({...stopList, ..._stopList})
-
-    // set route list
-    setRouteList(prevRouteList => {
-      let _routeList = JSON.parse(JSON.stringify(prevRouteList))
-      objs.forEach(obj => _routeList[routeId].stops[obj.co] = obj.routeStops)
-      return _routeList
-    })
-  }
-
   const updateSearchRouteByButton = (buttonValue) => {
-    switch (buttonValue) {
-      case 'b': 
-        setSearchRoute(searchRoute.slice(0,-1))
-        break
-      case '-':
-        setSearchRoute('')
-        break
-      default: 
-        setSearchRoute(searchRoute+buttonValue)
-    }
+    vibrate(1)
+    setTimeout(() => {
+      switch (buttonValue) {
+        case 'b': 
+          setSearchRoute(searchRoute => searchRoute.slice(0,-1))
+          break
+        case '-':
+          setSearchRoute('')
+          break
+        default: 
+          setSearchRoute(searchRoute => searchRoute+buttonValue)
+      }
+    }, 0)
   }
 
   const updateSelectedRoute = ( route, seq = '' ) => {
@@ -160,9 +156,8 @@ export const AppContextProvider = ( props ) => {
 
   return (
     <AppContext.Provider value={{
-        routeList, stopList, 
+        routeList, stopList, stopMap,
         setRouteList, setStopList,
-        updateNewlyFetchedRouteStops,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
         selectedRoute, updateSelectedRoute,
         possibleChar,
@@ -171,7 +166,7 @@ export const AppContextProvider = ( props ) => {
         savedEtas, updateSavedEtas,
         resetUsageRecord,
         // settings
-        renewDb, schemaVersion, updateTime,
+        renewDb, schemaVersion, versionMd5, updateTime,
         geoPermission, setGeoPermission 
       }}
     >

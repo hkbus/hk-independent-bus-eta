@@ -6,6 +6,7 @@ import {
   AccordionDetails as MuiAccordionDetails,
   Box, 
   IconButton, 
+  Typography
 } from '@material-ui/core'
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder'
@@ -22,14 +23,14 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
     updateSavedEtas
   } = useContext ( AppContext )
 
-  const { route, serviceType, bound, stops, co } = routeList[id]
-  const { i18n } = useTranslation()
+  const { route, serviceType, bound, stops, co, fares, faresHoliday, nlbId } = routeList[id]
+  const { t, i18n } = useTranslation()
   const accordionRef = useRef([])
 
   const autoSetPanel = () => {
     if ( parseInt(panel, 10) && accordionRef.current[parseInt(panel, 10)] ) {
       setExpanded(parseInt(panel, 10))
-    } else if ( geoPermission && stops[co[0]] ) {
+    } else if ( geoPermission === 'granted' ) {
       // load from local storage to avoid unitentional re-rendering
       const geolocation = JSON.parse(localStorage.getItem('geolocation'))
       const nearbyStop = stops[co[0]]
@@ -71,7 +72,13 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
             TransitionProps={{unmountOnExit: true}}
             ref={el => {accordionRef.current[idx] = el}}
           >
-            <AccordionSummary>{stopList[stop].name[i18n.language]}</AccordionSummary>
+            <AccordionSummary>
+              <Typography variant='body1'>{stopList[stop].name[i18n.language]}</Typography>
+              <Typography variant='caption'>
+                {fares && fares[idx] ? t('車費')+': $'+fares[idx] : ''}
+                {faresHoliday && faresHoliday[idx] ? '　　　　'+t('假日車費')+': $'+faresHoliday[idx] : ''}
+              </Typography>
+            </AccordionSummary>
             <AccordionDetails>
               <TimeReport 
                 route={route}
@@ -80,6 +87,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
                 serviceType={serviceType}
                 bound={bound}
                 co={co}
+                nlbId={nlbId}
               />
               <IconButton 
                 aria-label="favourite" 
@@ -120,15 +128,17 @@ const AccordionSummary = withStyles({
     backgroundColor: 'rgba(0, 0, 0, .03)',
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
     marginBottom: -1,
-    minHeight: 56,
+    minHeight: 44,
     '&$expanded': {
-      minHeight: 56,
-    },
+      minHeight: 44,
+    }
   },
   content: {
     '&$expanded': {
-      margin: '12px 0',
+      margin: '8px 0',
     },
+    margin: '8px 0',
+    flexDirection: 'column'
   },
   expanded: {},
 })(MuiAccordionSummary);
@@ -136,6 +146,8 @@ const AccordionSummary = withStyles({
 const AccordionDetails = withStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     justifyContent: 'space-between'
   },
 }))(MuiAccordionDetails);

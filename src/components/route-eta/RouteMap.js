@@ -39,8 +39,8 @@ const CenterControl = ( {onClick}) => {
   )
 }
 
-const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
-  const { geoPermission, setGeoPermission, setGeolocation } = useContext ( AppContext )
+const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
+  const { stopList, geoPermission, setGeoPermission, setGeolocation } = useContext ( AppContext )
   const classes = useStyles()
   const [center, setCenter] = useState(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {})
   const [map, setMap] = useState(null)
@@ -85,7 +85,7 @@ const RouteMap = ({stops, stopList, stopIdx, onMarkerClick}) => {
               <Marker 
                 key={`${stopId}-${idx}`} 
                 position={stopList[stopId].location} 
-                icon={<BusStopMarker passed={idx < stopIdx} />}
+                icon={<BusStopMarker active={idx === stopIdx} passed={idx < stopIdx} />}
                 eventHandlers={{
                   click: (e) => {onMarkerClick(idx)(e, true, true)}
                 }}
@@ -142,23 +142,18 @@ const checkPosition = (position) => {
 
 const getPoint = ({lat, lng}) => [lat, lng]
 
-const BusStopMarker = ( {passed} ) => {
+const BusStopMarker = ( {active, passed} ) => {
+  const classes = useStyles()
   return (
     <img 
       src="https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon.png"
       alt="" 
       tabIndex="0" 
+      className={`${classes.marker} ${active ? classes.active : ''}`}
       style={{
-        marginLeft: '38px',
-        marginTop: '-14px',
-        width: '25px',
-        height: '41px',
-        zIndex: 618,
-        outline: 'none',
-        filter: passed ? 'grayscale(100%)' : 'hue-rotate(130deg)'
+        filter: passed ? 'grayscale(100%)' : 'hue-rotate(130deg)',
       }}
     />
-    
   )
 }
 
@@ -174,5 +169,21 @@ const useStyles = makeStyles ( theme => ({
     height: '28px',
     marginBottom: '20px !important',
     marginRight: '5px !important'
+  },
+  marker: {
+    marginLeft: '38px',
+    marginTop: '-14px',
+    width: '25px',
+    height: '41px',
+    zIndex: 618,
+    outline: 'none'
+  },
+  active: {
+    animation: '$blinker 2s linear infinite'
+  },
+  "@keyframes blinker": {
+    '50%': {
+      opacity: 0.3
+    }
   }
 }) )

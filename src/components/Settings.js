@@ -20,14 +20,15 @@ import DataUsageIcon from '@material-ui/icons/DataUsage'
 import DeleteIcon from '@material-ui/icons/Delete'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import ShareIcon from '@material-ui/icons/Share'
-import moment from 'moment'
+import { vibrate } from '../utils'
 
 const Settings = () => {
   const { 
-    schemaVersion, updateTime, geoPermission, 
+    schemaVersion, versionMd5, updateTime, geoPermission, 
     setGeoPermission, renewDb, resetUsageRecord
   } = useContext ( AppContext )
   const [ updating, setUpdating ] = useState(false)
+  const [ showGeoPermissionDenied, setShowGeoPermissionDenied ] = useState(false)
   const [ isCopied, setIsCopied ] = useState(false)
 
   const { t, i18n } = useTranslation()
@@ -42,24 +43,29 @@ const Settings = () => {
       <List>
         <ListItem
           button
-          onClick={() => {setUpdating(true);renewDb()}}
+          onClick={() => {vibrate(1);setUpdating(true);renewDb()}}
         >
           <ListItemAvatar>
             <Avatar><BuildIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("架構版本")+": "+schemaVersion} 
-            secondary={t('更新時間') + ": " + moment(updateTime).format('YYYY-MM-DD HH:mm:ss')} 
+            primary={t("架構版本")+": "+schemaVersion+" - "+versionMd5.substr(0,6)} 
+            secondary={t('更新時間') + ": " + (new Date(updateTime)).toLocaleString().slice(0,20).replace(',',' ')} 
           />
         </ListItem>
         <ListItem
           button
           onClick={() => {
+            vibrate(1)
             if ( geoPermission === 'granted' ) {
               setGeoPermission('closed')
             } else {
+              setGeoPermission('opening')
               navigator.geolocation.getCurrentPosition(position => {
                 setGeoPermission('granted')
+              }, () => {
+                setGeoPermission('denied')
+                setShowGeoPermissionDenied(true)
               })
             }
           }}
@@ -69,12 +75,12 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText 
             primary={t("地理位置定位功能")} 
-            secondary={t(geoPermission === 'granted' ? '開啟' : '關閉') } 
+            secondary={t(geoPermission === 'granted' ? '開啟' : ( geoPermission === 'opening' ? '開啟中...' : '關閉' )) } 
           />
         </ListItem>
         <ListItem
           button
-          onClick={() => {resetUsageRecord()}}
+          onClick={() => {vibrate(1);resetUsageRecord()}}
         >
           <ListItemAvatar>
             <Avatar><DeleteIcon /></Avatar>
@@ -90,6 +96,7 @@ const Settings = () => {
           component='a'
           href={`https://github.com/chunlaw/hk-independent-bus-eta`}
           target="_blank"
+          onClick={() => {vibrate(1)}}
         >
           <ListItemAvatar>
             <Avatar><GitHubIcon /></Avatar>
@@ -114,6 +121,7 @@ const Settings = () => {
           component='a'
           href={`https://donate.612fund.hk/${i18n.language}/`}
           target="_blank"
+          onClick={() => {vibrate(1)}}
         >
           <ListItemAvatar>
             <Avatar><MonetizationOnIcon /></Avatar>
@@ -126,6 +134,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
+            vibrate(1)
             if ( navigator.clipboard ) {
               navigator.clipboard.writeText(`${window.location.hostname}${process.env.PUBLIC_URL}`)
               .then(() => {
@@ -150,12 +159,18 @@ const Settings = () => {
       />
       <Snackbar
         anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+        open={showGeoPermissionDenied}
+        autoHideDuration={1500}
+        onClose={(e, reason) => {
+          setShowGeoPermissionDenied(false)
+        }}
+        message={t('無法獲得地理位置定位功能權限')}
+      />
+      <Snackbar
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
         open={isCopied}
-        autoHideDuration={3000}
+        autoHideDuration={1500}
         onClose={(event, reason) => {
-          if (reason === 'clickaway') {
-            return;
-          }
           setIsCopied(false);
         }}
         message={t('鏈結已複製到剪貼簿')}

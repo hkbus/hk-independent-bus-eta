@@ -5,23 +5,27 @@ import {
   ListItem,
   ListItemText
 } from '@material-ui/core'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { vibrate } from '../../utils'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
-import { 
-  fetchEtas as fetchEtasViaApi
-} from '../../data-api'
+import { fetchEtas } from 'hk-bus-eta'
 import { getDistance } from '../../utils'
-import moment from 'moment'
 
-const Dist = ({name, location}) => {
+const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
   const { t } = useTranslation ()
   const { geoPermission, geolocation } = useContext ( AppContext )
+  const _fareString = fares && fares[seq] ? '$' + fares[seq] : '';
+  const _fareHolidayString = faresHoliday && faresHoliday[seq] ? '$' + faresHoliday[seq] : '';
+  const fareString = [_fareString, _fareHolidayString].filter(v => v).join(', ')
+  
   if ( geoPermission !== 'granted' ) {
-    return name
+    return name + '　' + ( fareString ? "("+fareString+")" : "" )
   }
-  return name + ' ('+getDistance(location, geolocation).toFixed(0)+t('米')+')'
+  
+  return name + ' - '+getDistance(location, geolocation).toFixed(0)+t('米')+
+     '　' + ( fareString ? "("+fareString+")" : "" )
 }
 
 const SuccinctTimeReport = ({routeId} ) => {
@@ -29,7 +33,7 @@ const SuccinctTimeReport = ({routeId} ) => {
   const { routeList, stopList } = useContext ( AppContext )
   const [ routeNo, serviceType ] = routeId.split('+')
   const [ routeKey, seq ] = routeId.split('/')
-  const { co, stops, dest, bound } = routeList[routeKey]
+  const { co, stops, dest, bound, nlbId, fares, faresHoliday } = routeList[routeKey]
   const stop = stopList[stops[co[0]] ? stops[co[0]][parseInt(seq, 10)] : null]
   const [ etas, setEtas ] = useState(null)
   const classes = useStyles()
@@ -38,8 +42,8 @@ const SuccinctTimeReport = ({routeId} ) => {
     let isMounted = true
     
     const fetchData = () => (
-      fetchEtasViaApi({
-        route: routeNo, routeStops: stops, seq: parseInt(seq, 10), bound, serviceType, co
+      fetchEtas({
+        route: routeNo, routeStops: stops, seq: parseInt(seq, 10), bound, serviceType, co, nlbId
       }).then ( _etas => {
         if (isMounted) setEtas(_etas)
       })
@@ -61,7 +65,7 @@ const SuccinctTimeReport = ({routeId} ) => {
   const getEtaString = (eta) => {
     if ( !eta ) return ''
     else {
-      const waitTime = Math.round(moment(eta.eta).diff(moment()) / 60 / 1000)
+      const waitTime = Math.round(((new Date(eta.eta)) - (new Date())) / 60 / 1000)
       if ( waitTime < 1 ) {
         return '- '+t('分鐘')
       } else if ( Number.isInteger(waitTime) ) {
@@ -71,13 +75,20 @@ const SuccinctTimeReport = ({routeId} ) => {
       }
     }
   }
+
+  const history = useHistory()
+  const handleClick = () => {
+    vibrate(1)
+    setTimeout(() => {
+      history.push(`/${i18n.language}/route/${routeId}`)
+    }, 0)
+  }
   
   return (
     <>
     <ListItem
       button
-      component={Link}
-      to={`/${i18n.language}/route/${routeId}`}
+      onClick={handleClick}
       className={classes.listItem}
     >
       <ListItemText 
@@ -87,7 +98,15 @@ const SuccinctTimeReport = ({routeId} ) => {
       {
         stop ? <ListItemText 
           primary={t('往')+' '+dest[i18n.language]}
-          secondary={<Dist name={stop.name[i18n.language]} location={stop.location} />}
+          secondary={
+            <DistAndFare 
+              name={stop.name[i18n.language]} 
+              location={stop.location} 
+              fares={fares} 
+              faresHoliday={faresHoliday} 
+              seq={parseInt(seq, 10)}
+            />
+          }
           className={classes.routeDest}
         /> : <CircularProgress size={15} />
       }

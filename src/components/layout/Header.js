@@ -7,9 +7,10 @@ import {
   Typography
 } from "@material-ui/core"
 import { withStyles, makeStyles } from '@material-ui/core/styles'
-import { Link, useLocation, useHistory, useRouteMatch } from 'react-router-dom'
+import { useLocation, useHistory, useRouteMatch } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
+import { vibrate, checkMobile } from '../../utils'
 
 const Header = (props) => {
   const { searchRoute, setSearchRoute } = useContext( AppContext )
@@ -21,6 +22,7 @@ const Header = (props) => {
   const history = useHistory()
 
   const handleLanguageChange = lang => {
+    vibrate(1)
     history.replace( location.pathname.replace('/'+i18n.language+'/', '/'+lang+'/') )
     i18n.changeLanguage(lang)
   }
@@ -29,14 +31,13 @@ const Header = (props) => {
     <Toolbar
       className={classes.toolbar}
     >
-      <Link
-        to={{
-          pathname: `/${i18n.language}/search`
-        }}
+      <div onClick={() => {
+          vibrate(1)
+          history.push(`/${i18n.language}/search`)}
+        }
       >
-        <Typography variant="h6">香港</Typography>
         <Typography variant='subtitle2'>獨立巴士預報</Typography>
-      </Link> 
+      </div> 
       <Input 
         className={classes.searchRouteInput}
         type="text"
@@ -44,7 +45,10 @@ const Header = (props) => {
         placeholder={t('巴士線')}
         onChange={e => setSearchRoute(e.target.value)}
         onFocus={e => {
-          document.activeElement.blur();
+          vibrate(1)
+          if ( checkMobile() ) {
+            document.activeElement.blur()
+          }
           history.replace(`/${i18n.language}/search`)
         }}
         disabled={path.includes('route')}
