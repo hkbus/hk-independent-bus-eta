@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core/styles'
 import React, { useContext } from 'react'
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Redirect,
   Switch,
   Route,

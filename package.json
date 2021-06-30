@@ -65,7 +65,7 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://chunlaw.github.io/hk-independent-bus-eta",
+  "homepage": "https://hkbus.app/",
   "devDependencies": {
     "@types/leaflet": "^1.7.0"
   }
