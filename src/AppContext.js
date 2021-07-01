@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta' 
 import { vibrate } from './utils'
+import { compressToBase64, decompressFromBase64 } from 'lz-string'
 
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
+  const AppTitle = '巴士到站預報 App'
   const [schemaVersion, setSchemaVersion] = useState(localStorage.getItem('schemaVersion'))
   const [versionMd5, setVersionMd5] = useState(localStorage.getItem('versionMd5'))
   // route list & stop list & route-stop list
-  const [routeList, setRouteList] = useState(JSON.parse(localStorage.getItem('routeList')))
-  const [stopList, setStopList] = useState(JSON.parse(localStorage.getItem('stopList')))
-  const [stopMap, setStopMap] = useState(JSON.parse(localStorage.getItem('stopMap')))
+  const [routeList, setRouteList] = useState(JSON.parse(decompress(localStorage.getItem('routeList'))))
+  const [stopList, setStopList] = useState(JSON.parse(decompress(localStorage.getItem('stopList'))))
+  const [stopMap, setStopMap] = useState(JSON.parse(decompress(localStorage.getItem('stopMap'))))
   const [updateTime, setUpdateTime] = useState(parseInt(localStorage.getItem('updateTime'), 10))
   // search route
   const [searchRoute, setSearchRoute] = useState("")
@@ -95,15 +97,15 @@ export const AppContextProvider = ( props ) => {
   }, [savedEtas])
 
   useEffect(() => {
-    localStorage.setItem('stopList', JSON.stringify(stopList))
+    localStorage.setItem('stopList', compressToBase64(JSON.stringify(stopList)))
   }, [stopList])
 
   useEffect(() => {
-    localStorage.setItem('stopMap', JSON.stringify(stopMap))
+    localStorage.setItem('stopMap', compressToBase64(JSON.stringify(stopMap)))
   }, [stopMap])
 
   useEffect(() => {
-    localStorage.setItem('routeList', JSON.stringify(routeList))
+    localStorage.setItem('routeList', compressToBase64(JSON.stringify(routeList)))
   }, [routeList])
 
   useEffect(() => {
@@ -156,6 +158,7 @@ export const AppContextProvider = ( props ) => {
 
   return (
     <AppContext.Provider value={{
+        AppTitle,
         routeList, stopList, stopMap,
         setRouteList, setStopList,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
@@ -187,4 +190,11 @@ const getPossibleChar = ( searchRoute, routeList ) => {
     }
   })
   return Object.entries(possibleChar).map(k => k[0]).filter(k => k !== '+')
+}
+
+const decompress = (txt) => {
+  let ret = decompressFromBase64(txt)
+  if ( ret && ret.length )
+    return ret
+  return txt
 }
