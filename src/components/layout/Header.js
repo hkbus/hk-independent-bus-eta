@@ -36,7 +36,7 @@ const Header = (props) => {
           history.push(`/${i18n.language}/search`)}
         }
       >
-        <Typography variant='subtitle2'>巴士到站預報</Typography>
+        <Typography component="h1" variant='subtitle2'>巴士到站預報</Typography>
       </div> 
       <Input 
         className={classes.searchRouteInput}

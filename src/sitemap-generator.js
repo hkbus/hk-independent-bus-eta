@@ -11,8 +11,8 @@ enPages = content.map(path => `${host}/?/en${path}`)
 // route pages
 request('https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json', (e, r, b) => {
   var routeList = JSON.parse(b)['routeList']
-  zhRoutes = Object.entries(routeList).map(route => `${host}/?/zh/route/${encodeURIComponent(route[0])}`)
-  enRoutes = Object.entries(routeList).map(route => `${host}/?/en/route/${encodeURIComponent(route[0])}`)
+  zhRoutes = Object.entries(routeList).map(route => `${host}/?/zh/route/${route[0].replace(/ /g, '%20')}`)
+  enRoutes = Object.entries(routeList).map(route => `${host}/?/en/route/${route[0].replace(/ /g, '%20')}`)
   
   // write to file
   fs.writeFileSync('build/sitemap.txt', [host].concat(zhPages, enPages, zhRoutes, enRoutes).join("\n"))
