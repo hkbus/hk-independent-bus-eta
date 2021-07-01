@@ -51,11 +51,11 @@ const PageSwitch = () => {
 }
 
 const App = () => { 
-  const { routeList, stopList } = useContext( AppContext )
+  const { routeList, stopList, stopMap } = useContext( AppContext )
   const { t } = useTranslation()
   const classes = useStyles()
 
-  if ( routeList == null || stopList == null ) {
+  if ( routeList == null || stopList == null || stopMap == null ) {
     return (
       <Container maxWidth='xs' disableGutters className={classes.loadingContainer}>
         <CircularProgress size={40} />
@@ -92,7 +92,7 @@ const App = () => {
     </MuiThemeProvider>
   );
 }
-
+ 
 export default App;
 
 const Theme = createMuiTheme({
