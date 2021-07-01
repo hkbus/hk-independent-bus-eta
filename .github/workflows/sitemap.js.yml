@@ -26,6 +26,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+    - run: npm install request --save
     - run: node src/sitemap-generator.js
     - name: Update sitemap.txt
       uses: test-room-7/action-update-file@v1
