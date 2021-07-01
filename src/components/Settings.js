@@ -38,6 +38,7 @@ const Settings = () => {
   useEffect(() => {
     document.title = t('設定') + ' - ' +t(AppTitle)
     setUpdating(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateTime])
 
   return (
