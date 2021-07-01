@@ -39,10 +39,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "node src/sitemap-generator.js && react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "yarn run build",
+    "predeploy": "yarn run build && node src/sitemap-generator.js",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
