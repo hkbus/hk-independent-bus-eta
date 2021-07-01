@@ -5,6 +5,7 @@ import { vibrate } from './utils'
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
+  const AppTitle = '獨立巴士預報'
   const [schemaVersion, setSchemaVersion] = useState(localStorage.getItem('schemaVersion'))
   const [versionMd5, setVersionMd5] = useState(localStorage.getItem('versionMd5'))
   // route list & stop list & route-stop list
@@ -156,6 +157,7 @@ export const AppContextProvider = ( props ) => {
 
   return (
     <AppContext.Provider value={{
+        AppTitle,
         routeList, stopList, stopMap,
         setRouteList, setStopList,
         searchRoute, setSearchRoute, updateSearchRouteByButton,

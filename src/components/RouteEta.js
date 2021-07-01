@@ -3,18 +3,13 @@ import { useParams, useHistory } from 'react-router-dom'
 import RouteMap from './route-eta/RouteMap'
 import StopAccordions from './route-eta/StopAccordions'
 import StopDialog from './route-eta/StopDialog'
-import {
-  Box, 
-  CircularProgress,
-  Typography
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { Typography } from '@material-ui/core'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
 
 const RouteEta = () => {
   const { id, panel } = useParams()
-  const { routeList, stopMap, updateSelectedRoute } = useContext ( AppContext )
+  const { AppTitle, routeList, stopMap, updateSelectedRoute } = useContext ( AppContext )
   const { route, stops, co, orig, dest, nlbId } = routeList[id]
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
   const [ isDialogOpen, setIsDialogOpen ] = useState(false) 
@@ -52,29 +47,10 @@ const RouteEta = () => {
   }, [route])
 
   useEffect(() => {
+    document.title = route + ' ' + t('往') + ' ' + dest[i18n.language] + ' - ' + t(AppTitle)
     updateSelectedRoute( id )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const classes = useStyles()
-
-  if ( stops[co[0]] == null ) {
-    return (
-      <Box className={classes.loadingContainer}>
-        <CircularProgress size={30} />
-      </Box>
-    )
-  }
-
-  // as stops for some routes are not fetched beforehand
-  // the route may be not exist as it is uni-direction
-  if ( stops[co[0]].length === 0 ) {
-    return (
-      <>
-        <Typography variant="h5" align="center">{t('路線不存在')}</Typography>
-      </>
-    )
-  }
 
   return (
     <>
@@ -104,10 +80,3 @@ const RouteEta = () => {
 }
 
 export default RouteEta
-
-const useStyles = makeStyles(theme => ({
-  loadingContainer: {
-    display: 'flex',
-    justifyContent: 'center'
-  }
-}))

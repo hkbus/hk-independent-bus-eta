@@ -8,11 +8,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../AppContext'
 import { getDistance } from '../utils'
 import SuccinctTimeReport from './home/SuccinctTimeReport'
+import { useTranslation } from 'react-i18next'
 
 const Home = () => {
   const { 
+    AppTitle,
     hotRoute, savedEtas, routeList, stopList
   } = useContext ( AppContext )
+  const { t } = useTranslation()
 
   const [selectedRoutes, setSelectedRoute] = useState(
     savedEtas.concat(
@@ -25,6 +28,7 @@ const Home = () => {
   const [doneGeoRoutes, setDoneGeoRoutes] = useState(false)
 
   useEffect (() => {
+    document.title = t(AppTitle)
     let isMounted = true
     // to enhance performance, we used cached geolocation
     const geolocation = JSON.parse(localStorage.getItem('geolocation'))

@@ -24,6 +24,7 @@ import { vibrate } from '../utils'
 
 const Settings = () => {
   const { 
+    AppTitle,
     schemaVersion, versionMd5, updateTime, geoPermission, 
     setGeoPermission, renewDb, resetUsageRecord
   } = useContext ( AppContext )
@@ -35,6 +36,7 @@ const Settings = () => {
   const classes = useStyles()
 
   useEffect(() => {
+    document.title = t('設定') + ' - ' +t(AppTitle)
     setUpdating(false)
   }, [updateTime])
 
