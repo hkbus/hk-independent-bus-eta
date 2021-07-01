@@ -5,9 +5,10 @@ name: Build
 
 on:
   push:
-    branches: [ gh-pages ]
+    branches: 
+      - gh-pages
   schedule:
-    - cron: "5 55 * * *"
+    - cron: '55 19 * * *'
 
 jobs:
   build:
