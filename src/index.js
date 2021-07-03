@@ -4,14 +4,17 @@ import './index.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import reportWebVitals from './reportWebVitals';
+import { DbProvider } from './DbContext'
 import { AppContextProvider } from './AppContext'
 import './i18n'
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppContextProvider>
-      <App />
-    </AppContextProvider>
+    <DbProvider>
+      <AppContextProvider>
+        <App />
+      </AppContextProvider>
+    </DbProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
