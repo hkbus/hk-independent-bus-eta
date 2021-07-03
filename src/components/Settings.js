@@ -20,6 +20,7 @@ import DataUsageIcon from '@material-ui/icons/DataUsage'
 import DeleteIcon from '@material-ui/icons/Delete'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import ShareIcon from '@material-ui/icons/Share'
+import TelegramIcon from '@material-ui/icons/Telegram'
 import { vibrate } from '../utils'
 
 const Settings = () => {
@@ -155,6 +156,21 @@ const Settings = () => {
             secondary={t('經不同媒介分享給親友') } 
           />
         </ListItem>
+        <ListItem
+          button
+          component='a'
+          href={`https://t.me/hkbusapp`}
+          target="_blank"
+          onClick={() => {vibrate(1)}}
+        >
+          <ListItemAvatar>
+            <Avatar><TelegramIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={t("Telegram 交流區")} 
+            secondary={t('歡迎意見及技術交流') } 
+          />
+        </ListItem>
       </List>
       <Snackbar
         anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
@@ -188,6 +204,7 @@ export default Settings
 const useStyles = makeStyles ( theme => ({
   root: {
     background: 'white',
-    height: 'calc(100vh - 120px)'
+    height: 'calc(100vh - 120px)',
+    overflowY: "scroll"
   }
 }))
