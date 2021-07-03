@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 
 const RouteEta = () => {
   const { id, panel } = useParams()
-  const { AppTitle, routeList, stopMap, updateSelectedRoute } = useContext ( AppContext )
+  const { AppTitle, routeList, stopList, stopMap, updateSelectedRoute } = useContext ( AppContext )
   const { route, stops, co, orig, dest, nlbId } = routeList[id]
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
   const [ isDialogOpen, setIsDialogOpen ] = useState(false) 
@@ -38,6 +38,14 @@ const RouteEta = () => {
     setIsDialogOpen(false)
   }
 
+  const pageDesc = () => {
+    if ( i18n.language === 'zh' ) {
+      return `由${co.map(c => t(c)).join('、')}聯營的${route}路線，途經${stops[co[0]].map(stop => stopList[stop].name.zh).join('、')}`
+    } else {
+      return `The route ${route} is supported by ${co.map(c => t(c)).join(',')}. The stops of the route are ${stops[co[0]].map(stop => stopList[stop].name.en).join(',')}`
+    }
+  }
+
   useEffect( () => {
     setIsDialogOpen(false)
     if ( panel ) {
@@ -48,6 +56,8 @@ const RouteEta = () => {
 
   useEffect(() => {
     document.title = route + ' ' + t('往') + ' ' + dest[i18n.language] + ' - ' + t(AppTitle)
+    document.querySelector('meta[name="description"]').setAttribute("content", pageDesc())
+    
     updateSelectedRoute( id )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

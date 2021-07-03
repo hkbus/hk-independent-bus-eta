@@ -37,6 +37,7 @@ const Settings = () => {
 
   useEffect(() => {
     document.title = t('設定') + ' - ' +t(AppTitle)
+    document.querySelector('meta[name="description"]').setAttribute("content", t('巴士 App 設定，重置資料庫、查看原始碼及捐款支持'))
     setUpdating(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateTime])

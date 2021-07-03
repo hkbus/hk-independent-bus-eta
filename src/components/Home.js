@@ -29,6 +29,7 @@ const Home = () => {
 
   useEffect (() => {
     document.title = t(AppTitle)
+    document.querySelector('meta[name="description"]').setAttribute("content", t('巴士到站預報 App，一 App 盡覽九巴、龍運、新巴、城巴、嶼巴巴士路線、車費及到站預報'))
     let isMounted = true
     // to enhance performance, we used cached geolocation
     const geolocation = JSON.parse(localStorage.getItem('geolocation'))
