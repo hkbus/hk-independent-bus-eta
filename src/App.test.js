@@ -1,13 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
+import { DbProvider } from './DbContext'
 import { AppContextProvider } from './AppContext'
 import './i18n'
 
 test('renders App', () => {
   render(
-    <AppContextProvider>
-      <App />
-    </AppContextProvider>
+    <DbProvider>
+      <AppContextProvider>
+        <App />
+      </AppContextProvider>
+    </DbProvider>
   );
   const initializingElement = screen.getByText(/初始設定/);
   expect(initializingElement).toBeInTheDocument();
