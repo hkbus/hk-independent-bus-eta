@@ -99,7 +99,7 @@ const Settings = () => {
         <ListItem
           button
           component='a'
-          href={`https://github.com/chunlaw/hk-independent-bus-eta`}
+          href={`https://github.com/hkbus/hk-independent-bus-eta`}
           target="_blank"
           onClick={() => {vibrate(1)}}
         >
