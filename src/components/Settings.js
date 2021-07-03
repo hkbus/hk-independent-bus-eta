@@ -95,7 +95,7 @@ const Settings = () => {
         <ListItem
           button
           component='a'
-          href={`https://github.com/chunlaw/hk-independent-bus-eta`}
+          href={`https://github.com/chunlaw/hk-independent-bus-eta/`}
           target="_blank"
           onClick={() => {vibrate(1)}}
         >
@@ -137,7 +137,7 @@ const Settings = () => {
           onClick={() => {
             vibrate(1)
             if ( navigator.clipboard ) {
-              navigator.clipboard.writeText(`${window.location.hostname}${process.env.PUBLIC_URL}`)
+              navigator.clipboard.writeText('https://hkbus.app/')
               .then(() => {
                 setIsCopied(true)
               })
