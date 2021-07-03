@@ -5,7 +5,7 @@ import DbContext from './DbContext'
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
-  const { AppTitle, schemaVersion, versionMd5, routeList, stopList, stopMap, updateTime, renewDb } = useContext(DbContext)
+  const { schemaVersion, versionMd5, routeList, stopList, stopMap, updateTime, renewDb } = useContext(DbContext)
   
   // search route
   const [searchRoute, setSearchRoute] = useState("")
@@ -105,7 +105,6 @@ export const AppContextProvider = ( props ) => {
 
   return (
     <AppContext.Provider value={{
-        AppTitle,
         routeList, stopList, stopMap,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
         selectedRoute, updateSelectedRoute,

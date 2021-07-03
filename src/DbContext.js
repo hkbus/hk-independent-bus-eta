@@ -5,7 +5,6 @@ import { compressToBase64, decompressFromBase64 } from 'lz-string'
 const DbContext = React.createContext()
 
 export const DbProvider = ( props ) => {
-  const AppTitle = '巴士到站預報 App'
   const [schemaVersion, setSchemaVersion] = useState(localStorage.getItem('schemaVersion'))
   const [versionMd5, setVersionMd5] = useState(localStorage.getItem('versionMd5'))
   // route list & stop list & route-stop list
@@ -66,7 +65,6 @@ export const DbProvider = ( props ) => {
 
   return (
     <DbContext.Provider value={{
-        AppTitle,
         routeList, stopList, stopMap,
         // settings
         renewDb, schemaVersion, versionMd5, updateTime
