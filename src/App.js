@@ -54,7 +54,7 @@ const App = () => {
   const { routeList, stopList, stopMap } = useContext( AppContext )
   const { t } = useTranslation()
   const classes = useStyles()
-
+  
   if ( routeList == null || stopList == null || stopMap == null ) {
     return (
       <Container maxWidth='xs' disableGutters className={classes.loadingContainer}>

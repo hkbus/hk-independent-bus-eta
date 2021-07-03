@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta' 
+import React, { useContext, useEffect, useState } from 'react'
 import { vibrate } from './utils'
-import { compressToBase64, decompressFromBase64 } from 'lz-string'
+import DbContext from './DbContext'
 
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
-  const AppTitle = '巴士到站預報 App'
-  const [schemaVersion, setSchemaVersion] = useState(localStorage.getItem('schemaVersion'))
-  const [versionMd5, setVersionMd5] = useState(localStorage.getItem('versionMd5'))
-  // route list & stop list & route-stop list
-  const [routeList, setRouteList] = useState(decompressJsonString(localStorage.getItem('routeList')))
-  const [stopList, setStopList] = useState(decompressJsonString(localStorage.getItem('stopList')))
-  const [stopMap, setStopMap] = useState(decompressJsonString(localStorage.getItem('stopMap')))
-  const [updateTime, setUpdateTime] = useState(parseInt(localStorage.getItem('updateTime'), 10))
+  const { AppTitle, schemaVersion, versionMd5, routeList, stopList, stopMap, updateTime, renewDb } = useContext(DbContext)
+  
   // search route
   const [searchRoute, setSearchRoute] = useState("")
   // selected route for bottom navigation shortcut
@@ -30,38 +23,8 @@ export const AppContextProvider = ( props ) => {
   // possible Char for RouteInputPad
   const [possibleChar, setPossibleChar] = useState([])
   
-  const renewDb = () => {
-    fetchEtaObj().then( ({routeList, stopList, stopMap}) => {
-      setRouteList(routeList)
-      setStopList(stopList)
-      setStopMap(stopMap)
-      setUpdateTime( Date.now() )
-    })
-  }
 
   useEffect(() => {
-    // check app version and flush localstorage if outdated
-    Promise.all([
-      fetch(process.env.PUBLIC_URL+'/schema-version.txt').then(r => r.text()),
-      fetchEtaObjMd5()
-    ]).then( ([_schemaVersion, _md5] ) => {
-      let needRenew = false
-      if ( schemaVersion !== _schemaVersion ) {
-        setSchemaVersion(_schemaVersion)
-        localStorage.setItem('schemaVersion', _schemaVersion)
-        needRenew = true
-      }
-      if ( versionMd5 !== _md5 ) {
-        setVersionMd5(_md5)
-        localStorage.setItem('versionMd5', _md5)
-        needRenew = true
-      }
-      needRenew = needRenew || routeList == null || stopList == null
-      if (needRenew) {
-        renewDb()
-      }
-    })
-
     if ( geoPermission === 'granted' ) {
       const _geoWatcherId = navigator.geolocation.watchPosition(({coords: {latitude, longitude}}) => {
         setGeolocation({lat: latitude, lng: longitude})
@@ -95,22 +58,6 @@ export const AppContextProvider = ( props ) => {
   useEffect(() => {
     localStorage.setItem('savedEtas', JSON.stringify(savedEtas))
   }, [savedEtas])
-
-  useEffect(() => {
-    localStorage.setItem('stopList', compressToBase64(JSON.stringify(stopList)))
-  }, [stopList])
-
-  useEffect(() => {
-    localStorage.setItem('stopMap', compressToBase64(JSON.stringify(stopMap)))
-  }, [stopMap])
-
-  useEffect(() => {
-    localStorage.setItem('routeList', compressToBase64(JSON.stringify(routeList)))
-  }, [routeList])
-
-  useEffect(() => {
-    localStorage.setItem('updateTime', updateTime)
-  }, [updateTime])
 
   useEffect(() => {
     localStorage.setItem('geolocation', JSON.stringify(geolocation))
@@ -160,7 +107,6 @@ export const AppContextProvider = ( props ) => {
     <AppContext.Provider value={{
         AppTitle,
         routeList, stopList, stopMap,
-        setRouteList, setStopList,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
         selectedRoute, updateSelectedRoute,
         possibleChar,
@@ -190,12 +136,4 @@ const getPossibleChar = ( searchRoute, routeList ) => {
     }
   })
   return Object.entries(possibleChar).map(k => k[0]).filter(k => k !== '+')
-}
-
-const decompressJsonString = (txt) => {
-  let ret = decompressFromBase64(txt)
-  if ( ret && ret.length && ret !== 'null' && txt.endsWith('=') ){
-    return JSON.parse(ret)
-  }
-  return null
 }
