@@ -141,7 +141,7 @@ const Settings = () => {
           onClick={() => {
             vibrate(1)
             if ( navigator.clipboard ) {
-              navigator.clipboard.writeText(`${window.location.hostname}${process.env.PUBLIC_URL}`)
+              navigator.clipboard.writeText('https://hkbus.app/')
               .then(() => {
                 setIsCopied(true)
               })
