@@ -63,7 +63,7 @@ const RouteRow = React.memo(( {data, index, style} ) => {
                 {
                   route[1].co.map(co => {
                     return (
-                      <span className={classes[co]}>
+                      <span className={classes.company}>
                         {t(co)}
                       </span>
                     )
@@ -101,33 +101,9 @@ const useStyles = makeStyles (theme => ({
     fontSize: '0.6rem',
     marginLeft: '8px'
   },
-  kmb: {
-    background: 'red',
-    color: 'white',
-    fontWeight: 600,
-    fontSize: '0.6rem',
-    padding: '2px 3px',
-    marginRight: '2px'
-  },
-  ctb: {
-    background: '#0080FF',
-    color: 'white',
-    fontWeight: 600,
-    fontSize: '0.6rem',
-    padding: '2px 3px',
-    marginRight: '2px'
-  },
-  nwfb: {
-    background: '#7000CC',
-    color: 'white',
-    fontWeight: 600,
-    fontSize: '0.6rem',
-    padding: '2px 3px',
-    marginRight: '2px'
-  },
-  nlb: {
-    background: '#0080FF',
-    color: 'white',
+  company: {
+    background: 'rgba(0, 0, 0, 0.12)',
+    color: 'black',
     fontWeight: 600,
     fontSize: '0.6rem',
     padding: '2px 3px',
