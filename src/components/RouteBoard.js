@@ -18,6 +18,7 @@ const RouteList = () => {
 
   useEffect(() => {
     document.title = t('搜尋') + ' - ' + t(AppTitle)
+    document.querySelector('meta[name="description"]').setAttribute("content", t('巴士 App 路線搜尋介面'))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
