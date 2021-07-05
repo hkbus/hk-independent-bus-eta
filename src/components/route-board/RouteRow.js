@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { areEqual } from 'react-window'
 import { useHistory } from  'react-router-dom'
 import { vibrate } from '../../utils'
+import RouteNo from '../RouteNo'
 
 const RouteInfo = ( {route} ) => {
   const { t, i18n } = useTranslation()
@@ -43,7 +44,7 @@ const RouteRow = React.memo(( {data, index, style} ) => {
       <Card variant="outlined" key={route[0]} style={style} square>
         <CardActionArea>
           <CardContent className={classes.cardContent}>
-            <Typography variant="h5" display="inline">{routeNo}</Typography>
+            <Typography variant="h5" display="inline">{<RouteNo routeNo={routeNo} />}</Typography>
             <Typography variant="caption"> - {route[1].co.map(co => t(co)).join('+')}</Typography>
             <br/>
             <RouteInfo route={route[1]} />
