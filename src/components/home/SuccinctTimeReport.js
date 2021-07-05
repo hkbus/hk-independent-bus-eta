@@ -7,11 +7,12 @@ import {
 } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 import { vibrate } from '../../utils'
-import { makeStyles } from '@material-ui/core/styles'
+import { formatMs, makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
 import { fetchEtas } from 'hk-bus-eta'
 import { getDistance } from '../../utils'
+import RouteNo from '../RouteNo'
 
 const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
   const { t } = useTranslation ()
@@ -92,7 +93,7 @@ const SuccinctTimeReport = ({routeId} ) => {
       className={classes.listItem}
     >
       <ListItemText 
-        primary={routeNo} 
+        primary={<RouteNo routeNo={routeNo} />} 
         className={classes.route}
       />
       {
