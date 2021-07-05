@@ -14,14 +14,24 @@ import RouteNo from '../RouteNo'
 
 const RouteInfo = ( {route} ) => {
   const { t, i18n } = useTranslation()
+  const classes = useStyles()
 
   return (
-    <>
+    <div className={classes.routeInfo}>
     { route.nlbId ?
-      <Typography variant="subtitle2" display="inline">{t('往')} {route.dest[i18n.language]} {t('由')+" "+route.orig[i18n.language]}</Typography>
-      : <Typography variant="subtitle2" display="inline">{t('往')} {route.dest[i18n.language]}</Typography>
+      <>
+        <span className={classes.fromToText}>{`${t('往')} `}</span>
+          <b>{route.dest[i18n.language]}</b>
+          <br />
+          <span className={classes.fromToText}>{`${t('由')} `}</span>
+          <b>{route.orig[i18n.language]}</b>
+      </>
+      : <>
+          <span className={classes.fromToText}>{`${t('往')} `}</span>
+          <b>{route.dest[i18n.language]}</b>
+        </>
     }
-    </>
+    </div>
   )
 }
 
@@ -44,11 +54,27 @@ const RouteRow = React.memo(( {data, index, style} ) => {
       <Card variant="outlined" key={route[0]} style={style} square>
         <CardActionArea>
           <CardContent className={classes.cardContent}>
-            <Typography variant="h5" display="inline">{<RouteNo routeNo={routeNo} />}</Typography>
-            <Typography variant="caption"> - {route[1].co.map(co => t(co)).join('+')}</Typography>
-            <br/>
+            <div>
+              <div>
+                <RouteNo routeNo={routeNo} />
+                {service_type >= 2 && <Typography variant="caption" className={classes.specialTrip}>{t('特別班次')}</Typography>}
+              </div>
+              <div>
+                {
+                  route[1].co.map(co => {
+                    return (
+                      <span className={classes[co]}>
+                        {t(co)}
+                      </span>
+                    )
+                  })
+                }
+              {/* <Typography variant="caption">
+                  {route[1].co.map(co => t(co)).join('+')}
+              </Typography> */}
+              </div>
+            </div>
             <RouteInfo route={route[1]} />
-            <Typography variant="caption">{service_type >= 2 ? t('特別班次') : '　'}</Typography>
           </CardContent>
         </CardActionArea>
       </Card>
@@ -60,6 +86,51 @@ export default RouteRow
 
 const useStyles = makeStyles (theme => ({
   cardContent: {
-    padding: '8px 16px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '4px 16px',
+  },
+  routeInfo: {
+    textAlign: 'right',
+  },
+  fromToText: {
+    fontSize: '0.85rem'
+  },
+  specialTrip: {
+    fontSize: '0.6rem',
+    marginLeft: '8px'
+  },
+  kmb: {
+    background: 'red',
+    color: 'white',
+    fontWeight: 600,
+    fontSize: '0.6rem',
+    padding: '2px 3px',
+    marginRight: '2px'
+  },
+  ctb: {
+    background: '#0080FF',
+    color: 'white',
+    fontWeight: 600,
+    fontSize: '0.6rem',
+    padding: '2px 3px',
+    marginRight: '2px'
+  },
+  nwfb: {
+    background: '#7000CC',
+    color: 'white',
+    fontWeight: 600,
+    fontSize: '0.6rem',
+    padding: '2px 3px',
+    marginRight: '2px'
+  },
+  nlb: {
+    background: '#0080FF',
+    color: 'white',
+    fontWeight: 600,
+    fontSize: '0.6rem',
+    padding: '2px 3px',
+    marginRight: '2px'
   }
 }))
