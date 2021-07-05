@@ -6,6 +6,7 @@ import StopDialog from './route-eta/StopDialog'
 import { Typography } from '@material-ui/core'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
+import RouteNo from './RouteNo'
 
 const RouteEta = () => {
   const { id, panel } = useParams()
@@ -65,7 +66,7 @@ const RouteEta = () => {
   return (
     <>
       <Typography variant="subtitle1" align='center'>
-        {route}
+        <RouteNo routeNo={route} />
       </Typography>
       <Typography variant="caption" align='center'>
         {t('往')} {dest[i18n.language]} {nlbId ? t('由')+" "+orig[i18n.language] : ""}
