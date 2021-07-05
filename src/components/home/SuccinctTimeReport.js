@@ -98,7 +98,10 @@ const SuccinctTimeReport = ({routeId} ) => {
       />
       {
         stop ? <ListItemText 
-          primary={t('往')+' '+dest[i18n.language]}
+          primary={<>
+            <span className={classes.toText}>{`${t('往')} `}</span>
+            <b>{dest[i18n.language]}</b>
+          </>}
           secondary={
             <DistAndFare 
               name={stop.name[i18n.language]} 
@@ -136,5 +139,8 @@ const useStyles = makeStyles(theme => ({
   },
   routeEta: {
     width: '20%'
-  }
+  },
+  toText: {
+    fontSize: '0.85rem'
+  },
 }))
