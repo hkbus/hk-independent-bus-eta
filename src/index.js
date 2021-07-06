@@ -8,7 +8,7 @@ import { DbProvider } from './DbContext'
 import { AppContextProvider } from './AppContext'
 import './i18n'
 
-if (!navigator.userAgent.match(/googlebot/i)){
+if (!navigator.userAgent.match(/googlebot/i) || window.location.pathname === '/'){
   // content should be prerendered
   ReactDOM.render(
     <React.StrictMode>
