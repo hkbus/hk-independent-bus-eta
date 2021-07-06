@@ -24,7 +24,7 @@ const RouteEta = () => {
     setExpanded(newExpanded ? panel : false)
     setDialogStop ( getDialogStops(co, stops, stopMap, panel) )
     if ( newExpanded ) {
-      history.replace(`/${i18n.language}/route/${id}/${panel}`)
+      history.replace(`/${i18n.language}/route/${_id}/${panel}`)
       return
     }
   }
@@ -56,16 +56,25 @@ const RouteEta = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route])
 
-  useEffect(() => {
+  const updateHeader = () => {
     document.title = route + ' ' + t('往') + ' ' + dest[i18n.language] + ' - ' + t(AppTitle)
     document.querySelector('meta[name="description"]').setAttribute("content", pageDesc())
     document.querySelector('link[rel="canonical"]').setAttribute("href", `https://hkbus.app/${i18n.language}/route/${_id}`)
     document.querySelector('link[rel="alternative"][hreflang="en"]').setAttribute("href", `https://hkbus.app/en/route/${_id}`)
     document.querySelector('link[rel="alternative"][hreflang="zh-Hant"]').setAttribute("href", `https://hkbus.app/zh/route/${_id}`)
-    
+    document.getElementById(_id).setAttribute("value", _id)
+  }
+
+  useEffect(() => {
+    updateHeader()
     updateSelectedRoute( id )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    updateHeader()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [_id])
 
   return (
     <>

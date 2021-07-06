@@ -101,7 +101,7 @@ const Settings = () => {
         <Divider />
         <ListItem
           button
-          component='a'
+          component={'a'}
           href={`https://github.com/hkbus/hk-independent-bus-eta`}
           target="_blank"
           onClick={() => {vibrate(1)}}

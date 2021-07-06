@@ -5,7 +5,7 @@ import {
   ListItem,
   ListItemText
 } from '@material-ui/core'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { vibrate } from '../../utils'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
@@ -78,7 +78,8 @@ const SuccinctTimeReport = ({routeId} ) => {
   }
 
   const history = useHistory()
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault()
     vibrate(1)
     setTimeout(() => {
       history.push(`/${i18n.language}/route/${routeId.replace(/ /g, '_')}`)
@@ -88,7 +89,8 @@ const SuccinctTimeReport = ({routeId} ) => {
   return (
     <>
     <ListItem
-      button
+      component={Link}
+      to={`/${i18n.language}/route/${routeId.replace(/ /g, '_')}`}
       onClick={handleClick}
       className={classes.listItem}
     >
@@ -129,7 +131,8 @@ export default SuccinctTimeReport
 
 const useStyles = makeStyles(theme => ({
   listItem: {
-    padding: '4px 16px'
+    padding: '4px 16px',
+    color: 'rgba(0,0,0,0.87)'
   },
   route: {
     width: '15%'

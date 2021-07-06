@@ -8,7 +8,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 import { areEqual } from 'react-window'
-import { useHistory } from  'react-router-dom'
+import { Link, useHistory } from  'react-router-dom'
 import { vibrate } from '../../utils'
 import RouteNo from './RouteNo'
 
@@ -42,7 +42,8 @@ const RouteRow = React.memo(( {data, index, style} ) => {
   const [routeNo, service_type] = route[0].split('+').slice(0,2)
   const classes = useStyles()
   const history = useHistory()
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault()
     vibrate(1)
     setTimeout(() => {
       history.push(`/${i18n.language}/route/${route[0].replace(/ /g,'_')}`)
@@ -50,7 +51,7 @@ const RouteRow = React.memo(( {data, index, style} ) => {
   }
 
   return (
-    <div onClick={handleClick} >
+    <Link onClick={handleClick} to={`/${i18n.language}/route/${route[0].replace(/ /g,'_')}`}>
       <Card variant="outlined" key={route[0]} style={style} square>
         <CardActionArea>
           <CardContent className={classes.cardContent}>
@@ -67,7 +68,7 @@ const RouteRow = React.memo(( {data, index, style} ) => {
           </CardContent>
         </CardActionArea>
       </Card>
-    </div>
+    </Link>
   )
 }, areEqual)
 

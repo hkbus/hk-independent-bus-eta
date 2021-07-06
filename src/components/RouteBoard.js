@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import AppContext from '../AppContext'
+import { List } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import { FixedSizeList } from 'react-window'
 import memorize from 'memoize-one'
 import RouteInputPad from './route-board/RouteInputPad'
@@ -15,6 +17,7 @@ const RouteList = () => {
       (stops[co[0]] == null || stops[co[0]].length > 0)
   )
   const { t } = useTranslation()
+  const classes = useStyles()
 
   useEffect(() => {
     document.title = t('搜尋') + ' - ' + t(AppTitle)
@@ -26,6 +29,17 @@ const RouteList = () => {
   }, [])
 
   const itemData = createItemData(targetRouteList)
+  if (navigator.userAgent === 'prerendering') {
+    return (
+      <List className={classes.prerenderList}>
+        {
+          targetRouteList.map((data, idx) => (
+            <RouteRow data={itemData} index={idx} style={null} />
+          ))
+        }
+      </List>
+    )
+  }
   return (
     <FixedSizeList
       height={330}
@@ -49,3 +63,13 @@ const RouteBoard = () => {
 }
 
 export default RouteBoard
+
+const useStyles = makeStyles(theme => ({
+  prerenderList: {
+    height: '330px',
+    overflowY: 'scroll',
+    '& a': {
+      textDecoration: 'none'
+    }
+  }
+}))

@@ -7,7 +7,7 @@ import HomeIcon from '@material-ui/icons/Home'
 import SearchIcon from '@material-ui/icons/Search'
 import TimerIcon from '@material-ui/icons/Timer'
 import SettingsIcon from '@material-ui/icons/Settings';
-import { useLocation, useHistory } from 'react-router-dom'
+import { Link, useLocation, useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
 import {
@@ -21,7 +21,8 @@ const Footer = () => {
   const { selectedRoute } = useContext ( AppContext ) 
   const classes = useStyles()
   const history = useHistory()
-  const handleClick = (link) => {
+  const handleClick = (link, e) => {
+    e.preventDefault()
     vibrate(1)
     setTimeout(() => history.push(link), 0)
   }
@@ -34,25 +35,33 @@ const Footer = () => {
     >
       <BottomNavigationAction
         label={t("常用")}
-        onClick={() => handleClick(`/${i18n.language}`)}
+        component={Link}
+        to={`/${i18n.language}`}
+        onClick={(e) => handleClick(`/${i18n.language}`, e)}
         value={`/${i18n.language}`}
         icon={<HomeIcon />}
       />
       <BottomNavigationAction 
         label={t("搜尋")}
-        onClick={() => handleClick(`/${i18n.language}/search`)}
+        component={Link}
+        to={`/${i18n.language}/search`}
+        onClick={(e) => handleClick(`/${i18n.language}/search`, e)}
         value={`/${i18n.language}/search`}
         icon={<SearchIcon />} 
       />
       <BottomNavigationAction
        label={selectedRoute.split('+')[0]}
-       onClick={() => handleClick(`/${i18n.language}/route/${selectedRoute}`)}
+       component={Link}
+       to={`/${i18n.language}/route/${selectedRoute}`}
+       onClick={(e) => handleClick(`/${i18n.language}/route/${selectedRoute}`, e)}
        value={`/${i18n.language}/route/${selectedRoute}`}
        icon={<TimerIcon />} 
       />
       <BottomNavigationAction
        label={t("設定")}
-       onClick={() => handleClick(`/${i18n.language}/settings`)}
+       component={Link}
+       to={`/${i18n.language}/settings`}
+       onClick={(e) => handleClick(`/${i18n.language}/settings`, e)}
        value={`/${i18n.language}/settings`}
        icon={<SettingsIcon />} 
       />

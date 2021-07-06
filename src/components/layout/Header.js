@@ -7,7 +7,7 @@ import {
   Typography
 } from "@material-ui/core"
 import { withStyles, makeStyles } from '@material-ui/core/styles'
-import { useLocation, useHistory, useRouteMatch } from 'react-router-dom'
+import { Link, useLocation, useHistory, useRouteMatch } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
 import { vibrate, checkMobile } from '../../utils'
@@ -31,13 +31,16 @@ const Header = (props) => {
     <Toolbar
       className={classes.toolbar}
     >
-      <div onClick={() => {
+      <Link 
+        to={`/${i18n.language}`}
+        onClick={(e) => {
           vibrate(1)
-          history.push(`/${i18n.language}/search`)}
-        }
+          history.push(`/${i18n.language}/search`)
+          e.preventDefault()
+        }}
       >
         <Typography component="h1" variant='subtitle2'>巴士到站預報</Typography>
-      </div> 
+      </Link> 
       <Input 
         id="searchInput"
         className={classes.searchRouteInput}
@@ -64,8 +67,16 @@ const Header = (props) => {
           value={i18n.language}
           onChange={(e, v) => handleLanguageChange(v)}
         >
-        <LanguageTab id="en-selector" value="en" label="En" />
-        <LanguageTab id="zh-selector" value="zh" label="繁" />
+        <LanguageTab 
+          id="en-selector" value="en" label="En"
+          component={Link} to={`${window.location.pathname.replace('/zh', '/en')}`}  
+          onClick={(e) => e.preventDefault()}
+        />
+        <LanguageTab 
+          id="zh-selector" value="zh" label="繁" 
+          component={Link} to={`${window.location.pathname.replace('/en', '/zh')}`}  
+          onClick={(e) => e.preventDefault()}
+        />
       </LanguageTabs>
     </Toolbar>
   );

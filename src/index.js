@@ -8,16 +8,19 @@ import { DbProvider } from './DbContext'
 import { AppContextProvider } from './AppContext'
 import './i18n'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <DbProvider>
-      <AppContextProvider>
-        <App />
-      </AppContextProvider>
-    </DbProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+if (!navigator.userAgent.match(/googlebot/i)){
+  // content should be prerendered
+  ReactDOM.render(
+    <React.StrictMode>
+      <DbProvider>
+        <AppContextProvider>
+          <App />
+        </AppContextProvider>
+      </DbProvider>
+    </React.StrictMode>,
+    document.getElementById('root')
+  );
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
