@@ -33,7 +33,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
     } else if ( geoPermission === 'granted' ) {
       // load from local storage to avoid unitentional re-rendering
       const geolocation = JSON.parse(localStorage.getItem('geolocation'))
-      const nearbyStop = stops[co[0]]
+      const nearbyStop = getStops(co, stops)
         .map((stopId, idx) => [stopId, idx, getDistance(geolocation, stopList[stopId].location)])
         .sort((a,b) => a[2] - b[2])[0]
       if ( nearbyStop ) {
@@ -64,7 +64,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
   return (
     <Box className={classes.boxContainer}>
       {
-        stops[co[0]].map((stop, idx) => (
+        getStops(co, stops).map((stop, idx) => (
           <Accordion 
             key={'stop-'+idx} 
             expanded={expanded === idx}
@@ -102,6 +102,15 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
       }
     </Box>
   )
+}
+
+// TODO: better handling on buggy data in database
+const getStops = (co, stops) => {
+  for ( let i = 0; i< co.length; ++i ) {
+    if ( co[i] in stops ) {
+      return stops[co[i]]
+    }
+  }
 }
 
 export default StopAccordions

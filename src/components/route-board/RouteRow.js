@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { areEqual } from 'react-window'
 import { useHistory } from  'react-router-dom'
 import { vibrate } from '../../utils'
-import RouteNo from '../RouteNo'
+import RouteNo from './RouteNo'
 
 const RouteInfo = ( {route} ) => {
   const { t, i18n } = useTranslation()
@@ -54,25 +54,14 @@ const RouteRow = React.memo(( {data, index, style} ) => {
       <Card variant="outlined" key={route[0]} style={style} square>
         <CardActionArea>
           <CardContent className={classes.cardContent}>
-            <div>
+            <div className={classes.busInfoContainer}>
               <div>
                 <RouteNo routeNo={routeNo} />
                 {service_type >= 2 && <Typography variant="caption" className={classes.specialTrip}>{t('特別班次')}</Typography>}
               </div>
-              <div>
-                {
-                  route[1].co.map(co => {
-                    return (
-                      <span className={classes[co]}>
-                        {t(co)}
-                      </span>
-                    )
-                  })
-                }
-              {/* <Typography variant="caption">
+              <Typography variant="caption" className={classes.company}>
                   {route[1].co.map(co => t(co)).join('+')}
-              </Typography> */}
-              </div>
+              </Typography>
             </div>
             <RouteInfo route={route[1]} />
           </CardContent>
@@ -87,50 +76,25 @@ export default RouteRow
 const useStyles = makeStyles (theme => ({
   cardContent: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     padding: '4px 16px',
   },
+  busInfoContainer: {
+    width: '25%'
+  },
   routeInfo: {
-    textAlign: 'right',
+    textAlign: 'left',
+    fontSize: '1rem'
   },
   fromToText: {
-    fontSize: '0.85rem'
+    fontSize: '0.95rem'
+  },
+  company: {
+    color: '#888'
   },
   specialTrip: {
     fontSize: '0.6rem',
     marginLeft: '8px'
-  },
-  kmb: {
-    background: 'red',
-    color: 'white',
-    fontWeight: 600,
-    fontSize: '0.6rem',
-    padding: '2px 3px',
-    marginRight: '2px'
-  },
-  ctb: {
-    background: '#0080FF',
-    color: 'white',
-    fontWeight: 600,
-    fontSize: '0.6rem',
-    padding: '2px 3px',
-    marginRight: '2px'
-  },
-  nwfb: {
-    background: '#7000CC',
-    color: 'white',
-    fontWeight: 600,
-    fontSize: '0.6rem',
-    padding: '2px 3px',
-    marginRight: '2px'
-  },
-  nlb: {
-    background: '#0080FF',
-    color: 'white',
-    fontWeight: 600,
-    fontSize: '0.6rem',
-    padding: '2px 3px',
-    marginRight: '2px'
   }
 }))

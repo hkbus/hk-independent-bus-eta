@@ -6,22 +6,22 @@ import StopDialog from './route-eta/StopDialog'
 import { Typography } from '@material-ui/core'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
-import RouteNo from './RouteNo'
+import RouteNo from './route-board/RouteNo'
 
 const RouteEta = () => {
   const { id, panel } = useParams()
   const { AppTitle, routeList, stopList, stopMap, updateSelectedRoute } = useContext ( AppContext )
   const { route, stops, co, orig, dest, nlbId } = routeList[id]
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
-  const [ isDialogOpen, setIsDialogOpen ] = useState(false) 
-  const [ dialogStop, setDialogStop ] = useState([[co[0], stops[co[0]][0]]].concat(stopMap[stops[co[0]][0]] || []))
+  const [ isDialogOpen, setIsDialogOpen ] = useState(false)
+  const [ dialogStop, setDialogStop ] = useState(getDialogStops(co, stops, stopMap, 0))
   
   const { t, i18n } = useTranslation()
   const history = useHistory()
 
   const handleChange = ( panel ) => (event, newExpanded, isFromMap) => {
     setExpanded(newExpanded ? panel : false)
-    setDialogStop ( [[co[0], stops[co[0]][panel]]].concat(stopMap[stops[co[0]][panel]] || []) )
+    setDialogStop ( getDialogStops(co, stops, stopMap, panel) )
     if ( newExpanded ) {
       history.replace(`/${i18n.language}/route/${id}/${panel}`)
       return
@@ -41,9 +41,9 @@ const RouteEta = () => {
 
   const pageDesc = () => {
     if ( i18n.language === 'zh' ) {
-      return `由${co.map(c => t(c)).join('、')}聯營的${route}路線，途經${stops[co[0]].map(stop => stopList[stop].name.zh).join('、')}`
+      return `由${co.map(c => t(c)).join('、')}聯營的${route}路線，途經${getStops(co,stops).map(stop => stopList[stop].name.zh).join('、')}`
     } else {
-      return `The route ${route} is supported by ${co.map(c => t(c)).join(',')}. The stops of the route are ${stops[co[0]].map(stop => stopList[stop].name.en).join(',')}`
+      return `The route ${route} is supported by ${co.map(c => t(c)).join(',')}. The stops of the route are ${getStops(co,stops).map(stop => stopList[stop].name.en).join(',')}`
     }
   }
 
@@ -65,17 +65,18 @@ const RouteEta = () => {
 
   return (
     <>
+      <input hidden id={id} />
       <Typography variant="subtitle1" align='center'>
         <RouteNo routeNo={route} />
       </Typography>
       <Typography variant="caption" align='center'>
         {t('往')} {dest[i18n.language]} {nlbId ? t('由')+" "+orig[i18n.language] : ""}
       </Typography>
-      <RouteMap 
-        stops={stops[co[0]]}
+      {navigator.userAgent !== 'prerendering' ? <RouteMap 
+        stops={getStops(co, stops)}
         stopIdx={expanded}
         onMarkerClick={onMarkerClick}
-      />
+      /> : <></>}
       <StopAccordions 
         expanded={expanded}
         setExpanded={setExpanded}
@@ -88,6 +89,23 @@ const RouteEta = () => {
       />
     </>
   )
+}
+
+// TODO: better handling on buggy data in database
+const getStops = (co, stops) => {
+  for ( let i = 0; i< co.length; ++i ) {
+    if ( co[i] in stops ) {
+      return stops[co[i]]
+    }
+  }
+}
+
+// TODO: better handling on buggy data in database
+const getDialogStops = (co, stops, stopMap, panel) => {
+  for ( let i = 0; i < co.length; ++i ){
+    if ( co[i] in stops )
+      return [[co[i], stops[co[i]][panel]]].concat(stopMap[stops[co[i]][panel]] || [])
+  }
 }
 
 export default RouteEta

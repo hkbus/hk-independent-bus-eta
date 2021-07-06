@@ -7,12 +7,12 @@ import {
 } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 import { vibrate } from '../../utils'
-import { formatMs, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
 import { fetchEtas } from 'hk-bus-eta'
 import { getDistance } from '../../utils'
-import RouteNo from '../RouteNo'
+import RouteNo from '../route-board/RouteNo'
 
 const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
   const { t } = useTranslation ()

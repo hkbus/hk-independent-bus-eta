@@ -27,7 +27,7 @@ const RouteList = () => {
     <FixedSizeList
       height={330}
       itemCount={targetRouteList.length}
-      itemSize={60}
+      itemSize={56}
       width="100%"
       itemData={itemData}
     >

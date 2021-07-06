@@ -13,7 +13,7 @@ import AppContext from '../../AppContext'
 import { vibrate, checkMobile } from '../../utils'
 
 const Header = (props) => {
-  const { searchRoute, setSearchRoute } = useContext( AppContext )
+  const { searchRoute, setSearchRoute, routeList } = useContext( AppContext )
   
   const { path } = useRouteMatch()
   const { t, i18n } = useTranslation()
@@ -39,14 +39,21 @@ const Header = (props) => {
         <Typography component="h1" variant='subtitle2'>巴士到站預報</Typography>
       </div> 
       <Input 
+        id="searchInput"
         className={classes.searchRouteInput}
         type="text"
         value={searchRoute}
         placeholder={t('巴士線')}
-        onChange={e => setSearchRoute(e.target.value)}
+        onChange={e => {
+          if ( e.target.value in routeList ) {
+            document.activeElement.blur()
+            history.push('/'+i18n.language+'/route/'+e.target.value)
+          }
+          setSearchRoute(e.target.value)
+        }}
         onFocus={e => {
           vibrate(1)
-          if ( checkMobile() ) {
+          if ( navigator.userAgent !== 'prerendering' && checkMobile() ) {
             document.activeElement.blur()
           }
           history.replace(`/${i18n.language}/search`)
@@ -57,8 +64,8 @@ const Header = (props) => {
           value={i18n.language}
           onChange={(e, v) => handleLanguageChange(v)}
         >
-        <LanguageTab value="en" label="En" />
-        <LanguageTab value="zh" label="繁" />
+        <LanguageTab id="en-selector" value="en" label="En" />
+        <LanguageTab id="zh-selector" value="zh" label="繁" />
       </LanguageTabs>
     </Toolbar>
   );
