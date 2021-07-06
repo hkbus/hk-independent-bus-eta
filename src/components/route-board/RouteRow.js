@@ -92,7 +92,7 @@ const useStyles = makeStyles (theme => ({
     fontSize: '0.95rem'
   },
   company: {
-    color: '#888'
+    color: theme.palette.text.secondary
   },
   specialTrip: {
     fontSize: '0.6rem',

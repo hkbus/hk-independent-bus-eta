@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { vibrate } from './utils'
 import DbContext from './DbContext'
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const AppContext = React.createContext()
 
@@ -22,7 +23,11 @@ export const AppContextProvider = ( props ) => {
 
   // possible Char for RouteInputPad
   const [possibleChar, setPossibleChar] = useState([])
-  
+
+  const devicePreferColorScheme = useMediaQuery('(prefers-color-scheme: dark)') ? 'dark': 'light'
+
+  const [ colorMode, setColorMode ] = useState(localStorage.getItem('colorMode')) || devicePreferColorScheme
+
 
   useEffect(() => {
     if ( geoPermission === 'granted' ) {
@@ -62,6 +67,10 @@ export const AppContextProvider = ( props ) => {
   useEffect(() => {
     localStorage.setItem('geolocation', JSON.stringify(geolocation))
   }, [geolocation])
+
+  useEffect(() => {
+    localStorage.setItem('colorMode', colorMode)
+  }, [colorMode]) 
 
   const updateSearchRouteByButton = (buttonValue) => {
     vibrate(1)
@@ -116,7 +125,8 @@ export const AppContextProvider = ( props ) => {
         resetUsageRecord,
         // settings
         renewDb, schemaVersion, versionMd5, updateTime,
-        geoPermission, setGeoPermission 
+        geoPermission, setGeoPermission,
+        colorMode , setColorMode
       }}
     >
       {props.children}

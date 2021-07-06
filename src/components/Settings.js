@@ -23,12 +23,15 @@ import GitHubIcon from '@material-ui/icons/GitHub'
 import ShareIcon from '@material-ui/icons/Share'
 import TelegramIcon from '@material-ui/icons/Telegram'
 import { vibrate, setSeoHeader } from '../utils'
+import Brightness7Icon from '@material-ui/icons/Brightness7';
+import NightsStayIcon from '@material-ui/icons/NightsStay';
 
 const Settings = () => {
   const { 
     AppTitle,
     schemaVersion, versionMd5, updateTime, geoPermission, 
-    setGeoPermission, renewDb, resetUsageRecord
+    setGeoPermission, renewDb, resetUsageRecord,
+    colorMode, setColorMode
   } = useContext ( AppContext )
   const [ updating, setUpdating ] = useState(false)
   const [ showGeoPermissionDenied, setShowGeoPermissionDenied ] = useState(false)
@@ -88,6 +91,21 @@ const Settings = () => {
             primary={<ListPrimaryText>{t("地理位置定位功能")}</ListPrimaryText>} 
             secondary={t(geoPermission === 'granted' ? '開啟' : ( geoPermission === 'opening' ? '開啟中...' : '關閉' )) } 
             secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            vibrate(1)
+            setColorMode(colorMode === 'dark' ? 'light' : 'dark')
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>{colorMode === 'dark' ? <NightsStayIcon /> : <Brightness7Icon />}</Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={t("黑夜模式")} 
+            secondary={t(colorMode === 'dark' ? '開啟' : '關閉')} 
           />
         </ListItem>
         <ListItem
@@ -222,7 +240,7 @@ export default Settings
 
 const useStyles = makeStyles ( theme => ({
   root: {
-    background: 'white',
+    background: theme.palette.background.default,
     height: 'calc(100vh - 120px)',
     overflowY: "scroll"
   }

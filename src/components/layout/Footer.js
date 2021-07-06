@@ -18,8 +18,8 @@ import { vibrate } from '../../utils'
 const Footer = () => {
   const { t, i18n } = useTranslation()
   const location = useLocation()
-  const { selectedRoute } = useContext ( AppContext ) 
-  const classes = useStyles()
+  const { selectedRoute, colorMode } = useContext ( AppContext ) 
+
   const history = useHistory()
   const handleClick = (link, e) => {
     e.preventDefault()
@@ -27,11 +27,31 @@ const Footer = () => {
     setTimeout(() => history.push(link), 0)
   }
 
+  const useStyles = makeStyles(theme => ({
+    root: {
+      background: colorMode === 'dark' ? theme.palette.background.main: theme.palette.primary.main,
+      // background: theme.palette.primary.main,
+      // color: theme.palette.text.secondary,
+      position: "sticky",
+      bottom: "0",
+    },
+    actionItem: {
+      '&$selected': {
+        color: colorMode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+      },
+    },
+    selected: {}
+  }))
+
+  const classes = useStyles()
+
   return (
     <BottomNavigation
       value={location.pathname.replace(/(.*)\/[0-9]*?$/, "$1")}
       showLabels={true}
-      className={classes.root}
+      classes={{
+        root: classes.root,
+      }}
     >
       <BottomNavigationAction
         label={t("常用")}
@@ -40,6 +60,10 @@ const Footer = () => {
         onClick={(e) => handleClick(`/${i18n.language}`, e)}
         value={`/${i18n.language}`}
         icon={<HomeIcon />}
+        classes={{
+          root: classes.actionItem,
+          selected: classes.selected
+        }}
       />
       <BottomNavigationAction 
         label={t("搜尋")}
@@ -48,6 +72,10 @@ const Footer = () => {
         onClick={(e) => handleClick(`/${i18n.language}/search`, e)}
         value={`/${i18n.language}/search`}
         icon={<SearchIcon />} 
+        classes={{
+          root: classes.actionItem,
+          selected: classes.selected
+        }}
       />
       <BottomNavigationAction
        label={selectedRoute.split('-')[0]}
@@ -56,6 +84,10 @@ const Footer = () => {
        onClick={(e) => handleClick(`/${i18n.language}/route/${selectedRoute.toLowerCase()}`, e)}
        value={`/${i18n.language}/route/${selectedRoute.replace(/(.*)\/.*$/, "$1").toLowerCase()}`}
        icon={<TimerIcon />} 
+       classes={{
+        root: classes.actionItem,
+        selected: classes.selected
+       }}
       />
       <BottomNavigationAction
        label={t("設定")}
@@ -64,16 +96,13 @@ const Footer = () => {
        onClick={(e) => handleClick(`/${i18n.language}/settings`, e)}
        value={`/${i18n.language}/settings`}
        icon={<SettingsIcon />} 
+       classes={{
+        root: classes.actionItem,
+        selected: classes.selected
+       }}
       />
     </BottomNavigation>
   )
 }
 
 export default Footer
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    position: "sticky",
-    bottom: "0"
-  }
-}))

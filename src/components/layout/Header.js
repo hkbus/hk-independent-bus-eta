@@ -13,8 +13,34 @@ import AppContext from '../../AppContext'
 import { vibrate, checkMobile } from '../../utils'
 
 const Header = (props) => {
-  const { searchRoute, setSearchRoute, routeList } = useContext( AppContext )
+  const { searchRoute, setSearchRoute, routeList, colorMode } = useContext( AppContext )
   
+  const useStyles = makeStyles(theme => ({
+    appTitle: {
+      color: colorMode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+    },
+    toolbar: {
+      background: colorMode === 'dark' ? theme.palette.background.main: theme.palette.primary.main,
+      '& a': {
+        color: 'black',
+        textDecoration: 'none',
+      },
+      display: 'flex',
+      justifyContent: 'space-between',
+      zIndex: theme.zIndex.drawer * 2
+    },
+    searchRouteInput: {
+      // color: 'black',
+      maxWidth: '50px',
+      "& input": {
+        textAlign: 'center',
+      },
+      "& input::before": {
+        borderBottom: '1px black solid'
+      }
+    }
+  }))
+
   const { path } = useRouteMatch()
   const { t, i18n } = useTranslation()
   const classes = useStyles()
@@ -39,7 +65,7 @@ const Header = (props) => {
           history.push(`/${i18n.language}/search`)
         }}
       >
-        <Typography variant='subtitle2'>{t('巴士到站預報')}</Typography>
+        <Typography component="h1" variant='subtitle2' className={classes.appTitle}>{t('巴士到站預報')}</Typography>
       </Link> 
       <Input 
         id="searchInput"
@@ -82,23 +108,7 @@ const Header = (props) => {
   );
 }
 
-const useStyles = makeStyles(theme => ({
-  toolbar: {
-    '& a': {
-      color: 'black',
-      textDecoration: 'none',
-    },
-    display: 'flex',
-    justifyContent: 'space-between',
-    zIndex: theme.zIndex.drawer * 2
-  },
-  searchRouteInput: {
-    maxWidth: '50px',
-    "& input": {
-      textAlign: 'center'
-    }
-  }
-}))
+
 
 const LanguageTabs = withStyles({
   root: {
