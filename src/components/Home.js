@@ -30,6 +30,10 @@ const Home = () => {
   useEffect (() => {
     document.title = t(AppTitle)
     document.querySelector('meta[name="description"]').setAttribute("content", t('巴士到站預報 App，一 App 盡覽九巴、龍運、新巴、城巴、嶼巴巴士路線、車費及到站預報'))
+    document.querySelector('link[rel="canonical"]').setAttribute("href", 'https://hkbus.app')
+    document.querySelector('link[rel="alternative"][hreflang="en"]').setAttribute("href", 'https://hkbus.app/en')
+    document.querySelector('link[rel="alternative"][hreflang="zh-Hant"]').setAttribute("href", 'https://hkbus.app/zh')
+
     let isMounted = true
     // to enhance performance, we used cached geolocation
     const geolocation = JSON.parse(localStorage.getItem('geolocation'))
@@ -46,7 +50,7 @@ const Home = () => {
       // keep only max. 5 stops
       let routeIds = []
       Object.entries(routeList).forEach(([key, route]) => {  
-        ['kmb', 'nwfb', 'ctb'].forEach(co => {
+        ['kmb', 'nwfb', 'ctb', 'nlb'].forEach(co => {
           if (route.stops[co] && route.stops[co].includes(stopId)) {
             routeIds.push(key+'/'+route.stops[co].indexOf(stopId))
           }

@@ -19,6 +19,9 @@ const RouteList = () => {
   useEffect(() => {
     document.title = t('搜尋') + ' - ' + t(AppTitle)
     document.querySelector('meta[name="description"]').setAttribute("content", t('巴士 App 路線搜尋介面'))
+    document.querySelector('link[rel="canonical"]').setAttribute("href", `https://hkbus.app${window.location.pathname}`)
+    document.querySelector('link[rel="alternative"][hreflang="en"]').setAttribute("href", `https://hkbus.app/en/search`)
+    document.querySelector('link[rel="alternative"][hreflang="zh-Hant"]').setAttribute("href", 'https://hkbus.app/zh/search')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

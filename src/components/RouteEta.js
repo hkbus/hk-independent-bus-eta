@@ -9,7 +9,8 @@ import { useTranslation } from 'react-i18next'
 import RouteNo from './route-board/RouteNo'
 
 const RouteEta = () => {
-  const { id, panel } = useParams()
+  const { _id, panel } = useParams()
+  const id = _id.replace(/_/g, ' ')
   const { AppTitle, routeList, stopList, stopMap, updateSelectedRoute } = useContext ( AppContext )
   const { route, stops, co, orig, dest, nlbId } = routeList[id]
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
@@ -58,6 +59,9 @@ const RouteEta = () => {
   useEffect(() => {
     document.title = route + ' ' + t('往') + ' ' + dest[i18n.language] + ' - ' + t(AppTitle)
     document.querySelector('meta[name="description"]').setAttribute("content", pageDesc())
+    document.querySelector('link[rel="canonical"]').setAttribute("href", `https://hkbus.app/${i18n.language}/route/${_id}`)
+    document.querySelector('link[rel="alternative"][hreflang="en"]').setAttribute("href", `https://hkbus.app/en/route/${_id}`)
+    document.querySelector('link[rel="alternative"][hreflang="zh-Hant"]').setAttribute("href", `https://hkbus.app/zh/route/${_id}`)
     
     updateSelectedRoute( id )
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,7 +69,7 @@ const RouteEta = () => {
 
   return (
     <>
-      <input hidden id={id} />
+      <input hidden id={_id} />
       <Typography variant="subtitle1" align='center'>
         <RouteNo routeNo={route} />
       </Typography>

@@ -81,7 +81,7 @@ const SuccinctTimeReport = ({routeId} ) => {
   const handleClick = () => {
     vibrate(1)
     setTimeout(() => {
-      history.push(`/${i18n.language}/route/${routeId}`)
+      history.push(`/${i18n.language}/route/${routeId.replace(/ /g, '_')}`)
     }, 0)
   }
   

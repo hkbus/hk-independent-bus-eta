@@ -39,6 +39,9 @@ const Settings = () => {
   useEffect(() => {
     document.title = t('設定') + ' - ' +t(AppTitle)
     document.querySelector('meta[name="description"]').setAttribute("content", t('巴士 App 設定，重置資料庫、查看原始碼及捐款支持'))
+    document.querySelector('link[rel="canonical"]').setAttribute("href", `https://hkbus.app${window.location.pathname}`)
+    document.querySelector('link[rel="alternative"][hreflang="en"]').setAttribute("href", 'https://hkbus.app/en/settings')
+    document.querySelector('link[rel="alternative"][hreflang="zh-Hant"]').setAttribute("href", 'https://hkbus.app/zh/settings')
     setUpdating(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateTime])

@@ -45,7 +45,7 @@ const RouteRow = React.memo(( {data, index, style} ) => {
   const handleClick = () => {
     vibrate(1)
     setTimeout(() => {
-      history.push('/'+i18n.language+'/route/'+route[0])
+      history.push(`/${i18n.language}/route/${route[0].replace(/ /g,'_')}`)
     }, 0)
   }
 

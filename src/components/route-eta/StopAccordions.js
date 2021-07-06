@@ -17,7 +17,8 @@ import { getDistance } from '../../utils'
 import TimeReport from './TimeReport'
 
 const StopAccordions = ({expanded, setExpanded, handleChange}) => {
-  const { id, panel } = useParams()
+  const { _id, panel } = useParams()
+  const id = _id.replace(/_/g, ' ')
   const { 
     routeList, stopList, savedEtas, geoPermission,
     updateSavedEtas

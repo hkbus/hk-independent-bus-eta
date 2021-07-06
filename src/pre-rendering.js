@@ -127,16 +127,15 @@ async function runPuppeteer(baseUrl, routes, dir) {
       if (html) createNewHTMLPage(routes[i], html, dir);
       else return 0;
 
-      if ( i % 10 == 0) {
-        console.log( ( Date.now() - start ) / 1000);
-        start = Date.now();
-      }
     } catch (err) {
-      throw new Error(`Error: Failed to process route "${routes[i]}"\nMessage: ${err}`);
+      console.error(`Error: Failed to process route "${routes[i]}"\nMessage: ${err}`);
+      process.exit(1)
     }
   }
 
   await browser.close();
+  console.log( ( 'Finished in ' + (Date.now() - start ) / 1000) + "s.");
+  start = Date.now();
   return;
 } 
 
