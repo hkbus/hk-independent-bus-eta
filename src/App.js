@@ -79,7 +79,7 @@ const App = () => {
       <Container maxWidth='xs' disableGutters className={classes.container}>
         <Router>
           <Route exact path="/">
-            <Redirect to="/zh/" />
+            <Redirect to="/zh" />
           </Route>
           <Route path="/:lang">
             <CssBaseline />

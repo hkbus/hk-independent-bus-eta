@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <link rel="canonical" href="%PUBLIC_URL%/" />
-    <link rel="alternative" hreflang="zh-Hant" href="%PUBLIC_URL%/zh" />
     <link rel="alternative" hreflang="en" href="%PUBLIC_URL%/en" />
+    <link rel="alternative" hreflang="zh-Hant" href="%PUBLIC_URL%/zh" />
+    <link rel="alternative" hreflang="x-default" href="%PUBLIC_URL%/zh" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0" />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="巴士到站預報 App，一 App 盡覽九巴、龍運、新巴、城巴、嶼巴巴士路線、車費及到站預報"
+      content="無廣告手機應用程式查閱巴士線、車站、預計到達時間，路線盡包九龍巴士(九巴)、龍運巴士、新世界第一巴士(新巴)、城巴、新大嶼山巴士 - 巴士到站預報 App"
     />
     <!-- Start Single Page Apps for GitHub Pages -->
     <script>
@@ -65,14 +66,1479 @@
 
     <title>巴士到站預報 App</title>
     <meta property="og:title" content="巴士到站預報 App" />
-    <meta property="og:description" content="九巴、城巴、新巴、新大嶼到站報時預報（無廣告）" />
+    <meta property="og:description" content="無廣告手機應用程式查閱巴士線、車站、預計到達時間，路線盡包九龍巴士(九巴)、龍運巴士、新世界第一巴士(新巴)、城巴、新大嶼山巴士 - 巴士到站預報 App" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="%PUBLIC_URL%" />
     <meta property="og:image" content="%PUBLIC_URL%/share.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="巴士到站預報 App" />
+    <meta name="twitter:description" content="無廣告手機應用程式查閱巴士線、車站、預計到達時間，路線盡包九龍巴士(九巴)、龍運巴士、新世界第一巴士(新巴)、城巴、新大嶼山巴士 - 巴士到站預報 App" />
+    <meta name="twitter:image" content="%PUBLIC_URL%/share.png" />
+    <style data-jss="" data-meta="MuiContainer">
+      .MuiContainer-root {
+      width: 100%;
+      display: block;
+      box-sizing: border-box;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 16px;
+      padding-right: 16px;
+      }
+      @media (min-width:600px) {
+      .MuiContainer-root {
+      padding-left: 24px;
+      padding-right: 24px;
+      }
+      }
+      .MuiContainer-disableGutters {
+      padding-left: 0;
+      padding-right: 0;
+      }
+      @media (min-width:600px) {
+      .MuiContainer-fixed {
+      max-width: 600px;
+      }
+      }
+      @media (min-width:960px) {
+      .MuiContainer-fixed {
+      max-width: 960px;
+      }
+      }
+      @media (min-width:1280px) {
+      .MuiContainer-fixed {
+      max-width: 1280px;
+      }
+      }
+      @media (min-width:1920px) {
+      .MuiContainer-fixed {
+      max-width: 1920px;
+      }
+      }
+      @media (min-width:0px) {
+      .MuiContainer-maxWidthXs {
+      max-width: 444px;
+      }
+      }
+      @media (min-width:600px) {
+      .MuiContainer-maxWidthSm {
+      max-width: 600px;
+      }
+      }
+      @media (min-width:960px) {
+      .MuiContainer-maxWidthMd {
+      max-width: 960px;
+      }
+      }
+      @media (min-width:1280px) {
+      .MuiContainer-maxWidthLg {
+      max-width: 1280px;
+      }
+      }
+      @media (min-width:1920px) {
+      .MuiContainer-maxWidthXl {
+      max-width: 1920px;
+      }
+      }
+   </style>
+   <style data-jss="" data-meta="MuiPaper">
+      .MuiPaper-root {
+      color: rgba(0, 0, 0, 0.87);
+      transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      background-color: #fff;
+      }
+      .MuiPaper-rounded {
+      border-radius: 4px;
+      }
+      .MuiPaper-outlined {
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      }
+      .MuiPaper-elevation0 {
+      box-shadow: none;
+      }
+      .MuiPaper-elevation1 {
+      box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation2 {
+      box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation3 {
+      box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation4 {
+      box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation5 {
+      box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 5px 8px 0px rgba(0,0,0,0.14),0px 1px 14px 0px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation6 {
+      box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation7 {
+      box-shadow: 0px 4px 5px -2px rgba(0,0,0,0.2),0px 7px 10px 1px rgba(0,0,0,0.14),0px 2px 16px 1px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation8 {
+      box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation9 {
+      box-shadow: 0px 5px 6px -3px rgba(0,0,0,0.2),0px 9px 12px 1px rgba(0,0,0,0.14),0px 3px 16px 2px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation10 {
+      box-shadow: 0px 6px 6px -3px rgba(0,0,0,0.2),0px 10px 14px 1px rgba(0,0,0,0.14),0px 4px 18px 3px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation11 {
+      box-shadow: 0px 6px 7px -4px rgba(0,0,0,0.2),0px 11px 15px 1px rgba(0,0,0,0.14),0px 4px 20px 3px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation12 {
+      box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation13 {
+      box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 13px 19px 2px rgba(0,0,0,0.14),0px 5px 24px 4px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation14 {
+      box-shadow: 0px 7px 9px -4px rgba(0,0,0,0.2),0px 14px 21px 2px rgba(0,0,0,0.14),0px 5px 26px 4px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation15 {
+      box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation16 {
+      box-shadow: 0px 8px 10px -5px rgba(0,0,0,0.2),0px 16px 24px 2px rgba(0,0,0,0.14),0px 6px 30px 5px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation17 {
+      box-shadow: 0px 8px 11px -5px rgba(0,0,0,0.2),0px 17px 26px 2px rgba(0,0,0,0.14),0px 6px 32px 5px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation18 {
+      box-shadow: 0px 9px 11px -5px rgba(0,0,0,0.2),0px 18px 28px 2px rgba(0,0,0,0.14),0px 7px 34px 6px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation19 {
+      box-shadow: 0px 9px 12px -6px rgba(0,0,0,0.2),0px 19px 29px 2px rgba(0,0,0,0.14),0px 7px 36px 6px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation20 {
+      box-shadow: 0px 10px 13px -6px rgba(0,0,0,0.2),0px 20px 31px 3px rgba(0,0,0,0.14),0px 8px 38px 7px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation21 {
+      box-shadow: 0px 10px 13px -6px rgba(0,0,0,0.2),0px 21px 33px 3px rgba(0,0,0,0.14),0px 8px 40px 7px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation22 {
+      box-shadow: 0px 10px 14px -6px rgba(0,0,0,0.2),0px 22px 35px 3px rgba(0,0,0,0.14),0px 8px 42px 7px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation23 {
+      box-shadow: 0px 11px 14px -7px rgba(0,0,0,0.2),0px 23px 36px 3px rgba(0,0,0,0.14),0px 9px 44px 8px rgba(0,0,0,0.12);
+      }
+      .MuiPaper-elevation24 {
+      box-shadow: 0px 11px 15px -7px rgba(0,0,0,0.2),0px 24px 38px 3px rgba(0,0,0,0.14),0px 9px 46px 8px rgba(0,0,0,0.12);
+      }
+   </style>
+   <style data-jss="" data-meta="MuiTypography">
+      .MuiTypography-root {
+      margin: 0;
+      }
+      .MuiTypography-body2 {
+      font-size: 0.875rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 400;
+      line-height: 1.43;
+      }
+      .MuiTypography-body1 {
+      font-size: 1rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 400;
+      line-height: 1.5;
+      }
+      .MuiTypography-caption {
+      font-size: 0.75rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 400;
+      line-height: 1.66;
+      }
+      .MuiTypography-button {
+      font-size: 0.875rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 500;
+      line-height: 1.75;
+      text-transform: uppercase;
+      }
+      .MuiTypography-h1 {
+      font-size: 6rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 300;
+      line-height: 1.167;
+      }
+      .MuiTypography-h2 {
+      font-size: 3.75rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 300;
+      line-height: 1.2;
+      }
+      .MuiTypography-h3 {
+      font-size: 3rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 400;
+      line-height: 1.167;
+      }
+      .MuiTypography-h4 {
+      font-size: 2.125rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 400;
+      line-height: 1.235;
+      }
+      .MuiTypography-h5 {
+      font-size: 1.5rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 400;
+      line-height: 1.334;
+      }
+      .MuiTypography-h6 {
+      font-size: 1.25rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 500;
+      line-height: 1.6;
+      }
+      .MuiTypography-subtitle1 {
+      font-size: 1rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 400;
+      line-height: 1.75;
+      }
+      .MuiTypography-subtitle2 {
+      font-size: 0.875rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 500;
+      line-height: 1.57;
+      }
+      .MuiTypography-overline {
+      font-size: 0.75rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 400;
+      line-height: 2.66;
+      text-transform: uppercase;
+      }
+      .MuiTypography-srOnly {
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      }
+      .MuiTypography-alignLeft {
+      text-align: left;
+      }
+      .MuiTypography-alignCenter {
+      text-align: center;
+      }
+      .MuiTypography-alignRight {
+      text-align: right;
+      }
+      .MuiTypography-alignJustify {
+      text-align: justify;
+      }
+      .MuiTypography-noWrap {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      }
+      .MuiTypography-gutterBottom {
+      margin-bottom: 0.35em;
+      }
+      .MuiTypography-paragraph {
+      margin-bottom: 16px;
+      }
+      .MuiTypography-colorInherit {
+      color: inherit;
+      }
+      .MuiTypography-colorPrimary {
+      color: #3f51b5;
+      }
+      .MuiTypography-colorSecondary {
+      color: #f50057;
+      }
+      .MuiTypography-colorTextPrimary {
+      color: rgba(0, 0, 0, 0.87);
+      }
+      .MuiTypography-colorTextSecondary {
+      color: rgba(0, 0, 0, 0.54);
+      }
+      .MuiTypography-colorError {
+      color: #f44336;
+      }
+      .MuiTypography-displayInline {
+      display: inline;
+      }
+      .MuiTypography-displayBlock {
+      display: block;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiCssBaseline">
+      html {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      }
+      *, *::before, *::after {
+      box-sizing: inherit;
+      }
+      strong, b {
+      font-weight: 700;
+      }
+      body {
+      color: rgba(0, 0, 0, 0.87);
+      margin: 0;
+      font-size: 0.875rem;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 400;
+      line-height: 1.43;
+      background-color: #ffff90;
+      }
+      @media print {
+      body {
+      background-color: #fff;
+      }
+      }
+      body::backdrop {
+      background-color: #ffff90;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiToolbar">
+      .MuiToolbar-root {
+      display: flex;
+      position: relative;
+      align-items: center;
+      }
+      .MuiToolbar-gutters {
+      padding-left: 16px;
+      padding-right: 16px;
+      }
+      @media (min-width:600px) {
+      .MuiToolbar-gutters {
+      padding-left: 24px;
+      padding-right: 24px;
+      }
+      }
+      .MuiToolbar-regular {
+      min-height: 56px;
+      }
+      @media (min-width:0px) and (orientation: landscape) {
+      .MuiToolbar-regular {
+      min-height: 48px;
+      }
+      }
+      @media (min-width:600px) {
+      .MuiToolbar-regular {
+      min-height: 64px;
+      }
+      }
+      .MuiToolbar-dense {
+      min-height: 48px;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiInputBase">
+      @-webkit-keyframes mui-auto-fill {}
+      @-webkit-keyframes mui-auto-fill-cancel {}
+      .MuiInputBase-root {
+      color: rgba(0, 0, 0, 0.87);
+      cursor: text;
+      display: inline-flex;
+      position: relative;
+      font-size: 1rem;
+      box-sizing: border-box;
+      align-items: center;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 400;
+      line-height: 1.1876em;
+      }
+      .MuiInputBase-root.Mui-disabled {
+      color: rgba(0, 0, 0, 0.38);
+      cursor: default;
+      }
+      .MuiInputBase-multiline {
+      padding: 6px 0 7px;
+      }
+      .MuiInputBase-multiline.MuiInputBase-marginDense {
+      padding-top: 3px;
+      }
+      .MuiInputBase-fullWidth {
+      width: 100%;
+      }
+      .MuiInputBase-input {
+      font: inherit;
+      color: currentColor;
+      width: 100%;
+      border: 0;
+      height: 1.1876em;
+      margin: 0;
+      display: block;
+      padding: 6px 0 7px;
+      min-width: 0;
+      background: none;
+      box-sizing: content-box;
+      animation-name: mui-auto-fill-cancel;
+      letter-spacing: inherit;
+      animation-duration: 10ms;
+      -webkit-tap-highlight-color: transparent;
+      }
+      .MuiInputBase-input::-webkit-input-placeholder {
+      color: currentColor;
+      opacity: 0.42;
+      transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      }
+      .MuiInputBase-input::-moz-placeholder {
+      color: currentColor;
+      opacity: 0.42;
+      transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      }
+      .MuiInputBase-input:-ms-input-placeholder {
+      color: currentColor;
+      opacity: 0.42;
+      transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      }
+      .MuiInputBase-input::-ms-input-placeholder {
+      color: currentColor;
+      opacity: 0.42;
+      transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      }
+      .MuiInputBase-input:focus {
+      outline: 0;
+      }
+      .MuiInputBase-input:invalid {
+      box-shadow: none;
+      }
+      .MuiInputBase-input::-webkit-search-decoration {
+      -webkit-appearance: none;
+      }
+      .MuiInputBase-input.Mui-disabled {
+      opacity: 1;
+      }
+      .MuiInputBase-input:-webkit-autofill {
+      animation-name: mui-auto-fill;
+      animation-duration: 5000s;
+      }
+      label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-webkit-input-placeholder {
+      opacity: 0 !important;
+      }
+      label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-moz-placeholder {
+      opacity: 0 !important;
+      }
+      label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input:-ms-input-placeholder {
+      opacity: 0 !important;
+      }
+      label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-ms-input-placeholder {
+      opacity: 0 !important;
+      }
+      label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input:focus::-webkit-input-placeholder {
+      opacity: 0.42;
+      }
+      label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input:focus::-moz-placeholder {
+      opacity: 0.42;
+      }
+      label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input:focus:-ms-input-placeholder {
+      opacity: 0.42;
+      }
+      label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input:focus::-ms-input-placeholder {
+      opacity: 0.42;
+      }
+      .MuiInputBase-inputMarginDense {
+      padding-top: 3px;
+      }
+      .MuiInputBase-inputMultiline {
+      height: auto;
+      resize: none;
+      padding: 0;
+      }
+      .MuiInputBase-inputTypeSearch {
+      -moz-appearance: textfield;
+      -webkit-appearance: textfield;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiInput">
+      .MuiInput-root {
+      position: relative;
+      }
+      label + .MuiInput-formControl {
+      margin-top: 16px;
+      }
+      .MuiInput-colorSecondary.MuiInput-underline:after {
+      border-bottom-color: #f50057;
+      }
+      .MuiInput-underline:after {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      content: "";
+      position: absolute;
+      transform: scaleX(0);
+      transition: transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+      border-bottom: 2px solid #3f51b5;
+      pointer-events: none;
+      }
+      .MuiInput-underline.Mui-focused:after {
+      transform: scaleX(1);
+      }
+      .MuiInput-underline.Mui-error:after {
+      transform: scaleX(1);
+      border-bottom-color: #f44336;
+      }
+      .MuiInput-underline:before {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      content: "\00a0";
+      position: absolute;
+      transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+      pointer-events: none;
+      }
+      .MuiInput-underline:hover:not(.Mui-disabled):before {
+      border-bottom: 2px solid rgba(0, 0, 0, 0.87);
+      }
+      .MuiInput-underline.Mui-disabled:before {
+      border-bottom-style: dotted;
+      }
+      @media (hover: none) {
+      .MuiInput-underline:hover:not(.Mui-disabled):before {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+      }
+      }
+   </style>
+   <style data-jss="" data-meta="PrivateTabIndicator">
+      .jss10 {
+      width: 100%;
+      bottom: 0;
+      height: 2px;
+      position: absolute;
+      transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      }
+      .jss11 {
+      background-color: #3f51b5;
+      }
+      .jss12 {
+      background-color: #f50057;
+      }
+      .jss13 {
+      right: 0;
+      width: 2px;
+      height: 100%;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiSvgIcon">
+      .MuiSvgIcon-root {
+      fill: currentColor;
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      font-size: 1.5rem;
+      transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      flex-shrink: 0;
+      user-select: none;
+      }
+      .MuiSvgIcon-colorPrimary {
+      color: #3f51b5;
+      }
+      .MuiSvgIcon-colorSecondary {
+      color: #f50057;
+      }
+      .MuiSvgIcon-colorAction {
+      color: rgba(0, 0, 0, 0.54);
+      }
+      .MuiSvgIcon-colorError {
+      color: #f44336;
+      }
+      .MuiSvgIcon-colorDisabled {
+      color: rgba(0, 0, 0, 0.26);
+      }
+      .MuiSvgIcon-fontSizeInherit {
+      font-size: inherit;
+      }
+      .MuiSvgIcon-fontSizeSmall {
+      font-size: 1.25rem;
+      }
+      .MuiSvgIcon-fontSizeLarge {
+      font-size: 2.1875rem;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiTouchRipple">
+      .MuiTouchRipple-root {
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 0;
+      overflow: hidden;
+      position: absolute;
+      border-radius: inherit;
+      pointer-events: none;
+      }
+      .MuiTouchRipple-ripple {
+      opacity: 0;
+      position: absolute;
+      }
+      .MuiTouchRipple-rippleVisible {
+      opacity: 0.3;
+      animation: MuiTouchRipple-keyframes-enter 550ms cubic-bezier(0.4, 0, 0.2, 1);
+      transform: scale(1);
+      }
+      .MuiTouchRipple-ripplePulsate {
+      animation-duration: 200ms;
+      }
+      .MuiTouchRipple-child {
+      width: 100%;
+      height: 100%;
+      display: block;
+      opacity: 1;
+      border-radius: 50%;
+      background-color: currentColor;
+      }
+      .MuiTouchRipple-childLeaving {
+      opacity: 0;
+      animation: MuiTouchRipple-keyframes-exit 550ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .MuiTouchRipple-childPulsate {
+      top: 0;
+      left: 0;
+      position: absolute;
+      animation: MuiTouchRipple-keyframes-pulsate 2500ms cubic-bezier(0.4, 0, 0.2, 1) 200ms infinite;
+      }
+      @-webkit-keyframes MuiTouchRipple-keyframes-enter {
+      0% {
+      opacity: 0.1;
+      transform: scale(0);
+      }
+      100% {
+      opacity: 0.3;
+      transform: scale(1);
+      }
+      }
+      @-webkit-keyframes MuiTouchRipple-keyframes-exit {
+      0% {
+      opacity: 1;
+      }
+      100% {
+      opacity: 0;
+      }
+      }
+      @-webkit-keyframes MuiTouchRipple-keyframes-pulsate {
+      0% {
+      transform: scale(1);
+      }
+      50% {
+      transform: scale(0.92);
+      }
+      100% {
+      transform: scale(1);
+      }
+      }
+   </style>
+   <style data-jss="" data-meta="MuiButtonBase">
+      .MuiButtonBase-root {
+      color: inherit;
+      border: 0;
+      cursor: pointer;
+      margin: 0;
+      display: inline-flex;
+      outline: 0;
+      padding: 0;
+      position: relative;
+      align-items: center;
+      user-select: none;
+      border-radius: 0;
+      vertical-align: middle;
+      -moz-appearance: none;
+      justify-content: center;
+      text-decoration: none;
+      background-color: transparent;
+      -webkit-appearance: none;
+      -webkit-tap-highlight-color: transparent;
+      }
+      .MuiButtonBase-root::-moz-focus-inner {
+      border-style: none;
+      }
+      .MuiButtonBase-root.Mui-disabled {
+      cursor: default;
+      pointer-events: none;
+      }
+      @media print {
+      .MuiButtonBase-root {
+      -webkit-print-color-adjust: exact;
+      }
+      }
+   </style>
+   <style data-jss="" data-meta="MuiTabs">
+      .MuiTabs-root {
+      display: flex;
+      overflow: hidden;
+      min-height: 48px;
+      -webkit-overflow-scrolling: touch;
+      }
+      .MuiTabs-vertical {
+      flex-direction: column;
+      }
+      .MuiTabs-flexContainer {
+      display: flex;
+      }
+      .MuiTabs-flexContainerVertical {
+      flex-direction: column;
+      }
+      .MuiTabs-centered {
+      justify-content: center;
+      }
+      .MuiTabs-scroller {
+      flex: 1 1 auto;
+      display: inline-block;
+      position: relative;
+      white-space: nowrap;
+      }
+      .MuiTabs-fixed {
+      width: 100%;
+      overflow-x: hidden;
+      }
+      .MuiTabs-scrollable {
+      overflow-x: scroll;
+      scrollbar-width: none;
+      }
+      .MuiTabs-scrollable::-webkit-scrollbar {
+      display: none;
+      }
+      @media (max-width:599.95px) {
+      .MuiTabs-scrollButtonsDesktop {
+      display: none;
+      }
+      }
+   </style>
+   <style data-jss="" data-meta="MuiTab">
+      .MuiTab-root {
+      padding: 6px 12px;
+      overflow: hidden;
+      position: relative;
+      font-size: 0.875rem;
+      max-width: 264px;
+      min-width: 72px;
+      box-sizing: border-box;
+      min-height: 48px;
+      text-align: center;
+      flex-shrink: 0;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      font-weight: 500;
+      line-height: 1.75;
+      white-space: normal;
+      text-transform: uppercase;
+      }
+      @media (min-width:600px) {
+      .MuiTab-root {
+      min-width: 160px;
+      }
+      }
+      .MuiTab-labelIcon {
+      min-height: 72px;
+      padding-top: 9px;
+      }
+      .MuiTab-labelIcon .MuiTab-wrapper > *:first-child {
+      margin-bottom: 6px;
+      }
+      .MuiTab-textColorInherit {
+      color: inherit;
+      opacity: 0.7;
+      }
+      .MuiTab-textColorInherit.Mui-selected {
+      opacity: 1;
+      }
+      .MuiTab-textColorInherit.Mui-disabled {
+      opacity: 0.5;
+      }
+      .MuiTab-textColorPrimary {
+      color: rgba(0, 0, 0, 0.54);
+      }
+      .MuiTab-textColorPrimary.Mui-selected {
+      color: #3f51b5;
+      }
+      .MuiTab-textColorPrimary.Mui-disabled {
+      color: rgba(0, 0, 0, 0.38);
+      }
+      .MuiTab-textColorSecondary {
+      color: rgba(0, 0, 0, 0.54);
+      }
+      .MuiTab-textColorSecondary.Mui-selected {
+      color: #f50057;
+      }
+      .MuiTab-textColorSecondary.Mui-disabled {
+      color: rgba(0, 0, 0, 0.38);
+      }
+      .MuiTab-fullWidth {
+      flex-grow: 1;
+      max-width: none;
+      flex-basis: 0;
+      flex-shrink: 1;
+      }
+      .MuiTab-wrapped {
+      font-size: 0.75rem;
+      line-height: 1.5;
+      }
+      .MuiTab-wrapper {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      }
+   </style>
+   <style data-jss="" data-meta="makeStyles">
+      .jss3 {
+      display: flex;
+      z-index: 2400;
+      justify-content: space-between;
+      }
+      .jss3 a {
+      color: black;
+      text-decoration: none;
+      }
+      .jss4 {
+      max-width: 50px;
+      }
+      .jss4 input {
+      text-align: center;
+      }
+   </style>
+   <style data-jss="" data-meta="makeStyles">
+      .jss5 {
+      min-height: 24px;
+      border-bottom: none;
+      }
+      .jss6 {
+      background-color: transparent;
+      }
+   </style>
+   <style data-jss="" data-meta="makeStyles">
+      .jss7 {
+      opacity: 1;
+      padding: 6px 6px;
+      font-size: 15px;
+      min-width: 36px;
+      font-weight: 900;
+      margin-right: 0;
+      text-transform: none;
+      }
+      .jss8 > .MuiTab-wrapper {
+      color: #3B3C45;
+      background-color: #FEFBFA;
+      }
+      .jss9 {
+      color: #3B3C45;
+      padding: 2px 10px 0px 10px;
+      border-radius: 30px;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiList">
+      .MuiList-root {
+      margin: 0;
+      padding: 0;
+      position: relative;
+      list-style: none;
+      }
+      .MuiList-padding {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      }
+      .MuiList-subheader {
+      padding-top: 0;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiListItem">
+      .MuiListItem-root {
+      width: 100%;
+      display: flex;
+      position: relative;
+      box-sizing: border-box;
+      text-align: left;
+      align-items: center;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      justify-content: flex-start;
+      text-decoration: none;
+      }
+      .MuiListItem-root.Mui-focusVisible {
+      background-color: rgba(0, 0, 0, 0.08);
+      }
+      .MuiListItem-root.Mui-selected, .MuiListItem-root.Mui-selected:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+      }
+      .MuiListItem-root.Mui-disabled {
+      opacity: 0.5;
+      }
+      .MuiListItem-container {
+      position: relative;
+      }
+      .MuiListItem-dense {
+      padding-top: 4px;
+      padding-bottom: 4px;
+      }
+      .MuiListItem-alignItemsFlexStart {
+      align-items: flex-start;
+      }
+      .MuiListItem-divider {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      background-clip: padding-box;
+      }
+      .MuiListItem-gutters {
+      padding-left: 16px;
+      padding-right: 16px;
+      }
+      .MuiListItem-button {
+      transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      }
+      .MuiListItem-button:hover {
+      text-decoration: none;
+      background-color: rgba(0, 0, 0, 0.04);
+      }
+      @media (hover: none) {
+      .MuiListItem-button:hover {
+      background-color: transparent;
+      }
+      }
+      .MuiListItem-secondaryAction {
+      padding-right: 48px;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiListItemText">
+      .MuiListItemText-root {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin-top: 4px;
+      margin-bottom: 4px;
+      }
+      .MuiListItemText-multiline {
+      margin-top: 6px;
+      margin-bottom: 6px;
+      }
+      .MuiListItemText-inset {
+      padding-left: 56px;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiDivider">
+      .MuiDivider-root {
+      border: none;
+      height: 1px;
+      margin: 0;
+      flex-shrink: 0;
+      background-color: rgba(0, 0, 0, 0.12);
+      }
+      .MuiDivider-absolute {
+      left: 0;
+      width: 100%;
+      bottom: 0;
+      position: absolute;
+      }
+      .MuiDivider-inset {
+      margin-left: 72px;
+      }
+      .MuiDivider-light {
+      background-color: rgba(0, 0, 0, 0.08);
+      }
+      .MuiDivider-middle {
+      margin-left: 16px;
+      margin-right: 16px;
+      }
+      .MuiDivider-vertical {
+      width: 1px;
+      height: 100%;
+      }
+      .MuiDivider-flexItem {
+      height: auto;
+      align-self: stretch;
+      }
+   </style>
+   <style data-jss="" data-meta="makeStyles">
+      .jss22 {
+      display: inline;
+      line-height: normal;
+      }
+      .jss23 {
+      font-size: 1.2rem;
+      font-family: "Oswald", sans-serif;
+      }
+      .jss24 {
+      font-size: 0.95rem;
+      font-family: "Oswald", sans-serif;
+      }
+   </style>
+   <style data-jss="" data-meta="makeStyles">
+      .jss16 {
+      color: rgba(0,0,0,0.87);
+      padding: 4px 16px;
+      }
+      .jss17 {
+      width: 15%;
+      }
+      .jss18 {
+      width: 65%;
+      }
+      .jss19 {
+      width: 20%;
+      padding-left: 10px;
+      }
+      .jss20 {
+      font-size: 0.85rem;
+      }
+      .jss21 {
+      color: rgba(0, 0, 0, 0.54);
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.43;
+      }
+   </style>
+   <style data-jss="" data-meta="makeStyles">
+      .jss14 {
+      height: calc(100vh - 125px);
+      background: white;
+      overflow-y: scroll;
+      text-align: center;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiBottomNavigation">
+      .MuiBottomNavigation-root {
+      height: 56px;
+      display: flex;
+      justify-content: center;
+      background-color: #fff;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiBottomNavigationAction">
+      .MuiBottomNavigationAction-root {
+      flex: 1;
+      color: rgba(0, 0, 0, 0.54);
+      padding: 6px 12px 8px;
+      max-width: 168px;
+      min-width: 80px;
+      transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,padding-top 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      }
+      .MuiBottomNavigationAction-root.MuiBottomNavigationAction-iconOnly {
+      padding-top: 16px;
+      }
+      .MuiBottomNavigationAction-root.Mui-selected {
+      color: #3f51b5;
+      padding-top: 6px;
+      }
+      .MuiBottomNavigationAction-wrapper {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      }
+      .MuiBottomNavigationAction-label {
+      opacity: 1;
+      font-size: 0.75rem;
+      transition: font-size 0.2s, opacity 0.2s;
+      font-family: Noto Sans TC, Chivo, sans-serif;
+      transition-delay: 0.1s;
+      }
+      .MuiBottomNavigationAction-label.MuiBottomNavigationAction-iconOnly {
+      opacity: 0;
+      transition-delay: 0s;
+      }
+      .MuiBottomNavigationAction-label.Mui-selected {
+      font-size: 0.875rem;
+      }
+   </style>
+   <style data-jss="" data-meta="makeStyles">
+      .jss15 {
+      bottom: 0;
+      position: sticky;
+      }
+   </style>
+   <style data-jss="" data-meta="makeStyles">
+      .jss1 {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      }
+      .jss2 {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      }
+   </style>
   </head>
   <body style="overscroll-behavior-y: none;">
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="MuiContainer-root jss1 MuiContainer-disableGutters MuiContainer-maxWidthXs">
+        <div class="MuiToolbar-root MuiToolbar-regular jss3 MuiToolbar-gutters">
+           <a href="/zh">
+              <h6 class="MuiTypography-root MuiTypography-subtitle2">巴士到站預報</h6>
+           </a>
+           <div class="MuiInputBase-root MuiInput-root MuiInput-underline jss4"><input id="searchInput" placeholder="巴士線" type="text" class="MuiInputBase-input MuiInput-input" value=""></div>
+           <div class="MuiTabs-root jss5">
+              <div class="MuiTabs-scroller MuiTabs-fixed" style="overflow: hidden;">
+                 <div class="MuiTabs-flexContainer" role="tablist"><a class="MuiButtonBase-root MuiTab-root jss7 MuiTab-textColorInherit" tabindex="-1" role="tab" aria-disabled="false" aria-selected="false" id="en-selector" href="/en"><span class="MuiTab-wrapper jss9">En</span></a><a class="MuiButtonBase-root MuiTab-root jss7 MuiTab-textColorInherit Mui-selected jss8" tabindex="0" role="tab" aria-disabled="false" aria-selected="true" id="zh-selector" href="/zh"><span class="MuiTab-wrapper jss9">繁</span></a></div>
+                 <span class="jss10 jss12 MuiTabs-indicator jss6" style="left: 51.1719px; width: 47px;"></span>
+              </div>
+           </div>
+        </div>
+        <div class="MuiPaper-root jss14 MuiPaper-elevation0">
+           <h1 class="MuiTypography-root MuiTypography-srOnly">儀表板 - 巴士到站預報 App</h1>
+           <ul class="MuiList-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/208+1+TSIM_SHA_TSUI_EAST+BROADCAST_DRIVE">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">208</span><span class="jss24"></span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>廣播道</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($8.6)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">11 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">31 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/271S+1+HUNG_HOM_STATION+TAI_PO_(TAI_WO)">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">271</span><span class="jss24">S</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>大埔(太和)</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($20.1)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1"></h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/287D+1+HUNG_HOM_STATION+KAM_YING_COURT">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">287</span><span class="jss24">D</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>錦英苑</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($11)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1"></h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/5C+1+TSZ_WAN_SHAN_(CENTRAL)+STAR_FERRY">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">5</span><span class="jss24">C</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀碼頭</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($6.2)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">10 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">17 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/5C+2+YUK_WAH_STREET+STAR_FERRY">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">5</span><span class="jss24">C</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀碼頭</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($6.2)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">10 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">17 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/70S+1+HUNG_HOM_STATION+WO_HOP_SHEK">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">70</span><span class="jss24">S</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>和合石</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">- 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/8+1+KOWLOON_STATION+STAR_FERRY">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">8</span><span class="jss24"></span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀碼頭</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($5.4)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">21 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">44 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/87D+1+HUNG_HOM_STATION+KAM_YING_COURT">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">87</span><span class="jss24">D</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>錦英苑</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($10)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">4 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">12 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/8A+1+WHAMPOA_GARDEN+TSIM_SHA_TSUI_(CIRCULAR)">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">8</span><span class="jss24">A</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀(循環線)</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($4.6)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">11 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">31 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/N216+1+HUNG_HOM_STATION+YAU_TONG">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">N216</span><span class="jss24"></span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>油塘</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($9)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1"></h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/N241+1+HUNG_HOM_STATION+TSING_YI_(CHEUNG_WANG_ESTATE)">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">N241</span><span class="jss24"></span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>青衣(長宏邨)</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($16.6)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1"></h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/N271+1+HUNG_HOM_STATION+TAI_PO_(FU_HENG)">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">N271</span><span class="jss24"></span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>大埔(富亨)</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($20.1)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1"></h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/N281+1+HUNG_HOM_STATION+KAM_YING_COURT">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">N281</span><span class="jss24"></span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>錦英苑</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($17.9)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1"></h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/N41X+1+HUNG_HOM_STATION+TSING_YI_(CHEUNG_WANG_ESTATE)">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">N41</span><span class="jss24">X</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>青衣(長宏邨)</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($9.6)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1"></h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/973+1+Tsim_Sha_Tsui_(Mody_Road)+Stanley_Market">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">973</span><span class="jss24"></span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>赤柱市場</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館, 暢運道　($15.7)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">15 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">35 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/14X+1+YAU_TONG_(SHUNG_TAK_WAI)+TSIM_SHA_TSUI_(CIRCULAR)">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">14</span><span class="jss24">X</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀(循環線)</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港理工大學　($8)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">32 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">57 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/215X+1+KOWLOON_STATION+LAM_TIN_(KWONG_TIN_ESTATE)">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">215</span><span class="jss24">X</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>藍田(廣田邨)</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港理工大學　($8)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">5 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">16 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/26+1+SHUN_TIN+TSIM_SHA_TSUI_EAST">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">26</span><span class="jss24"></span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀東</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港理工大學　($6.2)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">7 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">18 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/28+1+STAR_FERRY+LOK_WAH">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">28</span><span class="jss24"></span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>樂華</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港理工大學　($6.2)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">9 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">19 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+              <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/41A+1+TSING_YI_(CHEUNG_ON_ESTATE)+TSIM_SHA_TSUI_EAST">
+                 <div class="MuiListItemText-root jss17">
+                    <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
+                       <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">41</span><span class="jss24">A</span></h2>
+                    </span>
+                 </div>
+                 <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
+                    <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀東</b></h3>
+                    <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港理工大學　($5.4)</h4>
+                 </div>
+                 <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
+                    <h5 class="MuiTypography-root MuiTypography-body1">19 分鐘</h5>
+                    <h6 class="MuiTypography-root jss21 MuiTypography-body1">37 分鐘</h6>
+                 </div>
+              </a>
+              <hr class="MuiDivider-root">
+           </ul>
+        </div>
+        <div class="MuiBottomNavigation-root jss15">
+           <a class="MuiButtonBase-root MuiBottomNavigationAction-root Mui-selected" tabindex="0" role="button" aria-disabled="false" href="/zh">
+              <span class="MuiBottomNavigationAction-wrapper">
+                 <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+                 </svg>
+                 <span class="MuiBottomNavigationAction-label Mui-selected">常用</span>
+              </span>
+              <span class="MuiTouchRipple-root"></span>
+           </a>
+           <a class="MuiButtonBase-root MuiBottomNavigationAction-root" tabindex="0" role="button" aria-disabled="false" href="/zh/search">
+              <span class="MuiBottomNavigationAction-wrapper">
+                 <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                 </svg>
+                 <span class="MuiBottomNavigationAction-label">搜尋</span>
+              </span>
+              <span class="MuiTouchRipple-root"></span>
+           </a>
+           <a class="MuiButtonBase-root MuiBottomNavigationAction-root" tabindex="0" role="button" aria-disabled="false" href="/zh/route/1+1+CHUK_YUEN_ESTATE+STAR_FERRY">
+              <span class="MuiBottomNavigationAction-wrapper">
+                 <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"></path>
+                 </svg>
+                 <span class="MuiBottomNavigationAction-label">1</span>
+              </span>
+              <span class="MuiTouchRipple-root"></span>
+           </a>
+           <a class="MuiButtonBase-root MuiBottomNavigationAction-root" tabindex="0" role="button" aria-disabled="false" href="/zh/settings">
+              <span class="MuiBottomNavigationAction-wrapper">
+                 <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"></path>
+                 </svg>
+                 <span class="MuiBottomNavigationAction-label">設定</span>
+              </span>
+              <span class="MuiTouchRipple-root"></span>
+           </a>
+        </div>
+      </div>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

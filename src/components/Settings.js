@@ -8,7 +8,8 @@ import {
   ListItemAvatar,
   ListItemText,
   Paper,
-  Snackbar
+  Snackbar,
+  Typography
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import BuildIcon from '@material-ui/icons/Build'
@@ -21,7 +22,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import ShareIcon from '@material-ui/icons/Share'
 import TelegramIcon from '@material-ui/icons/Telegram'
-import { vibrate } from '../utils'
+import { vibrate, setSeoHeader } from '../utils'
 
 const Settings = () => {
   const { 
@@ -37,17 +38,18 @@ const Settings = () => {
   const classes = useStyles()
 
   useEffect(() => {
-    document.title = t('設定') + ' - ' +t(AppTitle)
-    document.querySelector('meta[name="description"]').setAttribute("content", t('巴士 App 設定，重置資料庫、查看原始碼及捐款支持'))
-    document.querySelector('link[rel="canonical"]').setAttribute("href", `https://hkbus.app${window.location.pathname}`)
-    document.querySelector('link[rel="alternative"][hreflang="en"]').setAttribute("href", 'https://hkbus.app/en/settings')
-    document.querySelector('link[rel="alternative"][hreflang="zh-Hant"]').setAttribute("href", 'https://hkbus.app/zh/settings')
+    setSeoHeader({
+      title: t('設定') + ' - ' +t(AppTitle),
+      description: t('setting-page-description'),
+      lang: i18n.language
+    })
     setUpdating(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateTime])
 
   return (
     <Paper className={classes.root}>
+      <Typography component="h1" variant="srOnly">{`${t('設定')} - ${t(AppTitle)}`}</Typography>
       <List>
         <ListItem
           button
@@ -57,8 +59,9 @@ const Settings = () => {
             <Avatar><BuildIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("架構版本")+": "+schemaVersion+" - "+versionMd5.substr(0,6)} 
+            primary={<ListPrimaryText>{t("架構版本")+": "+schemaVersion+" - "+versionMd5.substr(0,6)}</ListPrimaryText>} 
             secondary={t('更新時間') + ": " + (new Date(updateTime)).toLocaleString().slice(0,20).replace(',',' ')} 
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
         <ListItem
@@ -82,8 +85,9 @@ const Settings = () => {
             <Avatar>{geoPermission === 'granted' ? <LocationOnIcon /> : <LocationOffIcon />}</Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("地理位置定位功能")} 
+            primary={<ListPrimaryText>{t("地理位置定位功能")}</ListPrimaryText>} 
             secondary={t(geoPermission === 'granted' ? '開啟' : ( geoPermission === 'opening' ? '開啟中...' : '關閉' )) } 
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
         <ListItem
@@ -94,8 +98,9 @@ const Settings = () => {
             <Avatar><DeleteIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("一鍵清空用戶記錄")} 
+            primary={<ListPrimaryText>{t("一鍵清空用戶記錄")}</ListPrimaryText>} 
             secondary={t("包括鎖定和常用報時")}
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
         <Divider />
@@ -110,8 +115,9 @@ const Settings = () => {
             <Avatar><GitHubIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={"Source Code"} 
-            secondary={"GPL-3.0 License"} 
+            primary={<ListPrimaryText>Source Code</ListPrimaryText>} 
+            secondary={"GPL-3.0 License"}
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
         <ListItem>
@@ -119,8 +125,9 @@ const Settings = () => {
             <Avatar><DataUsageIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("交通資料來源")} 
+            primary={<ListPrimaryText>{t("交通資料來源")}</ListPrimaryText>} 
             secondary={t('資料一線通') + "  https://data.gov.hk" } 
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
         <Divider />
@@ -135,8 +142,9 @@ const Settings = () => {
             <Avatar><MonetizationOnIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("捐款支持")} 
+            primary={<ListPrimaryText>{t("捐款支持")}</ListPrimaryText>} 
             secondary={t('請捐款到 612 人道支援基金') } 
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
         <ListItem
@@ -155,8 +163,9 @@ const Settings = () => {
             <Avatar><ShareIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("複製應用程式鏈結")} 
+            primary={<ListPrimaryText>{t("複製應用程式鏈結")}</ListPrimaryText>} 
             secondary={t('經不同媒介分享給親友') } 
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
         <ListItem
@@ -170,8 +179,9 @@ const Settings = () => {
             <Avatar><TelegramIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={t("Telegram 交流區")} 
+            primary={<ListPrimaryText>{t("Telegram 交流區")}</ListPrimaryText>} 
             secondary={t('歡迎意見及技術交流') } 
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
       </List>
@@ -199,6 +209,12 @@ const Settings = () => {
         message={t('鏈結已複製到剪貼簿')}
       />
     </Paper>
+  )
+}
+
+const ListPrimaryText = ({children}) => {
+  return (
+    <Typography component="h2" variant="body1">{children}</Typography>
   )
 }
 

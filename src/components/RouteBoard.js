@@ -7,6 +7,7 @@ import memorize from 'memoize-one'
 import RouteInputPad from './route-board/RouteInputPad'
 import RouteRow from './route-board/RouteRow'
 import { useTranslation } from 'react-i18next'
+import { setSeoHeader } from '../utils'
 
 const createItemData = memorize((routeList) => ({routeList}))
 
@@ -16,15 +17,15 @@ const RouteList = () => {
     ([routeNo, {stops, co}]) => routeNo.startsWith(searchRoute.toUpperCase()) && 
       (stops[co[0]] == null || stops[co[0]].length > 0)
   )
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const classes = useStyles()
 
   useEffect(() => {
-    document.title = t('搜尋') + ' - ' + t(AppTitle)
-    document.querySelector('meta[name="description"]').setAttribute("content", t('巴士 App 路線搜尋介面'))
-    document.querySelector('link[rel="canonical"]').setAttribute("href", `https://hkbus.app${window.location.pathname}`)
-    document.querySelector('link[rel="alternative"][hreflang="en"]').setAttribute("href", `https://hkbus.app/en/search`)
-    document.querySelector('link[rel="alternative"][hreflang="zh-Hant"]').setAttribute("href", 'https://hkbus.app/zh/search')
+    setSeoHeader ({
+      title: t('搜尋') + ' - ' + t(AppTitle),
+      description: t('route-board-page-description'),
+      lang: i18n.language
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

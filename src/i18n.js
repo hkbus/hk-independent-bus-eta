@@ -14,7 +14,6 @@ i18n
     nsSeparator: false,
     keySeparator: false,
     debug: false,
-
     interpolation:{
       escapeValue: false
     }

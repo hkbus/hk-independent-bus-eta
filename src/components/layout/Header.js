@@ -23,7 +23,7 @@ const Header = (props) => {
 
   const handleLanguageChange = lang => {
     vibrate(1)
-    history.replace( location.pathname.replace('/'+i18n.language+'/', '/'+lang+'/') )
+    history.replace( location.pathname.replace('/'+i18n.language, '/'+lang) )
     i18n.changeLanguage(lang)
   }
 
@@ -34,12 +34,12 @@ const Header = (props) => {
       <Link 
         to={`/${i18n.language}`}
         onClick={(e) => {
+          e.preventDefault()
           vibrate(1)
           history.push(`/${i18n.language}/search`)
-          e.preventDefault()
         }}
       >
-        <Typography component="h1" variant='subtitle2'>巴士到站預報</Typography>
+        <Typography variant='subtitle2'>{t('巴士到站預報')}</Typography>
       </Link> 
       <Input 
         id="searchInput"

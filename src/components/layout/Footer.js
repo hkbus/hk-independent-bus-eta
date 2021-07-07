@@ -29,7 +29,7 @@ const Footer = () => {
 
   return (
     <BottomNavigation
-      value={location.pathname}
+      value={location.pathname.replace(/(.*)\/[0-9]*?$/, "$1")}
       showLabels={true}
       className={classes.root}
     >
@@ -52,9 +52,9 @@ const Footer = () => {
       <BottomNavigationAction
        label={selectedRoute.split('+')[0]}
        component={Link}
-       to={`/${i18n.language}/route/${selectedRoute}`}
-       onClick={(e) => handleClick(`/${i18n.language}/route/${selectedRoute}`, e)}
-       value={`/${i18n.language}/route/${selectedRoute}`}
+       to={`/${i18n.language}/route/${selectedRoute.replace(/ /g, '_').replace(/(.*)\/.*$/, "$1")}`}
+       onClick={(e) => handleClick(`/${i18n.language}/route/${selectedRoute.replace(/ /g, '_')}`, e)}
+       value={`/${i18n.language}/route/${selectedRoute.replace(/ /g, '_').replace(/(.*)\/.*$/, "$1")}`}
        icon={<TimerIcon />} 
       />
       <BottomNavigationAction

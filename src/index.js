@@ -8,8 +8,15 @@ import { DbProvider } from './DbContext'
 import { AppContextProvider } from './AppContext'
 import './i18n'
 
-if (!navigator.userAgent.match(/googlebot/i) || window.location.pathname === '/'){
-  // content should be prerendered
+const isHuman = () => {
+  const agents = ['googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot', 'facebot', 'ia_archiver', 'sitecheckerbotcrawler']
+  return !navigator.userAgent.match(new RegExp(agents.join('|'), 'i'))
+}
+
+// content is render only for human
+if (isHuman()){
+  // remove prerendered style
+  document.querySelectorAll('style').forEach(e => e.parentNode.removeChild(e))
   ReactDOM.render(
     <React.StrictMode>
       <DbProvider>

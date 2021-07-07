@@ -3,7 +3,8 @@ import {
   CircularProgress,
   Divider,
   ListItem,
-  ListItemText
+  ListItemText,
+  Typography
 } from '@material-ui/core'
 import { Link, useHistory } from 'react-router-dom'
 import { vibrate } from '../../utils'
@@ -26,7 +27,8 @@ const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
   }
   
   return name + ' - '+getDistance(location, geolocation).toFixed(0)+t('米')+
-     '　' + ( fareString ? "("+fareString+")" : "" )
+         '　' + ( fareString ? "("+fareString+")" : "" )
+      
 }
 
 const SuccinctTimeReport = ({routeId} ) => {
@@ -90,7 +92,7 @@ const SuccinctTimeReport = ({routeId} ) => {
     <>
     <ListItem
       component={Link}
-      to={`/${i18n.language}/route/${routeId.replace(/ /g, '_')}`}
+      to={`/${i18n.language}/route/${routeKey.replace(/ /g, '_')}`}
       onClick={handleClick}
       className={classes.listItem}
     >
@@ -100,10 +102,10 @@ const SuccinctTimeReport = ({routeId} ) => {
       />
       {
         stop ? <ListItemText 
-          primary={<>
+          primary={<Typography component="h3" variant="body1">
             <span className={classes.toText}>{`${t('往')} `}</span>
             <b>{dest[i18n.language]}</b>
-          </>}
+          </Typography>}
           secondary={
             <DistAndFare 
               name={stop.name[i18n.language]} 
@@ -113,12 +115,16 @@ const SuccinctTimeReport = ({routeId} ) => {
               seq={parseInt(seq, 10)}
             />
           }
+          secondaryTypographyProps={{
+            component: "h4", 
+            variant: "subtitle2"
+          }}
           className={classes.routeDest}
         /> : <CircularProgress size={15} />
       }
       <ListItemText
-        primary={etas ? getEtaString(etas[0]) : ''}
-        secondary={etas ? getEtaString(etas[1]) : ''}
+        primary={<Typography component="h5">{etas ? getEtaString(etas[0]) : ''}</Typography>}
+        secondary={<Typography component="h6" className={classes.secondaryEta}>{etas ? getEtaString(etas[1]) : ''}</Typography>}
         className={classes.routeEta}
       />
     </ListItem>
@@ -141,9 +147,16 @@ const useStyles = makeStyles(theme => ({
     width: '65%'
   },
   routeEta: {
-    width: '20%'
+    width: '20%',
+    paddingLeft: '10px'
   },
   toText: {
     fontSize: '0.85rem'
   },
+  secondaryEta: {
+    color: 'rgba(0, 0, 0, 0.54)',
+    fontSize: '0.875rem',
+    fontWeight: '400',
+    lineHeight: '1.43'
+  }
 }))

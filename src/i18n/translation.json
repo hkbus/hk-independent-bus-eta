@@ -2,6 +2,7 @@
   "en": {
     "translation": {
       "巴士到站預報 App": "HK Bus ETA App",
+      "巴士到站預報": "HK BUS ETA",
       "kmb": "KMB",
       "ctb": "CTB",
       "nwfb": "NWFB",
@@ -39,10 +40,10 @@
       "Telegram 交流區": "Telegram sharing group",
       "歡迎意見及技術交流": "Welcome comment & technology sharing",
       "車費": "Fee",
-      "巴士到站預報 App，一 App 盡覽九巴、龍運、新巴、城巴、嶼巴巴士路線、車費及到站預報": "HK Bus ETA App, Checking bus routes and ETA of KMB, NWFB, CTB, LWB and NLB in a single App",
-      "巴士 App 設定，重置資料庫、查看原始碼及捐款支持": "HK Bus App settings includes renew the database, check the source code and donation",
-      "巴士 App 路線搜尋介面": "HK Bus App route searching interface",
-      "特別班次": "Special"
+      "特別班次": "Special",
+      "home-page-description": "Ad-free mobile application for checking bus routes, stops, estimated time of arrival(ETA) of Kowloon Motor Bus Co.(KMB), Long Win Bus (LWB), CityBus (CTB), New World First Bus (NWFB) and New Lantao Bus (NLB) - HK Bus ETA App",
+      "route-board-page-description": "Simple & clean route searching interface to search over 1800 routes and 8800 stops among Kowloon Motor Bus Co.(KMB), Long Win Bus (LWB), CityBus (CTB), New World First Bus (NWFB) and New Lantao Bus (NLB), covering Hong Kong Island, Kowloon, New Territories and Lantau Island - HK Bus ETA App",
+      "setting-page-description": "Renew the database, clean up usage record, check out the source code, join the telegram sharing group and donate - HK Bus ETA App"
     }
   },
   "zh": {
@@ -50,7 +51,11 @@
       "kmb": "九巴",
       "ctb": "城巴",
       "nwfb": "新巴",
-      "nlb": "新大嶼山巴士"
+      "nlb": "新大嶼山巴士",
+      "Dashboard": "儀表板",
+      "home-page-description": "無廣告手機應用程式查閱巴士線、車站、預計到達時間，路線盡包九龍巴士(九巴)、龍運巴士、新世界第一巴士(新巴)、城巴、新大嶼山巴士 - 巴士到站預報 App",
+      "route-board-page-description": "透過簡潔清晣的搜尋介面，輕鬆查找九巴、龍運、新巴、城巴、新大嶼山巴士合共超過 1800 條巴士路線，8800 個車站，路線覆蓋港島、九龍、新界、大嶼山 - 巴士到站預報 App",
+      "setting-page-description": "重置巴士路線資料，刪除使用記錄，查看原始碼，加入 Telegram 交流群組，亦可捐款支持 - 巴士到站預報 App"
     }
   }
 }

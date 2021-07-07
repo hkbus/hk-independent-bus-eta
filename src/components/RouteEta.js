@@ -7,14 +7,15 @@ import { Typography } from '@material-ui/core'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
 import RouteNo from './route-board/RouteNo'
+import { setSeoHeader } from '../utils'
 
 const RouteEta = () => {
   const { _id, panel } = useParams()
   const id = _id.replace(/_/g, ' ')
   const { AppTitle, routeList, stopList, stopMap, updateSelectedRoute } = useContext ( AppContext )
-  const { route, stops, co, orig, dest, nlbId } = routeList[id]
+  const { route, stops, co, orig, dest, nlbId, fares } = routeList[id]
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
-  const [ isDialogOpen, setIsDialogOpen ] = useState(false)
+  const [ isDialogOpen, setIsDialogOpen ] = useState( false )
   const [ dialogStop, setDialogStop ] = useState(getDialogStops(co, stops, stopMap, 0))
   
   const { t, i18n } = useTranslation()
@@ -41,10 +42,18 @@ const RouteEta = () => {
   }
 
   const pageDesc = () => {
+    const uniqueFares = fares ? fares.filter((v, idx, self) => self.indexOf(v) === idx).map(v => `$${v}`) : []
     if ( i18n.language === 'zh' ) {
-      return `由${co.map(c => t(c)).join('、')}聯營的${route}路線，途經${getStops(co,stops).map(stop => stopList[stop].name.zh).join('、')}`
+      return (`路線${route}`+
+        `由${orig.zh}出發，以${dest.zh}為終點，` +
+        (uniqueFares.length ? `分段車費為${uniqueFares.join('、')}，`:'') +
+        `途經${getStops(co,stops).map(stop => stopList[stop].name.zh).join('、')}。`
+      )
     } else {
-      return `The route ${route} is supported by ${co.map(c => t(c)).join(',')}. The stops of the route are ${getStops(co,stops).map(stop => stopList[stop].name.en).join(',')}`
+      return (`Route ${route} `+
+        `is from ${toProperCase(orig.en)} to ${toProperCase(dest.en)}` +
+        (uniqueFares.length ? `, section fees are ${uniqueFares.join(', ')}. ` : '. ') +
+        'Stops: '+ toProperCase(getStops(co,stops).map(stop => stopList[stop].name.en).join(', ')) +'. ')
     }
   }
 
@@ -57,11 +66,12 @@ const RouteEta = () => {
   }, [route])
 
   const updateHeader = () => {
-    document.title = route + ' ' + t('往') + ' ' + dest[i18n.language] + ' - ' + t(AppTitle)
-    document.querySelector('meta[name="description"]').setAttribute("content", pageDesc())
-    document.querySelector('link[rel="canonical"]').setAttribute("href", `https://hkbus.app/${i18n.language}/route/${_id}`)
-    document.querySelector('link[rel="alternative"][hreflang="en"]').setAttribute("href", `https://hkbus.app/en/route/${_id}`)
-    document.querySelector('link[rel="alternative"][hreflang="zh-Hant"]').setAttribute("href", `https://hkbus.app/zh/route/${_id}`)
+    setSeoHeader({
+      title: route + ' ' + t('往') + ' ' + toProperCase(dest[i18n.language]) + ' - ' + t(AppTitle),
+      description: pageDesc(),
+      lang: i18n.language
+    })
+    // the following is notify the rendering is done, for pre-rendering purpose
     document.getElementById(_id).setAttribute("value", _id)
   }
 
@@ -79,10 +89,8 @@ const RouteEta = () => {
   return (
     <>
       <input hidden id={_id} />
-      <Typography variant="subtitle1" align='center'>
-        <RouteNo routeNo={route} />
-      </Typography>
-      <Typography variant="caption" align='center'>
+      <RouteNo routeNo={route} component="h1" align='center' />
+      <Typography component="h2" variant="caption" align='center'>
         {t('往')} {dest[i18n.language]} {nlbId ? t('由')+" "+orig[i18n.language] : ""}
       </Typography>
       {navigator.userAgent !== 'prerendering' ? <RouteMap 
@@ -119,6 +127,10 @@ const getDialogStops = (co, stops, stopMap, panel) => {
     if ( co[i] in stops )
       return [[co[i], stops[co[i]][panel]]].concat(stopMap[stops[co[i]][panel]] || [])
   }
+}
+
+const toProperCase = (txt) => {
+  return txt.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})
 }
 
 export default RouteEta

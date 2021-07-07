@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import {
   CircularProgress,
   List,
-  Paper
+  Paper,
+  Typography
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../AppContext'
-import { getDistance } from '../utils'
+import { getDistance, setSeoHeader } from '../utils'
 import SuccinctTimeReport from './home/SuccinctTimeReport'
 import { useTranslation } from 'react-i18next'
 
@@ -15,7 +16,7 @@ const Home = () => {
     AppTitle,
     hotRoute, savedEtas, routeList, stopList
   } = useContext ( AppContext )
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   const [selectedRoutes, setSelectedRoute] = useState(
     savedEtas.concat(
@@ -28,11 +29,11 @@ const Home = () => {
   const [doneGeoRoutes, setDoneGeoRoutes] = useState(false)
 
   useEffect (() => {
-    document.title = t(AppTitle)
-    document.querySelector('meta[name="description"]').setAttribute("content", t('巴士到站預報 App，一 App 盡覽九巴、龍運、新巴、城巴、嶼巴巴士路線、車費及到站預報'))
-    document.querySelector('link[rel="canonical"]').setAttribute("href", 'https://hkbus.app')
-    document.querySelector('link[rel="alternative"][hreflang="en"]').setAttribute("href", 'https://hkbus.app/en')
-    document.querySelector('link[rel="alternative"][hreflang="zh-Hant"]').setAttribute("href", 'https://hkbus.app/zh')
+    setSeoHeader ({
+      title: `${t('Dashboard')} - ${t(AppTitle)}`,
+      description: t('home-page-description'),
+      lang: i18n.language
+    })
 
     let isMounted = true
     // to enhance performance, we used cached geolocation
@@ -78,8 +79,9 @@ const Home = () => {
 
   const classes = useStyles()
   return (
-    <Paper className={classes.root}>
-      <List className={classes.list}>
+    <Paper className={classes.root} square elevation={0}>
+      <Typography component="h1" variant="srOnly">{`${t('Dashboard')} - ${t(AppTitle)}`}</Typography>
+      <List className={classes.list} disablePadding>
       {
         selectedRoutes.map( selectedRoute => (
           <SuccinctTimeReport key={selectedRoute} routeId={selectedRoute} />
@@ -98,7 +100,7 @@ export default Home
 const useStyles = makeStyles ( theme => ({
   root: {
     background: 'white',
-    height: 'calc(100vh - 120px)',
+    height: 'calc(100vh - 125px)',
     overflowY: 'scroll',
     textAlign: 'center'
   }

@@ -17,7 +17,7 @@ const RouteInfo = ( {route} ) => {
   const classes = useStyles()
 
   return (
-    <div className={classes.routeInfo}>
+    <Typography component="h3" variant="body1" className={classes.routeInfo}>
     { route.nlbId ?
       <>
         <span className={classes.fromToText}>{`${t('往')} `}</span>
@@ -31,7 +31,7 @@ const RouteInfo = ( {route} ) => {
           <b>{route.dest[i18n.language]}</b>
         </>
     }
-    </div>
+    </Typography>
   )
 }
 
@@ -60,7 +60,7 @@ const RouteRow = React.memo(( {data, index, style} ) => {
                 <RouteNo routeNo={routeNo} />
                 {service_type >= 2 && <Typography variant="caption" className={classes.specialTrip}>{t('特別班次')}</Typography>}
               </div>
-              <Typography variant="caption" className={classes.company}>
+              <Typography component="h4" variant="caption" className={classes.company}>
                   {route[1].co.map(co => t(co)).join('+')}
               </Typography>
             </div>
