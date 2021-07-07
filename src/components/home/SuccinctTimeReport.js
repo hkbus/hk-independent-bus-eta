@@ -34,7 +34,7 @@ const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
 const SuccinctTimeReport = ({routeId} ) => {
   const { t, i18n } = useTranslation()
   const { routeList, stopList } = useContext ( AppContext )
-  const [ routeNo, serviceType ] = routeId.split('+')
+  const [ routeNo, serviceType ] = routeId.split('-')
   const [ routeKey, seq ] = routeId.split('/')
   const { co, stops, dest, bound, nlbId, fares, faresHoliday } = routeList[routeKey]
   const stop = stopList[stops[co[0]] ? stops[co[0]][parseInt(seq, 10)] : null]
@@ -84,7 +84,7 @@ const SuccinctTimeReport = ({routeId} ) => {
     e.preventDefault()
     vibrate(1)
     setTimeout(() => {
-      history.push(`/${i18n.language}/route/${routeId.replace(/ /g, '_')}`)
+      history.push(`/${i18n.language}/route/${routeId.toLowerCase()}`)
     }, 0)
   }
   
@@ -92,7 +92,7 @@ const SuccinctTimeReport = ({routeId} ) => {
     <>
     <ListItem
       component={Link}
-      to={`/${i18n.language}/route/${routeKey.replace(/ /g, '_')}`}
+      to={`/${i18n.language}/route/${routeKey.toLowerCase()}`}
       onClick={handleClick}
       className={classes.listItem}
     >

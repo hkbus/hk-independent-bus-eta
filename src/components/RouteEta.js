@@ -10,10 +10,9 @@ import RouteNo from './route-board/RouteNo'
 import { setSeoHeader } from '../utils'
 
 const RouteEta = () => {
-  const { _id, panel } = useParams()
-  const id = _id.replace(/_/g, ' ')
+  const { id, panel } = useParams()
   const { AppTitle, routeList, stopList, stopMap, updateSelectedRoute } = useContext ( AppContext )
-  const { route, stops, co, orig, dest, nlbId, fares } = routeList[id]
+  const { route, stops, co, orig, dest, nlbId, fares } = routeList[id.toUpperCase()]
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
   const [ isDialogOpen, setIsDialogOpen ] = useState( false )
   const [ dialogStop, setDialogStop ] = useState(getDialogStops(co, stops, stopMap, 0))
@@ -25,7 +24,7 @@ const RouteEta = () => {
     setExpanded(newExpanded ? panel : false)
     setDialogStop ( getDialogStops(co, stops, stopMap, panel) )
     if ( newExpanded ) {
-      history.replace(`/${i18n.language}/route/${_id}/${panel}`)
+      history.replace(`/${i18n.language}/route/${id}/${panel}`)
       return
     }
   }
@@ -72,7 +71,7 @@ const RouteEta = () => {
       lang: i18n.language
     })
     // the following is notify the rendering is done, for pre-rendering purpose
-    document.getElementById(_id).setAttribute("value", _id)
+    document.getElementById(id).setAttribute("value", id)
   }
 
   useEffect(() => {
@@ -84,11 +83,11 @@ const RouteEta = () => {
   useEffect(() => {
     updateHeader()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [_id])
+  }, [id])
 
   return (
     <>
-      <input hidden id={_id} />
+      <input hidden id={id} />
       <RouteNo routeNo={route} component="h1" align='center' />
       <Typography component="h2" variant="caption" align='center'>
         {t('往')} {dest[i18n.language]} {nlbId ? t('由')+" "+orig[i18n.language] : ""}

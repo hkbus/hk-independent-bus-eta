@@ -81,6 +81,7 @@ const Home = () => {
   return (
     <Paper className={classes.root} square elevation={0}>
       <Typography component="h1" variant="srOnly">{`${t('Dashboard')} - ${t(AppTitle)}`}</Typography>
+      <Typography component="h2" variant="srOnly">{t('home-page-description')}</Typography>
       <List className={classes.list} disablePadding>
       {
         selectedRoutes.map( selectedRoute => (

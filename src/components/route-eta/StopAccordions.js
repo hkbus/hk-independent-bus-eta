@@ -17,14 +17,13 @@ import { getDistance } from '../../utils'
 import TimeReport from './TimeReport'
 
 const StopAccordions = ({expanded, setExpanded, handleChange}) => {
-  const { _id, panel } = useParams()
-  const id = _id.replace(/_/g, ' ')
+  const { id, panel } = useParams()
   const { 
     routeList, stopList, savedEtas, geoPermission,
     updateSavedEtas
   } = useContext ( AppContext )
 
-  const { route, serviceType, bound, stops, co, fares, faresHoliday, nlbId } = routeList[id]
+  const { route, serviceType, bound, stops, co, fares, faresHoliday, nlbId } = routeList[id.toUpperCase()]
   const { t, i18n } = useTranslation()
   const accordionRef = useRef([])
 

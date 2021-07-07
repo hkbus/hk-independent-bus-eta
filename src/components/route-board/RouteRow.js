@@ -39,26 +39,26 @@ const RouteRow = React.memo(( {data, index, style} ) => {
   const { t, i18n } = useTranslation()
   const { routeList } = data
   const route = routeList[index]
-  const [routeNo, service_type] = route[0].split('+').slice(0,2)
+  const [routeNo, serviceType] = route[0].split('-').slice(0,2)
   const classes = useStyles()
   const history = useHistory()
   const handleClick = (e) => {
     e.preventDefault()
     vibrate(1)
     setTimeout(() => {
-      history.push(`/${i18n.language}/route/${route[0].replace(/ /g,'_')}`)
+      history.push(`/${i18n.language}/route/${route[0].toLowerCase()}`)
     }, 0)
   }
 
   return (
-    <Link onClick={handleClick} to={`/${i18n.language}/route/${route[0].replace(/ /g,'_')}`}>
+    <Link onClick={handleClick} to={`/${i18n.language}/route/${route[0].toLowerCase()}`}>
       <Card variant="outlined" key={route[0]} style={style} square>
         <CardActionArea>
           <CardContent className={classes.cardContent}>
             <div className={classes.busInfoContainer}>
               <div>
                 <RouteNo routeNo={routeNo} />
-                {service_type >= 2 && <Typography variant="caption" className={classes.specialTrip}>{t('特別班次')}</Typography>}
+                {serviceType >= 2 && <Typography variant="caption" className={classes.specialTrip}>{t('特別班次')}</Typography>}
               </div>
               <Typography component="h4" variant="caption" className={classes.company}>
                   {route[1].co.map(co => t(co)).join('+')}

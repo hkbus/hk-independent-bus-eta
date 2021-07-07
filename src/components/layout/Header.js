@@ -48,11 +48,11 @@ const Header = (props) => {
         value={searchRoute}
         placeholder={t('巴士線')}
         onChange={e => {
-          if ( e.target.value in routeList || e.target.value.replace(/_/g, ' ') in routeList) {
+          if ( e.target.value.toUpperCase() in routeList || e.target.value in routeList) {
             document.activeElement.blur()
-            history.push(`/${i18n.language}/route/${e.target.value.replace(/ /g, '_')}`)
+            history.push(`/${i18n.language}/route/${e.target.value}`)
           }
-          setSearchRoute(e.target.value.replace(/_/g, ' '))
+          setSearchRoute(e.target.value)
         }}
         onFocus={e => {
           vibrate(1)

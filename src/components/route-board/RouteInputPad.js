@@ -23,7 +23,7 @@ const KeyButton = ({k, handleClick, disabled = false, className}) => {
       disabled={disabled}
     >
       {k === 'b' ? <BackspaceOutlinedIcon/> : 
-        k === '-' ? <div className={classes.cancelButton}>{t('取消')}</div> : k}
+        k === 'c' ? <div className={classes.cancelButton}>{t('取消')}</div> : k}
     </Button>
   )
 }
@@ -34,15 +34,15 @@ const RouteNumPad = () => {
   return (
     <Grid container spacing={0}>
     {
-      '789456123-0b'.split('').map( k => (
+      '789456123c0b'.split('').map( k => (
         <Grid item xs={4} key={'input-'+k}>
           <KeyButton
             k={k}
             handleClick={updateSearchRouteByButton}
             disabled={
               (k === 'b' && searchRoute === '') 
-              || ( !'b-'.includes(k) && !possibleChar.includes(k))
-              || ( k === '-' && searchRoute === '' )
+              || ( !'bc'.includes(k) && !possibleChar.includes(k))
+              || ( k === 'c' && searchRoute === '' )
             }
           />
         </Grid>

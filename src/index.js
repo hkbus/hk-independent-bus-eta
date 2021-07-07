@@ -16,7 +16,7 @@ const isHuman = () => {
 // content is render only for human
 if (isHuman()){
   // remove prerendered style
-  document.querySelectorAll('style').forEach(e => e.parentNode.removeChild(e))
+  document.querySelectorAll('style[data-jss]').forEach(e => e.parentNode.removeChild(e))
   ReactDOM.render(
     <React.StrictMode>
       <DbProvider>
@@ -27,14 +27,14 @@ if (isHuman()){
     </React.StrictMode>,
     document.getElementById('root')
   );
+
+  // If you want your app to work offline and load faster, you can change
+  // unregister() to register() below. Note this comes with some pitfalls.
+  // Learn more about service workers: https://cra.link/PWA
+  serviceWorkerRegistration.register();
+
+  // If you want to start measuring performance in your app, pass a function
+  // to log results (for example: reportWebVitals(console.log))
+  // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+  reportWebVitals();
 }
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://cra.link/PWA
-serviceWorkerRegistration.register();
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

@@ -50,11 +50,11 @@ const Footer = () => {
         icon={<SearchIcon />} 
       />
       <BottomNavigationAction
-       label={selectedRoute.split('+')[0]}
+       label={selectedRoute.split('-')[0]}
        component={Link}
-       to={`/${i18n.language}/route/${selectedRoute.replace(/ /g, '_').replace(/(.*)\/.*$/, "$1")}`}
-       onClick={(e) => handleClick(`/${i18n.language}/route/${selectedRoute.replace(/ /g, '_')}`, e)}
-       value={`/${i18n.language}/route/${selectedRoute.replace(/ /g, '_').replace(/(.*)\/.*$/, "$1")}`}
+       to={`/${i18n.language}/route/${selectedRoute.replace(/(.*)\/.*$/, "$1").toLowerCase()}`}
+       onClick={(e) => handleClick(`/${i18n.language}/route/${selectedRoute.toLowerCase()}`, e)}
+       value={`/${i18n.language}/route/${selectedRoute.replace(/(.*)\/.*$/, "$1").toLowerCase()}`}
        icon={<TimerIcon />} 
       />
       <BottomNavigationAction

@@ -16,7 +16,10 @@ export const DbProvider = ( props ) => {
   
   const renewDb = () => {
     fetchEtaObj().then( ({routeList, stopList, stopMap}) => {
-      setRouteList(routeList)
+      setRouteList(Object.entries(routeList).reduce((acc, [k, v]) => {
+        acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = v
+        return acc
+      }, {}))
       setStopList(stopList)
       setStopMap(stopMap)
       setUpdateTime( Date.now() )

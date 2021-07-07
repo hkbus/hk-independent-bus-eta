@@ -10,7 +10,7 @@ export const AppContextProvider = ( props ) => {
   // search route
   const [searchRoute, setSearchRoute] = useState("")
   // selected route for bottom navigation shortcut
-  const [selectedRoute, setSelectedRoute] = useState('1+1+CHUK_YUEN_ESTATE+STAR_FERRY')
+  const [selectedRoute, setSelectedRoute] = useState('1-1-CHUK-YUEN-ESTATE-STAR-FERRY')
   // Geo Permission for UX
   const [ geoPermission, setGeoPermission ] = useState( localStorage.getItem('geoPermission') ) 
   const [ geolocation, setGeolocation ] = useState (JSON.parse(localStorage.getItem('geolocation')) || {lat: 22.302711, lng: 114.177216})
@@ -70,7 +70,7 @@ export const AppContextProvider = ( props ) => {
         case 'b': 
           setSearchRoute(searchRoute => searchRoute.slice(0,-1))
           break
-        case '-':
+        case 'c':
           setSearchRoute('')
           break
         default: 
@@ -135,5 +135,5 @@ const getPossibleChar = ( searchRoute, routeList ) => {
       possibleChar[c] = isNaN(possibleChar[c]) ? 1 : ( possibleChar[c] + 1)
     }
   })
-  return Object.entries(possibleChar).map(k => k[0]).filter(k => k !== '+')
+  return Object.entries(possibleChar).map(k => k[0]).filter(k => k !== '-')
 }
