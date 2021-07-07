@@ -19,17 +19,20 @@ const RouteInfo = ( {route} ) => {
   return (
     <Typography component="h3" variant="body1" className={classes.routeInfo}>
     { route.nlbId ?
-      <>
-        <span className={classes.fromToText}>{`${t('往')} `}</span>
-          <b>{route.dest[i18n.language]}</b>
-          <br />
-          <span className={classes.fromToText}>{`${t('由')} `}</span>
-          <b>{route.orig[i18n.language]}</b>
-      </>
-      : <>
-          <span className={classes.fromToText}>{`${t('往')} `}</span>
-          <b>{route.dest[i18n.language]}</b>
-        </>
+      <div>
+        <div className={classes.fromToWrapper}>
+          <Typography variant="subtitle2" color="textPrimary" component="h4" className={classes.fromToText}>{`${t('往')} `}</Typography>
+          <Typography variant="h4" color="textPrimary" component="h4">{route.dest[i18n.language]}</Typography>
+        </div>
+        <div className={classes.fromToWrapper}>
+          <Typography variant="subtitle2" color="textPrimary" component="h4" className={classes.fromToText}>{`${t('由')} `}</Typography>
+          <Typography variant="h4" color="textPrimary" component="h4">{route.orig[i18n.language]}</Typography>
+        </div>
+      </div>
+      : <div className={classes.fromToWrapper}>
+          <Typography variant="subtitle2" color="textPrimary" component="h4" className={classes.fromToText}>{`${t('往')} `}</Typography>
+          <Typography variant="h4" color="textPrimary" component="h4">{route.dest[i18n.language]}</Typography>
+        </div>
     }
     </Typography>
   )
@@ -58,7 +61,7 @@ const RouteRow = React.memo(( {data, index, style} ) => {
             <div className={classes.busInfoContainer}>
               <div>
                 <RouteNo routeNo={routeNo} />
-                {serviceType >= 2 && <Typography variant="caption" className={classes.specialTrip}>{t('特別班次')}</Typography>}
+                {serviceType >= 2 && <Typography variant="caption" className={classes.specialTrip}>{t('特別班')}</Typography>}
               </div>
               <Typography component="h4" variant="caption" className={classes.company}>
                   {route[1].co.map(co => t(co)).join('+')}
@@ -88,11 +91,15 @@ const useStyles = makeStyles (theme => ({
     textAlign: 'left',
     fontSize: '1rem'
   },
-  fromToText: {
-    fontSize: '0.95rem'
-  },
   company: {
     color: theme.palette.text.secondary
+  },
+  fromToWrapper: {
+    display: 'flex',
+    alignItems: 'baseline',
+  },
+  fromToText: {
+    marginRight: theme.spacing(0.5)
   },
   specialTrip: {
     fontSize: '0.6rem',

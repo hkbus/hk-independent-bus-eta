@@ -36,7 +36,7 @@ const Header = (props) => {
         textAlign: 'center',
       },
       "& input::before": {
-        borderBottom: '1px black solid'
+        borderBottom: theme.palette.text.primary
       }
     }
   }))
@@ -52,6 +52,31 @@ const Header = (props) => {
     history.replace( location.pathname.replace('/'+i18n.language, '/'+lang) )
     i18n.changeLanguage(lang)
   }
+
+
+const LanguageTab = withStyles((theme) => ({
+  root: {
+    textTransform: 'none',
+    minWidth: 36,
+    fontWeight: 900,
+    marginRight: theme.spacing(0),
+    fontSize: '15px',
+    opacity: 1,
+    padding: '6px 6px'
+  },
+  selected:{
+    '& > .MuiTab-wrapper':{
+      color: 'black',
+      backgroundColor: colorMode === 'dark' ? theme.palette.primary.main: theme.palette.background.paper,
+    }
+  },
+  wrapper: {
+    color: theme.palette.text.primary,
+    borderRadius: '30px',
+    padding: '2px 10px 0px 10px'
+  }
+}))((props) => <Tab disableRipple {...props} />);
+
 
   return (
     <Toolbar
@@ -110,7 +135,7 @@ const Header = (props) => {
 
 
 
-const LanguageTabs = withStyles({
+const LanguageTabs = withStyles((theme) => ({
   root: {
     borderBottom: 'none',
     minHeight: 24
@@ -118,29 +143,7 @@ const LanguageTabs = withStyles({
   indicator: {
     backgroundColor: 'transparent'
   }
-})(Tabs);
+}))(Tabs);
 
-const LanguageTab = withStyles((theme) => ({
-  root: {
-    textTransform: 'none',
-    minWidth: 36,
-    fontWeight: 900,
-    marginRight: theme.spacing(0),
-    fontSize: '15px',
-    opacity: 1,
-    padding: '6px 6px'
-  },
-  selected:{
-    '& > .MuiTab-wrapper':{
-      color: '#3B3C45',
-      backgroundColor: '#FEFBFA'
-    }
-  },
-  wrapper: {
-    color: '#3B3C45',
-    borderRadius: '30px',
-    padding: '2px 10px 0px 10px'
-  }
-}))((props) => <Tab disableRipple {...props} />);
 
 export default Header;

@@ -73,7 +73,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
             ref={el => {accordionRef.current[idx] = el}}
           >
             <AccordionSummary>
-              <Typography component="h3" variant='body1'>{stopList[stop].name[i18n.language]}</Typography>
+              <Typography variant="h4">{stopList[stop].name[i18n.language]}</Typography>
               <Typography variant='caption'>
                 {fares && fares[idx] ? t('車費')+': $'+fares[idx] : ''}
                 {faresHoliday && faresHoliday[idx] ? '　　　　'+t('假日車費')+': $'+faresHoliday[idx] : ''}
