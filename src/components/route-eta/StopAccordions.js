@@ -168,5 +168,8 @@ const useStyles = makeStyles(theme => ({
   loadingContainer: {
     display: 'flex',
     justifyContent: 'center'
+  },
+  stopName: {
+    fontWeight: 600
   }
 }))

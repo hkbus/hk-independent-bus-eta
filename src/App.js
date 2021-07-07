@@ -51,9 +51,32 @@ const PageSwitch = () => {
 }
 
 const App = () => { 
-  const { routeList, stopList, stopMap } = useContext( AppContext )
+  const { routeList, stopList, stopMap, colorMode } = useContext( AppContext )
   const { t } = useTranslation()
   const classes = useStyles()
+
+  const Theme = createMuiTheme({
+    typography: {
+      fontFamily: "Noto Sans TC, Chivo, sans-serif"
+    },
+    palette: {
+      type: colorMode,
+      primary: {
+        main: '#fedb00' // yellow
+      },
+    },
+    overrides: {
+      MuiCssBaseline: {
+        '@global': {
+          html: {
+            userSelect: 'none'
+          }
+        }
+      }
+    }
+  })
+
+  
   
   if ( routeList == null || stopList == null || stopMap == null ) {
     return (
@@ -95,32 +118,16 @@ const App = () => {
  
 export default App;
 
-const Theme = createMuiTheme({
-  typography: {
-    fontFamily: "Noto Sans TC, Chivo, sans-serif"
-  },
-  palette: {
-    background: {
-      default: "#ffff90" // yellow
-    }
-  },
-  overrides: {
-    MuiCssBaseline: {
-      '@global': {
-        html: {
-          userSelect: 'none'
-        }
-      }
-    }
-  }
-})
-
 const useStyles = makeStyles( theme => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     height: '100vh'
+  },
+  loadingTextContainer: {
+    background: theme.palette.background.default,
+
   },
   loadingContainer: {
     display: 'flex',

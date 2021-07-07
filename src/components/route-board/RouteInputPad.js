@@ -111,10 +111,15 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'scroll'
   },
   button: {
+    background: theme.palette.background.paper,
+    color: theme.palette.text.primary,
     width: '100%',
     height: '44px',
     fontSize: '1.2em',
-    borderRadius: 'unset'
+    borderRadius: 'unset',
+    '&$selected': {
+      color: theme.palette.text.primary,
+    },
   },
   cancelButton: {
     fontSize: '0.8em',
