@@ -102,10 +102,10 @@ const SuccinctTimeReport = ({routeId} ) => {
       />
       {
         stop ? <ListItemText 
-          primary={<Typography component="h3" variant="body1">
-            <span className={classes.toText}>{`${t('往')} `}</span>
-            <b>{dest[i18n.language]}</b>
-          </Typography>}
+          primary={<div className={classes.fromToWrapper}>
+            <Typography variant="subtitle2" color="textPrimary" component="h4" className={classes.fromToText}>{t('往')}</Typography>
+            <Typography variant="h4" color="textPrimary" component="h4">{dest[i18n.language]}</Typography>
+          </div>}
           secondary={
             <DistAndFare 
               name={stop.name[i18n.language]} 
@@ -123,8 +123,8 @@ const SuccinctTimeReport = ({routeId} ) => {
         /> : <CircularProgress size={15} />
       }
       <ListItemText
-        primary={<Typography component="h5">{etas ? getEtaString(etas[0]) : ''}</Typography>}
-        secondary={<Typography component="h6" className={classes.secondaryEta}>{etas ? getEtaString(etas[1]) : ''}</Typography>}
+        primary={<Typography component="h5" color="textPrimary">{etas ? getEtaString(etas[0]) : ''}</Typography>}
+        secondary={<Typography component="h6" color="textSecondary" className={classes.secondaryEta}>{etas ? getEtaString(etas[1]) : ''}</Typography>}
         className={classes.routeEta}
       />
     </ListItem>
@@ -148,13 +148,17 @@ const useStyles = makeStyles(theme => ({
   },
   routeEta: {
     width: '20%',
-    paddingLeft: '10px'
+    paddingLeft: '10px',
+    textAlign: 'right',
   },
-  toText: {
-    fontSize: '0.85rem'
+  fromToWrapper: {
+    display: 'flex',
+    alignItems: 'baseline',
+  },
+  fromToText: {
+    marginRight: theme.spacing(0.5)
   },
   secondaryEta: {
-    color: 'rgba(0, 0, 0, 0.54)',
     fontSize: '0.875rem',
     fontWeight: '400',
     lineHeight: '1.43'

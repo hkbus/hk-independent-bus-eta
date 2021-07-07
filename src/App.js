@@ -57,7 +57,15 @@ const App = () => {
 
   const Theme = createMuiTheme({
     typography: {
-      fontFamily: "Noto Sans TC, Chivo, sans-serif"
+      fontFamily: "Noto Sans TC, Chivo, sans-serif",
+      h4: {
+        fontSize: '1rem',
+        fontWeight: 700,
+        lineHeight: 1.5,
+      },
+      subtitle2: {
+        fontSize: '0.85rem',
+      }
     },
     palette: {
       type: colorMode,
