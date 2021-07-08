@@ -26,6 +26,10 @@ export const vibrate = (duration) => {
 }
 
 export const setSeoHeader = ({title, description, lang}) => {
+  if ( !document.querySelector('meta[name="description"]') ) {
+    // skip if rendering not ready
+    return
+  }
   // basic SEO
   document.title = title
   document.querySelector('meta[name="description"]').setAttribute("content", description)
@@ -42,4 +46,12 @@ export const setSeoHeader = ({title, description, lang}) => {
   // twitter card
   document.querySelector('meta[name="twitter:title"]').setAttribute('content', title)
   document.querySelector('meta[name="twitter:description"]').setAttribute('content', description)
+}
+
+export const toProperCase = (txt) => {
+  return txt.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})
+}
+
+export const isEmptyObj = (obj) => {
+  return obj && Object.keys(obj).length === 0 && obj.constructor === Object
 }

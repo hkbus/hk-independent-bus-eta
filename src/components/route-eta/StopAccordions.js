@@ -13,13 +13,14 @@ import StarBorderIcon from '@material-ui/icons/StarBorder'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
-import { getDistance } from '../../utils'
+import { getDistance, toProperCase } from '../../utils'
 import TimeReport from './TimeReport'
 
 const StopAccordions = ({expanded, setExpanded, handleChange}) => {
   const { id, panel } = useParams()
   const { 
-    routeList, stopList, savedEtas, geoPermission,
+    db: {routeList, stopList},
+    savedEtas, geoPermission,
     updateSavedEtas
   } = useContext ( AppContext )
 
@@ -73,7 +74,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
             ref={el => {accordionRef.current[idx] = el}}
           >
             <AccordionSummary>
-              <Typography component="h3" variant="body1">{stopList[stop].name[i18n.language]}</Typography>
+              <Typography component="h3" variant="body1">{toProperCase(stopList[stop].name[i18n.language])}</Typography>
               <Typography variant='caption'>
                 {fares && fares[idx] ? t('車費')+': $'+fares[idx] : ''}
                 {faresHoliday && faresHoliday[idx] ? '　　　　'+t('假日車費')+': $'+faresHoliday[idx] : ''}

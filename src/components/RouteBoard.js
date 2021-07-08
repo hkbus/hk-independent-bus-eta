@@ -12,7 +12,7 @@ import { setSeoHeader } from '../utils'
 const createItemData = memorize((routeList) => ({routeList}))
 
 const RouteList = () => {
-  const { AppTitle, routeList, searchRoute } = useContext ( AppContext )
+  const { AppTitle, db: {routeList}, searchRoute } = useContext ( AppContext )
   const targetRouteList = Object.entries(routeList).filter(
     ([routeNo, {stops, co}]) => routeNo.startsWith(searchRoute.toUpperCase()) && 
       (stops[co[0]] == null || stops[co[0]].length > 0)
@@ -48,6 +48,7 @@ const RouteList = () => {
       itemSize={56}
       width="100%"
       itemData={itemData}
+      className={classes.root}
     >
         {RouteRow}
     </FixedSizeList>
@@ -66,6 +67,9 @@ const RouteBoard = () => {
 export default RouteBoard
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white', 
+  },
   prerenderList: {
     height: '330px',
     overflowY: 'scroll',

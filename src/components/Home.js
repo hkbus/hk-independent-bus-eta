@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 const Home = () => {
   const { 
     AppTitle,
-    hotRoute, savedEtas, routeList, stopList
+    hotRoute, savedEtas, db: {routeList, stopList}
   } = useContext ( AppContext )
   const { t, i18n } = useTranslation()
 
@@ -75,7 +75,7 @@ const Home = () => {
       isMounted = false
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [stopList])
 
   const classes = useStyles()
   return (
@@ -84,9 +84,10 @@ const Home = () => {
       <Typography component="h2" variant="srOnly">{t('home-page-description')}</Typography>
       <List className={classes.list} disablePadding>
       {
-        selectedRoutes.map( selectedRoute => (
-          <SuccinctTimeReport key={selectedRoute} routeId={selectedRoute} />
-         ) )
+        selectedRoutes.map( selectedRoute => 
+          selectedRoute.split('/')[0] in routeList ? 
+            <SuccinctTimeReport key={selectedRoute} routeId={selectedRoute} /> : null
+        )
       }
       </List>
       {

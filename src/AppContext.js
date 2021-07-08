@@ -6,8 +6,9 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
-  const { AppTitle, schemaVersion, versionMd5, routeList, stopList, stopMap, updateTime, renewDb } = useContext(DbContext)
-  
+  const { AppTitle, schemaVersion, versionMd5, db, updateTime, renewDb } = useContext(DbContext)
+  const { routeList } = db
+
   // search route
   const [searchRoute, setSearchRoute] = useState("")
   // selected route for bottom navigation shortcut
@@ -113,8 +114,7 @@ export const AppContextProvider = ( props ) => {
 
   return (
     <AppContext.Provider value={{
-        AppTitle,
-        routeList, stopList, stopMap,
+        AppTitle, db,
         searchRoute, setSearchRoute, updateSearchRouteByButton,
         selectedRoute, updateSelectedRoute,
         possibleChar,

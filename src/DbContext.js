@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta' 
 import { compressToBase64, decompressFromBase64 } from 'lz-string'
+import { isEmptyObj } from './utils'
 
 const DbContext = React.createContext()
 
@@ -9,19 +10,19 @@ export const DbProvider = ( props ) => {
   const [schemaVersion, setSchemaVersion] = useState(localStorage.getItem('schemaVersion'))
   const [versionMd5, setVersionMd5] = useState(localStorage.getItem('versionMd5'))
   // route list & stop list & route-stop list
-  const [routeList, setRouteList] = useState(decompressJsonString(localStorage.getItem('routeList')))
-  const [stopList, setStopList] = useState(decompressJsonString(localStorage.getItem('stopList')))
-  const [stopMap, setStopMap] = useState(decompressJsonString(localStorage.getItem('stopMap')))
+  const [db, setDb] = useState({routeList: {}, stopList: {}, stopMap: {}})
   const [updateTime, setUpdateTime] = useState(parseInt(localStorage.getItem('updateTime'), 10))
-  
+
   const renewDb = () => {
     fetchEtaObj().then( ({routeList, stopList, stopMap}) => {
-      setRouteList(Object.entries(routeList).reduce((acc, [k, v]) => {
-        acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = v
-        return acc
-      }, {}))
-      setStopList(stopList)
-      setStopMap(stopMap)
+      setDb({
+        routeList: Object.entries(routeList).reduce((acc, [k, v]) => {
+          acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = v
+          return acc
+        }, {}),
+        stopList, 
+        stopMap
+      })
       setUpdateTime( Date.now() )
     })
   }
@@ -43,25 +44,26 @@ export const DbProvider = ( props ) => {
         localStorage.setItem('versionMd5', _md5)
         needRenew = true
       }
-      needRenew = needRenew || routeList == null || stopList == null
+
       if (needRenew) {
         renewDb()
+      } else {
+        // load from localStorage
+        setDb(decompressJsonString(localStorage.getItem('db')))
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    localStorage.setItem('stopList', compressToBase64(JSON.stringify(stopList)))
-  }, [stopList])
-
-  useEffect(() => {
-    localStorage.setItem('stopMap', compressToBase64(JSON.stringify(stopMap)))
-  }, [stopMap])
-
-  useEffect(() => {
-    localStorage.setItem('routeList', compressToBase64(JSON.stringify(routeList)))
-  }, [routeList])
+    if ( db && !isEmptyObj(db.routeList) && !isEmptyObj(db.stopList) && !isEmptyObj(db.stopMap) ) {
+      // skip if db is {}
+      // make costly compression async
+      setTimeout( () => {
+        localStorage.setItem('db', compressToBase64(JSON.stringify(db)))
+      }, 0)
+    }
+  }, [db])
 
   useEffect(() => {
     localStorage.setItem('updateTime', updateTime)
@@ -69,10 +71,8 @@ export const DbProvider = ( props ) => {
 
   return (
     <DbContext.Provider value={{
-        AppTitle,
-        routeList, stopList, stopMap,
-        // settings
-        renewDb, schemaVersion, versionMd5, updateTime
+        AppTitle, db, renewDb, 
+        schemaVersion, versionMd5, updateTime
       }}
     >
       {props.children}

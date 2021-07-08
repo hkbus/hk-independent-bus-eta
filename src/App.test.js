@@ -12,6 +12,6 @@ test('renders App', () => {
       </AppContextProvider>
     </DbProvider>
   );
-  const initializingElement = screen.getByText(/初始設定/);
+  const initializingElement = screen.getByText(/繁/);
   expect(initializingElement).toBeInTheDocument();
 });

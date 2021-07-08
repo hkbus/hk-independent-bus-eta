@@ -86,6 +86,7 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
     // const page = await browser.newPage();
     if ( !pageUrl.includes('/route/') ) {
         await page.goto(pageUrl, {waitUntil: idx > 0 ? 'domcontentloaded' : 'networkidle0'});
+        if (idx === 0 || pageUrl.includes('search')) await page.waitForTimeout(3000) // wait decompression & loading data
     } else {
         const lang = pageUrl.split('/').slice(-3)[0]
         const q = pageUrl.split('/').slice(-1)[0];

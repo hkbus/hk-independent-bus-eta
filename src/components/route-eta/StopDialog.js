@@ -12,7 +12,7 @@ import SuccinctTimeReport from '../home/SuccinctTimeReport'
 
 
 const StopDialog = ({open, stops, handleClose}) => {
-  const { routeList, stopList } = useContext ( AppContext )
+  const { db:{routeList, stopList} } = useContext ( AppContext )
   const { i18n } = useTranslation()
   const [ routes, setRoutes ] = useState([])
   const classes = useStyles()

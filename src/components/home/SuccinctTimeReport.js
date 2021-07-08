@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
 import { fetchEtas } from 'hk-bus-eta'
-import { getDistance } from '../../utils'
+import { getDistance, toProperCase } from '../../utils'
 import RouteNo from '../route-board/RouteNo'
 
 const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
@@ -33,7 +33,7 @@ const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
 
 const SuccinctTimeReport = ({routeId} ) => {
   const { t, i18n } = useTranslation()
-  const { routeList, stopList } = useContext ( AppContext )
+  const { db: {routeList, stopList} } = useContext ( AppContext )
   const [ routeNo, serviceType ] = routeId.split('-')
   const [ routeKey, seq ] = routeId.split('/')
   const { co, stops, dest, bound, nlbId, fares, faresHoliday } = routeList[routeKey]
@@ -104,11 +104,11 @@ const SuccinctTimeReport = ({routeId} ) => {
         stop ? <ListItemText 
           primary={<Typography component="h3" variant="body1" color="textPrimary" className={classes.fromToWrapper}>
             <span className={classes.fromToText}>{t('往')}</span>
-            <b>{dest[i18n.language]}</b>
+            <b>{toProperCase(dest[i18n.language])}</b>
           </Typography>}
           secondary={
             <DistAndFare 
-              name={stop.name[i18n.language]} 
+              name={toProperCase(stop.name[i18n.language])} 
               location={stop.location} 
               fares={fares} 
               faresHoliday={faresHoliday} 
