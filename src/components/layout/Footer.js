@@ -18,7 +18,7 @@ import { vibrate } from '../../utils'
 const Footer = () => {
   const { t, i18n } = useTranslation()
   const location = useLocation()
-  const { selectedRoute, colorMode } = useContext ( AppContext ) 
+  const { selectedRoute } = useContext ( AppContext ) 
 
   const history = useHistory()
   const handleClick = (link, e) => {
@@ -26,22 +26,6 @@ const Footer = () => {
     vibrate(1)
     setTimeout(() => history.push(link), 0)
   }
-
-  const useStyles = makeStyles(theme => ({
-    root: {
-      background: colorMode === 'dark' ? theme.palette.background.main: theme.palette.primary.main,
-      // background: theme.palette.primary.main,
-      // color: theme.palette.text.secondary,
-      position: "sticky",
-      bottom: "0",
-    },
-    actionItem: {
-      '&$selected': {
-        color: colorMode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
-      },
-    },
-    selected: {}
-  }))
 
   const classes = useStyles()
 
@@ -106,3 +90,19 @@ const Footer = () => {
 }
 
 export default Footer
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    background: theme.palette.type === 'dark' ? theme.palette.background.main: theme.palette.primary.main,
+    // background: theme.palette.primary.main,
+    // color: theme.palette.text.secondary,
+    position: "sticky",
+    bottom: "0",
+  },
+  actionItem: {
+    '&$selected': {
+      color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+    },
+  },
+  selected: {}
+}))

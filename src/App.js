@@ -54,30 +54,7 @@ const App = () => {
   const { routeList, stopList, stopMap, colorMode } = useContext( AppContext )
   const { t } = useTranslation()
   const classes = useStyles()
-
-  const Theme = createMuiTheme({
-    typography: {
-      fontFamily: "Noto Sans TC, Chivo, sans-serif"
-    },
-    palette: {
-      type: colorMode,
-      primary: {
-        main: '#fedb00' // yellow
-      },
-    },
-    overrides: {
-      MuiCssBaseline: {
-        '@global': {
-          html: {
-            userSelect: 'none'
-          }
-        }
-      }
-    }
-  })
-
-  
-  
+ 
   if ( routeList == null || stopList == null || stopMap == null ) {
     return (
       <Container maxWidth='xs' disableGutters className={classes.loadingContainer}>
@@ -98,7 +75,7 @@ const App = () => {
   } 
 
   return (
-    <MuiThemeProvider theme={Theme}>
+    <MuiThemeProvider theme={colorMode === 'dark' ? DarkTheme : Theme}>
       <Container maxWidth='xs' disableGutters className={classes.container}>
         <Router>
           <Route exact path="/">
@@ -118,7 +95,9 @@ const App = () => {
  
 export default App;
 
-const useStyles = makeStyles( theme => ({
+const useStyles = makeStyles( theme => {
+  console.log('hi')
+  return ({
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -127,7 +106,6 @@ const useStyles = makeStyles( theme => ({
   },
   loadingTextContainer: {
     background: theme.palette.background.default,
-
   },
   loadingContainer: {
     display: 'flex',
@@ -136,4 +114,46 @@ const useStyles = makeStyles( theme => ({
     alignItems: 'center',
     height: '100vh'
   }
-}))
+})})
+
+const Theme = createMuiTheme({
+  typography: {
+    fontFamily: "Noto Sans TC, Chivo, sans-serif"
+  },
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#fedb00' // yellow
+    },
+  },
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        html: {
+          userSelect: 'none'
+        }
+      }
+    }
+  }
+}, ['light'])
+
+const DarkTheme = createMuiTheme({
+  typography: {
+    fontFamily: "Noto Sans TC, Chivo, sans-serif"
+  },
+  palette: {
+    type: 'dark',
+    primary: {
+      main: '#fedb00' // yellow
+    },
+  },
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        html: {
+          userSelect: 'none'
+        }
+      }
+    }
+  }
+})

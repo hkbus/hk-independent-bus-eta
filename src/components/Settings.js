@@ -51,7 +51,7 @@ const Settings = () => {
   }, [updateTime])
 
   return (
-    <Paper className={classes.root}>
+    <Paper className={classes.root} square elevation={0}>
       <Typography component="h1" variant="srOnly">{`${t('設定')} - ${t(AppTitle)}`}</Typography>
       <List>
         <ListItem
@@ -97,6 +97,7 @@ const Settings = () => {
           button
           onClick={() => {
             vibrate(1)
+            //document.querySelectorAll('style[data-jss]').forEach(e => e.parentNode.removeChild(e))
             setColorMode(colorMode === 'dark' ? 'light' : 'dark')
           }}
         >

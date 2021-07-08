@@ -26,7 +26,7 @@ export const AppContextProvider = ( props ) => {
 
   const devicePreferColorScheme = useMediaQuery('(prefers-color-scheme: dark)') ? 'dark': 'light'
 
-  const [ colorMode, setColorMode ] = useState(localStorage.getItem('colorMode')) || devicePreferColorScheme
+  const [ colorMode, setColorMode ] = useState(localStorage.getItem('colorMode') || devicePreferColorScheme )
 
 
   useEffect(() => {

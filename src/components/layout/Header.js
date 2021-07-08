@@ -13,34 +13,7 @@ import AppContext from '../../AppContext'
 import { vibrate, checkMobile } from '../../utils'
 
 const Header = (props) => {
-  const { searchRoute, setSearchRoute, routeList, colorMode } = useContext( AppContext )
-  
-  const useStyles = makeStyles(theme => ({
-    appTitle: {
-      color: colorMode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
-    },
-    toolbar: {
-      background: colorMode === 'dark' ? theme.palette.background.main: theme.palette.primary.main,
-      '& a': {
-        color: 'black',
-        textDecoration: 'none',
-      },
-      display: 'flex',
-      justifyContent: 'space-between',
-      zIndex: theme.zIndex.drawer * 2
-    },
-    searchRouteInput: {
-      // color: 'black',
-      maxWidth: '50px',
-      "& input": {
-        textAlign: 'center',
-      },
-      "& input::before": {
-        borderBottom: '1px black solid'
-      }
-    }
-  }))
-
+  const { searchRoute, setSearchRoute, routeList } = useContext( AppContext )
   const { path } = useRouteMatch()
   const { t, i18n } = useTranslation()
   const classes = useStyles()
@@ -144,3 +117,28 @@ const LanguageTab = withStyles((theme) => ({
 }))((props) => <Tab disableRipple {...props} />);
 
 export default Header;
+
+const useStyles = makeStyles(theme => ({
+  appTitle: {
+    color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+  },
+  toolbar: {
+    background: theme.palette.type === 'dark' ? theme.palette.background.main: theme.palette.primary.main,
+    '& a': {
+      color: 'black',
+      textDecoration: 'none',
+    },
+    display: 'flex',
+    justifyContent: 'space-between',
+    zIndex: theme.zIndex.drawer * 2
+  },
+  searchRouteInput: {
+    maxWidth: '50px',
+    "& input": {
+      textAlign: 'center',
+    },
+    "& input::before": {
+      borderBottom: '1px black solid'
+    }
+  }
+}))
