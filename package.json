@@ -41,10 +41,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "render": "node src/pre-rendering.js",
+    "render": "node scripts/pre-rendering.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build && node src/sitemap-generator.js && mv sitemap.txt build/ && node src/pre-rendering.js",
+    "predeploy": "npm run build && node scripts/sitemap-generator.js && node src/pre-rendering.js",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
