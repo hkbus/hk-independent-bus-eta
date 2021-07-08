@@ -73,7 +73,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
             ref={el => {accordionRef.current[idx] = el}}
           >
             <AccordionSummary>
-              <Typography component="h3" variant='body1'>{stopList[stop].name[i18n.language]}</Typography>
+              <Typography component="h3" variant="body1">{stopList[stop].name[i18n.language]}</Typography>
               <Typography variant='caption'>
                 {fares && fares[idx] ? t('車費')+': $'+fares[idx] : ''}
                 {faresHoliday && faresHoliday[idx] ? '　　　　'+t('假日車費')+': $'+faresHoliday[idx] : ''}
@@ -132,9 +132,9 @@ const Accordion = withStyles({
   expanded: {},
 })(MuiAccordion)
 
-const AccordionSummary = withStyles({
+const AccordionSummary = withStyles(theme => ({
   root: {
-    backgroundColor: 'rgba(0, 0, 0, .03)',
+    backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
     marginBottom: -1,
     minHeight: 44,
@@ -150,7 +150,7 @@ const AccordionSummary = withStyles({
     flexDirection: 'column'
   },
   expanded: {},
-})(MuiAccordionSummary);
+}))(MuiAccordionSummary);
 
 const AccordionDetails = withStyles((theme) => ({
   root: {

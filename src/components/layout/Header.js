@@ -81,18 +81,6 @@ const Header = (props) => {
   );
 }
 
-
-
-const LanguageTabs = withStyles({
-  root: {
-    borderBottom: 'none',
-    minHeight: 24
-  },
-  indicator: {
-    backgroundColor: 'transparent'
-  }
-})(Tabs);
-
 const LanguageTab = withStyles((theme) => ({
   root: {
     textTransform: 'none',
@@ -105,16 +93,27 @@ const LanguageTab = withStyles((theme) => ({
   },
   selected:{
     '& > .MuiTab-wrapper':{
-      color: '#3B3C45',
-      backgroundColor: '#FEFBFA'
+      color: 'black',
+      backgroundColor: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.background.paper,
     }
   },
   wrapper: {
-    color: '#3B3C45',
+    color: theme.palette.text.primary,
     borderRadius: '30px',
     padding: '2px 10px 0px 10px'
   }
 }))((props) => <Tab disableRipple {...props} />);
+
+const LanguageTabs = withStyles((theme) => ({
+  root: {
+    borderBottom: 'none',
+    minHeight: 24
+  },
+  indicator: {
+    backgroundColor: 'transparent'
+  }
+}))(Tabs);
+
 
 export default Header;
 
@@ -138,7 +137,7 @@ const useStyles = makeStyles(theme => ({
       textAlign: 'center',
     },
     "& input::before": {
-      borderBottom: '1px black solid'
+      borderBottom: `1px ${theme.palette.text.primary} solid`
     }
   }
 }))

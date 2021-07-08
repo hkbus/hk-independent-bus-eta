@@ -241,8 +241,11 @@ export default Settings
 
 const useStyles = makeStyles ( theme => ({
   root: {
-    background: theme.palette.background.default,
+    background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
     height: 'calc(100vh - 120px)',
-    overflowY: "scroll"
+    overflowY: "scroll",
+    '& .MuiAvatar-colorDefault': {
+      color: theme.palette.type === 'dark' ? theme.palette.background.default : 'white'
+    }
   }
 }))

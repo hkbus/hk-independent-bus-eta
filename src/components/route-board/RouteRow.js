@@ -19,17 +19,20 @@ const RouteInfo = ( {route} ) => {
   return (
     <Typography component="h3" variant="body1" className={classes.routeInfo}>
     { route.nlbId ?
-      <>
-        <span className={classes.fromToText}>{`${t('往')} `}</span>
-          <b>{route.dest[i18n.language]}</b>
-          <br />
-          <span className={classes.fromToText}>{`${t('由')} `}</span>
-          <b>{route.orig[i18n.language]}</b>
-      </>
-      : <>
+      <div>
+        <div className={classes.fromToWrapper}>
           <span className={classes.fromToText}>{`${t('往')} `}</span>
           <b>{route.dest[i18n.language]}</b>
-        </>
+        </div>
+        <div className={classes.fromToWrapper}>
+          <span className={classes.fromToText}>{`${t('由')} `}</span>
+          <b variant="h4" color="textPrimary" component="h4">{route.orig[i18n.language]}</b>
+        </div>
+      </div>
+      : <div className={classes.fromToWrapper}>
+          <span className={classes.fromToText}>{`${t('往')} `}</span>
+          <b variant="h4" color="textPrimary" component="h4">{route.dest[i18n.language]}</b>
+        </div>
     }
     </Typography>
   )
@@ -52,13 +55,13 @@ const RouteRow = React.memo(( {data, index, style} ) => {
 
   return (
     <Link onClick={handleClick} to={`/${i18n.language}/route/${route[0].toLowerCase()}`}>
-      <Card variant="outlined" key={route[0]} style={style} square>
+      <Card className={classes.card} variant="outlined" key={route[0]} style={style} square>
         <CardActionArea>
           <CardContent className={classes.cardContent}>
             <div className={classes.busInfoContainer}>
               <div>
                 <RouteNo routeNo={routeNo} />
-                {serviceType >= 2 && <Typography variant="caption" className={classes.specialTrip}>{t('特別班次')}</Typography>}
+                {serviceType >= 2 && <Typography variant="caption" className={classes.specialTrip}>{t('特別班')}</Typography>}
               </div>
               <Typography component="h4" variant="caption" className={classes.company}>
                   {route[1].co.map(co => t(co)).join('+')}
@@ -75,6 +78,9 @@ const RouteRow = React.memo(( {data, index, style} ) => {
 export default RouteRow
 
 const useStyles = makeStyles (theme => ({
+  card: {
+    background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
+  },
   cardContent: {
     display: 'flex',
     justifyContent: 'flex-start',
@@ -88,11 +94,16 @@ const useStyles = makeStyles (theme => ({
     textAlign: 'left',
     fontSize: '1rem'
   },
-  fromToText: {
-    fontSize: '0.95rem'
-  },
   company: {
     color: theme.palette.text.secondary
+  },
+  fromToWrapper: {
+    display: 'flex',
+    alignItems: 'baseline',
+  },
+  fromToText: {
+    fontSize: '0.95rem',
+    marginRight: theme.spacing(0.5)
   },
   specialTrip: {
     fontSize: '0.6rem',

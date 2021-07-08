@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <link rel="canonical" href="%PUBLIC_URL%/" />
-    <link rel="alternative" hreflang="en" href="%PUBLIC_URL%/en" />
-    <link rel="alternative" hreflang="zh-Hant" href="%PUBLIC_URL%/zh" />
-    <link rel="alternative" hreflang="x-default" href="%PUBLIC_URL%/zh" />
+    <link rel="canonical" href="https://hkbus.app/" />
+    <link rel="alternative" hreflang="en" href="https://hkbus.app/en" />
+    <link rel="alternative" hreflang="zh-Hant" href="https://hkbus.app/zh" />
+    <link rel="alternative" hreflang="x-default" href="https://hkbus.app/zh" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0" />
     <meta name="theme-color" content="#000000" />
     <meta
@@ -68,7 +68,7 @@
     <meta property="og:title" content="巴士到站預報 App" />
     <meta property="og:description" content="無廣告手機應用程式查閱巴士線、車站、預計到達時間，路線盡包九龍巴士(九巴)、龍運巴士、新世界第一巴士(新巴)、城巴、新大嶼山巴士 - 巴士到站預報 App" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="%PUBLIC_URL%" />
+    <meta property="og:url" content="%PUBLIC_URL%/" />
     <meta property="og:image" content="%PUBLIC_URL%/share.png" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="巴士到站預報 App" />
@@ -345,7 +345,7 @@
       color: inherit;
       }
       .MuiTypography-colorPrimary {
-      color: #3f51b5;
+      color: #fedb00;
       }
       .MuiTypography-colorSecondary {
       color: #f50057;
@@ -386,7 +386,7 @@
       font-family: Noto Sans TC, Chivo, sans-serif;
       font-weight: 400;
       line-height: 1.43;
-      background-color: #ffff90;
+      background-color: #fedb00;
       }
       @media print {
       body {
@@ -394,7 +394,7 @@
       }
       }
       body::backdrop {
-      background-color: #ffff90;
+      background-color: #fedb00;
       }
    </style>
    <style data-jss="" data-meta="MuiToolbar">
@@ -566,7 +566,7 @@
       position: absolute;
       transform: scaleX(0);
       transition: transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-      border-bottom: 2px solid #3f51b5;
+      border-bottom: 2px solid #fedb00;
       pointer-events: none;
       }
       .MuiInput-underline.Mui-focused:after {
@@ -596,62 +596,6 @@
       .MuiInput-underline:hover:not(.Mui-disabled):before {
       border-bottom: 1px solid rgba(0, 0, 0, 0.42);
       }
-      }
-   </style>
-   <style data-jss="" data-meta="PrivateTabIndicator">
-      .jss10 {
-      width: 100%;
-      bottom: 0;
-      height: 2px;
-      position: absolute;
-      transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-      }
-      .jss11 {
-      background-color: #3f51b5;
-      }
-      .jss12 {
-      background-color: #f50057;
-      }
-      .jss13 {
-      right: 0;
-      width: 2px;
-      height: 100%;
-      }
-   </style>
-   <style data-jss="" data-meta="MuiSvgIcon">
-      .MuiSvgIcon-root {
-      fill: currentColor;
-      width: 1em;
-      height: 1em;
-      display: inline-block;
-      font-size: 1.5rem;
-      transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-      flex-shrink: 0;
-      user-select: none;
-      }
-      .MuiSvgIcon-colorPrimary {
-      color: #3f51b5;
-      }
-      .MuiSvgIcon-colorSecondary {
-      color: #f50057;
-      }
-      .MuiSvgIcon-colorAction {
-      color: rgba(0, 0, 0, 0.54);
-      }
-      .MuiSvgIcon-colorError {
-      color: #f44336;
-      }
-      .MuiSvgIcon-colorDisabled {
-      color: rgba(0, 0, 0, 0.26);
-      }
-      .MuiSvgIcon-fontSizeInherit {
-      font-size: inherit;
-      }
-      .MuiSvgIcon-fontSizeSmall {
-      font-size: 1.25rem;
-      }
-      .MuiSvgIcon-fontSizeLarge {
-      font-size: 2.1875rem;
       }
    </style>
    <style data-jss="" data-meta="MuiTouchRipple">
@@ -760,48 +704,6 @@
       }
       }
    </style>
-   <style data-jss="" data-meta="MuiTabs">
-      .MuiTabs-root {
-      display: flex;
-      overflow: hidden;
-      min-height: 48px;
-      -webkit-overflow-scrolling: touch;
-      }
-      .MuiTabs-vertical {
-      flex-direction: column;
-      }
-      .MuiTabs-flexContainer {
-      display: flex;
-      }
-      .MuiTabs-flexContainerVertical {
-      flex-direction: column;
-      }
-      .MuiTabs-centered {
-      justify-content: center;
-      }
-      .MuiTabs-scroller {
-      flex: 1 1 auto;
-      display: inline-block;
-      position: relative;
-      white-space: nowrap;
-      }
-      .MuiTabs-fixed {
-      width: 100%;
-      overflow-x: hidden;
-      }
-      .MuiTabs-scrollable {
-      overflow-x: scroll;
-      scrollbar-width: none;
-      }
-      .MuiTabs-scrollable::-webkit-scrollbar {
-      display: none;
-      }
-      @media (max-width:599.95px) {
-      .MuiTabs-scrollButtonsDesktop {
-      display: none;
-      }
-      }
-   </style>
    <style data-jss="" data-meta="MuiTab">
       .MuiTab-root {
       padding: 6px 12px;
@@ -846,7 +748,7 @@
       color: rgba(0, 0, 0, 0.54);
       }
       .MuiTab-textColorPrimary.Mui-selected {
-      color: #3f51b5;
+      color: #fedb00;
       }
       .MuiTab-textColorPrimary.Mui-disabled {
       color: rgba(0, 0, 0, 0.38);
@@ -878,34 +780,106 @@
       justify-content: center;
       }
    </style>
-   <style data-jss="" data-meta="makeStyles">
-      .jss3 {
+   <style data-jss="" data-meta="PrivateTabIndicator">
+      .jss12 {
+      width: 100%;
+      bottom: 0;
+      height: 2px;
+      position: absolute;
+      transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      }
+      .jss13 {
+      background-color: #fedb00;
+      }
+      .jss14 {
+      background-color: #f50057;
+      }
+      .jss15 {
+      right: 0;
+      width: 2px;
+      height: 100%;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiSvgIcon">
+      .MuiSvgIcon-root {
+      fill: currentColor;
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      font-size: 1.5rem;
+      transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      flex-shrink: 0;
+      user-select: none;
+      }
+      .MuiSvgIcon-colorPrimary {
+      color: #fedb00;
+      }
+      .MuiSvgIcon-colorSecondary {
+      color: #f50057;
+      }
+      .MuiSvgIcon-colorAction {
+      color: rgba(0, 0, 0, 0.54);
+      }
+      .MuiSvgIcon-colorError {
+      color: #f44336;
+      }
+      .MuiSvgIcon-colorDisabled {
+      color: rgba(0, 0, 0, 0.26);
+      }
+      .MuiSvgIcon-fontSizeInherit {
+      font-size: inherit;
+      }
+      .MuiSvgIcon-fontSizeSmall {
+      font-size: 1.25rem;
+      }
+      .MuiSvgIcon-fontSizeLarge {
+      font-size: 2.1875rem;
+      }
+   </style>
+   <style data-jss="" data-meta="MuiTabs">
+      .MuiTabs-root {
       display: flex;
-      z-index: 2400;
-      justify-content: space-between;
+      overflow: hidden;
+      min-height: 48px;
+      -webkit-overflow-scrolling: touch;
       }
-      .jss3 a {
-      color: black;
-      text-decoration: none;
+      .MuiTabs-vertical {
+      flex-direction: column;
       }
-      .jss4 {
-      max-width: 50px;
+      .MuiTabs-flexContainer {
+      display: flex;
       }
-      .jss4 input {
-      text-align: center;
+      .MuiTabs-flexContainerVertical {
+      flex-direction: column;
+      }
+      .MuiTabs-centered {
+      justify-content: center;
+      }
+      .MuiTabs-scroller {
+      flex: 1 1 auto;
+      display: inline-block;
+      position: relative;
+      white-space: nowrap;
+      }
+      .MuiTabs-fixed {
+      width: 100%;
+      overflow-x: hidden;
+      }
+      .MuiTabs-scrollable {
+      overflow-x: scroll;
+      scrollbar-width: none;
+      }
+      .MuiTabs-scrollable::-webkit-scrollbar {
+      display: none;
+      }
+      @media (max-width:599.95px) {
+      .MuiTabs-scrollButtonsDesktop {
+      display: none;
+      }
       }
    </style>
    <style data-jss="" data-meta="makeStyles">
-      .jss5 {
-      min-height: 24px;
-      border-bottom: none;
-      }
-      .jss6 {
-      background-color: transparent;
-      }
-   </style>
-   <style data-jss="" data-meta="makeStyles">
-      .jss7 {
+      .jss9 {
       opacity: 1;
       padding: 6px 6px;
       font-size: 15px;
@@ -914,14 +888,47 @@
       margin-right: 0;
       text-transform: none;
       }
-      .jss8 > .MuiTab-wrapper {
-      color: #3B3C45;
-      background-color: #FEFBFA;
+      .jss10 > .MuiTab-wrapper {
+      color: black;
+      background-color: #fff;
       }
-      .jss9 {
-      color: #3B3C45;
+      .jss11 {
+      color: rgba(0, 0, 0, 0.87);
       padding: 2px 10px 0px 10px;
       border-radius: 30px;
+      }
+   </style>
+   <style data-jss="" data-meta="makeStyles">
+      .jss7 {
+      min-height: 24px;
+      border-bottom: none;
+      }
+      .jss8 {
+      background-color: transparent;
+      }
+   </style>
+   <style data-jss="" data-meta="makeStyles">
+      .jss4 {
+      color: rgba(0, 0, 0, 0.87);
+      }
+      .jss5 {
+      display: flex;
+      z-index: 2400;
+      background: #fedb00;
+      justify-content: space-between;
+      }
+      .jss5 a {
+      color: black;
+      text-decoration: none;
+      }
+      .jss6 {
+      max-width: 50px;
+      }
+      .jss6 input {
+      text-align: center;
+      }
+      .jss6 input::before {
+      border-bottom: 1px rgba(0, 0, 0, 0.87) solid;
       }
    </style>
    <style data-jss="" data-meta="MuiList">
@@ -1044,46 +1051,51 @@
       }
    </style>
    <style data-jss="" data-meta="makeStyles">
-      .jss22 {
+      .jss27 {
       display: inline;
       line-height: normal;
       }
-      .jss23 {
+      .jss28 {
       font-size: 1.2rem;
       font-family: "Oswald", sans-serif;
       }
-      .jss24 {
+      .jss29 {
       font-size: 0.95rem;
       font-family: "Oswald", sans-serif;
       }
    </style>
    <style data-jss="" data-meta="makeStyles">
-      .jss16 {
+      .jss20 {
       color: rgba(0,0,0,0.87);
       padding: 4px 16px;
       }
-      .jss17 {
+      .jss21 {
       width: 15%;
       }
-      .jss18 {
+      .jss22 {
       width: 65%;
       }
-      .jss19 {
+      .jss23 {
       width: 20%;
+      text-align: right;
       padding-left: 10px;
       }
-      .jss20 {
-      font-size: 0.85rem;
+      .jss24 {
+      display: flex;
+      align-items: baseline;
       }
-      .jss21 {
-      color: rgba(0, 0, 0, 0.54);
+      .jss25 {
+      font-size: 0.85rem;
+      margin-right: 4px;
+      }
+      .jss26 {
       font-size: 0.875rem;
       font-weight: 400;
       line-height: 1.43;
       }
    </style>
    <style data-jss="" data-meta="makeStyles">
-      .jss14 {
+      .jss16 {
       height: calc(100vh - 125px);
       background: white;
       overflow-y: scroll;
@@ -1111,7 +1123,7 @@
       padding-top: 16px;
       }
       .MuiBottomNavigationAction-root.Mui-selected {
-      color: #3f51b5;
+      color: #fedb00;
       padding-top: 6px;
       }
       .MuiBottomNavigationAction-wrapper {
@@ -1137,9 +1149,13 @@
       }
    </style>
    <style data-jss="" data-meta="makeStyles">
-      .jss15 {
+      .jss17 {
       bottom: 0;
       position: sticky;
+      background: #fedb00;
+      }
+      .jss18.jss19 {
+      color: rgba(0, 0, 0, 0.87);
       }
    </style>
    <style data-jss="" data-meta="makeStyles">
@@ -1150,6 +1166,9 @@
       justify-content: space-between;
       }
       .jss2 {
+      background: #fafafa;
+      }
+      .jss3 {
       height: 100vh;
       display: flex;
       align-items: center;
@@ -1162,355 +1181,355 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="MuiContainer-root jss1 MuiContainer-disableGutters MuiContainer-maxWidthXs">
-         <div class="MuiToolbar-root MuiToolbar-regular jss3 MuiToolbar-gutters">
+         <div class="MuiToolbar-root MuiToolbar-regular jss5 MuiToolbar-gutters">
             <a href="/zh">
-               <h6 class="MuiTypography-root MuiTypography-subtitle2">巴士到站預報</h6>
+               <h1 class="MuiTypography-root jss4 MuiTypography-subtitle2">巴士到站預報</h1>
             </a>
-            <div class="MuiInputBase-root MuiInput-root MuiInput-underline jss4"><input id="searchInput" placeholder="巴士線" type="text" class="MuiInputBase-input MuiInput-input" value=""></div>
-            <div class="MuiTabs-root jss5">
+            <div class="MuiInputBase-root MuiInput-root MuiInput-underline jss6"><input id="searchInput" placeholder="巴士線" type="text" class="MuiInputBase-input MuiInput-input" value=""></div>
+            <div class="MuiTabs-root jss7">
                <div class="MuiTabs-scroller MuiTabs-fixed" style="overflow: hidden;">
-                  <div class="MuiTabs-flexContainer" role="tablist"><a class="MuiButtonBase-root MuiTab-root jss7 MuiTab-textColorInherit" tabindex="-1" role="tab" aria-disabled="false" aria-selected="false" id="en-selector" href="/en"><span class="MuiTab-wrapper jss9">En</span></a><a class="MuiButtonBase-root MuiTab-root jss7 MuiTab-textColorInherit Mui-selected jss8" tabindex="0" role="tab" aria-disabled="false" aria-selected="true" id="zh-selector" href="/zh"><span class="MuiTab-wrapper jss9">繁</span></a></div>
-                  <span class="jss10 jss12 MuiTabs-indicator jss6" style="left: 51.1719px; width: 47px;"></span>
+                  <div class="MuiTabs-flexContainer" role="tablist"><a class="MuiButtonBase-root MuiTab-root jss9 MuiTab-textColorInherit" tabindex="-1" role="tab" aria-disabled="false" aria-selected="false" id="en-selector" href="/en"><span class="MuiTab-wrapper jss11">En</span></a><a class="MuiButtonBase-root MuiTab-root jss9 MuiTab-textColorInherit Mui-selected jss10" tabindex="0" role="tab" aria-disabled="false" aria-selected="true" id="zh-selector" href="/zh"><span class="MuiTab-wrapper jss11">繁</span></a></div>
+                  <span class="jss12 jss14 MuiTabs-indicator jss8" style="left: 51.1719px; width: 47px;"></span>
                </div>
             </div>
          </div>
-         <div class="MuiPaper-root jss14 MuiPaper-elevation0">
+         <div class="MuiPaper-root jss16 MuiPaper-elevation0">
             <h1 class="MuiTypography-root MuiTypography-srOnly">儀表板 - 巴士到站預報 App</h1>
             <h2 class="MuiTypography-root MuiTypography-srOnly">無廣告手機應用程式查閱巴士線、車站、預計到達時間，路線盡包九龍巴士(九巴)、龍運巴士、新世界第一巴士(新巴)、城巴、新大嶼山巴士 - 巴士到站預報 App</h2>
             <ul class="MuiList-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/208-1-tsim-sha-tsui-east-broadcast-drive">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/208-1-tsim-sha-tsui-east-broadcast-drive">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">208</span><span class="jss24"></span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">208</span><span class="jss29"></span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>廣播道</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>廣播道</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($8.6)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">10 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">35 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">28 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">58 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/271s-1-hung-hom-station-tai-po-(tai-wo)">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/271s-1-hung-hom-station-tai-po-(tai-wo)">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">271</span><span class="jss24">S</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">271</span><span class="jss29">S</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>大埔(太和)</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>大埔(太和)</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($20.1)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1"></h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"></h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary"></h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/287d-1-hung-hom-station-kam-ying-court">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/287d-1-hung-hom-station-kam-ying-court">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">287</span><span class="jss24">D</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">287</span><span class="jss29">D</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>錦英苑</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>錦英苑</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($11)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">- 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"></h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary"></h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/5c-1-tsz-wan-shan-(central)-star-ferry">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/5c-1-tsz-wan-shan-(central)-star-ferry">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">5</span><span class="jss24">C</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">5</span><span class="jss29">C</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀碼頭</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>尖沙咀碼頭</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($6.2)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">3 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">13 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">4 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">14 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/5c-2-yuk-wah-street-star-ferry">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/5c-2-yuk-wah-street-star-ferry">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">5</span><span class="jss24">C</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">5</span><span class="jss29">C</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀碼頭</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>尖沙咀碼頭</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($6.2)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">3 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">13 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">4 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">14 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/70s-1-hung-hom-station-wo-hop-shek">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/70s-1-hung-hom-station-wo-hop-shek">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">70</span><span class="jss24">S</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">70</span><span class="jss29">S</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>和合石</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>和合石</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">- 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">- 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary"></h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/8-1-kowloon-station-star-ferry">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/8-1-kowloon-station-star-ferry">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">8</span><span class="jss24"></span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">8</span><span class="jss29"></span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀碼頭</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>尖沙咀碼頭</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($5.4)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">- 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">15 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">1 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">29 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/87d-1-hung-hom-station-kam-ying-court">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/87d-1-hung-hom-station-kam-ying-court">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">87</span><span class="jss24">D</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">87</span><span class="jss29">D</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>錦英苑</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>錦英苑</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($10)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">- 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">1 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">3 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">15 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/8a-1-whampoa-garden-tsim-sha-tsui-(circular)">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/8a-1-whampoa-garden-tsim-sha-tsui-(circular)">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">8</span><span class="jss24">A</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">8</span><span class="jss29">A</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀(循環線)</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>尖沙咀(循環線)</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($4.6)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">15 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">35 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">18 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">38 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/n216-1-hung-hom-station-yau-tong">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/n216-1-hung-hom-station-yau-tong">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">N216</span><span class="jss24"></span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">N216</span><span class="jss29"></span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>油塘</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>油塘</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($9)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1"></h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"></h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary"></h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/n241-1-hung-hom-station-tsing-yi-(cheung-wang-estate)">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/n241-1-hung-hom-station-tsing-yi-(cheung-wang-estate)">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">N241</span><span class="jss24"></span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">N241</span><span class="jss29"></span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>青衣(長宏邨)</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>青衣(長宏邨)</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($16.6)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1"></h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"></h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary"></h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/n271-1-hung-hom-station-tai-po-(fu-heng)">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/n271-1-hung-hom-station-tai-po-(fu-heng)">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">N271</span><span class="jss24"></span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">N271</span><span class="jss29"></span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>大埔(富亨)</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>大埔(富亨)</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($20.1)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1"></h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"></h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary"></h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/n281-1-hung-hom-station-kam-ying-court">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/n281-1-hung-hom-station-kam-ying-court">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">N281</span><span class="jss24"></span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">N281</span><span class="jss29"></span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>錦英苑</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>錦英苑</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($17.9)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1"></h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"></h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary"></h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/n41x-1-hung-hom-station-tsing-yi-(cheung-wang-estate)">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/n41x-1-hung-hom-station-tsing-yi-(cheung-wang-estate)">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">N41</span><span class="jss24">X</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">N41</span><span class="jss29">X</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>青衣(長宏邨)</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>青衣(長宏邨)</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館　($9.6)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1"></h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1"></h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"></h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary"></h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/973-1-tsim-sha-tsui-(mody-road)-stanley-market">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/973-1-tsim-sha-tsui-(mody-road)-stanley-market">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">973</span><span class="jss24"></span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">973</span><span class="jss29"></span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>赤柱市場</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>赤柱市場</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港歷史博物館, 暢運道　($15.7)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">26 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">54 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">13 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">43 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/14x-1-yau-tong-(shung-tak-wai)-tsim-sha-tsui-(circular)">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/14x-1-yau-tong-(shung-tak-wai)-tsim-sha-tsui-(circular)">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">14</span><span class="jss24">X</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">14</span><span class="jss29">X</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀(循環線)</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>尖沙咀(循環線)</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港理工大學　($8)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">17 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">47 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">2 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">33 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/215x-1-kowloon-station-lam-tin-(kwong-tin-estate)">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/215x-1-kowloon-station-lam-tin-(kwong-tin-estate)">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">215</span><span class="jss24">X</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">215</span><span class="jss29">X</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>藍田(廣田邨)</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>藍田(廣田邨)</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港理工大學　($8)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">6 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">9 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">3 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">12 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/26-1-shun-tin-tsim-sha-tsui-east">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/26-1-shun-tin-tsim-sha-tsui-east">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">26</span><span class="jss24"></span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">26</span><span class="jss29"></span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀東</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>尖沙咀東</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港理工大學　($6.2)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">19 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">33 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">4 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">17 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/28-1-star-ferry-lok-wah">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/28-1-star-ferry-lok-wah">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">28</span><span class="jss24"></span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">28</span><span class="jss29"></span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>樂華</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>樂華</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港理工大學　($6.2)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">4 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">11 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">- 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">14 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
-               <a class="MuiListItem-root jss16 MuiListItem-gutters" href="/zh/route/41a-1-tsing-yi-(cheung-on-estate)-tsim-sha-tsui-east">
-                  <div class="MuiListItemText-root jss17">
+               <a class="MuiListItem-root jss20 MuiListItem-gutters" href="/zh/route/41a-1-tsing-yi-(cheung-on-estate)-tsim-sha-tsui-east">
+                  <div class="MuiListItemText-root jss21">
                      <span class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock">
-                        <h2 class="MuiTypography-root jss22 MuiTypography-caption"><span class="jss23">41</span><span class="jss24">A</span></h2>
+                        <h2 class="MuiTypography-root jss27 MuiTypography-caption MuiTypography-colorTextPrimary"><span class="jss28">41</span><span class="jss29">A</span></h2>
                      </span>
                   </div>
-                  <div class="MuiListItemText-root jss18 MuiListItemText-multiline">
-                     <h3 class="MuiTypography-root MuiTypography-body1"><span class="jss20">往 </span><b>尖沙咀東</b></h3>
+                  <div class="MuiListItemText-root jss22 MuiListItemText-multiline">
+                     <h3 class="MuiTypography-root jss24 MuiTypography-body1 MuiTypography-colorTextPrimary"><span class="jss25">往</span><b>尖沙咀東</b></h3>
                      <h4 class="MuiTypography-root MuiListItemText-secondary MuiTypography-subtitle2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">香港理工大學　($5.4)</h4>
                   </div>
-                  <div class="MuiListItemText-root jss19 MuiListItemText-multiline">
-                     <h5 class="MuiTypography-root MuiTypography-body1">8 分鐘</h5>
-                     <h6 class="MuiTypography-root jss21 MuiTypography-body1">22 分鐘</h6>
+                  <div class="MuiListItemText-root jss23 MuiListItemText-multiline">
+                     <h5 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary">4 分鐘</h5>
+                     <h6 class="MuiTypography-root jss26 MuiTypography-body1 MuiTypography-colorTextSecondary">25 分鐘</h6>
                   </div>
                </a>
                <hr class="MuiDivider-root">
             </ul>
          </div>
-         <div class="MuiBottomNavigation-root jss15">
-            <a class="MuiButtonBase-root MuiBottomNavigationAction-root Mui-selected" tabindex="0" role="button" aria-disabled="false" href="/zh">
+         <div class="MuiBottomNavigation-root jss17">
+            <a class="MuiButtonBase-root MuiBottomNavigationAction-root jss18 Mui-selected jss19" tabindex="0" role="button" aria-disabled="false" href="/zh">
                <span class="MuiBottomNavigationAction-wrapper">
                   <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
                      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
                   </svg>
-                  <span class="MuiBottomNavigationAction-label Mui-selected">常用</span>
+                  <span class="MuiBottomNavigationAction-label Mui-selected jss19">常用</span>
                </span>
                <span class="MuiTouchRipple-root"></span>
             </a>
-            <a class="MuiButtonBase-root MuiBottomNavigationAction-root" tabindex="0" role="button" aria-disabled="false" href="/zh/search">
+            <a class="MuiButtonBase-root MuiBottomNavigationAction-root jss18" tabindex="0" role="button" aria-disabled="false" href="/zh/search">
                <span class="MuiBottomNavigationAction-wrapper">
                   <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
                      <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
@@ -1519,7 +1538,7 @@
                </span>
                <span class="MuiTouchRipple-root"></span>
             </a>
-            <a class="MuiButtonBase-root MuiBottomNavigationAction-root" tabindex="0" role="button" aria-disabled="false" href="/zh/route/1-1-chuk-yuen-estate-star-ferry">
+            <a class="MuiButtonBase-root MuiBottomNavigationAction-root jss18" tabindex="0" role="button" aria-disabled="false" href="/zh/route/1-1-chuk-yuen-estate-star-ferry">
                <span class="MuiBottomNavigationAction-wrapper">
                   <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
                      <path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"></path>
@@ -1528,7 +1547,7 @@
                </span>
                <span class="MuiTouchRipple-root"></span>
             </a>
-            <a class="MuiButtonBase-root MuiBottomNavigationAction-root" tabindex="0" role="button" aria-disabled="false" href="/zh/settings">
+            <a class="MuiButtonBase-root MuiBottomNavigationAction-root jss18" tabindex="0" role="button" aria-disabled="false" href="/zh/settings">
                <span class="MuiBottomNavigationAction-wrapper">
                   <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
                      <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"></path>

@@ -24,10 +24,9 @@ export const AppContextProvider = ( props ) => {
   // possible Char for RouteInputPad
   const [possibleChar, setPossibleChar] = useState([])
 
+  // color mode
   const devicePreferColorScheme = useMediaQuery('(prefers-color-scheme: dark)') ? 'dark': 'light'
-
   const [ colorMode, setColorMode ] = useState(localStorage.getItem('colorMode') || devicePreferColorScheme )
-
 
   useEffect(() => {
     if ( geoPermission === 'granted' ) {

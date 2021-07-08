@@ -40,7 +40,7 @@ const CenterControl = ( {onClick}) => {
 }
 
 const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
-  const { stopList, geoPermission, setGeoPermission, setGeolocation } = useContext ( AppContext )
+  const { stopList, geoPermission, setGeoPermission, setGeolocation, colorMode } = useContext ( AppContext )
   const classes = useStyles()
   const [center, setCenter] = useState(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {})
   const [map, setMap] = useState(null)
@@ -77,7 +77,10 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
         <ChangeMapCenter center={checkPosition(center)} zoom={16} />
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          url={colorMode === 'dark' ? 
+            "https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png" : 
+            "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          }
         />
         {
           // plot stops
@@ -163,6 +166,7 @@ const useStyles = makeStyles ( theme => ({
   },
   centerControl: {
     padding: '5px',
+    color: 'black'
   },
   centerControlContainer: {
     background: 'white',

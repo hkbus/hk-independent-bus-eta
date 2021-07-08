@@ -75,7 +75,7 @@ const App = () => {
   } 
 
   return (
-    <MuiThemeProvider theme={colorMode === 'dark' ? DarkTheme : Theme}>
+    <MuiThemeProvider theme={colorMode === 'dark' ? DarkTheme : LightTheme}>
       <Container maxWidth='xs' disableGutters className={classes.container}>
         <Router>
           <Route exact path="/">
@@ -95,9 +95,7 @@ const App = () => {
  
 export default App;
 
-const useStyles = makeStyles( theme => {
-  console.log('hi')
-  return ({
+const useStyles = makeStyles( theme => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -114,14 +112,17 @@ const useStyles = makeStyles( theme => {
     alignItems: 'center',
     height: '100vh'
   }
-})})
+}))
 
-const Theme = createMuiTheme({
+const LightTheme = createMuiTheme({
   typography: {
-    fontFamily: "Noto Sans TC, Chivo, sans-serif"
+    fontFamily: "Noto Sans TC, Chivo, sans-serif",
   },
   palette: {
     type: 'light',
+    background: {
+      default: '#fedb00'
+    },
     primary: {
       main: '#fedb00' // yellow
     },
@@ -139,7 +140,7 @@ const Theme = createMuiTheme({
 
 const DarkTheme = createMuiTheme({
   typography: {
-    fontFamily: "Noto Sans TC, Chivo, sans-serif"
+    fontFamily: "Noto Sans TC, Chivo, sans-serif",
   },
   palette: {
     type: 'dark',

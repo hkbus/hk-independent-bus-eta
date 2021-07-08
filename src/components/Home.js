@@ -100,7 +100,7 @@ export default Home
 
 const useStyles = makeStyles ( theme => ({
   root: {
-    background: theme.palette.background.default,
+    background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
     height: 'calc(100vh - 125px)',
     overflowY: 'scroll',
     textAlign: 'center'

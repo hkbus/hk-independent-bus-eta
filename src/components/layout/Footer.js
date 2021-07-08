@@ -68,6 +68,7 @@ const Footer = () => {
        onClick={(e) => handleClick(`/${i18n.language}/route/${selectedRoute.toLowerCase()}`, e)}
        value={`/${i18n.language}/route/${selectedRoute.replace(/(.*)\/.*$/, "$1").toLowerCase()}`}
        icon={<TimerIcon />} 
+       style={{textTransform: 'uppercase'}}
        classes={{
         root: classes.actionItem,
         selected: classes.selected
