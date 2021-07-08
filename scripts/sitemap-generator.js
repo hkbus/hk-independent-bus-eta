@@ -15,7 +15,7 @@ request('https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json', (e, r,
   enRoutes = Object.entries(routeList).map(route => `/en/route/${route[0].replace(/\+/g, '-').replace(/ /g, '-').toLowerCase()}`)
   
   // write to file
-  fs.writeFileSync('build/sitemap.txt', host+"\n"+[].concat(zhPages, enPages, zhRoutes, enRoutes).map(p => `${host}${p}`).join("\n"))
+  fs.writeFileSync('build/sitemap.txt', [].concat(zhPages, enPages, zhRoutes, enRoutes).map(p => `${host}${p}`).join("\n"))
   fs.writeFileSync('.rsp.json', JSON.stringify({
     port: 3001, 
     routes: [].concat(zhPages, enPages, zhRoutes, enRoutes)
