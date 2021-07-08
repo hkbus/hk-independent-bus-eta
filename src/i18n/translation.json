@@ -38,7 +38,9 @@
       "特別班": "Special",
       "home-page-description": "Ad-free mobile application for checking bus routes, stops, estimated time of arrival(ETA) of Kowloon Motor Bus Co.(KMB), Long Win Bus (LWB), CityBus (CTB), New World First Bus (NWFB) and New Lantao Bus (NLB) - HK Bus ETA App",
       "route-board-page-description": "Simple & clean route searching interface to search over 1800 routes and 8800 stops among Kowloon Motor Bus Co.(KMB), Long Win Bus (LWB), CityBus (CTB), New World First Bus (NWFB) and New Lantao Bus (NLB), covering Hong Kong Island, Kowloon, New Territories and Lantau Island - HK Bus ETA App",
-      "setting-page-description": "Renew the database, clean up usage record, check out the source code, join the telegram sharing group and donate - HK Bus ETA App"
+      "setting-page-description": "Renew the database, clean up usage record, check out the source code, join the telegram sharing group and donate - HK Bus ETA App",
+      "圖示來源": "Icons made by",
+      "黑夜模式": "Dark mode"
     }
   },
   "zh": {

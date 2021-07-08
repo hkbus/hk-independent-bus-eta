@@ -122,7 +122,6 @@ const Settings = () => {
             secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
-        <Divider />
         <ListItem
           button
           component={'a'}
@@ -134,11 +133,28 @@ const Settings = () => {
             <Avatar><GitHubIcon /></Avatar>
           </ListItemAvatar>
           <ListItemText 
-            primary={<ListPrimaryText>Source Code</ListPrimaryText>} 
+            primary={<ListPrimaryText>Source code</ListPrimaryText>}
             secondary={"GPL-3.0 License"}
             secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
+        <ListItem
+          button
+          component={'a'}
+          href={`https://www.freepik.com`}
+          target="_blank"
+          onClick={() => {vibrate(1)}}
+        >
+          <ListItemAvatar>
+            <Avatar><GitHubIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={<ListPrimaryText>{t("圖示來源")}</ListPrimaryText>} 
+            secondary={"Freepik from Flaticon"}
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
+          />
+        </ListItem>
+        <Divider />
         <ListItem>
           <ListItemAvatar>
             <Avatar><DataUsageIcon /></Avatar>
