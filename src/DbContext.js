@@ -27,7 +27,18 @@ export const DbProvider = ( props ) => {
     })
   }
 
+  const loadDbFromLocalStorage = () => {
+    // load from localStorage
+    setTimeout(() => {
+      setDb(decompressJsonString(localStorage.getItem('db')))
+    }, 0)
+  }
+
   useEffect(() => {
+    if ( !navigator.onLine ) {
+      loadDbFromLocalStorage()
+      return
+    }
     // check app version and flush localstorage if outdated
     Promise.all([
       fetch(process.env.PUBLIC_URL+'/schema-version.txt').then(r => r.text()),
@@ -48,10 +59,7 @@ export const DbProvider = ( props ) => {
       if (needRenew) {
         renewDb()
       } else {
-        // load from localStorage
-        setTimeout(() => {
-          setDb(decompressJsonString(localStorage.getItem('db')))
-        }, 0)
+        loadDbFromLocalStorage()
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,7 +97,7 @@ const decompressJsonString = (txt) => {
     let ret = decompressFromBase64(txt)
     return JSON.parse(ret)
   } catch (e) {
-    // return null if no valid JSON string parsed
-    return null
+    // return empty object if no valid JSON string parsed
+    return {routeList: {}, stopList: {}, stopMap: {}}
   }
 }

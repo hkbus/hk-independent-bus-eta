@@ -97,7 +97,6 @@ const Settings = () => {
           button
           onClick={() => {
             vibrate(1)
-            //document.querySelectorAll('style[data-jss]').forEach(e => e.parentNode.removeChild(e))
             setColorMode(colorMode === 'dark' ? 'light' : 'dark')
           }}
         >
@@ -122,66 +121,7 @@ const Settings = () => {
             secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
-        <ListItem
-          button
-          component={'a'}
-          href={`https://github.com/hkbus/hk-independent-bus-eta`}
-          target="_blank"
-          onClick={() => {vibrate(1)}}
-        >
-          <ListItemAvatar>
-            <Avatar><GitHubIcon /></Avatar>
-          </ListItemAvatar>
-          <ListItemText 
-            primary={<ListPrimaryText>Source code</ListPrimaryText>}
-            secondary={"GPL-3.0 License"}
-            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
-          />
-        </ListItem>
-        <ListItem
-          button
-          component={'a'}
-          href={`https://www.freepik.com`}
-          target="_blank"
-          onClick={() => {vibrate(1)}}
-        >
-          <ListItemAvatar>
-            <Avatar><GitHubIcon /></Avatar>
-          </ListItemAvatar>
-          <ListItemText 
-            primary={<ListPrimaryText>{t("圖示來源")}</ListPrimaryText>} 
-            secondary={"Freepik from Flaticon"}
-            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
-          />
-        </ListItem>
         <Divider />
-        <ListItem>
-          <ListItemAvatar>
-            <Avatar><DataUsageIcon /></Avatar>
-          </ListItemAvatar>
-          <ListItemText 
-            primary={<ListPrimaryText>{t("交通資料來源")}</ListPrimaryText>} 
-            secondary={t('資料一線通') + "  https://data.gov.hk" } 
-            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
-          />
-        </ListItem>
-        <Divider />
-        <ListItem
-          button
-          component='a'
-          href={`https://donate.612fund.hk/${i18n.language}/`}
-          target="_blank"
-          onClick={() => {vibrate(1)}}
-        >
-          <ListItemAvatar>
-            <Avatar><MonetizationOnIcon /></Avatar>
-          </ListItemAvatar>
-          <ListItemText 
-            primary={<ListPrimaryText>{t("捐款支持")}</ListPrimaryText>} 
-            secondary={t('請捐款到 612 人道支援基金') } 
-            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
-          />
-        </ListItem>
         <ListItem
           button
           onClick={() => {
@@ -216,6 +156,65 @@ const Settings = () => {
           <ListItemText 
             primary={<ListPrimaryText>{t("Telegram 交流區")}</ListPrimaryText>} 
             secondary={t('歡迎意見及技術交流') } 
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
+          />
+        </ListItem>
+        <ListItem
+          button
+          component='a'
+          href={`https://donate.612fund.hk/${i18n.language}/`}
+          target="_blank"
+          onClick={() => {vibrate(1)}}
+        >
+          <ListItemAvatar>
+            <Avatar><MonetizationOnIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={<ListPrimaryText>{t("捐款支持")}</ListPrimaryText>} 
+            secondary={t('請捐款到 612 人道支援基金') } 
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
+          />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          component={'a'}
+          href={`https://github.com/hkbus/hk-independent-bus-eta`}
+          target="_blank"
+          onClick={() => {vibrate(1)}}
+        >
+          <ListItemAvatar>
+            <Avatar><GitHubIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={<ListPrimaryText>Source code</ListPrimaryText>}
+            secondary={"GPL-3.0 License"}
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
+          />
+        </ListItem>
+        <ListItem
+          button
+          component={'a'}
+          href={`https://www.freepik.com`}
+          target="_blank"
+          onClick={() => {vibrate(1)}}
+        >
+          <ListItemAvatar>
+            <Avatar className={classes.icon} src="/logo128.png" alt="App Logo"></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={<ListPrimaryText>{t("圖標來源")}</ListPrimaryText>} 
+            secondary={"Freepik from Flaticon"}
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar><DataUsageIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={<ListPrimaryText>{t("交通資料來源")}</ListPrimaryText>} 
+            secondary={t('資料一線通') + "  https://data.gov.hk" } 
             secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
@@ -263,5 +262,8 @@ const useStyles = makeStyles ( theme => ({
     '& .MuiAvatar-colorDefault': {
       color: theme.palette.type === 'dark' ? theme.palette.background.default : 'white'
     }
+  },
+  icon: {
+    filter: theme.palette.type === 'dark' ? 'grayscale(100%) brightness(0.5)' : 'none'
   }
 }))
