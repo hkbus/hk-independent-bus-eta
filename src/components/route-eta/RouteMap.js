@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Polyline, Circle, useMap } from 'react-leaflet'
-import Marker from 'react-leaflet-enhanced-marker'
+import { MapContainer, Marker, TileLayer, Polyline, Circle, useMap } from 'react-leaflet'
+import Leaflet from 'leaflet'
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
@@ -88,7 +88,7 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
               <Marker 
                 key={`${stopId}-${idx}`} 
                 position={stopList[stopId].location} 
-                icon={<BusStopMarker active={idx === stopIdx} passed={idx < stopIdx} />}
+                icon={BusStopMarker({active: idx === stopIdx, passed: (idx < stopIdx)})}
                 eventHandlers={{
                   click: (e) => {onMarkerClick(idx)(e, true, true)}
                 }}
@@ -147,17 +147,10 @@ const getPoint = ({lat, lng}) => [lat, lng]
 
 const BusStopMarker = ( {active, passed} ) => {
   const classes = useStyles()
-  return (
-    <img 
-      src="https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon.png"
-      alt="" 
-      tabIndex="0" 
-      className={`${classes.marker} ${active ? classes.active : ''}`}
-      style={{
-        filter: passed ? 'grayscale(100%)' : 'hue-rotate(130deg)',
-      }}
-    />
-  )
+  return Leaflet.icon({
+    iconUrl: 'https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png',
+    className: `${classes.marker} ${active ? classes.active : ''} ${passed ? classes.passed : ''}`
+  })
 }
 
 const useStyles = makeStyles ( theme => ({
@@ -175,15 +168,19 @@ const useStyles = makeStyles ( theme => ({
     marginRight: '5px !important'
   },
   marker: {
-    marginLeft: '38px',
-    marginTop: '-14px',
+    marginLeft: '-12px',
+    marginTop: '-41px',
     width: '25px',
     height: '41px',
     zIndex: 618,
-    outline: 'none'
+    outline: 'none',
+    filter: 'hue-rotate(130deg)'
   },
   active: {
     animation: '$blinker 2s linear infinite'
+  },
+  passed: {
+    filter: 'grayscale(100%)'
   },
   "@keyframes blinker": {
     '50%': {
