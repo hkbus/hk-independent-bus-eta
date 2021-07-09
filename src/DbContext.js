@@ -3,6 +3,7 @@ import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta'
 import { compressToBase64, decompressFromBase64 } from 'lz-string'
 import { isEmptyObj } from './utils'
 
+
 const DbContext = React.createContext()
 
 export const DbProvider = ( props ) => {
@@ -13,55 +14,27 @@ export const DbProvider = ( props ) => {
   const [db, setDb] = useState({routeList: {}, stopList: {}, stopMap: {}})
   const [updateTime, setUpdateTime] = useState(parseInt(localStorage.getItem('updateTime'), 10))
   
-  const renewDb = () => {
-    fetchEtaObj().then( ({routeList, stopList, stopMap}) => {
-      setDb({
-        routeList: Object.entries(routeList).reduce((acc, [k, v]) => {
-          acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = v
-          return acc
-        }, {}),
-        stopList, 
-        stopMap
-      })
-      setUpdateTime( Date.now() )
+  const loadData = (data) => {
+    const {db: {routeList, stopList, stopMap}, versionMd5, schemaVersion} = data
+    setVersionMd5(versionMd5)
+    setSchemaVersion(schemaVersion)
+    setDb({
+      routeList: Object.entries(routeList).reduce((acc, [k, v]) => {
+        acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = v
+        return acc
+      }, {}),
+      stopList, 
+      stopMap
     })
+    setUpdateTime( Date.now() )
   }
 
-  const loadDbFromLocalStorage = () => {
-    // load from localStorage
-    setTimeout(() => {
-      setDb(decompressJsonString(localStorage.getItem('db')))
-    }, 0)
+  const renewDb = () => {
+    fetchDbFunc().then( loadData )
   }
 
   useEffect(() => {
-    if ( !navigator.onLine ) {
-      loadDbFromLocalStorage()
-      return
-    }
-    // check app version and flush localstorage if outdated
-    Promise.all([
-      fetch(process.env.PUBLIC_URL+'/schema-version.txt').then(r => r.text()),
-      fetchEtaObjMd5()
-    ]).then( ([_schemaVersion, _md5] ) => {
-      let needRenew = false
-      if ( schemaVersion !== _schemaVersion ) {
-        setSchemaVersion(_schemaVersion)
-        localStorage.setItem('schemaVersion', _schemaVersion)
-        needRenew = true
-      }
-      if ( versionMd5 !== _md5 ) {
-        setVersionMd5(_md5)
-        localStorage.setItem('versionMd5', _md5)
-        needRenew = true
-      }
-
-      if (needRenew) {
-        renewDb()
-      } else {
-        loadDbFromLocalStorage()
-      }
-    })
+    initDb.then(loadData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -101,3 +74,48 @@ const decompressJsonString = (txt) => {
     return {routeList: {}, stopList: {}, stopMap: {}}
   }
 }
+
+// to optimize the data fetching significantly
+// we define the fetchDbFunc outside the components
+// and we hence able to fetch data before rendering
+const fetchDbFunc = () => {
+  const schemaVersion = localStorage.getItem('schemaVersion')
+  const versionMd5 = localStorage.getItem('versionMd5')
+  if ( !navigator.onLine ) {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve({
+        schemaVersion, versionMd5,
+        db: decompressJsonString(localStorage.getItem('db'))
+      }), 0)
+    })
+  }
+
+  return Promise.all([
+    fetch(process.env.PUBLIC_URL+'/schema-version.txt').then(r => r.text()),
+    fetchEtaObjMd5()
+  ]).then( ([_schemaVersion, _md5] ) => {
+    let needRenew = false
+    if ( schemaVersion !== _schemaVersion ) {
+      localStorage.setItem('schemaVersion', _schemaVersion)
+      needRenew = true
+    }
+    if ( versionMd5 !== _md5 ) {
+      localStorage.setItem('versionMd5', _md5)
+      needRenew = true
+    }
+
+    if (needRenew) {
+      return fetchEtaObj().then(db => ({db, schemaVersion: _schemaVersion, versionMd5: _md5}))
+    }
+    
+    return new Promise((resolve) => {
+      setTimeout(() => resolve({
+        schemaVersion, versionMd5,
+        db: decompressJsonString(localStorage.getItem('db'))
+      }), 0)
+    })
+  })
+}
+
+// actually start fetching DB once the script is runned 
+const initDb = fetchDbFunc()

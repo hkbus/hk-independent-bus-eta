@@ -92,10 +92,10 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
               />
               <IconButton 
                 aria-label="favourite" 
-                onClick={() => toggleSavedRoute(`${id}/${idx}`)}
+                onClick={() => toggleSavedRoute(`${id.toUpperCase()}/${idx}`)}
                 style={{ backgroundColor: 'transparent' }} 
               >
-                {savedEtas.includes(`${id}/${idx}`) ? <StarIcon/> : <StarBorderIcon />}
+                {savedEtas.includes(`${id.toUpperCase()}/${idx}`) ? <StarIcon/> : <StarBorderIcon />}
               </IconButton>
             </AccordionDetails>
           </Accordion>
