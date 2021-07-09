@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useMemo } from "react"
 import {
   Input,
   Tabs,
@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
 import { vibrate, checkMobile } from '../../utils'
 
-const Header = (props) => {
+const Header = () => {
   const { searchRoute, setSearchRoute, db: {routeList} } = useContext( AppContext )
   const { path } = useRouteMatch()
   const { t, i18n } = useTranslation()
@@ -26,7 +26,7 @@ const Header = (props) => {
     i18n.changeLanguage(lang)
   }
 
-  return (
+  return useMemo(() => (
     <Toolbar
       className={classes.toolbar}
     >
@@ -78,7 +78,8 @@ const Header = (props) => {
         />
       </LanguageTabs>
     </Toolbar>
-  );
+    // eslint-disable-next-line
+  ), [searchRoute, i18n.language, location.pathname]);
 }
 
 const LanguageTab = withStyles((theme) => ({
@@ -115,7 +116,7 @@ const LanguageTabs = withStyles((theme) => ({
 }))(Tabs);
 
 
-export default Header;
+export default Header
 
 const useStyles = makeStyles(theme => ({
   appTitle: {

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import {
   BottomNavigation,
   BottomNavigationAction
@@ -29,7 +29,7 @@ const Footer = () => {
 
   const classes = useStyles()
 
-  return (
+  return useMemo(() => (
     <BottomNavigation
       value={location.pathname.replace(/(.*)\/[0-9]*?$/, "$1")}
       showLabels={true}
@@ -87,7 +87,8 @@ const Footer = () => {
        }}
       />
     </BottomNavigation>
-  )
+    // eslint-disable-next-line
+  ), [location.pathname, i18n.langauage])
 }
 
 export default Footer

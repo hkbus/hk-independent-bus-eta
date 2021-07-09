@@ -91,7 +91,7 @@ const Home = () => {
       }
       </List>
       {
-        !doneGeoRoutes ? <CircularProgress size={20} /> : <></>
+        !doneGeoRoutes ? <CircularProgress size={40} /> : <></>
       }
     </Paper>
   )

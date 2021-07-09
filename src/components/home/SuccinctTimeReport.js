@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import {
-  CircularProgress,
   Divider,
   ListItem,
   ListItemText,
@@ -37,7 +36,8 @@ const SuccinctTimeReport = ({routeId} ) => {
   const [ routeNo, serviceType ] = routeId.split('-')
   const [ routeKey, seq ] = routeId.split('/')
   const { co, stops, dest, bound, nlbId, fares, faresHoliday } = routeList[routeKey]
-  const stop = stopList[stops[co[0]] ? stops[co[0]][parseInt(seq, 10)] : null]
+  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]]
+  
   const [ etas, setEtas ] = useState(null)
   const classes = useStyles()
 
@@ -100,28 +100,26 @@ const SuccinctTimeReport = ({routeId} ) => {
         primary={<RouteNo routeNo={routeNo} />} 
         className={classes.route}
       />
-      {
-        stop ? <ListItemText 
-          primary={<Typography component="h3" variant="body1" color="textPrimary" className={classes.fromToWrapper}>
-            <span className={classes.fromToText}>{t('往')}</span>
-            <b>{toProperCase(dest[i18n.language])}</b>
-          </Typography>}
-          secondary={
-            <DistAndFare 
-              name={toProperCase(stop.name[i18n.language])} 
-              location={stop.location} 
-              fares={fares} 
-              faresHoliday={faresHoliday} 
-              seq={parseInt(seq, 10)}
-            />
-          }
-          secondaryTypographyProps={{
-            component: "h4", 
-            variant: "subtitle2"
-          }}
-          className={classes.routeDest}
-        /> : <CircularProgress size={15} />
-      }
+      <ListItemText 
+        primary={<Typography component="h3" variant="body1" color="textPrimary" className={classes.fromToWrapper}>
+          <span className={classes.fromToText}>{t('往')}</span>
+          <b>{toProperCase(dest[i18n.language])}</b>
+        </Typography>}
+        secondary={
+          <DistAndFare 
+            name={toProperCase(stop.name[i18n.language])} 
+            location={stop.location} 
+            fares={fares} 
+            faresHoliday={faresHoliday} 
+            seq={parseInt(seq, 10)}
+          />
+        }
+        secondaryTypographyProps={{
+          component: "h4", 
+          variant: "subtitle2"
+        }}
+        className={classes.routeDest}
+      />
       <ListItemText
         primary={<Typography component="h5" color="textPrimary">{etas ? getEtaString(etas[0]) : ''}</Typography>}
         secondary={<Typography component="h6" color="textSecondary" className={classes.secondaryEta}>{etas ? getEtaString(etas[1]) : ''}</Typography>}
@@ -134,6 +132,15 @@ const SuccinctTimeReport = ({routeId} ) => {
 }
 
 export default SuccinctTimeReport
+
+// TODO: better handling on buggy data in database
+const getStops = (co, stops) => {
+  for ( let i = 0; i< co.length; ++i ) {
+    if ( co[i] in stops ) {
+      return stops[co[i]]
+    }
+  }
+}
 
 const useStyles = makeStyles(theme => ({
   listItem: {
