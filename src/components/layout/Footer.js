@@ -18,7 +18,7 @@ import { vibrate } from '../../utils'
 const Footer = () => {
   const { t, i18n } = useTranslation()
   const location = useLocation()
-  const { selectedRoute } = useContext ( AppContext ) 
+  const { selectedRoute, colorMode } = useContext ( AppContext ) 
 
   const history = useHistory()
   const handleClick = (link, e) => {
@@ -88,7 +88,7 @@ const Footer = () => {
       />
     </BottomNavigation>
     // eslint-disable-next-line
-  ), [location.pathname, i18n.langauage])
+  ), [location.pathname, i18n.langauage, colorMode])
 }
 
 export default Footer

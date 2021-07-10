@@ -13,7 +13,7 @@ import AppContext from '../../AppContext'
 import { vibrate, checkMobile } from '../../utils'
 
 const Header = () => {
-  const { searchRoute, setSearchRoute, db: {routeList} } = useContext( AppContext )
+  const { searchRoute, setSearchRoute, db: {routeList}, colorMode } = useContext( AppContext )
   const { path } = useRouteMatch()
   const { t, i18n } = useTranslation()
   const classes = useStyles()
@@ -79,7 +79,7 @@ const Header = () => {
       </LanguageTabs>
     </Toolbar>
     // eslint-disable-next-line
-  ), [searchRoute, i18n.language, location.pathname]);
+  ), [searchRoute, i18n.language, location.pathname, colorMode]);
 }
 
 const LanguageTab = withStyles((theme) => ({
