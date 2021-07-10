@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react'
 import {
-  CircularProgress,
   List,
   Paper,
   Typography
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../AppContext'
-import { getDistance, isEmptyObj, setSeoHeader } from '../utils'
+import { getDistance, setSeoHeader } from '../utils'
 import SuccinctTimeReport from './home/SuccinctTimeReport'
 import { useTranslation } from 'react-i18next'
 
@@ -37,20 +36,18 @@ const Home = () => {
   }, [routeList, geolocation])
 
   const classes = useStyles()
-  
+
   return useMemo(() => (
     <Paper className={classes.root} square elevation={0}>
       <Typography component="h1" variant="srOnly">{`${t('Dashboard')} - ${t(AppTitle)}`}</Typography>
       <Typography component="h2" variant="srOnly">{t('home-page-description')}</Typography>
       <List className={classes.list} disablePadding>
       {
-        selectedRoutes.split('|').map( selectedRoute => (
-          selectedRoute.split('/')[0] in routeList ? 
-            <SuccinctTimeReport key={selectedRoute} routeId={selectedRoute} /> : null
+        selectedRoutes.split('|').map( (selectedRoute, idx) => (
+          <SuccinctTimeReport key={`route-shortcut-${idx}`} routeId={selectedRoute} />
         ))
       }
       </List>
-      { isEmptyObj(routeList) ? <CircularProgress className={classes.loading} size={40} /> : null }
     </Paper>
     // eslint-disable-next-line
   ), [selectedRoutes])
@@ -75,7 +72,7 @@ const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeLis
   ).sort((a, b) => 
     a[2] - b[2]
   ).slice(0, 5).reduce((acc, [stopId]) => {
-    // keep only max. 5 stops
+    // keep only the nearest 5 stops
     let routeIds = []
     Object.entries(routeList).forEach(([key, route]) => {  
       ['kmb', 'nwfb', 'ctb', 'nlb'].forEach(co => {
@@ -86,7 +83,11 @@ const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeLis
     })
     return acc.concat(routeIds)
   }, [])
-  return selectedRoutes.concat(nearbyRoutes).filter( (v, i, s) => s.indexOf(v) === i ).slice(0,20).join('|')
+  return selectedRoutes
+    .concat(nearbyRoutes)
+    .filter( (v, i, s) => s.indexOf(v) === i ) // uniqify
+    .concat(Array(20).fill('')) // padding
+    .slice(0,20).join('|')
 }
 
 const useStyles = makeStyles ( theme => ({

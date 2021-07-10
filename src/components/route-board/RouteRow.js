@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 import { areEqual } from 'react-window'
 import { Link, useHistory } from  'react-router-dom'
-import { vibrate } from '../../utils'
+import { vibrate, toProperCase } from '../../utils'
 import RouteNo from './RouteNo'
 
 const RouteInfo = ( {route} ) => {
@@ -18,22 +18,16 @@ const RouteInfo = ( {route} ) => {
 
   return (
     <Typography component="h3" variant="body1" className={classes.routeInfo}>
-    { route.nlbId ?
       <div>
         <div className={classes.fromToWrapper}>
           <span className={classes.fromToText}>{`${t('往')} `}</span>
-          <b>{route.dest[i18n.language]}</b>
+          <b>{toProperCase(route.dest[i18n.language])}</b>
         </div>
         <div className={classes.fromToWrapper}>
-          <span className={classes.fromToText}>{`${t('由')} `}</span>
-          <b variant="h4" color="textPrimary" component="h4">{route.orig[i18n.language]}</b>
+          <span className={classes.fromToText}>{`${route.nlbId ? t('由') : ''} `}</span>
+          <b>{route.nlbId ? toProperCase(route.orig[i18n.language]) : ''}</b>
         </div>
       </div>
-      : <div className={classes.fromToWrapper}>
-          <span className={classes.fromToText}>{`${t('往')} `}</span>
-          <b variant="h4" color="textPrimary" component="h4">{route.dest[i18n.language]}</b>
-        </div>
-    }
     </Typography>
   )
 }

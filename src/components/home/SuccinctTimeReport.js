@@ -21,7 +21,7 @@ const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
   const _fareHolidayString = faresHoliday && faresHoliday[seq] ? '$' + faresHoliday[seq] : '';
   const fareString = [_fareString, _fareHolidayString].filter(v => v).join(', ')
   
-  if ( geoPermission !== 'granted' ) {
+  if ( geoPermission !== 'granted' || location.lat === 0 ) {
     return name + '　' + ( fareString ? "("+fareString+")" : "" )
   }
   
@@ -35,8 +35,8 @@ const SuccinctTimeReport = ({routeId} ) => {
   const { db: {routeList, stopList} } = useContext ( AppContext )
   const [ routeNo, serviceType ] = routeId.split('-')
   const [ routeKey, seq ] = routeId.split('/')
-  const { co, stops, dest, bound, nlbId, fares, faresHoliday } = routeList[routeKey]
-  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]]
+  const { co, stops, dest, bound, nlbId, fares, faresHoliday } = routeList[routeKey] || DefaultRoute
+  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DefaultStop
   
   const [ etas, setEtas ] = useState(null)
   const classes = useStyles()
@@ -130,6 +130,9 @@ const SuccinctTimeReport = ({routeId} ) => {
     </>
   )
 }
+
+const DefaultRoute = { co: [''], stops: {'': ['']}, dest: {zh: '', en: ''}, bound: '', nlbId: 0, fares: [], faresHoliday: [] }
+const DefaultStop = {location: {lat: 0, lng: 0}, name: {zh: '', en: ''}}
 
 export default SuccinctTimeReport
 

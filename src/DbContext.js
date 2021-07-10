@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from 'react'
 import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta' 
-import { compressToBase64, decompressFromBase64 } from 'lz-string'
 import { isEmptyObj } from './utils'
+import {compress as compressJson, decompress as decompressJson} from 'compressed-json'
 
+// implant the DB Context logic into code to avoid loading error
+const DB_CONTEXT_VERSION = '1.1.0'
 
 const DbContext = React.createContext()
 
 export const DbProvider = ( props ) => {
   const AppTitle = '巴士到站預報 App'
-  const [schemaVersion, setSchemaVersion] = useState(localStorage.getItem('schemaVersion') || '')
-  const [versionMd5, setVersionMd5] = useState(localStorage.getItem('versionMd5') || '')
   // route list & stop list & route-stop list
-  const [db, setDb] = useState({routeList: {}, stopList: {}, stopMap: {}})
-  const [updateTime, setUpdateTime] = useState(parseInt(localStorage.getItem('updateTime'), 10))
+  const [db, setDb] = useState({
+    routeList: {}, stopList: {}, stopMap: {},
+    schemaVersion: localStorage.getItem('schemaVersion') || '',
+    versionMd5: localStorage.getItem('versionMd5') || '',
+    updateTime: parseInt(localStorage.getItem('updateTime'), 10)
+  })
   
-  const loadData = (data) => {
-    const {db: {routeList, stopList, stopMap}, versionMd5, schemaVersion} = data
-    setVersionMd5(versionMd5)
-    setSchemaVersion(schemaVersion)
+  
+  const loadData = ({db: {routeList, stopList, stopMap}, versionMd5, schemaVersion}) => {
     setDb({
-      routeList: Object.entries(routeList).reduce((acc, [k, v]) => {
-        acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = v
+      routeList: Object.keys(routeList).sort().reduce((acc, k) => {
+        acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = routeList[k]
         return acc
       }, {}),
       stopList, 
-      stopMap
+      stopMap,
+      versionMd5,
+      schemaVersion,
+      updateTime: Date.now()
     })
-    setUpdateTime( Date.now() )
   }
 
   const renewDb = () => {
@@ -43,19 +47,14 @@ export const DbProvider = ( props ) => {
       // skip if db is {}
       // make costly compression async
       setTimeout( () => {
-        localStorage.setItem('db', compressToBase64(JSON.stringify(db)))
+        localStorage.setItem('db', JSON.stringify(compressJson(db)))
       }, 0)
     }
   }, [db])
 
-  useEffect(() => {
-    localStorage.setItem('updateTime', updateTime)
-  }, [updateTime])
-
   return (
     <DbContext.Provider value={{
-        AppTitle, db, renewDb, 
-        schemaVersion, versionMd5, updateTime
+        AppTitle, db, renewDb
       }}
     >
       {props.children}
@@ -67,8 +66,7 @@ export default DbContext
 
 const decompressJsonString = (txt) => {
   try {
-    let ret = decompressFromBase64(txt)
-    return JSON.parse(ret)
+    return decompressJson(JSON.parse(txt))
   } catch (e) {
     // return empty object if no valid JSON string parsed
     return {routeList: {}, stopList: {}, stopMap: {}}
@@ -79,6 +77,12 @@ const decompressJsonString = (txt) => {
 // we define the fetchDbFunc outside the components
 // and we hence able to fetch data before rendering
 const fetchDbFunc = () => {
+  if ( localStorage.getItem('dbv') !== DB_CONTEXT_VERSION ) {
+    console.log('New DB, will refetch data')
+    localStorage.removeItem('db')
+    localStorage.removeItem('versionMd5')
+    localStorage.setItem('dbv', DB_CONTEXT_VERSION)
+  }
   const schemaVersion = localStorage.getItem('schemaVersion')
   const versionMd5 = localStorage.getItem('versionMd5')
   if ( !navigator.onLine ) {

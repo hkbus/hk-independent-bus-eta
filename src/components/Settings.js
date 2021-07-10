@@ -29,8 +29,9 @@ import NightsStayIcon from '@material-ui/icons/NightsStay';
 const Settings = () => {
   const { 
     AppTitle,
-    schemaVersion, versionMd5, updateTime, geoPermission, 
-    setGeoPermission, renewDb, resetUsageRecord,
+    db: {schemaVersion, versionMd5, updateTime}, renewDb,
+    geoPermission, setGeoPermission,
+    resetUsageRecord,
     colorMode, setColorMode
   } = useContext ( AppContext )
   const [ updating, setUpdating ] = useState(false)

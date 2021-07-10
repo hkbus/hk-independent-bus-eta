@@ -23,7 +23,7 @@ import AppContext from './AppContext'
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import { isEmptyObj } from './utils'
-const Home = lazy( () => import('./components/Home'))
+import Home from './components/Home'
 const RouteBoard = lazy( () => import('./components/RouteBoard'))
 const RouteEta = lazy( () => import('./components/RouteEta'))
 const Settings = lazy( () => import('./components/Settings'))

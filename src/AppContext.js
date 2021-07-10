@@ -6,7 +6,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
-  const { AppTitle, schemaVersion, versionMd5, db, updateTime, renewDb } = useContext(DbContext)
+  const { AppTitle, db, renewDb } = useContext(DbContext)
   const { routeList } = db
 
   // search route
@@ -123,7 +123,7 @@ export const AppContextProvider = ( props ) => {
         savedEtas, updateSavedEtas,
         resetUsageRecord,
         // settings
-        renewDb, schemaVersion, versionMd5, updateTime,
+        renewDb,
         geoPermission, setGeoPermission,
         colorMode , setColorMode
       }}
