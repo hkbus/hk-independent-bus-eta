@@ -117,8 +117,11 @@ const useStyles = makeStyles(theme => ({
     height: '44px',
     fontSize: '1.2em',
     borderRadius: 'unset',
-    '&$selected': {
+    '&:selected': {
       color: theme.palette.text.primary,
+    },
+    '&:hover': {
+      backgroundColor: theme.palette.background.paper
     },
   },
   cancelButton: {
