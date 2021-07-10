@@ -57,7 +57,7 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
   }
 
   useEffect ( () => {
-    if ( !map ) return
+    if ( !map ) return;
     map.on('dragend', updateCenter)
     return () => {
       map.off('dragend', updateCenter)
@@ -88,11 +88,10 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
               <Marker 
                 key={`${stopId}-${idx}`} 
                 position={stopList[stopId].location} 
-                icon={BusStopMarker({active: idx === stopIdx, passed: (idx < stopIdx)})}
+                icon={BusStopMarker({active: idx === stopIdx, passed: (idx < stopIdx), classes})}
                 eventHandlers={{
                   click: (e) => {onMarkerClick(idx)(e, true, true)}
                 }}
-                
               />
           )
         }
@@ -145,8 +144,7 @@ const checkPosition = (position) => {
 
 const getPoint = ({lat, lng}) => [lat, lng]
 
-const BusStopMarker = ( {active, passed} ) => {
-  const classes = useStyles()
+const BusStopMarker = ( {active, passed, classes} ) => {
   return Leaflet.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png',
     className: `${classes.marker} ${active ? classes.active : ''} ${passed ? classes.passed : ''}`
