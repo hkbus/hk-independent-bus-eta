@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { vibrate } from './utils'
 import DbContext from './DbContext'
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const AppContext = React.createContext()
 
 export const AppContextProvider = ( props ) => {
   const { AppTitle, db, renewDb } = useContext(DbContext)
   const { routeList } = db
-
+  
   // search route
   const [searchRoute, setSearchRoute] = useState("")
   // selected route for bottom navigation shortcut
@@ -23,16 +22,16 @@ export const AppContextProvider = ( props ) => {
   const [ savedEtas, setSavedEtas ] = useState ( JSON.parse(localStorage.getItem('savedEtas')) || [] )
 
   // possible Char for RouteInputPad
-  const [possibleChar, setPossibleChar] = useState([])
+  const [possibleChar, setPossibleChar] = useState(getPossibleChar(searchRoute, routeList) || [])
 
   // color mode
-  const devicePreferColorScheme = useMediaQuery('(prefers-color-scheme: dark)') ? 'dark': 'light'
+  const devicePreferColorScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   const [ colorMode, setColorMode ] = useState(localStorage.getItem('colorMode') || devicePreferColorScheme )
 
   useEffect(() => {
     if ( geoPermission === 'granted' ) {
       const _geoWatcherId = navigator.geolocation.watchPosition(({coords: {latitude, longitude}}) => {
-        setGeolocation({lat: latitude, lng: longitude})
+        updateGeolocation({lat: latitude, lng: longitude})
       })
       setGeoWatcherId ( _geoWatcherId )
     }
@@ -42,7 +41,8 @@ export const AppContextProvider = ( props ) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
+  const updateGeoPermission = (geoPermission) => {
+    setGeoPermission(geoPermission)
     if ( geoPermission === 'granted' ) {
       const _geoWatcherId = navigator.geolocation.watchPosition(({coords: {latitude, longitude}}) => {
         setGeolocation({lat: latitude, lng: longitude})
@@ -54,37 +54,37 @@ export const AppContextProvider = ( props ) => {
     }
     localStorage.setItem('geoPermission', geoPermission)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geoPermission])
+  }
 
-  useEffect(() => {
-    setPossibleChar(getPossibleChar(searchRoute, routeList))
-  }, [searchRoute, routeList])
-
-  useEffect(() => {
-    localStorage.setItem('savedEtas', JSON.stringify(savedEtas))
-  }, [savedEtas])
-
-  useEffect(() => {
+  const updateGeolocation = (geolocation) => {
     localStorage.setItem('geolocation', JSON.stringify(geolocation))
-  }, [geolocation])
+    setGeolocation(geolocation)
+  }
 
-  useEffect(() => {
+  const toggleColorMode = () => setColorMode(prevColorMode => {
+    const colorMode = prevColorMode === 'dark' ? 'light' : 'dark'
     localStorage.setItem('colorMode', colorMode)
-  }, [colorMode]) 
-
+    return colorMode
+  })
+  
   const updateSearchRouteByButton = (buttonValue) => {
     vibrate(1)
     setTimeout(() => {
-      switch (buttonValue) {
-        case 'b': 
-          setSearchRoute(searchRoute => searchRoute.slice(0,-1))
-          break
-        case 'c':
-          setSearchRoute('')
-          break
-        default: 
-          setSearchRoute(searchRoute => searchRoute+buttonValue)
-      }
+      setSearchRoute(prevSearchRoute => {
+        let ret
+        switch (buttonValue) {
+          case 'b': 
+            ret = prevSearchRoute.slice(0,-1)
+            break
+          case 'c':
+            ret = ''
+            break
+          default: 
+            ret = prevSearchRoute + buttonValue
+        }
+        setPossibleChar( getPossibleChar(ret, routeList) )
+        return ret
+      })
     }, 0)
   }
 
@@ -101,14 +101,15 @@ export const AppContextProvider = ( props ) => {
 
   const updateSavedEtas = ( key ) => {
     setSavedEtas ( prevSavedEtas => {
-      if ( prevSavedEtas.includes(key) ) return prevSavedEtas.filter(k => k !== key)
-      else return prevSavedEtas.concat(key)
+      const newSavedEtas = prevSavedEtas.concat(key).filter( (v, i, s) => s.indexOf(v) === i )
+      localStorage.setItem('savedEtas', JSON.stringify(newSavedEtas))
+      return newSavedEtas
     })
   }
 
   const resetUsageRecord = () => {
     setHotRoute({})
-    setGeolocation({lat: 22.302711, lng: 114.177216})
+    updateGeolocation({lat: 22.302711, lng: 114.177216})
     setSavedEtas([])
   }
 
@@ -119,13 +120,13 @@ export const AppContextProvider = ( props ) => {
         selectedRoute, updateSelectedRoute,
         possibleChar,
         // UX
-        hotRoute, geolocation, setGeolocation,
+        hotRoute, geolocation, updateGeolocation,
         savedEtas, updateSavedEtas,
         resetUsageRecord,
         // settings
         renewDb,
-        geoPermission, setGeoPermission,
-        colorMode , setColorMode
+        geoPermission, updateGeoPermission,
+        colorMode , toggleColorMode
       }}
     >
       {props.children}

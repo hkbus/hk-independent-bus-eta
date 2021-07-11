@@ -30,9 +30,9 @@ const Settings = () => {
   const { 
     AppTitle,
     db: {schemaVersion, versionMd5, updateTime}, renewDb,
-    geoPermission, setGeoPermission,
+    geoPermission, updateGeoPermission,
     resetUsageRecord,
-    colorMode, setColorMode
+    colorMode, toggleColorMode
   } = useContext ( AppContext )
   const [ updating, setUpdating ] = useState(false)
   const [ showGeoPermissionDenied, setShowGeoPermissionDenied ] = useState(false)
@@ -73,13 +73,13 @@ const Settings = () => {
           onClick={() => {
             vibrate(1)
             if ( geoPermission === 'granted' ) {
-              setGeoPermission('closed')
+              updateGeoPermission('closed')
             } else {
-              setGeoPermission('opening')
+              updateGeoPermission('opening')
               navigator.geolocation.getCurrentPosition(position => {
-                setGeoPermission('granted')
+                updateGeoPermission('granted')
               }, () => {
-                setGeoPermission('denied')
+                updateGeoPermission('denied')
                 setShowGeoPermissionDenied(true)
               })
             }
@@ -98,7 +98,7 @@ const Settings = () => {
           button
           onClick={() => {
             vibrate(1)
-            setColorMode(colorMode === 'dark' ? 'light' : 'dark')
+            toggleColorMode()
           }}
         >
           <ListItemAvatar>

@@ -95,9 +95,7 @@ export default Footer
 
 const useStyles = makeStyles(theme => ({
   root: {
-    background: theme.palette.type === 'dark' ? theme.palette.background.main: theme.palette.primary.main,
-    // background: theme.palette.primary.main,
-    // color: theme.palette.text.secondary,
+    background: theme.palette.type === 'dark' ? theme.palette.background.default: theme.palette.primary.main,
     position: "sticky",
     bottom: "0",
   },

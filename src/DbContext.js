@@ -34,8 +34,11 @@ export const DbProvider = ( props ) => {
   }
 
   useEffect(() => {
+    // skip if db is {}
     if ( db && !isEmptyObj(db.routeList) && !isEmptyObj(db.stopList) && !isEmptyObj(db.stopMap) ) {
-      // skip if db is {}
+      // skip if db version is the same
+      if ( localStorage.getItem('db') && db.schemaVersion === localStorage.getItem('schemaVersion') && db.versionMd5 === localStorage.getItem('versionMd5') )
+        return;
       // make costly compression async
       setTimeout( () => {
         localStorage.setItem('db', JSON.stringify(compressJson(db)))

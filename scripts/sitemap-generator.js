@@ -5,8 +5,7 @@ host = 'https://'+fs.readFileSync('public/CNAME', 'utf8')
 
 // constant pages
 content = [``, '/search', '/settings']
-zhPages = content.map(path => `/zh${path}`)
-enPages = content.map(path => `/en${path}`)
+pages = ['/zh', '/en', '/en/search', '/zh/search', '/zh/settings', '/en/settings']
 
 // route pages
 request('https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json', (e, r, b) => {
@@ -15,10 +14,10 @@ request('https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json', (e, r,
   enRoutes = Object.entries(routeList).map(route => `/en/route/${route[0].replace(/\+/g, '-').replace(/ /g, '-').toLowerCase()}`)
   
   // write to file
-  fs.writeFileSync('build/sitemap.txt', [].concat(zhPages, enPages, zhRoutes, enRoutes).map(p => `${host}${p}`).join("\n"))
+  fs.writeFileSync('build/sitemap.txt', [].concat(pages, zhRoutes, enRoutes).map(p => `${host}${p}`).join("\n"))
   fs.writeFileSync('.rsp.json', JSON.stringify({
     port: 3001, 
-    routes: [].concat(zhPages, enPages, zhRoutes, enRoutes)
+    routes: [].concat(pages, zhRoutes, enRoutes)
   }))
 })
 

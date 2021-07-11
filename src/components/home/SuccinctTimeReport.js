@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import {
   Divider,
   ListItem,
@@ -10,7 +10,7 @@ import { vibrate } from '../../utils'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
-import { fetchEtas } from 'hk-bus-eta'
+import Etas from './Etas'
 import { getDistance, toProperCase } from '../../utils'
 import RouteNo from '../route-board/RouteNo'
 
@@ -33,51 +33,12 @@ const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
 const SuccinctTimeReport = ({routeId} ) => {
   const { t, i18n } = useTranslation()
   const { db: {routeList, stopList} } = useContext ( AppContext )
-  const [ routeNo, serviceType ] = routeId.split('-')
+  const [ routeNo ] = routeId.split('-')
   const [ routeKey, seq ] = routeId.split('/')
-  const { co, stops, dest, bound, nlbId, fares, faresHoliday } = routeList[routeKey] || DefaultRoute
-  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DefaultStop
+  const { co, stops, dest, fares, faresHoliday } = routeList[routeKey]
+  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]]
   
-  const [ etas, setEtas ] = useState(null)
   const classes = useStyles()
-
-  useEffect(() => {
-    let isMounted = true
-    
-    const fetchData = () => (
-      fetchEtas({
-        route: routeNo, routeStops: stops, seq: parseInt(seq, 10), bound, serviceType, co, nlbId
-      }).then ( _etas => {
-        if (isMounted) setEtas(_etas)
-      })
-    )
-    
-    const fetchEtaInterval = setInterval(() => {
-      fetchData()
-    }, 30000)
-
-    fetchData()
-
-    return () => {
-      isMounted = false
-      clearInterval(fetchEtaInterval)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const getEtaString = (eta) => {
-    if ( !eta ) return ''
-    else {
-      const waitTime = Math.round(((new Date(eta.eta)) - (new Date())) / 60 / 1000)
-      if ( waitTime < 1 ) {
-        return '- '+t('分鐘')
-      } else if ( Number.isInteger(waitTime) ) {
-        return waitTime+" "+t('分鐘')
-      } else {
-        return eta.remark[i18n.language]
-      }
-    }
-  }
 
   const history = useHistory()
   const handleClick = (e) => {
@@ -120,19 +81,12 @@ const SuccinctTimeReport = ({routeId} ) => {
         }}
         className={classes.routeDest}
       />
-      <ListItemText
-        primary={<Typography component="h5" color="textPrimary">{etas ? getEtaString(etas[0]) : ''}</Typography>}
-        secondary={<Typography component="h6" color="textSecondary" className={classes.secondaryEta}>{etas ? getEtaString(etas[1]) : ''}</Typography>}
-        className={classes.routeEta}
-      />
+      <Etas routeId={routeId} />
     </ListItem>
     <Divider />
     </>
   )
 }
-
-const DefaultRoute = { co: [''], stops: {'': ['']}, dest: {zh: '', en: ''}, bound: '', nlbId: 0, fares: [], faresHoliday: [] }
-const DefaultStop = {location: {lat: 0, lng: 0}, name: {zh: '', en: ''}}
 
 export default SuccinctTimeReport
 
@@ -156,11 +110,6 @@ const useStyles = makeStyles(theme => ({
   routeDest: {
     width: '65%'
   },
-  routeEta: {
-    width: '20%',
-    paddingLeft: '10px',
-    textAlign: 'right',
-  },
   fromToWrapper: {
     display: 'flex',
     alignItems: 'baseline',
@@ -168,10 +117,5 @@ const useStyles = makeStyles(theme => ({
   fromToText: {
     fontSize: '0.85rem',
     marginRight: theme.spacing(0.5)
-  },
-  secondaryEta: {
-    fontSize: '0.875rem',
-    fontWeight: '400',
-    lineHeight: '1.43'
   }
 }))

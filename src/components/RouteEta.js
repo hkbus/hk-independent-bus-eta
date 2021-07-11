@@ -92,11 +92,11 @@ const RouteEta = () => {
       <Typography component="h2" variant="caption" align='center'>
         {t('往')} {toProperCase(dest[i18n.language])} {nlbId ? t('由')+" "+toProperCase(orig[i18n.language]) : ""}
       </Typography>
-      {navigator.userAgent !== 'prerendering' ? <RouteMap 
+      <RouteMap 
         stops={getStops(co, stops)}
         stopIdx={expanded}
         onMarkerClick={onMarkerClick}
-      /> : <></>}
+      />
       <StopAccordions 
         expanded={expanded}
         setExpanded={setExpanded}

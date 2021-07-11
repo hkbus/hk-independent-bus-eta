@@ -2,6 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const resolve = require('path').resolve;
 const puppeteer = require('puppeteer');
+const jsdom = require('jsdom');
+const CleanCSS = require('clean-css');
 let app;
 
 /**
@@ -48,9 +50,8 @@ async function runStaticServer(port, routes, dir) {
  * @param {string} dir 
  */
 async function createNewHTMLPage(route, html, dir) {
-  if (html === 'skip') return;
   try {
-    const fname = route === '/' ? 'index' : route;
+    const fname = route === '/' ? '/index' : route;
     if (route.indexOf('/') !== route.lastIndexOf('/')) {
       const subDir = route.slice(0, route.lastIndexOf('/'));
       await ensureDirExists(`${dir}${subDir}`);
@@ -81,15 +82,20 @@ function ensureDirExists(dir) {
  * @returns {string|number}
  */
 async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
-  const start = Date.now()
+  const url = new URL(pageUrl)
   try {
     // const page = await browser.newPage();
     if ( !pageUrl.includes('/route/') ) {
+      if ( idx === 0 ) {
         await page.goto(pageUrl, {waitUntil: idx > 0 ? 'domcontentloaded' : 'networkidle0'});
-        if (idx === 0 || pageUrl.includes('search')) await page.waitForTimeout(3000) // wait decompression & loading data
+      } else {
+        await page.click(`a[href="${url.pathname}"]`)
+      }
+      if (idx === 0) await page.waitForTimeout(3000) // wait decompression & loading data
     } else {
         const lang = pageUrl.split('/').slice(-3)[0]
         const q = pageUrl.split('/').slice(-1)[0];
+        await page.evaluate(`document.querySelector('style[prerender]').innerText = ''`)
         await page.click(`[id="${lang}-selector"]`)
         await page.evaluate((q) => {
             // programmatically change the search route value
@@ -103,6 +109,7 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
     }
 
     const html = await page.content();
+
     if (!html) return 0;
     return html;
   } catch(err) {
@@ -119,6 +126,14 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
 async function runPuppeteer(baseUrl, routes, dir) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
+  page.setRequestInterception(true);
+  page.on('request', (request) => {
+    // block map loading
+    if (request.url().includes('basemaps.cartocdn.com') || request.url().includes('https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png'))
+      request.abort();
+    else
+      request.continue()
+  })
   page.setUserAgent('prerendering');
   let start = Date.now();
   for (let i = 0; i < routes.length; i++) {
@@ -146,7 +161,7 @@ async function run() {
 
   if (!staticServerURL) return 0;
 
-  await runPuppeteer(staticServerURL, options.routes, options.buildDirectory || './build');
+  await runPuppeteer(staticServerURL, ["/"].concat(options.routes), options.buildDirectory || './build');
   console.log('Finish react-spa-prerender tasks!');
   process.exit();
 }

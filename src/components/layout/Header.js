@@ -31,7 +31,7 @@ const Header = () => {
       className={classes.toolbar}
     >
       <Link 
-        to={`/${i18n.language}`}
+        to={`/${i18n.language}/search`}
         onClick={(e) => {
           e.preventDefault()
           vibrate(1)
@@ -79,7 +79,7 @@ const Header = () => {
       </LanguageTabs>
     </Toolbar>
     // eslint-disable-next-line
-  ), [searchRoute, i18n.language, location.pathname, colorMode]);
+  ), [searchRoute, i18n.language, location.pathname, colorMode])
 }
 
 const LanguageTab = withStyles((theme) => ({
@@ -123,7 +123,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
   },
   toolbar: {
-    background: theme.palette.type === 'dark' ? theme.palette.background.main: theme.palette.primary.main,
+    backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
     '& a': {
       color: 'black',
       textDecoration: 'none',

@@ -22,18 +22,37 @@ if (isHuman()){
   fetchDbFunc().then((db) => {
     Object.keys(db).forEach(k => initDb[k] = db[k])
     Object.freeze(initDb)
-    // remove prerendered style
-    document.querySelectorAll('style[data-jss]').forEach(e => e.parentNode.removeChild(e))
-    ReactDOM.render(
-      <React.StrictMode>
-        <DbProvider>
-          <AppContextProvider>
-            <App />
-          </AppContextProvider>
-        </DbProvider>
-      </React.StrictMode>,
-      document.getElementById('root')
-    )
+
+    // render only if development or prerendering
+    if ( process.env.NODE_ENV === 'development' || navigator.userAgent === 'prerendering' ) {
+      // remove prerendered style
+      document.querySelectorAll('style[prerender]').innerText = ''
+      ReactDOM.render(
+        <React.StrictMode>
+          <DbProvider>
+            <AppContextProvider>
+              <App />
+            </AppContextProvider>
+          </DbProvider>
+        </React.StrictMode>,
+        document.getElementById('root')
+      )
+    } else {
+      // hydrate in production
+      ReactDOM.hydrate(
+        <React.StrictMode>
+          <DbProvider>
+            <AppContextProvider>
+              <App />
+            </AppContextProvider>
+          </DbProvider>
+        </React.StrictMode>,
+        document.getElementById('root'), 
+        () => {
+          document.querySelectorAll('style[prerender]').innerText = ''
+        }
+      )
+    }
   })
 
   // If you want your app to work offline and load faster, you can change

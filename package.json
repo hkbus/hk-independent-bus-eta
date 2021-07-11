@@ -67,6 +67,7 @@
   "homepage": "https://hkbus.app/",
   "devDependencies": {
     "@types/leaflet": "^1.7.0",
+    "clean-css": "^4.2.3",
     "express": "^4.17.1",
     "puppeteer": "^9.1.1"
   }

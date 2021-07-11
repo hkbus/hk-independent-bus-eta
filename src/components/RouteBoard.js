@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react'
 import AppContext from '../AppContext'
-import { List } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { FixedSizeList } from 'react-window'
 import memorize from 'memoize-one'
@@ -30,17 +29,7 @@ const RouteList = () => {
   }, [])
 
   const itemData = createItemData(targetRouteList)
-  if (navigator.userAgent === 'prerendering') {
-    return (
-      <List className={classes.prerenderList}>
-        {
-          targetRouteList.map((data, idx) => (
-            <RouteRow data={itemData} index={idx} style={null} />
-          ))
-        }
-      </List>
-    )
-  }
+
   return (
     <FixedSizeList
       height={330}
