@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import { DbProvider } from './DbContext'
 import { AppContextProvider } from './AppContext'
 import './i18n'
+import { initDb, fetchDbFunc } from './db'
 
 const isHuman = () => {
   const agents = ['googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot', 'facebot', 'ia_archiver', 'sitecheckerbotcrawler']
@@ -15,18 +16,25 @@ const isHuman = () => {
 
 // content is render only for human
 if (isHuman()){
-  // remove prerendered style
-  document.querySelectorAll('style[data-jss]').forEach(e => e.parentNode.removeChild(e))
-  ReactDOM.render(
-    <React.StrictMode>
-      <DbProvider>
-        <AppContextProvider>
-          <App />
-        </AppContextProvider>
-      </DbProvider>
-    </React.StrictMode>,
-    document.getElementById('root')
-  );
+  // performance consideration
+  // the app is highly orientated by the routes data
+  // fetching should be done to avoid unnecessary rendering
+  fetchDbFunc().then((db) => {
+    Object.keys(db).forEach(k => initDb[k] = db[k])
+    Object.freeze(initDb)
+    // remove prerendered style
+    document.querySelectorAll('style[data-jss]').forEach(e => e.parentNode.removeChild(e))
+    ReactDOM.render(
+      <React.StrictMode>
+        <DbProvider>
+          <AppContextProvider>
+            <App />
+          </AppContextProvider>
+        </DbProvider>
+      </React.StrictMode>,
+      document.getElementById('root')
+    )
+  })
 
   // If you want your app to work offline and load faster, you can change
   // unregister() to register() below. Note this comes with some pitfalls.

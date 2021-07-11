@@ -1,4 +1,4 @@
-import React, { useContext, Suspense, lazy } from 'react'
+import React, { useContext } from 'react'
 import './App.css'
 import { 
   MuiThemeProvider, 
@@ -24,31 +24,29 @@ import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import { isEmptyObj } from './utils'
 import Home from './components/Home'
-const RouteBoard = lazy( () => import('./components/RouteBoard'))
-const RouteEta = lazy( () => import('./components/RouteEta'))
-const Settings = lazy( () => import('./components/Settings'))
+import RouteBoard from './components/RouteBoard'
+import RouteEta from './components/RouteEta'
+import Settings from './components/Settings'
 
 const PageSwitch = () => {
   const { path } = useRouteMatch()
   const { db: {routeList} } = useContext(AppContext)
-  const classes = useStyles()
+  
   return (
-    <Suspense fallback={<CircularProgress className={classes.loading} size={40} />}>
-      <Switch>
-        <Route path={`${path}/route/:id/:panel?`}>
-          {!isEmptyObj(routeList) ? <RouteEta /> : <CircularProgress size={40} />}
-        </Route>
-        <Route path={`${path}/settings`}>
-          <Settings />
-        </Route>      
-        <Route path={`${path}/search`}>
-          <RouteBoard />
-        </Route>
-        <Route path={`${path}`}>
-          <Home />
-        </Route>
-      </Switch>
-    </Suspense>
+    <Switch>
+      <Route path={`${path}/route/:id/:panel?`}>
+        {!isEmptyObj(routeList) ? <RouteEta /> : <CircularProgress size={40} />}
+      </Route>
+      <Route path={`${path}/settings`}>
+        <Settings />
+      </Route>      
+      <Route path={`${path}/search`}>
+        <RouteBoard />
+      </Route>
+      <Route path={`${path}`}>
+        <Home />
+      </Route>
+    </Switch>
   )
 }
 
@@ -83,10 +81,6 @@ const useStyles = makeStyles( theme => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     height: '100vh'
-  },
-  loading: {
-    color: theme.palette.type === 'dark' ? theme.palette.primary.main : 'black',
-    alignSelf: 'center'
   }
 }))
 
