@@ -42,21 +42,28 @@ const CenterControl = ( {onClick}) => {
 const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
   const { db: {stopList}, geolocation, geoPermission, updateGeoPermission, colorMode } = useContext ( AppContext )
   useStyles()
-  const [center, setCenter] = useState(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {})
-  const [followCenter, setFollowCenter] = useState(false)
+  const [mapState, setMapState] = useState({
+    center: stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {},
+    isFollow: false
+  })
+  const {center, isFollow} = mapState
   const [map, setMap] = useState(null)
 
+  const updateCenter = ({center, isFollow = false}) => {
+    setMapState({
+      center: center ? center : map.getCenter(),
+      isFollow: isFollow
+    })
+  }
+
   useEffect ( () => {
-    setCenter(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : 
+    const _center = stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : 
       stopList[stops[Math.round(stops.length/2)]].location
-    )
+    if ( _center.lat !== center.lat && _center.lng !== center.lng ) {
+      updateCenter({ center: _center })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stopIdx])
-
-  const updateCenter = (e) => {
-    setCenter(map.getCenter())
-    setFollowCenter(false)
-  }
 
   useEffect ( () => {
     if ( !map ) return;
@@ -68,8 +75,9 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
   }, [map])
 
   useEffect( () => {
-    if ( followCenter ) {
-      setCenter(geolocation)
+    if ( isFollow ) {
+      if ( geolocation.lat !== center.lat || geolocation.lng !== center.lng )
+        updateCenter({center: geolocation, isFollow: true})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geolocation])
@@ -120,13 +128,13 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
         <SelfCircle />
         <CenterControl 
           onClick={() => {
-            setFollowCenter(true)
             if (geoPermission === 'granted') {
               // load from cache to avoid unintentional re-rending 
               // becoz geolocation is updated frequently 
-              setCenter(checkPosition(geolocation))
+              updateCenter({center: checkPosition(geolocation), isFollow: true})
             } else if ( geoPermission !== 'denied' ) {
               // ask for loading geolocation
+              updateCenter({isFollow: true})
               updateGeoPermission('opening')
             }
           }}
