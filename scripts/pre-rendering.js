@@ -4,6 +4,7 @@ const resolve = require('path').resolve;
 const puppeteer = require('puppeteer');
 const jsdom = require('jsdom');
 const CleanCSS = require('clean-css');
+const cleanCss = new CleanCSS()
 let app;
 
 /**
@@ -112,7 +113,7 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
     if (!html) return 0;
 
     const dom = new jsdom.JSDOM(html)
-    const css = new CleanCSS().minify(Array.prototype.map.call(dom.window.document.querySelectorAll('style[data-jss]'), e => e.textContent).join('')).styles
+    const css = cleanCss.minify(Array.prototype.map.call(dom.window.document.querySelectorAll('style[data-jss]'), e => e.textContent).join('')).styles
     dom.window.document.querySelectorAll('style[data-jss]').forEach(e => e.parentNode.removeChild(e))
     dom.window.document.querySelector('style[prerender]').textContent = css
     

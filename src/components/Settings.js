@@ -49,7 +49,7 @@ const Settings = () => {
     })
     setUpdating(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateTime])
+  }, [updateTime, i18n.language])
 
   return (
     <Paper className={"settings-root"} square elevation={0}>

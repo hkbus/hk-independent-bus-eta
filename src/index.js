@@ -23,8 +23,12 @@ if (isHuman()){
     Object.keys(db).forEach(k => initDb[k] = db[k])
     Object.freeze(initDb)
 
-    // Target: render only if development or prerendering 
-    if ( process.env.NODE_ENV === 'development' || navigator.userAgent === 'prerendering' ) {
+    // Target: render only if development or prerendering or in registered app 
+    if ( 
+      process.env.NODE_ENV === 'development' || 
+      navigator.userAgent === 'prerendering' || 
+      !document.querySelector('link[rel="canonical"]').href.endsWith(window.location.pathname)
+    ) {
       // remove prerendered style
       document.querySelector('style[prerender]').innerText = ''
       ReactDOM.render(

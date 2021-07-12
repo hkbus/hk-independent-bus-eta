@@ -26,7 +26,7 @@ const RouteList = () => {
       lang: i18n.language
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [i18n.language])
 
   const itemData = createItemData(targetRouteList)
 

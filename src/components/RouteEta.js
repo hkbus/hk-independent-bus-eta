@@ -78,12 +78,7 @@ const RouteEta = () => {
     updateHeader()
     updateSelectedRoute( id )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    updateHeader()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [id, i18n.language])
 
   return (
     <>
