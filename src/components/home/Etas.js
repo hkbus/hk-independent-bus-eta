@@ -17,13 +17,18 @@ const Etas = ({routeId}) => {
   useEffect(() => {
     let isMounted = true
     
-    const fetchData = () => (
-      fetchEtas({
+    const fetchData = () => {
+      if ( navigator.userAgent === 'prerendering' ){
+        // skip if prerendering
+        setEtas(null)
+        return new Promise((resolve) => resolve())
+      }
+      return fetchEtas({
         route: routeNo, routeStops: stops, seq: parseInt(seq, 10), bound, serviceType, co, nlbId
       }).then ( _etas => {
         if (isMounted) setEtas(_etas)
       })
-    )
+    }
     
     const fetchEtaInterval = setInterval(() => {
       fetchData()

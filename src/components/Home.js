@@ -28,10 +28,16 @@ const Home = () => {
       description: t('home-page-description'),
       lang: i18n.language
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
     
-    setSelectedRoute(getSelectedRoutes({
+  useEffect( () => {
+    const _selectedRoutes = getSelectedRoutes({
       geolocation, hotRoute, savedEtas, routeList, stopList
-    }))
+    })
+    if ( _selectedRoutes !== selectedRoutes ) {
+      setSelectedRoute(_selectedRoutes)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geolocation])
 

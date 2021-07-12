@@ -20,7 +20,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
   const { id, panel } = useParams()
   const { 
     db: {routeList, stopList},
-    savedEtas, geoPermission,
+    savedEtas, geoPermission, geolocation,
     updateSavedEtas
   } = useContext ( AppContext )
 
@@ -33,7 +33,6 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
       setExpanded(parseInt(panel, 10))
     } else if ( geoPermission === 'granted' ) {
       // load from local storage to avoid unitentional re-rendering
-      const geolocation = JSON.parse(localStorage.getItem('geolocation'))
       const nearbyStop = getStops(co, stops)
         .map((stopId, idx) => [stopId, idx, getDistance(geolocation, stopList[stopId].location)])
         .sort((a,b) => a[2] - b[2])[0]

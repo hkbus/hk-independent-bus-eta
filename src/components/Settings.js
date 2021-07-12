@@ -75,11 +75,7 @@ const Settings = () => {
             if ( geoPermission === 'granted' ) {
               updateGeoPermission('closed')
             } else {
-              updateGeoPermission('opening')
-              navigator.geolocation.getCurrentPosition(position => {
-                updateGeoPermission('granted')
-              }, () => {
-                updateGeoPermission('denied')
+              updateGeoPermission('opening', () => {
                 setShowGeoPermissionDenied(true)
               })
             }

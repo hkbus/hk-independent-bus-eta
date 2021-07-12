@@ -41,18 +41,25 @@ export const AppContextProvider = ( props ) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const updateGeoPermission = (geoPermission) => {
-    setGeoPermission(geoPermission)
-    if ( geoPermission === 'granted' ) {
+  const updateGeoPermission = (geoPermission, deniedCallback) => {
+    if ( geoPermission === 'opening' ) {
+      setGeoPermission('opening')
       const _geoWatcherId = navigator.geolocation.watchPosition(({coords: {latitude, longitude}}) => {
-        setGeolocation({lat: latitude, lng: longitude})
+        updateGeolocation({lat: latitude, lng: longitude})
+        setGeoPermission('granted')
+        localStorage.setItem('geoPermission', 'granted')
+      }, () => {
+        setGeoPermission('denied')
+        localStorage.setItem('geoPermission', 'denied')
+        if (deniedCallback) deniedCallback()
       })
       setGeoWatcherId ( _geoWatcherId )
     } else if ( geoWatcherId ) {
       navigator.geolocation.clearWatch(geoWatcherId)
       setGeoWatcherId(null)
+      setGeoPermission(geoPermission)
+      localStorage.setItem('geoPermission', geoPermission)
     }
-    localStorage.setItem('geoPermission', geoPermission)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }
 

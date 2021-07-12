@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import MyLocationIcon from '@material-ui/icons/MyLocation'
 
-const ChangeMapCenter = ( {center, zoom} ) => {
+const ChangeMapCenter = ( {center} ) => {
   const map = useMap()
   map.flyTo(checkPosition(center))
   return <></>
@@ -40,9 +40,10 @@ const CenterControl = ( {onClick}) => {
 }
 
 const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
-  const { db: {stopList}, geolocation, geoPermission, setGeoPermission, setGeolocation, colorMode } = useContext ( AppContext )
+  const { db: {stopList}, geolocation, geoPermission, updateGeoPermission, colorMode } = useContext ( AppContext )
   useStyles()
   const [center, setCenter] = useState(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {})
+  const [followCenter, setFollowCenter] = useState(false)
   const [map, setMap] = useState(null)
 
   useEffect ( () => {
@@ -54,6 +55,7 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
 
   const updateCenter = (e) => {
     setCenter(map.getCenter())
+    setFollowCenter(false)
   }
 
   useEffect ( () => {
@@ -65,6 +67,13 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map])
 
+  useEffect( () => {
+    if ( followCenter ) {
+      setCenter(geolocation)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [geolocation])
+
   return (
     <Box className={"routeMap-mapContainer"}>
       <MapContainer 
@@ -74,7 +83,7 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
         className={"routeMap-mapContainer"}
         whenCreated={setMap}
       >
-        <ChangeMapCenter center={checkPosition(center)} zoom={16} />
+        <ChangeMapCenter center={checkPosition(center)} />
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url={colorMode === 'dark' ? 
@@ -111,17 +120,14 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
         <SelfCircle />
         <CenterControl 
           onClick={() => {
+            setFollowCenter(true)
             if (geoPermission === 'granted') {
               // load from cache to avoid unintentional re-rending 
               // becoz geolocation is updated frequently 
               setCenter(checkPosition(geolocation))
             } else if ( geoPermission !== 'denied' ) {
               // ask for loading geolocation
-              navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
-                setGeolocation( {lat: latitude, lng: longitude} )
-                setCenter( {lat: latitude, lng: longitude} )
-                setGeoPermission('granted')
-              })
+              updateGeoPermission('opening')
             }
           }}
         />
