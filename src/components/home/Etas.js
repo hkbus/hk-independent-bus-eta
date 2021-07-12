@@ -10,7 +10,7 @@ const Etas = ({routeId}) => {
   const { db: {routeList} } = useContext ( AppContext )
   const [ routeNo, serviceType ] = routeId.split('-')
   const [ routeKey, seq ] = routeId.split('/')
-  const { co, stops, bound, nlbId } = routeList[routeKey]
+  const { co, stops, bound, nlbId } = routeList[routeKey] || DefaultRoute
   const [ etas, setEtas ] = useState(null)
   const classes = useStyles()
 
@@ -60,6 +60,8 @@ const Etas = ({routeId}) => {
     />
   )
 }
+
+const DefaultRoute = { co: [''], stops: {'': ['']}, dest: {zh: '', en: ''}, bound: '', nlbId: 0, fares: [], faresHoliday: [] }
 
 export default Etas
 

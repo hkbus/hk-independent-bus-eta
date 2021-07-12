@@ -35,8 +35,8 @@ const SuccinctTimeReport = ({routeId} ) => {
   const { db: {routeList, stopList} } = useContext ( AppContext )
   const [ routeNo ] = routeId.split('-')
   const [ routeKey, seq ] = routeId.split('/')
-  const { co, stops, dest, fares, faresHoliday } = routeList[routeKey]
-  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]]
+  const { co, stops, dest, fares, faresHoliday } = routeList[routeKey] || DefaultRoute
+  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DefaultStop
   
   const classes = useStyles()
 
@@ -87,6 +87,9 @@ const SuccinctTimeReport = ({routeId} ) => {
     </>
   )
 }
+
+const DefaultRoute = { co: [''], stops: {'': ['']}, dest: {zh: '', en: ''}, bound: '', nlbId: 0, fares: [], faresHoliday: [] }
+const DefaultStop = {location: {lat: 0, lng: 0}, name: {zh: '', en: ''}}
 
 export default SuccinctTimeReport
 

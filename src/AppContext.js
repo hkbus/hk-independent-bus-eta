@@ -7,7 +7,7 @@ const AppContext = React.createContext()
 export const AppContextProvider = ( props ) => {
   const { AppTitle, db, renewDb } = useContext(DbContext)
   const { routeList } = db
-  
+
   // search route
   const [searchRoute, setSearchRoute] = useState("")
   // selected route for bottom navigation shortcut
@@ -25,7 +25,7 @@ export const AppContextProvider = ( props ) => {
   const [possibleChar, setPossibleChar] = useState(getPossibleChar(searchRoute, routeList) || [])
 
   // color mode
-  const devicePreferColorScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  const devicePreferColorScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   const [ colorMode, setColorMode ] = useState(localStorage.getItem('colorMode') || devicePreferColorScheme )
 
   useEffect(() => {

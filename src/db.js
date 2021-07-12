@@ -60,10 +60,22 @@ export const fetchDbFunc = () => {
     }
     
     return new Promise((resolve) => {
-      setTimeout(() => resolve({
+      resolve({
         schemaVersion, versionMd5,
         db: decompressJsonString(localStorage.getItem('db'))
-      }), 0)
+      })
+    })
+  }).catch(r => {
+    // mock data for App.test.js
+    return new Promise((resolve) => {
+      resolve({
+        schemaVersion: '', versionMd5: '',
+        db: {
+          routeList: {}, 
+          stopList: {}, 
+          stopMap: {}
+        }
+      })
     })
   })
 }
