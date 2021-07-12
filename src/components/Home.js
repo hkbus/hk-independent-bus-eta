@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useMemo } from 'react'
+import React, { useContext, useEffect, useRef, useState, useMemo } from 'react'
 import {
   List,
   Paper,
@@ -9,6 +9,7 @@ import AppContext from '../AppContext'
 import { getDistance, setSeoHeader } from '../utils'
 import SuccinctTimeReport from './home/SuccinctTimeReport'
 import { useTranslation } from 'react-i18next'
+import throttle from 'lodash.throttle'
 
 const Home = () => {
   const { 
@@ -22,6 +23,16 @@ const Home = () => {
     geolocation, hotRoute, savedEtas, routeList, stopList
   }))
   
+  const throttledUpdateRoutes = useRef(throttle(newGeolocation => {
+    const _selectedRoutes = getSelectedRoutes({
+      geolocation: newGeolocation, hotRoute, savedEtas, routeList, stopList
+    })
+    if ( _selectedRoutes !== selectedRoutes ) {
+      setSelectedRoute(_selectedRoutes)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, 60000)).current
+  
   useEffect (() => {
     setSeoHeader ({
       title: `${t('Dashboard')} - ${t(AppTitle)}`,
@@ -32,12 +43,7 @@ const Home = () => {
   }, [i18n.language])
     
   useEffect( () => {
-    const _selectedRoutes = getSelectedRoutes({
-      geolocation, hotRoute, savedEtas, routeList, stopList
-    })
-    if ( _selectedRoutes !== selectedRoutes ) {
-      setSelectedRoute(_selectedRoutes)
-    }
+    throttledUpdateRoutes(geolocation)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geolocation])
 
