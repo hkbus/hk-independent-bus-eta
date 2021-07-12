@@ -12,18 +12,18 @@ import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next';
 
 const KeyButton = ({k, handleClick, disabled = false, className}) => {
-  const classes = useStyles()
+  useStyles()
   const { t } = useTranslation()
   return (
     <Button 
       size="large"
       variant="contained" 
-      className={`${classes.button} ${className}`}
+      className={`inputpad-button ${className}`}
       onClick={() => handleClick(k)}
       disabled={disabled}
     >
       {k === 'b' ? <BackspaceOutlinedIcon/> : 
-        k === 'c' ? <div className={classes.cancelButton}>{t('取消')}</div> : k}
+        k === 'c' ? <div className={"inputpad-cancelButton"}>{t('取消')}</div> : k}
     </Button>
   )
 }
@@ -54,7 +54,7 @@ const RouteNumPad = () => {
 
 const RouteAlphabetPad = () => {
   const { updateSearchRouteByButton, possibleChar } = useContext( AppContext )
-  const classes = useStyles()
+  useStyles()
 
   return (
     <Grid container spacing={1}>
@@ -64,7 +64,7 @@ const RouteAlphabetPad = () => {
             <KeyButton
               k={k}
               handleClick={updateSearchRouteByButton}
-              className={classes.alphabetButton}
+              className={"inputpad-alphabetButton"}
             />
           </Grid>
         )) 
@@ -74,16 +74,15 @@ const RouteAlphabetPad = () => {
 }
 
 const RouteInputPad = () => {
-
-  const classes = useStyles()
+  useStyles()
   const padding = 0
 
   return (
-    <Box className={classes.boxContainer} padding={padding}>
-      <Box className={classes.numPadContainer} padding={padding}>
+    <Box className={"inputpad-boxContainer"} padding={padding}>
+      <Box className={"inputpad-numPadContainer"} padding={padding}>
         <RouteNumPad />
       </Box>
-      <Box className={classes.alphabetPadContainer} padding={padding}>
+      <Box className={"inputpad-alphabetPadContainer"} padding={padding}>
         <RouteAlphabetPad />
       </Box>
     </Box>
@@ -93,41 +92,43 @@ const RouteInputPad = () => {
 export default RouteInputPad
 
 const useStyles = makeStyles(theme => ({
-  boxContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    height: 'calc(100vh - 330px - 112px)',
-    paddingTop: 'calc(50vh - 165px - 56px - 88px)',
-    paddingBottom: 'calc(50vh - 165px - 56px - 88px)',
-    justifyContent: 'space-around'
-  },
-  numPadContainer: {
-    width: '60%',
-  },
-  alphabetPadContainer: {
-    width: '20%',
-    height: '176px',
-    overflowX: 'hidden',
-    overflowY: 'scroll'
-  },
-  button: {
-    background: theme.palette.background.paper,
-    color: theme.palette.text.primary,
-    width: '100%',
-    height: '44px',
-    fontSize: '1.2em',
-    borderRadius: 'unset',
-    '&:selected': {
+  "@global": {
+    ".inputpad-boxContainer": {
+      display: 'flex',
+      flexDirection: 'row',
+      height: 'calc(100vh - 330px - 112px)',
+      paddingTop: 'calc(50vh - 165px - 56px - 88px)',
+      paddingBottom: 'calc(50vh - 165px - 56px - 88px)',
+      justifyContent: 'space-around'
+    },
+    ".inputpad-numPadContainer": {
+      width: '60%',
+    },
+    ".inputpad-alphabetPadContainer": {
+      width: '20%',
+      height: '176px',
+      overflowX: 'hidden',
+      overflowY: 'scroll'
+    },
+    ".inputpad-button": {
+      background: theme.palette.background.paper,
       color: theme.palette.text.primary,
+      width: '100%',
+      height: '44px',
+      fontSize: '1.2em',
+      borderRadius: 'unset',
+      '&:selected': {
+        color: theme.palette.text.primary,
+      },
+      '&:hover': {
+        backgroundColor: theme.palette.background.paper
+      },
     },
-    '&:hover': {
-      backgroundColor: theme.palette.background.paper
+    ".inputpad-cancelButton": {
+      fontSize: '0.8em',
     },
-  },
-  cancelButton: {
-    fontSize: '0.8em',
-  },
-  alphabetButton: {
-    height: '42px'
+    ".inputpad-alphabetButton": {
+      height: '42px'
+    }
   }
 }))

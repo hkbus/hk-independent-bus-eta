@@ -16,7 +16,7 @@ const Header = () => {
   const { searchRoute, setSearchRoute, db: {routeList}, colorMode } = useContext( AppContext )
   const { path } = useRouteMatch()
   const { t, i18n } = useTranslation()
-  const classes = useStyles()
+  useStyles()
   let location = useLocation()
   const history = useHistory()
 
@@ -28,7 +28,7 @@ const Header = () => {
 
   return useMemo(() => (
     <Toolbar
-      className={classes.toolbar}
+      className={"header-toolbar"}
     >
       <Link 
         to={`/${i18n.language}/search`}
@@ -38,11 +38,11 @@ const Header = () => {
           history.push(`/${i18n.language}/search`)
         }}
       >
-        <Typography component="h1" variant='subtitle2' className={classes.appTitle}>{t('巴士到站預報')}</Typography>
+        <Typography component="h1" variant='subtitle2' className={"header-appTitle"}>{t('巴士到站預報')}</Typography>
       </Link> 
       <Input 
         id="searchInput"
-        className={classes.searchRouteInput}
+        className={"header-searchRouteInput"}
         type="text"
         value={searchRoute}
         placeholder={t('巴士線')}
@@ -119,26 +119,28 @@ const LanguageTabs = withStyles((theme) => ({
 export default Header
 
 const useStyles = makeStyles(theme => ({
-  appTitle: {
-    color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
-  },
-  toolbar: {
-    backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
-    '& a': {
-      color: 'black',
-      textDecoration: 'none',
+  '@global': {
+    ".header-appTitle": {
+      color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
     },
-    display: 'flex',
-    justifyContent: 'space-between',
-    zIndex: theme.zIndex.drawer * 2
-  },
-  searchRouteInput: {
-    maxWidth: '50px',
-    "& input": {
-      textAlign: 'center',
+    ".header-toolbar": {
+      backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
+      '& a': {
+        color: 'black',
+        textDecoration: 'none',
+      },
+      display: 'flex',
+      justifyContent: 'space-between',
+      zIndex: theme.zIndex.drawer * 2
     },
-    "& input::before": {
-      borderBottom: `1px ${theme.palette.text.primary} solid`
+    ".header-searchRouteInput": {
+      maxWidth: '50px',
+      "& input": {
+        textAlign: 'center',
+      },
+      "& input::before": {
+        borderBottom: `1px ${theme.palette.text.primary} solid`
+      }
     }
   }
 }))

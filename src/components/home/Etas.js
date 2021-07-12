@@ -12,7 +12,7 @@ const Etas = ({routeId}) => {
   const [ routeKey, seq ] = routeId.split('/')
   const { co, stops, bound, nlbId } = routeList[routeKey] || DefaultRoute
   const [ etas, setEtas ] = useState(null)
-  const classes = useStyles()
+  useStyles()
 
   useEffect(() => {
     let isMounted = true
@@ -55,8 +55,8 @@ const Etas = ({routeId}) => {
   return (
     <ListItemText
       primary={<Typography component="h5" color="textPrimary">{etas ? getEtaString(etas[0]) : ''}</Typography>}
-      secondary={<Typography component="h6" color="textSecondary" className={classes.secondaryEta}>{etas ? getEtaString(etas[1]) : ''}</Typography>}
-      className={classes.routeEta}
+      secondary={<Typography component="h6" color="textSecondary" className={"etas-secondaryEta"}>{etas ? getEtaString(etas[1]) : ''}</Typography>}
+      className={"etas-routeEta"}
     />
   )
 }
@@ -66,14 +66,16 @@ const DefaultRoute = { co: [''], stops: {'': ['']}, dest: {zh: '', en: ''}, boun
 export default Etas
 
 const useStyles = makeStyles(theme => ({
-  routeEta: {
-    width: '20%',
-    paddingLeft: '10px',
-    textAlign: 'right',
-  },
-  secondaryEta: {
-    fontSize: '0.875rem',
-    fontWeight: '400',
-    lineHeight: '1.43'
+  "@global": {
+    ".etas-routeEta": {
+      width: '20%',
+      paddingLeft: '10px',
+      textAlign: 'right',
+    },
+    ".etas-secondaryEta": {
+      fontSize: '0.875rem',
+      fontWeight: '400',
+      lineHeight: '1.43'
+}
   }
 }))

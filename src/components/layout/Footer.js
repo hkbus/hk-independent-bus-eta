@@ -27,15 +27,13 @@ const Footer = () => {
     setTimeout(() => history.push(link), 0)
   }
 
-  const classes = useStyles()
+  useStyles()
 
   return useMemo(() => (
     <BottomNavigation
       value={location.pathname.replace(/(.*)\/[0-9]*?$/, "$1")}
       showLabels={true}
-      classes={{
-        root: classes.root,
-      }}
+      classes={{root: "footer-root"}}
     >
       <BottomNavigationAction
         label={t("常用")}
@@ -45,8 +43,8 @@ const Footer = () => {
         value={`/${i18n.language}`}
         icon={<HomeIcon />}
         classes={{
-          root: classes.actionItem,
-          selected: classes.selected
+          root: "footer-actionItem",
+          selected: "footer-selected"
         }}
       />
       <BottomNavigationAction 
@@ -57,8 +55,8 @@ const Footer = () => {
         value={`/${i18n.language}/search`}
         icon={<SearchIcon />} 
         classes={{
-          root: classes.actionItem,
-          selected: classes.selected
+          root: "footer-actionItem",
+          selected: "footer-selected"
         }}
       />
       <BottomNavigationAction
@@ -70,8 +68,8 @@ const Footer = () => {
        icon={<TimerIcon />} 
        style={{textTransform: 'uppercase'}}
        classes={{
-        root: classes.actionItem,
-        selected: classes.selected
+        root: "footer-actionItem",
+        selected: "footer-selected"
        }}
       />
       <BottomNavigationAction
@@ -82,8 +80,8 @@ const Footer = () => {
        value={`/${i18n.language}/settings`}
        icon={<SettingsIcon />} 
        classes={{
-        root: classes.actionItem,
-        selected: classes.selected
+        root: "footer-actionItem",
+        selected: "footer-selected"
        }}
       />
     </BottomNavigation>
@@ -94,15 +92,14 @@ const Footer = () => {
 export default Footer
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    background: theme.palette.type === 'dark' ? theme.palette.background.default: theme.palette.primary.main,
-    position: "sticky",
-    bottom: "0",
-  },
-  actionItem: {
-    '&$selected': {
-      color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+  '@global': {
+    ".footer-root": {
+      background: theme.palette.type === 'dark' ? theme.palette.background.default: theme.palette.primary.main,
+      position: "sticky",
+      bottom: "0",
     },
-  },
-  selected: {}
+    '.Mui-selected.footer-selected': {
+      color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+    }
+  }
 }))

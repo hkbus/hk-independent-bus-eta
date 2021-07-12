@@ -39,7 +39,7 @@ const Settings = () => {
   const [ isCopied, setIsCopied ] = useState(false)
 
   const { t, i18n } = useTranslation()
-  const classes = useStyles()
+  useStyles()
 
   useEffect(() => {
     setSeoHeader({
@@ -52,7 +52,7 @@ const Settings = () => {
   }, [updateTime])
 
   return (
-    <Paper className={classes.root} square elevation={0}>
+    <Paper className={"settings-root"} square elevation={0}>
       <Typography component="h1" variant="srOnly">{`${t('設定')} - ${t(AppTitle)}`}</Typography>
       <List>
         <ListItem
@@ -201,7 +201,7 @@ const Settings = () => {
           onClick={() => {vibrate(1)}}
         >
           <ListItemAvatar>
-            <Avatar className={classes.icon} src="/logo128.png" alt="App Logo"></Avatar>
+            <Avatar className={"settings-icon"} src="/logo128.png" alt="App Logo"></Avatar>
           </ListItemAvatar>
           <ListItemText 
             primary={<ListPrimaryText>{t("圖標來源")}</ListPrimaryText>} 
@@ -256,15 +256,17 @@ const ListPrimaryText = ({children}) => {
 export default Settings
 
 const useStyles = makeStyles ( theme => ({
-  root: {
-    background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
-    height: 'calc(100vh - 120px)',
-    overflowY: "scroll",
-    '& .MuiAvatar-colorDefault': {
-      color: theme.palette.type === 'dark' ? theme.palette.background.default : 'white'
+  "@global": {
+    ".settings-root": {
+      background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
+      height: 'calc(100vh - 120px)',
+      overflowY: "scroll",
+      '& .MuiAvatar-colorDefault': {
+        color: theme.palette.type === 'dark' ? theme.palette.background.default : 'white'
+      }
+    },
+    ".settings-icon": {
+      filter: theme.palette.type === 'dark' ? 'grayscale(100%) brightness(0.5)' : 'none'
     }
-  },
-  icon: {
-    filter: theme.palette.type === 'dark' ? 'grayscale(100%) brightness(0.5)' : 'none'
   }
 }))

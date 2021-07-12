@@ -28,20 +28,20 @@ const Home = () => {
       description: t('home-page-description'),
       lang: i18n.language
     })
-
+    
     setSelectedRoute(getSelectedRoutes({
       geolocation, hotRoute, savedEtas, routeList, stopList
     }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeList, geolocation])
+  }, [geolocation])
 
-  const classes = useStyles()
+  useStyles()
 
   return useMemo(() => (
-    <Paper className={classes.root} square elevation={0}>
+    <Paper className={"home-root"} square elevation={0}>
       <Typography component="h1" variant="srOnly">{`${t('Dashboard')} - ${t(AppTitle)}`}</Typography>
       <Typography component="h2" variant="srOnly">{t('home-page-description')}</Typography>
-      <List className={classes.list} disablePadding>
+      <List disablePadding>
       {
         selectedRoutes.split('|').map( (selectedRoute, idx) => (
           <SuccinctTimeReport key={`route-shortcut-${idx}`} routeId={selectedRoute} />
@@ -91,11 +91,13 @@ const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeLis
 }
 
 const useStyles = makeStyles ( theme => ({
-  root: {
-    background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
-    height: 'calc(100vh - 125px)',
-    overflowY: 'scroll',
-    textAlign: 'center'
+  "@global": {
+    ".home-root": {
+      background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
+      height: 'calc(100vh - 125px)',
+      overflowY: 'scroll',
+      textAlign: 'center'
+    }
   }
 }))
 

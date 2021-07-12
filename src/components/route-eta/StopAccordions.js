@@ -1,16 +1,16 @@
 import React, { useEffect, useContext, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import {
-  Accordion as MuiAccordion,
-  AccordionSummary as MuiAccordionSummary, 
-  AccordionDetails as MuiAccordionDetails,
+  Accordion,
+  AccordionSummary, 
+  AccordionDetails,
   Box, 
   IconButton, 
   Typography
 } from '@material-ui/core'
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
 import { getDistance, toProperCase } from '../../utils'
@@ -58,12 +58,12 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const classes = useStyles()
+  useStyles()
 
   const toggleSavedRoute = (key) => updateSavedEtas(key)
 
   return (
-    <Box className={classes.boxContainer}>
+    <Box className={"stopAccordions-boxContainer"}>
       {
         getStops(co, stops).map((stop, idx) => (
           <Accordion 
@@ -72,15 +72,16 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
             onChange={handleChange(idx)}
             TransitionProps={{unmountOnExit: true}}
             ref={el => {accordionRef.current[idx] = el}}
+            classes={{root: "accordion-root", expanded: 'accordion-expanded'}}
           >
-            <AccordionSummary>
+            <AccordionSummary classes={{root: "accordionSummary-root", content: "accordionSummary-content", expanded: "accordionSummary-expanded"}}>
               <Typography component="h3" variant="body1">{toProperCase(stopList[stop].name[i18n.language])}</Typography>
               <Typography variant='caption'>
                 {fares && fares[idx] ? t('車費')+': $'+fares[idx] : ''}
                 {faresHoliday && faresHoliday[idx] ? '　　　　'+t('假日車費')+': $'+faresHoliday[idx] : ''}
               </Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails classes={{root: "accordionDetails-root"}}>
               <TimeReport 
                 route={route}
                 seq={idx}
@@ -116,61 +117,45 @@ const getStops = (co, stops) => {
 
 export default StopAccordions
 
-const Accordion = withStyles({
-  root: {
-    border: '1px solid rgba(0, 0, 0, .125)',
-    boxShadow: 'none',
-    '&:not(:last-child)': {
+const useStyles = makeStyles(theme => ({
+  '@global': {
+    '.accordion-root': {
+      border: '1px solid rgba(0, 0, 0, .125)',
+      boxShadow: 'none'
+    },
+    '.accordion-root:not(:last-child)': {
       borderBottom: 0,
     },
-    '&:before': {
+    '.accordion-root:before': {
       display: 'none',
     },
-    '&$expanded': {
+    '.accordion-root.accordion-expanded': {
       margin: 'auto',
     },
-  },
-  expanded: {},
-})(MuiAccordion)
-
-const AccordionSummary = withStyles(theme => ({
-  root: {
-    backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
-    borderBottom: '1px solid rgba(0, 0, 0, .125)',
-    marginBottom: -1,
-    minHeight: 44,
-    '&$expanded': {
-      minHeight: 44,
-    }
-  },
-  content: {
-    '&$expanded': {
-      margin: '8px 0',
+    '.accordionSummary-root': {
+      backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
+      borderBottom: '1px solid rgba(0, 0, 0, .125)',
+      marginBottom: -1,
+      minHeight: 44
     },
-    margin: '8px 0',
-    flexDirection: 'column'
-  },
-  expanded: {},
-}))(MuiAccordionSummary);
-
-const AccordionDetails = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    justifyContent: 'space-between'
-  },
-}))(MuiAccordionDetails);
-
-const useStyles = makeStyles(theme => ({
-  boxContainer: {
-    overflowY: 'scroll'
-  },
-  loadingContainer: {
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  stopName: {
-    fontWeight: 600
+    '.accordionSummary-root.accordionSummary-expanded': {
+      minHeight: 44
+    },
+    '.accordionSummary-content': {
+      margin: '8px 0',
+      flexDirection: 'column'
+    },
+    '.accordionSummary-content.accordionSummary-expanded': {
+      margin: '8px 0'
+    },
+    '.accordionDetails-root': {
+      padding: theme.spacing(2),
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
+      justifyContent: 'space-between'
+    },
+    ".stopAccordions-boxContainer": {
+      overflowY: 'scroll'
+    }
   }
 }))

@@ -24,8 +24,7 @@ if (isHuman()){
     Object.freeze(initDb)
 
     // Target: render only if development or prerendering 
-    // the non-deterministic className of Material-ui is not friendly to our current puppeteer browsing prerendering approach
-    if ( window.location.pathname.length > 3 || process.env.NODE_ENV === 'development' || navigator.userAgent === 'prerendering' ) {
+    if ( process.env.NODE_ENV === 'development' || navigator.userAgent === 'prerendering' ) {
       // remove prerendered style
       document.querySelector('style[prerender]').innerText = ''
       ReactDOM.render(

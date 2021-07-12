@@ -15,7 +15,7 @@ const StopDialog = ({open, stops, handleClose}) => {
   const { db:{routeList, stopList} } = useContext ( AppContext )
   const { i18n } = useTranslation()
   const [ routes, setRoutes ] = useState([])
-  const classes = useStyles()
+  useStyles()
 
   useEffect(() => {
     if (stops === undefined) {
@@ -37,8 +37,8 @@ const StopDialog = ({open, stops, handleClose}) => {
   }, [stops])
   
   return (
-    <Dialog open={open} onClose={handleClose} className={classes.dialog}>
-      <DialogTitle className={classes.title}>{stopList[stops[0][1]].name[i18n.language]}</DialogTitle>
+    <Dialog open={open} onClose={handleClose} className={"stopDialog-dialog"}>
+      <DialogTitle className={"stopDialog-title"}>{stopList[stops[0][1]].name[i18n.language]}</DialogTitle>
       <DialogContent>
         <List>
           {routes.map(route => (
@@ -51,15 +51,17 @@ const StopDialog = ({open, stops, handleClose}) => {
 }
 
 const useStyles = makeStyles(theme => ({
-  dialog: {
-    '& .MuiPaper-root': {
-      width: '100%',
-      marginTop: '90px',
-      height: 'calc(100vh - 100px)'
+  '@global': {
+    '.stopDialog-dialog': {
+      '& .MuiPaper-root': {
+        width: '100%',
+        marginTop: '90px',
+        height: 'calc(100vh - 100px)'
+      }
+    },
+    '.stopDialog-title': {
+      background: '#ffff90'
     }
-  },
-  title: {
-    background: '#ffff90'
   }
 }))
 

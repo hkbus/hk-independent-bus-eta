@@ -38,7 +38,7 @@ const SuccinctTimeReport = ({routeId} ) => {
   const { co, stops, dest, fares, faresHoliday } = routeList[routeKey] || DefaultRoute
   const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DefaultStop
   
-  const classes = useStyles()
+  useStyles()
 
   const history = useHistory()
   const handleClick = (e) => {
@@ -55,15 +55,15 @@ const SuccinctTimeReport = ({routeId} ) => {
       component={Link}
       to={`/${i18n.language}/route/${routeKey.toLowerCase()}`}
       onClick={handleClick}
-      className={classes.listItem}
+      className={"succinctTimeReport-listItem"}
     >
       <ListItemText 
         primary={<RouteNo routeNo={routeNo} />} 
-        className={classes.route}
+        className={"succinctTimeReport-route"}
       />
       <ListItemText 
-        primary={<Typography component="h3" variant="body1" color="textPrimary" className={classes.fromToWrapper}>
-          <span className={classes.fromToText}>{t('往')}</span>
+        primary={<Typography component="h3" variant="body1" color="textPrimary" className={"succinctTimeReport-fromToWrapper"}>
+          <span className={"succinctTimeReport-fromToText"}>{t('往')}</span>
           <b>{toProperCase(dest[i18n.language])}</b>
         </Typography>}
         secondary={
@@ -79,7 +79,7 @@ const SuccinctTimeReport = ({routeId} ) => {
           component: "h4", 
           variant: "subtitle2"
         }}
-        className={classes.routeDest}
+        className={"succinctTimeReport-routeDest"}
       />
       <Etas routeId={routeId} />
     </ListItem>
@@ -103,22 +103,24 @@ const getStops = (co, stops) => {
 }
 
 const useStyles = makeStyles(theme => ({
-  listItem: {
-    padding: '4px 16px',
-    color: 'rgba(0,0,0,0.87)'
-  },
-  route: {
-    width: '15%'
-  },
-  routeDest: {
-    width: '65%'
-  },
-  fromToWrapper: {
-    display: 'flex',
-    alignItems: 'baseline',
-  },
-  fromToText: {
-    fontSize: '0.85rem',
-    marginRight: theme.spacing(0.5)
+  "@global":{
+    ".succinctTimeReport-listItem": {
+      padding: '4px 16px',
+      color: 'rgba(0,0,0,0.87)'
+    },
+    ".succinctTimeReport-route": {
+      width: '15%'
+    },
+    ".succinctTimeReport-routeDest": {
+      width: '65%'
+    },
+    ".succinctTimeReport-fromToWrapper": {
+      display: 'flex',
+      alignItems: 'baseline',
+    },
+    ".succinctTimeReport-fromToText": {
+      fontSize: '0.85rem',
+      marginRight: theme.spacing(0.5)
+    }
   }
 }))

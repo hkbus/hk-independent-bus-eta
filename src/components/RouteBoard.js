@@ -17,7 +17,7 @@ const RouteList = () => {
       (stops[co[0]] == null || stops[co[0]].length > 0)
   )
   const { t, i18n } = useTranslation()
-  const classes = useStyles()
+  useStyles()
 
   useEffect(() => {
     setSeoHeader ({
@@ -37,7 +37,7 @@ const RouteList = () => {
       itemSize={56}
       width="100%"
       itemData={itemData}
-      className={classes.root}
+      className={"routeBoard-root"}
     >
         {RouteRow}
     </FixedSizeList>
@@ -56,14 +56,9 @@ const RouteBoard = () => {
 export default RouteBoard
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white', 
-  },
-  prerenderList: {
-    height: '330px',
-    overflowY: 'scroll',
-    '& a': {
-      textDecoration: 'none'
+  "@global": {
+    ".routeBoard-root": {
+      background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white', 
     }
   }
 }))

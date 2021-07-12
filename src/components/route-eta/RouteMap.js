@@ -26,22 +26,22 @@ const SelfCircle = () => {
 }
 
 const CenterControl = ( {onClick}) => {
-  const classes = useStyles()
+  useStyles()
   return (
     <div className='leaflet-bottom leaflet-right'>
       <div 
-        className={`${classes.centerControlContainer} leaflet-control leaflet-bar`}
+        className={`${"routeMap-centerControlContainer"} leaflet-control leaflet-bar`}
         onClick={onClick}
       >
-        <MyLocationIcon className={classes.centerControl} />
+        <MyLocationIcon className={"routeMap-centerControl"} />
       </div>
     </div>
   )
 }
 
 const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
-  const { db: {stopList}, geoPermission, setGeoPermission, setGeolocation, colorMode } = useContext ( AppContext )
-  const classes = useStyles()
+  const { db: {stopList}, geolocation, geoPermission, setGeoPermission, setGeolocation, colorMode } = useContext ( AppContext )
+  useStyles()
   const [center, setCenter] = useState(stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {})
   const [map, setMap] = useState(null)
 
@@ -66,12 +66,12 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
   }, [map])
 
   return (
-    <Box className={`${classes.mapContainer}`}>
+    <Box className={"routeMap-mapContainer"}>
       <MapContainer 
         center={checkPosition(center)} 
         zoom={16} 
         scrollWheelZoom={false} 
-        className={classes.mapContainer}
+        className={"routeMap-mapContainer"}
         whenCreated={setMap}
       >
         <ChangeMapCenter center={checkPosition(center)} zoom={16} />
@@ -88,7 +88,7 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
               <Marker 
                 key={`${stopId}-${idx}`} 
                 position={stopList[stopId].location} 
-                icon={BusStopMarker({active: idx === stopIdx, passed: (idx < stopIdx), classes})}
+                icon={BusStopMarker({active: idx === stopIdx, passed: (idx < stopIdx)})}
                 eventHandlers={{
                   click: (e) => {onMarkerClick(idx)(e, true, true)}
                 }}
@@ -114,7 +114,7 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
             if (geoPermission === 'granted') {
               // load from cache to avoid unintentional re-rending 
               // becoz geolocation is updated frequently 
-              setCenter(checkPosition(JSON.parse(localStorage.getItem('geolocation'))))
+              setCenter(checkPosition(geolocation))
             } else if ( geoPermission !== 'denied' ) {
               // ask for loading geolocation
               navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
@@ -144,45 +144,47 @@ const checkPosition = (position) => {
 
 const getPoint = ({lat, lng}) => [lat, lng]
 
-const BusStopMarker = ( {active, passed, classes} ) => {
+const BusStopMarker = ( {active, passed} ) => {
   return Leaflet.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png',
-    className: `${classes.marker} ${active ? classes.active : ''} ${passed ? classes.passed : ''}`
+    className: `${"routeMap-marker"} ${active ? "routeMap-active" : ''} ${passed ? "routeMap-passed" : ''}`
   })
 }
 
 const useStyles = makeStyles ( theme => ({
-  mapContainer: {
-    height: '30vh'
-  },
-  centerControl: {
-    padding: '5px',
-    color: 'black'
-  },
-  centerControlContainer: {
-    background: 'white',
-    height: '28px',
-    marginBottom: '20px !important',
-    marginRight: '5px !important'
-  },
-  marker: {
-    marginLeft: '-12px',
-    marginTop: '-41px',
-    width: '25px',
-    height: '41px',
-    zIndex: 618,
-    outline: 'none',
-    filter: 'hue-rotate(130deg)'
-  },
-  active: {
-    animation: '$blinker 2s linear infinite'
-  },
-  passed: {
-    filter: 'grayscale(100%)'
-  },
-  "@keyframes blinker": {
-    '50%': {
-      opacity: 0.3
+  "@global": {
+    ".routeMap-mapContainer": {
+      height: '30vh'
+    },
+    ".routeMap-centerControl": {
+      padding: '5px',
+      color: 'black'
+    },
+    ".routeMap-centerControlContainer": {
+      background: 'white',
+      height: '28px',
+      marginBottom: '20px !important',
+      marginRight: '5px !important'
+    },
+    ".routeMap-marker": {
+      marginLeft: '-12px',
+      marginTop: '-41px',
+      width: '25px',
+      height: '41px',
+      zIndex: 618,
+      outline: 'none',
+      filter: 'hue-rotate(130deg)'
+    },
+    ".routeMap-active": {
+      animation: '$blinker 2s linear infinite'
+    },
+    ".routeMap-passed": {
+      filter: 'grayscale(100%)'
+    },
+    "@keyframes blinker": {
+      '50%': {
+        opacity: 0.3
+      }
     }
-  }
+  },
 }) )
