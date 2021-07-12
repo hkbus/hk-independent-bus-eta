@@ -196,7 +196,7 @@ const Settings = () => {
         <ListItem
           button
           component={'a'}
-          href={`https://www.freepik.com`}
+          href={`https://www.flaticon.com/free-icon/double-decker_1032967`}
           target="_blank"
           onClick={() => {vibrate(1)}}
         >

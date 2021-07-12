@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration'
-import reportWebVitals from './reportWebVitals';
 import { DbProvider } from './DbContext'
 import { AppContextProvider } from './AppContext'
 import './i18n'
 import { initDb, fetchDbFunc } from './db'
+import * as serviceWorkerRegistration from './serviceWorkerRegistration'
+import reportWebVitals from './reportWebVitals';
 
 const isHuman = () => {
   const agents = ['googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot', 'facebot', 'ia_archiver', 'sitecheckerbotcrawler']
@@ -23,10 +23,11 @@ if (isHuman()){
     Object.keys(db).forEach(k => initDb[k] = db[k])
     Object.freeze(initDb)
 
-    // render only if development or prerendering
-    if ( process.env.NODE_ENV === 'development' || navigator.userAgent === 'prerendering' ) {
+    // Target: render only if development or prerendering 
+    // the non-deterministic className of Material-ui is not friendly to our current puppeteer browsing prerendering approach
+    if ( window.location.pathname.length > 3 || process.env.NODE_ENV === 'development' || navigator.userAgent === 'prerendering' ) {
       // remove prerendered style
-      document.querySelectorAll('style[prerender]').innerText = ''
+      document.querySelector('style[prerender]').innerText = ''
       ReactDOM.render(
         <React.StrictMode>
           <DbProvider>
@@ -49,7 +50,7 @@ if (isHuman()){
         </React.StrictMode>,
         document.getElementById('root'), 
         () => {
-          document.querySelectorAll('style[prerender]').innerText = ''
+          document.querySelector('style[prerender]').innerText = ''
         }
       )
     }

@@ -109,9 +109,14 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
     }
 
     const html = await page.content();
-
     if (!html) return 0;
-    return html;
+
+    const dom = new jsdom.JSDOM(html)
+    const css = new CleanCSS().minify(Array.prototype.map.call(dom.window.document.querySelectorAll('style[data-jss]'), e => e.textContent).join('')).styles
+    dom.window.document.querySelectorAll('style[data-jss]').forEach(e => e.parentNode.removeChild(e))
+    dom.window.document.querySelector('style[prerender]').textContent = css
+    
+    return dom.serialize();
   } catch(err) {
     throw new Error(`Error: Failed to build HTML for ${pageUrl}.\nMessage: ${err}`);
   }

@@ -17,10 +17,7 @@ export const DbProvider = ( props ) => {
   
   const loadData = ({db: {routeList, stopList, stopMap}, versionMd5, schemaVersion}) => {
     setDb({
-      routeList: Object.keys(routeList).sort().reduce((acc, k) => {
-        acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = routeList[k]
-        return acc
-      }, {}),
+      routeList,
       stopList, 
       stopMap,
       versionMd5,

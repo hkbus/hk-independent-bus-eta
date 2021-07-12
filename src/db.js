@@ -6,7 +6,15 @@ export const DB_CONTEXT_VERSION = '1.1.0'
 
 const decompressJsonString = (txt) => {
   try {
-    return decompressJson(JSON.parse(txt))
+    const ret = decompressJson(JSON.parse(txt))
+    return {
+      ...ret,
+      // sort the routeList object order based on the key
+      routeList: Object.keys(ret.routeList).sort().reduce((acc, k) => {
+        acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = ret.routeList[k]
+        return acc
+      }, {})
+    }
   } catch (e) {
     // return empty object if no valid JSON string parsed
     return {routeList: {}, stopList: {}, stopMap: {}}
