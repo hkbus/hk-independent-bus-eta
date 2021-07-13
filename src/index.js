@@ -7,7 +7,7 @@ import { AppContextProvider } from './AppContext'
 import './i18n'
 import { initDb, fetchDbFunc } from './db'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals, {sendToGoogleAnalytics} from './reportWebVitals';
 
 const isHuman = () => {
   const agents = ['googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot', 'facebot', 'ia_archiver', 'sitecheckerbotcrawler']
@@ -23,10 +23,12 @@ if (isHuman()){
     Object.keys(db).forEach(k => initDb[k] = db[k])
     Object.freeze(initDb)
 
-    // Target: render only if development or prerendering or in registered app 
+    // Target: render only if development or prerendering or in registered app or lazy loading page
     if ( 
       process.env.NODE_ENV === 'development' || 
       navigator.userAgent === 'prerendering' || 
+      window.location.pathname.includes('/search') ||
+      window.location.pathname.includes('/settings') ||
       !document.querySelector('link[rel="canonical"]').href.endsWith(window.location.pathname)
     ) {
       // remove prerendered style
@@ -67,5 +69,5 @@ if (isHuman()){
   // If you want to start measuring performance in your app, pass a function
   // to log results (for example: reportWebVitals(console.log))
   // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-  reportWebVitals();
+  reportWebVitals(sendToGoogleAnalytics);
 }
