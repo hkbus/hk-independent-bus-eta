@@ -7,7 +7,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../AppContext'
 import { getDistance, setSeoHeader } from '../utils'
-import SuccinctTimeReport from './home/SuccinctTimeReport'
+import SuccinctTimeReport from '../components/home/SuccinctTimeReport'
 import { useTranslation } from 'react-i18next'
 import throttle from 'lodash.throttle'
 

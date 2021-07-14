@@ -27,7 +27,7 @@ export const DbProvider = ( props ) => {
   }
 
   const renewDb = () => {
-    fetchDbFunc().then( loadData )
+    fetchDbFunc(true).then( loadData )
   }
 
   useEffect(() => {

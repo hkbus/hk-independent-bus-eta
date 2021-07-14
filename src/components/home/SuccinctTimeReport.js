@@ -12,7 +12,7 @@ import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
 import Etas from './Etas'
 import { getDistance, toProperCase } from '../../utils'
-import RouteNo from '../route-board/RouteNo'
+import RouteNo from '../route-list/RouteNo'
 
 const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
   const { t } = useTranslation ()

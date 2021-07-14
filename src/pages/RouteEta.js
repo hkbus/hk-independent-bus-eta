@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import RouteMap from './route-eta/RouteMap'
-import StopAccordions from './route-eta/StopAccordions'
-import StopDialog from './route-eta/StopDialog'
+import RouteMap from '../components/route-eta/RouteMap'
+import StopAccordions from '../components/route-eta/StopAccordions'
+import StopDialog from '../components/route-eta/StopDialog'
 import { Typography } from '@material-ui/core'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
-import RouteNo from './route-board/RouteNo'
+import RouteNo from '../components/route-list/RouteNo'
 import { setSeoHeader, toProperCase } from '../utils'
 
 const RouteEta = () => {

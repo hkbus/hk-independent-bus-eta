@@ -12,6 +12,16 @@ export const getDistance = (a, b) => {
   return R * c; // in metres
 }
 
+// HK location if no valid value
+export const checkPosition = (position) => {
+  if ( position 
+    && typeof position.lat === 'number' && isFinite(position.lat)
+    && typeof position.lng === 'number' && isFinite(position.lng) 
+  )
+    return position
+  return {lat: 22.302711, lng: 114.177216}
+}
+
 export const checkMobile = () => {
   let check = false;
   //eslint-disable-next-line

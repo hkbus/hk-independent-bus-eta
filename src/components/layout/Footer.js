@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 import SearchIcon from '@material-ui/icons/Search'
+import NearMeIcon from '@material-ui/icons/NearMe'
 import TimerIcon from '@material-ui/icons/Timer'
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Link, useLocation, useHistory } from 'react-router-dom'
@@ -14,6 +15,7 @@ import {
   makeStyles
 } from '@material-ui/core/styles'
 import { vibrate } from '../../utils'
+
 
 const Footer = () => {
   const { t, i18n } = useTranslation()
@@ -50,9 +52,9 @@ const Footer = () => {
       <BottomNavigationAction 
         label={t("搜尋")}
         component={Link}
-        to={`/${i18n.language}/search`}
-        onClick={(e) => handleClick(`/${i18n.language}/search`, e)}
-        value={`/${i18n.language}/search`}
+        to={`/${i18n.language}/list`}
+        onClick={(e) => handleClick(`/${i18n.language}/list`, e)}
+        value={`/${i18n.language}/list`}
         icon={<SearchIcon />} 
         classes={{
           root: "footer-actionItem",
@@ -72,6 +74,18 @@ const Footer = () => {
         selected: "footer-selected"
        }}
       />
+      <BottomNavigationAction 
+        label={t("規劃路線")}
+        component={Link}
+        to={`/${i18n.language}/search`}
+        onClick={(e) => handleClick(`/${i18n.language}/search`, e)}
+        value={`/${i18n.language}/search`}
+        icon={<NearMeIcon />} 
+        classes={{
+          root: "footer-actionItem",
+          selected: "footer-selected"
+        }}
+      />
       <BottomNavigationAction
        label={t("設定")}
        component={Link}
@@ -89,6 +103,7 @@ const Footer = () => {
   ), [location.pathname, i18n.langauage, colorMode])
 }
 
+
 export default Footer
 
 const useStyles = makeStyles(theme => ({
@@ -100,6 +115,6 @@ const useStyles = makeStyles(theme => ({
     },
     '.Mui-selected.footer-selected': {
       color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
-    }
+    },
   }
 }))

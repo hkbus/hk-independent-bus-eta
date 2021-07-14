@@ -23,10 +23,11 @@ import AppContext from './AppContext'
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import { isEmptyObj } from './utils'
-import Home from './components/Home'
-import RouteBoard from './components/RouteBoard'
-import RouteEta from './components/RouteEta'
-import Settings from './components/Settings'
+import Home from './pages/Home'
+import RouteList from './pages/RouteList'
+import RouteSearch from './pages/RouteSearch'
+import RouteEta from './pages/RouteEta'
+import Settings from './pages/Settings'
 
 const PageSwitch = () => {
   const { path } = useRouteMatch()
@@ -40,8 +41,11 @@ const PageSwitch = () => {
       <Route path={`${path}/settings`}>
         <Settings />
       </Route>      
+      <Route path={`${path}/list`}>
+        <RouteList />
+      </Route>
       <Route path={`${path}/search`}>
-        <RouteBoard />
+        <RouteSearch />
       </Route>
       <Route path={`${path}`}>
         <Home />

@@ -5,6 +5,7 @@ import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import MyLocationIcon from '@material-ui/icons/MyLocation'
+import { checkPosition } from '../../utils'
 
 const ChangeMapCenter = ( {center} ) => {
   const map = useMap()
@@ -145,16 +146,6 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
 }
 
 export default RouteMap
-
-// HK location if no valid value
-const checkPosition = (position) => {
-  if ( position 
-    && typeof position.lat === 'number' && isFinite(position.lat)
-    && typeof position.lng === 'number' && isFinite(position.lng) 
-  )
-    return position
-  return {lat: 22.302711, lng: 114.177216}
-}
 
 const getPoint = ({lat, lng}) => [lat, lng]
 

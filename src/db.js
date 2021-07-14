@@ -24,7 +24,7 @@ const decompressJsonString = (txt) => {
 // to optimize the data fetching significantly
 // we define the fetchDbFunc outside the components
 // and we hence able to fetch data before rendering
-export const fetchDbFunc = () => {
+export const fetchDbFunc = (forceRenew = false) => {
   if ( localStorage.getItem('dbv') !== DB_CONTEXT_VERSION ) {
     console.log('New DB, will refetch data')
     localStorage.removeItem('db')
@@ -46,13 +46,11 @@ export const fetchDbFunc = () => {
     fetch(process.env.PUBLIC_URL+'/schema-version.txt').then(r => r.text()),
     fetchEtaObjMd5()
   ]).then( ([_schemaVersion, _md5] ) => {
-    let needRenew = false
+    let needRenew = forceRenew
     if ( schemaVersion !== _schemaVersion ) {
-      localStorage.setItem('schemaVersion', _schemaVersion)
       needRenew = true
     }
     if ( versionMd5 !== _md5 ) {
-      localStorage.setItem('versionMd5', _md5)
       needRenew = true
     }
 
@@ -65,6 +63,11 @@ export const fetchDbFunc = () => {
           return acc
         }, {})
       }, schemaVersion: _schemaVersion, versionMd5: _md5}))
+      .then((ret) => {
+        localStorage.setItem('schemaVersion', _schemaVersion)
+        localStorage.setItem('versionMd5', _md5)
+        return ret
+      })
     }
     
     return new Promise((resolve) => {
