@@ -1,24 +1,25 @@
 import React, { useContext, useEffect, useState, useRef } from 'react'
-import { List, Paper, Divider, ListItem } from '@material-ui/core'
+import { List, Paper, Divider, ListItem, ListItemText, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
 import AddressInput from '../components/route-search/AddressInput'
 import RouteNo from '../components/route-list/RouteNo'
+import { fetchEtas } from 'hk-bus-eta'
 
 const RouteSearch = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { 
     geolocation,
     db: {routeList, stopList}
   } = useContext(AppContext)
   const [locations, setLocations] = useState({
     start: geolocation,
-    end: geolocation, // null
-    result: [["30X-1-CYBERPORT-CENTRAL-(EXCHANGE-SQUARE)/10","948-1-CAUSEWAY-BAY-(TIN-HAU)-TSING-YI-(CHEUNG-ON-ESTATE)/14"],["904-1-KENNEDY-TOWN-(BELCHER-BAY)-LAI-CHI-KOK/7","948-1-CAUSEWAY-BAY-(TIN-HAU)-TSING-YI-(CHEUNG-ON-ESTATE)/14"],["904-1-KENNEDY-TOWN-(BELCHER-BAY)-LAI-CHI-KOK/8","N41X-1-HUNG-HOM-STATION-TSING-YI-(CHEUNG-WANG-ESTATE)/21"],["905-1-WAN-CHAI-NORTH-LAI-CHI-KOK/15","948-1-CAUSEWAY-BAY-(TIN-HAU)-TSING-YI-(CHEUNG-ON-ESTATE)/14"],["905-1-WAN-CHAI-NORTH-LAI-CHI-KOK/16","N41X-1-HUNG-HOM-STATION-TSING-YI-(CHEUNG-WANG-ESTATE)/21"],["905A-1-WAN-CHAI-NORTH-LAI-CHI-KOK/15","948-1-CAUSEWAY-BAY-(TIN-HAU)-TSING-YI-(CHEUNG-ON-ESTATE)/14"],["905A-1-WAN-CHAI-NORTH-LAI-CHI-KOK/16","N41X-1-HUNG-HOM-STATION-TSING-YI-(CHEUNG-WANG-ESTATE)/21"],["930A-1-WAN-CHAI-NORTH-TSUEN-WAN-WEST-STATION/9","948-1-CAUSEWAY-BAY-(TIN-HAU)-TSING-YI-(CHEUNG-ON-ESTATE)/14"],["930A-1-WAN-CHAI-NORTH-TSUEN-WAN-WEST-STATION/10","E32-2-KWAI-FONG-(SOUTH)-ASIAWORLD-EXPO/10"],["930A-1-WAN-CHAI-NORTH-TSUEN-WAN-WEST-STATION/11","N43-1-TSUEN-WAN-STATION-TSING-YI-(CHEUNG-WANG-ESTATE)/8"],["A12-1-SIU-SAI-WAN-(ISLAND-RESORT)-AIRPORT/32","948-1-CAUSEWAY-BAY-(TIN-HAU)-TSING-YI-(CHEUNG-ON-ESTATE)/14"]],
+    end: null,
+    result: [],
     done: true
   })
-  const {result, done} = locations
+  const {result} = locations
   useStyles()
 
   const worker = useRef(undefined)
@@ -29,22 +30,44 @@ const RouteSearch = () => {
     }
   }
 
+  const checkRoutes = (routes) => {
+    const uniqueRoutes = routes.reduce((acc, routeArr) => acc.concat(routeArr.map(r => r.routeId)), []).filter((v, i, s) => s.indexOf(v) === i)
+    
+    // check currently available routes by fetching ETA
+    Promise.all(uniqueRoutes.map(routeId => fetchEtas({
+        ...routeList[routeId], 
+        seq: 0, 
+        routeStops: routeList[routeId].stops,
+        co: Object.keys(routeList[routeId].stops)
+    }))).then(etas =>
+      // filter out non available route
+      uniqueRoutes.filter((routeId, idx) => etas[idx].length && etas[idx].reduce((acc, eta) => {return acc || eta.eta}, null))
+    ).then( availableRoutes => {
+      setLocations({
+        ...locations,
+        done: true,
+        // save current available route only
+        result: routes.filter( route => (
+          route.reduce((ret, r) => {
+            return ret && availableRoutes.indexOf( r.routeId ) !== -1
+          }, true)
+        ))
+      })
+    })
+  }
+
   useEffect(() => {
-    if (!done && locations.start && locations.end) {
+    if (!locations.done && locations.start && locations.end) {
       if ( window.Worker ) {
         terminateWorker()
         worker.current = new Worker('/search-worker.js')
         worker.current.postMessage({routeList, stopList, 
           start: locations.start,
           end: locations.end, 
-          lv: 2
+          lv: 1
         })
         worker.current.onmessage = (e) => {
-          setLocations({
-            ...locations,
-            result: e.data.map(routes => routes.split('|').filter(route => route)).sort((a, b) => a.length - b.length),
-            done: true
-          })
+          checkRoutes(e.data.sort((a, b) => a.length - b.length))
           terminateWorker()
         }
       }
@@ -55,6 +78,18 @@ const RouteSearch = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations])
+
+  const getStopString = (routes) => {
+    const ret = []
+    routes.forEach(selectedRoute => {
+      const {routeId, on} = selectedRoute
+      const {fares, stops} = routeList[routeId]
+      ret.push(stopList[stops[Object.keys(stops)[0]][on]].name[i18n.language] + (fares && ` ($${fares[on]})`))
+    })
+    const {routeId, off} = routes[routes.length-1]
+    const {stops} = routeList[routeId]
+    return ret.concat(stopList[stops[Object.keys(stops)[0]][off]].name[i18n.language]).join(' → ')
+  }
 
   const handleStartChange = ( v ) => {
     setLocations({
@@ -79,25 +114,36 @@ const RouteSearch = () => {
       <AddressInput
         placeholder={t("你的位置")}
         onChange={handleStartChange}
+        stopList={stopList}
       />
       <AddressInput
         placeholder={t("目的地")}
         onChange={handleEndChange}
+        stopList={stopList}
       />
       <List className={"search-result-list"}>
         {
           locations.start && locations.end ? (
             result.length ? result.map((routes, resIdx) => <div key={`search-${resIdx}`}>
               <ListItem className={"search-result-container"}>
+
                 {
-                  routes.map((route, routeIdx) => {
-                    const [routeId] = route.split('/') 
-                    return (
-                      <div className={"search-routeNo"} key={`search-${resIdx}-${routeIdx}`}>
-                        <RouteNo routeNo={routeList[routeId].route} />
-                      </div>
-                    )
-                  })
+                  <ListItemText
+                    primary={
+                      routes.map((selectedRoute, routeIdx) => {
+                        const {routeId} = selectedRoute
+                        const {route, serviceType} = routeList[routeId]
+                        
+                        return (
+                          <span className="search-routeNo" key={`search-${resIdx}-${routeIdx}`}>
+                            <RouteNo routeNo={route} />
+                            {serviceType >= 2 && <Typography variant="caption" className={"search-result-specialTrip"}>{t('特別班')}</Typography>}
+                          </span>
+                        )
+                      })
+                    }
+                    secondary={getStopString(routes)}
+                  />
                 }
               </ListItem>
               <Divider />
@@ -120,7 +166,7 @@ const useStyles = makeStyles(theme => ({
       textAlign: 'center'
     },
     ".search-routeNo": {
-      minWidth: '20%'
+      paddingRight: '20%'
     },
     ".search-result-list": {
       overflowY: 'scroll',
@@ -129,6 +175,14 @@ const useStyles = makeStyles(theme => ({
     ".search-result-container": {
       display: 'flex',
       flexDirection: 'row'
+    },
+    ".search-result-fare": {
+      fontSize: '0.8rem',
+      marginLeft: '3px'
+    },
+    ".search-result-specialTrip": {
+      fontSize: '0.6rem',
+      marginLeft: '8px'
     }
   }
 }))
