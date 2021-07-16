@@ -43,7 +43,7 @@ const submitResult = (routeList, stopList, end) => {
     return bestRouteStop[routeId][0] === off
   })
   dfsRoutes.splice(0)
-  postMessage(ret)
+  postMessage({type: "result", value: ret})
 }
 
 const buildStopRoute = (routeList) => {
@@ -101,11 +101,13 @@ const dfs = (routeList, stopList, curLocation, targetLocation, curDepth, maxDept
 onmessage = (e) => {
   const {routeList, stopList, start, end, maxDepth} = e.data
   buildStopRoute(routeList)
+  let count = 0
   for (var i=1;i<=maxDepth;++i ) {
     routePrev = {}
     stopPrev = {} 
     dfs(routeList, stopList, start, end, i, i)
+    count = dfsRoutes.length
     submitResult(routeList, stopList, end)
   }
-  postMessage('done')
+  postMessage({type: "done", count: count})
 }

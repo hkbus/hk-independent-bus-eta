@@ -31,11 +31,11 @@ const Header = () => {
       className={"header-toolbar"}
     >
       <Link 
-        to={`/${i18n.language}/search`}
+        to={`/${i18n.language}/board`}
         onClick={(e) => {
           e.preventDefault()
           vibrate(1)
-          history.push(`/${i18n.language}/search`)
+          history.push(`/${i18n.language}/board`)
         }}
       >
         <Typography component="h1" variant='subtitle2' className={"header-appTitle"}>{t('巴士到站預報')}</Typography>
@@ -58,7 +58,7 @@ const Header = () => {
           if ( navigator.userAgent !== 'prerendering' && checkMobile() ) {
             document.activeElement.blur()
           }
-          history.replace(`/${i18n.language}/search`)
+          history.replace(`/${i18n.language}/board`)
         }}
         disabled={path.includes('route')}
       />

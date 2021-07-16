@@ -38,7 +38,7 @@ const RouteSearch = () => {
         seq: 0, 
         routeStops: routeList[routeId].stops,
         co: Object.keys(routeList[routeId].stops)
-    }))).then(etas =>
+    }))).then(etas => 
       // filter out non available route
       uniqueRoutes.filter((routeId, idx) => etas[idx].length && etas[idx].reduce((acc, eta) => {return acc || eta.eta}, null))
     ).then( availableRoutes => {
@@ -54,6 +54,14 @@ const RouteSearch = () => {
   }
 
   useEffect(() => {
+    // update status if status is rendering
+    if ( status === 'rendering' ) {
+      setStatus('ready')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result])
+
+  useEffect(() => {
     if (status === 'waiting' && locations.start && locations.end) {
       if ( window.Worker ) {
         terminateWorker()
@@ -64,12 +72,13 @@ const RouteSearch = () => {
           maxDepth: 2
         })
         worker.current.onmessage = (e) => {
-          if ( e.data === 'done' ) {
+          if ( e.data.type === 'done' ) {
             terminateWorker()
-            setStatus('ready')
+            // set status to rendering result if result not empty
+            setStatus( e.data.count ? 'rendering' : 'ready')
             return
           }
-          updateRoutes(e.data.sort((a, b) => a.length - b.length))
+          updateRoutes(e.data.value.sort((a, b) => a.length - b.length))
         }
       }
     }
@@ -127,8 +136,8 @@ const RouteSearch = () => {
       <List className={"search-result-list"}>
         {
           !locations.start || !locations.end ? <RouteSearchDetails /> : (
-          status === 'waiting' && result.length === 0 ? t("搜尋中...") : (
-          'ready|waiting'.includes( status ) && result.length ? (
+          'waiting|rendering'.includes(status) && result.length === 0 ? t("搜尋中...") : (
+          'ready|waiting|rendering'.includes( status ) && result.length ? (
             result.map((routes, resIdx) => (
               <div key={`search-${resIdx}`}>
                 <ListItem className={"search-result-container"}>
@@ -187,7 +196,8 @@ const useStyles = makeStyles(theme => ({
     },
     ".search-description": {
       textAlign: "left",
-      marginTop: '10%'
+      marginTop: '10%',
+      padding: '5%'
     },
     ".search-routeNo": {
       paddingRight: '20%'

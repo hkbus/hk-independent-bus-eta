@@ -27,6 +27,7 @@ if (isHuman()){
     if ( 
       process.env.NODE_ENV === 'development' || 
       navigator.userAgent === 'prerendering' || 
+      window.location.pathname.includes('/board') ||
       window.location.pathname.includes('/search') ||
       window.location.pathname.includes('/settings') ||
       !document.querySelector('link[rel="canonical"]').href.endsWith(window.location.pathname)

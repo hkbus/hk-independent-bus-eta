@@ -52,9 +52,9 @@ const Footer = () => {
       <BottomNavigationAction 
         label={t("搜尋")}
         component={Link}
-        to={`/${i18n.language}/list`}
-        onClick={(e) => handleClick(`/${i18n.language}/list`, e)}
-        value={`/${i18n.language}/list`}
+        to={`/${i18n.language}/board`}
+        onClick={(e) => handleClick(`/${i18n.language}/board`, e)}
+        value={`/${i18n.language}/board`}
         icon={<SearchIcon />} 
         classes={{
           root: "footer-actionItem",

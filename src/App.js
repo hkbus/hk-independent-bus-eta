@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, Suspense } from 'react'
 import './App.css'
 import { 
   MuiThemeProvider, 
@@ -24,33 +24,35 @@ import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import { isEmptyObj } from './utils'
 import Home from './pages/Home'
-import RouteList from './pages/RouteList'
-import RouteSearch from './pages/RouteSearch'
 import RouteEta from './pages/RouteEta'
-import Settings from './pages/Settings'
+const RouteBoard = React.lazy(() =>  import('./pages/RouteBoard'))
+const RouteSearch = React.lazy(() => import('./pages/RouteSearch'))
+const Settings = React.lazy(() => import('./pages/Settings'))
 
 const PageSwitch = () => {
   const { path } = useRouteMatch()
   const { db: {routeList} } = useContext(AppContext)
   
   return (
-    <Switch>
-      <Route path={`${path}/route/:id/:panel?`}>
-        {!isEmptyObj(routeList) ? <RouteEta /> : <CircularProgress size={40} />}
-      </Route>
-      <Route path={`${path}/settings`}>
-        <Settings />
-      </Route>      
-      <Route path={`${path}/list`}>
-        <RouteList />
-      </Route>
-      <Route path={`${path}/search`}>
-        <RouteSearch />
-      </Route>
-      <Route path={`${path}`}>
-        <Home />
-      </Route>
-    </Switch>
+    <Suspense fallback={<></>}>
+      <Switch>
+        <Route path={`${path}/route/:id/:panel?`}>
+          {!isEmptyObj(routeList) ? <RouteEta /> : <CircularProgress size={40} />}
+        </Route>
+        <Route path={`${path}/settings`}>
+          <Settings />
+        </Route>      
+        <Route path={`${path}/board`}>
+          <RouteBoard />
+        </Route>
+        <Route path={`${path}/search`}>
+          <RouteSearch />
+        </Route>
+        <Route path={`${path}`}>
+          <Home />
+        </Route>
+      </Switch>
+    </Suspense>
   )
 }
 

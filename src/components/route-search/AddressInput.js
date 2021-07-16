@@ -29,10 +29,10 @@ const AddressInput = ({placeholder = '', onChange, stopList}) => {
 
   return (
     <AsyncSelect
-      cacheOptions
+      isClearable
       loadOptions={loadAddress}
       placeholder={placeholder}
-      onChange={onChange}
+      onChange={(v) => {onChange( v || {value: {location: null}})}}
       classNamePrefix="react-select"
     />
   )
