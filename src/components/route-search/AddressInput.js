@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import debounce from 'lodash.debounce'
 import AsyncSelect from 'react-select/async'
@@ -6,55 +6,42 @@ import { makeStyles } from '@material-ui/styles'
 import proj4 from 'proj4'
 
 const AddressInput = ({placeholder = '', onChange, stopList}) => {
-  const [state, setState] = useState({
-    value: '',
-    suggestions: []
-  })
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const abortController = useRef(new AbortController())
   useStyles()
-
+  
   const loadAddress = useRef(debounce((addr, callback) => {
     const stopAddresses = Object.values(stopList)
       .filter((stop) => stop.name.zh.includes(addr) || stop.name.en.toLowerCase().includes(addr.toLowerCase()))
       .map((stop) => ({
-        label: `${stop.name[i18n.language]} - 車站`,
-        value: stop.name[i18n.language],
-        ...stop.location
-      }))
-    loadAddressFromGeodata(addr).then(suggestions => {
-      callback(stopAddresses.concat(suggestions.map(s => ({
-        label: [s.name[i18n.language], s.address[i18n.language]].filter( e => e ).join(' - '),
-        value: s.name[i18n.language],
-        ...s
+        label: `${stop.name[i18n.language]} - ${t("車站")}`,
+        value: stop
+      })).slice(0,10)
+    abortController.current.abort();
+    abortController.current = new AbortController()
+    loadAddressFromGeodata(addr, {signal: abortController.current.signal}).then(suggestions => {
+      callback(stopAddresses.concat(suggestions.map(({name, address, lat, lng}) => ({
+        label: [name[i18n.language], address[i18n.language]].filter( e => e ).join(' - '),
+        value: {location: {lat, lng}, name, address}
       }))))
     })
   }, 200)).current
-
-
-  const handleInputChange = (newValue) => {
-    setState({
-      ...state,
-      value: newValue
-    })
-    return newValue
-  }
 
   return (
     <AsyncSelect
       cacheOptions
       loadOptions={loadAddress}
       placeholder={placeholder}
-      onInputChange={handleInputChange}
       onChange={onChange}
       classNamePrefix="react-select"
     />
   )
 }
 
-const loadAddressFromGeodata = (addr) => {
+const loadAddressFromGeodata = (addr, options) => {
   if ( !addr ) return new Promise(resolve => resolve([]))
   // use geodata.gov.hk api, potentially add als.ogcio.gov.hk api
-  return fetch(`https://geodata.gov.hk/gs/api/v1.0.0/locationSearch?q=${encodeURI(addr)}`)
+  return fetch(`https://geodata.gov.hk/gs/api/v1.0.0/locationSearch?q=${encodeURI(addr)}`, options)
     .then(res => res.json())
     .then(suggestions => (
       suggestions.map((sug) => {
@@ -80,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
     ".react-select__control": {
       background: `${theme.palette.type === 'dark' ? theme.palette.background.default : 'white'} !important`,
       border: 'none !important',
+      borderRadius: 'unset !important',
       borderBottom: '1px hsl(0, 0%, 80%) solid !important'
     },
     '.react-select__input': {
@@ -88,11 +76,19 @@ const useStyles = makeStyles((theme) => ({
     '.react-select__valueContainer': {
       color: `${theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.text.primary} !important`,
     },
-    '.react-select__singleValue': {
+    '.react-select__single-value': {
       color: `${theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.text.primary} !important`,
     },
-    '.react-select__option': { 
-
+    '.react-select__option:hover': {
+      filter: 'grayscale(1) !important'
+    },    
+    '.react-select__option--is-focused': {
+      background: `${theme.palette.type === 'dark' ? theme.palette.background.default : 'white'} !important`
+    },
+    '.react-select__option--is-selected': {
+      filter: 'sepia(1)',
+      background: `${theme.palette.type === 'dark' ? theme.palette.background.default : 'white'} !important`,
+      color: `${theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.text.primary} !important`
     },
     '.react-select__menu': {
       background: `${theme.palette.type === 'dark' ? theme.palette.background.default : 'white'} !important`,

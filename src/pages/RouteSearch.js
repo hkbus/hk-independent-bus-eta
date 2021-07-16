@@ -15,11 +15,10 @@ const RouteSearch = () => {
   } = useContext(AppContext)
   const [locations, setLocations] = useState({
     start: geolocation,
-    end: null,
-    result: [],
-    done: true
+    end: null
   })
-  const {result} = locations
+  const [status, setStatus] = useState("ready")
+  const [result, setResult] = useState([])
   useStyles()
 
   const worker = useRef(undefined)
@@ -29,8 +28,8 @@ const RouteSearch = () => {
       worker.current = undefined
     }
   }
-
-  const checkRoutes = (routes) => {
+  
+  const updateRoutes = (routes) => {
     const uniqueRoutes = routes.reduce((acc, routeArr) => acc.concat(routeArr.map(r => r.routeId)), []).filter((v, i, s) => s.indexOf(v) === i)
     
     // check currently available routes by fetching ETA
@@ -43,32 +42,34 @@ const RouteSearch = () => {
       // filter out non available route
       uniqueRoutes.filter((routeId, idx) => etas[idx].length && etas[idx].reduce((acc, eta) => {return acc || eta.eta}, null))
     ).then( availableRoutes => {
-      setLocations({
-        ...locations,
-        done: true,
+      setResult(prevResult => [...prevResult,
         // save current available route only
-        result: routes.filter( route => (
+        ...routes.filter( route => (
           route.reduce((ret, r) => {
             return ret && availableRoutes.indexOf( r.routeId ) !== -1
           }, true)
         ))
-      })
+      ])
     })
   }
 
   useEffect(() => {
-    if (!locations.done && locations.start && locations.end) {
+    if (status === 'waiting' && locations.start && locations.end) {
       if ( window.Worker ) {
         terminateWorker()
         worker.current = new Worker('/search-worker.js')
         worker.current.postMessage({routeList, stopList, 
           start: locations.start,
           end: locations.end, 
-          lv: 1
+          maxDepth: 2
         })
         worker.current.onmessage = (e) => {
-          checkRoutes(e.data.sort((a, b) => a.length - b.length))
-          terminateWorker()
+          if ( e.data === 'done' ) {
+            terminateWorker()
+            setStatus('ready')
+            return
+          }
+          updateRoutes(e.data.sort((a, b) => a.length - b.length))
         }
       }
     }
@@ -77,36 +78,38 @@ const RouteSearch = () => {
       terminateWorker()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locations])
+  }, [status])
 
   const getStopString = (routes) => {
     const ret = []
     routes.forEach(selectedRoute => {
       const {routeId, on} = selectedRoute
       const {fares, stops} = routeList[routeId]
-      ret.push(stopList[stops[Object.keys(stops)[0]][on]].name[i18n.language] + (fares && ` ($${fares[on]})`))
+      ret.push(stopList[Object.values(stops).sort((a,b) => b.length - a.length)[0][on]].name[i18n.language] + (fares ? ` ($${fares[on]})` : ''))
     })
     const {routeId, off} = routes[routes.length-1]
     const {stops} = routeList[routeId]
-    return ret.concat(stopList[stops[Object.keys(stops)[0]][off]].name[i18n.language]).join(' → ')
+    return ret.concat(stopList[Object.values(stops).sort((a,b) => b.length - a.length)[0][off]].name[i18n.language]).join(' → ')
   }
 
-  const handleStartChange = ( v ) => {
+  const handleStartChange = ( {value: { location: v } } ) => {
+    if ( !v || !(v.lat && v.lng) ) return;
     setLocations({
       ...locations,
-      start: v ? {lat: v.lat, lng: v.lng} : geolocation,
-      result: [],
-      done: false
+      start: v ? {lat: v.lat, lng: v.lng} : geolocation
     })
+    setStatus('waiting')
+    setResult([])
   }
 
-  const handleEndChange = ( v ) => {
+  const handleEndChange = ( {value: { location: v } } ) => {
+    if ( !v || !(v.lat && v.lng) ) return;
     setLocations({
       ...locations,
-      end: v ? {lat: v.lat, lng: v.lng} : null,
-      result: [],
-      done: false
+      end: v ? {lat: v.lat, lng: v.lng} : null
     })
+    setStatus('waiting')
+    setResult([])
   }
   
   return (
@@ -123,11 +126,12 @@ const RouteSearch = () => {
       />
       <List className={"search-result-list"}>
         {
-          locations.start && locations.end ? (
-            result.length ? result.map((routes, resIdx) => <div key={`search-${resIdx}`}>
-              <ListItem className={"search-result-container"}>
-
-                {
+          !locations.start || !locations.end ? <RouteSearchDetails /> : (
+          status === 'waiting' && result.length === 0 ? t("搜尋中...") : (
+          'ready|waiting'.includes( status ) && result.length ? (
+            result.map((routes, resIdx) => (
+              <div key={`search-${resIdx}`}>
+                <ListItem className={"search-result-container"}>
                   <ListItemText
                     primary={
                       routes.map((selectedRoute, routeIdx) => {
@@ -144,14 +148,30 @@ const RouteSearch = () => {
                     }
                     secondary={getStopString(routes)}
                   />
-                }
-              </ListItem>
-              <Divider />
-            </div>): <>{"Loading"}</>
-          ) : <></>
+                </ListItem>
+                <Divider />
+              </div>
+            ))
+          ) : <>{t("找不到合適的巴士路線")}</> ))
         }
       </List>
     </Paper>
+  )
+}
+
+const RouteSearchDetails = () => {
+  const { t } = useTranslation()
+  return (
+    <div className={"search-description"}>
+      <Typography variant="h5">{t('Route Search header')}</Typography>
+      <Divider />
+      <Typography variant="subtitle1">{t('Route Search description')}</Typography>
+      <br/>
+      <Typography variant="body2">{t('Route Search constraint')}</Typography>
+      <Typography variant="body2">1. {t('Route Search caption 1')}</Typography>
+      <Typography variant="body2">2. {t('Route Search caption 2')}</Typography>
+      <Typography variant="body2">3. {t('Route Search caption 3')}</Typography>
+    </div>
   )
 }
 
@@ -164,6 +184,10 @@ const useStyles = makeStyles(theme => ({
       height: 'calc(100vh - 125px)',
       overflowY: 'hidden',
       textAlign: 'center'
+    },
+    ".search-description": {
+      textAlign: "left",
+      marginTop: '10%'
     },
     ".search-routeNo": {
       paddingRight: '20%'

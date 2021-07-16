@@ -32,7 +32,7 @@ const submitResult = (routeList, stopList, end) => {
   // find best end location
   _ret.forEach( routes => {
     const {routeId, off} = routes[routes.length - 1]
-    const dist = getDistance( end, stopList[Object.values(routeList[routeId].stops)[0][off]].location )
+    const dist = getDistance( end, stopList[Object.values(routeList[routeId].stops).sort((a,b) => b.length - a.length)[0][off]].location )
     if ( !bestRouteStop[routeId] ) bestRouteStop[routeId] = [-1, 1000]
     if ( bestRouteStop[routeId][1] > dist ) 
       bestRouteStop[routeId] = [off, dist]
@@ -42,7 +42,7 @@ const submitResult = (routeList, stopList, end) => {
     const {routeId, off} = routes[routes.length-1]
     return bestRouteStop[routeId][0] === off
   })
-
+  dfsRoutes.splice(0)
   postMessage(ret)
 }
 
@@ -99,12 +99,13 @@ const dfs = (routeList, stopList, curLocation, targetLocation, curDepth, maxDept
 }
 
 onmessage = (e) => {
-  const {routeList, stopList, start, end, lv} = e.data
+  const {routeList, stopList, start, end, maxDepth} = e.data
   buildStopRoute(routeList)
-  for (var i=1;i<=lv;++i ) {
+  for (var i=1;i<=maxDepth;++i ) {
     routePrev = {}
     stopPrev = {} 
     dfs(routeList, stopList, start, end, i, i)
+    submitResult(routeList, stopList, end)
   }
-  submitResult(routeList, stopList, end)
+  postMessage('done')
 }
