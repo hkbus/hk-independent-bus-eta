@@ -6,11 +6,12 @@ import { useTranslation } from 'react-i18next'
 import AddressInput from '../components/route-search/AddressInput'
 import RouteNo from '../components/route-list/RouteNo'
 import { fetchEtas } from 'hk-bus-eta'
+import { setSeoHeader } from '../utils'
 
 const RouteSearch = () => {
   const { t, i18n } = useTranslation()
   const { 
-    geolocation,
+    AppTitle, geolocation,
     db: {routeList, stopList}
   } = useContext(AppContext)
   const [locations, setLocations] = useState({
@@ -52,6 +53,15 @@ const RouteSearch = () => {
       ])
     })
   }
+
+  useEffect(() => {
+    setSeoHeader ({
+      title: t('點對點路線搜尋') + ' - ' + t(AppTitle),
+      description: t('route-search-page-description'),
+      lang: i18n.language
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i18n.language])
 
   useEffect(() => {
     // update status if status is rendering

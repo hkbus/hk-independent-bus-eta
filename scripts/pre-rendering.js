@@ -88,9 +88,10 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
     // const page = await browser.newPage();
     if ( !pageUrl.includes('/route/') ) {
       if ( idx === 0 ) {
-        await page.goto(pageUrl, {waitUntil: idx > 0 ? 'domcontentloaded' : 'networkidle0'});
+        await page.goto(pageUrl, {waitUntil: 'networkidle0'});
       } else {
         await page.click(`a[href="${url.pathname}"]`)
+        await new Promise((resolve) => {setTimeout(resolve, 500)})
       }
       if (idx === 0) await page.waitForTimeout(3000) // wait decompression & loading data
     } else {
