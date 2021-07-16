@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import { vibrate } from './utils'
 import DbContext from './DbContext'
 
@@ -15,7 +15,7 @@ export const AppContextProvider = ( props ) => {
   // Geo Permission for UX
   const [ geoPermission, setGeoPermission ] = useState( localStorage.getItem('geoPermission') ) 
   const [ geolocation, setGeolocation ] = useState (JSON.parse(localStorage.getItem('geolocation')) || {lat: 22.302711, lng: 114.177216})
-  const [ geoWatcherId, setGeoWatcherId ] = useState ( null )
+  const geoWatcherId = useRef ( null )
 
   // hot query count
   const [ hotRoute, setHotRoute ] = useState( JSON.parse(localStorage.getItem('hotRoute')) || {} )
@@ -33,10 +33,10 @@ export const AppContextProvider = ( props ) => {
       const _geoWatcherId = navigator.geolocation.watchPosition(({coords: {latitude, longitude}}) => {
         updateGeolocation({lat: latitude, lng: longitude})
       })
-      setGeoWatcherId ( _geoWatcherId )
+      geoWatcherId.current = _geoWatcherId
     }
     return () => {
-      if ( geoWatcherId ) navigator.geolocation.clearWatch(geoWatcherId)
+      if ( geoWatcherId.current ) navigator.geolocation.clearWatch(geoWatcherId.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -53,10 +53,10 @@ export const AppContextProvider = ( props ) => {
         localStorage.setItem('geoPermission', 'denied')
         if (deniedCallback) deniedCallback()
       })
-      setGeoWatcherId ( _geoWatcherId )
-    } else if ( geoWatcherId ) {
-      navigator.geolocation.clearWatch(geoWatcherId)
-      setGeoWatcherId(null)
+      geoWatcherId.current = _geoWatcherId
+    } else if ( geoWatcherId.current ) {
+      navigator.geolocation.clearWatch(geoWatcherId.current)
+      geoWatcherId.current = null
       setGeoPermission(geoPermission)
       localStorage.setItem('geoPermission', geoPermission)
     }
@@ -108,6 +108,11 @@ export const AppContextProvider = ( props ) => {
 
   const updateSavedEtas = ( key ) => {
     setSavedEtas ( prevSavedEtas => {
+      if ( prevSavedEtas.includes(key) ) {
+        prevSavedEtas.splice( prevSavedEtas.indexOf(key), 1 )
+        localStorage.setItem('savedEtas', JSON.stringify(prevSavedEtas))
+        return JSON.parse(JSON.stringify(prevSavedEtas))
+      }
       const newSavedEtas = prevSavedEtas.concat(key).filter( (v, i, s) => s.indexOf(v) === i )
       localStorage.setItem('savedEtas', JSON.stringify(newSavedEtas))
       return newSavedEtas

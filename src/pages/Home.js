@@ -73,6 +73,14 @@ const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeLis
     .sort((a,b) => b[1] - a[1])
     .map(([routeId]) => routeId)
   ).filter((routeId, index, self) => self.indexOf(routeId) === index)
+  .map( routeUrl => {
+    const [routeId, stopIdx] = routeUrl.split('/') 
+    // TODO: taking the longest stop array to avoid error, should be fixed in the database
+    const stop = stopList[Object.values(routeList[routeId].stops).sort((a,b) => b.length - a.length)[0][stopIdx]] 
+    return [routeUrl, getDistance(geolocation, stop.location)]
+  })
+  .sort((a, b)  => a[1] - b[1])
+  .map(v => v[0])
   .slice(0,20)
   
   const nearbyRoutes = Object.entries(stopList).map(stop =>
