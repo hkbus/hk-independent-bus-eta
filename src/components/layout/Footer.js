@@ -115,7 +115,9 @@ const useStyles = makeStyles(theme => ({
     },
     '.Mui-selected.footer-selected': {
       color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
-      width: "20vw"
     },
+    '.MuiBottomNavigationAction-root':{
+      width: "20vw"
+    }
   }
 }))
