@@ -119,7 +119,7 @@ const useStyles = makeStyles(theme => ({
     },
     '.MuiBottomNavigationAction-root':{
       width: "20vw",
-      min-width: "0"
+      minWidth: "0"
     }
   }
 }))
