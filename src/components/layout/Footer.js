@@ -117,7 +117,8 @@ const useStyles = makeStyles(theme => ({
       color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
     },
     '.MuiBottomNavigationAction-root':{
-      width: "20vw"
+      width: "20vw",
+      min-width: "0"
     }
   }
 }))
