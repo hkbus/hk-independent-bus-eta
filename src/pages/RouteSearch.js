@@ -7,7 +7,7 @@ import AddressInput from '../components/route-search/AddressInput'
 import SearchResult from '../components/route-search/SearchResult'
 import SearchMap from '../components/route-search/SearchMap'
 import { fetchEtas } from 'hk-bus-eta'
-import { setSeoHeader } from '../utils'
+import { setSeoHeader, getDistance } from '../utils'
 
 const RouteSearch = () => {
   const { t, i18n } = useTranslation()
@@ -32,8 +32,8 @@ const RouteSearch = () => {
     }
   }
   
-  const updateRoutes = (routes) => {
-    const uniqueRoutes = routes.reduce((acc, routeArr) => acc.concat(routeArr.map(r => r.routeId)), []).filter((v, i, s) => s.indexOf(v) === i)
+  const updateRoutes = (routeResults) => {
+    const uniqueRoutes = routeResults.reduce((acc, routeArr) => acc.concat(routeArr.map(r => r.routeId)), []).filter((v, i, s) => s.indexOf(v) === i)
     
     // check currently available routes by fetching ETA
     Promise.all(uniqueRoutes.map(routeId => fetchEtas({
@@ -47,15 +47,36 @@ const RouteSearch = () => {
     ).then( availableRoutes => {
       setResult(prevResult => [...prevResult,
         // save current available route only
-        ...routes.filter( route => (
-          route.reduce((ret, r) => {
-            return ret && availableRoutes.indexOf( r.routeId ) !== -1
+        ...routeResults.filter( routes => (
+          routes.reduce((ret, route) => {
+            return ret && availableRoutes.indexOf( route.routeId ) !== -1
           }, true)
         ))
+        // refine nearest start if available
+        .map(routes => {
+          let start = locations.start
+          return routes.map((route, idx) => {
+            const stops = Object.values(routeList[route.routeId].stops).sort((a,b) => b.length - a.length)[0]
+            let bestOn = -1
+            let dist = 100000
+            for (var i = route.on; i < route.off; ++i) {
+              let _dist = getDistance(stopList[stops[i]].location, start)
+              if ( _dist < dist) {
+                bestOn = i
+                dist = _dist
+              }
+            }
+            start = stopList[stops[route.off]].location
+            return {
+              ...route,
+              on: bestOn
+            }
+          })
+        })
         // sort route by number of stops
-        .map(route => ([route, route.reduce((sum, r) => sum + r.off - r.on, 0)])) 
+        .map(routes => ([routes, routes.reduce((sum, route) => sum + route.off - route.on, 0)])) 
         .sort( (a, b) => a[1] - b[1])
-        .map(route => route[0])
+        .map(v => v[0])
       ])
     })
   }
@@ -112,6 +133,7 @@ const RouteSearch = () => {
       start: v ? {lat: v.lat, lng: v.lng} : geolocation
     })
     setStatus('waiting')
+    setRouteIdx(0)
     setResult([])
   }
 
@@ -122,6 +144,7 @@ const RouteSearch = () => {
       end: v ? {lat: v.lat, lng: v.lng} : null
     })
     setStatus('waiting')
+    setRouteIdx(0)
     setResult([])
   }
 
