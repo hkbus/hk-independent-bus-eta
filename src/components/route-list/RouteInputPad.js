@@ -21,6 +21,7 @@ const KeyButton = ({k, handleClick, disabled = false, className}) => {
       className={`inputpad-button ${className}`}
       onClick={() => handleClick(k)}
       disabled={disabled}
+      disableRipple
     >
       {k === 'b' ? <BackspaceOutlinedIcon/> : 
         k === 'c' ? <div className={"inputpad-cancelButton"}>{t('取消')}</div> : k}

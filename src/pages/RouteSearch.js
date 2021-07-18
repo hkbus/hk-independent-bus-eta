@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState, useRef } from 'react'
-import { List, Paper, Divider, ListItem, ListItemText, Typography } from '@material-ui/core'
+import { Button, List, Paper, Divider, ListItem, ListItemText, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
 import AddressInput from '../components/route-search/AddressInput'
 import RouteNo from '../components/route-list/RouteNo'
+import RouteSearchMap from '../components/route-search/RouteSearchMap'
 import { fetchEtas } from 'hk-bus-eta'
 import { setSeoHeader } from '../utils'
 
@@ -20,6 +21,7 @@ const RouteSearch = () => {
   })
   const [status, setStatus] = useState("ready")
   const [result, setResult] = useState([])
+  const [routeIdx, setRouteIdx] = useState(0)
   useStyles()
 
   const worker = useRef(undefined)
@@ -97,7 +99,7 @@ const RouteSearch = () => {
       terminateWorker()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status])
+  }, [status, locations])
 
   const getStopString = (routes) => {
     const ret = []
@@ -122,7 +124,7 @@ const RouteSearch = () => {
   }
 
   const handleEndChange = ( {value: { location: v } } ) => {
-    if ( !v || !(v.lat && v.lng) ) return;
+    if ( !v || !(v.lat && v.lng) ) return
     setLocations({
       ...locations,
       end: v ? {lat: v.lat, lng: v.lng} : null
@@ -130,9 +132,15 @@ const RouteSearch = () => {
     setStatus('waiting')
     setResult([])
   }
+
+  const hanldeRouteClick = (idx) => {
+    setRouteIdx(idx)
+  }
   
   return (
     <Paper className={"search-root"} square elevation={0}>
+      <RouteSearchMap routes={result[routeIdx]} start={locations.start} end={locations.end} />
+      <div className={"search-input-container"}>
       <AddressInput
         placeholder={t("你的位置")}
         onChange={handleStartChange}
@@ -143,6 +151,7 @@ const RouteSearch = () => {
         onChange={handleEndChange}
         stopList={stopList}
       />
+      </div>
       <List className={"search-result-list"}>
         {
           !locations.start || !locations.end ? <RouteSearchDetails /> : (
@@ -150,7 +159,11 @@ const RouteSearch = () => {
           'ready|waiting|rendering'.includes( status ) && result.length ? (
             result.map((routes, resIdx) => (
               <div key={`search-${resIdx}`}>
-                <ListItem className={"search-result-container"}>
+                <ListItem 
+                  component={Button}
+                  className={"search-result-container"} 
+                  onClick={() => hanldeRouteClick(resIdx)}
+                >
                   <ListItemText
                     primary={
                       routes.map((selectedRoute, routeIdx) => {
@@ -204,13 +217,18 @@ const useStyles = makeStyles(theme => ({
       overflowY: 'hidden',
       textAlign: 'center'
     },
+    '.search-input-container': {
+      marginTop: '2%',
+      padding: '0% 2%' 
+    },
     ".search-description": {
       textAlign: "left",
       marginTop: '10%',
       padding: '5%'
     },
     ".search-routeNo": {
-      paddingRight: '20%'
+      width: '30%',
+      display: 'inline-block'
     },
     ".search-result-list": {
       overflowY: 'scroll',

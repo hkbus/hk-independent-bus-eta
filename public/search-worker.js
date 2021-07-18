@@ -72,29 +72,39 @@ const dfs = (routeList, stopList, curLocation, targetLocation, curDepth, maxDept
   const stopIds = Object.keys(stopList)
     .filter(stopId => getDistance(stopList[stopId].location, curLocation) < 500)
 
+  // sort out available routes by nearby stops 
+  // fix bug of taking late stop for circular route
+  const availableRoutes = {}
+  stopIds.forEach( stopId => {
+    if ( !stopRoute[stopId] ) return; // skip if the stop have no route
+    stopRoute[stopId].forEach(routeId => {
+      const seq = Object.values(routeList[routeId].stops).reduce( (minIdx, stops) => Math.max( stops.indexOf(stopId), minIdx ), -1 )
+      if ( !availableRoutes[routeId] || availableRoutes[routeId][0] > seq) availableRoutes[routeId] = [seq, stopId]
+    })
+  } )
+
   let found = false
   // take bus in nearby stops
-  for (var stopId of stopIds ) {    
-    if ( !stopRoute[stopId] ) continue // skip if the stop have no route
-    for ( var routeId of stopRoute[stopId] ) {
-      if ( !routePrev[routeId] ) routePrev[routeId] = {}
-      if ( routeFrom in routePrev[routeId] ) continue // skip if same kind of route exchange has been taken before
-      if ( routeLv[routeId] < maxDepth ) continue // skip if this route can directly arrive
+  Object.entries(availableRoutes)
+  .map(([k,v]) => [k, v[1]])
+  .forEach( ([routeId, stopId]) => {
+    if ( !routePrev[routeId] ) routePrev[routeId] = {}
+    if ( routeFrom in routePrev[routeId] ) return; // skip if same kind of route exchange has been taken before
+    if ( routeLv[routeId] < maxDepth ) return; // skip if this route can directly arrive
 
-      routePrev[routeId][routeFrom] = 1
-      for (var stops of Object.values(routeList[routeId].stops)) {
-        const stopIdx = stops.indexOf(stopId)
-        if ( stopIdx === -1 ) continue // skip if no take up stop is found
-        // take off the bus
-        for (var idx = stopIdx + 1; idx < stops.length; ++idx ) {
-          if ( dfs(routeList, stopList, stopList[stops[idx]].location, targetLocation, curDepth - 1, maxDepth, routeId, tmpRoute + '|' + `${routeId}/${stopIdx}-${idx}` ) ) {
-            routeLv[routeFrom] = maxDepth - curDepth
-            found = true
-          }
+    routePrev[routeId][routeFrom] = 1
+    for (var stops of Object.values(routeList[routeId].stops)) {
+      const stopIdx = stops.indexOf(stopId)
+      if ( stopIdx === -1 ) continue // skip if no take up stop is found
+      // take off the bus
+      for (var idx = stopIdx + 1; idx < stops.length; ++idx ) {
+        if ( dfs(routeList, stopList, stopList[stops[idx]].location, targetLocation, curDepth - 1, maxDepth, routeId, tmpRoute + '|' + `${routeId}/${stopIdx}-${idx}` ) ) {
+          routeLv[routeFrom] = maxDepth - curDepth
+          found = true
         }
       }
     }
-  }
+  })
   return found
 }
 
