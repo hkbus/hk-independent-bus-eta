@@ -67,7 +67,7 @@ const CenterControl = ( {onClick}) => {
   )
 }
 
-const BusRoute = ( {route: {routeId, on, off}, lv} ) => {
+const BusRoute = ( {route: {routeId, on, off}, lv, stopIdx, onMarkerClick} ) => {
   const { db: {routeList, stopList} } = useContext ( AppContext )
   const stops = Object.values(routeList[routeId].stops).sort((a,b) => b.length - a.length)[0].slice(on, off+1)
   return (
@@ -77,9 +77,9 @@ const BusRoute = ( {route: {routeId, on, off}, lv} ) => {
         <Marker 
           key={`${stopId}-${idx}`} 
           position={stopList[stopId].location} 
-          icon={BusStopMarker({active: false, passed: false, lv})}
+          icon={BusStopMarker({active: stopIdx === idx, passed: idx < stopIdx, lv})}
           eventHandlers={{
-            click: (e) => {console.log(e)}
+            click: (e) => {onMarkerClick(routeId, idx)}
           }}
         />
       )
@@ -131,7 +131,7 @@ const Walklines = ({routes, start, end}) => {
   )
 }
 
-const SearchMap = ({routes, start, end}) => {
+const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } = useContext ( AppContext )
   useStyles()
   const [mapState, setMapState] = useState({
@@ -195,7 +195,7 @@ const SearchMap = ({routes, start, end}) => {
           }
         />
         { 
-          (routes || []).map((route, idx) => <BusRoute key={`route-${idx}`} route={route} lv={idx}/>)
+          (routes || []).map((route, idx) => <BusRoute key={`route-${idx}`} route={route} lv={idx} stopIdx={stopIdx[idx]} onMarkerClick={onMarkerClick} />)
         }
         <Walklines routes={routes} start={start} end={end} />
         <SelfCircle />

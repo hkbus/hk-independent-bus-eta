@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import {
   CircularProgress,
   Typography
 } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { fetchEtas } from 'hk-bus-eta'
+import AppContext from "../../AppContext"
 
-const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId, containerClass } ) => {
+const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId, containerClass, showStopName = false } ) => {
   const { t, i18n } = useTranslation()
   const [ etas, setEtas ] = useState(null)
+  const {db: {stopList}} = useContext(AppContext)
 
   useEffect( () => {
     let isMounted = true
@@ -27,7 +29,7 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId, co
       clearInterval(fetchEtaInterval)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [seq])
 
   if ( etas == null ) {
     return (
@@ -48,9 +50,11 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId, co
       }
     }
   }
+  const stopId = Object.values(routeStops).sort((a,b) => b.length - a.length)[0][seq]
 
   return (
     <div className={containerClass}>
+      {showStopName ? <Typography variant="caption">{stopList[stopId].name[i18n.language]}</Typography> : null}
       {
         etas.length === 0 ? t('未有班次資料') : (
           etas.map((eta, idx) => (

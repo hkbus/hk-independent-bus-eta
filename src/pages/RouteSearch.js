@@ -21,7 +21,7 @@ const RouteSearch = () => {
   })
   const [status, setStatus] = useState("ready")
   const [result, setResult] = useState([])
-  const [routeIdx, setRouteIdx] = useState(0)
+  const [resultIdx, setResultIdx] = useState({resultIdx: 0, stopIdx: [0, 0]})
   useStyles()
 
   const worker = useRef(undefined)
@@ -133,7 +133,7 @@ const RouteSearch = () => {
       start: v ? {lat: v.lat, lng: v.lng} : geolocation
     })
     setStatus('waiting')
-    setRouteIdx(0)
+    setResultIdx({resultIdx: 0, stopIdx: [0,0]})
     setResult([])
   }
 
@@ -144,17 +144,29 @@ const RouteSearch = () => {
       end: v ? {lat: v.lat, lng: v.lng} : null
     })
     setStatus('waiting')
-    setRouteIdx(0)
+    setResultIdx({resultIdx: 0, stopIdx: [0, 0]})
     setResult([])
   }
 
   const handleRouteClick = (idx) => {
-    setRouteIdx(idx)
+    setResultIdx({resultIdx: idx, stopIdx: [0, 0]})
+  }
+
+  const handleMarkerClick = (routeId, offset) => {
+    const routeIdx = result[resultIdx.resultIdx].map(route => route.routeId).indexOf(routeId)
+    setResultIdx(prevResultIdx => {
+      const _stopIdx = [...prevResultIdx.stopIdx]
+      _stopIdx[routeIdx] = offset
+      return {
+        ...prevResultIdx,
+        stopIdx: _stopIdx
+      }
+    })
   }
   
   return (
     <Paper className={"search-root"} square elevation={0}>
-      <SearchMap routes={result[routeIdx]} start={locations.start} end={locations.end} />
+      <SearchMap routes={result[resultIdx.resultIdx]} stopIdx={resultIdx.stopIdx} start={locations.start} end={locations.end} onMarkerClick={handleMarkerClick}/>
       <div className={"search-input-container"}>
       <AddressInput
         placeholder={t("你的位置")}
@@ -178,7 +190,8 @@ const RouteSearch = () => {
                 routes={routes} 
                 idx={resIdx}
                 handleRouteClick={handleRouteClick}
-                expanded={resIdx === routeIdx}
+                expanded={resIdx === resultIdx.resultIdx}
+                stopIdx={resIdx === resultIdx.resultIdx ? resultIdx.stopIdx : null}
               />
             ))
           ) : <>{t("找不到合適的巴士路線")}</> ))

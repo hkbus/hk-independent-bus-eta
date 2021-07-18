@@ -6,7 +6,7 @@ import AppContext from '../../AppContext'
 import RouteNo from '../route-list/RouteNo'
 import TimeReport from '../route-eta/TimeReport'
 
-const SearchResult = ({routes, idx, handleRouteClick, expanded}) => {
+const SearchResult = ({routes, idx, handleRouteClick, expanded, stopIdx}) => {
   const {db: {routeList, stopList}} = useContext(AppContext)
   const {t, i18n} = useTranslation()
   useStyles()
@@ -54,7 +54,7 @@ const SearchResult = ({routes, idx, handleRouteClick, expanded}) => {
           return (
             <TimeReport 
               route={route}
-              seq={selectedRoute.on}
+              seq={selectedRoute.on + ( stopIdx ? stopIdx[routeIdx] : 0 )}
               routeStops={stops}
               serviceType={serviceType}
               bound={bound}
@@ -62,6 +62,7 @@ const SearchResult = ({routes, idx, handleRouteClick, expanded}) => {
               nlbId={nlbId}
               containerClass={"search-timereport-container"}
               key={`timereport-${idx}-${routeIdx}`}
+              showStopName={true}
             />
           )
         })}
