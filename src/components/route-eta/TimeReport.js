@@ -6,7 +6,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { fetchEtas } from 'hk-bus-eta'
 
-const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId } ) => {
+const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId, containerClass } ) => {
   const { t, i18n } = useTranslation()
   const [ etas, setEtas ] = useState(null)
 
@@ -31,7 +31,9 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId } )
 
   if ( etas == null ) {
     return (
-      <CircularProgress size={20} style={{}} />
+      <div className={containerClass}>
+        <CircularProgress size={20} style={{}} />
+      </div>
     )
   }
 
@@ -48,7 +50,7 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId } )
   }
 
   return (
-    <div>
+    <div className={containerClass}>
       {
         etas.length === 0 ? t('未有班次資料') : (
           etas.map((eta, idx) => (

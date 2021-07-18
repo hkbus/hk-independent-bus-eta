@@ -131,7 +131,7 @@ const Walklines = ({routes, start, end}) => {
   )
 }
 
-const RouteSearchMap = ({routes, start, end}) => {
+const SearchMap = ({routes, start, end}) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } = useContext ( AppContext )
   useStyles()
   const [mapState, setMapState] = useState({
@@ -219,7 +219,7 @@ const RouteSearchMap = ({routes, start, end}) => {
   )
 }
 
-export default RouteSearchMap
+export default SearchMap
 
 const getPoint = ({lat, lng}) => [lat, lng]
 
