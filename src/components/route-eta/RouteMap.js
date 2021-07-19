@@ -10,7 +10,11 @@ import { checkPosition } from '../../utils'
 
 const ChangeMapCenter = ( {center} ) => {
   const map = useMap()
-  map.flyTo(checkPosition(center))
+  if ( navigator.userAgent === 'prerendering' ) {
+    map.setView(checkPosition(center), 11)
+  } else {
+    map.flyTo(checkPosition(center))
+  }
   return <></>
 }
 
@@ -45,7 +49,7 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
   const { db: {stopList}, geolocation, geoPermission, updateGeoPermission, colorMode } = useContext ( AppContext )
   useStyles()
   const [mapState, setMapState] = useState({
-    center: stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : {},
+    center: stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : stopList[stops[Math.round(stops.length/2)]].location,
     isFollow: false
   })
   const {center, isFollow} = mapState
@@ -62,11 +66,11 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
   useEffect ( () => {
     const _center = stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : 
       stopList[stops[Math.round(stops.length/2)]].location
-    if ( _center.lat !== center.lat && _center.lng !== center.lng ) {
+    if ( _center.lat !== center.lat || _center.lng !== center.lng ) {
       updateCenter({ center: _center })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stopIdx])
+  }, [stops, stopIdx])
 
   useEffect ( () => {
     if ( !map ) return;

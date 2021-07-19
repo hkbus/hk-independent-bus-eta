@@ -116,6 +116,7 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
     const dom = new jsdom.JSDOM(html)
     const css = cleanCss.minify(Array.prototype.map.call(dom.window.document.querySelectorAll('style[data-jss]'), e => e.textContent).join('')).styles
     dom.window.document.querySelectorAll('style[data-jss]').forEach(e => e.parentNode.removeChild(e))
+    dom.window.document.querySelectorAll('img[role=presentation]').forEach(e => {e.style.opacity = 1; e.className = `${e.className} leaflet-tile-loaded`})
     dom.window.document.querySelector('style[prerender]').textContent = css
     
     return dom.serialize();
