@@ -25,6 +25,7 @@ import Footer from './components/layout/Footer'
 import { isEmptyObj } from './utils'
 import Home from './pages/Home'
 import RouteEta from './pages/RouteEta'
+import { SearchContextProvider } from './SearchContext'
 const RouteBoard = React.lazy(() =>  import('./pages/RouteBoard'))
 const RouteSearch = React.lazy(() => import('./pages/RouteSearch'))
 const Settings = React.lazy(() => import('./pages/Settings'))
@@ -34,25 +35,27 @@ const PageSwitch = () => {
   const { db: {routeList} } = useContext(AppContext)
   
   return (
-    <Suspense fallback={<></>}>
-      <Switch>
-        <Route path={`${path}/route/:id/:panel?`}>
-          {!isEmptyObj(routeList) ? <RouteEta /> : <CircularProgress size={40} />}
-        </Route>
-        <Route path={`${path}/settings`}>
-          <Settings />
-        </Route>      
-        <Route path={`${path}/board`}>
-          <RouteBoard />
-        </Route>
-        <Route path={`${path}/search`}>
-          <RouteSearch />
-        </Route>
-        <Route path={`${path}`}>
-          <Home />
-        </Route>
-      </Switch>
-    </Suspense>
+    <SearchContextProvider>
+      <Suspense fallback={<></>}>
+        <Switch>
+          <Route path={`${path}/route/:id/:panel?`}>
+            {!isEmptyObj(routeList) ? <RouteEta /> : <CircularProgress size={40} />}
+          </Route>
+          <Route path={`${path}/settings`}>
+            <Settings />
+          </Route>      
+          <Route path={`${path}/board`}>
+            <RouteBoard />
+          </Route>
+          <Route path={`${path}/search`}>
+            <RouteSearch />
+          </Route>
+          <Route path={`${path}`}>
+            <Home />
+          </Route>
+        </Switch>
+      </Suspense>
+    </SearchContextProvider>
   )
 }
 

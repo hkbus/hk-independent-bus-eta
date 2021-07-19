@@ -104,6 +104,8 @@ const Walklines = ({routes, start, end}) => {
   const { db: {routeList, stopList} } = useContext ( AppContext )
   const lines = []
   const points = []
+
+  if ( !(start && end) ) return <></>
   
   points.push(start);
   (routes || []).forEach(({routeId, on, off}) => {

@@ -25,6 +25,7 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId, co
     }, 30000)
 
     return () => {
+      setEtas(null)
       isMounted = false
       clearInterval(fetchEtaInterval)
     }

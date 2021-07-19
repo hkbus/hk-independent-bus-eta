@@ -1,5 +1,4 @@
 let routePrev = {}
-let stopPrev = {}
 const routeLv = {}
 const bestRouteStop = {}
 const stopRoute = {}
@@ -114,7 +113,6 @@ onmessage = (e) => {
   let count = 0
   for (var i=1;i<=maxDepth;++i ) {
     routePrev = {}
-    stopPrev = {} 
     dfs(routeList, stopList, start, end, i, i)
     count = dfsRoutes.length
     submitResult(routeList, stopList, end)

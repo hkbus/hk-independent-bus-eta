@@ -5,7 +5,7 @@ import AsyncSelect from 'react-select/async'
 import { makeStyles } from '@material-ui/styles'
 import proj4 from 'proj4'
 
-const AddressInput = ({placeholder = '', onChange, stopList}) => {
+const AddressInput = ({placeholder = '', onChange, stopList, value}) => {
   const { t, i18n } = useTranslation()
   const abortController = useRef(new AbortController())
   useStyles()
@@ -15,14 +15,14 @@ const AddressInput = ({placeholder = '', onChange, stopList}) => {
       .filter((stop) => stop.name.zh.includes(addr) || stop.name.en.toLowerCase().includes(addr.toLowerCase()))
       .map((stop) => ({
         label: `${stop.name[i18n.language]} - ${t("車站")}`,
-        value: stop
+        location: stop.location,
       })).slice(0,10)
     abortController.current.abort();
     abortController.current = new AbortController()
     loadAddressFromGeodata(addr, {signal: abortController.current.signal}).then(suggestions => {
       callback(stopAddresses.concat(suggestions.map(({name, address, lat, lng}) => ({
         label: [name[i18n.language], address[i18n.language]].filter( e => e ).join(' - '),
-        value: {location: {lat, lng}, name, address}
+        location: {lat, lng}, 
       }))))
     })
   }, 200)).current
@@ -30,9 +30,10 @@ const AddressInput = ({placeholder = '', onChange, stopList}) => {
   return (
     <AsyncSelect
       isClearable
+      value={value}
       loadOptions={loadAddress}
       placeholder={placeholder}
-      onChange={(v) => {onChange( v || {value: {location: null}})}}
+      onChange={onChange}
       classNamePrefix="react-select"
     />
   )
@@ -86,7 +87,6 @@ const useStyles = makeStyles((theme) => ({
       background: `${theme.palette.type === 'dark' ? theme.palette.background.default : 'white'} !important`
     },
     '.react-select__option--is-selected': {
-      filter: 'sepia(1)',
       background: `${theme.palette.type === 'dark' ? theme.palette.background.default : 'white'} !important`,
       color: `${theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.text.primary} !important`
     },

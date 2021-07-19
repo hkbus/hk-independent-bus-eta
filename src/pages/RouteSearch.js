@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useState, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { Box, CircularProgress, Divider, Paper, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import AppContext from '../AppContext'
+import SearchContext from '../SearchContext'
 import { useTranslation } from 'react-i18next'
 import AddressInput from '../components/route-search/AddressInput'
 import SearchResult from '../components/route-search/SearchResult'
 import SearchMap from '../components/route-search/SearchMap'
 import { fetchEtas } from 'hk-bus-eta'
-import { setSeoHeader, getDistance } from '../utils'
+import { setSeoHeader, getDistance, vibrate } from '../utils'
 
 const RouteSearch = () => {
   const { t, i18n } = useTranslation()
@@ -15,13 +16,13 @@ const RouteSearch = () => {
     AppTitle, geolocation,
     db: {routeList, stopList}
   } = useContext(AppContext)
-  const [locations, setLocations] = useState({
-    start: geolocation,
-    end: null
-  })
-  const [status, setStatus] = useState("ready")
-  const [result, setResult] = useState([])
-  const [resultIdx, setResultIdx] = useState({resultIdx: 0, stopIdx: [0, 0]})
+  const {
+    locations, setLocations, 
+    status, setStatus,
+    result, setResult,
+    resultIdx, setResultIdx
+  } = useContext(SearchContext)
+
   useStyles()
 
   const worker = useRef(undefined)
@@ -33,15 +34,17 @@ const RouteSearch = () => {
   }
   
   const updateRoutes = (routeResults) => {
-    const uniqueRoutes = routeResults.reduce((acc, routeArr) => acc.concat(routeArr.map(r => r.routeId)), []).filter((v, i, s) => s.indexOf(v) === i)
-    
+    const uniqueRoutes = routeResults.reduce((acc, routeArr) => acc.concat(...routeArr.map(r => [`${r.routeId}/${r.on}`, `${r.routeId}/${r.off}`])), []).filter((v, i, s) => s.indexOf(v) === i)
+
     // check currently available routes by fetching ETA
-    Promise.all(uniqueRoutes.map(routeId => fetchEtas({
+    Promise.all(uniqueRoutes.map(routeIdSeq => {
+      const [routeId, seq] = routeIdSeq.split('/')
+      return !navigator.onLine ? new Promise((resolve) => resolve([{eta: 1}])) : fetchEtas({
         ...routeList[routeId], 
-        seq: 0, 
+        seq: parseInt(seq, 10),
         routeStops: routeList[routeId].stops,
         co: Object.keys(routeList[routeId].stops)
-    }))).then(etas => 
+    })})).then(etas => 
       // filter out non available route
       uniqueRoutes.filter((routeId, idx) => etas[idx].length && etas[idx].reduce((acc, eta) => {return acc || eta.eta}, null))
     ).then( availableRoutes => {
@@ -49,12 +52,12 @@ const RouteSearch = () => {
         // save current available route only
         ...routeResults.filter( routes => (
           routes.reduce((ret, route) => {
-            return ret && availableRoutes.indexOf( route.routeId ) !== -1
+            return ret && (availableRoutes.indexOf( `${route.routeId}/${route.on}` ) !== -1 || availableRoutes.indexOf( `${route.routeId}/${route.off}` ) !== -1)
           }, true)
         ))
         // refine nearest start if available
         .map(routes => {
-          let start = locations.start
+          let start = locations.start ? locations.start.location : geolocation
           return routes.map((route, idx) => {
             const stops = Object.values(routeList[route.routeId].stops).sort((a,b) => b.length - a.length)[0]
             let bestOn = -1
@@ -99,13 +102,13 @@ const RouteSearch = () => {
   }, [result])
 
   useEffect(() => {
-    if (status === 'waiting' && locations.start && locations.end) {
+    if (status === 'waiting' && locations.end) {
       if ( window.Worker ) {
         terminateWorker()
         worker.current = new Worker('/search-worker.js')
         worker.current.postMessage({routeList, stopList, 
-          start: locations.start,
-          end: locations.end, 
+          start: locations.start ? locations.start.location : geolocation,
+          end: locations.end.location, 
           maxDepth: 2
         })
         worker.current.onmessage = (e) => {
@@ -126,30 +129,33 @@ const RouteSearch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, locations])
 
-  const handleStartChange = ( {value: { location: v } } ) => {
-    if ( !v || !(v.lat && v.lng) ) return;
+  const handleStartChange = ( value ) => {
     setLocations({
       ...locations,
-      start: v ? {lat: v.lat, lng: v.lng} : geolocation
+      start: value
     })
+    
     setStatus('waiting')
     setResultIdx({resultIdx: 0, stopIdx: [0,0]})
     setResult([])
   }
 
-  const handleEndChange = ( {value: { location: v } } ) => {
-    if ( !v || !(v.lat && v.lng) ) return
+  const handleEndChange = ( value ) => {
     setLocations({
       ...locations,
-      end: v ? {lat: v.lat, lng: v.lng} : null
+      end: value
     })
-    setStatus('waiting')
+    
+    if ( value ) setStatus('waiting')
     setResultIdx({resultIdx: 0, stopIdx: [0, 0]})
     setResult([])
   }
 
   const handleRouteClick = (idx) => {
-    setResultIdx({resultIdx: idx, stopIdx: [0, 0]})
+    vibrate(1)
+    setTimeout(() => {
+      setResultIdx({resultIdx: idx, stopIdx: [0, 0]})
+    }, 0)
   }
 
   const handleMarkerClick = (routeId, offset) => {
@@ -163,17 +169,25 @@ const RouteSearch = () => {
       }
     })
   }
-  
+
   return (
     <Paper className={"search-root"} square elevation={0}>
-      <SearchMap routes={result[resultIdx.resultIdx]} stopIdx={resultIdx.stopIdx} start={locations.start} end={locations.end} onMarkerClick={handleMarkerClick}/>
+      <SearchMap 
+        start={locations.start ? locations.start.location : geolocation} 
+        end={locations.end ? locations.end.location : null}
+        routes={result[resultIdx.resultIdx]} 
+        stopIdx={resultIdx.stopIdx} 
+        onMarkerClick={handleMarkerClick}
+      />
       <div className={"search-input-container"}>
       <AddressInput
+        value={locations.start}
         placeholder={t("你的位置")}
         onChange={handleStartChange}
         stopList={stopList}
       />
       <AddressInput
+        value={locations.end}
         placeholder={t("目的地")}
         onChange={handleEndChange}
         stopList={stopList}
@@ -181,7 +195,7 @@ const RouteSearch = () => {
       </div>
       <Box className={"search-result-list"}>
         {
-          !locations.start || !locations.end ? <RouteSearchDetails /> : (
+          !locations.end ? <RouteSearchDetails /> : (
           'waiting|rendering'.includes(status) && result.length === 0 ? <CircularProgress size={30} className={"search-route-loading"} /> : (
           'ready|waiting|rendering'.includes( status ) && result.length ? (
             result.map((routes, resIdx) => (
