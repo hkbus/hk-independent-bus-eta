@@ -28,6 +28,9 @@ export const AppContextProvider = ( props ) => {
   const devicePreferColorScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   const [ colorMode, setColorMode ] = useState(localStorage.getItem('colorMode') || devicePreferColorScheme )
 
+  // energy saving mode
+  const [ energyMode, setEnergyMode ] = useState(false)
+
   useEffect(() => {
     if ( geoPermission === 'granted' ) {
       const _geoWatcherId = navigator.geolocation.watchPosition(({coords: {latitude, longitude}}) => {
@@ -72,6 +75,12 @@ export const AppContextProvider = ( props ) => {
     const colorMode = prevColorMode === 'dark' ? 'light' : 'dark'
     localStorage.setItem('colorMode', colorMode)
     return colorMode
+  })
+
+  const toggleEnergyMode = () => setEnergyMode(prevEnergyMode => {
+    const energyMode = !prevEnergyMode
+    localStorage.setItem('energyMode', energyMode)
+    return energyMode
   })
   
   const updateSearchRouteByButton = (buttonValue) => {
@@ -138,7 +147,8 @@ export const AppContextProvider = ( props ) => {
         // settings
         renewDb,
         geoPermission, updateGeoPermission,
-        colorMode , toggleColorMode
+        colorMode , toggleColorMode,
+        energyMode, toggleEnergyMode
       }}
     >
       {props.children}

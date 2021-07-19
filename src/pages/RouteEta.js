@@ -11,7 +11,7 @@ import { setSeoHeader, toProperCase } from '../utils'
 
 const RouteEta = () => {
   const { id, panel } = useParams()
-  const { AppTitle, db:{ routeList, stopList, stopMap}, updateSelectedRoute } = useContext ( AppContext )
+  const { AppTitle, db:{ routeList, stopList, stopMap}, updateSelectedRoute, energyMode } = useContext ( AppContext )
   const { route, stops, co, orig, dest, nlbId, fares } = routeList[id.toUpperCase()]
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
   const [ isDialogOpen, setIsDialogOpen ] = useState( false )
@@ -87,11 +87,11 @@ const RouteEta = () => {
       <Typography component="h2" variant="caption" align='center'>
         {t('往')} {toProperCase(dest[i18n.language])} {nlbId ? t('由')+" "+toProperCase(orig[i18n.language]) : ""}
       </Typography>
-      <RouteMap 
+      {!energyMode ? <RouteMap 
         stops={getStops(co, stops)}
         stopIdx={expanded}
         onMarkerClick={onMarkerClick}
-      />
+      /> : <></>}
       <StopAccordions 
         expanded={expanded}
         setExpanded={setExpanded}

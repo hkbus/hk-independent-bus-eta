@@ -13,7 +13,7 @@ import { setSeoHeader, getDistance, vibrate } from '../utils'
 const RouteSearch = () => {
   const { t, i18n } = useTranslation()
   const { 
-    AppTitle, geolocation,
+    AppTitle, geolocation, energyMode,
     db: {routeList, stopList}
   } = useContext(AppContext)
   const {
@@ -172,13 +172,13 @@ const RouteSearch = () => {
 
   return (
     <Paper className={"search-root"} square elevation={0}>
-      <SearchMap 
+      {!energyMode ? <SearchMap 
         start={locations.start ? locations.start.location : geolocation} 
         end={locations.end ? locations.end.location : null}
         routes={result[resultIdx.resultIdx]} 
         stopIdx={resultIdx.stopIdx} 
         onMarkerClick={handleMarkerClick}
-      />
+      /> : null}
       <div className={"search-input-container"}>
       <AddressInput
         value={locations.start}
@@ -193,7 +193,7 @@ const RouteSearch = () => {
         stopList={stopList}
       />
       </div>
-      <Box className={"search-result-list"}>
+      <Box className={!energyMode ? "search-result-list" : "search-result-list-energy"}>
         {
           !locations.end ? <RouteSearchDetails /> : (
           'waiting|rendering'.includes(status) && result.length === 0 ? <CircularProgress size={30} className={"search-route-loading"} /> : (
@@ -253,6 +253,10 @@ const useStyles = makeStyles(theme => ({
     ".search-result-list": {
       overflowY: 'scroll',
       height: 'calc(100% - 30vh - 76px)'
+    },
+    ".search-result-list-energy": {
+      overflowY: 'scroll',
+      height: 'calc(100% - 76px)'
     },
     ".search-route-loading": {
       margin: '10%'

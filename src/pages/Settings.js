@@ -18,6 +18,8 @@ import LocationOffIcon from '@material-ui/icons/LocationOff'
 import { useTranslation } from 'react-i18next'
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
 import DataUsageIcon from '@material-ui/icons/DataUsage'
+import Battery20Icon from '@material-ui/icons/Battery20'
+import BatteryStdIcon from '@material-ui/icons/BatteryStd'
 import DeleteIcon from '@material-ui/icons/Delete'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import ShareIcon from '@material-ui/icons/Share'
@@ -32,7 +34,8 @@ const Settings = () => {
     db: {schemaVersion, versionMd5, updateTime}, renewDb,
     geoPermission, updateGeoPermission,
     resetUsageRecord,
-    colorMode, toggleColorMode
+    colorMode, toggleColorMode,
+    energyMode, toggleEnergyMode
   } = useContext ( AppContext )
   const [ updating, setUpdating ] = useState(false)
   const [ showGeoPermissionDenied, setShowGeoPermissionDenied ] = useState(false)
@@ -103,6 +106,21 @@ const Settings = () => {
           <ListItemText 
             primary={t("黑夜模式")} 
             secondary={t(colorMode === 'dark' ? '開啟' : '關閉')} 
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            vibrate(1)
+            toggleEnergyMode()
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>{energyMode ? <Battery20Icon /> : <BatteryStdIcon />}</Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={t("省電模式")} 
+            secondary={t(energyMode ? '開啟' : '關閉') + ' - ' + t('地圖功能')} 
           />
         </ListItem>
         <ListItem
