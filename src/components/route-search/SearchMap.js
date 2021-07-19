@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Polyline, Circle, useMap } from 'react-leaflet'
 import Leaflet from 'leaflet'
+import { useTranslation } from 'react-i18next'
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
@@ -69,7 +70,10 @@ const CenterControl = ( {onClick}) => {
 
 const BusRoute = ( {route: {routeId, on, off}, lv, stopIdx, onMarkerClick} ) => {
   const { db: {routeList, stopList} } = useContext ( AppContext )
+  const { i18n } = useTranslation()
   const stops = Object.values(routeList[routeId].stops).sort((a,b) => b.length - a.length)[0].slice(on, off+1)
+  const routeNo = routeId.split('-')[0]
+  
   return (
     <>
     {
@@ -78,6 +82,7 @@ const BusRoute = ( {route: {routeId, on, off}, lv, stopIdx, onMarkerClick} ) => 
           key={`${stopId}-${idx}`} 
           position={stopList[stopId].location} 
           icon={BusStopMarker({active: stopIdx === idx, passed: idx < stopIdx, lv})}
+          alt={`${idx}. ${routeNo} - ${stopList[stopId].name[i18n.language]}`}
           eventHandlers={{
             click: (e) => {onMarkerClick(routeId, idx)}
           }}

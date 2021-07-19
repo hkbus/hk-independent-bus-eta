@@ -3,6 +3,7 @@ import { MapContainer, Marker, TileLayer, Polyline, Circle, useMap } from 'react
 import Leaflet from 'leaflet'
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
 import MyLocationIcon from '@material-ui/icons/MyLocation'
 import { checkPosition } from '../../utils'
@@ -48,6 +49,7 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
     isFollow: false
   })
   const {center, isFollow} = mapState
+  const { i18n } = useTranslation()
   const [map, setMap] = useState(null)
 
   const updateCenter = ({center, isFollow = false}) => {
@@ -102,11 +104,12 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
         />
         {
           // plot stops
-          stops.map((stopId, idx, self) => 
+          stops.map((stopId, idx) => 
               <Marker 
                 key={`${stopId}-${idx}`} 
                 position={stopList[stopId].location} 
                 icon={BusStopMarker({active: idx === stopIdx, passed: (idx < stopIdx)})}
+                alt={`${idx}. ${stopList[stopId].name[i18n.language]}`}
                 eventHandlers={{
                   click: (e) => {onMarkerClick(idx)(e, true, true)}
                 }}

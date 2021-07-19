@@ -100,7 +100,7 @@ const Footer = () => {
       />
     </BottomNavigation>
     // eslint-disable-next-line
-  ), [location.pathname, i18n.langauage, colorMode])
+  ), [location.pathname, i18n.langauage, colorMode, selectedRoute])
 }
 
 
