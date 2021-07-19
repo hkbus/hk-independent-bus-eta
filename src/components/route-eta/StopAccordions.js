@@ -21,7 +21,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
   const { 
     db: {routeList, stopList},
     savedEtas, geoPermission, geolocation,
-    updateSavedEtas
+    updateSavedEtas, energyMode
   } = useContext ( AppContext )
 
   const { route, serviceType, bound, stops, co, fares, faresHoliday, nlbId } = routeList[id.toUpperCase()]
@@ -62,7 +62,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
   const toggleSavedRoute = (key) => updateSavedEtas(key)
 
   return (
-    <Box className={"stopAccordions-boxContainer"}>
+    <Box className={!energyMode ? "stopAccordions-boxContainer" : "stopAccordions-boxContainer-energy"}>
       {
         getStops(co, stops).map((stop, idx) => (
           <Accordion 
@@ -154,7 +154,12 @@ const useStyles = makeStyles(theme => ({
       justifyContent: 'space-between'
     },
     ".stopAccordions-boxContainer": {
-      overflowY: 'scroll'
+      overflowY: 'scroll',
+      height: 'calc(100vh - 30vh - 47px)'
+    },
+    ".stopAccordions-boxContainer-energy": {
+      overflowY: 'scroll',
+      height: 'calc(100vh - 47px)'
     }
   }
 }))

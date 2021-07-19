@@ -29,6 +29,9 @@ export const fetchDbFunc = (forceRenew = false) => {
     console.log('New DB, will refetch data')
     localStorage.removeItem('db')
     localStorage.removeItem('versionMd5')
+    localStorage.removeItem('routeList')
+    localStorage.removeItem('stopList')
+    localStorage.removeItem('stopMap')
     localStorage.setItem('dbv', DB_CONTEXT_VERSION)
   }
   const schemaVersion = localStorage.getItem('schemaVersion')
