@@ -1,4 +1,5 @@
-import React, { useContext, Suspense } from 'react'
+import React, { useContext } from 'react'
+import loadable from '@loadable/component'
 import './App.css'
 import { 
   MuiThemeProvider, 
@@ -12,7 +13,6 @@ import {
   useRouteMatch
 } from "react-router-dom";
 import {
-  CircularProgress,
   Container,
   CssBaseline
 } from '@material-ui/core'
@@ -22,50 +22,46 @@ import {
 import AppContext from './AppContext'
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
-import { isEmptyObj } from './utils'
 import Home from './pages/Home'
 import RouteEta from './pages/RouteEta'
 import { SearchContextProvider } from './SearchContext'
-const RouteBoard = React.lazy(() =>  import('./pages/RouteBoard'))
-const RouteSearch = React.lazy(() => import('./pages/RouteSearch'))
-const Settings = React.lazy(() => import('./pages/Settings'))
+const RouteBoard = loadable(() =>  import('./pages/RouteBoard'))
+const RouteSearch = loadable(() => import('./pages/RouteSearch'))
+const Settings = loadable(() => import('./pages/Settings'))
 
 const PageSwitch = () => {
   const { path } = useRouteMatch()
-  const { db: {routeList} } = useContext(AppContext)
-  
+
   return (
     <SearchContextProvider>
-      <Suspense fallback={<></>}>
-        <Switch>
-          <Route path={`${path}/route/:id/:panel?`}>
-            {!isEmptyObj(routeList) ? <RouteEta /> : <CircularProgress size={40} />}
-          </Route>
-          <Route path={`${path}/settings`}>
-            <Settings />
-          </Route>      
-          <Route path={`${path}/board`}>
-            <RouteBoard />
-          </Route>
-          <Route path={`${path}/search`}>
-            <RouteSearch />
-          </Route>
-          <Route path={`${path}`}>
-            <Home />
-          </Route>
-        </Switch>
-      </Suspense>
+      <Switch>
+        <Route path={`${path}/route/:id/:panel?`}>
+          <RouteEta />
+        </Route>
+        <Route path={`${path}/settings`}>
+          <Settings />
+        </Route>
+        <Route path={`${path}/board`}>
+          <RouteBoard />
+        </Route>
+        <Route path={`${path}/search`}>
+          <RouteSearch />
+        </Route>
+        <Route path={`${path}`}>
+          <Home />
+        </Route>
+      </Switch>
     </SearchContextProvider>
   )
 }
 
 const App = () => { 
   const { colorMode } = useContext( AppContext )
-  const classes = useStyles()
+  useStyles()
 
   return (
     <MuiThemeProvider theme={colorMode === 'dark' ? DarkTheme : LightTheme}>
-      <Container maxWidth='xs' disableGutters className={classes.container}>
+      <Container maxWidth='xs' disableGutters className={"AppContainer"}>
         <Router>
           <Route exact path="/">
             <Redirect to="/zh" />
@@ -85,11 +81,13 @@ const App = () => {
 export default App;
 
 const useStyles = makeStyles( theme => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    height: '100vh'
+  "@global":{
+    ".AppContainer": {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      height: '100vh'
+    }
   }
 }))
 
