@@ -6,7 +6,7 @@ import {
   Toolbar,
   Typography
 } from "@material-ui/core"
-import { withStyles, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { Link, useLocation, useHistory, useRouteMatch } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
@@ -62,59 +62,25 @@ const Header = () => {
         }}
         disabled={path.includes('route')}
       />
-      <LanguageTabs
+      <Tabs className={"language-tabs"}
           value={i18n.language}
           onChange={(e, v) => handleLanguageChange(v)}
         >
-        <LanguageTab 
+        <Tab disableRipple className={"language-tab"}
           id="en-selector" value="en" label="En"
           component={Link} to={`${window.location.pathname.replace('/zh', '/en')}`}  
           onClick={(e) => e.preventDefault()}
         />
-        <LanguageTab 
+        <Tab disableRipple className={"language-tab"} 
           id="zh-selector" value="zh" label="繁" 
           component={Link} to={`${window.location.pathname.replace('/en', '/zh')}`}  
           onClick={(e) => e.preventDefault()}
         />
-      </LanguageTabs>
+      </Tabs>
     </Toolbar>
     // eslint-disable-next-line
   ), [searchRoute, i18n.language, location.pathname, colorMode])
 }
-
-const LanguageTab = withStyles((theme) => ({
-  root: {
-    textTransform: 'none',
-    minWidth: 36,
-    fontWeight: 900,
-    marginRight: theme.spacing(0),
-    fontSize: '15px',
-    opacity: 1,
-    padding: '6px 6px'
-  },
-  selected:{
-    '& > .MuiTab-wrapper':{
-      color: 'black',
-      backgroundColor: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.background.paper,
-    }
-  },
-  wrapper: {
-    color: theme.palette.text.primary,
-    borderRadius: '30px',
-    padding: '2px 10px 0px 10px'
-  }
-}))((props) => <Tab disableRipple {...props} />);
-
-const LanguageTabs = withStyles((theme) => ({
-  root: {
-    borderBottom: 'none',
-    minHeight: 24
-  },
-  indicator: {
-    backgroundColor: 'transparent'
-  }
-}))(Tabs);
-
 
 export default Header
 
@@ -140,6 +106,33 @@ const useStyles = makeStyles(theme => ({
       },
       "& input::before": {
         borderBottom: `1px ${theme.palette.text.primary} solid`
+      }
+    },
+    '.language-tabs': {
+      borderBottom: 'none',
+      minHeight: 24,
+      '& .MuiTabs-indicator': {
+        backgroundColor: 'transparent'
+      }
+    },
+    ".language-tab": {
+      textTransform: 'none',
+      minWidth: 36,
+      fontWeight: 900,
+      marginRight: theme.spacing(0),
+      fontSize: '15px',
+      opacity: 1,
+      padding: '6px 6px',
+      "& .MuiTab-wrapper": {
+        color: theme.palette.text.primary,
+        borderRadius: '30px',
+        padding: '2px 10px 0px 10px'
+      }
+    },
+    ".language-tab.Mui-selected": {
+      '& .MuiTab-wrapper':{
+        color: 'black',
+        backgroundColor: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.background.paper,
       }
     }
   }
