@@ -10,7 +10,7 @@ import { vibrate } from '../../utils'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
-import Etas from './Etas'
+import SuccinctEtas from './SuccinctEtas'
 import { getDistance, toProperCase } from '../../utils'
 import RouteNo from '../route-list/RouteNo'
 
@@ -81,7 +81,7 @@ const SuccinctTimeReport = ({routeId} ) => {
         }}
         className={"succinctTimeReport-routeDest"}
       />
-      <Etas routeId={routeId} />
+      <SuccinctEtas routeId={routeId} />
     </ListItem>
     <Divider />
     </>

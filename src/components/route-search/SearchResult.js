@@ -49,23 +49,15 @@ const SearchResult = ({routes, idx, handleRouteClick, expanded, stopIdx}) => {
         />
       </AccordionSummary>
       <AccordionDetails classes={{root: "search-accordionDetails-root"}}>
-        {routes.map((selectedRoute, routeIdx) => { 
-          const { route, serviceType, bound, stops, co, nlbId } = routeList[selectedRoute.routeId.toUpperCase()]
-          return (
-            <TimeReport 
-              route={route}
-              seq={selectedRoute.on + ( stopIdx ? stopIdx[routeIdx] : 0 )}
-              routeStops={stops}
-              serviceType={serviceType}
-              bound={bound}
-              co={co}
-              nlbId={nlbId}
-              containerClass={"search-timereport-container"}
-              key={`timereport-${idx}-${routeIdx}`}
-              showStopName={true}
-            />
-          )
-        })}
+        {routes.map((selectedRoute, routeIdx) => (
+          <TimeReport 
+            key={`timereport-${idx}-${routeIdx}`}
+            routeId={selectedRoute.routeId.toUpperCase()}
+            seq={selectedRoute.on + ( stopIdx ? stopIdx[routeIdx] : 0 )}
+            containerClass={"search-timereport-container"}
+            showStopName={true}
+          />
+        ))}
       </AccordionDetails>
     </Accordion>
   )

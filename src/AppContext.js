@@ -29,7 +29,11 @@ export const AppContextProvider = ( props ) => {
   const [ colorMode, setColorMode ] = useState(localStorage.getItem('colorMode') || devicePreferColorScheme )
 
   // energy saving mode
-  const [ energyMode, setEnergyMode ] = useState(false)
+  const [ energyMode, setEnergyMode ] = useState(JSON.parse(localStorage.getItem('energyMode')) || false)
+
+  // check if window is on active in mobile
+  const [isVisible, setIsVisible] = useState(true)
+  const onVisibilityChange = () => setIsVisible(!document.hidden)
 
   useEffect(() => {
     if ( geoPermission === 'granted' ) {
@@ -38,8 +42,10 @@ export const AppContextProvider = ( props ) => {
       })
       geoWatcherId.current = _geoWatcherId
     }
+    window.addEventListener("visibilitychange", onVisibilityChange)
     return () => {
       if ( geoWatcherId.current ) navigator.geolocation.clearWatch(geoWatcherId.current)
+      window.removeEventListener("visibilitychange", onVisibilityChange)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -79,7 +85,7 @@ export const AppContextProvider = ( props ) => {
 
   const toggleEnergyMode = () => setEnergyMode(prevEnergyMode => {
     const energyMode = !prevEnergyMode
-    localStorage.setItem('energyMode', energyMode)
+    localStorage.setItem('energyMode', JSON.stringify(energyMode))
     return energyMode
   })
   
@@ -143,7 +149,7 @@ export const AppContextProvider = ( props ) => {
         // UX
         hotRoute, geolocation, updateGeolocation,
         savedEtas, updateSavedEtas,
-        resetUsageRecord,
+        resetUsageRecord, isVisible,
         // settings
         renewDb,
         geoPermission, updateGeoPermission,

@@ -1,36 +1,17 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext } from 'react'
 import {
   CircularProgress,
   Typography
 } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
-import { fetchEtas } from 'hk-bus-eta'
 import AppContext from "../../AppContext"
+import { useEtas } from "../Etas"
 
-const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId, containerClass, showStopName = false } ) => {
+const TimeReport = ( { routeId, seq, containerClass, showStopName = false } ) => {
   const { t, i18n } = useTranslation()
-  const [ etas, setEtas ] = useState(null)
+  const { db: {routeList} } = useContext(AppContext) 
+  const etas = useEtas(`${routeId}/${seq}`)
   const {db: {stopList}} = useContext(AppContext)
-
-  useEffect( () => {
-    let isMounted = true
-    const fetchData = () => {
-      fetchEtas({route, routeStops, seq, bound, serviceType, co, nlbId}).then(_etas => {
-        if (isMounted) setEtas(_etas)
-      })
-    }
-    fetchData()
-    const fetchEtaInterval = setInterval(() => {
-      fetchData()
-    }, 30000)
-
-    return () => {
-      setEtas(null)
-      isMounted = false
-      clearInterval(fetchEtaInterval)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seq])
 
   if ( etas == null ) {
     return (
@@ -41,7 +22,7 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId, co
   }
 
   const displayMsg = (eta) => {
-    if ( eta === '' ) return ''
+    if ( !eta ) return ''
     else {
       const waitTime = Math.round(((new Date(eta)) - (new Date())) / 60 / 1000)
       if ( waitTime < 1 ) {
@@ -51,7 +32,7 @@ const TimeReport = ( { route, routeStops, seq, bound, serviceType, co, nlbId, co
       }
     }
   }
-  const stopId = Object.values(routeStops).sort((a,b) => b.length - a.length)[0][seq]
+  const stopId = Object.values(routeList[routeId].stops)[0][seq]
 
   return (
     <div className={containerClass}>

@@ -24,7 +24,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
     updateSavedEtas, energyMode
   } = useContext ( AppContext )
 
-  const { route, serviceType, bound, stops, co, fares, faresHoliday, nlbId } = routeList[id.toUpperCase()]
+  const { stops, co, fares, faresHoliday } = routeList[id.toUpperCase()]
   const { t, i18n } = useTranslation()
   const accordionRef = useRef([])
 
@@ -82,13 +82,8 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
             </AccordionSummary>
             <AccordionDetails classes={{root: "accordionDetails-root"}}>
               <TimeReport 
-                route={route}
+                routeId={`${id.toUpperCase()}`}
                 seq={idx}
-                routeStops={stops}
-                serviceType={serviceType}
-                bound={bound}
-                co={co}
-                nlbId={nlbId}
               />
               <IconButton 
                 aria-label="favourite" 
