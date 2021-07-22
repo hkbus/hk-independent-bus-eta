@@ -37,6 +37,7 @@ const Header = () => {
           vibrate(1)
           history.push(`/${i18n.language}/board`)
         }}
+        rel="nofollow"
       >
         <Typography component="h1" variant='subtitle2' className={"header-appTitle"}>{t('巴士到站預報')}</Typography>
       </Link> 
