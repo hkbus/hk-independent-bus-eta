@@ -4,9 +4,8 @@ import AppContext from '../AppContext'
 
 export const useEtas = (routeId) => {
   const { db: {routeList}, isVisible } = useContext ( AppContext )
-  const [ routeNo, serviceType ] = routeId.split('-')
   const [ routeKey, seq ] = routeId.split('/')
-  const { co, stops, bound, nlbId } = routeList[routeKey] || DefaultRoute
+  const routeObj = routeList[routeKey] || DefaultRoute
   const [ etas, setEtas ] = useState(null)
 
   useEffect(() => {
@@ -19,7 +18,7 @@ export const useEtas = (routeId) => {
         return new Promise((resolve) => resolve())
       }
       return fetchEtas({
-        route: routeNo, routeStops: stops, seq: parseInt(seq, 10), bound, serviceType, co, nlbId
+        ...routeObj, seq: parseInt(seq, 10)
       }).then ( _etas => {
         if (isMounted) setEtas(_etas)
       })
