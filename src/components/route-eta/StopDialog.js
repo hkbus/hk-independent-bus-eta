@@ -60,7 +60,8 @@ const useStyles = makeStyles(theme => ({
       }
     },
     '.stopDialog-title': {
-      background: '#ffff90'
+      backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
+      color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
     }
   }
 }))
