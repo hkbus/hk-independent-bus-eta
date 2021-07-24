@@ -74,7 +74,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
             classes={{root: "accordion-root", expanded: 'accordion-expanded'}}
           >
             <AccordionSummary classes={{root: "accordionSummary-root", content: "accordionSummary-content", expanded: "accordionSummary-expanded"}}>
-              <Typography component="h3" variant="body1">{toProperCase(stopList[stop].name[i18n.language])}</Typography>
+              <Typography component="h3" variant="body1">{idx+1}. {toProperCase(stopList[stop].name[i18n.language])}</Typography>
               <Typography variant='caption'>
                 {fares && fares[idx] ? t('車費')+': $'+fares[idx] : ''}
                 {faresHoliday && faresHoliday[idx] ? '　　　　'+t('假日車費')+': $'+faresHoliday[idx] : ''}

@@ -197,7 +197,7 @@ const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url={colorMode === 'dark' ? 
-            "https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png" : 
+            "https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png" : 
             "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           }
         />
@@ -247,7 +247,8 @@ const EndsMarker = ( {isStart} ) => {
 const useStyles = makeStyles ( theme => ({
   "@global": {
     ".routeMap-mapContainer": {
-      height: '30vh'
+      height: '30vh',
+      filter: theme.palette.type === 'dark' ? 'brightness(0.9)' : 'none'
     },
     ".routeMap-centerControl": {
       padding: '5px',

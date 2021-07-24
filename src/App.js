@@ -124,6 +124,9 @@ const DarkTheme = createMuiTheme({
     primary: {
       main: '#fedb00' // yellow
     },
+    background: {
+      default: '#000'
+    }
   },
   overrides: {
     MuiCssBaseline: {

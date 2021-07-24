@@ -87,7 +87,8 @@ const useStyles = makeStyles (theme => ({
     },
     ".routeRow-routeInfo": {
       textAlign: 'left',
-      fontSize: '1rem'
+      fontSize: '1rem',
+      width: '75%'
     },
     ".routeRow-company": {
       color: theme.palette.text.secondary
@@ -95,6 +96,8 @@ const useStyles = makeStyles (theme => ({
     ".routeRow-fromToWrapper": {
       display: 'flex',
       alignItems: 'baseline',
+      whiteSpace: 'nowrap',
+      overflowX: 'hidden'
     },
     ".routeRow-fromToText": {
       fontSize: '0.95rem',
