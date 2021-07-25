@@ -12,6 +12,7 @@ import {
   Typography
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import GetAppIcon from '@material-ui/icons/GetApp'
 import BuildIcon from '@material-ui/icons/Build'
 import LocationOnIcon from '@material-ui/icons/LocationOn'
 import LocationOffIcon from '@material-ui/icons/LocationOff'
@@ -27,6 +28,7 @@ import TelegramIcon from '@material-ui/icons/Telegram'
 import { vibrate, setSeoHeader } from '../utils'
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import NightsStayIcon from '@material-ui/icons/NightsStay';
+import InstallDialog from '../components/settings/InstallDialog'
 
 const Settings = () => {
   const { 
@@ -40,6 +42,7 @@ const Settings = () => {
   const [ updating, setUpdating ] = useState(false)
   const [ showGeoPermissionDenied, setShowGeoPermissionDenied ] = useState(false)
   const [ isCopied, setIsCopied ] = useState(false)
+  const [ isOpenInstallDialog, setIsOpenInstallDialog] = useState(false)
 
   const { t, i18n } = useTranslation()
   useStyles()
@@ -58,6 +61,19 @@ const Settings = () => {
     <Paper className={"settings-root"} square elevation={0}>
       <Typography component="h1" variant="srOnly">{`${t('設定')} - ${t(AppTitle)}`}</Typography>
       <List>
+        {window.matchMedia('(display-mode: standalone)').matches ? null : <ListItem
+          button
+          onClick={() => {vibrate(1);setTimeout(() => setIsOpenInstallDialog(true), 0)}}
+        >
+          <ListItemAvatar>
+            <Avatar><GetAppIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={<ListPrimaryText>{t("安裝")}</ListPrimaryText>} 
+            secondary={t('安裝巴士預報 App 到裝置')} 
+            secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
+          />
+        </ListItem>}
         <ListItem
           button
           onClick={() => {vibrate(1);setUpdating(true);renewDb()}}
@@ -256,6 +272,10 @@ const Settings = () => {
           setIsCopied(false);
         }}
         message={t('鏈結已複製到剪貼簿')}
+      />
+      <InstallDialog
+        open={isOpenInstallDialog}
+        handleClose={() => setIsOpenInstallDialog(false)}
       />
     </Paper>
   )
