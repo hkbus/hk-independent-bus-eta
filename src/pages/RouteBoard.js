@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import AppContext from '../AppContext'
 import { makeStyles } from '@material-ui/core/styles'
 import { FixedSizeList } from 'react-window'
+import AutoSizer from "react-virtualized-auto-sizer"
 import memorize from 'memoize-one'
 import RouteInputPad from '../components/route-list/RouteInputPad'
 import RouteRow from '../components/route-list/RouteRow'
@@ -31,16 +32,22 @@ const RouteList = () => {
   const itemData = createItemData(targetRouteList)
 
   return (
-    <FixedSizeList
-      height={330}
-      itemCount={targetRouteList.length}
-      itemSize={56}
-      width="100%"
-      itemData={itemData}
-      className={"routeBoard-root"}
-    >
-        {RouteRow}
-    </FixedSizeList>
+    <div className={"routeBoard-list"}>
+      <AutoSizer>
+        {({height, width}) => (
+          <FixedSizeList
+            height={height * 0.98}
+            itemCount={targetRouteList.length}
+            itemSize={56}
+            width={width}
+            itemData={itemData}
+            className={"routeBoard-root"}
+          >
+            {RouteRow}
+          </FixedSizeList>
+        )}
+      </AutoSizer>
+    </div>
   )
 }
 
@@ -59,6 +66,9 @@ const useStyles = makeStyles(theme => ({
   "@global": {
     ".routeBoard-root": {
       background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white', 
+    },
+    ".routeBoard-list": {
+      flex: '1 1 auto'
     }
   }
 }))

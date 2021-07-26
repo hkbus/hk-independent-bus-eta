@@ -97,9 +97,7 @@ const useStyles = makeStyles(theme => ({
     ".inputpad-boxContainer": {
       display: 'flex',
       flexDirection: 'row',
-      height: 'calc(100vh - 330px - 112px)',
-      paddingTop: 'calc(50vh - 165px - 56px - 88px)',
-      paddingBottom: 'calc(50vh - 165px - 56px - 88px)',
+      height: '180px',
       justifyContent: 'space-around'
     },
     ".inputpad-numPadContainer": {
