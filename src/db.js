@@ -36,13 +36,15 @@ export const fetchDbFunc = (forceRenew = false) => {
   }
   const schemaVersion = localStorage.getItem('schemaVersion')
   const versionMd5 = localStorage.getItem('versionMd5')
-  if ( !navigator.onLine ) {
-    return new Promise((resolve) => {
-      resolve({
-        schemaVersion, versionMd5,
-        db: decompressJsonString(localStorage.getItem('db'))
-      })
+  const storedDb = new Promise((resolve) => {
+    resolve({
+      schemaVersion, versionMd5,
+      db: decompressJsonString(localStorage.getItem('db'))
     })
+  })
+
+  if ( !navigator.onLine ) {
+    return storedDb
   }
 
   return Promise.all([
@@ -59,17 +61,24 @@ export const fetchDbFunc = (forceRenew = false) => {
 
     if (needRenew) {
       localStorage.setItem('updateTime', Date.now())
-      return fetchEtaObj().then(db => ({db:{
-        ...db,
-        routeList: Object.keys(db.routeList).sort().reduce((acc, k) => {
-          acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = db.routeList[k]
-          return acc
-        }, {})
-      }, schemaVersion: _schemaVersion, versionMd5: _md5}))
-      .then((ret) => {
-        localStorage.setItem('schemaVersion', _schemaVersion)
-        localStorage.setItem('versionMd5', _md5)
-        return ret
+      return new Promise((resolve) => {
+        const timerId = setTimeout( () => {         
+          resolve( storedDb )
+        }, 1000)
+        fetchEtaObj().then(db => ({db:{
+          ...db,
+          routeList: Object.keys(db.routeList).sort().reduce((acc, k) => {
+            acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = db.routeList[k]
+            return acc
+          }, {})
+        }, schemaVersion: _schemaVersion, versionMd5: _md5}))
+        .then((ret) => {
+          localStorage.setItem('schemaVersion', _schemaVersion)
+          localStorage.setItem('versionMd5', _md5)
+          clearTimeout(timerId)
+          resolve (ret)
+        })
+        
       })
     }
     
