@@ -53,7 +53,6 @@ const Footer = () => {
         label={t("搜尋")}
         component={Link}
         to={`/${i18n.language}/board`}
-        rel="nofollow"
         onClick={(e) => handleClick(`/${i18n.language}/board`, e)}
         value={`/${i18n.language}/board`}
         icon={<SearchIcon />} 

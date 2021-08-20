@@ -77,6 +77,9 @@ const RouteAlphabetPad = () => {
 const RouteInputPad = () => {
   useStyles()
   const padding = 0
+  if (navigator.userAgent === 'prerendering') {
+    return <></>
+  }
 
   return (
     <Box className={"inputpad-boxContainer"} padding={padding}>

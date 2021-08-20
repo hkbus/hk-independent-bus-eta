@@ -5,7 +5,7 @@ host = 'https://'+fs.readFileSync('public/CNAME', 'utf8')
 
 // constant pages
 content = [``, '/search', '/settings']
-pages = ['/zh', '/en', '/en/search', '/zh/search']
+pages = ['/zh', '/en', '/en/board', '/zh/board', '/zh/search', '/en/search']
 
 // route pages
 request('https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json', (e, r, b) => {
