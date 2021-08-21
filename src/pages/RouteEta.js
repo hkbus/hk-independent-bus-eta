@@ -3,22 +3,27 @@ import { useParams, useHistory } from 'react-router-dom'
 import RouteMap from '../components/route-eta/RouteMap'
 import StopAccordions from '../components/route-eta/StopAccordions'
 import StopDialog from '../components/route-eta/StopDialog'
-import { Typography } from '@material-ui/core'
+import { Button, Divider, Paper, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
 import RouteNo from '../components/route-list/RouteNo'
 import { setSeoHeader, toProperCase } from '../utils'
+import ScheduleIcon from '@material-ui/icons/Schedule'
+import TimetableDrawer from '../components/route-eta/TimetableDrawer'
 
 const RouteEta = () => {
   const { id, panel } = useParams()
   const { AppTitle, db:{ routeList, stopList, stopMap}, updateSelectedRoute, energyMode } = useContext ( AppContext )
-  const { route, stops, co, orig, dest, nlbId, fares } = routeList[id.toUpperCase()]
+  const { route, stops, co, orig, dest, nlbId, fares, freq } = routeList[id.toUpperCase()]
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
   const [ isDialogOpen, setIsDialogOpen ] = useState( false )
+  const [ isOpenTimetable, setIsOpenTimetable] = useState(false)
   const [ dialogStop, setDialogStop ] = useState(getDialogStops(co, stops, stopMap, 0))
   
   const { t, i18n } = useTranslation()
   const history = useHistory()
+  useStyles()
 
   const handleChange = ( panel ) => (event, newExpanded, isFromMap) => {
     setExpanded(newExpanded ? panel : false)
@@ -83,10 +88,26 @@ const RouteEta = () => {
   return (
     <>
       <input hidden id={id} />
-      <RouteNo routeNo={route} component="h1" align='center' />
-      <Typography component="h2" variant="caption" align='center'>
-        {t('往')} {toProperCase(dest[i18n.language])} {nlbId ? t('由')+" "+toProperCase(orig[i18n.language]) : ""}
-      </Typography>
+      <Paper className="route-header" elevation={0}>
+        <RouteNo routeNo={route} component="h1" align='center' />
+        <Typography component="h2" variant="caption" align='center'>
+          {t('往')} {toProperCase(dest[i18n.language])} {nlbId ? t('由')+" "+toProperCase(orig[i18n.language]) : ""}
+        </Typography>
+        {freq ? <>
+          <Divider orientation="vertical" className={'timetable-button-divider'} />
+          <Button 
+            variant="text"
+            aria-label="open-timetable"
+            className="timetable-button" 
+            size="small"
+            startIcon={<ScheduleIcon />}
+            onClick={() => setIsOpenTimetable(true)}
+          >
+            {t('時間表')}
+          </Button>
+          <TimetableDrawer freq={freq} open={isOpenTimetable} onClose={() => setIsOpenTimetable(false)} /> 
+        </>: <></>}
+      </Paper>
       {!energyMode ? <RouteMap 
         stops={getStops(co, stops)}
         stopIdx={expanded}
@@ -124,3 +145,30 @@ const getDialogStops = (co, stops, stopMap, panel) => {
 }
 
 export default RouteEta
+
+const useStyles = makeStyles(theme => ({
+  '@global': {
+    '.route-header': {
+      textAlign: 'center',
+      background: 'transparent',
+      position: 'relative'
+    },
+    '.timetable-button-divider': {
+      position: 'absolute',
+      top: '0',
+      right: 'calc(64px + 2%)'
+    },
+    '.timetable-button': {
+      position: 'absolute',
+      top: '0',
+      right: '2%'
+    },
+    '.timetable-button > .MuiButton-label': {
+      flexDirection: 'column',
+      justifyContent: 'center'
+    },
+    '.timetable-button > .MuiButton-label > .MuiButton-startIcon': {
+      margin: 0
+    }
+  }
+}))

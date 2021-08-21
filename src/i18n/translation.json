@@ -50,6 +50,7 @@
       "省電模式": "Energy saving mode",
       "車站": "Bus station",
       "地圖功能": "Map Function",
+      "圖標來源": "Logo source",
       "找不到合適的巴士路線": "No available routes found",
       "用 Safari 開": "Open this website with Safari",
       "加至主畫面": "Add to Home Screen",
@@ -61,7 +62,17 @@
       "Route Search constraint": "Constraints：",
       "Route Search caption 1": "Max. transfer once",
       "Route Search caption 2": "Max. walking distance is 500m between each location",
-      "Route Search caption 3": "Verified scheduled bus in the first terminal"
+      "Route Search caption 3": "Verified scheduled bus in the first terminal",
+      "星期一至五": "Monday to Friday",
+      "星期一至六": "Monday to Saturday",
+      "星期六至日": "Saturday & Sunday",
+      "星期二至四": "Tuesday to Thursday",
+      "星期一至四": "Monday to Thursday",
+      "星期五": "Friday", 
+      "星期六": "Saturday",
+      "星期日及公眾假期": "Sunday & Public Holiday",
+      "所有日子": "All day",
+      "時間表": "skd"
     }
   },
   "zh": {
