@@ -36,7 +36,7 @@ const TimetableDrawer = ({freq, open, onClose}) => {
         Object.entries(freq).map(([serviceId, dayFreq]) => (
           <ListItem key={`${serviceId}`} className="timetable-entries">
             <Typography variant="subtitle1">{t(ServiceIds[serviceId])}</Typography>
-            {Object.entries(dayFreq).map(([start, details]) => (
+            {Object.entries(dayFreq).sort((a,b) => a[0] < b[0] ? -1 : 1).map(([start, details]) => (
               <div key={`${serviceId}-${start}`} className="timetable-freqContainer">
                 <Typography variant="caption">{start} {details ? `-${details[0]}` : ''}</Typography>
                 {details ? <Typography variant="caption">{parseInt(details[1], 10)/60}{t('分鐘')}</Typography> : <></>}
