@@ -62,8 +62,10 @@ export const fetchDbFunc = (forceRenew = false) => {
     if (needRenew) {
       localStorage.setItem('updateTime', Date.now())
       return new Promise((resolve) => {
-        const timerId = setTimeout( () => {         
-          resolve( storedDb )
+        const timerId = setTimeout( () => {
+          if ( !forceRenew && localStorage.getItem('db') ) {
+            resolve( storedDb )
+          }
         }, 1000)
         fetchEtaObj().then(db => ({db:{
           ...db,

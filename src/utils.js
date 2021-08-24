@@ -35,6 +35,15 @@ export const vibrate = (duration) => {
   }
 }
 
+export const triggerShare = (url, title) => {
+  if ( navigator.share ) {
+    return navigator.share({title, url})
+  } else if ( navigator.clipboard ) {
+    return navigator.clipboard.writeText(url)
+  }
+  return new Promise(resolve => resolve(''))
+}
+
 export const setSeoHeader = ({title, description, lang}) => {
   if ( !document.querySelector('meta[name="description"]') ) {
     // skip if rendering not ready
