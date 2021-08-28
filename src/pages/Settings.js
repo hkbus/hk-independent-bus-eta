@@ -157,7 +157,7 @@ const Settings = () => {
           button
           onClick={() => {
             vibrate(1)
-            triggerShare(`${window.location.hostname}${process.env.PUBLIC_URL}`, t('巴士到站預報 App')).then(() => {
+            triggerShare(`https://${window.location.hostname}`, t('巴士到站預報 App')).then(() => {
               if (navigator.clipboard)
                 setIsCopied(true)
             })
