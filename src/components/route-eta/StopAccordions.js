@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   Accordion,
@@ -6,6 +6,7 @@ import {
   AccordionDetails,
   Box, 
   IconButton, 
+  Snackbar,
   Typography
 } from '@material-ui/core'
 import StarIcon from '@material-ui/icons/Star';
@@ -13,18 +14,21 @@ import StarBorderIcon from '@material-ui/icons/StarBorder'
 import { makeStyles } from '@material-ui/core/styles'
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
-import { getDistance, toProperCase } from '../../utils'
+import { getDistance, toProperCase, triggerShare } from '../../utils'
 import TimeReport from './TimeReport'
+import ShareIcon from '@material-ui/icons/Share';
 
 const StopAccordions = ({expanded, setExpanded, handleChange}) => {
   const { id, panel } = useParams()
+  
   const { 
+    AppTitle,
     db: {routeList, stopList},
     savedEtas, geoPermission, geolocation,
     updateSavedEtas, energyMode
   } = useContext ( AppContext )
-
-  const { stops, co, fares, faresHoliday } = routeList[id.toUpperCase()]
+  const [ isCopied, setIsCopied ] = useState(false)
+  const { route, dest, stops, co, fares, faresHoliday } = routeList[id.toUpperCase()]
   const { t, i18n } = useTranslation()
   const accordionRef = useRef([])
 
@@ -85,17 +89,43 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
                 routeId={`${id.toUpperCase()}`}
                 seq={idx}
               />
-              <IconButton 
-                aria-label="favourite" 
-                onClick={() => toggleSavedRoute(`${id.toUpperCase()}/${idx}`)}
-                style={{ backgroundColor: 'transparent' }} 
-              >
-                {savedEtas.includes(`${id.toUpperCase()}/${idx}`) ? <StarIcon/> : <StarBorderIcon />}
-              </IconButton>
+              <div style={{display: 'flex'}}>
+                <IconButton
+                  aria-label="share" 
+                  onClick={() => {
+                    triggerShare(
+                      `https://${window.location.hostname}/${i18n.language}/${id}`, 
+                      `${idx+1}. ${toProperCase(stopList[stop].name[i18n.language])} - ${route} ${t('往')} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}` 
+                    ).then(() => {
+                      if (navigator.clipboard)
+                        setIsCopied(true)
+                    })
+                  }}
+                  style={{ backgroundColor: 'transparent' }}
+                >
+                  <ShareIcon />
+                </IconButton>
+                <IconButton 
+                  aria-label="favourite" 
+                  onClick={() => toggleSavedRoute(`${id.toUpperCase()}/${idx}`)}
+                  style={{ backgroundColor: 'transparent' }} 
+                >
+                  {savedEtas.includes(`${id.toUpperCase()}/${idx}`) ? <StarIcon/> : <StarBorderIcon />}
+                </IconButton>
+              </div>
             </AccordionDetails>
           </Accordion>
         ))
       }
+      <Snackbar
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+        open={isCopied}
+        autoHideDuration={1500}
+        onClose={(event, reason) => {
+          setIsCopied(false);
+        }}
+        message={t('鏈結已複製到剪貼簿')}
+      />
     </Box>
   )
 }

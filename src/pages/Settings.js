@@ -25,7 +25,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import ShareIcon from '@material-ui/icons/Share'
 import TelegramIcon from '@material-ui/icons/Telegram'
-import { vibrate, setSeoHeader } from '../utils'
+import { vibrate, setSeoHeader, triggerShare } from '../utils'
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import NightsStayIcon from '@material-ui/icons/NightsStay';
 import InstallDialog from '../components/settings/InstallDialog'
@@ -157,12 +157,10 @@ const Settings = () => {
           button
           onClick={() => {
             vibrate(1)
-            if ( navigator.clipboard ) {
-              navigator.clipboard.writeText(`${window.location.hostname}${process.env.PUBLIC_URL}`)
-              .then(() => {
+            triggerShare(`${window.location.hostname}${process.env.PUBLIC_URL}`, t('巴士到站預報 App')).then(() => {
+              if (navigator.clipboard)
                 setIsCopied(true)
-              })
-            }
+            })
           }}
         >
           <ListItemAvatar>

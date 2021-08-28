@@ -44,7 +44,7 @@ export const fetchDbFunc = (forceRenew = false) => {
     })
   })
 
-  if ( !navigator.onLine || ( !forceRenew && versionMd5 && Date.now() - lastUpdateTime < 7 * 24 * 3600 * 1000 ) ) {
+  if ( !navigator.onLine || ( !forceRenew && localStorage.getItem('db') && Date.now() - lastUpdateTime < 7 * 24 * 3600 * 1000 ) ) {
     return storedDb
   }
 
@@ -63,8 +63,10 @@ export const fetchDbFunc = (forceRenew = false) => {
     if (needRenew) {
       localStorage.setItem('updateTime', Date.now())
       return new Promise((resolve) => {
-        const timerId = setTimeout( () => {         
-          resolve( storedDb )
+        const timerId = setTimeout( () => {
+          if ( !forceRenew && localStorage.getItem('db') ) {
+            resolve( storedDb )
+          }
         }, 1000)
         fetchEtaObj().then(db => ({db:{
           ...db,
