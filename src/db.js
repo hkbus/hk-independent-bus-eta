@@ -36,6 +36,7 @@ export const fetchDbFunc = (forceRenew = false) => {
   }
   const schemaVersion = localStorage.getItem('schemaVersion')
   const versionMd5 = localStorage.getItem('versionMd5')
+  const lastUpdateTime = parseInt(localStorage.getItem('updateTime') || Date.now(), 10)
   const storedDb = new Promise((resolve) => {
     resolve({
       schemaVersion, versionMd5,
@@ -43,7 +44,7 @@ export const fetchDbFunc = (forceRenew = false) => {
     })
   })
 
-  if ( !navigator.onLine ) {
+  if ( !navigator.onLine || ( !forceRenew && versionMd5 && Date.now() - lastUpdateTime < 7 * 24 * 3600 * 1000 ) ) {
     return storedDb
   }
 
