@@ -1,5 +1,5 @@
 import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta' 
-import { decompress as decompressJson } from 'compress-json'
+import { decompress as decompressJson } from 'lzutf8'
 import { decompress as _decompressJson } from 'compressed-json'
 
 // implant the DB Context logic into code to avoid loading error
@@ -7,7 +7,7 @@ export const DB_CONTEXT_VERSION = '1.1.0'
 
 const decompressJsonString = (txt) => {
   try {
-    const ret = decompressJson(JSON.parse(txt))
+    const ret = JSON.parse(decompressJson(txt, {inputEncoding: 'Base64'}))
     return {
       ...ret,
       // sort the routeList object order based on the key

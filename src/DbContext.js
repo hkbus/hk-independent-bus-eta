@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { isEmptyObj } from './utils'
 import { initDb, fetchDbFunc } from './db'
-import {compress as compressJson} from 'compress-json'
+import { compress as compressJson } from 'lzutf8'
 
 const DbContext = React.createContext()
 
@@ -37,7 +37,7 @@ export const DbProvider = ( props ) => {
       
       // make costly compression async
       setTimeout( () => {
-        localStorage.setItem('db', JSON.stringify(compressJson(db)))
+        localStorage.setItem('db', compressJson(JSON.stringify(db), {outputEncoding: 'Base64'}) )
       }, 0)
     }
   }, [db])
