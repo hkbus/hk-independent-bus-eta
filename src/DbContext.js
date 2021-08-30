@@ -37,7 +37,6 @@ export const DbProvider = ( props ) => {
       
       // make costly compression async
       setTimeout( () => {
-        console.log(JSON.stringify(compressJson(db)).length)
         localStorage.setItem('db', JSON.stringify(compressJson(db)))
       }, 0)
     }
