@@ -1,5 +1,5 @@
 import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta' 
-import { decompress as decompressJson } from 'compressed-json'
+import { decompress as decompressJson } from 'compress-json'
 
 // implant the DB Context logic into code to avoid loading error
 export const DB_CONTEXT_VERSION = '1.1.0'
