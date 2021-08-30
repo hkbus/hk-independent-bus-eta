@@ -10,6 +10,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "compress-json": "^1.0.4",
+    "compressed-json": "^1.0.16",
     "fbjs": "^1.0.0",
     "gh-pages": "^3.1.0",
     "hk-bus-eta": "^1.1.0",

@@ -1,5 +1,6 @@
 import { fetchEtaObj, fetchEtaObjMd5 } from 'hk-bus-eta' 
 import { decompress as decompressJson } from 'compress-json'
+import { decompress as _decompressJson } from 'compressed-json'
 
 // implant the DB Context logic into code to avoid loading error
 export const DB_CONTEXT_VERSION = '1.1.0'
@@ -16,8 +17,13 @@ const decompressJsonString = (txt) => {
       }, {})
     }
   } catch (e) {
-    // return empty object if no valid JSON string parsed
-    return {routeList: {}, stopList: {}, stopMap: {}}
+    try {
+      // backward compactability
+      return _decompressJson(JSON.parse(txt))
+    } catch (e2){
+      // return empty object if no valid JSON string parsed
+      return {routeList: {}, stopList: {}, stopMap: {}}
+    }
   }
 }
 
@@ -44,7 +50,7 @@ export const fetchDbFunc = (forceRenew = false) => {
     })
   })
 
-  if ( !navigator.onLine || ( !forceRenew && localStorage.getItem('db') && Date.now() - lastUpdateTime < 7 * 24 * 3600 * 1000 ) ) {
+  if ( localStorage.getItem('db') && ( !navigator.onLine || ( !forceRenew && Date.now() - lastUpdateTime < 7 * 24 * 3600 * 1000 ) ) ) {
     return storedDb
   }
 
