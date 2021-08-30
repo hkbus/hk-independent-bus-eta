@@ -23,9 +23,9 @@ const RouteInfo = ( {route} ) => {
           <span className={"routeRow-fromToText"}>{`${t('往')} `}</span>
           <b>{toProperCase(route.dest[i18n.language])}</b>
         </div>
-        <div className={"routeRow-fromToWrapper"}>
-          <span className={"routeRow-fromToText"}>{`${route.nlbId ? t('由') : ''} `}</span>
-          <b>{route.nlbId ? toProperCase(route.orig[i18n.language]) : ''}</b>
+        <div className={"routeRow-fromWrapper"}>
+          <span className={"routeRow-fromText"}>{t('由')}</span>
+          <span>{toProperCase(route.orig[i18n.language])}</span>
         </div>
       </div>
     </Typography>
@@ -101,6 +101,16 @@ const useStyles = makeStyles (theme => ({
     },
     ".routeRow-fromToText": {
       fontSize: '0.95rem',
+      marginRight: theme.spacing(0.5)
+    },
+    ".routeRow-fromWrapper": {
+      display: 'flex',
+      alignItems: 'baseline',
+      whiteSpace: 'nowrap',
+      overflowX: 'hidden',
+      fontSize: '0.75rem',
+    },
+    ".routeRow-fromText": {
       marginRight: theme.spacing(0.5)
     },
     ".routeRow-specialTrip": {
