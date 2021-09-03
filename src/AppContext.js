@@ -24,6 +24,9 @@ export const AppContextProvider = ( props ) => {
   // possible Char for RouteInputPad
   const [possibleChar, setPossibleChar] = useState(getPossibleChar(searchRoute, routeList) || [])
 
+  // time display format
+  const [etaFormat, setEtaFormat] = useState(localStorage.getItem('etaFormat') || 'diff')
+
   // color mode
   const devicePreferColorScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   const [ colorMode, setColorMode ] = useState(localStorage.getItem('colorMode') || devicePreferColorScheme )
@@ -76,6 +79,12 @@ export const AppContextProvider = ( props ) => {
     localStorage.setItem('geolocation', JSON.stringify(geolocation))
     setGeolocation(geolocation)
   }
+
+  const toggleEtaFormat = () => setEtaFormat( prev => {
+    const etaFormat = prev === 'diff' ? 'exact' : 'diff'
+    localStorage.setItem('etaFormat', etaFormat)
+    return etaFormat
+  })
 
   const toggleColorMode = () => setColorMode(prevColorMode => {
     const colorMode = prevColorMode === 'dark' ? 'light' : 'dark'
@@ -153,6 +162,7 @@ export const AppContextProvider = ( props ) => {
         // settings
         renewDb,
         geoPermission, updateGeoPermission,
+        etaFormat, toggleEtaFormat,
         colorMode , toggleColorMode,
         energyMode, toggleEnergyMode
       }}

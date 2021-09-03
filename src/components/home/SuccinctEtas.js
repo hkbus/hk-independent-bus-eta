@@ -1,22 +1,28 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { ListItemText, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 import { useEtas } from '../Etas'
+import AppContext from '../../AppContext'
 
 const SuccinctEtas = ({routeId}) => {
   const { t, i18n } = useTranslation()
+  const { etaFormat } = useContext( AppContext )
   const etas = useEtas(routeId)
   useStyles()
 
   const getEtaString = (eta) => {
-    if ( !eta || !eta.eta ) return ''
-    else {
+    if ( !eta || !eta.eta ) {
+      return ''
+    } else {
       const waitTime = Math.round(((new Date(eta.eta)) - (new Date())) / 60 / 1000)
+      if ( etaFormat === 'exact' && Number.isInteger(waitTime) ) {
+        return eta.eta.substr(11,5)
+      }
       if ( waitTime < 1 ) {
-        return '- '+t('分鐘')
+        return `- ${t('分鐘')}`
       } else if ( Number.isInteger(waitTime) ) {
-        return waitTime+" "+t('分鐘')
+        return `${waitTime} ${t('分鐘')}`
       } else {
         return eta.remark[i18n.language]
       }

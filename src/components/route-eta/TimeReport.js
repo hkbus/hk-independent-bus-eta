@@ -9,7 +9,7 @@ import { useEtas } from "../Etas"
 
 const TimeReport = ( { routeId, seq, containerClass, showStopName = false } ) => {
   const { t, i18n } = useTranslation()
-  const { db: {routeList, stopList} } = useContext(AppContext) 
+  const { db: {routeList, stopList}, etaFormat } = useContext(AppContext) 
   const etas = useEtas(`${routeId}/${seq}`)
   
   if ( etas == null ) {
@@ -24,6 +24,9 @@ const TimeReport = ( { routeId, seq, containerClass, showStopName = false } ) =>
     if ( !eta ) return ''
     else {
       const waitTime = Math.round(((new Date(eta)) - (new Date())) / 60 / 1000)
+      if ( etaFormat === 'exact' && Number.isInteger(waitTime) ) {
+        return eta.substr(11,5)
+      }
       if ( waitTime < 1 ) {
         return '- '+t('分鐘')
       } else if ( Number.isInteger(waitTime) ) {

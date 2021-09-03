@@ -14,6 +14,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import BuildIcon from '@material-ui/icons/Build'
+import TimerIcon from '@material-ui/icons/Timer'
 import LocationOnIcon from '@material-ui/icons/LocationOn'
 import LocationOffIcon from '@material-ui/icons/LocationOff'
 import { useTranslation } from 'react-i18next'
@@ -36,6 +37,7 @@ const Settings = () => {
     db: {schemaVersion, versionMd5, updateTime}, renewDb,
     geoPermission, updateGeoPermission,
     resetUsageRecord,
+    etaFormat, toggleEtaFormat,
     colorMode, toggleColorMode,
     energyMode, toggleEnergyMode
   } = useContext ( AppContext )
@@ -122,6 +124,21 @@ const Settings = () => {
           <ListItemText 
             primary={t("黑夜模式")} 
             secondary={t(colorMode === 'dark' ? '開啟' : '關閉')} 
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            vibrate(1)
+            toggleEtaFormat()
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar><TimerIcon /></Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={t("報時格式")} 
+            secondary={t(etaFormat === 'diff' ? '到站時差' : '到站時間')} 
           />
         </ListItem>
         <ListItem
