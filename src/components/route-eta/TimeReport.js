@@ -9,10 +9,9 @@ import { useEtas } from "../Etas"
 
 const TimeReport = ( { routeId, seq, containerClass, showStopName = false } ) => {
   const { t, i18n } = useTranslation()
-  const { db: {routeList} } = useContext(AppContext) 
+  const { db: {routeList, stopList} } = useContext(AppContext) 
   const etas = useEtas(`${routeId}/${seq}`)
-  const {db: {stopList}} = useContext(AppContext)
-
+  
   if ( etas == null ) {
     return (
       <div className={containerClass}>
