@@ -1,3 +1,4 @@
+import { Workbox, messageSW } from "workbox-window";
 // This optional code is used to register a service worker.
 // register() is not called by default.
 
@@ -17,7 +18,13 @@ const isLocalhost = Boolean(
     // 127.0.0.0/8 are considered localhost for IPv4.
     window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 );
-
+/**
+ * 
+ * @param {{
+ *   onSuccess?: (registration: Workbox) => void;
+ *   onUpdate?: (registration: Workbox, skipWaiting: () => void, installingServiceWorker: ServiceWorker) => void;
+ * }} config 
+ */
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
@@ -53,47 +60,26 @@ export function register(config) {
 }
 
 function registerValidSW(swUrl, config) {
-  navigator.serviceWorker
-    .register(swUrl)
-    .then((registration) => {
-      registration.onupdatefound = () => {
-        const installingWorker = registration.installing;
-        if (installingWorker == null) {
-          return;
-        }
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
-              // At this point, the updated precached content has been fetched,
-              // but the previous service worker will still serve the older
-              // content until all client tabs are closed.
-              console.log(
-                'New content is available and will be used when all ' +
-                  'tabs for this page are closed. See https://cra.link/PWA.'
-              );
-
-              // Execute callback
-              if (config && config.onUpdate) {
-                config.onUpdate(registration);
-              }
-            } else {
-              // At this point, everything has been precached.
-              // It's the perfect time to display a
-              // "Content is cached for offline use." message.
-              console.log('Content is cached for offline use.');
-
-              // Execute callback
-              if (config && config.onSuccess) {
-                config.onSuccess(registration);
-              }
-            }
-          }
-        };
-      };
-    })
-    .catch((error) => {
-      console.error('Error during service worker registration:', error);
-    });
+  const wb = new Workbox(swUrl);
+  const waitingHandler = (event) => {
+    if (event.sw !== undefined && config && config.onUpdate) {
+      const sw = event.sw;
+      config.onUpdate(wb, () => messageSW(sw, { type: "SKIP_WAITING" }), sw);
+    }
+  };
+  const controllingHandler = (event) => {
+    if (event.isUpdate) {
+      window.location.reload();
+    } else {
+      if (config && config.onSuccess) {
+        config.onSuccess(wb);
+      }
+    }
+  };
+  wb.addEventListener("waiting", waitingHandler);
+  wb.addEventListener("externalwaiting", waitingHandler);
+  wb.addEventListener("controlling", controllingHandler);
+  wb.register();
 }
 
 function checkValidServiceWorker(swUrl, config) {
