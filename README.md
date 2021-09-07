@@ -51,7 +51,6 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 Project owner [chunlaw](https://github.com/chunlaw) is the initiator of the whole project. Anyone is welcome to contribute. Other contributors are:
 
 [lzwn128](https://github.com/lzwn128 )
-
 [cswbrian](https://github.com/cswbrian)
-
 [thomassth](https://github.com/thomassth)
+[hk-ng](https://github.com/hk-ng)
