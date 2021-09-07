@@ -25,6 +25,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
+    - run: sed -i "s/REACT_APP_CI_JOB_ID=1/REACT_APP_CI_JOB_ID=$GITHUB_RUN_NUMBER/g" .env
     - run: npm run build
     - run: npm test
     - run: npm run predeploy
