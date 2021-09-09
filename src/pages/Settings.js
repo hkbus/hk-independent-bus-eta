@@ -30,6 +30,7 @@ import { vibrate, setSeoHeader, triggerShare } from '../utils'
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import NightsStayIcon from '@material-ui/icons/NightsStay';
 import InstallDialog from '../components/settings/InstallDialog'
+import Donations from '../Donations'
 
 const Settings = () => {
   const { 
@@ -47,6 +48,7 @@ const Settings = () => {
   const [ isOpenInstallDialog, setIsOpenInstallDialog] = useState(false)
 
   const { t, i18n } = useTranslation()
+  const donationId = Math.floor( Math.random() * Donations.length )
   useStyles()
 
   useEffect(() => {
@@ -208,7 +210,7 @@ const Settings = () => {
         <ListItem
           button
           component='a'
-          href={`https://donate.612fund.hk/${i18n.language}/`}
+          href={Donations[donationId].url[i18n.language]}
           target="_blank"
           onClick={() => {vibrate(1)}}
         >
@@ -217,7 +219,7 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText 
             primary={<ListPrimaryText>{t("捐款支持")}</ListPrimaryText>} 
-            secondary={t('請捐款到 612 人道支援基金') } 
+            secondary={Donations[donationId].description[i18n.language]} 
             secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
