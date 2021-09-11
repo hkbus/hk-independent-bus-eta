@@ -23,17 +23,27 @@ interface AppState {
   selectedRoute: string;
   geoPermission: GeoPermission;
   geolocation: GeoLocation;
+  /**
+   * hot query count
+   */
   hotRoute: Record<string, number>;
-  // hot query count
   savedEtas: string[];
-  // possible Char for RouteInputPad
+  /**
+   * possible Char for RouteInputPad
+   */
   possibleChar: string[];
-  // time display format
+  /**
+   * time display format
+   */
   etaFormat: "exact" | "diff";
   colorMode: "dark" | "light";
-  // energy saving mode
+  /**
+   * energy saving mode
+   */
   energyMode: boolean;
-  // check if window is on active in mobile
+  /**
+   * check if window is on active in mobile
+   */
   isVisible: boolean;
 }
 
@@ -70,8 +80,35 @@ const isGeoPremission = (input: unknown): input is GeoPermission => {
   );
 };
 
+const isGetLocation = (input: unknown): input is GeoLocation => {
+  if (input instanceof Object && input !== null && input !== undefined) {
+    if (typeof input["lat"] === "number" && typeof input["lng"] === "number") {
+      return true;
+    }
+  }
+  return false;
+};
+
 const isEtaFormat = (input: unknown): input is AppState["etaFormat"] => {
   return input === "exact" || input === "diff";
+};
+
+const isStrings = (input: unknown[]): input is string[] => {
+  if (input.some((v) => typeof v !== "string")) {
+    return false;
+  }
+  return true;
+};
+
+const isNumberRecord = (input: unknown): input is Record<string, number> => {
+  if (input instanceof Object && input !== null && input !== undefined) {
+    if (Object.entries(input).some((v) => typeof v !== "number")) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  return false;
 };
 
 export const AppContextProvider = ({ children }: AppContextProviderProps) => {
@@ -84,25 +121,27 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         ? "dark"
         : "light";
     const searchRoute = "";
-    const geoPermission = localStorage.getItem("geoPermission");
-    const etaFormat = localStorage.getItem("etaFormat");
+    const geoPermission: unknown = localStorage.getItem("geoPermission");
+    const getLocation: unknown = JSON.parse(
+      localStorage.getItem("geolocation")
+    );
+    const etaFormat: unknown = localStorage.getItem("etaFormat");
+    const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
+    const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
     return {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
       geoPermission: isGeoPremission(geoPermission) ? geoPermission : null,
-      geolocation:
-        JSON.parse(localStorage.getItem("geolocation")) || defaultGeolocation,
-      hotRoute: JSON.parse(localStorage.getItem("hotRoute")) || {},
-      // hot query count
-      savedEtas: JSON.parse(localStorage.getItem("savedEtas")) || [],
-      // possible Char for RouteInputPad
+      geolocation: isGetLocation(getLocation)
+        ? getLocation
+        : defaultGeolocation,
+      hotRoute: isNumberRecord(hotRoute) ? hotRoute : {},
+      savedEtas:
+        Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       possibleChar: getPossibleChar(searchRoute, routeList) || [],
-      // time display format
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
       colorMode: devicePreferColorScheme,
-      // energy saving mode
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
-      // check if window is on active in mobile
       isVisible: true,
     };
   };
@@ -248,6 +287,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
               default:
                 ret = prevSearchRoute + buttonValue;
             }
+            state.searchRoute = ret;
             state.possibleChar = getPossibleChar(ret, routeList);
           })
         );
@@ -267,7 +307,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
           } else {
             state.hotRoute[route + "/" + seq] = 1;
           }
-          localStorage.setItem("hotRoute", JSON.stringify(current(state.hotRoute)));
+          localStorage.setItem(
+            "hotRoute",
+            JSON.stringify(current(state.hotRoute))
+          );
         }
       })
     );
@@ -283,15 +326,13 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
             "savedEtas",
             JSON.stringify(current(prevSavedEtas))
           );
-          return JSON.parse(JSON.stringify(prevSavedEtas));
+          state.savedEtas = prevSavedEtas;
+          return;
         }
         const newSavedEtas = prevSavedEtas
           .concat(key)
           .filter((v, i, s) => s.indexOf(v) === i);
-        localStorage.setItem(
-          "savedEtas",
-          JSON.stringify(current(newSavedEtas))
-        );
+        localStorage.setItem("savedEtas", JSON.stringify(newSavedEtas));
         state.savedEtas = newSavedEtas;
       })
     );
