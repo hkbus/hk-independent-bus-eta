@@ -80,7 +80,7 @@ const isGeoPremission = (input: unknown): input is GeoPermission => {
   );
 };
 
-const isGetLocation = (input: unknown): input is GeoLocation => {
+const isgeoLocation  = (input: unknown): input is GeoLocation => {
   if (input instanceof Object && input !== null && input !== undefined) {
     if (typeof input["lat"] === "number" && typeof input["lng"] === "number") {
       return true;
@@ -122,7 +122,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         : "light";
     const searchRoute = "";
     const geoPermission: unknown = localStorage.getItem("geoPermission");
-    const getLocation: unknown = JSON.parse(
+    const geoLocation : unknown = JSON.parse(
       localStorage.getItem("geolocation")
     );
     const etaFormat: unknown = localStorage.getItem("etaFormat");
@@ -132,8 +132,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
       geoPermission: isGeoPremission(geoPermission) ? geoPermission : null,
-      geolocation: isGetLocation(getLocation)
-        ? getLocation
+      geolocation: isgeoLocation (geoLocation )
+        ? geoLocation 
         : defaultGeolocation,
       hotRoute: isNumberRecord(hotRoute) ? hotRoute : {},
       savedEtas:
