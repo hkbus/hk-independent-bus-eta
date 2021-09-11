@@ -379,7 +379,7 @@ export type { AppContextValue };
 
 const getPossibleChar = (
   searchRoute: string,
-  routeList: Record<string, string>
+  routeList: Record<string, unknown>
 ) => {
   if (routeList == null) return [];
   let possibleChar = {};
