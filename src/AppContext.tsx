@@ -80,7 +80,7 @@ const isGeoPremission = (input: unknown): input is GeoPermission => {
   );
 };
 
-const isgeoLocation  = (input: unknown): input is GeoLocation => {
+const isGeoLocation  = (input: unknown): input is GeoLocation => {
   if (input instanceof Object && input !== null && input !== undefined) {
     if (typeof input["lat"] === "number" && typeof input["lng"] === "number") {
       return true;
@@ -132,7 +132,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
       geoPermission: isGeoPremission(geoPermission) ? geoPermission : null,
-      geolocation: isgeoLocation (geoLocation )
+      geolocation: isGeoLocation (geoLocation )
         ? geoLocation 
         : defaultGeolocation,
       hotRoute: isNumberRecord(hotRoute) ? hotRoute : {},
