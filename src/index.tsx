@@ -24,16 +24,20 @@ if (isHuman()){
     Object.freeze(initDb)
 
     // Target: render only if development or prerendering or in registered app or lazy loading page
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    let prerenderStyle = document.querySelector('style[prerender]');
     if ( 
       process.env.NODE_ENV === 'development' || 
       navigator.userAgent === 'prerendering' || 
       window.location.pathname.includes('/board') ||
       window.location.pathname.includes('/search') ||
       window.location.pathname.includes('/settings') ||
-      !document.querySelector('link[rel="canonical"]').href.endsWith(window.location.pathname)
+      (canonicalLink instanceof HTMLAnchorElement && !canonicalLink.href.endsWith(window.location.pathname))
     ) {
       // remove prerendered style
-      document.querySelector('style[prerender]').innerText = ''
+      if (prerenderStyle instanceof HTMLStyleElement) {
+        prerenderStyle.innerHTML = "";
+      }
       ReactDOM.render(
         <React.StrictMode>
           <DbProvider>
@@ -56,7 +60,9 @@ if (isHuman()){
         </React.StrictMode>,
         document.getElementById('root'), 
         () => {
-          document.querySelector('style[prerender]').innerText = ''
+          if (prerenderStyle instanceof HTMLStyleElement) {
+            prerenderStyle.innerHTML = "";
+          }
         }
       )
     }
