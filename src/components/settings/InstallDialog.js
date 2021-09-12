@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
   Typography
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -25,7 +26,7 @@ const InstallDialog = ({open, handleClose}) => {
           <Typography variant="body1">2. {t("分享")}</Typography>
           <Typography variant="body1">3. {t("加至主畫面")}</Typography>
         </Box>
-        <hr/>
+        <Divider/>
         <Box className={"installDialog-section"}>
           <Typography variant="h5">Android:</Typography>
           <br/>
@@ -43,8 +44,10 @@ const useStyles = makeStyles(theme => ({
     '.installDialog-dialog': {
       '& .MuiPaper-root': {
         width: '100%',
-        marginTop: '90px',
-        height: '50vh'
+        height: 'fit-content',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
       }
     },
     '.installDialog-title': {
@@ -52,8 +55,7 @@ const useStyles = makeStyles(theme => ({
       color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
     },
     '.installDialog-section': {
-      height: '40%',
-      paddingTop: '10px'
+      padding: '10px 0px'
     }
   }
 }))
