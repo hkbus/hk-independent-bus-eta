@@ -100,6 +100,11 @@ const isStrings = (input: unknown[]): input is string[] => {
   return true;
 };
 
+const isColorMode = (input: unknown): input is 'dark' | 'light' => {
+  console.log(input)
+  return input === 'dark' || input === 'light';
+}
+
 const isNumberRecord = (input: unknown): input is Record<string, number> => {
   if (input instanceof Object && input !== null && input !== undefined) {
     if (Object.entries(input).some((v) => typeof v !== "number")) {
@@ -115,11 +120,12 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const { AppTitle, db, renewDb } = useContext(DbContext);
   const { routeList } = db;
   const getInitialState = (): AppState => {
-    const devicePreferColorScheme =
+    const devicePreferColorScheme = localStorage.getItem('colorMode') || (
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
-        : "light";
+        : "light"
+    );
     const searchRoute = "";
     const geoPermission: unknown = localStorage.getItem("geoPermission");
     const geoLocation : unknown = JSON.parse(
@@ -140,7 +146,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       possibleChar: getPossibleChar(searchRoute, routeList) || [],
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
-      colorMode: devicePreferColorScheme,
+      colorMode: isColorMode(devicePreferColorScheme) ? devicePreferColorScheme : 'light',
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       isVisible: true,
     };
