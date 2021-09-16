@@ -11,7 +11,8 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { StaleWhileRevalidate, CacheFirst, NetworkFirst } from 'workbox-strategies';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 clientsClaim();
 
@@ -46,17 +47,67 @@ registerRoute(
   createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
 );
 
-// An example runtime caching route for requests that aren't handled by the
-// precache, in this case same-origin .png requests like those from in public/
 registerRoute(
-  // Add in any other file extensions or routing criteria as needed.
-  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'), // Customize this strategy as needed, e.g., by changing to CacheFirst.
-  new StaleWhileRevalidate({
-    cacheName: 'images',
+  ({ url }) => url.origin === self.location.origin && url.pathname.startsWith('/static'),
+  new CacheFirst({
+    cacheName: 'app-runtime',
     plugins: [
-      // Ensure that once this runtime cache reaches a maximum size the
-      // least-recently used images are removed.
-      new ExpirationPlugin({ maxEntries: 50 }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      })
+    ],
+  })
+);
+
+registerRoute(
+  ({ url }) => url.origin === self.location.origin && (url.pathname.startsWith('/zh/route/') || url.pathname.startsWith('/en/route/')),
+  new StaleWhileRevalidate({
+    cacheName: 'app-runtime-public',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 60 * 24 * 30 }),
+    ],
+  })
+);
+
+
+registerRoute(
+  ({ url }) => url.origin.includes('basemaps.cartocdn.com'),
+  new CacheFirst({
+    cacheName: 'map',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({ maxAgeSeconds: 60 * 24 * 30 }),
+    ],
+  })
+);
+
+registerRoute(
+  ({ url }) => url.origin.includes('fonts.gstatic.com') || url.origin.includes('unpkg.com') || url.origin.includes('fonts.googleapis.com'),
+  new CacheFirst({
+    cacheName: 'fonts-and-asset',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({ maxAgeSeconds: 60 * 24 * 365 }),
+    ],
+  })
+);
+
+registerRoute(
+  ({ url }) => url.origin.includes('rt.data.gov.hk') || url.origin.includes('data.etabus.gov.hk'),
+  new NetworkFirst({
+    cacheName: 'bus-route-and-eta',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({ maxAgeSeconds: 60 * 24 * 30 }),
     ],
   })
 );
