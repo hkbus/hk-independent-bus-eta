@@ -47,7 +47,7 @@ const CenterControl = ( {onClick}) => {
 }
 
 const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
-  const { db: {stopList}, geolocation, geoPermission, updateGeoPermission, colorMode } = useContext ( AppContext )
+  const { db: {stopList}, geolocation, geoPermission, updateGeoPermission } = useContext ( AppContext )
   const classes = useStyles()
   const [mapState, setMapState] = useState({
     center: stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : stopList[stops[Math.round(stops.length/2)]].location,
@@ -104,10 +104,7 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
           className={classes.tileLayer}
           crossOrigin="anonymous"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url={colorMode === 'dark' ? 
-            "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" : 
-            "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}{r}.png"
-          }
+          url={"https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"}
         />
         {
           // plot stops
