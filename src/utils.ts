@@ -201,10 +201,12 @@ export const getTileListURL = (
       process.env.REACT_APP_OSM_PROVIDER_URL.replaceAll("{s}", "a")
         .replaceAll("{x}", String(entry.x))
         .replaceAll("{y}", String(entry.y))
-        .replaceAll("{z}", String(zoomLevel)),
+        .replaceAll("{z}", String(zoomLevel))
+        .replaceAll("{r}", "@2x"),
       process.env.REACT_APP_OSM_PROVIDER_URL_DARK.replaceAll("{s}", "a")
         .replaceAll("{x}", String(entry.x))
         .replaceAll("{y}", String(entry.y))
-        .replaceAll("{z}", String(zoomLevel)),
+        .replaceAll("{z}", String(zoomLevel))
+        .replaceAll("{r}", "@2x"),
     ]);
 };

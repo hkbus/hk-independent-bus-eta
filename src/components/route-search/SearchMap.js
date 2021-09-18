@@ -9,6 +9,8 @@ import AppContext from '../../AppContext'
 import MyLocationIcon from '@material-ui/icons/MyLocation'
 import { checkPosition } from '../../utils'
 
+Leaflet.Browser.retina = true;
+
 const ChangeMapCenter = ( {center, start, end} ) => {
   const map = useMap()
   if ( center )
@@ -197,6 +199,7 @@ const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
         <ChangeMapCenter center={center} start={checkPosition(start)} end={end} />
         <TileLayer
           crossOrigin="anonymous"
+          detectRetina
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url={colorMode === "light" ? process.env.REACT_APP_OSM_PROVIDER_URL : process.env.REACT_APP_OSM_PROVIDER_URL_DARK}
         />
