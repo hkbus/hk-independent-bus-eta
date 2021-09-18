@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Polyline, Circle, useMap } from 'react-leaflet'
 import Leaflet from 'leaflet'
+import markerIcon2X from 'leaflet/dist/images/marker-icon-2x.png'
 import { useTranslation } from 'react-i18next'
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -139,8 +140,8 @@ const Walklines = ({routes, start, end}) => {
 }
 
 const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
-  const { geolocation, geoPermission, updateGeoPermission, colorMode } = useContext ( AppContext )
-  useStyles()
+  const { geolocation, geoPermission, updateGeoPermission } = useContext ( AppContext )
+  const classes = useStyles();
   const [mapState, setMapState] = useState({
     center: null,
     isFollow: false
@@ -195,11 +196,10 @@ const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
       >
         <ChangeMapCenter center={center} start={checkPosition(start)} end={end} />
         <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url={colorMode === 'dark' ? 
-            "https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png" : 
-            "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-          }
+          className={classes.tileLayer}
+          crossOrigin="anonymous"
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors &copy;'
+          url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
         />
         { 
           (routes || []).map((route, idx) => <BusRoute key={`route-${idx}`} route={route} lv={idx} stopIdx={stopIdx[idx]} onMarkerClick={onMarkerClick} />)
@@ -232,19 +232,22 @@ const getPoint = ({lat, lng}) => [lat, lng]
 
 const BusStopMarker = ( {active, passed, lv} ) => {
   return Leaflet.icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png',
+    iconUrl: markerIcon2X,
     className: `${"routeMap-marker"} ${active ? "routeMap-active" : ''} ${passed ? "routeMap-passed" : ''} routeMap-marker-${lv}`,
   })
 }
 
 const EndsMarker = ( {isStart} ) => {
   return Leaflet.icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png',
+    iconUrl: markerIcon2X,
     className: `${"routeMap-marker"} ${isStart ? "routeMap-start" : 'routeMap-end'}`
   })
 }
 
 const useStyles = makeStyles ( theme => ({
+  "tileLayer": {
+    filter: `${theme.palette.type === "dark" ? 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)' : 'none'}`
+  },
   "@global": {
     ".routeMap-mapContainer": {
       height: '30vh',

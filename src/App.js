@@ -1,6 +1,7 @@
 import React, { useContext, useMemo } from "react";
 import loadable from "@loadable/component";
 import "./App.css";
+import "leaflet/dist/leaflet.css";
 import {
   MuiThemeProvider,
   unstable_createMuiStrictModeTheme as createMuiTheme,

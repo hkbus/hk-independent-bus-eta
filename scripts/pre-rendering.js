@@ -140,7 +140,7 @@ async function runPuppeteer(baseUrl, routes, dir) {
   page.setRequestInterception(true);
   page.on('request', (request) => {
     // block map loading
-    if (request.url().includes('basemaps.cartocdn.com') || request.url().includes('https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png'))
+    if (request.url().includes('tile.openstreetmap.fr'))
       request.abort();
     else
       request.continue()
