@@ -24,7 +24,7 @@ const KeyButton = ({k, handleClick, disabled = false, className}) => {
       disableRipple
     >
       {k === 'b' ? <BackspaceOutlinedIcon/> : 
-        k === 'c' ? <div className={"inputpad-cancelButton"}>{t('取消')}</div> : k}
+        k === 'c' ? <div className={"inputpad-cancelButton"}>{t('C')}</div> : k}
     </Button>
   )
 }
@@ -40,6 +40,7 @@ const RouteNumPad = () => {
           <KeyButton
             k={k}
             handleClick={updateSearchRouteByButton}
+            className={"inputpad-numberButton"}
             disabled={
               (k === 'b' && searchRoute === '') 
               || ( !'bc'.includes(k) && !possibleChar.includes(k))
@@ -100,7 +101,7 @@ const useStyles = makeStyles(theme => ({
     ".inputpad-boxContainer": {
       display: 'flex',
       flexDirection: 'row',
-      height: '180px',
+      height: '208px',
       justifyContent: 'space-around'
     },
     ".inputpad-numPadContainer": {
@@ -108,7 +109,7 @@ const useStyles = makeStyles(theme => ({
     },
     ".inputpad-alphabetPadContainer": {
       width: '20%',
-      height: '176px',
+      height: '206px',
       overflowX: 'hidden',
       overflowY: 'scroll'
     },
@@ -131,6 +132,9 @@ const useStyles = makeStyles(theme => ({
     },
     ".inputpad-alphabetButton": {
       height: '42px'
+    },
+    ".inputpad-numberButton": {
+      height: '52px'
     }
   }
 }))

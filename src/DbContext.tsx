@@ -54,7 +54,7 @@ const getInitialDB = (): DatabaseType => {
 const DbContext = React.createContext<DatabaseContextValue>(null);
 
 export const DbProvider = ({ children }: DbProviderProps) => {
-  const AppTitle = "巴士到站預報 App";
+  const AppTitle = "巴士到站預報 App （免費無廣告）";
   // route list & stop list & route-stop list
   const [db, setDb] = useState(getInitialDB);
 

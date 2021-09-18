@@ -75,7 +75,7 @@ const Footer = () => {
        }}
       />
       <BottomNavigationAction 
-        label={t("規劃路線")}
+        label={t("規劃")}
         component={Link}
         to={`/${i18n.language}/search`}
         onClick={(e) => handleClick(`/${i18n.language}/search`, e)}
