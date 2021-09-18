@@ -1,30 +1,15 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import type { ReactNode } from "react";
 import { isEmptyObj } from "./utils";
-import { initDb, fetchDbFunc } from "./db";
+import { fetchDbFunc } from "./db";
 import { compress as compressJson } from "lzutf8";
-
-interface RouteListEntry {
-  co: string[];
-  stops: Record<string, string[]>;
-  dest: { zh: string; en: string };
-  bound?: string;
-  nlbId?: number;
-  fares?: string[];
-  faresHoliday?: string[];
-  freq?: Record<string, Record<string, string[]>>
-}
-
-interface StopEntry {
-  location: { lat: number; lng: number };
-  name: { zh: string; en: string };
-}
+import type { RouteListEntry, StopListEntry } from "hk-bus-eta"
 
 type StopMapEntry = Array<Array<string>>;
 
 interface DatabaseType {
   routeList: Record<string, RouteListEntry>;
-  stopList: Record<string, StopEntry>;
+  stopList: Record<string, StopListEntry>;
   stopMap: Record<string, StopMapEntry>;
   schemaVersion: string;
   versionMd5: string;
@@ -38,42 +23,17 @@ interface DatabaseContextValue {
 }
 
 interface DbProviderProps {
+  initialDb: DatabaseType;
   children: ReactNode;
 }
 
-const getInitialDB = (): DatabaseType => {
-  return {
-    routeList: initDb.db.routeList,
-    stopList: initDb.db.stopList,
-    stopMap: initDb.db.stopMap,
-    schemaVersion: localStorage.getItem("schemaVersion") || "",
-    versionMd5: localStorage.getItem("versionMd5") || "",
-    updateTime: parseInt(localStorage.getItem("updateTime"), 10),
-  };
-};
-
 const DbContext = React.createContext<DatabaseContextValue>(null);
 
-export const DbProvider = ({ children }: DbProviderProps) => {
+export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
   const AppTitle = "巴士到站預報 App （免費無廣告）";
   // route list & stop list & route-stop list
-  const [db, setDb] = useState(getInitialDB);
-
-  const loadData = ({
-    db: { routeList, stopList, stopMap },
-    versionMd5,
-    schemaVersion,
-  }) => {
-    setDb({
-      routeList,
-      stopList,
-      stopMap,
-      versionMd5,
-      schemaVersion,
-      updateTime: Date.now(),
-    });
-  };
-  const renewDb = useCallback(() => fetchDbFunc(true).then(loadData), []);
+  const [db, setDb] = useState<DatabaseType>(initialDb);
+  const renewDb = useCallback(() => fetchDbFunc(true).then((a) => setDb(a)), []);
   useEffect(() => {
     // skip if db is {}
     if (
@@ -109,6 +69,6 @@ export type {
   DatabaseContextValue,
   DatabaseType,
   StopMapEntry,
-  StopEntry,
+  StopListEntry as StopEntry,
   RouteListEntry,
 };

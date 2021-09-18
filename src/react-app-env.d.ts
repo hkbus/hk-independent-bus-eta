@@ -10,17 +10,17 @@ declare module "hk-bus-eta" {
       lat: number;
       lng: number;
     };
-    name: Record<string, string>;
+    name: { zh: string; en: string };
   }
   export interface RouteListEntry {
     bound: Record<string, string>;
     co: string[];
-    dest: Record<string, string>;
-    fares: string[];
+    dest: { zh: string; en: string };
+    fares: string[] | null;
     faresHoliday: string[] | null;
     freq: Record<string, Record<string, string[]> | null>;
     nlbId: string | null;
-    orig?: Record<string, string>;
+    orig: { zh: string; en: string };
     route: string;
     seq: number;
     serviceType: string;
@@ -38,4 +38,5 @@ interface WarnUpMessageData {
   type: "WARN_UP_MAP_CACHE";
   retinaDisplay: boolean;
   zoomLevels: number[];
+  stopList?: StopListEntry[];
 }

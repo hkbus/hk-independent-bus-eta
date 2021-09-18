@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 import { vibrate } from "./utils";
 import DbContext from "./DbContext";
 import type { DatabaseContextValue } from "./DbContext";
+import { Workbox } from "workbox-window";
 import { produce, freeze, current } from "immer";
 
 interface GeoLocation {
@@ -64,10 +65,12 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
   toggleEnergyMode: () => void;
+  workbox?: Workbox;
 }
 
 interface AppContextProviderProps {
   children: ReactNode;
+  workbox?: Workbox;
 }
 
 const AppContext = React.createContext<AppContextValue>(null);
@@ -117,7 +120,10 @@ const isNumberRecord = (input: unknown): input is Record<string, number> => {
   return false;
 };
 
-export const AppContextProvider = ({ children }: AppContextProviderProps) => {
+export const AppContextProvider = ({
+  workbox,
+  children,
+}: AppContextProviderProps) => {
   const dbContext = useContext(DbContext);
   const { routeList } = dbContext.db;
   const getInitialState = (): AppState => {
@@ -375,6 +381,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleEtaFormat,
       toggleColorMode,
       toggleEnergyMode,
+      workbox,
     };
   }, [
     dbContext,
@@ -389,6 +396,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     toggleEtaFormat,
     toggleColorMode,
     toggleEnergyMode,
+    workbox,
   ]);
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>

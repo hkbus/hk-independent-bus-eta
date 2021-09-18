@@ -11,10 +11,11 @@ import RouteNo from '../components/route-list/RouteNo'
 import { setSeoHeader, toProperCase } from '../utils'
 import ScheduleIcon from '@material-ui/icons/Schedule'
 import TimetableDrawer from '../components/route-eta/TimetableDrawer'
+import Leaflet from 'leaflet'
 
 const RouteEta = () => {
   const { id, panel } = useParams()
-  const { AppTitle, db:{ routeList, stopList, stopMap}, updateSelectedRoute, energyMode } = useContext ( AppContext )
+  const { AppTitle, db:{ routeList, stopList, stopMap}, updateSelectedRoute, energyMode, workbox } = useContext ( AppContext )
   const { route, stops, co, orig, dest, nlbId, fares, freq } = routeList[id.toUpperCase()]
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
   const [ isDialogOpen, setIsDialogOpen ] = useState( false )
@@ -92,6 +93,23 @@ const RouteEta = () => {
       return stopList[id];
     }).filter(stop => stop !== null && stop !== undefined);
   }, [co, stopList, stops]);
+
+  useEffect(() => {
+    if (!energyMode) {
+      /**
+       * @type {WarnUpMessageData}
+       **/
+      const message = {
+        type: "WARN_UP_MAP_CACHE",
+        retinaDisplay: Leaflet.Browser.retina,
+        zoomLevels: [14, 15, 16, 17, 18],
+        stopList: getStops(co, stops).map(id => {
+          return stopList[id];
+        }).filter(stop => stop !== null && stop !== undefined)
+      };
+      workbox?.messageSW(message);
+    }
+  }, [co, energyMode, stopList, stops, workbox]);
 
   return (
     <>

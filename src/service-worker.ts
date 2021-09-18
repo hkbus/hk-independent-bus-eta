@@ -21,6 +21,7 @@ import {
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
 import { fetchEtaObj } from "hk-bus-eta";
 import { getTileListURL, isWarnUpMessageData } from "./utils";
+import type { StopListEntry } from "hk-bus-eta";
 
 declare var self: ServiceWorkerGlobalScope & typeof globalThis;
 clientsClaim();
@@ -152,11 +153,17 @@ registerRoute(
 const warnUpCache = async (
   zoomLevels: Array<number>,
   event: ExtendableEvent,
-  retina: boolean
+  retina: boolean,
+  stopListInput?: Array<StopListEntry>
 ) => {
   try {
-    const eta = await fetchEtaObj();
-    const stopList = Object.values(eta.stopList);
+    let stopList;
+    if (stopListInput === undefined) {
+      const eta = await fetchEtaObj();
+      stopList = Object.values(eta.stopList);
+    } else {
+      stopList = stopListInput;
+    }
     await Promise.all(
       zoomLevels.map(async (i) => {
         const generate = function* () {
@@ -213,13 +220,14 @@ self.addEventListener("message", (event) => {
   }
   const data: unknown = event.data;
   if (isWarnUpMessageData(data)) {
-    const warnCache = fetchEtaObj().then(async (o) => {
+    console.log("warm up map cache", data);
+    const warnCache = async () => {
       try {
-        await warnUpCache(data.zoomLevels, event, data.retinaDisplay);
+        await warnUpCache(data.zoomLevels, event, data.retinaDisplay, data.stopList);
       } catch (e) {
         console.error("error on warn cache", e);
       }
-    });
-    event.waitUntil(warnCache);
+    };
+    event.waitUntil(warnCache());
   }
 });
