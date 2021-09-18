@@ -4,6 +4,7 @@ const resolve = require('path').resolve;
 const puppeteer = require('puppeteer');
 const jsdom = require('jsdom');
 const CleanCSS = require('clean-css');
+require('dotenv').config()
 const cleanCss = new CleanCSS()
 let app;
 
@@ -140,7 +141,7 @@ async function runPuppeteer(baseUrl, routes, dir) {
   page.setRequestInterception(true);
   page.on('request', (request) => {
     // block map loading
-    if (request.url().includes('tile.openstreetmap.fr'))
+    if (request.url().includes(process.env.REACT_APP_OSM_PROVIDER_HOST))
       request.abort();
     else
       request.continue()

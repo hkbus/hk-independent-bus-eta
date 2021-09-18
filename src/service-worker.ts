@@ -19,6 +19,8 @@ import {
   StrategyHandler,
 } from "workbox-strategies";
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
+import { fetchEtaObj } from "hk-bus-eta";
+import { getTileListURL } from "./utils";
 declare var self: ServiceWorkerGlobalScope & typeof globalThis;
 clientsClaim();
 
@@ -64,7 +66,7 @@ class CacheFirstCORS extends Strategy {
       r = new Request(r.url, {
         mode: "cors",
         credentials: "omit",
-        method: r.method
+        method: r.method,
       });
     }
     return handler.fetchAndCachePut(r);
@@ -100,18 +102,20 @@ registerRoute(
   })
 );
 
-registerRoute(
-  ({ url }) => url.origin.includes("tile.openstreetmap.fr"),
-  new CacheFirstCORS({
-    cacheName: "map",
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [200],
-      }),
-      new ExpirationPlugin({ maxAgeSeconds: 60 * 24 * 30 }),
-    ],
-  })
-);
+const maphost = process.env.REACT_APP_OSM_PROVIDER_HOST || "";
+const mapCacheStrategy = new CacheFirstCORS({
+  cacheName: "map",
+  plugins: [
+    new CacheableResponsePlugin({
+      statuses: [200],
+    }),
+    new ExpirationPlugin({
+      maxAgeSeconds: 60 * 24 * 30,
+      purgeOnQuotaError: true,
+    }),
+  ],
+});
+registerRoute(({ url }) => url.origin.includes(maphost), mapCacheStrategy);
 
 registerRoute(
   ({ url }) =>
@@ -144,6 +148,45 @@ registerRoute(
   })
 );
 
+const warnUpCache = async (
+  zoomLevels: Array<number>,
+  event: ExtendableEvent
+) => {
+  try {
+    const eta = await fetchEtaObj();
+    const stopList = Object.values(eta.stopList);
+    await Promise.all(
+      zoomLevels.map(async (i) => {
+        const generate = function* () {
+          const list = getTileListURL(i, stopList);
+          for (let k = 0; k < list.length; k = k + 1) {
+            yield mapCacheStrategy.handleAll({
+              event,
+              request: new Request(list[k], {}),
+            })[1];
+          }
+        };
+        const a = generate();
+        let result = a.next();
+        console.log(result);
+        const pendingPromise: Set<Promise<void>> = new Set();
+        while (result.done !== true) {
+          console.log(result);
+          const value = result.value;
+          pendingPromise.add(value);
+          value.then(() => pendingPromise.delete(value));
+          if (pendingPromise.size >= 10) {
+            await Promise.any(pendingPromise);
+          }
+          result = a.next();
+        }
+        return;
+      })
+    );
+  } catch (e) {
+    console.error("error on warn cache", e);
+  }
+};
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener("message", (event) => {
@@ -166,6 +209,29 @@ self.addEventListener("message", (event) => {
         )
       );
   }
+  if (event.data && event.data.type === "WARN_UP_MAP_CACHE") {
+    const warnCache = fetchEtaObj().then(async (o) => {
+      try {
+        await await warnUpCache([16, 17, 18], event);
+      } catch (e) {
+        console.error("error on warn cache", e);
+      }
+    });
+    event.waitUntil(warnCache);
+  }
 });
 
-// Any other custom service worker logic can go here.
+// Warn up map cache
+self.addEventListener("install", (event) => {
+  const warnCache = fetchEtaObj().then(async (o) => {
+    try {
+      const timeout = new Promise((resolve, _) =>
+        setTimeout(() => resolve, 20000)
+      );
+      await Promise.race([warnUpCache([14, 15], event), timeout]);
+    } catch (e) {
+      console.error("error on warn cache", e);
+    }
+  });
+  event.waitUntil(warnCache);
+});

@@ -47,8 +47,7 @@ const CenterControl = ( {onClick}) => {
 }
 
 const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
-  const { db: {stopList}, geolocation, geoPermission, updateGeoPermission } = useContext ( AppContext )
-  const classes = useStyles()
+  const { db: {stopList}, geolocation, geoPermission, updateGeoPermission, colorMode } = useContext ( AppContext )
   const [mapState, setMapState] = useState({
     center: stopList[stops[stopIdx]] ? stopList[stops[stopIdx]].location : stopList[stops[Math.round(stops.length/2)]].location,
     isFollow: false
@@ -101,10 +100,9 @@ const RouteMap = ({stops, stopIdx, onMarkerClick}) => {
       >
         <ChangeMapCenter center={checkPosition(center)} />
         <TileLayer
-          className={classes.tileLayer}
           crossOrigin="anonymous"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url={"https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"}
+          url={colorMode === "light" ? process.env.REACT_APP_OSM_PROVIDER_URL : process.env.REACT_APP_OSM_PROVIDER_URL_DARK}
         />
         {
           // plot stops
@@ -164,9 +162,6 @@ const BusStopMarker = ( {active, passed} ) => {
 }
 
 const useStyles = makeStyles ( theme => ({
-  "tileLayer": {
-    filter: `${theme.palette.type === "dark" ? 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)' : 'none'}`
-  },
   "@global": {
     ".routeMap-mapContainer": {
       height: '30vh',

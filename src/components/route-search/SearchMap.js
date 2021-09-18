@@ -140,8 +140,8 @@ const Walklines = ({routes, start, end}) => {
 }
 
 const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
-  const { geolocation, geoPermission, updateGeoPermission } = useContext ( AppContext )
-  const classes = useStyles();
+  const { geolocation, geoPermission, updateGeoPermission, colorMode } = useContext ( AppContext )
+  useStyles();
   const [mapState, setMapState] = useState({
     center: null,
     isFollow: false
@@ -196,10 +196,9 @@ const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
       >
         <ChangeMapCenter center={center} start={checkPosition(start)} end={end} />
         <TileLayer
-          className={classes.tileLayer}
           crossOrigin="anonymous"
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors &copy;'
-          url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url={colorMode === "light" ? process.env.REACT_APP_OSM_PROVIDER_URL : process.env.REACT_APP_OSM_PROVIDER_URL_DARK}
         />
         { 
           (routes || []).map((route, idx) => <BusRoute key={`route-${idx}`} route={route} lv={idx} stopIdx={stopIdx[idx]} onMarkerClick={onMarkerClick} />)
@@ -245,9 +244,6 @@ const EndsMarker = ( {isStart} ) => {
 }
 
 const useStyles = makeStyles ( theme => ({
-  "tileLayer": {
-    filter: `${theme.palette.type === "dark" ? 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)' : 'none'}`
-  },
   "@global": {
     ".routeMap-mapContainer": {
       height: '30vh',
