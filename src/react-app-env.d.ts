@@ -33,3 +33,9 @@ declare module "hk-bus-eta" {
   }>;
   export const fetchEtaObjMd5: () => string;
 }
+
+interface WarnUpMessageData {
+  type: "WARN_UP_MAP_CACHE";
+  retinaDisplay: boolean;
+  zoomLevels: number[];
+}

@@ -27,25 +27,14 @@ const Settings = loadable(() => import("./pages/Settings"));
 
 const PageSwitch = () => {
   const { path } = useRouteMatch();
-
   return (
     <SearchContextProvider>
       <Switch>
-        <Route path={`${path}/route/:id/:panel?`}>
-          <RouteEta />
-        </Route>
-        <Route path={`${path}/settings`}>
-          <Settings />
-        </Route>
-        <Route path={`${path}/board`}>
-          <RouteBoard />
-        </Route>
-        <Route path={`${path}/search`}>
-          <RouteSearch />
-        </Route>
-        <Route path={`${path}`}>
-          <Home />
-        </Route>
+        <Route path={`${path}/route/:id/:panel?`} component={RouteEta} />
+        <Route path={`${path}/settings`} component={Settings} />
+        <Route path={`${path}/board`} component={RouteBoard} />
+        <Route path={`${path}/search`} component={RouteSearch} />
+        <Route path={`${path}`} component={Home} />
       </Switch>
     </SearchContextProvider>
   );
@@ -57,7 +46,6 @@ const App = () => {
     return colorMode === "dark" ? getDarkTheme() : getlightTheme();
   }, [colorMode]);
   useStyles();
-
   return (
     <MuiThemeProvider theme={theme}>
       <Container maxWidth="xs" disableGutters className={"AppContainer"}>

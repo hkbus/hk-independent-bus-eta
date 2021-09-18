@@ -13,17 +13,20 @@ export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   return R * c; // in metres
 };
 
+const defaultLocation = { lat: 22.302711, lng: 114.177216 };
 // HK location if no valid value
-export const checkPosition = (position: GeoLocation): GeoLocation => {
+export const checkPosition = (position?: GeoLocation): GeoLocation => {
   if (
     position &&
     typeof position.lat === "number" &&
     isFinite(position.lat) &&
     typeof position.lng === "number" &&
     isFinite(position.lng)
-  )
+  ) {
     return position;
-  return { lat: 22.302711, lng: 114.177216 };
+  } else {
+    return defaultLocation;
+  }
 };
 
 export const checkMobile = () => {
@@ -176,7 +179,8 @@ interface TempEntry {
 
 export const getTileListURL = (
   zoomLevel: number,
-  stopLists: Array<StopListEntry>
+  stopLists: Array<StopListEntry>,
+  retinaDisplay: boolean
 ) => {
   const high = 255 * (zoomLevel + 5) * (zoomLevel + 5);
   const compare = (a: TempEntry, b: TempEntry) => b.key - a.key;
@@ -202,11 +206,16 @@ export const getTileListURL = (
         .replaceAll("{x}", String(entry.x))
         .replaceAll("{y}", String(entry.y))
         .replaceAll("{z}", String(zoomLevel))
-        .replaceAll("{r}", "@2x"),
+        .replaceAll("{r}", "@2x")
+        .replaceAll("{r}", retinaDisplay ? "@2x" : ""),
       process.env.REACT_APP_OSM_PROVIDER_URL_DARK.replaceAll("{s}", "a")
         .replaceAll("{x}", String(entry.x))
         .replaceAll("{y}", String(entry.y))
         .replaceAll("{z}", String(zoomLevel))
-        .replaceAll("{r}", "@2x"),
+        .replaceAll("{r}", retinaDisplay ? "@2x" : ""),
     ]);
 };
+
+export const isWarnUpMessageData = (value: unknown) : value is WarnUpMessageData => {
+  return typeof value === 'object' && value['type'] === "WARN_UP_MAP_CACHE";
+}

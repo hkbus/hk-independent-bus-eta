@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import RouteMap from '../components/route-eta/RouteMap'
 import StopAccordions from '../components/route-eta/StopAccordions'
@@ -25,7 +25,7 @@ const RouteEta = () => {
   const history = useHistory()
   useStyles()
 
-  const handleChange = ( panel ) => (event, newExpanded, isFromMap) => {
+  const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false)
     setDialogStop ( getDialogStops(co, stops, stopMap, panel) )
     if ( newExpanded ) {
@@ -34,12 +34,14 @@ const RouteEta = () => {
     }
   }
 
-  const onMarkerClick = (panel) => {
-    if ( expanded === panel ) {
+  const onMarkerClick = useCallback((panel, event) => {
+    if (expanded === panel) {
       setIsDialogOpen(true)
     }
-    return handleChange(panel)
-  }
+    setExpanded(panel);
+    setDialogStop(getDialogStops(co, stops, stopMap, panel));
+    history.replace(`/${i18n.language}/route/${id}/${panel}`);
+  }, [co, expanded, history, i18n.language, id, stopMap, stops])
   
   const handleCloseDialog = () => {
     setIsDialogOpen(false)
@@ -85,6 +87,12 @@ const RouteEta = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, i18n.language])
 
+  const stopsExtracted = useMemo(() => {
+    return getStops(co, stops).map(id => {
+      return stopList[id];
+    }).filter(stop => stop !== null && stop !== undefined);
+  }, [co, stopList, stops]);
+
   return (
     <>
       <input hidden id={id} />
@@ -109,7 +117,7 @@ const RouteEta = () => {
         </>: <></>}
       </Paper>
       {!energyMode ? <RouteMap 
-        stops={getStops(co, stops)}
+        stops={stopsExtracted}
         stopIdx={expanded}
         onMarkerClick={onMarkerClick}
       /> : <></>}
@@ -128,6 +136,12 @@ const RouteEta = () => {
 }
 
 // TODO: better handling on buggy data in database
+/**
+ * 
+ * @param {string[]} co 
+ * @param {Record<string, string[]>} stops
+ * @returns {string[]}
+ */
 const getStops = (co, stops) => {
   for ( let i = 0; i< co.length; ++i ) {
     if ( co[i] in stops ) {

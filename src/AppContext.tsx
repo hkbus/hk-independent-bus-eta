@@ -4,6 +4,7 @@ import React, {
   useState,
   useRef,
   useCallback,
+  useMemo,
 } from "react";
 import type { ReactNode } from "react";
 import { vibrate } from "./utils";
@@ -58,7 +59,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   // settings
   updateGeoPermission: (
     geoPermission: AppState["geoPermission"],
-    deniedCallback: () => void
+    deniedCallback?: () => void
   ) => void;
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
@@ -80,7 +81,7 @@ const isGeoPremission = (input: unknown): input is GeoPermission => {
   );
 };
 
-const isGeoLocation  = (input: unknown): input is GeoLocation => {
+const isGeoLocation = (input: unknown): input is GeoLocation => {
   if (input instanceof Object && input !== null && input !== undefined) {
     if (typeof input["lat"] === "number" && typeof input["lng"] === "number") {
       return true;
@@ -100,10 +101,10 @@ const isStrings = (input: unknown[]): input is string[] => {
   return true;
 };
 
-const isColorMode = (input: unknown): input is 'dark' | 'light' => {
-  console.log(input)
-  return input === 'dark' || input === 'light';
-}
+const isColorMode = (input: unknown): input is "dark" | "light" => {
+  console.log(input);
+  return input === "dark" || input === "light";
+};
 
 const isNumberRecord = (input: unknown): input is Record<string, number> => {
   if (input instanceof Object && input !== null && input !== undefined) {
@@ -117,18 +118,18 @@ const isNumberRecord = (input: unknown): input is Record<string, number> => {
 };
 
 export const AppContextProvider = ({ children }: AppContextProviderProps) => {
-  const { AppTitle, db, renewDb } = useContext(DbContext);
-  const { routeList } = db;
+  const dbContext = useContext(DbContext);
+  const { routeList } = dbContext.db;
   const getInitialState = (): AppState => {
-    const devicePreferColorScheme = localStorage.getItem('colorMode') || (
-      window.matchMedia &&
+    const devicePreferColorScheme =
+      localStorage.getItem("colorMode") ||
+      (window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
-        : "light"
-    );
+        : "light");
     const searchRoute = "";
     const geoPermission: unknown = localStorage.getItem("geoPermission");
-    const geoLocation : unknown = JSON.parse(
+    const geoLocation: unknown = JSON.parse(
       localStorage.getItem("geolocation")
     );
     const etaFormat: unknown = localStorage.getItem("etaFormat");
@@ -138,15 +139,17 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
       geoPermission: isGeoPremission(geoPermission) ? geoPermission : null,
-      geolocation: isGeoLocation (geoLocation )
-        ? geoLocation 
+      geolocation: isGeoLocation(geoLocation)
+        ? geoLocation
         : defaultGeolocation,
       hotRoute: isNumberRecord(hotRoute) ? hotRoute : {},
       savedEtas:
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       possibleChar: getPossibleChar(searchRoute, routeList) || [],
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
-      colorMode: isColorMode(devicePreferColorScheme) ? devicePreferColorScheme : 'light',
+      colorMode: isColorMode(devicePreferColorScheme)
+        ? devicePreferColorScheme
+        : "light",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       isVisible: true,
     };
@@ -172,12 +175,16 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
 
   useEffect(() => {
     if (geoPermission === "granted") {
-      const _geoWatcherId = navigator.geolocation.watchPosition(
-        ({ coords: { latitude, longitude } }) => {
-          updateGeolocation({ lat: latitude, lng: longitude });
-        }
-      );
-      geoWatcherId.current = _geoWatcherId;
+      try {
+        const _geoWatcherId = navigator.geolocation.watchPosition(
+          ({ coords: { latitude, longitude } }) => {
+            updateGeolocation({ lat: latitude, lng: longitude });
+          }
+        );
+        geoWatcherId.current = _geoWatcherId;
+      } catch (e) {
+        console.error("cannot watch position", e);
+      }
     }
     const onVisibilityChange = () => {
       setStateRaw(
@@ -216,7 +223,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const geoWatcherId = useRef(null);
 
   const updateGeoPermission = useCallback(
-    (geoPermission: AppState["geoPermission"], deniedCallback: () => void) => {
+    (geoPermission: AppState["geoPermission"], deniedCallback?: () => void) => {
       if (geoPermission === "opening") {
         setGeoPermission("opening");
         const _geoWatcherId = navigator.geolocation.watchPosition(
@@ -354,29 +361,37 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
+  const contextValue = useMemo(() => {
+    return {
+      ...dbContext,
+      ...state,
+      setSearchRoute,
+      updateSearchRouteByButton,
+      updateSelectedRoute,
+      updateGeolocation,
+      updateSavedEtas,
+      resetUsageRecord,
+      updateGeoPermission,
+      toggleEtaFormat,
+      toggleColorMode,
+      toggleEnergyMode,
+    };
+  }, [
+    dbContext,
+    state,
+    setSearchRoute,
+    updateSearchRouteByButton,
+    updateSelectedRoute,
+    updateGeolocation,
+    updateSavedEtas,
+    resetUsageRecord,
+    updateGeoPermission,
+    toggleEtaFormat,
+    toggleColorMode,
+    toggleEnergyMode,
+  ]);
   return (
-    <AppContext.Provider
-      value={{
-        AppTitle,
-        db,
-        ...state,
-        setSearchRoute,
-        updateSearchRouteByButton,
-        updateSelectedRoute,
-        // UX
-        updateGeolocation,
-        updateSavedEtas,
-        resetUsageRecord,
-        // settings
-        renewDb,
-        updateGeoPermission,
-        toggleEtaFormat,
-        toggleColorMode,
-        toggleEnergyMode,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 };
 

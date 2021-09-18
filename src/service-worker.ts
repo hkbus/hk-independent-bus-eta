@@ -20,7 +20,8 @@ import {
 } from "workbox-strategies";
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
 import { fetchEtaObj } from "hk-bus-eta";
-import { getTileListURL } from "./utils";
+import { getTileListURL, isWarnUpMessageData } from "./utils";
+
 declare var self: ServiceWorkerGlobalScope & typeof globalThis;
 clientsClaim();
 
@@ -150,7 +151,8 @@ registerRoute(
 
 const warnUpCache = async (
   zoomLevels: Array<number>,
-  event: ExtendableEvent
+  event: ExtendableEvent,
+  retina: boolean
 ) => {
   try {
     const eta = await fetchEtaObj();
@@ -158,7 +160,7 @@ const warnUpCache = async (
     await Promise.all(
       zoomLevels.map(async (i) => {
         const generate = function* () {
-          const list = getTileListURL(i, stopList);
+          const list = getTileListURL(i, stopList, retina);
           for (let k = 0; k < list.length; k = k + 1) {
             yield mapCacheStrategy.handleAll({
               event,
@@ -168,13 +170,12 @@ const warnUpCache = async (
         };
         const a = generate();
         let result = a.next();
-        console.log(result);
         const pendingPromise: Set<Promise<void>> = new Set();
         while (result.done !== true) {
-          console.log(result);
           const value = result.value;
           pendingPromise.add(value);
           value.then(() => pendingPromise.delete(value));
+          // limit pending fetch to 10
           if (pendingPromise.size >= 10) {
             await Promise.any(pendingPromise);
           }
@@ -187,6 +188,7 @@ const warnUpCache = async (
     console.error("error on warn cache", e);
   }
 };
+
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener("message", (event) => {
@@ -209,29 +211,15 @@ self.addEventListener("message", (event) => {
         )
       );
   }
-  if (event.data && event.data.type === "WARN_UP_MAP_CACHE") {
+  const data: unknown = event.data;
+  if (isWarnUpMessageData(data)) {
     const warnCache = fetchEtaObj().then(async (o) => {
       try {
-        await await warnUpCache([16, 17, 18], event);
+        await warnUpCache(data.zoomLevels, event, data.retinaDisplay);
       } catch (e) {
         console.error("error on warn cache", e);
       }
     });
     event.waitUntil(warnCache);
   }
-});
-
-// Warn up map cache
-self.addEventListener("install", (event) => {
-  const warnCache = fetchEtaObj().then(async (o) => {
-    try {
-      const timeout = new Promise((resolve, _) =>
-        setTimeout(() => resolve, 20000)
-      );
-      await Promise.race([warnUpCache([14, 15], event), timeout]);
-    } catch (e) {
-      console.error("error on warn cache", e);
-    }
-  });
-  event.waitUntil(warnCache);
 });

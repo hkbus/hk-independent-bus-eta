@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import type { ReactNode } from "react";
 import { isEmptyObj } from "./utils";
 import { initDb, fetchDbFunc } from "./db";
@@ -12,6 +12,7 @@ interface RouteListEntry {
   nlbId?: number;
   fares?: string[];
   faresHoliday?: string[];
+  freq?: Record<string, Record<string, string[]>>
 }
 
 interface StopEntry {
@@ -93,16 +94,13 @@ export const DbProvider = ({ children }: DbProviderProps) => {
     }
   }, [db]);
 
+  const contextValue = useMemo(
+    () => ({ AppTitle, db, renewDb }),
+    [db, renewDb]
+  );
+
   return (
-    <DbContext.Provider
-      value={{
-        AppTitle,
-        db,
-        renewDb,
-      }}
-    >
-      {children}
-    </DbContext.Provider>
+    <DbContext.Provider value={contextValue}>{children}</DbContext.Provider>
   );
 };
 

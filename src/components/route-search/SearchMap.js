@@ -9,8 +9,6 @@ import AppContext from '../../AppContext'
 import MyLocationIcon from '@material-ui/icons/MyLocation'
 import { checkPosition } from '../../utils'
 
-Leaflet.Browser.retina = true;
-
 const ChangeMapCenter = ( {center, start, end} ) => {
   const map = useMap()
   if ( center )

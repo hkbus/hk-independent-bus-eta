@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Leaflet from 'leaflet';
 import './index.css';
 import App from './App';
 import { DbProvider } from './DbContext'
@@ -72,8 +73,14 @@ if (isHuman()){
   // unregister() to register() below. Note this comes with some pitfalls.
   // Learn more about service workers: https://cra.link/PWA
   serviceWorkerRegistration.register({
-    onUpdate: (registration, skipWaiting, installingServiceWorker) => {
+    onUpdate: (workbox, skipWaiting, installingServiceWorker) => {
       skipWaiting();
+      const message: WarnUpMessageData = {
+        type: "WARN_UP_MAP_CACHE",
+        retinaDisplay: Leaflet.Browser.retina,
+        zoomLevels: [14, 15]
+      };
+      workbox.messageSW(message);
     },
   });
 
