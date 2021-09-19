@@ -91,6 +91,7 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
       if ( idx === 0 ) {
         await page.goto(pageUrl, {waitUntil: 'networkidle0'});
       } else if ( pageUrl.includes('search') ) {
+        await page.waitForSelector(`a[href="${url.pathname}"]`)
         await page.click(`a[href="${url.pathname}"]`)
         await new Promise((resolve) => {setTimeout(resolve, 500)})
       } else {
@@ -101,6 +102,7 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
     } else {
         const lang = pageUrl.split('/').slice(-3)[0]
         const q = pageUrl.split('/').slice(-1)[0];
+        await page.waitForSelector('style[prerender]')
         await page.evaluate(`document.querySelector('style[prerender]').innerText = ''`)
         await page.click(`[id="${lang}-selector"]`)
         await page.evaluate((q) => {
@@ -136,32 +138,38 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
  * @returns {number|undefined}
  */
 async function runPuppeteer(baseUrl, routes, dir) {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  page.setRequestInterception(true);
-  page.on('request', (request) => {
-    // block map loading
-    if (request.url().includes(process.env.REACT_APP_OSM_PROVIDER_HOST))
-      request.abort();
-    else
-      request.continue()
-  })
-  page.setUserAgent('prerendering');
   let start = Date.now();
-  for (let i = 0; i < routes.length; i++) {
-    try {
-      console.log(`Processing route "${routes[i]}"`);
-      const html = await getHTMLfromPuppeteerPage(page, `${baseUrl}${routes[i]}`, i);
-      if (html) createNewHTMLPage(routes[i], html, dir);
-      else return 0;
-
-    } catch (err) {
-      console.error(`Error: Failed to process route "${routes[i]}"\nMessage: ${err}`);
-      process.exit(1)
+  const instances = [0,1,2,3];
+  const promised = instances.map(
+    async (k) => {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      page.setRequestInterception(true);
+      page.on('request', (request) => {
+        // block map loading
+        if (request.url().includes(process.env.REACT_APP_OSM_PROVIDER_HOST))
+          request.abort();
+        else
+          request.continue()
+      })
+      page.setUserAgent('prerendering');
+      for (let i = k; i < routes.length; i = i + 4) {
+        try {
+          console.log(`Processing route "${routes[i]}"`);
+          const html = await getHTMLfromPuppeteerPage(page, `${baseUrl}${routes[i]}`, i);
+          if (html) createNewHTMLPage(routes[i], html, dir);
+          else return 0;
+    
+        } catch (err) {
+          console.error(`Error: Failed to process route "${routes[i]}"\nMessage: ${err}`);
+          process.exit(1)
+        }
+      }
+      await browser.close();
     }
-  }
-
-  await browser.close();
+  )
+  await Promise.all(promised);
+  
   console.log( ( 'Finished in ' + (Date.now() - start ) / 1000) + "s.");
   start = Date.now();
   return;
