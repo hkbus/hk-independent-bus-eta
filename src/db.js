@@ -67,7 +67,7 @@ export const fetchDbFunc = async (forceRenew = false) => {
       resolve({
         schemaVersion,
         versionMd5,
-        lastUpdateTime,
+        updateTime: lastUpdateTime,
         routeList: db.routeList,
         stopList: db.stopList,
         stopMap: db.stopMap,

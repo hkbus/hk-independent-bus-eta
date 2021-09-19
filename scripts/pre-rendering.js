@@ -86,7 +86,6 @@ function ensureDirExists(dir) {
 async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
   const url = new URL(pageUrl)
   try {
-    // const page = await browser.newPage();
     if ( !pageUrl.includes('/route/') ) {
       if ( idx === 0 ) {
         await page.goto(pageUrl, {waitUntil: 'networkidle0'});
@@ -96,7 +95,7 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
         await new Promise((resolve) => {setTimeout(resolve, 500)})
       } else {
         await page.goto(pageUrl, {waitUntil: 'networkidle0'})
-        await page.waitForTimeout(3000)
+        await page.waitForTimeout(10000)
       }
       if (idx === 0) await page.waitForTimeout(3000) // wait decompression & loading data
     } else {
@@ -113,9 +112,20 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
             var ev2 = new Event('input', { bubbles: true});
             input.dispatchEvent(ev2);
         }, q)
-        await page.waitForSelector(`input[id="${q}"][value="${q}"]`, {timeout: 1000});
+        await page.waitForSelector(`input[id="${q}"][value="${q}"]`, {timeout: 5000});
     }
+  } catch (err) {
+    let content = '';
+    try {
+      const html = await page.content();
+      const dom = new jsdom.JSDOM(html);
+      content = dom.serialize();
+    } catch (err2) {
 
+    }
+    throw new Error(`Error: Failed to build HTML for ${pageUrl}.\nMessage: ${err}\nContent: ${content}`);
+  }
+  try {
     const html = await page.content();
     if (!html) return 0;
 

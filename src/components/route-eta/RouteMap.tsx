@@ -218,8 +218,8 @@ export default RouteMap;
 const getPoint = ({ lat, lng }) => [lat, lng];
 
 const BusStopMarker = ({ active, passed }) => {
-  return Leaflet.icon({
-    iconUrl: markerIcon2X,
+  return Leaflet.divIcon({
+    iconSize: [25, 41],
     className: `${"routeMap-marker"} ${active ? "routeMap-active" : ""} ${
       passed ? "routeMap-passed" : ""
     }`,
@@ -243,13 +243,13 @@ const useStyles = makeStyles((theme) => ({
       marginRight: "5px !important",
     },
     ".routeMap-marker": {
-      marginLeft: "-12px",
-      marginTop: "-41px",
       width: "25px",
       height: "41px",
       zIndex: 618,
       outline: "none",
       filter: "hue-rotate(130deg)",
+      'background-image': `url(${markerIcon2X})`,
+      'background-size': 'cover',
     },
     ".routeMap-active": {
       animation: "$blinker 2s linear infinite",

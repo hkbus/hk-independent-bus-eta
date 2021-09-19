@@ -231,15 +231,15 @@ export default SearchMap
 const getPoint = ({lat, lng}) => [lat, lng]
 
 const BusStopMarker = ( {active, passed, lv} ) => {
-  return Leaflet.icon({
-    iconUrl: markerIcon2X,
+  return Leaflet.divIcon({
+    iconSize: [25, 41],
     className: `${"routeMap-marker"} ${active ? "routeMap-active" : ''} ${passed ? "routeMap-passed" : ''} routeMap-marker-${lv}`,
   })
 }
 
 const EndsMarker = ( {isStart} ) => {
-  return Leaflet.icon({
-    iconUrl: markerIcon2X,
+  return Leaflet.divIcon({
+    iconSize: [25, 41],
     className: `${"routeMap-marker"} ${isStart ? "routeMap-start" : 'routeMap-end'}`
   })
 }
@@ -260,14 +260,14 @@ const useStyles = makeStyles ( theme => ({
       marginBottom: '20px !important',
       marginRight: '5px !important'
     },
-    ".routeMap-marker": {
-      marginLeft: '-12px',
-      marginTop: '-41px',
+    ".routeMap-marker": {      
       width: '25px',
       height: '41px',
       zIndex: 618,
       outline: 'none',
-      filter: 'hue-rotate(130deg)'
+      filter: 'hue-rotate(130deg)',
+      'background-image': `url(${markerIcon2X})`,
+      'background-size': 'cover',
     },
     ".routeMap-marker-1": {
       filter: 'hue-rotate(210deg) brightness(1.5)'
