@@ -233,6 +233,7 @@ const getPoint = ({lat, lng}) => [lat, lng]
 const BusStopMarker = ( {active, passed, lv} ) => {
   return Leaflet.divIcon({
     iconSize: [25, 41],
+    iconAnchor: [12.5, 41],
     className: `${"routeMap-marker"} ${active ? "routeMap-active" : ''} ${passed ? "routeMap-passed" : ''} routeMap-marker-${lv}`,
   })
 }
@@ -240,6 +241,7 @@ const BusStopMarker = ( {active, passed, lv} ) => {
 const EndsMarker = ( {isStart} ) => {
   return Leaflet.divIcon({
     iconSize: [25, 41],
+    iconAnchor: [12.5, 41],
     className: `${"routeMap-marker"} ${isStart ? "routeMap-start" : 'routeMap-end'}`
   })
 }
