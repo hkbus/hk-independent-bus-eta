@@ -61,29 +61,34 @@ export const fetchDbFunc = async (forceRenew = false) => {
     localStorage.getItem("updateTime") || Date.now(),
     10
   );
-  const storedDb = new Promise((resolve, reject) => {
+  const raw = localStorage.getItem("db");
+  const storedDb = (raw) => new Promise((resolve, reject) => {
     try {
-      const db = decompressJsonString(localStorage.getItem("db"));
-      resolve({
-        schemaVersion,
-        versionMd5,
-        updateTime: lastUpdateTime,
-        routeList: db.routeList,
-        stopList: db.stopList,
-        stopMap: db.stopMap,
-      });
+      if (raw === null) {
+        reject('localStorage is null');
+      } else {
+        const db = decompressJsonString(localStorage.getItem("db"));
+        resolve({
+          schemaVersion,
+          versionMd5,
+          updateTime: lastUpdateTime,
+          routeList: db.routeList,
+          stopList: db.stopList,
+          stopMap: db.stopMap,
+        });
+      }
     } catch (e) {
       reject(e);
     }
   });
 
   if (
-    localStorage.getItem("db") &&
+    raw !== null &&
     (!navigator.onLine ||
       (!forceRenew && Date.now() - lastUpdateTime < 7 * 24 * 3600 * 1000))
   ) {
     try {
-      const db = await storedDb;
+      const db = await storedDb(raw);
       return db;
     } catch {}
   }
@@ -104,7 +109,7 @@ export const fetchDbFunc = async (forceRenew = false) => {
     }
     try {
       if (!needRenew) {
-        const db = await storedDb;
+        const db = await storedDb(raw);
         return db;
       }
     } catch {}
@@ -112,8 +117,8 @@ export const fetchDbFunc = async (forceRenew = false) => {
     localStorage.setItem("updateTime", Date.now());
     return new Promise((resolve_1) => {
       const timerId = setTimeout(() => {
-        if (!forceRenew && localStorage.getItem("db")) {
-          resolve_1(storedDb);
+        if (!forceRenew && raw !== null) {
+          resolve_1(storedDb(raw));
         }
       }, 1000);
       fetchEtaObj()

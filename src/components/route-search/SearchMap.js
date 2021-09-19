@@ -189,8 +189,8 @@ const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
     <Box className={"routeMap-mapContainer"}>
       <MapContainer 
         center={getMapCenter()} 
-        zoom={16} 
-        scrollWheelZoom={false} 
+        zoom={16}
+        scrollWheelZoom={false}
         className={"routeMap-mapContainer"}
         whenCreated={setMap}
       >
@@ -198,6 +198,10 @@ const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
         <TileLayer
           crossOrigin="anonymous"
           detectRetina
+          maxZoom={Leaflet.Browser.retina ? 20 : 19}
+          maxNativeZoom={18}
+          keepBuffer={10}
+          updateWhenIdle={false}
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url={colorMode === "light" ? process.env.REACT_APP_OSM_PROVIDER_URL : process.env.REACT_APP_OSM_PROVIDER_URL_DARK}
         />

@@ -33,6 +33,19 @@ if (isHuman()) {
   // Target: render only if development or prerendering or in registered app or lazy loading page
   let canonicalLink = document.querySelector('link[rel="canonical"]');
   let prerenderStyle = document.querySelector("style[prerender]");
+  const workboxPromise = serviceWorkerRegistration.register({
+    onUpdate: (workbox, skipWaiting, installingServiceWorker) => {
+      skipWaiting();
+      const message: WarnUpMessageData = {
+        type: "WARN_UP_MAP_CACHE",
+        retinaDisplay: Leaflet.Browser.retina,
+        zoomLevels: [14, 15],
+      };
+      workbox.messageSW(message);
+    },
+  });
+  const fetchDb = fetchDbFunc();
+  const allPromise = Promise.all([fetchDb, workboxPromise]);
   if (
     process.env.NODE_ENV === "development" ||
     navigator.userAgent === "prerendering" ||
@@ -46,18 +59,6 @@ if (isHuman()) {
     if (prerenderStyle instanceof HTMLStyleElement) {
       prerenderStyle.innerHTML = "";
     }
-    const workboxPromise = serviceWorkerRegistration.register({
-      onUpdate: (workbox, skipWaiting, installingServiceWorker) => {
-        skipWaiting();
-        const message: WarnUpMessageData = {
-          type: "WARN_UP_MAP_CACHE",
-          retinaDisplay: Leaflet.Browser.retina,
-          zoomLevels: [14, 15],
-        };
-        workbox.messageSW(message);
-      },
-    });
-    const allPromise = Promise.all([fetchDbFunc(), workboxPromise]);
     const Container = () => {
       const [state, setState] = useState({
         initialized: false,
@@ -88,15 +89,29 @@ if (isHuman()) {
       document.getElementById("root")
     );
   } else {
-    fetchDbFunc().then((db) => {
-      // hydrate in production
-      ReactDOM.hydrate(
-        <React.StrictMode>
+    fetchDb.then((db) => {
+      const Container = () => {
+        const [state, setState] = useState({
+          workbox: undefined,
+        });
+        useEffect(() => {
+          workboxPromise.then((workbox) => {
+            console.log(workbox);
+            setState({ workbox: workbox });
+          });
+        }, [])
+        return (
           <DbProvider initialDb={db}>
-            <AppContextProvider>
+            <AppContextProvider workbox={state.workbox}>
               <App />
             </AppContextProvider>
           </DbProvider>
+        );
+      };
+      // hydrate in production
+      ReactDOM.hydrate(
+        <React.StrictMode>
+          <Container />
         </React.StrictMode>,
         document.getElementById("root"),
         () => {

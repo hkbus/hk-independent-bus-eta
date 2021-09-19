@@ -5,6 +5,10 @@ interface GeoLocation {
 }
 
 declare module "hk-bus-eta" {
+  /**
+   * I - inbound, O - outbound
+   */
+  export type BoundType = "O" | "I";
   export interface StopListEntry {
     location: {
       lat: number;
@@ -13,7 +17,7 @@ declare module "hk-bus-eta" {
     name: { zh: string; en: string };
   }
   export interface RouteListEntry {
-    bound: Record<string, string>;
+    bound: Record<string, BoundType>;
     co: string[];
     dest: { zh: string; en: string };
     fares: string[] | null;

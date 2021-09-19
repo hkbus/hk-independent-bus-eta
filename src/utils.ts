@@ -29,6 +29,17 @@ export const checkPosition = (position?: GeoLocation): GeoLocation => {
   }
 };
 
+const locationEpsilon = 0.0000001;
+export const locationEqual = (
+  position1: GeoLocation,
+  position2: GeoLocation
+): boolean => {
+  return (
+    Math.abs(position1.lat - position2.lat) < locationEpsilon &&
+    Math.abs(position1.lng - position2.lng) < locationEpsilon
+  );
+};
+
 export const checkMobile = () => {
   let check = false;
   //eslint-disable-next-line
@@ -215,6 +226,8 @@ export const getTileListURL = (
     ]);
 };
 
-export const isWarnUpMessageData = (value: unknown) : value is WarnUpMessageData => {
-  return typeof value === 'object' && value['type'] === "WARN_UP_MAP_CACHE";
-}
+export const isWarnUpMessageData = (
+  value: unknown
+): value is WarnUpMessageData => {
+  return typeof value === "object" && value["type"] === "WARN_UP_MAP_CACHE";
+};

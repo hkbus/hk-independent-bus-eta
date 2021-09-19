@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef, useCallback, useMemo } from "react";
+import { useContext, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   MapContainer,
   Marker,
@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import type { StopEntry } from "../../DbContext";
 import MyLocationIcon from "@material-ui/icons/MyLocation";
-import { checkPosition } from "../../utils";
+import { checkPosition, locationEqual } from "../../utils";
 import type { Map as LeafletMap } from "leaflet";
 
 const SelfCircle = () => {
@@ -42,82 +42,98 @@ const CenterControl = ({ onClick }) => {
 interface RouteMapProps {
   stops: Array<StopEntry>;
   stopIdx: number;
-  onMarkerClick: (idx: number, event: unknown) => void
+  onMarkerClick: (idx: number, event: unknown) => void;
+}
+
+interface RouteMapRef {
+  initialCenter: GeoLocation;
+  map?: LeafletMap;
+  currentStopCenter: GeoLocation;
+  /**
+   * last center that requested by map.flyTo() / map.setView()
+   */
+  center: GeoLocation;
+  isFollow: boolean;
+  stops: Array<StopEntry>;
+  stopIdx: number;
 }
 
 const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
-  const {
-    geolocation,
-    geoPermission,
-    updateGeoPermission,
-    colorMode,
-  } = useContext(AppContext);
-  const [mapState, setMapState] = useState({
+  const { geolocation, geoPermission, updateGeoPermission, colorMode } =
+    useContext(AppContext);
+  const { i18n } = useTranslation();
+  const mapRef = useRef<RouteMapRef>({
+    initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
+    currentStopCenter: stops[stopIdx]
+      ? stops[stopIdx].location
+      : checkPosition(),
     center: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
     isFollow: false,
+    stops: stops,
+    stopIdx: stopIdx,
   });
-  const { center } = mapState;
-  const { i18n } = useTranslation();
-  const mapRef = useRef<LeafletMap>(null);
 
   useEffect(() => {
-    const _center = stops[stopIdx] ? stops[stopIdx].location : checkPosition();
-    setMapState((state) => {
-      if (_center.lat !== state.center.lat || _center.lng !== state.center.lng) {
-        if (mapRef != null) {
-          mapRef.current.flyTo(_center);
-        }
-        return {
-          ...state,
-          center: _center,
-          isFollow: false
-        }
-      }
-      return state;
-    })
-  }, [stops, stopIdx]);
-
-  useEffect(() => {
-    setMapState((state) => {
-      if (state.isFollow) {
-        if (
-          geolocation.lat !== state.center.lat ||
-          geolocation.lng !== state.center.lng
-        ) {
-          if (mapRef.current != null) {
-            mapRef.current.flyTo(geolocation);
-          }
-          return { center: geolocation, isFollow: true };
-        }
-      }
-      return state;
-    });
-  }, [geolocation]);
-
-  const whenCreated = useCallback(
-    (map: LeafletMap) => {
-      console.log("got map", map);
-      mapRef.current = map;
-      map.on({
-        dragend: () => {
-          setMapState({
-            center: map.getCenter(),
-            isFollow: false,
-          });
-        },
-      });
-      if (navigator.userAgent === "prerendering") {
-        map.setView(checkPosition(center), 11);
+    let isFollow: boolean, _center: GeoLocation;
+    if (mapRef.current.stops !== stops || mapRef.current.stopIdx !== stopIdx) {
+      isFollow = false;
+    } else {
+      isFollow = mapRef.current.isFollow;
+    }
+    if (
+      mapRef.current.stops === stops &&
+      mapRef.current.stopIdx === stopIdx &&
+      isFollow
+    ) {
+      _center = geolocation;
+    } else {
+      _center = stops[stopIdx] ? stops[stopIdx].location : checkPosition();
+    }
+    const center = mapRef.current.center;
+    if (center !== _center && !locationEqual(_center, center)) {
+      if (mapRef.current.stops !== stops) {
+        mapRef.current.map?.setView(_center);
       } else {
-        map.flyTo(checkPosition(center));
+        mapRef.current.map?.flyTo(_center);
       }
-      setTimeout(() => {
-        console.log("try invalidateSize");
-        map.invalidateSize();
-      }, 500);
-    },
-    [center]
-  );
+    }
+    mapRef.current = {
+      ...mapRef.current,
+      center: _center,
+      currentStopCenter: stops[stopIdx]
+        ? stops[stopIdx].location
+        : checkPosition(),
+      stops: stops,
+      stopIdx: stopIdx,
+      isFollow: isFollow,
+    };
+  }, [stops, stopIdx, geolocation]);
+
+  const whenCreated = useCallback((map: LeafletMap) => {
+    console.log("got map", map);
+    mapRef.current = {
+      ...mapRef.current,
+      map,
+    };
+    const stopFollowingDeviceGeoLocation = () => {
+      mapRef.current = {
+        ...mapRef.current,
+        center: mapRef.current.currentStopCenter,
+        isFollow: false,
+      };
+    };
+    map.on({
+      dragend: stopFollowingDeviceGeoLocation,
+      dragstart: stopFollowingDeviceGeoLocation,
+    });
+    if (navigator.userAgent === "prerendering") {
+      map.setView(mapRef.current.center, 11);
+    } else {
+      map.setView(mapRef.current.center);
+    }
+    console.log("try invalidateSize");
+    map.invalidateSize();
+  }, []);
 
   const whenReady = useCallback(() => {
     console.log("map is ready");
@@ -125,18 +141,18 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
 
   const onClickJumpToMyLocation = useCallback(() => {
     if (geoPermission === "granted") {
-      // load from cache to avoid unintentional re-rending
-      // becoz geolocation is updated frequently
-      setMapState({
-        center: checkPosition(geolocation),
+      mapRef.current.map?.flyTo(geolocation);
+      mapRef.current = {
+        ...mapRef.current,
+        center: geolocation,
         isFollow: true,
-      });
-      if (mapRef.current != null) {
-        mapRef.current.flyTo(geolocation);
-      }
+      };
     } else if (geoPermission !== "denied") {
       // ask for loading geolocation
-      setMapState((state) => ({ ...state, isFollow: true }));
+      mapRef.current = {
+        ...mapRef.current,
+        isFollow: true,
+      };
       updateGeoPermission("opening");
     }
   }, [geoPermission, geolocation, updateGeoPermission]);
@@ -158,8 +174,8 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
           },
         }}
       />
-    ))
-  }, [i18n.language, onMarkerClick, stopIdx, stops])
+    ));
+  }, [i18n.language, onMarkerClick, stopIdx, stops]);
 
   const lines = useMemo(() => {
     const list: JSX.Element[] = [];
@@ -172,22 +188,20 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         console.log("wat?", stops, idx);
         return prev;
       }
-      prev.push(<Polyline
-        key={`${stop.location.lng}-${stop.location.lat}-line`}
-        positions={[
-          getPoint(lastStop.location),
-          getPoint(stop.location),
-        ]}
-        color={"#FF9090"}
-      />)
+      prev.push(
+        <Polyline
+          key={`${stop.location.lng}-${stop.location.lat}-line`}
+          positions={[getPoint(lastStop.location), getPoint(stop.location)]}
+          color={"#FF9090"}
+        />
+      );
       return prev;
     }, list);
-  }, [stops])
-  console.log(checkPosition(center))
+  }, [stops]);
   return (
     <Box className={"routeMap-mapContainer"}>
       <MapContainer
-        center={checkPosition(center)}
+        center={mapRef.current.initialCenter}
         zoom={16}
         scrollWheelZoom={false}
         className={"routeMap-mapContainer"}
@@ -197,6 +211,10 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         <TileLayer
           crossOrigin="anonymous"
           detectRetina
+          maxZoom={Leaflet.Browser.retina ? 20 : 19}
+          maxNativeZoom={18}
+          keepBuffer={10}
+          updateWhenIdle={false}
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url={
             colorMode === "light"
@@ -249,8 +267,8 @@ const useStyles = makeStyles((theme) => ({
       zIndex: 618,
       outline: "none",
       filter: "hue-rotate(130deg)",
-      'background-image': `url(${markerIcon2X})`,
-      'background-size': 'cover',
+      "background-image": `url(${markerIcon2X})`,
+      "background-size": "cover",
     },
     ".routeMap-active": {
       animation: "$blinker 2s linear infinite",

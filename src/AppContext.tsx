@@ -52,7 +52,7 @@ interface AppState {
 interface AppContextValue extends AppState, DatabaseContextValue {
   setSearchRoute: (searchRoute: string) => void;
   updateSearchRouteByButton: (buttonValue: string) => void;
-  updateSelectedRoute: (route: string, seq: string) => void;
+  updateSelectedRoute: (route: string, seq?: string) => void;
   // UX
   updateGeolocation: (geoLocation: GeoLocation) => void;
   updateSavedEtas: (keys: string) => void;

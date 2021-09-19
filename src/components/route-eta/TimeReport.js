@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import AppContext from "../../AppContext"
 import { useEtas } from "../Etas"
 
-const TimeReport = ( { routeId, seq, containerClass, showStopName = false } ) => {
+const TimeReport = ( { routeId, seq, containerClass = "", showStopName = false } ) => {
   const { t, i18n } = useTranslation()
   const { db: {routeList, stopList}, etaFormat } = useContext(AppContext) 
   const etas = useEtas(`${routeId}/${seq}`)
