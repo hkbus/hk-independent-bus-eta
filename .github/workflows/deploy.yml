@@ -24,6 +24,15 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Cache yarn dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.yarn
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+          ${{ runner.os }}-
+
     - run: yarn install --immutable
     - run: sed -i "s/REACT_APP_CI_JOB_ID=1/REACT_APP_CI_JOB_ID=$GITHUB_RUN_NUMBER/g" .env
     - run: yarn run build
