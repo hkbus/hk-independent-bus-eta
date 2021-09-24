@@ -6,9 +6,10 @@ import {
   DialogTitle,
   Divider,
   Typography
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next'
+import { IosShare } from '@mui/icons-material'
 
 const InstallDialog = ({open, handleClose}) => {
   
@@ -23,7 +24,7 @@ const InstallDialog = ({open, handleClose}) => {
           <Typography variant="h5">iOS:</Typography>
           <br/>
           <Typography variant="body1">1. {t("用 Safari 開")}</Typography>
-          <Typography variant="body1">2. {t("分享")}</Typography>
+          <Typography variant="body1">2. {t("分享")}<IosShare /></Typography>
           <Typography variant="body1">3. {t("加至主畫面")}</Typography>
         </Box>
         <Divider/>
@@ -51,8 +52,8 @@ const useStyles = makeStyles(theme => ({
       }
     },
     '.installDialog-title': {
-      backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
-      color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
+      color: theme.palette.mode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
     },
     '.installDialog-section': {
       padding: '10px 0px'

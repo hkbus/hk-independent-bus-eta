@@ -8,14 +8,15 @@ import {
 } from "react-leaflet";
 import Leaflet from "leaflet";
 import markerIcon2X from "leaflet/dist/images/marker-icon-2x.png";
-import { Box } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Box } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import type { StopEntry } from "../../DbContext";
-import MyLocationIcon from "@material-ui/icons/MyLocation";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { checkPosition, locationEqual } from "../../utils";
 import type { Map as LeafletMap } from "leaflet";
+import type { GeoLocation, Theme } from '../../typing';
 
 const SelfCircle = () => {
   const { geolocation, geoPermission } = useContext(AppContext);
@@ -245,11 +246,11 @@ const BusStopMarker = ({ active, passed }) => {
   });
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   "@global": {
     ".routeMap-mapContainer": {
       height: "30vh",
-      filter: theme.palette.type === "dark" ? "brightness(0.9)" : "none",
+      filter: theme.palette.mode === "dark" ? "brightness(0.9)" : "none",
     },
     ".routeMap-centerControl": {
       padding: "5px",

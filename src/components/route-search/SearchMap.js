@@ -3,10 +3,10 @@ import { MapContainer, Marker, TileLayer, Polyline, Circle, useMap } from 'react
 import Leaflet from 'leaflet'
 import markerIcon2X from 'leaflet/dist/images/marker-icon-2x.png'
 import { useTranslation } from 'react-i18next'
-import { Box } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { Box } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
 import AppContext from '../../AppContext'
-import MyLocationIcon from '@material-ui/icons/MyLocation'
+import MyLocationIcon from '@mui/icons-material/MyLocation'
 import { checkPosition } from '../../utils'
 
 const ChangeMapCenter = ( {center, start, end} ) => {
@@ -254,7 +254,7 @@ const useStyles = makeStyles ( theme => ({
   "@global": {
     ".routeMap-mapContainer": {
       height: '30vh',
-      filter: theme.palette.type === 'dark' ? 'brightness(0.9)' : 'none'
+      filter: theme.palette.mode === 'dark' ? 'brightness(0.9)' : 'none'
     },
     ".routeMap-centerControl": {
       padding: '5px',

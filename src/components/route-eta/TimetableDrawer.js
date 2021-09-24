@@ -1,7 +1,7 @@
-import { Drawer, List, ListItem, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
+import { Drawer, List, ListItem, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 
 const ServiceIds = {
   31: "星期一至五",
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: "56px",
       paddingLeft: "20px",
       backgroundColor:
-        theme.palette.type === "dark"
+        theme.palette.mode === "dark"
           ? theme.palette.background.default
           : theme.palette.primary.main,
     },

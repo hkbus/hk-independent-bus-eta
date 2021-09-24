@@ -7,16 +7,17 @@ import {
   IconButton,
   Snackbar,
   Typography,
-} from "@material-ui/core";
-import StarIcon from "@material-ui/icons/Star";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
-import { makeStyles } from "@material-ui/core/styles";
+} from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import makeStyles from "@mui/styles/makeStyles";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import { toProperCase, triggerShare } from "../../utils";
 import TimeReport from "./TimeReport";
-import ShareIcon from "@material-ui/icons/Share";
+import ShareIcon from "@mui/icons-material/Share";
 import type { StopEntry, RouteListEntry } from "../../DbContext";
+import type { Theme } from '../../typing';
 
 interface StopAccordionsProps {
   routeId: string;
@@ -113,13 +114,14 @@ const StopAccordions = ({
                 aria-label="share"
                 onClick={onClickShare}
                 style={{ backgroundColor: "transparent" }}
-              >
+                size="large">
                 <ShareIcon />
               </IconButton>
               <IconButton
                 aria-label="favourite"
                 onClick={() => updateSavedEtas(`${id.toUpperCase()}/${idx}`)}
                 style={{ backgroundColor: "transparent" }}
+                size="large"
               >
                 {savedEtas.includes(`${id.toUpperCase()}/${idx}`) ? (
                   <StarIcon />
@@ -172,7 +174,7 @@ const StopAccordions = ({
 
 export default StopAccordions;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   "@global": {
     ".accordion-root": {
       border: "1px solid rgba(0, 0, 0, .125)",
@@ -189,7 +191,7 @@ const useStyles = makeStyles((theme) => ({
     },
     ".accordionSummary-root": {
       backgroundColor:
-        theme.palette.type === "dark"
+        theme.palette.mode === "dark"
           ? theme.palette.background.default
           : "rgba(0, 0, 0, .03)",
       borderBottom: "1px solid rgba(0, 0, 0, .125)",
@@ -211,6 +213,7 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
       justifyContent: "space-between",
+      display: 'flex'
     },
     ".stopAccordions-boxContainer": {
       overflowY: "scroll",

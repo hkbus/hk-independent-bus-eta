@@ -2,18 +2,16 @@ import React, { useContext, useMemo } from 'react'
 import {
   BottomNavigation,
   BottomNavigationAction
-} from '@material-ui/core'
-import HomeIcon from '@material-ui/icons/Home'
-import SearchIcon from '@material-ui/icons/Search'
-import NearMeIcon from '@material-ui/icons/NearMe'
-import TimerIcon from '@material-ui/icons/Timer'
-import SettingsIcon from '@material-ui/icons/Settings';
+} from '@mui/material'
+import HomeIcon from '@mui/icons-material/Home'
+import SearchIcon from '@mui/icons-material/Search'
+import NearMeIcon from '@mui/icons-material/NearMe'
+import TimerIcon from '@mui/icons-material/Timer'
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Link, useLocation, useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
-import {
-  makeStyles
-} from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles';
 import { vibrate } from '../../utils'
 
 
@@ -101,7 +99,7 @@ const Footer = () => {
       />
     </BottomNavigation>
     // eslint-disable-next-line
-  ), [location.pathname, i18n.langauage, colorMode, selectedRoute])
+  ), [location.pathname, i18n.langauage, colorMode, selectedRoute]);
 }
 
 
@@ -110,13 +108,13 @@ export default Footer
 const useStyles = makeStyles(theme => ({
   '@global': {
     ".footer-root": {
-      background: theme.palette.type === 'dark' ? theme.palette.background.default: theme.palette.primary.main,
+      background: theme.palette.mode === 'dark' ? theme.palette.background.default: theme.palette.primary.main,
       position: "sticky",
       bottom: "0",
       height: "initial"
     },
     '.Mui-selected.footer-selected': {
-      color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+      color: theme.palette.mode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
     },
     '.MuiBottomNavigationAction-root':{
       width: "20%",

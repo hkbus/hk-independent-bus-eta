@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react'
-import { Box, CircularProgress, Divider, Paper, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Box, CircularProgress, Divider, Paper, Typography } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import AppContext from '../AppContext'
 import SearchContext from '../SearchContext'
 import { useTranslation } from 'react-i18next'
@@ -236,7 +236,7 @@ export default RouteSearch
 const useStyles = makeStyles(theme => ({
   "@global": {
     ".search-root": {
-      background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
+      background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white',
       height: 'calc(100vh - 125px)',
       overflowY: 'hidden',
       textAlign: 'left'

@@ -3,11 +3,11 @@ import {
   Box,
   Button,
   Grid
-} from '@material-ui/core'
+} from '@mui/material'
 import {
   makeStyles
-} from '@material-ui/styles'
-import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
+} from '@mui/styles'
+import BackspaceOutlinedIcon from '@mui/icons-material/BackspaceOutlined';
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next';
 

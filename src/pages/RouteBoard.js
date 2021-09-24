@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import AppContext from '../AppContext'
-import { makeStyles } from '@material-ui/core/styles'
-import { List } from '@material-ui/core'
+import makeStyles from '@mui/styles/makeStyles';
+import { List } from '@mui/material'
 import { FixedSizeList } from 'react-window'
 import AutoSizer from "react-virtualized-auto-sizer"
 import memorize from 'memoize-one'
@@ -77,7 +77,7 @@ export default RouteBoard
 const useStyles = makeStyles(theme => ({
   "@global": {
     ".routeBoard-root": {
-      background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white', 
+      background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white', 
     },
     ".routeBoard-list": {
       flex: '1 1 auto'

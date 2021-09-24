@@ -4,10 +4,10 @@ import {
   ListItem,
   ListItemText,
   Typography
-} from '@material-ui/core'
+} from '@mui/material'
 import { Link, useHistory } from 'react-router-dom'
 import { vibrate } from '../../utils'
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles';
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
 import SuccinctEtas from './SuccinctEtas'

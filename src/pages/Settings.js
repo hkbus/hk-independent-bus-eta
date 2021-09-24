@@ -10,25 +10,26 @@ import {
   Paper,
   Snackbar,
   Typography
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import GetAppIcon from '@material-ui/icons/GetApp'
-import BuildIcon from '@material-ui/icons/Build'
-import TimerIcon from '@material-ui/icons/Timer'
-import LocationOnIcon from '@material-ui/icons/LocationOn'
-import LocationOffIcon from '@material-ui/icons/LocationOff'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
+import GetAppIcon from '@mui/icons-material/GetApp'
+import BuildIcon from '@mui/icons-material/Build'
+import TimerIcon from '@mui/icons-material/Timer'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
+import LocationOffIcon from '@mui/icons-material/LocationOff'
+import { visuallyHidden } from '@mui/utils'
 import { useTranslation } from 'react-i18next'
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
-import DataUsageIcon from '@material-ui/icons/DataUsage'
-import Battery20Icon from '@material-ui/icons/Battery20'
-import BatteryStdIcon from '@material-ui/icons/BatteryStd'
-import DeleteIcon from '@material-ui/icons/Delete'
-import GitHubIcon from '@material-ui/icons/GitHub'
-import ShareIcon from '@material-ui/icons/Share'
-import TelegramIcon from '@material-ui/icons/Telegram'
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
+import DataUsageIcon from '@mui/icons-material/DataUsage'
+import Battery20Icon from '@mui/icons-material/Battery20'
+import BatteryStdIcon from '@mui/icons-material/BatteryStd'
+import DeleteIcon from '@mui/icons-material/Delete'
+import GitHubIcon from '@mui/icons-material/GitHub'
+import ShareIcon from '@mui/icons-material/Share'
+import TelegramIcon from '@mui/icons-material/Telegram'
 import { vibrate, setSeoHeader, triggerShare } from '../utils'
-import Brightness7Icon from '@material-ui/icons/Brightness7';
-import NightsStayIcon from '@material-ui/icons/NightsStay';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import NightsStayIcon from '@mui/icons-material/NightsStay';
 import InstallDialog from '../components/settings/InstallDialog'
 import Donations from '../Donations'
 
@@ -63,7 +64,7 @@ const Settings = () => {
 
   return (
     <Paper className={"settings-root"} square elevation={0}>
-      <Typography component="h1" variant="srOnly">{`${t('設定')} - ${t(AppTitle)}`}</Typography>
+      <Typography component="h1" style={visuallyHidden}>{`${t('設定')} - ${t(AppTitle)}`}</Typography>
       <List>
         {window.matchMedia('(display-mode: standalone)').matches ? null : <ListItem
           button
@@ -309,15 +310,15 @@ export default Settings
 const useStyles = makeStyles ( theme => ({
   "@global": {
     ".settings-root": {
-      background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
+      background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white',
       height: 'calc(100vh - 120px)',
       overflowY: "scroll",
       '& .MuiAvatar-colorDefault': {
-        color: theme.palette.type === 'dark' ? theme.palette.background.default : 'white'
+        color: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white'
       }
     },
     ".settings-icon": {
-      filter: theme.palette.type === 'dark' ? 'grayscale(100%) brightness(0.5)' : 'none'
+      filter: theme.palette.mode === 'dark' ? 'grayscale(100%) brightness(0.5)' : 'none'
     }
   }
 }))

@@ -9,15 +9,16 @@ import { useParams, useHistory } from "react-router-dom";
 import RouteMap from "../components/route-eta/RouteMap";
 import StopAccordions from "../components/route-eta/StopAccordions";
 import StopDialog from "../components/route-eta/StopDialog";
-import { Button, Divider, Paper, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
+import { Button, Divider, Paper, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import AppContext from "../AppContext";
 import { useTranslation } from "react-i18next";
 import RouteNo from "../components/route-list/RouteNo";
 import { setSeoHeader, toProperCase, getDistance } from "../utils";
-import ScheduleIcon from "@material-ui/icons/Schedule";
+import ScheduleIcon from "@mui/icons-material/Schedule";
 import TimetableDrawer from "../components/route-eta/TimetableDrawer";
 import Leaflet from "leaflet";
+import type { WarnUpMessageData, Theme } from '../typing';
 
 const RouteEta = () => {
   const { id, panel } = useParams<{id: string, panel: string}>();
@@ -248,7 +249,7 @@ const getDialogStops = (co, stops, stopMap, panel) => {
 
 export default RouteEta;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   "@global": {
     ".route-header": {
       textAlign: "center",
@@ -261,15 +262,18 @@ const useStyles = makeStyles((theme) => ({
       right: "calc(64px + 2%)",
     },
     ".timetable-button": {
+      color: theme.palette.getContrastText(theme.palette.background.default),
       position: "absolute",
       top: "0",
       right: "2%",
+      flexDirection: 'column',
+      justifyContent: 'center'
     },
     ".timetable-button > .MuiButton-label": {
       flexDirection: "column",
       justifyContent: "center",
     },
-    ".timetable-button > .MuiButton-label > .MuiButton-startIcon": {
+    ".timetable-button > .MuiButton-startIcon": {
       margin: 0,
     },
   },
