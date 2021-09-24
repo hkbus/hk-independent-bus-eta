@@ -1,5 +1,5 @@
 import { act, render, screen } from "@testing-library/react";
-import { MuiThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import "../../i18n";
 import InstallDialog from "./InstallDialog";
 
@@ -7,9 +7,9 @@ test("renders App", async () => {
   act(() => {
     const theme = createTheme();
     render(
-      <MuiThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
         <InstallDialog open />
-      </MuiThemeProvider>
+      </ThemeProvider>
     );
   });
   const initializingElement = screen.getByText(/iOS/);
