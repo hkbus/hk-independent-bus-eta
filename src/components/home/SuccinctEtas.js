@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'
-import { ListItemText, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { ListItemText, Typography } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next'
 import { useEtas } from '../Etas'
 import AppContext from '../../AppContext'

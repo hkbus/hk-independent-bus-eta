@@ -5,8 +5,8 @@ import {
   Tab,
   Toolbar,
   Typography
-} from "@material-ui/core"
-import { makeStyles } from '@material-ui/core/styles'
+} from "@mui/material"
+import makeStyles from '@mui/styles/makeStyles';
 import { Link, useLocation, useHistory, useRouteMatch } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
@@ -88,10 +88,10 @@ export default Header
 const useStyles = makeStyles(theme => ({
   '@global': {
     ".header-appTitle": {
-      color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+      color: theme.palette.mode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
     },
     ".header-toolbar": {
-      backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
+      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
       '& a': {
         color: 'black',
         textDecoration: 'none',
@@ -119,21 +119,22 @@ const useStyles = makeStyles(theme => ({
     ".language-tab": {
       textTransform: 'none',
       minWidth: 36,
+      minHeight: 24,
       fontWeight: 900,
       marginRight: theme.spacing(0),
       fontSize: '15px',
       opacity: 1,
       padding: '6px 6px',
-      "& .MuiTab-wrapper": {
+      "&.MuiTab-root": {
         color: theme.palette.text.primary,
         borderRadius: '30px',
-        padding: '2px 10px 0px 10px'
+        padding: '0px 10px 0px 10px'
       }
     },
     ".language-tab.Mui-selected": {
-      '& .MuiTab-wrapper':{
+      '&.MuiTab-root':{
         color: 'black',
-        backgroundColor: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.background.paper,
+        backgroundColor: theme.palette.mode === 'dark' ? theme.palette.primary.main: theme.palette.background.paper,
       }
     }
   }

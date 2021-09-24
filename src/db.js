@@ -15,7 +15,7 @@ const decompressJsonString = (txt) => {
         acc[k.replace(/\+/g, '-').replace(/ /g, '-').toUpperCase()] = ret.routeList[k]
         return acc
       }, {})
-    }
+    };
   } catch (e) {
     try {
       // backward compactability
@@ -88,7 +88,7 @@ export const fetchDbFunc = (forceRenew = false) => {
           resolve (ret)
         })
         
-      })
+      });
     }
     
     return new Promise((resolve) => {
@@ -109,7 +109,7 @@ export const fetchDbFunc = (forceRenew = false) => {
         }
       })
     })
-  })
+  });
 }
 
 // actually start fetching DB once the script is runned 

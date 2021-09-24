@@ -4,8 +4,8 @@ import {
   CardActionArea,
   CardContent,
   Typography
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next'
 import { areEqual } from 'react-window'
 import { Link, useHistory } from  'react-router-dom'
@@ -74,7 +74,7 @@ export default RouteRow
 const useStyles = makeStyles (theme => ({
   "@global": {
     ".routeRow-card": {
-      background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
+      background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white',
     },
     ".routeRow-cardContent": {
       display: 'flex',

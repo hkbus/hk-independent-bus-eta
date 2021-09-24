@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Accordion, AccordionSummary, AccordionDetails, ListItemText, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Accordion, AccordionSummary, AccordionDetails, ListItemText, Typography } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import AppContext from '../../AppContext'
 import RouteNo from '../route-list/RouteNo'
 import TimeReport from '../route-eta/TimeReport'
@@ -93,7 +93,7 @@ const useStyles = makeStyles(theme => ({
       margin: 'auto',
     },
     '.search-accordionSummary-root': {
-      backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
+      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
       borderBottom: '1px solid rgba(0, 0, 0, .125)',
       marginBottom: -1,
       minHeight: 44
@@ -111,7 +111,8 @@ const useStyles = makeStyles(theme => ({
     '.search-accordionDetails-root': {
       padding: theme.spacing(2),
       paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1)
+      paddingBottom: theme.spacing(1),
+      display: 'flex'
     },
     ".search-timereport-container": {
       width: '50%'

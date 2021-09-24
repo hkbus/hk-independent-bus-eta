@@ -101,7 +101,6 @@ const isStrings = (input: unknown[]): input is string[] => {
 };
 
 const isColorMode = (input: unknown): input is 'dark' | 'light' => {
-  console.log(input)
   return input === 'dark' || input === 'light';
 }
 

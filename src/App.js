@@ -2,9 +2,10 @@ import React, { useContext, useMemo } from "react";
 import loadable from "@loadable/component";
 import "./App.css";
 import {
-  MuiThemeProvider,
-  unstable_createMuiStrictModeTheme as createMuiTheme,
-} from "@material-ui/core/styles";
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from "@mui/material/styles";
 import {
   BrowserRouter as Router,
   Redirect,
@@ -12,8 +13,8 @@ import {
   Route,
   useRouteMatch,
 } from "react-router-dom";
-import { Container, CssBaseline } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Container, CssBaseline } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import AppContext from "./AppContext";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
@@ -58,21 +59,23 @@ const App = () => {
   useStyles();
 
   return (
-    <MuiThemeProvider theme={theme}>
-      <Container maxWidth="xs" disableGutters className={"AppContainer"}>
-        <Router>
-          <Route exact path="/">
-            <Redirect to="/zh" />
-          </Route>
-          <Route path="/:lang">
-            <CssBaseline />
-            <Header />
-            <PageSwitch />
-            <Footer />
-          </Route>
-        </Router>
-      </Container>
-    </MuiThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Container maxWidth="xs" disableGutters className={"AppContainer"}>
+          <Router>
+            <Route exact path="/">
+              <Redirect to="/zh" />
+            </Route>
+            <Route path="/:lang">
+              <CssBaseline />
+              <Header />
+              <PageSwitch />
+              <Footer />
+            </Route>
+          </Router>
+        </Container>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 
@@ -90,40 +93,37 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const getlightTheme = () =>
-  createMuiTheme(
-    {
-      typography: {
-        fontFamily: "Noto Sans TC, Chivo, sans-serif",
-      },
-      palette: {
-        type: "light",
-        background: {
-          default: "#fedb00",
-        },
-        primary: {
-          main: "#fedb00", // yellow
-        },
-      },
-      overrides: {
-        MuiCssBaseline: {
-          "@global": {
-            html: {
-              userSelect: "none",
-            },
-          },
-        },
-      },
-    },
-    ["light"]
-  );
-
-const getDarkTheme = () =>
-  createMuiTheme({
+  createTheme({
     typography: {
       fontFamily: "Noto Sans TC, Chivo, sans-serif",
     },
     palette: {
-      type: "dark",
+      mode: "light",
+      background: {
+        default: "#fedb00",
+      },
+      primary: {
+        main: "#fedb00", // yellow
+      },
+    },
+    overrides: {
+      MuiCssBaseline: {
+        "@global": {
+          html: {
+            userSelect: "none",
+          },
+        },
+      },
+    },
+  }, ["light"]);
+
+const getDarkTheme = () =>
+  createTheme({
+    typography: {
+      fontFamily: "Noto Sans TC, Chivo, sans-serif",
+    },
+    palette: {
+      mode: "dark",
       primary: {
         main: "#fedb00", // yellow
       },

@@ -1,5 +1,5 @@
-import { Drawer, List, ListItem, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core'
+import { Drawer, List, ListItem, Typography } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next'
 
 const ServiceIds = {
@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
       maxWidth: '320px',
       paddingTop: '56px',
       paddingLeft: '20px',
-      backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
+      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
     },
     '.timetable-entries': {
       flexDirection: 'column',

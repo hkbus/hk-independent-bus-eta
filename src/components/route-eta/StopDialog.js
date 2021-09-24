@@ -4,8 +4,8 @@ import {
   DialogContent,
   DialogTitle,
   List
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
 import SuccinctTimeReport from '../home/SuccinctTimeReport'
@@ -60,8 +60,8 @@ const useStyles = makeStyles(theme => ({
       }
     },
     '.stopDialog-title': {
-      backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
-      color: theme.palette.type === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
+      color: theme.palette.mode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
     }
   }
 }))

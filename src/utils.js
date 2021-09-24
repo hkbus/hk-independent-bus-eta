@@ -68,7 +68,7 @@ export const setSeoHeader = ({title, description, lang}) => {
 }
 
 export const toProperCase = (txt) => {
-  return txt.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})
+  return txt.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
 export const isEmptyObj = (obj) => {

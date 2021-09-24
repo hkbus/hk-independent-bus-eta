@@ -3,8 +3,9 @@ import {
   List,
   Paper,
   Typography
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
+import { visuallyHidden } from '@mui/utils';
 import AppContext from '../AppContext'
 import { getDistance, setSeoHeader } from '../utils'
 import SuccinctTimeReport from '../components/home/SuccinctTimeReport'
@@ -51,8 +52,8 @@ const Home = () => {
 
   return useMemo(() => (
     <Paper className={"home-root"} square elevation={0}>
-      <Typography component="h1" variant="srOnly">{`${t('Dashboard')} - ${t(AppTitle)}`}</Typography>
-      <Typography component="h2" variant="srOnly">{t('home-page-description')}</Typography>
+      <Typography component="h1" style={visuallyHidden}>{`${t('Dashboard')} - ${t(AppTitle)}`}</Typography>
+      <Typography component="h2" style={visuallyHidden}>{t('home-page-description')}</Typography>
       <List disablePadding>
       {
         selectedRoutes.split('|').map( (selectedRoute, idx) => (
@@ -113,7 +114,7 @@ const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeLis
 const useStyles = makeStyles ( theme => ({
   "@global": {
     ".home-root": {
-      background: theme.palette.type === 'dark' ? theme.palette.background.default : 'white',
+      background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white',
       height: 'calc(100vh - 125px)',
       overflowY: 'scroll',
       textAlign: 'center'

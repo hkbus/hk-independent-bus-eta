@@ -8,15 +8,15 @@ import {
   IconButton, 
   Snackbar,
   Typography
-} from '@material-ui/core'
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder'
+import makeStyles from '@mui/styles/makeStyles';
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
 import { getDistance, toProperCase, triggerShare } from '../../utils'
 import TimeReport from './TimeReport'
-import ShareIcon from '@material-ui/icons/Share';
+import ShareIcon from '@mui/icons-material/Share';
 
 const StopAccordions = ({expanded, setExpanded, handleChange}) => {
   const { id, panel } = useParams()
@@ -91,7 +91,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
               />
               <div style={{display: 'flex'}}>
                 <IconButton
-                  aria-label="share" 
+                  aria-label="share"
                   onClick={() => {
                     triggerShare(
                       `https://${window.location.hostname}/${i18n.language}/${id}`, 
@@ -102,14 +102,14 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
                     })
                   }}
                   style={{ backgroundColor: 'transparent' }}
-                >
+                  size="large">
                   <ShareIcon />
                 </IconButton>
-                <IconButton 
-                  aria-label="favourite" 
+                <IconButton
+                  aria-label="favourite"
                   onClick={() => toggleSavedRoute(`${id.toUpperCase()}/${idx}`)}
-                  style={{ backgroundColor: 'transparent' }} 
-                >
+                  style={{ backgroundColor: 'transparent' }}
+                  size="large">
                   {savedEtas.includes(`${id.toUpperCase()}/${idx}`) ? <StarIcon/> : <StarBorderIcon />}
                 </IconButton>
               </div>
@@ -127,7 +127,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
         message={t('鏈結已複製到剪貼簿')}
       />
     </Box>
-  )
+  );
 }
 
 // TODO: better handling on buggy data in database
@@ -157,7 +157,7 @@ const useStyles = makeStyles(theme => ({
       margin: 'auto',
     },
     '.accordionSummary-root': {
-      backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
+      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
       borderBottom: '1px solid rgba(0, 0, 0, .125)',
       marginBottom: -1,
       minHeight: 44
@@ -176,7 +176,8 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(2),
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      display: 'flex'
     },
     ".stopAccordions-boxContainer": {
       overflowY: 'scroll',
