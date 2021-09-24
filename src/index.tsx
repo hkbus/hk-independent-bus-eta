@@ -9,7 +9,7 @@ import "./i18n";
 import { fetchDbFunc } from "./db";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
-import type { WarnUpMessageData } from './typing';
+import type { WarnUpMessageData } from "./typing";
 
 const isHuman = () => {
   const agents = [
@@ -100,7 +100,7 @@ if (isHuman()) {
             console.log(workbox);
             setState({ workbox: workbox });
           });
-        }, [])
+        }, []);
         return (
           <DbProvider initialDb={db}>
             <AppContextProvider workbox={state.workbox}>

@@ -1,4 +1,4 @@
-import type { StopListEntry } from "hk-bus-eta"
+import type { StopListEntry } from "hk-bus-eta";
 import type { Theme as MUITheme } from "@mui/material/styles";
 export interface GeoLocation {
   lat: number;
@@ -17,5 +17,4 @@ export interface GeoLocation {
   lng: number;
 }
 
-export interface Theme extends MUITheme {
-}
+export interface Theme extends MUITheme {}

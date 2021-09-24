@@ -223,7 +223,12 @@ self.addEventListener("message", (event) => {
     console.log("warm up map cache", data);
     const warnCache = async () => {
       try {
-        await warnUpCache(data.zoomLevels, event, data.retinaDisplay, data.stopList);
+        await warnUpCache(
+          data.zoomLevels,
+          event,
+          data.retinaDisplay,
+          data.stopList
+        );
       } catch (e) {
         console.error("error on warn cache", e);
       }

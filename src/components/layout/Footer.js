@@ -1,124 +1,137 @@
-import React, { useContext, useMemo } from 'react'
-import {
-  BottomNavigation,
-  BottomNavigationAction
-} from '@mui/material'
-import HomeIcon from '@mui/icons-material/Home'
-import SearchIcon from '@mui/icons-material/Search'
-import NearMeIcon from '@mui/icons-material/NearMe'
-import TimerIcon from '@mui/icons-material/Timer'
-import SettingsIcon from '@mui/icons-material/Settings';
-import { Link, useLocation, useHistory } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import AppContext from '../../AppContext'
-import makeStyles from '@mui/styles/makeStyles';
-import { vibrate } from '../../utils'
-
+import React, { useContext, useMemo } from "react";
+import { BottomNavigation, BottomNavigationAction } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import SearchIcon from "@mui/icons-material/Search";
+import NearMeIcon from "@mui/icons-material/NearMe";
+import TimerIcon from "@mui/icons-material/Timer";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { Link, useLocation, useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import AppContext from "../../AppContext";
+import makeStyles from "@mui/styles/makeStyles";
+import { vibrate } from "../../utils";
 
 const Footer = () => {
-  const { t, i18n } = useTranslation()
-  const location = useLocation()
-  const { selectedRoute, colorMode } = useContext ( AppContext ) 
+  const { t, i18n } = useTranslation();
+  const location = useLocation();
+  const { selectedRoute, colorMode } = useContext(AppContext);
 
-  const history = useHistory()
+  const history = useHistory();
   const handleClick = (link, e) => {
-    e.preventDefault()
-    vibrate(1)
-    setTimeout(() => history.push(link), 0)
-  }
+    e.preventDefault();
+    vibrate(1);
+    setTimeout(() => history.push(link), 0);
+  };
 
-  useStyles()
+  useStyles();
 
-  return useMemo(() => (
-    <BottomNavigation
-      value={location.pathname.replace(/(.*)\/[0-9]*?$/, "$1")}
-      showLabels={true}
-      classes={{root: "footer-root"}}
-    >
-      <BottomNavigationAction
-        label={t("常用")}
-        component={Link}
-        to={`/${i18n.language}`}
-        onClick={(e) => handleClick(`/${i18n.language}`, e)}
-        value={`/${i18n.language}`}
-        icon={<HomeIcon />}
-        classes={{
-          root: "footer-actionItem",
-          selected: "footer-selected"
-        }}
-      />
-      <BottomNavigationAction 
-        label={t("搜尋")}
-        component={Link}
-        to={`/${i18n.language}/board`}
-        onClick={(e) => handleClick(`/${i18n.language}/board`, e)}
-        value={`/${i18n.language}/board`}
-        icon={<SearchIcon />} 
-        classes={{
-          root: "footer-actionItem",
-          selected: "footer-selected"
-        }}
-      />
-      <BottomNavigationAction
-       label={selectedRoute.split('-')[0]}
-       component={Link}
-       to={`/${i18n.language}/route/${selectedRoute.replace(/(.*)\/.*$/, "$1").toLowerCase()}`}
-       onClick={(e) => handleClick(`/${i18n.language}/route/${selectedRoute.toLowerCase()}`, e)}
-       value={`/${i18n.language}/route/${selectedRoute.replace(/(.*)\/.*$/, "$1").toLowerCase()}`}
-       icon={<TimerIcon />} 
-       style={{textTransform: 'uppercase'}}
-       classes={{
-        root: "footer-actionItem",
-        selected: "footer-selected"
-       }}
-      />
-      <BottomNavigationAction 
-        label={t("規劃")}
-        component={Link}
-        to={`/${i18n.language}/search`}
-        onClick={(e) => handleClick(`/${i18n.language}/search`, e)}
-        value={`/${i18n.language}/search`}
-        icon={<NearMeIcon />} 
-        classes={{
-          root: "footer-actionItem",
-          selected: "footer-selected"
-        }}
-      />
-      <BottomNavigationAction
-       label={t("設定")}
-       component={Link}
-       to={`/${i18n.language}/settings`}
-       rel="nofollow"
-       onClick={(e) => handleClick(`/${i18n.language}/settings`, e)}
-       value={`/${i18n.language}/settings`}
-       icon={<SettingsIcon />} 
-       classes={{
-        root: "footer-actionItem",
-        selected: "footer-selected"
-       }}
-      />
-    </BottomNavigation>
-    // eslint-disable-next-line
-  ), [location.pathname, i18n.langauage, colorMode, selectedRoute]);
-}
+  return useMemo(
+    () => (
+      <BottomNavigation
+        value={location.pathname.replace(/(.*)\/[0-9]*?$/, "$1")}
+        showLabels={true}
+        classes={{ root: "footer-root" }}
+      >
+        <BottomNavigationAction
+          label={t("常用")}
+          component={Link}
+          to={`/${i18n.language}`}
+          onClick={(e) => handleClick(`/${i18n.language}`, e)}
+          value={`/${i18n.language}`}
+          icon={<HomeIcon />}
+          classes={{
+            root: "footer-actionItem",
+            selected: "footer-selected",
+          }}
+        />
+        <BottomNavigationAction
+          label={t("搜尋")}
+          component={Link}
+          to={`/${i18n.language}/board`}
+          onClick={(e) => handleClick(`/${i18n.language}/board`, e)}
+          value={`/${i18n.language}/board`}
+          icon={<SearchIcon />}
+          classes={{
+            root: "footer-actionItem",
+            selected: "footer-selected",
+          }}
+        />
+        <BottomNavigationAction
+          label={selectedRoute.split("-")[0]}
+          component={Link}
+          to={`/${i18n.language}/route/${selectedRoute
+            .replace(/(.*)\/.*$/, "$1")
+            .toLowerCase()}`}
+          onClick={(e) =>
+            handleClick(
+              `/${i18n.language}/route/${selectedRoute.toLowerCase()}`,
+              e
+            )
+          }
+          value={`/${i18n.language}/route/${selectedRoute
+            .replace(/(.*)\/.*$/, "$1")
+            .toLowerCase()}`}
+          icon={<TimerIcon />}
+          style={{ textTransform: "uppercase" }}
+          classes={{
+            root: "footer-actionItem",
+            selected: "footer-selected",
+          }}
+        />
+        <BottomNavigationAction
+          label={t("規劃")}
+          component={Link}
+          to={`/${i18n.language}/search`}
+          onClick={(e) => handleClick(`/${i18n.language}/search`, e)}
+          value={`/${i18n.language}/search`}
+          icon={<NearMeIcon />}
+          classes={{
+            root: "footer-actionItem",
+            selected: "footer-selected",
+          }}
+        />
+        <BottomNavigationAction
+          label={t("設定")}
+          component={Link}
+          to={`/${i18n.language}/settings`}
+          rel="nofollow"
+          onClick={(e) => handleClick(`/${i18n.language}/settings`, e)}
+          value={`/${i18n.language}/settings`}
+          icon={<SettingsIcon />}
+          classes={{
+            root: "footer-actionItem",
+            selected: "footer-selected",
+          }}
+        />
+      </BottomNavigation>
+      // eslint-disable-next-line
+    ),
+    [location.pathname, i18n.langauage, colorMode, selectedRoute]
+  );
+};
 
+export default Footer;
 
-export default Footer
-
-const useStyles = makeStyles(theme => ({
-  '@global': {
+const useStyles = makeStyles((theme) => ({
+  "@global": {
     ".footer-root": {
-      background: theme.palette.mode === 'dark' ? theme.palette.background.default: theme.palette.primary.main,
+      background:
+        theme.palette.mode === "dark"
+          ? theme.palette.background.default
+          : theme.palette.primary.main,
       position: "sticky",
       bottom: "0",
-      height: "initial"
+      height: "initial",
     },
-    '.Mui-selected.footer-selected': {
-      color: theme.palette.mode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
+    ".Mui-selected.footer-selected": {
+      color:
+        theme.palette.mode === "dark"
+          ? theme.palette.primary.main
+          : theme.palette.text.primary,
     },
-    '.MuiBottomNavigationAction-root':{
+    ".MuiBottomNavigationAction-root": {
       width: "20%",
-      minWidth: 0
-    }
-  }
-}))
+      minWidth: 0,
+    },
+  },
+}));

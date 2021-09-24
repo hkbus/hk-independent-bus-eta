@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { isEmptyObj } from "./utils";
 import { fetchDbFunc } from "./db";
 import { compress as compressJson } from "lzutf8";
-import type { RouteListEntry, StopListEntry } from "hk-bus-eta"
+import type { RouteListEntry, StopListEntry } from "hk-bus-eta";
 
 type StopMapEntry = Array<Array<string>>;
 
@@ -33,7 +33,10 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
   const AppTitle = "巴士到站預報 App （免費無廣告）";
   // route list & stop list & route-stop list
   const [db, setDb] = useState<DatabaseType>(initialDb);
-  const renewDb = useCallback(() => fetchDbFunc(true).then((a) => setDb(a)), []);
+  const renewDb = useCallback(
+    () => fetchDbFunc(true).then((a) => setDb(a)),
+    []
+  );
   useEffect(() => {
     // skip if db is {}
     if (

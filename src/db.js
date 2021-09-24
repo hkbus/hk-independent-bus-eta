@@ -62,25 +62,26 @@ export const fetchDbFunc = async (forceRenew = false) => {
     10
   );
   const raw = localStorage.getItem("db");
-  const storedDb = (raw) => new Promise((resolve, reject) => {
-    try {
-      if (raw === null) {
-        reject('localStorage is null');
-      } else {
-        const db = decompressJsonString(localStorage.getItem("db"));
-        resolve({
-          schemaVersion,
-          versionMd5,
-          updateTime: lastUpdateTime,
-          routeList: db.routeList,
-          stopList: db.stopList,
-          stopMap: db.stopMap,
-        });
+  const storedDb = (raw) =>
+    new Promise((resolve, reject) => {
+      try {
+        if (raw === null) {
+          reject("localStorage is null");
+        } else {
+          const db = decompressJsonString(localStorage.getItem("db"));
+          resolve({
+            schemaVersion,
+            versionMd5,
+            updateTime: lastUpdateTime,
+            routeList: db.routeList,
+            stopList: db.stopList,
+            stopMap: db.stopMap,
+          });
+        }
+      } catch (e) {
+        reject(e);
       }
-    } catch (e) {
-      reject(e);
-    }
-  });
+    });
 
   if (
     raw !== null &&

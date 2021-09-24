@@ -16,7 +16,7 @@ import type { StopEntry } from "../../DbContext";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { checkPosition, locationEqual } from "../../utils";
 import type { Map as LeafletMap } from "leaflet";
-import type { GeoLocation, Theme } from '../../typing';
+import type { GeoLocation, Theme } from "../../typing";
 
 const SelfCircle = () => {
   const { geolocation, geoPermission } = useContext(AppContext);

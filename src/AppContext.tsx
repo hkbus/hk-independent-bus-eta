@@ -104,9 +104,9 @@ const isStrings = (input: unknown[]): input is string[] => {
   return true;
 };
 
-const isColorMode = (input: unknown): input is 'dark' | 'light' => {
-  return input === 'dark' || input === 'light';
-}
+const isColorMode = (input: unknown): input is "dark" | "light" => {
+  return input === "dark" || input === "light";
+};
 
 const isNumberRecord = (input: unknown): input is Record<string, number> => {
   if (input instanceof Object && input !== null && input !== undefined) {

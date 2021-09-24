@@ -12,22 +12,24 @@ import { Workbox, messageSW } from "workbox-window";
 // opt-in, read https://cra.link/PWA
 
 const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' ||
+  window.location.hostname === "localhost" ||
     // [::1] is the IPv6 localhost address.
-    window.location.hostname === '[::1]' ||
+    window.location.hostname === "[::1]" ||
     // 127.0.0.0/8 are considered localhost for IPv4.
-    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+    window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+    )
 );
 /**
- * 
+ *
  * @param {{
  *   onSuccess?: (registration: Workbox) => void;
  *   onUpdate?: (registration: Workbox, skipWaiting: () => void, installingServiceWorker: ServiceWorker) => void;
- * }} config 
+ * }} config
  * @returns {Promise<Workbox | undefined>}
  */
 export const register = async (config) => {
-  if ('serviceWorker' in navigator) {
+  if ("serviceWorker" in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
     if (publicUrl.origin !== window.location.origin) {
@@ -37,16 +39,16 @@ export const register = async (config) => {
       return undefined;
     }
     return new Promise((resolve, rejects) => {
-      window.addEventListener('load', () => {
+      window.addEventListener("load", () => {
         const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-  
+
         if (isLocalhost) {
           navigator.serviceWorker.ready.then(() => {
             // Add some additional logging to localhost, pointing developers to the
             // service worker/PWA documentation.
             console.log(
-              'This web app is being served cache-first by a service ' +
-                'worker. To learn more, visit https://cra.link/PWA'
+              "This web app is being served cache-first by a service " +
+                "worker. To learn more, visit https://cra.link/PWA"
             );
           });
 
@@ -60,7 +62,7 @@ export const register = async (config) => {
     });
   }
   return undefined;
-}
+};
 
 const registerValidSW = async (swUrl, config) => {
   const wb = new Workbox(swUrl);
@@ -84,18 +86,20 @@ const registerValidSW = async (swUrl, config) => {
   wb.addEventListener("controlling", controllingHandler);
   await wb.register();
   return wb;
-}
+};
 
 const checkValidServiceWorker = async (swUrl, config) => {
   // Check if the service worker can be found. If it can't reload the page.
   try {
     const response = await fetch(swUrl, {
-      headers: { 'Service-Worker': 'script' },
+      headers: { "Service-Worker": "script" },
     });
     // Ensure service worker exists, and that we really are getting a JS file.
-    const contentType = response.headers.get('content-type');
-    if (response.status === 404 ||
-      (contentType != null && contentType.indexOf('javascript') === -1)) {
+    const contentType = response.headers.get("content-type");
+    if (
+      response.status === 404 ||
+      (contentType != null && contentType.indexOf("javascript") === -1)
+    ) {
       // No service worker found. Probably a different app. Reload the page.
       navigator.serviceWorker.ready.then((registration) => {
         registration.unregister().then(() => {
@@ -108,12 +112,14 @@ const checkValidServiceWorker = async (swUrl, config) => {
       return registerValidSW(swUrl, config);
     }
   } catch (e) {
-    console.log('No internet connection found. App is running in offline mode.');
+    console.log(
+      "No internet connection found. App is running in offline mode."
+    );
   }
-}
+};
 
 export function unregister() {
-  if ('serviceWorker' in navigator) {
+  if ("serviceWorker" in navigator) {
     navigator.serviceWorker.ready
       .then((registration) => {
         registration.unregister();

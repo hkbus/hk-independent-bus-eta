@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useContext,
-  useMemo,
-  useCallback,
-} from "react";
+import { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import RouteMap from "../components/route-eta/RouteMap";
 import StopAccordions from "../components/route-eta/StopAccordions";
@@ -18,10 +12,10 @@ import { setSeoHeader, toProperCase, getDistance } from "../utils";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import TimetableDrawer from "../components/route-eta/TimetableDrawer";
 import Leaflet from "leaflet";
-import type { WarnUpMessageData, Theme } from '../typing';
+import type { WarnUpMessageData, Theme } from "../typing";
 
 const RouteEta = () => {
-  const { id, panel } = useParams<{id: string, panel: string}>();
+  const { id, panel } = useParams<{ id: string; panel: string }>();
   const {
     AppTitle,
     db: { routeList, stopList, stopMap },
@@ -47,7 +41,7 @@ const RouteEta = () => {
     const nearbyStop = stopsExtracted
       .map((stop, idx) => [idx, getDistance(geolocation, stop.location)])
       .sort((a, b) => a[1] - b[1])[0];
-    
+
     if (nearbyStop.length > 0) {
       stopIdx = nearbyStop[0];
     } else {
@@ -75,7 +69,7 @@ const RouteEta = () => {
         }
       }
       if (stopIdx === newStopIdx && !expanded) {
-        setIsDialogOpen(true)
+        setIsDialogOpen(true);
       } else {
         setExpanded(expanded);
       }
@@ -116,9 +110,7 @@ const RouteEta = () => {
           `路線${route}` +
           `由${orig.zh}出發，以${dest.zh}為終點，` +
           (uniqueFares.length ? `分段車費為${uniqueFares.join("、")}，` : "") +
-          `途經${stopsExtracted
-            .map((stop) => stop.name.zh)
-            .join("、")}。`
+          `途經${stopsExtracted.map((stop) => stop.name.zh).join("、")}。`
         );
       } else {
         return (
@@ -128,11 +120,7 @@ const RouteEta = () => {
             ? `, section fees are ${uniqueFares.join(", ")}. `
             : ". ") +
           "Stops: " +
-          toProperCase(
-            stopsExtracted
-              .map((stop) => stop.name.en)
-              .join(", ")
-          ) +
+          toProperCase(stopsExtracted.map((stop) => stop.name.en).join(", ")) +
           ". "
         );
       }
@@ -149,12 +137,21 @@ const RouteEta = () => {
       description: pageDesc(),
       lang: i18n.language,
     });
-    
-  }, [AppTitle, dest, fares, i18n.language, orig.en, orig.zh, route, stopsExtracted, t]);
+  }, [
+    AppTitle,
+    dest,
+    fares,
+    i18n.language,
+    orig.en,
+    orig.zh,
+    route,
+    stopsExtracted,
+    t,
+  ]);
 
   useEffect(() => {
     if (!energyMode) {
-      const message : WarnUpMessageData = {
+      const message: WarnUpMessageData = {
         type: "WARN_UP_MAP_CACHE",
         retinaDisplay: Leaflet.Browser.retina,
         zoomLevels: [14, 15, 16, 17, 18],
@@ -266,8 +263,8 @@ const useStyles = makeStyles<Theme>((theme) => ({
       position: "absolute",
       top: "0",
       right: "2%",
-      flexDirection: 'column',
-      justifyContent: 'center'
+      flexDirection: "column",
+      justifyContent: "center",
     },
     ".timetable-button > .MuiButton-label": {
       flexDirection: "column",

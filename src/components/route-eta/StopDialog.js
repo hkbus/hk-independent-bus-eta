@@ -1,43 +1,40 @@
-import React, { useState, useEffect, useContext } from 'react'
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  List
-} from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
-import { useTranslation } from 'react-i18next'
-import AppContext from '../../AppContext'
-import SuccinctTimeReport from '../home/SuccinctTimeReport'
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import { Typography } from '@mui/material';
+import React, { useState, useEffect, useContext } from "react";
+import { Dialog, DialogContent, DialogTitle, List } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { useTranslation } from "react-i18next";
+import AppContext from "../../AppContext";
+import SuccinctTimeReport from "../home/SuccinctTimeReport";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import { Typography } from "@mui/material";
 
-const StopDialog = ({open, stops, handleClose}) => {
-  const { db:{routeList, stopList} } = useContext ( AppContext )
-  const { i18n } = useTranslation()
-  const [ routes, setRoutes ] = useState([])
-  const classes = useStyles()
+const StopDialog = ({ open, stops, handleClose }) => {
+  const {
+    db: { routeList, stopList },
+  } = useContext(AppContext);
+  const { i18n } = useTranslation();
+  const [routes, setRoutes] = useState([]);
+  const classes = useStyles();
 
   useEffect(() => {
     if (stops === undefined) {
-      setRoutes([])
-      return
+      setRoutes([]);
+      return;
     }
     let _routes = [];
     Object.entries(routeList).forEach(([key, route]) => {
-      stops.some( ([co, stopId]) => {
-        if ( route.stops[co] && route.stops[co].includes(stopId) ) {
-          _routes.push(key+'/'+route.stops[co].indexOf(stopId))
-          return true
+      stops.some(([co, stopId]) => {
+        if (route.stops[co] && route.stops[co].includes(stopId)) {
+          _routes.push(key + "/" + route.stops[co].indexOf(stopId));
+          return true;
         }
-        return false
-      })
-    })
-    setRoutes(_routes)
+        return false;
+      });
+    });
+    setRoutes(_routes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stops])
-  
+  }, [stops]);
+
   return (
     <Dialog open={open} onClose={handleClose} className={"stopDialog-dialog"}>
       <DialogTitle className={"stopDialog-title"} disableTypography>
@@ -54,36 +51,42 @@ const StopDialog = ({open, stops, handleClose}) => {
       </DialogTitle>
       <DialogContent>
         <List>
-          {routes.map(route => (
+          {routes.map((route) => (
             <SuccinctTimeReport key={route} routeId={route} />
           ))}
         </List>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   stopDialogClose: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
   },
   dialogTitleTypo: {
-    display: 'flex',
-    alignItem: 'center',
+    display: "flex",
+    alignItem: "center",
   },
-  '@global': {
-    '.stopDialog-dialog': {
-      '& .MuiPaper-root': {
-        width: '100%',
-        marginTop: '90px',
-        height: 'calc(100vh - 100px)'
-      }
+  "@global": {
+    ".stopDialog-dialog": {
+      "& .MuiPaper-root": {
+        width: "100%",
+        marginTop: "90px",
+        height: "calc(100vh - 100px)",
+      },
     },
-    '.stopDialog-title': {
-      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : theme.palette.primary.main,
-      color: theme.palette.mode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
-    }
-  }
-}))
+    ".stopDialog-title": {
+      backgroundColor:
+        theme.palette.mode === "dark"
+          ? theme.palette.background.default
+          : theme.palette.primary.main,
+      color:
+        theme.palette.mode === "dark"
+          ? theme.palette.primary.main
+          : theme.palette.text.primary,
+    },
+  },
+}));
 
-export default StopDialog
+export default StopDialog;

@@ -15,7 +15,7 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import { Container, CssBaseline } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import AppContext from "./AppContext";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
@@ -82,29 +82,32 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const getlightTheme = () =>
-  createTheme({
-    typography: {
-      fontFamily: "Noto Sans TC, Chivo, sans-serif",
-    },
-    palette: {
-      mode: "light",
-      background: {
-        default: "#fedb00",
+  createTheme(
+    {
+      typography: {
+        fontFamily: "Noto Sans TC, Chivo, sans-serif",
       },
-      primary: {
-        main: "#fedb00", // yellow
+      palette: {
+        mode: "light",
+        background: {
+          default: "#fedb00",
+        },
+        primary: {
+          main: "#fedb00", // yellow
+        },
       },
-    },
-    overrides: {
-      MuiCssBaseline: {
-        "@global": {
-          html: {
-            userSelect: "none",
+      overrides: {
+        MuiCssBaseline: {
+          "@global": {
+            html: {
+              userSelect: "none",
+            },
           },
         },
       },
     },
-  }, ["light"]);
+    ["light"]
+  );
 
 const getDarkTheme = () =>
   createTheme({

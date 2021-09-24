@@ -17,7 +17,7 @@ import { toProperCase, triggerShare } from "../../utils";
 import TimeReport from "./TimeReport";
 import ShareIcon from "@mui/icons-material/Share";
 import type { StopEntry, RouteListEntry } from "../../DbContext";
-import type { Theme } from '../../typing';
+import type { Theme } from "../../typing";
 
 interface StopAccordionsProps {
   routeId: string;
@@ -114,7 +114,8 @@ const StopAccordions = ({
                 aria-label="share"
                 onClick={onClickShare}
                 style={{ backgroundColor: "transparent" }}
-                size="large">
+                size="large"
+              >
                 <ShareIcon />
               </IconButton>
               <IconButton
@@ -213,7 +214,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
       justifyContent: "space-between",
-      display: 'flex'
+      display: "flex",
     },
     ".stopAccordions-boxContainer": {
       overflowY: "scroll",
