@@ -1,5 +1,5 @@
 import { act, render, screen } from "@testing-library/react";
-import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createTheme } from "@mui/material/styles";
 import "../../i18n";
 import InstallDialog from "./InstallDialog";
 
