@@ -42,7 +42,7 @@ export const fetchDbFunc = (forceRenew = false) => {
   }
   const schemaVersion = localStorage.getItem('schemaVersion')
   const versionMd5 = localStorage.getItem('versionMd5')
-  const lastUpdateTime = parseInt(localStorage.getItem('updateTime') || Date.now(), 10)
+  const lastUpdateTime = parseInt(localStorage.getItem('updateTime'), 10) || Date.now()
   const storedDb = new Promise((resolve) => {
     resolve({
       schemaVersion, versionMd5,
@@ -67,7 +67,7 @@ export const fetchDbFunc = (forceRenew = false) => {
     }
 
     if (needRenew) {
-      localStorage.setItem('updateTime', Date.now())
+      localStorage.setItem('updateTime', Date.now().toString())
       return new Promise((resolve) => {
         const timerId = setTimeout( () => {
           if ( !forceRenew && localStorage.getItem('db') ) {

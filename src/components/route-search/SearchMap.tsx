@@ -3,10 +3,11 @@ import { MapContainer, Marker, TileLayer, Polyline, Circle, useMap } from 'react
 import Leaflet from 'leaflet'
 import { useTranslation } from 'react-i18next'
 import { Box } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import AppContext from '../../AppContext'
 import MyLocationIcon from '@mui/icons-material/MyLocation'
 import { checkPosition } from '../../utils'
+import { Location as GeoLocation } from 'hk-bus-eta'
 
 const ChangeMapCenter = ( {center, start, end} ) => {
   const map = useMap()
@@ -55,15 +56,14 @@ const EndMarker = ({end}) => {
 }
 
 const CenterControl = ( {onClick}) => {
-  useStyles()
   return (
     <div className='leaflet-bottom leaflet-right'>
-      <div 
-        className={`${"routeMap-centerControlContainer"} leaflet-control leaflet-bar`}
+      <CenterControlRoot 
+        className={`${classes.centralControlContainer} leaflet-control leaflet-bar`}
         onClick={onClick}
       >
-        <MyLocationIcon className={"routeMap-centerControl"} />
-      </div>
+        <MyLocationIcon className={classes.centralControl} />
+      </CenterControlRoot>
     </div>
   )
 }
@@ -140,7 +140,6 @@ const Walklines = ({routes, start, end}) => {
 
 const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } = useContext ( AppContext )
-  useStyles()
   const [mapState, setMapState] = useState({
     center: null,
     isFollow: false
@@ -148,7 +147,7 @@ const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
   const {center, isFollow} = mapState
   const [map, setMap] = useState(null)
 
-  const updateCenter = ({center, isFollow = false}) => {
+  const updateCenter = ({center, isFollow = false}: {center?: GeoLocation, isFollow?: boolean}) => {
     setMapState({
       center: center ? center : map.getCenter(),      
       isFollow: isFollow
@@ -185,12 +184,12 @@ const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
   }, [geolocation])
 
   return (
-    <Box className={"routeMap-mapContainer"}>
+    <SearchMapBox className={classes.mapContainerBox}>
       <MapContainer 
         center={getMapCenter()} 
         zoom={16} 
         scrollWheelZoom={false} 
-        className={"routeMap-mapContainer"}
+        className={classes.mapContainer}
         whenCreated={setMap}
       >
         <ChangeMapCenter center={center} start={checkPosition(start)} end={end} />
@@ -222,7 +221,7 @@ const SearchMap = ({routes, start, end, stopIdx, onMarkerClick}) => {
           }}
         />
       </MapContainer>
-    </Box>
+    </SearchMapBox>
   )
 }
 
@@ -233,61 +232,73 @@ const getPoint = ({lat, lng}) => [lat, lng]
 const BusStopMarker = ( {active, passed, lv} ) => {
   return Leaflet.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png',
-    className: `${"routeMap-marker"} ${active ? "routeMap-active" : ''} ${passed ? "routeMap-passed" : ''} routeMap-marker-${lv}`,
+    className: `${classes.marker} ${active ? classes.active : ''} ${passed ? classes.passed : ''} lv-${lv}`,
   })
 }
 
 const EndsMarker = ( {isStart} ) => {
   return Leaflet.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png',
-    className: `${"routeMap-marker"} ${isStart ? "routeMap-start" : 'routeMap-end'}`
+    className: `${classes.marker} ${isStart ? "start" : 'end'}`
   })
 }
 
-const useStyles = makeStyles ( theme => ({
-  "@global": {
-    ".routeMap-mapContainer": {
-      height: '30vh',
-      filter: theme.palette.mode === 'dark' ? 'brightness(0.9)' : 'none'
-    },
-    ".routeMap-centerControl": {
-      padding: '5px',
-      color: 'black'
-    },
-    ".routeMap-centerControlContainer": {
-      background: 'white',
-      height: '28px',
-      marginBottom: '20px !important',
-      marginRight: '5px !important'
-    },
-    ".routeMap-marker": {
-      marginLeft: '-12px',
-      marginTop: '-41px',
-      width: '25px',
-      height: '41px',
-      zIndex: 618,
-      outline: 'none',
-      filter: 'hue-rotate(130deg)'
-    },
-    ".routeMap-marker-1": {
+const PREFIX = 'searchMap'
+
+const classes = {
+  mapContainerBox: `${PREFIX}-mapContainerBox`,
+  mapContainer: `${PREFIX}-mapContainer`,
+  centralControlContainer: `${PREFIX}-centralControlContainer`,
+  centralControl: `${PREFIX}-centralControl`,
+  marker: `${PREFIX}-marker`,
+  active: `${PREFIX}-active`,
+  passed: `${PREFIX}-passed`,
+
+}
+
+const SearchMapBox = styled(Box)(({theme}) => ({
+  [`&.${classes.mapContainerBox}`]: {
+    height: '30vh',
+    filter: theme.palette.mode === 'dark' ? 'brightness(0.8)' : 'none'
+  },
+  [`& .${classes.mapContainer}`]: {
+    height: '30vh',
+  },
+  [`& .${classes.marker}`]: {
+    marginLeft: '-12px',
+    marginTop: '-41px',
+    width: '25px',
+    height: '41px',
+    zIndex: 618,
+    outline: 'none',
+    filter: 'hue-rotate(130deg)',
+    '&.lv-1': {
       filter: 'hue-rotate(210deg) brightness(1.5)'
     },
-    ".routeMap-active": {
-      animation: '$blinker 2s linear infinite'
-    },
-    ".routeMap-passed": {
-      filter: 'grayscale(100%)'
-    },
-    ".routeMap-start": {
+    '&.start': {
       filter: 'hue-rotate(30deg)'
     },
-    ".routeMap-end": {
+    '&.end': {
       filter: 'hue-rotate(280deg)'
-    },
-    "@keyframes blinker": {
-      '50%': {
-        opacity: 0.3
-      }
     }
   },
+  [`& .${classes.active}`]: {
+    animation: 'blinker 2s linear infinite'
+  },
+  [`& .${classes.passed}`]: {
+    filter: 'grayscale(100%)'
+  }
 }) )
+
+const CenterControlRoot = styled('div')(({theme}) => ({
+  [`& .${classes.centralControl}`]: {
+    padding: '5px',
+    color: 'black'
+  },
+  [`&.${classes.centralControlContainer}`]: {
+    background: 'white',
+    height: '28px',
+    marginBottom: '20px !important',
+    marginRight: '5px !important'
+  },
+}))

@@ -10,13 +10,9 @@ import { vibrate } from "./utils";
 import DbContext from "./DbContext";
 import type { DatabaseContextValue } from "./DbContext";
 import { produce, freeze, current } from "immer";
+import { Location as GeoLocation } from 'hk-bus-eta'
 
-interface GeoLocation {
-  lat: number;
-  lng: number;
-}
-
-type GeoPermission = "opening" | "granted" | "denied" | null;
+type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
 interface AppState {
   searchRoute: string;
@@ -50,7 +46,7 @@ interface AppState {
 interface AppContextValue extends AppState, DatabaseContextValue {
   setSearchRoute: (searchRoute: string) => void;
   updateSearchRouteByButton: (buttonValue: string) => void;
-  updateSelectedRoute: (route: string, seq: string) => void;
+  updateSelectedRoute: (route: string, seq?: string) => void;
   // UX
   updateGeolocation: (geoLocation: GeoLocation) => void;
   updateSavedEtas: (keys: string) => void;
@@ -58,7 +54,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   // settings
   updateGeoPermission: (
     geoPermission: AppState["geoPermission"],
-    deniedCallback: () => void
+    deniedCallback?: () => void
   ) => void;
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
@@ -215,7 +211,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const geoWatcherId = useRef(null);
 
   const updateGeoPermission = useCallback(
-    (geoPermission: AppState["geoPermission"], deniedCallback: () => void) => {
+    (geoPermission: AppState["geoPermission"], deniedCallback?: () => void) => {
       if (geoPermission === "opening") {
         setGeoPermission("opening");
         const _geoWatcherId = navigator.geolocation.watchPosition(

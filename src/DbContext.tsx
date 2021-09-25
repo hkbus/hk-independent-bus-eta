@@ -3,28 +3,9 @@ import type { ReactNode } from "react";
 import { isEmptyObj } from "./utils";
 import { initDb, fetchDbFunc } from "./db";
 import { compress as compressJson } from "lzutf8";
+import { BusDb } from 'hk-bus-eta'
 
-interface RouteListEntry {
-  co: string[];
-  stops: Record<string, string[]>;
-  dest: { zh: string; en: string };
-  bound?: string;
-  nlbId?: number;
-  fares?: string[];
-  faresHoliday?: string[];
-}
-
-interface StopEntry {
-  location: { lat: number; lng: number };
-  name: { zh: string; en: string };
-}
-
-type StopMapEntry = Array<Array<string>>;
-
-interface DatabaseType {
-  routeList: Record<string, RouteListEntry>;
-  stopList: Record<string, StopEntry>;
-  stopMap: Record<string, StopMapEntry>;
+interface DatabaseType extends BusDb {
   schemaVersion: string;
   versionMd5: string;
   updateTime: number;
@@ -109,8 +90,5 @@ export const DbProvider = ({ children }: DbProviderProps) => {
 export default DbContext;
 export type {
   DatabaseContextValue,
-  DatabaseType,
-  StopMapEntry,
-  StopEntry,
-  RouteListEntry,
+  DatabaseType
 };

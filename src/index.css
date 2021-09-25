@@ -20,3 +20,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@keyframes blinker {
+  50% {
+    opacity: 0.3
+  }
+}

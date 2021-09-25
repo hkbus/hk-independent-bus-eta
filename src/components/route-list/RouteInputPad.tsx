@@ -4,27 +4,24 @@ import {
   Button,
   Grid
 } from '@mui/material'
-import {
-  makeStyles
-} from '@mui/styles'
+import { styled } from '@mui/material/styles'
 import BackspaceOutlinedIcon from '@mui/icons-material/BackspaceOutlined';
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next';
 
 const KeyButton = ({k, handleClick, disabled = false, className}) => {
-  useStyles()
   const { t } = useTranslation()
   return (
     <Button 
       size="large"
       variant="contained" 
-      className={`inputpad-button ${className}`}
+      className={`${classes.button} ${className}`}
       onClick={() => handleClick(k)}
       disabled={disabled}
       disableRipple
     >
       {k === 'b' ? <BackspaceOutlinedIcon/> : 
-        k === 'c' ? <div className={"inputpad-cancelButton"}>{t('C')}</div> : k}
+        k === 'c' ? <div className={classes.cancel}>{t('C')}</div> : k}
     </Button>
   )
 }
@@ -40,7 +37,7 @@ const RouteNumPad = () => {
           <KeyButton
             k={k}
             handleClick={updateSearchRouteByButton}
-            className={"inputpad-numberButton"}
+            className={classes.number}
             disabled={
               (k === 'b' && searchRoute === '') 
               || ( !'bc'.includes(k) && !possibleChar.includes(k))
@@ -56,17 +53,16 @@ const RouteNumPad = () => {
 
 const RouteAlphabetPad = () => {
   const { updateSearchRouteByButton, possibleChar } = useContext( AppContext )
-  useStyles()
 
   return (
     <Grid container spacing={1}>
       {
-        possibleChar.filter(k => isNaN(k)).map(k => (
+        possibleChar.filter(k => isNaN(parseInt(k,10))).map(k => (
           <Grid item xs={12} key={'input-'+k}>
             <KeyButton
               k={k}
               handleClick={updateSearchRouteByButton}
-              className={"inputpad-alphabetButton"}
+              className={classes.alphabet}
             />
           </Grid>
         )) 
@@ -76,65 +72,74 @@ const RouteAlphabetPad = () => {
 }
 
 const RouteInputPad = () => {
-  useStyles()
   const padding = 0
   if (navigator.userAgent === 'prerendering') {
     return <></>
   }
 
   return (
-    <Box className={"inputpad-boxContainer"} padding={padding}>
-      <Box className={"inputpad-numPadContainer"} padding={padding}>
+    <InputPadBox className={classes.root} padding={padding}>
+      <Box className={classes.numPadContainer} padding={padding}>
         <RouteNumPad />
       </Box>
-      <Box className={"inputpad-alphabetPadContainer"} padding={padding}>
+      <Box className={classes.alphabetPadContainer} padding={padding}>
         <RouteAlphabetPad />
       </Box>
-    </Box>
+    </InputPadBox>
   )
 }
 
 export default RouteInputPad
 
-const useStyles = makeStyles(theme => ({
-  "@global": {
-    ".inputpad-boxContainer": {
-      display: 'flex',
-      flexDirection: 'row',
-      height: '208px',
-      justifyContent: 'space-around'
-    },
-    ".inputpad-numPadContainer": {
-      width: '60%',
-    },
-    ".inputpad-alphabetPadContainer": {
-      width: '20%',
-      height: '206px',
-      overflowX: 'hidden',
-      overflowY: 'scroll'
-    },
-    ".inputpad-button": {
-      background: theme.palette.background.paper,
+const PREFIX = 'inputpad'
+
+const classes = {
+  root: `${PREFIX}-boxContainer`,
+  numPadContainer: `${PREFIX}-numPadContainer`,
+  alphabetPadContainer: `${PREFIX}-alphabetPadContainer`,
+  button: `${PREFIX}-button`,
+  alphabet: `${PREFIX}-alphabet`,
+  cancel: `${PREFIX}-cancel`,
+  number: `${PREFIX}-number`
+}
+
+const InputPadBox = styled(Box)(({theme}) => ({
+  [`&.${classes.root}`]: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: '208px',
+    justifyContent: 'space-around'
+  },
+  [`& .${classes.numPadContainer}`]: {
+    width: '60%',
+  },
+  [`& .${classes.alphabetPadContainer}`]: {
+    width: '20%',
+    height: '206px',
+    overflowX: 'hidden',
+    overflowY: 'scroll'
+  },
+  [`& .${classes.button}`]: {
+    background: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    width: '100%',
+    height: '44px',
+    fontSize: '1.2em',
+    borderRadius: 'unset',
+    '&:selected': {
       color: theme.palette.text.primary,
-      width: '100%',
-      height: '44px',
-      fontSize: '1.2em',
-      borderRadius: 'unset',
-      '&:selected': {
-        color: theme.palette.text.primary,
-      },
-      '&:hover': {
-        backgroundColor: theme.palette.background.paper
-      },
     },
-    ".inputpad-cancelButton": {
-      fontSize: '0.8em',
+    '&:hover': {
+      backgroundColor: theme.palette.background.paper
     },
-    ".inputpad-alphabetButton": {
-      height: '42px'
-    },
-    ".inputpad-numberButton": {
-      height: '52px'
-    }
+  },
+  [`& .${classes.cancel}`]: {
+    fontSize: '0.8em',
+  },
+  [`& .${classes.alphabet}`]: {
+    height: '42px'
+  },
+  [`& .${classes.number}`]: {
+    height: '52px'
   }
 }))

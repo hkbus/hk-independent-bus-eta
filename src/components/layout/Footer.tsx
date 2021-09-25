@@ -11,9 +11,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Link, useLocation, useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AppContext from '../../AppContext'
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import { vibrate } from '../../utils'
-
 
 const Footer = () => {
   const { t, i18n } = useTranslation()
@@ -27,13 +26,11 @@ const Footer = () => {
     setTimeout(() => history.push(link), 0)
   }
 
-  useStyles()
-
   return useMemo(() => (
-    <BottomNavigation
+    <Root
       value={location.pathname.replace(/(.*)\/[0-9]*?$/, "$1")}
       showLabels={true}
-      classes={{root: "footer-root"}}
+      classes={{root: classes.root}}
     >
       <BottomNavigationAction
         label={t("常用")}
@@ -94,31 +91,36 @@ const Footer = () => {
        icon={<SettingsIcon />} 
        classes={{
         root: "footer-actionItem",
-        selected: "footer-selected"
+        selected: classes.selected
        }}
       />
-    </BottomNavigation>
+    </Root>
     // eslint-disable-next-line
-  ), [location.pathname, i18n.langauage, colorMode, selectedRoute]);
+  ), [location.pathname, i18n.language, colorMode, selectedRoute]);
 }
 
 
 export default Footer
 
-const useStyles = makeStyles(theme => ({
-  '@global': {
-    ".footer-root": {
-      background: theme.palette.mode === 'dark' ? theme.palette.background.default: theme.palette.primary.main,
-      position: "sticky",
-      bottom: "0",
-      height: "initial"
+const PREFIX = 'footer'
+
+const classes = {
+  root: `${PREFIX}-root`,
+  selected: `${PREFIX}-selected`
+}
+
+const Root = styled(BottomNavigation)(({theme}) => ({ 
+  [`&.${classes.root}`]: {
+    background: theme.palette.mode === 'dark' ? theme.palette.background.default: theme.palette.primary.main,
+    position: "sticky",
+    bottom: "0",
+    height: "initial",
+    [`& .MuiBottomNavigationAction-root`]:{
+      width: "20%",
+      minWidth: 0,
     },
-    '.Mui-selected.footer-selected': {
+    [`& .Mui-selected.${classes.selected}`]: {
       color: theme.palette.mode === 'dark' ? theme.palette.primary.main: theme.palette.text.primary,
     },
-    '.MuiBottomNavigationAction-root':{
-      width: "20%",
-      minWidth: 0
-    }
-  }
+  },
 }))

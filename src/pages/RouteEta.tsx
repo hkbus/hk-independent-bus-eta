@@ -4,7 +4,7 @@ import RouteMap from '../components/route-eta/RouteMap'
 import StopAccordions from '../components/route-eta/StopAccordions'
 import StopDialog from '../components/route-eta/StopDialog'
 import { Button, Divider, Paper, Typography } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles'
 import AppContext from '../AppContext'
 import { useTranslation } from 'react-i18next'
 import RouteNo from '../components/route-list/RouteNo'
@@ -12,8 +12,13 @@ import { setSeoHeader, toProperCase } from '../utils'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import TimetableDrawer from '../components/route-eta/TimetableDrawer'
 
+interface RouteParams {
+  id: string,
+  panel: string
+}
+
 const RouteEta = () => {
-  const { id, panel } = useParams()
+  const { id, panel } = useParams<RouteParams>()
   const { AppTitle, db:{ routeList, stopList, stopMap}, updateSelectedRoute, energyMode } = useContext ( AppContext )
   const { route, stops, co, orig, dest, nlbId, fares, freq } = routeList[id.toUpperCase()]
   const [ expanded, setExpanded ] = useState(parseInt(panel, 10))
@@ -23,7 +28,6 @@ const RouteEta = () => {
   
   const { t, i18n } = useTranslation()
   const history = useHistory()
-  useStyles()
 
   const handleChange = ( panel ) => (event, newExpanded, isFromMap) => {
     setExpanded(newExpanded ? panel : false)
@@ -88,26 +92,26 @@ const RouteEta = () => {
   return (
     <>
       <input hidden id={id} />
-      <Paper className="route-header" elevation={0}>
+      <Root className={classes.header} elevation={0}>
         <RouteNo routeNo={route} component="h1" align='center' />
         <Typography component="h2" variant="caption" align='center'>
           {t('往')} {toProperCase(dest[i18n.language])} {nlbId ? t('由')+" "+toProperCase(orig[i18n.language]) : ""}
         </Typography>
         {freq ? <>
-          <Divider orientation="vertical" className={'timetable-button-divider'} />
-          <Button 
+          <ButtonDivider orientation="vertical" className={classes.buttonDivider} />
+          <TimeTableButton 
             variant="text"
             aria-label="open-timetable"
-            className="timetable-button" 
+            className={classes.timeTableButton} 
             size="small"
             startIcon={<ScheduleIcon />}
             onClick={() => setIsOpenTimetable(true)}
           >
             {t('時間表')}
-          </Button>
+          </TimeTableButton>
           <TimetableDrawer freq={freq} open={isOpenTimetable} onClose={() => setIsOpenTimetable(false)} /> 
         </>: <></>}
-      </Paper>
+      </Root>
       {!energyMode ? <RouteMap 
         stops={getStops(co, stops)}
         stopIdx={expanded}
@@ -146,31 +150,43 @@ const getDialogStops = (co, stops, stopMap, panel) => {
 
 export default RouteEta
 
-const useStyles = makeStyles(theme => ({
-  '@global': {
-    '.route-header': {
-      textAlign: 'center',
-      background: 'transparent',
-      position: 'relative'
-    },
-    '.timetable-button-divider': {
-      position: 'absolute',
-      top: '0',
-      right: 'calc(64px + 2%)'
-    },
-    '.timetable-button': {
-      color: theme.palette.getContrastText(theme.palette.background.default),
-      position: 'absolute',
-      top: '0',
-      right: '2%',
+const PREFIX = 'route'
+
+const classes = {
+  header: `${PREFIX}-header`,
+  buttonDivider: 'timetable-button-divider',
+  timeTableButton: 'timetable-button'
+}
+
+const Root = styled(Paper)(({theme}) => ({
+  [`&.${classes.header}`]: {
+    textAlign: 'center',
+    background: 'transparent',
+    position: 'relative'
+  }
+}))
+
+const ButtonDivider = styled(Divider)(({theme}) => ({
+  [`&.${classes.buttonDivider}`]: {
+    position: 'absolute',
+    top: '0',
+    right: 'calc(64px + 2%)'
+  }
+}))
+
+const TimeTableButton = styled(Button)(({theme}) => ({
+  [`&.${classes.timeTableButton}`]: {
+    color: theme.palette.getContrastText(theme.palette.background.default),
+    position: 'absolute',
+    top: '0',
+    right: '2%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    '& > .MuiButton-label': {
       flexDirection: 'column',
       justifyContent: 'center'
     },
-    '.timetable-button > .MuiButton-label': {
-      flexDirection: 'column',
-      justifyContent: 'center'
-    },
-    '.timetable-button > .MuiButton-startIcon': {
+    '& > .MuiButton-startIcon': {
       margin: 0
     }
   }

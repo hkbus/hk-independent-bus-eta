@@ -15,7 +15,7 @@ export const useEtas = (routeId) => {
       if ( !isVisible || navigator.userAgent === 'prerendering' ){
         // skip if prerendering
         setEtas(null)
-        return new Promise((resolve) => resolve())
+        return new Promise((resolve) => resolve([]))
       }
       return fetchEtas({
         ...routeObj, seq: parseInt(seq, 10)
