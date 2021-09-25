@@ -85,7 +85,10 @@ const StopAccordions = ({
               }
             }
           }}
-          classes={{ root: classes.accordionRoot, expanded: classes.accordionExpanded }}
+          classes={{
+            root: classes.accordionRoot,
+            expanded: classes.accordionExpanded,
+          }}
         >
           <StopAccordionSummary
             classes={{
@@ -153,9 +156,7 @@ const StopAccordions = ({
   return (
     <StopAccordionsBox
       className={
-        !energyMode 
-          ? classes.boxContainer 
-          : classes.boxContainerEnergy
+        !energyMode ? classes.boxContainer : classes.boxContainerEnergy
       }
     >
       {stopListElements}

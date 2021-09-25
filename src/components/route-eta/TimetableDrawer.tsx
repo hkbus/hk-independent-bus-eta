@@ -1,5 +1,5 @@
 import { Drawer, List, ListItem, Typography } from "@mui/material";
-import { useMemo } from 'react';
+import { useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 
@@ -27,9 +27,7 @@ const TimetableDrawer = ({ freq, open, onClose }) => {
   const list = useMemo(() => {
     return Object.entries(freq).map(([serviceId, dayFreq]) => (
       <ListItem key={`${serviceId}`} className={classes.entries}>
-        <Typography variant="subtitle1">
-          {t(ServiceIds[serviceId])}
-        </Typography>
+        <Typography variant="subtitle1">{t(ServiceIds[serviceId])}</Typography>
         {Object.entries(dayFreq)
           .sort((a, b) => (a[0] < b[0] ? -1 : 1))
           .map(([start, details]) => (

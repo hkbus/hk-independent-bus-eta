@@ -16,7 +16,7 @@ import type { StopListEntry } from "hk-bus-eta";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { checkPosition, locationEqual } from "../../utils";
 import type { Map as LeafletMap } from "leaflet";
-import type { Location as GeoLocation } from 'hk-bus-eta';
+import type { Location as GeoLocation } from "hk-bus-eta";
 
 const SelfCircle = () => {
   const { geolocation, geoPermission } = useContext(AppContext);

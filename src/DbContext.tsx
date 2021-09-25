@@ -3,8 +3,7 @@ import type { ReactNode } from "react";
 import { isEmptyObj } from "./utils";
 import { fetchDbFunc } from "./db";
 import { compress as compressJson } from "lzutf8";
-import type { DatabaseType } from './db';
-
+import type { DatabaseType } from "./db";
 
 interface DatabaseContextValue {
   db: DatabaseType;
