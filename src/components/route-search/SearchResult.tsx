@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Accordion, AccordionSummary, AccordionDetails, ListItemText, Typography } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+import { styled } from '@mui/material/styles'
 import AppContext from '../../AppContext'
 import RouteNo from '../route-list/RouteNo'
 import TimeReport from '../route-eta/TimeReport'
@@ -9,7 +9,6 @@ import TimeReport from '../route-eta/TimeReport'
 const SearchResult = ({routes, idx, handleRouteClick, expanded, stopIdx}) => {
   const {db: {routeList, stopList}} = useContext(AppContext)
   const {t, i18n} = useTranslation()
-  useStyles()
 
   const getStopString = (routes) => {
     const ret = []
@@ -24,13 +23,13 @@ const SearchResult = ({routes, idx, handleRouteClick, expanded, stopIdx}) => {
   }
 
   return (
-    <Accordion 
+    <ResultAccordion 
       TransitionProps={{unmountOnExit: true}}
-      classes={{root: "search-accordion-root", expanded: 'search-accordion-expanded'}}
+      classes={{root: classes.root, expanded: classes.expandedAccordion}}
       onChange={() => handleRouteClick(idx)}
       expanded={expanded}
     >
-      <AccordionSummary classes={{root: "search-accordionSummary-root", content: "search-accordionSummary-content", expanded: "search-accordionSummary-expanded"}}>
+      <AccordionSummary classes={{root: classes.summaryRoot, content: classes.content, expanded: classes.summaryExpanded}}>
         <ListItemText
           primary={
             routes.map((selectedRoute, routeIdx) => {
@@ -38,9 +37,9 @@ const SearchResult = ({routes, idx, handleRouteClick, expanded, stopIdx}) => {
               const {route, serviceType} = routeList[routeId]
               
               return (
-                <span className="search-routeNo" key={`search-${idx}-${routeIdx}`}>
+                <span className={classes.routeNo} key={`search-${idx}-${routeIdx}`}>
                   <RouteNo routeNo={route} />
-                  {serviceType >= 2 && <Typography variant="caption" className={"search-result-specialTrip"}>{t('特別班')}</Typography>}
+                  {parseInt(serviceType, 10) >= 2 && <Typography variant="caption" className={classes.specialTrip}>{t('特別班')}</Typography>}
                 </span>
               )
             })
@@ -48,75 +47,82 @@ const SearchResult = ({routes, idx, handleRouteClick, expanded, stopIdx}) => {
           secondary={getStopString(routes)}
         />
       </AccordionSummary>
-      <AccordionDetails classes={{root: "search-accordionDetails-root"}}>
+      <AccordionDetails classes={{root: classes.details}}>
         {routes.map((selectedRoute, routeIdx) => (
           <TimeReport 
             key={`timereport-${idx}-${routeIdx}`}
             routeId={selectedRoute.routeId.toUpperCase()}
             seq={selectedRoute.on + ( stopIdx ? stopIdx[routeIdx] : 0 )}
-            containerClass={"search-timereport-container"}
+            containerClass={classes.timerReport}
             showStopName={true}
           />
         ))}
       </AccordionDetails>
-    </Accordion>
+    </ResultAccordion>
   )
 }
 
 export default SearchResult
 
-const useStyles = makeStyles(theme => ({
-  '@global': {
-    ".search-routeNo": {
-      width: '50%',
-      display: 'inline-block'
-    },
-    ".search-result-fare": {
-      fontSize: '0.8rem',
-      marginLeft: '3px'
-    },
-    ".search-result-specialTrip": {
-      fontSize: '0.6rem',
-      marginLeft: '8px'
-    },
-    '.search-accordion-root': {
-      border: '1px solid rgba(0, 0, 0, .125)',
-      boxShadow: 'none'
-    },
-    '.search-accordion-root:not(:last-child)': {
+const PREFIX = 'search-result'
+
+const classes = {
+  root: `${PREFIX}-root`,
+  expandedAccordion: `${PREFIX}-expanded`,
+  summaryRoot: `${PREFIX}-summary-root`,
+  summaryExpanded: `${PREFIX}-summary-root-expanded`,
+  content: `${PREFIX}-content`,
+  details: `${PREFIX}-details`,
+  timerReport: `${PREFIX}-timer-report`,
+  routeNo: `${PREFIX}-route-no`,
+  specialTrip: `${PREFIX}-special-trip`
+}
+
+const ResultAccordion = styled(Accordion)(({theme}) => ({
+  [`&.${classes.root}`]: {
+    border: '1px solid rgba(0, 0, 0, .125)',
+    boxShadow: 'none',
+    '&:not(:last-child)': {
       borderBottom: 0,
     },
-    '.search-accordion-root:before': {
+    '&:before': {
       display: 'none',
     },
-    '.search-accordion-root.search-accordion-expanded': {
+    [`&.${classes.expandedAccordion}`]: {
       margin: 'auto',
     },
-    '.search-accordionSummary-root': {
-      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
-      borderBottom: '1px solid rgba(0, 0, 0, .125)',
-      marginBottom: -1,
+  },
+  [`& .${classes.summaryRoot}`]: {
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
+    borderBottom: '1px solid rgba(0, 0, 0, .125)',
+    marginBottom: -1,
+    minHeight: 44,
+    [`&.${classes.summaryExpanded}`]: {
       minHeight: 44
-    },
-    '.search-accordionSummary-root.search-accordionSummary-expanded': {
-      minHeight: 44
-    },
-    '.search-accordionSummary-content': {
-      margin: '8px 0',
-      flexDirection: 'column'
-    },
-    '.search-accordionSummary-content.search-accordionSummary-expanded': {
+    }
+  },
+  [`& .${classes.content}`]: {
+    margin: '8px 0',
+    flexDirection: 'column',
+    [`&.${classes.summaryExpanded}`]: {
       margin: '8px 0'
-    },
-    '.search-accordionDetails-root': {
+    }
+  },
+  [`& .${classes.details}`]: {
       padding: theme.spacing(2),
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
       display: 'flex'
-    },
-    ".search-timereport-container": {
-      width: '50%'
-    }
+  },
+  [`& .${classes.timerReport}`]: {
+    width: '50%'
+  },
+  [`& .${classes.routeNo}`]: {
+    width: '50%',
+    display: 'inline-block'
+  },
+  [`& .${classes.specialTrip}`]: {
+    fontSize: '0.6rem',
+    marginLeft: '8px'
   }
-
 }))

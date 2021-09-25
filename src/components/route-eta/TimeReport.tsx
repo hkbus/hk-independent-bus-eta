@@ -7,7 +7,14 @@ import { useTranslation } from 'react-i18next'
 import AppContext from "../../AppContext"
 import { useEtas } from "../Etas"
 
-const TimeReport = ( { routeId, seq, containerClass, showStopName = false } ) => {
+interface TimeReportProps {
+  routeId: string,
+  seq: number,
+  containerClass?: string,
+  showStopName?: boolean
+}
+
+const TimeReport = ( { routeId, seq, containerClass, showStopName = false }: TimeReportProps ) => {
   const { t, i18n } = useTranslation()
   const { db: {routeList, stopList}, etaFormat } = useContext(AppContext) 
   const etas = useEtas(`${routeId}/${seq}`)
@@ -23,7 +30,7 @@ const TimeReport = ( { routeId, seq, containerClass, showStopName = false } ) =>
   const displayMsg = (eta) => {
     if ( !eta ) return ''
     else {
-      const waitTime = Math.round(((new Date(eta)) - (new Date())) / 60 / 1000)
+      const waitTime = Math.round(((new Date(eta)).getTime() - (new Date()).getTime()) / 60 / 1000)
       if ( etaFormat === 'exact' && Number.isInteger(waitTime) ) {
         return eta.substr(11,5)
       }

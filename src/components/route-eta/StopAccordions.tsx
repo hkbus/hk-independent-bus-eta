@@ -11,15 +11,20 @@ import {
 } from '@mui/material'
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder'
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
 import { getDistance, toProperCase, triggerShare } from '../../utils'
 import TimeReport from './TimeReport'
 import ShareIcon from '@mui/icons-material/Share';
 
+interface RouteParams {
+  id: string,
+  panel: string
+}
+
 const StopAccordions = ({expanded, setExpanded, handleChange}) => {
-  const { id, panel } = useParams()
+  const { id, panel } = useParams<RouteParams>()
   
   const { 
     AppTitle,
@@ -61,30 +66,28 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useStyles()
-
   const toggleSavedRoute = (key) => updateSavedEtas(key)
 
   return (
-    <Box className={!energyMode ? "stopAccordions-boxContainer" : "stopAccordions-boxContainer-energy"}>
+    <StopAccordionsBox className={!energyMode ? classes.boxContainer : classes.boxContainerEnergy}>
       {
         getStops(co, stops).map((stop, idx) => (
-          <Accordion 
+          <StopAccordion 
             key={'stop-'+idx} 
             expanded={expanded === idx}
             onChange={handleChange(idx)}
             TransitionProps={{unmountOnExit: true}}
             ref={el => {accordionRef.current[idx] = el}}
-            classes={{root: "accordion-root", expanded: 'accordion-expanded'}}
+            classes={{root: classes.accordionRoot, expanded: classes.accordionExpanded}}
           >
-            <AccordionSummary classes={{root: "accordionSummary-root", content: "accordionSummary-content", expanded: "accordionSummary-expanded"}}>
+            <StopAccordionSummary classes={{root: classes.accordionSummaryRoot, content: classes.accordionSummaryContent, expanded: classes.accordionSummaryExpanded}}>
               <Typography component="h3" variant="body1">{idx+1}. {toProperCase(stopList[stop].name[i18n.language])}</Typography>
               <Typography variant='caption'>
                 {fares && fares[idx] ? t('車費')+': $'+fares[idx] : ''}
                 {faresHoliday && faresHoliday[idx] ? '　　　　'+t('假日車費')+': $'+faresHoliday[idx] : ''}
               </Typography>
-            </AccordionSummary>
-            <AccordionDetails classes={{root: "accordionDetails-root"}}>
+            </StopAccordionSummary>
+            <StopAccordionDetails classes={{root: classes.accordionDetailsRoot}}>
               <TimeReport 
                 routeId={`${id.toUpperCase()}`}
                 seq={idx}
@@ -113,8 +116,8 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
                   {savedEtas.includes(`${id.toUpperCase()}/${idx}`) ? <StarIcon/> : <StarBorderIcon />}
                 </IconButton>
               </div>
-            </AccordionDetails>
-          </Accordion>
+            </StopAccordionDetails>
+          </StopAccordion>
         ))
       }
       <Snackbar
@@ -126,7 +129,7 @@ const StopAccordions = ({expanded, setExpanded, handleChange}) => {
         }}
         message={t('鏈結已複製到剪貼簿')}
       />
-    </Box>
+    </StopAccordionsBox>
   );
 }
 
@@ -141,51 +144,71 @@ const getStops = (co, stops) => {
 
 export default StopAccordions
 
-const useStyles = makeStyles(theme => ({
-  '@global': {
-    '.accordion-root': {
-      border: '1px solid rgba(0, 0, 0, .125)',
-      boxShadow: 'none'
+const PREFIX = 'stopAccordions'
+
+const classes = {
+  boxContainer: `${PREFIX}-boxContainer`,
+  boxContainerEnergy: `${PREFIX}-boxContainerEnergy`,
+  accordionRoot: `${PREFIX}-accordion-root`,
+  accordionExpanded: `${PREFIX}-accordion-expanded`,
+  accordionSummaryRoot: `${PREFIX}-summary-root`,
+  accordionSummaryContent: `${PREFIX}-summary-content`,
+  accordionSummaryExpanded: `${PREFIX}-summary-expanded`,
+  accordionDetailsRoot: `${PREFIX}-details-root`
+}
+
+const StopAccordionsBox = styled(Box)(({theme}) => ({
+  [`&.${classes.boxContainer}`]: {
+    overflowY: 'scroll',
+    height: 'calc(100vh - 30vh - 47px)'
+  },
+  [`&.${classes.boxContainerEnergy}`]: {
+    overflowY: 'scroll',
+    height: 'calc(100vh - 47px)'
+  },
+}))
+
+const StopAccordion = styled(Accordion)(({theme}) => ({
+  [`&.${classes.accordionRoot}`]: {
+    border: '1px solid rgba(0, 0, 0, .125)',
+    boxShadow: 'none',
+    '&:not(:last-child)': {
+      borderBottom: 0
     },
-    '.accordion-root:not(:last-child)': {
-      borderBottom: 0,
+    '&:before': {
+      display: 'none'
     },
-    '.accordion-root:before': {
-      display: 'none',
-    },
-    '.accordion-root.accordion-expanded': {
-      margin: 'auto',
-    },
-    '.accordionSummary-root': {
-      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
-      borderBottom: '1px solid rgba(0, 0, 0, .125)',
-      marginBottom: -1,
-      minHeight: 44
-    },
-    '.accordionSummary-root.accordionSummary-expanded': {
-      minHeight: 44
-    },
-    '.accordionSummary-content': {
-      margin: '8px 0',
-      flexDirection: 'column'
-    },
-    '.accordionSummary-content.accordionSummary-expanded': {
-      margin: '8px 0'
-    },
-    '.accordionDetails-root': {
-      padding: theme.spacing(2),
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      justifyContent: 'space-between',
-      display: 'flex'
-    },
-    ".stopAccordions-boxContainer": {
-      overflowY: 'scroll',
-      height: 'calc(100vh - 30vh - 47px)'
-    },
-    ".stopAccordions-boxContainer-energy": {
-      overflowY: 'scroll',
-      height: 'calc(100vh - 47px)'
+    [`&.${classes.accordionExpanded}`]: {
+      margin: 'auto'
     }
   }
+}))
+
+const StopAccordionSummary = styled(AccordionSummary)(({theme}) => ({
+  [`&.${classes.accordionSummaryRoot}`]: {
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : 'rgba(0, 0, 0, .03)',
+    borderBottom: '1px solid rgba(0, 0, 0, .125)',
+    marginBottom: -1,
+    minHeight: 44,
+    [`&.${classes.accordionSummaryExpanded}`]: {
+      minHeight: 44
+    },
+    [`& .${classes.accordionSummaryContent}`]: {
+      margin: '8px 0',
+      flexDirection: 'column',
+      [`&.${classes.accordionSummaryExpanded}`]: {
+        margin: '8px 0'
+      },
+    }
+  },
+}))
+
+const StopAccordionDetails = styled(AccordionDetails)(({theme}) => ({
+  [`&.${classes.accordionDetailsRoot}`]: {
+    padding: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    justifyContent: 'space-between',
+    display: 'flex'
+  },
 }))

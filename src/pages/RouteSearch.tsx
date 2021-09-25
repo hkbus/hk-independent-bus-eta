@@ -1,14 +1,20 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import { Box, CircularProgress, Divider, Paper, Typography } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+import { styled } from '@mui/material/styles'
 import AppContext from '../AppContext'
 import SearchContext from '../SearchContext'
 import { useTranslation } from 'react-i18next'
 import AddressInput from '../components/route-search/AddressInput'
 import SearchResult from '../components/route-search/SearchResult'
 import SearchMap from '../components/route-search/SearchMap'
-import { fetchEtas } from 'hk-bus-eta'
+import { fetchEtas, Eta } from 'hk-bus-eta'
 import { setSeoHeader, getDistance, vibrate } from '../utils'
+
+export type SearchResultType = Array<{
+  routeId: string,
+  on: number,
+  off: number
+}>
 
 const RouteSearch = () => {
   const { t, i18n } = useTranslation()
@@ -23,8 +29,6 @@ const RouteSearch = () => {
     resultIdx, setResultIdx
   } = useContext(SearchContext)
 
-  useStyles()
-
   const worker = useRef(undefined)
   const terminateWorker = () => {
     if ( worker.current ) {
@@ -33,20 +37,20 @@ const RouteSearch = () => {
     }
   }
   
-  const updateRoutes = (routeResults) => {
-    const uniqueRoutes = routeResults.reduce((acc, routeArr) => acc.concat(...routeArr.map(r => [`${r.routeId}/${r.on}`, `${r.routeId}/${r.off}`])), []).filter((v, i, s) => s.indexOf(v) === i)
+  const updateRoutes = (routeResults: SearchResultType[]) => {
+    const uniqueRoutes = routeResults.reduce((acc, routeArr) => acc.concat(...routeArr.map(r => [`${r.routeId}/${r.on}`, `${r.routeId}/${r.off}`])), [] as string[]).filter((v, i, s) => s.indexOf(v) === i)
 
     // check currently available routes by fetching ETA
-    Promise.all(uniqueRoutes.map(routeIdSeq => {
+    Promise.all(uniqueRoutes.map((routeIdSeq): Promise<Eta[]> => {
       const [routeId, seq] = routeIdSeq.split('/')
-      return !navigator.onLine ? new Promise((resolve) => resolve([{eta: 1}])) : fetchEtas({
+      return !navigator.onLine ? new Promise((resolve) => resolve([])) : fetchEtas({
         ...routeList[routeId], 
         seq: parseInt(seq, 10),
         routeStops: routeList[routeId].stops,
         co: Object.keys(routeList[routeId].stops)
     })})).then(etas => 
       // filter out non available route
-      uniqueRoutes.filter((routeId, idx) => etas[idx].length && etas[idx].reduce((acc, eta) => {return acc || eta.eta}, null))
+      uniqueRoutes.filter((routeId, idx) => !navigator.onLine || ( etas[idx].length && etas[idx].reduce((acc, eta) => {return acc || eta.eta}, null)))
     ).then( availableRoutes => {
       setResult(prevResult => [...prevResult,
         // save current available route only
@@ -77,7 +81,7 @@ const RouteSearch = () => {
           })
         })
         // sort route by number of stops
-        .map(routes => ([routes, routes.reduce((sum, route) => sum + route.off - route.on, 0)])) 
+        .map((routes):[SearchResultType, number] => ([routes, routes.reduce((sum, route) => sum + route.off - route.on, 0)])) 
         .sort( (a, b) => a[1] - b[1])
         .map(v => v[0])
       ])
@@ -171,7 +175,7 @@ const RouteSearch = () => {
   }
 
   return (
-    <Paper className={"search-root"} square elevation={0}>
+    <Root className={classes.root} square elevation={0}>
       {!energyMode ? <SearchMap 
         start={locations.start ? locations.start.location : geolocation} 
         end={locations.end ? locations.end.location : null}
@@ -179,7 +183,7 @@ const RouteSearch = () => {
         stopIdx={resultIdx.stopIdx} 
         onMarkerClick={handleMarkerClick}
       /> : null}
-      <div className={"search-input-container"}>
+      <div className={classes.inputContainer}>
       <AddressInput
         value={locations.start}
         placeholder={t("你的位置")}
@@ -193,10 +197,10 @@ const RouteSearch = () => {
         stopList={stopList}
       />
       </div>
-      <Box className={!energyMode ? "search-result-list" : "search-result-list-energy"}>
+      <Box className={!energyMode ? classes.resultList : classes.resultListEnergy}>
         {
           !locations.end ? <RouteSearchDetails /> : (
-          'waiting|rendering'.includes(status) && result.length === 0 ? <CircularProgress size={30} className={"search-route-loading"} /> : (
+          'waiting|rendering'.includes(status) && result.length === 0 ? <CircularProgress size={30} className={classes.routeLoading} /> : (
           'ready|waiting|rendering'.includes( status ) && result.length ? (
             result.map((routes, resIdx) => (
               <SearchResult 
@@ -211,14 +215,14 @@ const RouteSearch = () => {
           ) : <>{t("找不到合適的巴士路線")}</> ))
         }
       </Box>
-    </Paper>
+    </Root>
   )
 }
 
 const RouteSearchDetails = () => {
   const { t } = useTranslation()
   return (
-    <div className={"search-description"}>
+    <div className={classes.description}>
       <Typography variant="h5">{t('Route Search header')}</Typography>
       <Divider />
       <Typography variant="subtitle1">{t('Route Search description')}</Typography>
@@ -233,33 +237,42 @@ const RouteSearchDetails = () => {
 
 export default RouteSearch
 
-const useStyles = makeStyles(theme => ({
-  "@global": {
-    ".search-root": {
-      background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white',
-      height: 'calc(100vh - 125px)',
-      overflowY: 'hidden',
-      textAlign: 'left'
-    },
-    '.search-input-container': {
-      marginTop: '2%',
-      padding: '0% 2%' 
-    },
-    ".search-description": {
-      textAlign: "left",
-      marginTop: '5%',
-      padding: '5%'
-    },
-    ".search-result-list": {
-      overflowY: 'scroll',
-      height: 'calc(100% - 30vh - 76px)'
-    },
-    ".search-result-list-energy": {
-      overflowY: 'scroll',
-      height: 'calc(100% - 76px)'
-    },
-    ".search-route-loading": {
-      margin: '10%'
-    }
+const PREFIX = 'search'
+
+const classes = {
+  root: `${PREFIX}-root`,
+  inputContainer: `${PREFIX}-input-container`,
+  description: `${PREFIX}-description`,
+  resultList: `${PREFIX}-result-list`,
+  resultListEnergy: `${PREFIX}-result-list-energy`,
+  routeLoading: `${PREFIX}-route-loading`
+}
+
+const Root = styled(Paper)(({theme}) => ({
+  [`&.${classes.root}`]: {
+    background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white',
+    height: 'calc(100vh - 125px)',
+    overflowY: 'hidden',
+    textAlign: 'left'
+  },
+  '.search-input-container': {
+    marginTop: '2%',
+    padding: '0% 2%' 
+  },
+  ".search-description": {
+    textAlign: "left",
+    marginTop: '5%',
+    padding: '5%'
+  },
+  ".search-result-list": {
+    overflowY: 'scroll',
+    height: 'calc(100% - 30vh - 76px)'
+  },
+  ".search-result-list-energy": {
+    overflowY: 'scroll',
+    height: 'calc(100% - 76px)'
+  },
+  ".search-route-loading": {
+    margin: '10%'
   }
 }))

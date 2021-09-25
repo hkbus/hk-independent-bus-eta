@@ -13,8 +13,8 @@ import {
   Route,
   useRouteMatch,
 } from "react-router-dom";
-import { Container, CssBaseline } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import { Container, CssBaseline, PaletteMode } from "@mui/material";
+import { styled } from '@mui/material/styles';
 import AppContext from "./AppContext";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
@@ -54,14 +54,13 @@ const PageSwitch = () => {
 const App = () => {
   const { colorMode } = useContext(AppContext);
   const theme = useMemo(() => {
-    return colorMode === "dark" ? getDarkTheme() : getlightTheme();
+    return createTheme(getThemeTokens(colorMode), [colorMode])
   }, [colorMode]);
-  useStyles();
 
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <Container maxWidth="xs" disableGutters className={"AppContainer"}>
+        <AppContainer maxWidth="xs" disableGutters className={classes.container}>
           <Router>
             <Route exact path="/">
               <Redirect to="/zh" />
@@ -73,7 +72,7 @@ const App = () => {
               <Footer />
             </Route>
           </Router>
-        </Container>
+        </AppContainer>
       </ThemeProvider>
     </StyledEngineProvider>
   );
@@ -81,63 +80,58 @@ const App = () => {
 
 export default App;
 
-const useStyles = makeStyles((theme) => ({
-  "@global": {
-    ".AppContainer": {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      height: "100%",
-    },
+const PREFIX = 'app'
+
+const classes = {
+  container: `${PREFIX}-container`
+}
+
+const AppContainer = styled(Container)(({theme}) => ({
+  [`&.${classes.container}`]: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    height: "100%",
   },
-}));
+}))
 
-const getlightTheme = () =>
-  createTheme({
-    typography: {
-      fontFamily: "Noto Sans TC, Chivo, sans-serif",
-    },
-    palette: {
-      mode: "light",
-      background: {
-        default: "#fedb00",
-      },
-      primary: {
-        main: "#fedb00", // yellow
-      },
-    },
-    overrides: {
-      MuiCssBaseline: {
-        "@global": {
-          html: {
-            userSelect: "none",
-          },
+const getThemeTokens = (mode: PaletteMode) => ({
+  typography: {
+    fontFamily: "Noto Sans TC, Chivo, sans-serif",
+  },
+  palette: {
+    mode,
+    ...(mode === 'light' 
+      ? {
+        // light mode
+        background: {
+          default: "#fedb00",
         },
-      },
-    },
-  }, ["light"]);
-
-const getDarkTheme = () =>
-  createTheme({
-    typography: {
-      fontFamily: "Noto Sans TC, Chivo, sans-serif",
-    },
-    palette: {
-      mode: "dark",
+        primary: {
+          main: "#fedb00", // yellow
+        },
+      }
+    : {
+      //dark mode
       primary: {
         main: "#fedb00", // yellow
       },
       background: {
         default: "#000",
       },
-    },
-    overrides: {
-      MuiCssBaseline: {
-        "@global": {
-          html: {
-            userSelect: "none",
-          },
+    })
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          userSelect: 'none'
         },
-      },
-    },
-  });
+        body: {
+          fontSize: '0.875rem',
+          lineHeight: 1.43
+        }
+      }
+    }
+  }
+});

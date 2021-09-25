@@ -1,10 +1,26 @@
 import React, { useState } from 'react'
+import { Location as GeoLocation } from 'hk-bus-eta'
 
-const SearchContext = React.createContext()
+
+interface SearchContextProps {
+  locations: { start: { location: GeoLocation } | null, end: { location: GeoLocation } | null },
+  status: 'ready' | 'rendering' | 'waiting',
+  result: any[],
+  resultIdx: {
+    resultIdx: number,
+    stopIdx: number[]
+  }
+  setLocations: any,
+  setStatus: any,
+  setResult: any,
+  setResultIdx: any
+}
+
+const SearchContext = React.createContext({} as SearchContextProps)
 
 export const SearchContextProvider = ( props ) => {
   const [locations, setLocations] = useState({ start: null, end: null })
-  const [status, setStatus] = useState("ready")
+  const [status, setStatus] = useState<'ready' | 'rendering' | 'waiting'>("ready")
   const [result, setResult] = useState([])
   const [resultIdx, setResultIdx] = useState({resultIdx: 0, stopIdx: [0, 0]})
 

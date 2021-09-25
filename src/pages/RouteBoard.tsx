@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import AppContext from '../AppContext'
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles'
 import { List } from '@mui/material'
 import { FixedSizeList } from 'react-window'
 import AutoSizer from "react-virtualized-auto-sizer"
@@ -19,7 +19,6 @@ const RouteList = () => {
       (stops[co[0]] == null || stops[co[0]].length > 0)
   )
   const { t, i18n } = useTranslation()
-  useStyles()
 
   useEffect(() => {
     setSeoHeader ({
@@ -29,22 +28,22 @@ const RouteList = () => {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language])
-
+  
   const itemData = createItemData(targetRouteList)
   if (navigator.userAgent === 'prerendering') {
     return (
-      <List className={'routeBoard-prerenderList'}>
+      <PrerenderList className={classes.prerenderList}>
         {
           targetRouteList.map((data, idx) => (
             <RouteRow data={itemData} key={`route-${idx}`} index={idx} style={null} />
           ))
         }
-      </List>
+      </PrerenderList>
     )
   }
 
   return (
-    <div className={"routeBoard-list"}>
+    <Root className={classes.list}>
       <AutoSizer>
         {({height, width}) => (
           <FixedSizeList
@@ -53,13 +52,13 @@ const RouteList = () => {
             itemSize={56}
             width={width}
             itemData={itemData}
-            className={"routeBoard-root"}
+            className={classes.root}
           >
             {RouteRow}
           </FixedSizeList>
         )}
       </AutoSizer>
-    </div>
+    </Root>
   )
 }
 
@@ -74,20 +73,29 @@ const RouteBoard = () => {
 
 export default RouteBoard
 
-const useStyles = makeStyles(theme => ({
-  "@global": {
-    ".routeBoard-root": {
-      background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white', 
-    },
-    ".routeBoard-list": {
-      flex: '1 1 auto'
-    },
-    '.routeBoard-prerenderList': {
-      height: '100%',
-      overflowY: 'scroll',
-      '& a': {
-        textDecoration: 'none'
-      }
+const PREFIX = 'routeBoard'
+
+const classes = {
+  root: `${PREFIX}-root`,
+  list: `${PREFIX}-list`,
+  prerenderList: `${PREFIX}-prerenderList`
+}
+
+const PrerenderList = styled('div')(({theme}) => ({
+  [`&.${classes.prerenderList}`]: {
+    height: '100%',
+    overflowY: 'scroll',
+    '& a': {
+      textDecoration: 'none'
     }
+  }
+}))
+
+const Root = styled(List)(({theme}) => ({
+  [`&.${classes.root}`]: {
+    background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white', 
+  },
+  [`&.${classes.list}`]: {
+    flex: '1 1 auto'
   }
 }))

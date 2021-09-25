@@ -11,7 +11,7 @@ import {
   Snackbar,
   Typography
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import BuildIcon from '@mui/icons-material/Build'
 import TimerIcon from '@mui/icons-material/Timer'
@@ -50,7 +50,6 @@ const Settings = () => {
 
   const { t, i18n } = useTranslation()
   const donationId = Math.floor( Math.random() * Donations.length )
-  useStyles()
 
   useEffect(() => {
     setSeoHeader({
@@ -63,7 +62,7 @@ const Settings = () => {
   }, [updateTime, i18n.language])
 
   return (
-    <Paper className={"settings-root"} square elevation={0}>
+    <Root className={classes.root} square elevation={0}>
       <Typography component="h1" style={visuallyHidden}>{`${t('設定')} - ${t(AppTitle)}`}</Typography>
       <List>
         {window.matchMedia('(display-mode: standalone)').matches ? null : <ListItem
@@ -249,7 +248,7 @@ const Settings = () => {
           onClick={() => {vibrate(1)}}
         >
           <ListItemAvatar>
-            <Avatar className={"settings-icon"} src="/logo128.png" alt="App Logo"></Avatar>
+            <Avatar className={classes.icon} src="/logo128.png" alt="App Logo"></Avatar>
           </ListItemAvatar>
           <ListItemText 
             primary={<ListPrimaryText>{t("圖標來源")}</ListPrimaryText>} 
@@ -295,7 +294,7 @@ const Settings = () => {
         open={isOpenInstallDialog}
         handleClose={() => setIsOpenInstallDialog(false)}
       />
-    </Paper>
+    </Root>
   )
 }
 
@@ -307,18 +306,23 @@ const ListPrimaryText = ({children}) => {
 
 export default Settings
 
-const useStyles = makeStyles ( theme => ({
-  "@global": {
-    ".settings-root": {
-      background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white',
-      height: 'calc(100vh - 120px)',
-      overflowY: "scroll",
-      '& .MuiAvatar-colorDefault': {
-        color: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white'
-      }
-    },
-    ".settings-icon": {
-      filter: theme.palette.mode === 'dark' ? 'grayscale(100%) brightness(0.5)' : 'none'
+const PREFIX = 'settings'
+
+const classes = {
+  root: `${PREFIX}-root`,
+  icon: `${PREFIX}-icon`
+}
+
+const Root = styled(Paper)(({theme}) => ({
+  [`&.${classes.root}`]: {
+    background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white',
+    height: 'calc(100vh - 120px)',
+    overflowY: "scroll",
+    '& .MuiAvatar-colorDefault': {
+      color: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white'
     }
+  }, 
+  [`& .${classes.icon}`]: {
+    filter: theme.palette.mode === 'dark' ? 'grayscale(100%) brightness(0.5)' : 'none'
   }
 }))

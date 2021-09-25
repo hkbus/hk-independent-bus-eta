@@ -7,14 +7,23 @@ import {
 } from '@mui/material'
 import { Link, useHistory } from 'react-router-dom'
 import { vibrate } from '../../utils'
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import AppContext from '../../AppContext'
 import { useTranslation } from 'react-i18next'
 import SuccinctEtas from './SuccinctEtas'
 import { getDistance, toProperCase } from '../../utils'
 import RouteNo from '../route-list/RouteNo'
+import { Location } from 'hk-bus-eta';
 
-const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
+interface DistAndFareProps {
+  name: string,
+  location: Location,
+  fares: string[] | null,
+  faresHoliday: string[] | null,
+  seq: number
+}
+
+const DistAndFare = ({name, location, fares, faresHoliday, seq}: DistAndFareProps) => {
   const { t } = useTranslation ()
   const { geoPermission, geolocation } = useContext ( AppContext )
   const _fareString = fares && fares[seq] ? '$' + fares[seq] : '';
@@ -22,23 +31,24 @@ const DistAndFare = ({name, location, fares, faresHoliday, seq}) => {
   const fareString = [_fareString, _fareHolidayString].filter(v => v).join(', ')
   
   if ( geoPermission !== 'granted' || location.lat === 0 ) {
-    return name + '　' + ( fareString ? "("+fareString+")" : "" )
+    return <>{name + '　' + ( fareString ? "("+fareString+")" : "" )}</>
   }
   
-  return name + ' - '+getDistance(location, geolocation).toFixed(0)+t('米')+
-         '　' + ( fareString ? "("+fareString+")" : "" )
-      
+  return (
+    <>
+      {name + ' - '+getDistance(location, geolocation).toFixed(0)+t('米')+
+         '　' + ( fareString ? "("+fareString+")" : "" )}
+    </>
+  )
 }
 
-const SuccinctTimeReport = ({routeId} ) => {
+const SuccinctTimeReport = ({routeId}: {routeId: string} ) => {
   const { t, i18n } = useTranslation()
   const { db: {routeList, stopList} } = useContext ( AppContext )
   const [ routeNo ] = routeId.split('-')
   const [ routeKey, seq ] = routeId.split('/')
   const { co, stops, dest, fares, faresHoliday } = routeList[routeKey] || DefaultRoute
   const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DefaultStop
-  
-  useStyles()
 
   const history = useHistory()
   const handleClick = (e) => {
@@ -51,19 +61,20 @@ const SuccinctTimeReport = ({routeId} ) => {
   
   return (
     <>
-    <ListItem
+    <RootListItem
+      // @ts-ignore
       component={Link}
       to={`/${i18n.language}/route/${routeKey.toLowerCase()}`}
       onClick={handleClick}
-      className={"succinctTimeReport-listItem"}
+      className={classes.listItem}
     >
       <ListItemText 
         primary={<RouteNo routeNo={routeNo} />} 
-        className={"succinctTimeReport-route"}
+        className={classes.route}
       />
       <ListItemText 
-        primary={<Typography component="h3" variant="body1" color="textPrimary" className={"succinctTimeReport-fromToWrapper"}>
-          <span className={"succinctTimeReport-fromToText"}>{t('往')}</span>
+        primary={<Typography component="h3" variant="body1" color="textPrimary" className={classes.fromToWrapper}>
+          <span className={classes.fromToText}>{t('往')}</span>
           <b>{toProperCase(dest[i18n.language])}</b>
         </Typography>}
         secondary={
@@ -79,10 +90,10 @@ const SuccinctTimeReport = ({routeId} ) => {
           component: "h4", 
           variant: "subtitle2"
         }}
-        className={"succinctTimeReport-routeDest"}
+        className={classes.routeDest}
       />
       <SuccinctEtas routeId={routeId} />
-    </ListItem>
+    </RootListItem>
     <Divider />
     </>
   )
@@ -102,25 +113,33 @@ const getStops = (co, stops) => {
   }
 }
 
-const useStyles = makeStyles(theme => ({
-  "@global":{
-    ".succinctTimeReport-listItem": {
-      padding: '4px 16px',
-      color: 'rgba(0,0,0,0.87)'
-    },
-    ".succinctTimeReport-route": {
-      width: '15%'
-    },
-    ".succinctTimeReport-routeDest": {
-      width: '65%'
-    },
-    ".succinctTimeReport-fromToWrapper": {
-      display: 'flex',
-      alignItems: 'baseline',
-    },
-    ".succinctTimeReport-fromToText": {
-      fontSize: '0.85rem',
-      marginRight: theme.spacing(0.5)
-    }
+const PREFIX = 'succinctTimeReport'
+
+const classes = {
+  listItem: `${PREFIX}-listItem`,
+  route: `${PREFIX}-route`,
+  routeDest: `${PREFIX}-routeDest`,
+  fromToWrapper: `${PREFIX}-fromToWrapper`,
+  fromToText: `${PREFIX}-fromToText`
+}
+
+const RootListItem = styled(ListItem)(({theme}) => ({  
+  [`&.${classes.listItem}`]: {
+    padding: '4px 16px',
+    color: 'rgba(0,0,0,0.87)'
+  },
+  [`& .${classes.route}`]: {
+    width: '15%'
+  },
+  [`& .${classes.routeDest}`]: {
+    width: '65%'
+  },
+  [`& .${classes.fromToWrapper}`]: {
+    display: 'flex',
+    alignItems: 'baseline',
+  },
+  [`& .${classes.fromToText}`]: {
+    fontSize: '0.85rem',
+    marginRight: theme.spacing(0.5)
   }
 }))

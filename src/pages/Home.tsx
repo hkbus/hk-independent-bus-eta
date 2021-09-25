@@ -4,13 +4,14 @@ import {
   Paper,
   Typography
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import AppContext from '../AppContext'
 import { getDistance, setSeoHeader } from '../utils'
 import SuccinctTimeReport from '../components/home/SuccinctTimeReport'
 import { useTranslation } from 'react-i18next'
 import throttle from 'lodash.throttle'
+import { Location, RouteList, StopListEntry, StopList } from 'hk-bus-eta'
 
 const Home = () => {
   const { 
@@ -48,10 +49,8 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geolocation])
 
-  useStyles()
-
   return useMemo(() => (
-    <Paper className={"home-root"} square elevation={0}>
+    <Root className={classes.root} square elevation={0}>
       <Typography component="h1" style={visuallyHidden}>{`${t('Dashboard')} - ${t(AppTitle)}`}</Typography>
       <Typography component="h2" style={visuallyHidden}>{t('home-page-description')}</Typography>
       <List disablePadding>
@@ -61,32 +60,33 @@ const Home = () => {
         ))
       }
       </List>
-    </Paper>
+    </Root>
     // eslint-disable-next-line
   ), [selectedRoutes])
 }
 
 export default Home
 
-const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeList}) => {
+const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeList}: 
+        {hotRoute: Record<string, number>, savedEtas: string[], geolocation: Location, stopList: StopList, routeList: RouteList }): string => {
   const selectedRoutes = savedEtas.concat(
     Object.entries(hotRoute).filter(([route, count]) => count > 5)
-    .sort((a,b) => b[1] - a[1])
+    .sort((a, b) => b[1] - a[1])
     .map(([routeId]) => routeId)
   ).filter((routeId, index, self) => self.indexOf(routeId) === index)
-  .map( routeUrl => {
+  .map( (routeUrl):[string, number] => {
     const [routeId, stopIdx] = routeUrl.split('/') 
     // TODO: taking the longest stop array to avoid error, should be fixed in the database
-    const stop = stopList[Object.values(routeList[routeId].stops).sort((a,b) => b.length - a.length)[0][stopIdx]] 
+    const stop = stopList[Object.values(routeList[routeId].stops).sort((a, b) => b.length - a.length)[0][stopIdx]] 
     return [routeUrl, getDistance(geolocation, stop.location)]
   })
   .sort((a, b)  => a[1] - b[1])
   .map(v => v[0])
   .slice(0,20)
   
-  const nearbyRoutes = Object.entries(stopList).map(stop =>
+  const nearbyRoutes = Object.entries(stopList).map((stop:[string, StopListEntry]): [string, StopListEntry, number] =>
     // potentially could be optimized by other distance function
-    stop.concat(getDistance(stop[1].location, geolocation))
+    [...stop, getDistance(stop[1].location, geolocation)]
   ).filter(stop => 
     // keep only nearby 1000m stops
     stop[2] < 1000
@@ -111,14 +111,17 @@ const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeLis
     .slice(0,20).join('|')
 }
 
-const useStyles = makeStyles ( theme => ({
-  "@global": {
-    ".home-root": {
-      background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white',
-      height: 'calc(100vh - 125px)',
-      overflowY: 'scroll',
-      textAlign: 'center'
-    }
+const PREFIX = 'home'
+
+const classes = {
+  root: `${PREFIX}-root`
+}
+
+const Root = styled(Paper)(({theme}) => ({
+  [`&.${classes.root}`]: {
+    background: theme.palette.mode === 'dark' ? theme.palette.background.default : 'white',
+    height: 'calc(100vh - 125px)',
+    overflowY: 'scroll',
+    textAlign: 'center'
   }
 }))
-
