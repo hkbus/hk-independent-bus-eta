@@ -1,24 +1,7 @@
 import { Drawer, List, ListItem, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next'
-
-const ServiceIds = {
-  31: "星期一至五",
-  287: "星期一至五",
-  415: "星期一至五",
-  63: "星期一至六",
-  319: "星期一至六",
-  447: "星期一至六",
-  416: "星期六至日",
-  480: "星期六至日",
-  266: "星期二至四",
-  271: "星期一至四",
-  272: "星期五",
-  288: "星期六",
-  320: "星期日及公眾假期",
-  448: "星期日及公眾假期",
-  511: "所有日子"
-}
+import { ServiceIds } from '../../timetable'
 
 const TimetableDrawer = ({freq, open, onClose}) => {
   const { t } = useTranslation()

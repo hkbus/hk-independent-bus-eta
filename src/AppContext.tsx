@@ -25,6 +25,10 @@ interface AppState {
   hotRoute: Record<string, number>;
   savedEtas: string[];
   /**
+   * filter routes by route schedule against time
+   */
+  isRouteFilter: boolean;
+  /**
    * possible Char for RouteInputPad
    */
   possibleChar: string[];
@@ -56,6 +60,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
     geoPermission: AppState["geoPermission"],
     deniedCallback?: () => void
   ) => void;
+  toggleRouteFilter: () => void;
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
   toggleEnergyMode: () => void;
@@ -139,6 +144,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       hotRoute: isNumberRecord(hotRoute) ? hotRoute : {},
       savedEtas:
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
+      isRouteFilter: !!JSON.parse(localStorage.getItem('isRouteFilter')) || false,
       possibleChar: getPossibleChar(searchRoute, routeList) || [],
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
       colorMode: isColorMode(devicePreferColorScheme) ? devicePreferColorScheme : 'light',
@@ -236,6 +242,17 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     },
     [setGeoPermission, updateGeolocation]
   );
+
+  const toggleRouteFilter = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prev = state.isRouteFilter
+        const isRouteFilter = prev ? false : true
+        localStorage.setItem('isRouteFilter', JSON.stringify(isRouteFilter))
+        state.isRouteFilter = isRouteFilter
+      })
+    )
+  }, [])
 
   const toggleEtaFormat = useCallback(() => {
     setStateRaw(
@@ -365,6 +382,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         // settings
         renewDb,
         updateGeoPermission,
+        toggleRouteFilter,
         toggleEtaFormat,
         toggleColorMode,
         toggleEnergyMode,

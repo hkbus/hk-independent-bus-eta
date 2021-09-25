@@ -3,7 +3,7 @@ import { decompress as decompressJson } from 'lzutf8'
 import { decompress as _decompressJson } from 'compressed-json'
 
 // implant the DB Context logic into code to avoid loading error
-export const DB_CONTEXT_VERSION = '1.1.0'
+export const DB_CONTEXT_VERSION = '1.2.0'
 
 const decompressJsonString = (txt) => {
   try {
@@ -102,16 +102,12 @@ export const fetchDbFunc = (forceRenew = false) => {
     return new Promise((resolve) => {
       resolve({
         schemaVersion: '', versionMd5: '',
-        db: {
-          routeList: {}, 
-          stopList: {}, 
-          stopMap: {}
-        }
+        ...initDb
       })
     })
   });
 }
 
 // actually start fetching DB once the script is runned 
-export const initDb = {db: {routeList: {}, stopList: {}, stopMap: {}}}
+export const initDb = {db: {holidays: [] as string[], routeList: {}, stopList: {}, stopMap: {}}}
 

@@ -12,22 +12,26 @@ import SuccinctTimeReport from '../components/home/SuccinctTimeReport'
 import { useTranslation } from 'react-i18next'
 import throttle from 'lodash.throttle'
 import { Location, RouteList, StopListEntry, StopList } from 'hk-bus-eta'
+import { isHoliday, isRouteAvaliable } from '../timetable'
 
 const Home = () => {
   const { 
     AppTitle, geolocation,
-    hotRoute, savedEtas, db: {routeList, stopList}
+    hotRoute, savedEtas, db: {holidays, routeList, stopList}, isRouteFilter
   } = useContext ( AppContext )
   const { t, i18n } = useTranslation()
-
+  const isTodayHoliday = isHoliday(holidays, new Date())
+  
   // selectedRoutes is a '|' joined string instead of array for useMemo comparison
   const [selectedRoutes, setSelectedRoute] = useState(getSelectedRoutes({
-    geolocation, hotRoute, savedEtas, routeList, stopList
+    geolocation, hotRoute, savedEtas, routeList, stopList, isRouteFilter, isTodayHoliday
   }))
+
+  
   
   const throttledUpdateRoutes = useRef(throttle(newGeolocation => {
     const _selectedRoutes = getSelectedRoutes({
-      geolocation: newGeolocation, hotRoute, savedEtas, routeList, stopList
+      geolocation: newGeolocation, hotRoute, savedEtas, routeList, stopList, isRouteFilter, isTodayHoliday
     })
     if ( _selectedRoutes !== selectedRoutes ) {
       setSelectedRoute(_selectedRoutes)
@@ -67,8 +71,8 @@ const Home = () => {
 
 export default Home
 
-const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeList}: 
-        {hotRoute: Record<string, number>, savedEtas: string[], geolocation: Location, stopList: StopList, routeList: RouteList }): string => {
+const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeList, isRouteFilter, isTodayHoliday}: 
+        {hotRoute: Record<string, number>, savedEtas: string[], geolocation: Location, stopList: StopList, routeList: RouteList, isRouteFilter: boolean, isTodayHoliday: boolean }): string => {
   const selectedRoutes = savedEtas.concat(
     Object.entries(hotRoute).filter(([route, count]) => count > 5)
     .sort((a, b) => b[1] - a[1])
@@ -107,6 +111,10 @@ const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeLis
   return selectedRoutes
     .concat(nearbyRoutes)
     .filter( (v, i, s) => s.indexOf(v) === i ) // uniqify
+    .filter( ( routeUrl ) => {
+      const [routeId, ] = routeUrl.split('/')
+      return !isRouteFilter || isRouteAvaliable(routeList[routeId].freq, isTodayHoliday)
+    } )
     .concat(Array(20).fill('')) // padding
     .slice(0,20).join('|')
 }

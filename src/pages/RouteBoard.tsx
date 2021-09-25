@@ -9,15 +9,17 @@ import RouteInputPad from '../components/route-list/RouteInputPad'
 import RouteRow from '../components/route-list/RouteRow'
 import { useTranslation } from 'react-i18next'
 import { setSeoHeader } from '../utils'
+import { isHoliday, isRouteAvaliable } from '../timetable'
 
 const createItemData = memorize((routeList) => ({routeList}))
 
 const RouteList = () => {
-  const { AppTitle, db: {routeList}, searchRoute } = useContext ( AppContext )
+  const { AppTitle, db: { holidays, routeList }, searchRoute, isRouteFilter } = useContext ( AppContext )
+  const isTodayHoliday = isHoliday(holidays, new Date())
   const targetRouteList = Object.entries(routeList).filter(
     ([routeNo, {stops, co}]) => routeNo.startsWith(searchRoute.toUpperCase()) && 
       (stops[co[0]] == null || stops[co[0]].length > 0)
-  )
+  ).filter(([routeNo, {freq}]) => !isRouteFilter || isRouteAvaliable(freq, isTodayHoliday) )
   const { t, i18n } = useTranslation()
 
   useEffect(() => {

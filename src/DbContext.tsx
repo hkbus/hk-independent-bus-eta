@@ -23,6 +23,7 @@ interface DbProviderProps {
 
 const getInitialDB = (): DatabaseType => {
   return {
+    holidays: initDb.db.holidays,
     routeList: initDb.db.routeList,
     stopList: initDb.db.stopList,
     stopMap: initDb.db.stopMap,
@@ -40,11 +41,12 @@ export const DbProvider = ({ children }: DbProviderProps) => {
   const [db, setDb] = useState(getInitialDB);
 
   const loadData = ({
-    db: { routeList, stopList, stopMap },
+    db: { holidays, routeList, stopList, stopMap },
     versionMd5,
     schemaVersion,
   }) => {
     setDb({
+      holidays,
       routeList,
       stopList,
       stopMap,

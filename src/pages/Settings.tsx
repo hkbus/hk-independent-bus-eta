@@ -12,24 +12,28 @@ import {
   Typography
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import GetAppIcon from '@mui/icons-material/GetApp'
-import BuildIcon from '@mui/icons-material/Build'
-import TimerIcon from '@mui/icons-material/Timer'
-import LocationOnIcon from '@mui/icons-material/LocationOn'
-import LocationOffIcon from '@mui/icons-material/LocationOff'
+import {
+  GetApp as GetAppIcon,
+  Build as BuildIcon,
+  Timer as TimerIcon,
+  LocationOn as LocationOnIcon,
+  LocationOff as LocationOffIcon,
+  MonetizationOn as MonetizationOnIcon,
+  DataUsage as DataUsageIcon,
+  Battery20 as Battery20Icon,
+  BatteryStd as BatteryStdIcon,
+  Delete as DeleteIcon,
+  GitHub as GitHubIcon,
+  Share as ShareIcon,
+  Telegram as TelegramIcon,
+  Brightness7 as Brightness7Icon,
+  NightsStay as NightsStayIcon,
+  AllInclusive as AllInclusiveIcon,
+  FilterAlt as FilterAltIcon
+} from '@mui/icons-material'
 import { visuallyHidden } from '@mui/utils'
 import { useTranslation } from 'react-i18next'
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
-import DataUsageIcon from '@mui/icons-material/DataUsage'
-import Battery20Icon from '@mui/icons-material/Battery20'
-import BatteryStdIcon from '@mui/icons-material/BatteryStd'
-import DeleteIcon from '@mui/icons-material/Delete'
-import GitHubIcon from '@mui/icons-material/GitHub'
-import ShareIcon from '@mui/icons-material/Share'
-import TelegramIcon from '@mui/icons-material/Telegram'
 import { vibrate, setSeoHeader, triggerShare } from '../utils'
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import NightsStayIcon from '@mui/icons-material/NightsStay';
 import InstallDialog from '../components/settings/InstallDialog'
 import Donations from '../Donations'
 
@@ -39,6 +43,7 @@ const Settings = () => {
     db: {schemaVersion, versionMd5, updateTime}, renewDb,
     geoPermission, updateGeoPermission,
     resetUsageRecord,
+    isRouteFilter, toggleRouteFilter,
     etaFormat, toggleEtaFormat,
     colorMode, toggleColorMode,
     energyMode, toggleEnergyMode
@@ -91,6 +96,7 @@ const Settings = () => {
             secondaryTypographyProps={{component: 'h3', variant: 'body2'}}
           />
         </ListItem>
+        <Divider />
         <ListItem
           button
           onClick={() => {
@@ -126,6 +132,21 @@ const Settings = () => {
           <ListItemText 
             primary={t("黑夜模式")} 
             secondary={t(colorMode === 'dark' ? '開啟' : '關閉')} 
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            vibrate(1)
+            toggleRouteFilter()
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>{isRouteFilter ? <FilterAltIcon />: <AllInclusiveIcon />}</Avatar>
+          </ListItemAvatar>
+          <ListItemText 
+            primary={t("路線篩選")} 
+            secondary={t(isRouteFilter ? '只顯示現時路線' : '顯示所有路線')} 
           />
         </ListItem>
         <ListItem
