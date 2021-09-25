@@ -71,8 +71,13 @@ const Home = () => {
 
 export default Home
 
+<<<<<<< HEAD:src/pages/Home.tsx
 const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeList, isRouteFilter, isTodayHoliday}: 
         {hotRoute: Record<string, number>, savedEtas: string[], geolocation: Location, stopList: StopList, routeList: RouteList, isRouteFilter: boolean, isTodayHoliday: boolean }): string => {
+=======
+const getSelectedRoutes = ({hotRoute, savedEtas, geolocation, stopList, routeList}: 
+        {hotRoute: Record<string, number>, savedEtas: string[], geolocation: Location, stopList: StopList, routeList: RouteList }): string => {
+>>>>>>> e865d39eaf1a592f37a0cc0d14d7156ea7eac2df:src/pages/Home.js
   const selectedRoutes = savedEtas.concat(
     Object.entries(hotRoute).filter(([route, count]) => count > 5)
     .sort((a, b) => b[1] - a[1])
