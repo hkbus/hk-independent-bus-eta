@@ -1,6 +1,6 @@
-const reportWebVitals = onPerfEntry => {
+const reportWebVitals = (onPerfEntry) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+    import("web-vitals").then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
       getCLS(onPerfEntry);
       getFID(onPerfEntry);
       getFCP(onPerfEntry);
@@ -10,14 +10,14 @@ const reportWebVitals = onPerfEntry => {
   }
 };
 
-export const sendToGoogleAnalytics = ({name, delta, value, id}) => {
-  if ( !window.gtag ) {
-    console.log('gtag not found')
-    return
+export const sendToGoogleAnalytics = ({ name, delta, value, id }) => {
+  if (!window.gtag) {
+    console.log("gtag not found");
+    return;
   }
   // Assumes the global `gtag()` function exists, see:
   // https://developers.google.com/analytics/devguides/collection/ga4
-  window.gtag('event', name, {
+  window.gtag("event", name, {
     // Built-in params:
     value: delta, // Use `delta` so the value can be summed.
     // Custom params:
@@ -31,6 +31,6 @@ export const sendToGoogleAnalytics = ({name, delta, value, id}) => {
     // debug_info: '...',
     // ...
   });
-}
+};
 
 export default reportWebVitals;

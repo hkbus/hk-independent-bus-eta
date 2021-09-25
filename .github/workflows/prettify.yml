@@ -1,0 +1,16 @@
+name: Prettify
+
+on: [push]
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.0
+        with:
+          dry: True
+          prettier_options: --check src/**/*.{js,jsx,ts,tsx}

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { isEmptyObj } from "./utils";
 import { initDb, fetchDbFunc } from "./db";
 import { compress as compressJson } from "lzutf8";
-import { BusDb } from 'hk-bus-eta'
+import { BusDb } from "hk-bus-eta";
 
 interface DatabaseType extends BusDb {
   schemaVersion: string;
@@ -90,7 +90,4 @@ export const DbProvider = ({ children }: DbProviderProps) => {
 };
 
 export default DbContext;
-export type {
-  DatabaseContextValue,
-  DatabaseType
-};
+export type { DatabaseContextValue, DatabaseType };
