@@ -10,7 +10,7 @@ import { vibrate } from "./utils";
 import DbContext from "./DbContext";
 import type { DatabaseContextValue } from "./DbContext";
 import { produce, freeze, current } from "immer";
-import { Location as GeoLocation } from 'hk-bus-eta'
+import { Location as GeoLocation } from "hk-bus-eta";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -81,7 +81,7 @@ const isGeoPremission = (input: unknown): input is GeoPermission => {
   );
 };
 
-const isGeoLocation  = (input: unknown): input is GeoLocation => {
+const isGeoLocation = (input: unknown): input is GeoLocation => {
   if (input instanceof Object && input !== null && input !== undefined) {
     if (typeof input["lat"] === "number" && typeof input["lng"] === "number") {
       return true;
@@ -101,9 +101,9 @@ const isStrings = (input: unknown[]): input is string[] => {
   return true;
 };
 
-const isColorMode = (input: unknown): input is 'dark' | 'light' => {
-  return input === 'dark' || input === 'light';
-}
+const isColorMode = (input: unknown): input is "dark" | "light" => {
+  return input === "dark" || input === "light";
+};
 
 const isNumberRecord = (input: unknown): input is Record<string, number> => {
   if (input instanceof Object && input !== null && input !== undefined) {
@@ -120,15 +120,15 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const { AppTitle, db, renewDb } = useContext(DbContext);
   const { routeList } = db;
   const getInitialState = (): AppState => {
-    const devicePreferColorScheme = localStorage.getItem('colorMode') || (
-      window.matchMedia &&
+    const devicePreferColorScheme =
+      localStorage.getItem("colorMode") ||
+      (window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
-        : "light"
-    );
+        : "light");
     const searchRoute = "";
     const geoPermission: unknown = localStorage.getItem("geoPermission");
-    const geoLocation : unknown = JSON.parse(
+    const geoLocation: unknown = JSON.parse(
       localStorage.getItem("geolocation")
     );
     const etaFormat: unknown = localStorage.getItem("etaFormat");
@@ -138,16 +138,19 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
       geoPermission: isGeoPremission(geoPermission) ? geoPermission : null,
-      geolocation: isGeoLocation (geoLocation )
-        ? geoLocation 
+      geolocation: isGeoLocation(geoLocation)
+        ? geoLocation
         : defaultGeolocation,
       hotRoute: isNumberRecord(hotRoute) ? hotRoute : {},
       savedEtas:
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
-      isRouteFilter: !!JSON.parse(localStorage.getItem('isRouteFilter')) || false,
+      isRouteFilter:
+        !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
       possibleChar: getPossibleChar(searchRoute, routeList) || [],
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
-      colorMode: isColorMode(devicePreferColorScheme) ? devicePreferColorScheme : 'light',
+      colorMode: isColorMode(devicePreferColorScheme)
+        ? devicePreferColorScheme
+        : "light",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       isVisible: true,
     };
@@ -246,13 +249,13 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const toggleRouteFilter = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
-        const prev = state.isRouteFilter
-        const isRouteFilter = prev ? false : true
-        localStorage.setItem('isRouteFilter', JSON.stringify(isRouteFilter))
-        state.isRouteFilter = isRouteFilter
+        const prev = state.isRouteFilter;
+        const isRouteFilter = prev ? false : true;
+        localStorage.setItem("isRouteFilter", JSON.stringify(isRouteFilter));
+        state.isRouteFilter = isRouteFilter;
       })
-    )
-  }, [])
+    );
+  }, []);
 
   const toggleEtaFormat = useCallback(() => {
     setStateRaw(
