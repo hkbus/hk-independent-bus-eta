@@ -14,7 +14,7 @@ interface TimeReportProps {
 const TimeReport = ({
   routeId,
   seq,
-  containerClass,
+  containerClass = "",
   showStopName = false,
 }: TimeReportProps) => {
   const { t, i18n } = useTranslation();

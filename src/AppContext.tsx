@@ -4,13 +4,15 @@ import React, {
   useState,
   useRef,
   useCallback,
+  useMemo,
 } from "react";
 import type { ReactNode } from "react";
 import { vibrate } from "./utils";
 import DbContext from "./DbContext";
 import type { DatabaseContextValue } from "./DbContext";
+import { Workbox } from "workbox-window";
 import { produce, freeze, current } from "immer";
-import { Location as GeoLocation } from "hk-bus-eta";
+import type { Location as GeoLocation } from "hk-bus-eta";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -64,10 +66,12 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
   toggleEnergyMode: () => void;
+  workbox?: Workbox;
 }
 
 interface AppContextProviderProps {
   children: ReactNode;
+  workbox?: Workbox;
 }
 
 const AppContext = React.createContext<AppContextValue>(null);
@@ -116,9 +120,12 @@ const isNumberRecord = (input: unknown): input is Record<string, number> => {
   return false;
 };
 
-export const AppContextProvider = ({ children }: AppContextProviderProps) => {
-  const { AppTitle, db, renewDb } = useContext(DbContext);
-  const { routeList } = db;
+export const AppContextProvider = ({
+  workbox,
+  children,
+}: AppContextProviderProps) => {
+  const dbContext = useContext(DbContext);
+  const { routeList } = dbContext.db;
   const getInitialState = (): AppState => {
     const devicePreferColorScheme =
       localStorage.getItem("colorMode") ||
@@ -176,12 +183,16 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
 
   useEffect(() => {
     if (geoPermission === "granted") {
-      const _geoWatcherId = navigator.geolocation.watchPosition(
-        ({ coords: { latitude, longitude } }) => {
-          updateGeolocation({ lat: latitude, lng: longitude });
-        }
-      );
-      geoWatcherId.current = _geoWatcherId;
+      try {
+        const _geoWatcherId = navigator.geolocation.watchPosition(
+          ({ coords: { latitude, longitude } }) => {
+            updateGeolocation({ lat: latitude, lng: longitude });
+          }
+        );
+        geoWatcherId.current = _geoWatcherId;
+      } catch (e) {
+        console.error("cannot watch position", e);
+      }
     }
     const onVisibilityChange = () => {
       setStateRaw(
@@ -369,30 +380,41 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
+  const contextValue = useMemo(() => {
+    return {
+      ...dbContext,
+      ...state,
+      setSearchRoute,
+      updateSearchRouteByButton,
+      updateSelectedRoute,
+      updateGeolocation,
+      updateSavedEtas,
+      resetUsageRecord,
+      updateGeoPermission,
+      toggleRouteFilter,
+      toggleEtaFormat,
+      toggleColorMode,
+      toggleEnergyMode,
+      workbox,
+    };
+  }, [
+    dbContext,
+    state,
+    setSearchRoute,
+    updateSearchRouteByButton,
+    updateSelectedRoute,
+    updateGeolocation,
+    updateSavedEtas,
+    resetUsageRecord,
+    updateGeoPermission,
+    toggleRouteFilter,
+    toggleEtaFormat,
+    toggleColorMode,
+    toggleEnergyMode,
+    workbox,
+  ]);
   return (
-    <AppContext.Provider
-      value={{
-        AppTitle,
-        db,
-        ...state,
-        setSearchRoute,
-        updateSearchRouteByButton,
-        updateSelectedRoute,
-        // UX
-        updateGeolocation,
-        updateSavedEtas,
-        resetUsageRecord,
-        // settings
-        renewDb,
-        updateGeoPermission,
-        toggleRouteFilter,
-        toggleEtaFormat,
-        toggleColorMode,
-        toggleEnergyMode,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 };
 

@@ -4,6 +4,7 @@ const resolve = require('path').resolve;
 const puppeteer = require('puppeteer');
 const jsdom = require('jsdom');
 const CleanCSS = require('clean-css');
+require('dotenv').config()
 const cleanCss = new CleanCSS()
 let app;
 
@@ -31,12 +32,9 @@ async function runStaticServer(port, routes, dir) {
     app = express();
     const resolvedPath = resolve(dir); 
     app.use(express.static(resolvedPath));
-    routes.forEach(route => {
-      app.get(route, (req, res) => {
-        res.sendFile(`${resolvedPath}/index.html`);
-      })
+    app.get("/*", (req, res) => {
+      res.sendFile(`${resolvedPath}/index.html`);
     })
-
     await app.listen(port);
     return `http://localhost:${port}`;
   } catch(err) {
@@ -85,21 +83,20 @@ function ensureDirExists(dir) {
 async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
   const url = new URL(pageUrl)
   try {
-    // const page = await browser.newPage();
-    if ( !pageUrl.includes('/route/') ) {
-      if ( idx === 0 ) {
-        await page.goto(pageUrl, {waitUntil: 'networkidle0'});
-      } else if ( pageUrl.includes('search') ) {
+    if (!pageUrl.includes('/route/')) {
+      if (pageUrl.includes('search')) {
+        await page.waitForSelector(`a[href="${url.pathname}"]`)
         await page.click(`a[href="${url.pathname}"]`)
         await new Promise((resolve) => {setTimeout(resolve, 500)})
-      } else {
-        await page.goto(pageUrl, {waitUntil: 'networkidle0'})
-        await page.waitForTimeout(3000)
+      } else if (pageUrl.endsWith('/board')) {
+        await page.waitForSelector(`a[href="${url.pathname}"]`)
+        await page.click(`a[href="${url.pathname}"]`)
+        await new Promise((resolve) => {setTimeout(resolve, 500)})
       }
-      if (idx === 0) await page.waitForTimeout(3000) // wait decompression & loading data
     } else {
         const lang = pageUrl.split('/').slice(-3)[0]
         const q = pageUrl.split('/').slice(-1)[0];
+        await page.waitForSelector('style[prerender]', {timeout: 5000})
         await page.evaluate(`document.querySelector('style[prerender]').innerText = ''`)
         await page.click(`[id="${lang}-selector"]`)
         await page.evaluate((q) => {
@@ -110,9 +107,20 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
             var ev2 = new Event('input', { bubbles: true});
             input.dispatchEvent(ev2);
         }, q)
-        await page.waitForSelector(`input[id="${q}"][value="${q}"]`, {timeout: 1000});
+        await page.waitForSelector(`input[id="${q}"][value="${q}"]`, {timeout: 5000});
     }
+  } catch (err) {
+    let content = '';
+    try {
+      const html = await page.content();
+      const dom = new jsdom.JSDOM(html);
+      content = dom.serialize();
+    } catch (err2) {
 
+    }
+    throw new Error(`Error: Failed to build HTML for ${pageUrl}.\nMessage: ${err}\nContent: ${content}`);
+  }
+  try {
     const html = await page.content();
     if (!html) return 0;
 
@@ -135,32 +143,59 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
  * @returns {number|undefined}
  */
 async function runPuppeteer(baseUrl, routes, dir) {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  page.setRequestInterception(true);
-  page.on('request', (request) => {
-    // block map loading
-    if (request.url().includes('basemaps.cartocdn.com') || request.url().includes('https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png'))
-      request.abort();
-    else
-      request.continue()
-  })
-  page.setUserAgent('prerendering');
   let start = Date.now();
-  for (let i = 0; i < routes.length; i++) {
-    try {
-      console.log(`Processing route "${routes[i]}"`);
-      const html = await getHTMLfromPuppeteerPage(page, `${baseUrl}${routes[i]}`, i);
-      if (html) createNewHTMLPage(routes[i], html, dir);
-      else return 0;
-
-    } catch (err) {
-      console.error(`Error: Failed to process route "${routes[i]}"\nMessage: ${err}`);
-      process.exit(1)
+  const instances = [0, 1];
+  console.log(routes);
+  const queue = [...routes.reverse()];
+  const promised = instances.map(
+    async (k) => {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      page.setRequestInterception(true);
+      page.on('request', (request) => {
+        // block map loading
+        if (request.url().includes(process.env.REACT_APP_OSM_PROVIDER_HOST))
+          request.abort();
+        else
+          request.continue()
+      })
+      page.setUserAgent('prerendering');
+      let route = queue.pop();
+      let idx = 0;
+      await page.goto(`${baseUrl}${route}`, {waitUntil: 'networkidle0'});
+      await page.waitForTimeout(10000);
+      do {
+        try {
+          console.log(`Processing route "${route}"`);
+          let html = undefined;          
+          for (let trial = 0; trial < 3; trial++) {
+            try {
+              html = await getHTMLfromPuppeteerPage(page, `${baseUrl}${route}`, idx);
+              break;
+            } catch (e) {
+              console.log(`error on processing route "${route}". trial ${trial}`);
+              if (trial === 2) {
+                throw e;
+              }
+              await page.goto(`${baseUrl}${route}`, {waitUntil: 'networkidle0'});
+              await page.waitForTimeout(10000);
+              continue;
+            }
+          }
+          if (html) createNewHTMLPage(route, html, dir);
+          else return 0;
+        } catch (err) {
+          console.error(`Error: Failed to process route "${route}"\nMessage: ${err}`);
+          process.exit(1);
+        }
+        idx = idx + 1;
+        route = queue.pop();
+      } while (route !== undefined)
+      await browser.close();
     }
-  }
-
-  await browser.close();
+  )
+  await Promise.all(promised);
+  
   console.log( ( 'Finished in ' + (Date.now() - start ) / 1000) + "s.");
   start = Date.now();
   return;
