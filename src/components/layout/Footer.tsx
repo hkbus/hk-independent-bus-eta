@@ -102,8 +102,8 @@ const Footer = () => {
           }}
         />
       </Root>
-      // eslint-disable-next-line
     ),
+    // eslint-disable-next-line
     [location.pathname, i18n.language, colorMode, selectedRoute]
   );
 };

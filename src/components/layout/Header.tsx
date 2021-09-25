@@ -96,8 +96,8 @@ const Header = () => {
           />
         </LanguageTabs>
       </AppToolbar>
-      // eslint-disable-next-line
     ),
+    // eslint-disable-next-line
     [searchRoute, i18n.language, location.pathname, colorMode]
   );
 };

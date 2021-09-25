@@ -85,8 +85,8 @@ const Home = () => {
           ))}
         </List>
       </Root>
-      // eslint-disable-next-line
     ),
+    // eslint-disable-next-line
     [selectedRoutes]
   );
 };
