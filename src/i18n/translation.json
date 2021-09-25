@@ -19,6 +19,7 @@
       "設定": "Settings",
       "取消": "Clear",
       "巴士線": "Route",
+      "未有班次資料": "No information available",
       "架構版本": "Schema Version",
       "更新時間": "Last Updated",
       "地理位置定位功能": "Geolocation",
@@ -68,7 +69,7 @@
       "Route Search constraint": "Constraints：",
       "Route Search caption 1": "Max. transfer once",
       "Route Search caption 2": "Max. walking distance is 500m",
-      "Route Search caption 3": "Verified scheduled bus in the first terminal",
+      "Route Search caption 3": "Scheduled bus at the first station",
       "星期一至五": "Monday to Friday",
       "星期一至六": "Monday to Saturday",
       "星期六至日": "Saturday & Sunday",
@@ -76,7 +77,7 @@
       "星期一至四": "Monday to Thursday",
       "星期五": "Friday", 
       "星期六": "Saturday",
-      "星期日及公眾假期": "Sunday & Public Holiday",
+      "星期日及公眾假期": "Sunday & Public Holidays",
       "所有日子": "All day",
       "時間表": "skd"
     }
