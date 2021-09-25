@@ -1,6 +1,7 @@
 import React, { useContext, useMemo } from "react";
 import loadable from "@loadable/component";
 import "./App.css";
+import "leaflet/dist/leaflet.css";
 import {
   ThemeProvider,
   StyledEngineProvider,
@@ -27,25 +28,14 @@ const Settings = loadable(() => import("./pages/Settings"));
 
 const PageSwitch = () => {
   const { path } = useRouteMatch();
-
   return (
     <SearchContextProvider>
       <Switch>
-        <Route path={`${path}/route/:id/:panel?`}>
-          <RouteEta />
-        </Route>
-        <Route path={`${path}/settings`}>
-          <Settings />
-        </Route>
-        <Route path={`${path}/board`}>
-          <RouteBoard />
-        </Route>
-        <Route path={`${path}/search`}>
-          <RouteSearch />
-        </Route>
-        <Route path={`${path}`}>
-          <Home />
-        </Route>
+        <Route path={`${path}/route/:id/:panel?`} component={RouteEta} />
+        <Route path={`${path}/settings`} component={Settings} />
+        <Route path={`${path}/board`} component={RouteBoard} />
+        <Route path={`${path}/search`} component={RouteSearch} />
+        <Route path={`${path}`} component={Home} />
       </Switch>
     </SearchContextProvider>
   );
@@ -56,7 +46,6 @@ const App = () => {
   const theme = useMemo(() => {
     return createTheme(getThemeTokens(colorMode), [colorMode]);
   }, [colorMode]);
-
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>

@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useMemo, useContext, useRef } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -14,90 +13,79 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
-import { getDistance, toProperCase, triggerShare } from "../../utils";
+import { toProperCase, triggerShare } from "../../utils";
 import TimeReport from "./TimeReport";
 import ShareIcon from "@mui/icons-material/Share";
+import type { StopListEntry, RouteListEntry } from "hk-bus-eta";
 
-interface RouteParams {
-  id: string;
-  panel: string;
+interface StopAccordionsProps {
+  routeId: string;
+  stopIdx: number;
+  routeListEntry: RouteListEntry;
+  stopListExtracted: Array<StopListEntry>;
+  expanded: boolean;
+  handleChange: (stopIdx: number, expanded: boolean) => void;
 }
-
-const StopAccordions = ({ expanded, setExpanded, handleChange }) => {
-  const { id, panel } = useParams<RouteParams>();
-
-  const {
-    AppTitle,
-    db: { routeList, stopList },
-    savedEtas,
-    geoPermission,
-    geolocation,
-    updateSavedEtas,
-    energyMode,
-  } = useContext(AppContext);
+const StopAccordions = ({
+  routeId,
+  stopIdx,
+  expanded,
+  routeListEntry,
+  stopListExtracted,
+  handleChange,
+}: StopAccordionsProps) => {
+  const id = routeId;
+  const { AppTitle, savedEtas, updateSavedEtas, energyMode } =
+    useContext(AppContext);
   const [isCopied, setIsCopied] = useState(false);
-  const { route, dest, stops, co, fares, faresHoliday } =
-    routeList[id.toUpperCase()];
+  const { route, dest, fares, faresHoliday } = routeListEntry;
   const { t, i18n } = useTranslation();
-  const accordionRef = useRef([]);
-
-  const autoSetPanel = () => {
-    if (parseInt(panel, 10) && accordionRef.current[parseInt(panel, 10)]) {
-      setExpanded(parseInt(panel, 10));
-    } else if (geoPermission === "granted") {
-      // load from local storage to avoid unitentional re-rendering
-      const nearbyStop = getStops(co, stops)
-        .map((stopId, idx) => [
-          stopId,
-          idx,
-          getDistance(geolocation, stopList[stopId].location),
-        ])
-        .sort((a, b) => a[2] - b[2])[0];
-      if (nearbyStop) {
-        const idx = nearbyStop[1];
-        setExpanded(idx);
-      }
-    }
-  };
+  const accordionRef = useRef<HTMLElement[]>([]);
 
   useEffect(() => {
     // scroll to specific bus stop
     // check acordion ref not null to ensure it is not in rendering
-    if (expanded !== false && accordionRef.current[expanded]) {
-      accordionRef.current[expanded].scrollIntoView({
+    if (expanded && accordionRef.current[stopIdx]) {
+      accordionRef.current[stopIdx]?.scrollIntoView({
         behavior: "smooth",
-        block: "center",
+        block: "nearest",
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expanded]);
+  }, [expanded, stopIdx]);
 
-  useEffect(() => {
-    autoSetPanel();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const toggleSavedRoute = (key) => updateSavedEtas(key);
-
-  return (
-    <StopAccordionsBox
-      className={
-        !energyMode ? classes.boxContainer : classes.boxContainerEnergy
-      }
-    >
-      {getStops(co, stops).map((stop, idx) => (
+  const stopListElements = useMemo(() => {
+    return stopListExtracted.map((stop, idx) => {
+      const onClickShare = () => {
+        triggerShare(
+          `https://${window.location.hostname}/${i18n.language}/${id}`,
+          `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
+            "往"
+          )} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}`
+        ).then(() => {
+          if (navigator.clipboard) setIsCopied(true);
+        });
+      };
+      const handleChangeInner = (_: unknown, expand: boolean) => {
+        handleChange(idx, expand);
+      };
+      return (
         <StopAccordion
           key={"stop-" + idx}
-          expanded={expanded === idx}
-          onChange={handleChange(idx)}
+          expanded={stopIdx === idx && expanded}
+          onChange={handleChangeInner}
           TransitionProps={{ unmountOnExit: true }}
           ref={(el) => {
-            accordionRef.current[idx] = el;
+            if (el instanceof HTMLElement) {
+              accordionRef.current[idx] = el;
+              if (stopIdx === idx) {
+                el.scrollIntoView({
+                  behavior: "smooth",
+                  block: "nearest",
+                });
+              }
+            }
           }}
-          classes={{
-            root: classes.accordionRoot,
-            expanded: classes.accordionExpanded,
-          }}
+          classes={{ root: classes.accordionRoot, expanded: classes.accordionExpanded }}
         >
           <StopAccordionSummary
             classes={{
@@ -107,7 +95,7 @@ const StopAccordions = ({ expanded, setExpanded, handleChange }) => {
             }}
           >
             <Typography component="h3" variant="body1">
-              {idx + 1}. {toProperCase(stopList[stop].name[i18n.language])}
+              {idx + 1}. {toProperCase(stop.name[i18n.language])}
             </Typography>
             <Typography variant="caption">
               {fares && fares[idx] ? t("車費") + ": $" + fares[idx] : ""}
@@ -123,18 +111,7 @@ const StopAccordions = ({ expanded, setExpanded, handleChange }) => {
             <div style={{ display: "flex" }}>
               <IconButton
                 aria-label="share"
-                onClick={() => {
-                  triggerShare(
-                    `https://${window.location.hostname}/${i18n.language}/${id}`,
-                    `${idx + 1}. ${toProperCase(
-                      stopList[stop].name[i18n.language]
-                    )} - ${route} ${t("往")} ${toProperCase(
-                      dest[i18n.language]
-                    )} - ${t(AppTitle)}`
-                  ).then(() => {
-                    if (navigator.clipboard) setIsCopied(true);
-                  });
-                }}
+                onClick={onClickShare}
                 style={{ backgroundColor: "transparent" }}
                 size="large"
               >
@@ -142,7 +119,7 @@ const StopAccordions = ({ expanded, setExpanded, handleChange }) => {
               </IconButton>
               <IconButton
                 aria-label="favourite"
-                onClick={() => toggleSavedRoute(`${id.toUpperCase()}/${idx}`)}
+                onClick={() => updateSavedEtas(`${id.toUpperCase()}/${idx}`)}
                 style={{ backgroundColor: "transparent" }}
                 size="large"
               >
@@ -155,27 +132,44 @@ const StopAccordions = ({ expanded, setExpanded, handleChange }) => {
             </div>
           </StopAccordionDetails>
         </StopAccordion>
-      ))}
+      );
+    });
+  }, [
+    AppTitle,
+    dest,
+    expanded,
+    fares,
+    faresHoliday,
+    handleChange,
+    i18n.language,
+    id,
+    route,
+    savedEtas,
+    stopIdx,
+    stopListExtracted,
+    t,
+    updateSavedEtas,
+  ]);
+  return (
+    <StopAccordionsBox
+      className={
+        !energyMode 
+          ? classes.boxContainer 
+          : classes.boxContainerEnergy
+      }
+    >
+      {stopListElements}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={isCopied}
         autoHideDuration={1500}
-        onClose={(event, reason) => {
+        onClose={() => {
           setIsCopied(false);
         }}
         message={t("鏈結已複製到剪貼簿")}
       />
     </StopAccordionsBox>
   );
-};
-
-// TODO: better handling on buggy data in database
-const getStops = (co, stops) => {
-  for (let i = 0; i < co.length; ++i) {
-    if (co[i] in stops) {
-      return stops[co[i]];
-    }
-  }
 };
 
 export default StopAccordions;

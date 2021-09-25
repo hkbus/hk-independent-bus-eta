@@ -1,18 +1,15 @@
-name: prettier
+name: Prettify
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   prettier:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [15.x]
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npx prettier --check "src/**/*.{js,jsx,ts,tsx}"
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.0
+        with:
+          prettier_options: --write ./src/**/*.{js,jsx,ts,tsx}

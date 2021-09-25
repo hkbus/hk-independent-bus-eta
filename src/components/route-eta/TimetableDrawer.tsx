@@ -1,4 +1,5 @@
 import { Drawer, List, ListItem, Typography } from "@mui/material";
+import { useMemo } from 'react';
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 
@@ -23,46 +24,54 @@ const ServiceIds = {
 const TimetableDrawer = ({ freq, open, onClose }) => {
   const { t } = useTranslation();
 
+  const list = useMemo(() => {
+    return Object.entries(freq).map(([serviceId, dayFreq]) => (
+      <ListItem key={`${serviceId}`} className={classes.entries}>
+        <Typography variant="subtitle1">
+          {t(ServiceIds[serviceId])}
+        </Typography>
+        {Object.entries(dayFreq)
+          .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+          .map(([start, details]) => (
+            <div
+              key={`${serviceId}-${start}`}
+              className={classes.freqContainer}
+            >
+              <Typography variant="caption">
+                {start} {details ? `-${details[0]}` : ""}
+              </Typography>
+              {details ? (
+                <Typography variant="caption">
+                  {parseInt(details[1], 10) / 60}
+                  {t("分鐘")}
+                </Typography>
+              ) : (
+                <></>
+              )}
+            </div>
+          ))}
+      </ListItem>
+    ));
+  }, [freq, t]);
+  const modalProps = useMemo(() => {
+    return {
+      onClose: () => {
+        onClose();
+      },
+    };
+  }, [onClose]);
+  const paperProps = useMemo(() => {
+    return { className: "timetable-drawer" };
+  }, []);
+
   return (
     <RootDrawer
       open={open}
-      ModalProps={{
-        onClose: () => {
-          onClose();
-        },
-      }}
-      PaperProps={{ className: classes.drawer }}
+      ModalProps={modalProps}
+      PaperProps={paperProps}
       anchor="right"
     >
-      <List>
-        {Object.entries(freq).map(([serviceId, dayFreq]) => (
-          <ListItem key={`${serviceId}`} className={classes.entries}>
-            <Typography variant="subtitle1">
-              {t(ServiceIds[serviceId])}
-            </Typography>
-            {Object.entries(dayFreq)
-              .sort((a, b) => (a[0] < b[0] ? -1 : 1))
-              .map(([start, details]) => (
-                <div
-                  key={`${serviceId}-${start}`}
-                  className={classes.freqContainer}
-                >
-                  <Typography variant="caption">
-                    {start} {details ? `-${details[0]}` : ""}
-                  </Typography>
-                  {details ? (
-                    <Typography variant="caption">
-                      {parseInt(details[1], 10) / 60}
-                      {t("分鐘")}
-                    </Typography>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              ))}
-          </ListItem>
-        ))}
-      </List>
+      <List>{list}</List>
     </RootDrawer>
   );
 };
