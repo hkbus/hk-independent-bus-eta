@@ -14,6 +14,8 @@ import {
   Route,
   useRouteMatch,
 } from "react-router-dom";
+import { CacheProvider } from "@emotion/react";
+import createCache from '@emotion/cache';
 import { Container, CssBaseline, PaletteMode } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AppContext from "./AppContext";
@@ -49,23 +51,25 @@ const App = () => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <AppContainer
-          maxWidth="xs"
-          disableGutters
-          className={classes.container}
-        >
-          <Router>
-            <Route exact path="/">
-              <Redirect to="/zh" />
-            </Route>
-            <Route path="/:lang">
-              <CssBaseline />
-              <Header />
-              <PageSwitch />
-              <Footer />
-            </Route>
-          </Router>
-        </AppContainer>
+        <CacheProvider value={emotionCache}>
+          <AppContainer
+            maxWidth="xs"
+            disableGutters
+            className={classes.container}
+          >
+            <Router>
+              <Route exact path="/">
+                <Redirect to="/zh" />
+              </Route>
+              <Route path="/:lang">
+                <CssBaseline />
+                <Header />
+                <PageSwitch />
+                <Footer />
+              </Route>
+            </Router>
+          </AppContainer>
+          </CacheProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );
@@ -87,6 +91,11 @@ const AppContainer = styled(Container)(({ theme }) => ({
     height: "100%",
   },
 }));
+
+const emotionCache = createCache({
+  key: 'hkbus',
+  speedy: !(process.env.NODE_ENV === "development" || navigator.userAgent === "prerendering"),
+}) 
 
 const getThemeTokens = (mode: PaletteMode) => ({
   typography: {

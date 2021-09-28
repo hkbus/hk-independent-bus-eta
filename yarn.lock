@@ -8465,6 +8465,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "hk-independent-bus-eta@workspace:."
   dependencies:
+    "@emotion/cache": ^11.4.0
     "@emotion/react": ^11.4.1
     "@emotion/styled": ^11.3.0
     "@loadable/component": ^5.15.0

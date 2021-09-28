@@ -54,7 +54,8 @@ if (isHuman()) {
     window.location.pathname.includes("/search") ||
     window.location.pathname.includes("/settings") ||
     (canonicalLink instanceof HTMLAnchorElement &&
-      !canonicalLink.href.endsWith(window.location.pathname))
+      !canonicalLink.href.endsWith(window.location.pathname)) ||
+    true // mui v5 make class name not preserved, prerendering fails......
   ) {
     // remove prerendered style
     if (prerenderStyle instanceof HTMLStyleElement) {
