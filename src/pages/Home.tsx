@@ -117,7 +117,9 @@ const getSelectedRoutes = ({
         .sort((a, b) => b[1] - a[1])
         .map(([routeId]) => routeId)
     )
-    .filter((routeId, index, self) => self.indexOf(routeId) === index)
+    .filter((routeUrl, index, self) => {
+      return self.indexOf(routeUrl) === index && ( routeUrl.split("/")[0] in routeList )
+    })
     .map((routeUrl): [string, number] => {
       const [routeId, stopIdx] = routeUrl.split("/");
       // TODO: taking the longest stop array to avoid error, should be fixed in the database

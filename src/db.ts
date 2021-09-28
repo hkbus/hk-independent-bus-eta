@@ -3,10 +3,22 @@ import type { BusDb } from "hk-bus-eta";
 import { decompress as decompressJson } from "lzutf8";
 import { decompress as _decompressJson } from "compressed-json";
 
+const isBusDb = (input: unknown): input is BusDb => {
+  return (
+    typeof input === 'object' &&
+    'routeList' in input &&
+    'stopList' in input &&
+    'stopMap' in input &&
+    'holidays' in input && 
+    Array.isArray(input['holidays']) &&
+    input['holidays'].length > 0
+  )
+} 
+
 // implant the DB Context logic into code to avoid loading error
 export const DB_CONTEXT_VERSION = "1.2.0";
 
-const decompressJsonString = (txt) => {
+const decompressJsonString = (txt): BusDb => {
   try {
     const ret = JSON.parse(decompressJson(txt, { inputEncoding: "Base64" }));
     return {
@@ -26,7 +38,7 @@ const decompressJsonString = (txt) => {
       return _decompressJson(JSON.parse(txt));
     } catch (e2) {
       // return empty object if no valid JSON string parsed
-      return { routeList: {}, stopList: {}, stopMap: {} };
+      return { holidays: [], routeList: {}, stopList: {}, stopMap: {} };
     }
   }
 };
@@ -114,7 +126,9 @@ export const fetchDbFunc = async (
     try {
       if (!needRenew) {
         const db = await storedDb(raw);
-        return db;
+        if ( isBusDb(db) ) {
+          return db;
+        }
       }
     } catch {}
     const updateTime = Date.now() + "";
@@ -122,7 +136,10 @@ export const fetchDbFunc = async (
     return new Promise((resolve_1) => {
       const timerId = setTimeout(() => {
         if (!forceRenew && raw !== null) {
-          resolve_1(storedDb(raw));
+          const _cachedDb = storedDb(raw)
+          if ( isBusDb(_cachedDb) ) {
+            resolve_1(_cachedDb);
+          }
         }
       }, 1000);
       fetchEtaObj()
