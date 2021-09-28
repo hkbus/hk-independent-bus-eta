@@ -118,7 +118,9 @@ const getSelectedRoutes = ({
         .map(([routeId]) => routeId)
     )
     .filter((routeUrl, index, self) => {
-      return self.indexOf(routeUrl) === index && ( routeUrl.split("/")[0] in routeList )
+      return (
+        self.indexOf(routeUrl) === index && routeUrl.split("/")[0] in routeList
+      );
     })
     .map((routeUrl): [string, number] => {
       const [routeId, stopIdx] = routeUrl.split("/");

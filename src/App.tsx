@@ -15,7 +15,7 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import { CacheProvider } from "@emotion/react";
-import createCache from '@emotion/cache';
+import createCache from "@emotion/cache";
 import { Container, CssBaseline, PaletteMode } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AppContext from "./AppContext";
@@ -69,7 +69,7 @@ const App = () => {
               </Route>
             </Router>
           </AppContainer>
-          </CacheProvider>
+        </CacheProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );
@@ -93,9 +93,12 @@ const AppContainer = styled(Container)(({ theme }) => ({
 }));
 
 const emotionCache = createCache({
-  key: 'hkbus',
-  speedy: !(process.env.NODE_ENV === "development" || navigator.userAgent === "prerendering"),
-}) 
+  key: "hkbus",
+  speedy: !(
+    process.env.NODE_ENV === "development" ||
+    navigator.userAgent === "prerendering"
+  ),
+});
 
 const getThemeTokens = (mode: PaletteMode) => ({
   typography: {

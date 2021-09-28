@@ -29,15 +29,15 @@ const RouteNo = ({ routeNo, component, align }: RouteNoProps) => {
 
 export default RouteNo;
 
-const PREFIX = 'routeNo';
+const PREFIX = "routeNo";
 
 const classes = {
   root: `${PREFIX}-root`,
   prefix: `${PREFIX}-prefix`,
-  suffix: `${PREFIX}-suffix`
-}
+  suffix: `${PREFIX}-suffix`,
+};
 
-const RouteNoTypography = styled(Typography)(({theme}) => ({
+const RouteNoTypography = styled(Typography)(({ theme }) => ({
   [`&.${classes.root}`]: {
     lineHeight: "normal",
     display: "inline",

@@ -5,15 +5,15 @@ import { decompress as _decompressJson } from "compressed-json";
 
 const isBusDb = (input: unknown): input is BusDb => {
   return (
-    typeof input === 'object' &&
-    'routeList' in input &&
-    'stopList' in input &&
-    'stopMap' in input &&
-    'holidays' in input && 
-    Array.isArray(input['holidays']) &&
-    input['holidays'].length > 0
-  )
-} 
+    typeof input === "object" &&
+    "routeList" in input &&
+    "stopList" in input &&
+    "stopMap" in input &&
+    "holidays" in input &&
+    Array.isArray(input["holidays"]) &&
+    input["holidays"].length > 0
+  );
+};
 
 // implant the DB Context logic into code to avoid loading error
 export const DB_CONTEXT_VERSION = "1.2.0";
@@ -126,7 +126,7 @@ export const fetchDbFunc = async (
     try {
       if (!needRenew) {
         const db = await storedDb(raw);
-        if ( isBusDb(db) ) {
+        if (isBusDb(db)) {
           return db;
         }
       }
@@ -136,8 +136,8 @@ export const fetchDbFunc = async (
     return new Promise((resolve_1) => {
       const timerId = setTimeout(() => {
         if (!forceRenew && raw !== null) {
-          const _cachedDb = storedDb(raw)
-          if ( isBusDb(_cachedDb) ) {
+          const _cachedDb = storedDb(raw);
+          if (isBusDb(_cachedDb)) {
             resolve_1(_cachedDb);
           }
         }
