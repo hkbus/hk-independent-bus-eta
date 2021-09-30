@@ -8496,6 +8496,7 @@ fsevents@^1.2.7:
     lodash.debounce: ^4.0.8
     lodash.throttle: ^4.1.1
     lzutf8: ^0.6.0
+    memoize-one: ^5.2.1
     memorize-one: ^0.0.0
     prettier: 2.4.0
     proj4: ^2.7.4
@@ -11090,7 +11091,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"memoize-one@npm:>=3.1.1 <6, memoize-one@npm:^5.0.0":
+"memoize-one@npm:>=3.1.1 <6, memoize-one@npm:^5.0.0, memoize-one@npm:^5.2.1":
   version: 5.2.1
   resolution: "memoize-one@npm:5.2.1"
   checksum: a3cba7b824ebcf24cdfcd234aa7f86f3ad6394b8d9be4c96ff756dafb8b51c7f71320785fbc2304f1af48a0467cbbd2a409efc9333025700ed523f254cb52e3d
