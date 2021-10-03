@@ -1,4 +1,4 @@
-import { Drawer, List, ListItem, Typography } from "@mui/material";
+import { Divider, Drawer, List, ListItem, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
@@ -21,7 +21,7 @@ const ServiceIds = {
   511: "所有日子",
 };
 
-const TimetableDrawer = ({ freq, open, onClose }) => {
+const TimetableDrawer = ({ freq, jt, open, onClose }) => {
   const { t } = useTranslation();
 
   const list = useMemo(() => {
@@ -69,6 +69,20 @@ const TimetableDrawer = ({ freq, open, onClose }) => {
       PaperProps={paperProps}
       anchor="right"
     >
+      {jt ? (
+        <>
+          <ListItem className={classes.entries}>
+            <div className={classes.jtContainer}>
+              <Typography variant="subtitle1">{t("車程")}</Typography>
+              <Typography variant="subtitle1">
+                {jt}
+                {t("分鐘")}
+              </Typography>
+            </div>
+          </ListItem>
+          <Divider className={classes.divider} />
+        </>
+      ) : null}
       <List>{list}</List>
     </RootDrawer>
   );
@@ -81,6 +95,8 @@ const PREFIX = "timetable";
 const classes = {
   drawer: `${PREFIX}-drawer`,
   entries: `${PREFIX}-entries`,
+  jtContainer: `${PREFIX}-jtContainer`,
+  divider: `${PREFIX}-divider`,
   freqContainer: `${PREFIX}-freqContainer`,
 };
 
@@ -96,6 +112,14 @@ const RootDrawer = styled(Drawer)(({ theme }) => ({
         ? theme.palette.background.default
         : theme.palette.primary.main,
     backgroundImage: "none",
+  },
+  [`& .${classes.jtContainer}`]: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "80%",
+  },
+  [`& .${classes.divider}`]: {
+    width: "80%",
   },
   [`& .${classes.entries}`]: {
     flexDirection: "column",

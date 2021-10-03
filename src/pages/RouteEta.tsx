@@ -26,7 +26,8 @@ const RouteEta = () => {
     geolocation,
   } = useContext(AppContext);
   const routeListEntry = routeList[id.toUpperCase()];
-  const { route, stops, co, orig, dest, nlbId, fares, freq } = routeListEntry;
+  const { route, stops, co, orig, dest, nlbId, fares, freq, jt } =
+    routeListEntry;
   const stopsExtracted = useMemo(() => {
     return getStops(co, stops)
       .map((id) => {
@@ -189,6 +190,7 @@ const RouteEta = () => {
             </TimeTableButton>
             <TimetableDrawer
               freq={freq}
+              jt={jt}
               open={isOpenTimetable}
               onClose={() => setIsOpenTimetable(false)}
             />
