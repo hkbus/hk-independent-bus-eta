@@ -8083,6 +8083,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"goober@npm:^2.0.35":
+  version: 2.0.41
+  resolution: "goober@npm:2.0.41"
+  peerDependencies:
+    csstype: ^2.6.2
+  checksum: ef1e4c7491633972497dfd28ef5641154d30f494455101456ba8ed70902e6127167bc2e9a258504a3bad9a3dd354805c9290353c84065af30cb6fcbeecb37894
+  languageName: node
+  linkType: hard
+
 "graceful-fs@npm:^4.1.11, graceful-fs@npm:^4.1.15, graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6":
   version: 4.2.8
   resolution: "graceful-fs@npm:4.2.8"
@@ -8337,6 +8346,7 @@ fsevents@^1.2.7:
     puppeteer: ^9.1.1
     react: ^17.0.2
     react-dom: ^17.0.2
+    react-hot-toast: ^2.1.1
     react-i18next: ^11.8.13
     react-leaflet: ^3.1.0
     react-router-dom: ^5.2.0
@@ -13518,6 +13528,18 @@ fsevents@^1.2.7:
   version: 6.0.9
   resolution: "react-error-overlay@npm:6.0.9"
   checksum: 695853bc885e798008a00c10d8d94e5ac91626e8130802fea37345f9c037f41b80104345db2ee87f225feb4a4ef71b0df572b17c378a6d397b6815f6d4a84293
+  languageName: node
+  linkType: hard
+
+"react-hot-toast@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "react-hot-toast@npm:2.1.1"
+  dependencies:
+    goober: ^2.0.35
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 029d375d50a937143d21d71c11d4ad00dbb58a6ca12a50378a7bd80fe294821def6f7a5b9a53404d31230d1fed5246453a73b9f90bc85811036e53b802ad790f
   languageName: node
   linkType: hard
 
