@@ -129,9 +129,9 @@ const getSelectedRoutes = ({
       // TODO: taking the longest stop array to avoid error, should be fixed in the database
       const stop =
         stopList[
-        Object.values(routeList[routeId].stops).sort(
-          (a, b) => b.length - a.length
-        )[0][stopIdx]
+          Object.values(routeList[routeId].stops).sort(
+            (a, b) => b.length - a.length
+          )[0][stopIdx]
         ];
       return [routeUrl, getDistance(geolocation, stop.location)];
     })
