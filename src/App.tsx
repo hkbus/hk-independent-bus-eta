@@ -24,7 +24,7 @@ import Footer from "./components/layout/Footer";
 import Home from "./pages/Home";
 import RouteEta from "./pages/RouteEta";
 import { SearchContextProvider } from "./SearchContext";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 const RouteBoard = loadable(() => import("./pages/RouteBoard"));
 const RouteSearch = loadable(() => import("./pages/RouteSearch"));
 const Settings = loadable(() => import("./pages/Settings"));
@@ -44,29 +44,39 @@ const PageSwitch = () => {
   );
 };
 
-const inBadWeather = () =>{
-  fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en').then(response => {
-    if(response.ok){
+const inBadWeather = () => {
+  fetch(
+    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en"
+  ).then((response) => {
+    if (response.ok) {
       let blob = response.text();
-      blob.then(data => {
+      blob.then((data) => {
         console.log("checking weather");
         const text = JSON.stringify(data);
-        const adverseCode = /((\\"code\\":\\")+(TC8\w+|TC9|TC10|WRAINR|WRAINB))/gi;
+        const adverseCode =
+          /((\\"code\\":\\")+(TC8\w+|TC9|TC10|WRAINR|WRAINB))/gi;
         const match = text.match(adverseCode);
-        if(match){
-          toast((t) => (
-            <span>
-              Services may be impacted by bad weather.<br/>Check <a href="https://www.td.gov.hk/en/special_news/spnews.htm">offical announcements</a> for more info.
-              <button onClick={() => toast.dismiss(t.id)}>
-                X
-              </button>
-            </span>
-          ),{duration:Infinity, id:"bad_weather"});
+        if (match) {
+          toast(
+            (t) => (
+              <span>
+                Services may be impacted by bad weather.
+                <br />
+                Check{" "}
+                <a href="https://www.td.gov.hk/en/special_news/spnews.htm">
+                  offical announcements
+                </a>{" "}
+                for more info.
+                <button onClick={() => toast.dismiss(t.id)}>X</button>
+              </span>
+            ),
+            { duration: Infinity, id: "bad_weather" }
+          );
         }
-      })
+      });
     }
-  })
-}
+  });
+};
 
 const App = () => {
   const { colorMode } = useContext(AppContext);
