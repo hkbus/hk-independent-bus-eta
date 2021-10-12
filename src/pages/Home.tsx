@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import throttle from "lodash.throttle";
 import { Location, RouteList, StopListEntry, StopList } from "hk-bus-eta";
 import { isHoliday, isRouteAvaliable } from "../timetable";
+import BasicCard from "../components/layout/BadWeatherCard";
 
 const Home = () => {
   const {
@@ -76,6 +77,7 @@ const Home = () => {
         <Typography component="h2" style={visuallyHidden}>
           {t("home-page-description")}
         </Typography>
+        {BasicCard()}
         <List disablePadding>
           {selectedRoutes.split("|").map((selectedRoute, idx) => (
             <SuccinctTimeReport
@@ -127,9 +129,9 @@ const getSelectedRoutes = ({
       // TODO: taking the longest stop array to avoid error, should be fixed in the database
       const stop =
         stopList[
-          Object.values(routeList[routeId].stops).sort(
-            (a, b) => b.length - a.length
-          )[0][stopIdx]
+        Object.values(routeList[routeId].stops).sort(
+          (a, b) => b.length - a.length
+        )[0][stopIdx]
         ];
       return [routeUrl, getDistance(geolocation, stop.location)];
     })
