@@ -1,0 +1,10 @@
+.card-dark{
+    color:  white;
+}
+.card {
+    color:  black;
+    background-color: transparent;
+}
+a, a:visited, a:hover, a:active{
+    text-decoration-line: none;
+}
