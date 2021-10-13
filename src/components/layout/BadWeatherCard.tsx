@@ -1,8 +1,5 @@
-import { Card, CardContent, Typography } from "@mui/material";
-import { useContext } from "react";
+import { Card, CardContent, styled, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
-import "./BadWeatherCard.css";
 
 const inBadWeather = () => {
   fetch(
@@ -22,26 +19,30 @@ const inBadWeather = () => {
     }
   });
 };
+const StyledCard = styled(Card)(({ theme }) => ({
+  backgroundColor: theme.palette.main,
+  borderRadius: theme.shape.borderRadius,
+}));
 
-const BasicCard = () => {
+const StyledLink = styled('a')(({ theme }) => ({
+  textDecorationLine: 'none',
+  color: theme.palette.text.primary,
+}))
+
+const BadWeatherCard = () => {
   const { t } = useTranslation();
-  const { colorMode } = useContext(AppContext);
-  let cardClass = "card";
-  if (colorMode === "dark") {
-    cardClass += " card-dark";
-  }
   return (
-    <Card
+    <StyledCard
       variant="outlined"
       sx={{ m: 0.2, display: inBadWeather ? "" : "none" }}
     >
-      <a href={t("bad-weather-link")}>
+      <StyledLink href={t("bad-weather-link")}>
         <CardContent>
-          <Typography className={cardClass}>{t("bad-weather-text")}</Typography>
+          <Typography>{t("bad-weather-text")}</Typography>
         </CardContent>
-      </a>
-    </Card>
+      </StyledLink>
+    </StyledCard>
   );
 };
 
-export default BasicCard;
+export default BadWeatherCard;
