@@ -8290,10 +8290,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"hk-bus-eta@npm:^1.2.4":
-  version: 1.2.4
-  resolution: "hk-bus-eta@npm:1.2.4"
-  checksum: 692ae6c82748902f1991b4e19df93beca8e4a50b8bafc5ad909cae0d9cc2844a5a3aa17837b38edb9ced4d5508333910cdaa2d3a0b5bf42ef17071b9b9fa2c8a
+"hk-bus-eta@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "hk-bus-eta@npm:1.3.0"
+  checksum: f7b51736ca83ec9ce6637d7d5cb2adac327e8b814a2c1d7478b11f7d29dbc9a168e98767d6b901a3745b3beb79f7713e7483ba6a527e264dbc61cb41f62c6870
   languageName: node
   linkType: hard
 
@@ -8325,7 +8325,7 @@ fsevents@^1.2.7:
     express: ^4.17.1
     fbjs: ^1.0.0
     gh-pages: ^3.1.0
-    hk-bus-eta: ^1.2.4
+    hk-bus-eta: ^1.3.0
     i18next: ^20.2.1
     immer: ^8.0.1
     leaflet: ^1.7.1

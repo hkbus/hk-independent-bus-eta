@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { fetchEtas } from "hk-bus-eta";
 import AppContext from "../AppContext";
 
@@ -10,6 +11,7 @@ export const useEtas = (routeId) => {
   const [routeKey, seq] = routeId.split("/");
   const routeObj = routeList[routeKey] || DefaultRoute;
   const [etas, setEtas] = useState(null);
+  const { i18n: { language } } = useTranslation()
 
   useEffect(() => {
     let isMounted = true;
@@ -23,6 +25,7 @@ export const useEtas = (routeId) => {
       return fetchEtas({
         ...routeObj,
         seq: parseInt(seq, 10),
+        language
       }).then((_etas) => {
         if (isMounted) setEtas(_etas);
       });
