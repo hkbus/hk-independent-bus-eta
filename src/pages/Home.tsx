@@ -77,7 +77,7 @@ const Home = () => {
         <Typography component="h2" style={visuallyHidden}>
           {t("home-page-description")}
         </Typography>
-        {BadWeatherCard()}
+        <BadWeatherCard />
         <List disablePadding>
           {selectedRoutes.split("|").map((selectedRoute, idx) => (
             <SuccinctTimeReport
