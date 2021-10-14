@@ -74,7 +74,7 @@ const RouteSearch = () => {
               seq: parseInt(seq, 10),
               routeStops: routeList[routeId].stops,
               co: Object.keys(routeList[routeId].stops),
-              language: i18n.language
+              language: i18n.language,
             });
       })
     )
