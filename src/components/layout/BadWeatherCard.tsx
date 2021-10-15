@@ -21,11 +21,11 @@ const BadWeatherCard = () => {
   }, []);
 
   const isAdverse = () => {
-    if ( !weather ) {
+    if (!weather) {
       return false;
-    } else if ( weather.WTCSGNL && adverseWCode.includes(weather.WTCSGNL.code) ) {
+    } else if (weather.WTCSGNL && adverseWCode.includes(weather.WTCSGNL.code)) {
       return true;
-    } else if ( weather.WRAIN && adverseRCode.includes(weather.WRAIN.code)) {
+    } else if (weather.WRAIN && adverseRCode.includes(weather.WRAIN.code)) {
       return true;
     } else {
       return false;
@@ -55,7 +55,7 @@ const adverseRCode = ["WARINR", "WRAINB"];
 const PREFIX = "route";
 
 const classes = {
-  card: `${PREFIX}-card`
+  card: `${PREFIX}-card`,
 };
 
 const WeatherCard = styled(Card)(({ theme }) => ({
@@ -63,5 +63,5 @@ const WeatherCard = styled(Card)(({ theme }) => ({
     backgroundColor: theme.palette.main,
     borderRadius: theme.shape.borderRadius,
     margin: 0.2,
-  }
+  },
 }));
