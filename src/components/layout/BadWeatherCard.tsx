@@ -1,65 +1,59 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent, styled, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, styled, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-// eslint-disable-next-line
-const adverseCode = new RegExp('(("code":")+(TC8+|TC9|TC10|WRAINR|WRAINB))');
 
-const useFetch = (url) => {
-  const [data, setData] = useState(null);
-  async function fetchData() {
-    const response = await fetch(url);
-    const json = await response.json();
-    setData(json);
-    //Test string, comment in production
-    // setData({ "WTCSGNL": { "name": "Tropical Cyclone Warning Signal", "code": "TC8NE", "actionCode": "ISSUE", "type": "No. 8 Northeast Gale or Storm Signal", "issueTime": "2021-10-12T17:20:00+08:00", "updateTime": "2021-10-12T17:20:00+08:00" } });
-  }
-  useEffect(() => {
-    fetchData();
-  }, []);
-  return data;
-};
-
-function BadWeatherCard() {
-  let match = false;
-  let string = "";
-  //Hook cannot go under if()
+const BadWeatherCard = () => {
   const { t } = useTranslation();
-  let bwLink = t("bad-weather-link");
-  let bwText = t("bad-weather-text");
-  const data = useFetch(
-    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en"
-  );
+  const [weather, setWeather] = useState(null);
+  
+  useEffect(() => {
+    fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en")
+    .then(r => r.json())
+    .then(d => setWeather(d));
+  }, [])
 
-  string = JSON.stringify(data);
-  match = adverseCode.test(string);
-  if (match) {
-    return clickCard(bwText, bwLink);
+  const isAdverse = () => {
+    if ( weather && weather.WTCSGNL && adverseWCode.includes(weather.WTCSGNL.code) )
+      return true;
+    if ( weather && weather.WRAIN && adverseRCode.includes(weather.WRAIN.code) )
+    return false;
+  }
+ 
+  if ( navigator.userAgent !== "prerendering" && isAdverse() ) {
+    return (
+      <WeatherCard variant="outlined" className={classes.card}>
+        <CardActionArea href={t('bad-weather-link')} target="_blank">
+          <CardContent>
+            <Typography>{t('bad-weather-text')}</Typography>
+          </CardContent>
+        </CardActionArea>
+      </WeatherCard>
+    )
   } else {
     return null;
   }
 }
 
-const StyledCard = styled(Card)(({ theme }) => ({
-  backgroundColor: theme.palette.main,
-  borderRadius: theme.shape.borderRadius,
-  margin: 0.2,
-}));
+export default BadWeatherCard;
 
-const StyledLink = styled("a")(({ theme }) => ({
-  textDecorationLine: "none",
-  color: theme.palette.text.primary,
-}));
+const adverseWCode = ["TC8NE", "TC8SE", "TC8NW", "TC8SW", "TC9", "TC10"];
+const adverseRCode = ["WARINR", "WRAINB"];
 
-const clickCard = (content, link) => {
-  return (
-    <StyledCard variant="outlined">
-      <StyledLink href={link}>
-        <CardContent>
-          <Typography>{content}</Typography>
-        </CardContent>
-      </StyledLink>
-    </StyledCard>
-  );
+const PREFIX = "route";
+
+const classes = {
+  card: `${PREFIX}-card`,
+  link: `${PREFIX}-link`,
 };
 
-export default BadWeatherCard;
+const WeatherCard = styled(Card)(({ theme }) => ({
+  [`&.${classes.card}`]: {
+    backgroundColor: theme.palette.main,
+    borderRadius: theme.shape.borderRadius,
+    margin: 0.2,
+  },
+  [`& .${classes.link}`]: {
+    textDecorationLine: "none",
+    color: theme.palette.text.primary,
+  }
+}));
