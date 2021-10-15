@@ -138,6 +138,7 @@ registerRoute(
 registerRoute(
   ({ url }) =>
     url.origin.includes("rt.data.gov.hk") ||
+    url.origin.includes("data.weather.gov.hk") ||
     url.origin.includes("data.etabus.gov.hk"),
   new NetworkFirst({
     cacheName: "bus-route-and-eta",

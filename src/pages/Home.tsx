@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import throttle from "lodash.throttle";
 import { Location, RouteList, StopListEntry, StopList } from "hk-bus-eta";
 import { isHoliday, isRouteAvaliable } from "../timetable";
+import BadWeatherCard from "../components/layout/BadWeatherCard";
 
 const Home = () => {
   const {
@@ -76,6 +77,7 @@ const Home = () => {
         <Typography component="h2" style={visuallyHidden}>
           {t("home-page-description")}
         </Typography>
+        <BadWeatherCard />
         <List disablePadding>
           {selectedRoutes.split("|").map((selectedRoute, idx) => (
             <SuccinctTimeReport
