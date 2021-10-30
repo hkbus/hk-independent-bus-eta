@@ -57,7 +57,7 @@ const StopAccordions = ({
     return stopListExtracted.map((stop, idx) => {
       const onClickShare = () => {
         triggerShare(
-          `https://${window.location.hostname}/${i18n.language}/${id}`,
+          `https://${window.location.hostname}/${i18n.language}/route/${id}`,
           `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
             "往"
           )} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}`
