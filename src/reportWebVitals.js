@@ -11,7 +11,7 @@ const reportWebVitals = (onPerfEntry) => {
 };
 
 export const sendToGoogleAnalytics = ({ name, delta, value, id }) => {
-  if (!window.gtag) {
+  /*if (!window.gtag) {
     console.log("gtag not found");
     return;
   }
@@ -30,7 +30,7 @@ export const sendToGoogleAnalytics = ({ name, delta, value, id }) => {
     // metric_rating: 'good' | 'ni' | 'poor',
     // debug_info: '...',
     // ...
-  });
+  });*/
 };
 
 export default reportWebVitals;
