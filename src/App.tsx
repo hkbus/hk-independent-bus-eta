@@ -59,7 +59,7 @@ const App = () => {
           >
             <Router>
               <Route exact path="/">
-                <Redirect to="/zh" />
+                <Redirect to="/en" />
               </Route>
               <Route path="/:lang">
                 <CssBaseline />

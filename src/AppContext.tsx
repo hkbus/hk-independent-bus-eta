@@ -16,6 +16,8 @@ import type { Location as GeoLocation } from "hk-bus-eta";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
+const defaultRoute = "44-1-tsing-yi-estate-mong-kok-east-station";
+
 interface AppState {
   searchRoute: string;
   selectedRoute: string;
@@ -143,7 +145,7 @@ export const AppContextProvider = ({
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
     return {
       searchRoute: searchRoute,
-      selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
+      selectedRoute: defaultRoute,
       geoPermission: isGeoPremission(geoPermission) ? geoPermission : null,
       geolocation: isGeoLocation(geoLocation)
         ? geoLocation
