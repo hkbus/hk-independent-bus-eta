@@ -1,4 +1,4 @@
-const reportWebVitals = (onPerfEntry) => {
+/*onst reportWebVitals = (onPerfEntry) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
     import("web-vitals").then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
       getCLS(onPerfEntry);
@@ -30,7 +30,8 @@ export const sendToGoogleAnalytics = ({ name, delta, value, id }) => {
     // metric_rating: 'good' | 'ni' | 'poor',
     // debug_info: '...',
     // ...
-  });*/
+  });
 };
 
 export default reportWebVitals;
+*/

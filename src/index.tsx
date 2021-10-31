@@ -8,7 +8,7 @@ import { AppContextProvider } from "./AppContext";
 import "./i18n";
 import { fetchDbFunc } from "./db";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
+//import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import type { WarnUpMessageData } from "./typing";
 
 const isHuman = () => {
