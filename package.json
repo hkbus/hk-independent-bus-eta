@@ -79,7 +79,7 @@
     "not dead",
     "not op_mini all"
   ],
-  "homepage": "https://hkbus.app/",
+  "homepage": "https://hkbus.skpracta.info/",
   "devDependencies": {
     "@types/leaflet": "^1.7.0",
     "clean-css": "^4.2.3",
