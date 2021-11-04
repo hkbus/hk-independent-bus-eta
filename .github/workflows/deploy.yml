@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Build & Deploy
+name: Build
 
 on:
   schedule:
@@ -44,7 +44,3 @@ jobs:
         branch: gh-pages # The branch the action should deploy to.
         folder: build # The folder the action should deploy.
         single-commit: true
-    - name: Publish to Cloudflare #Place to Cloudflare Worker
-        uses: cloudflare/wrangler-action@1.3.0
-        with:
-          apiToken: ${{ secrets.CF_TOKEN }}
