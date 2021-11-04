@@ -1,0 +1,17 @@
+name = "hk-independent-bus-eta"
+account_id = "3d380eda88886158e68a5629765f8e1d"
+type = "webpack"
+route = ''
+zone_id = ''
+usage_model = ''
+compatibility_flags = []
+workers_dev = true
+site = {bucket = "./build",entry-point = "workers-site"}
+compatibility_date = "2021-11-04"
+
+[env.production]
+# The ID of the domain to deploying to
+zone_id = "16cc5b1d928e40003826dd0eb0168838"
+
+# The route pattern your Workers application will be served at
+route = "hkbus-w.skpracta.info/*"
