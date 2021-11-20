@@ -102,7 +102,7 @@ const emotionCache = createCache({
 
 const getThemeTokens = (mode: PaletteMode) => ({
   typography: {
-    fontFamily: "Noto Sans TC, Chivo, sans-serif",
+    fontFamily: "'Chiron Sans HK Pro WS', sans-serif",
   },
   palette: {
     mode,
