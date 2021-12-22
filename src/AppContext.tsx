@@ -157,7 +157,7 @@ export const AppContextProvider = ({
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
       colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
-        : "light",
+        : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       isVisible: true,
     };
