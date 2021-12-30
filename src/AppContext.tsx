@@ -130,9 +130,9 @@ export const AppContextProvider = ({
     const devicePreferColorScheme =
       localStorage.getItem("colorMode") ||
       (window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light");
+      window.matchMedia("(prefers-color-scheme: light)").matches
+        ? "light"
+        : "dark");
     const searchRoute = "";
     const geoPermission: unknown = localStorage.getItem("geoPermission");
     const geoLocation: unknown = JSON.parse(
