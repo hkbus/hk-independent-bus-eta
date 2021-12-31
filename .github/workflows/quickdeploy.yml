@@ -23,6 +23,7 @@ jobs:
       - run: yarn install
       - run: yarn run build
       - run: cp build/index.html build/404.html
+      - run: curl https://github.com/sdip15fa/hk-independent-bus-eta/raw/gh-pages/CNAME -o build/CNAME
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
