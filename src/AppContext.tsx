@@ -129,7 +129,7 @@ export const AppContextProvider = ({
   const getInitialState = (): AppState => {
     const devicePreferColorScheme =
       localStorage.getItem("colorMode") ||
-      (navigator.userAgent === 'prerendering' && 'dark' ) || // set default color theme in prerendering to "dark"
+      (navigator.userAgent === "prerendering" && "dark") || // set default color theme in prerendering to "dark"
       (window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: light)").matches
         ? "light"
