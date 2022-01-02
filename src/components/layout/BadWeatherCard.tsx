@@ -60,7 +60,6 @@ const classes = {
 
 const WeatherCard = styled(Card)(({ theme }) => ({
   [`&.${classes.card}`]: {
-    backgroundColor: theme.palette.main,
     borderRadius: theme.shape.borderRadius,
     margin: 0.2,
   },

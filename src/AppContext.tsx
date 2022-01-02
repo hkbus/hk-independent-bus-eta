@@ -129,6 +129,7 @@ export const AppContextProvider = ({
   const getInitialState = (): AppState => {
     const devicePreferColorScheme =
       localStorage.getItem("colorMode") ||
+      (navigator.userAgent === 'prerendering' && 'dark' ) || // set default color theme in prerendering to "dark"
       (window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: light)").matches
         ? "light"
@@ -157,7 +158,7 @@ export const AppContextProvider = ({
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
       colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
-        : "light",
+        : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       isVisible: true,
     };
