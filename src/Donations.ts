@@ -11,16 +11,6 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://www.hkcnews.com/aboutus/",
-      en: "https://www.hkcnews.com/aboutus/",
-    },
-    description: {
-      zh: "請訂閱眾新聞",
-      en: "Please subscribe to Hong Kong Citizen News",
-    },
-  },
-  {
-    url: {
       zh: "https://hkfeature.com/join/",
       en: "https://hkfeature.com/join/",
     },

@@ -86,7 +86,7 @@
     "dotenv-cli": "^4.0.0",
     "express": "^4.17.1",
     "prettier": "2.4.0",
-    "puppeteer": "^9.1.1",
+    "puppeteer": "^13.0.1",
     "request": "^2.88.2",
     "source-map-explorer": "^2.5.2"
   }
