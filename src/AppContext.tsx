@@ -104,8 +104,8 @@ const isEtaFormat = (input: unknown): input is AppState["etaFormat"] => {
 };
 
 const isHomeTab = (input: unknown): input is AppState["homeTab"] => {
-  return input === 'both' || input === "saved" || input === "nearby";
-}
+  return input === "both" || input === "saved" || input === "nearby";
+};
 
 const isStrings = (input: unknown[]): input is string[] => {
   if (input.some((v) => typeof v !== "string")) {
@@ -151,7 +151,7 @@ export const AppContextProvider = ({
     const etaFormat: unknown = localStorage.getItem("etaFormat");
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
-    const homeTab: unknown = localStorage.getItem('homeTab') || 'both';
+    const homeTab: unknown = localStorage.getItem("homeTab") || "both";
     return {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
@@ -171,7 +171,7 @@ export const AppContextProvider = ({
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       isVisible: true,
-      homeTab: isHomeTab(homeTab) ? homeTab : "both"
+      homeTab: isHomeTab(homeTab) ? homeTab : "both",
     };
   };
   type State = AppState;
@@ -197,10 +197,10 @@ export const AppContextProvider = ({
       setState((state) => {
         state.homeTab = isHomeTab(val) ? val : "both";
         localStorage.setItem("homeTab", state.homeTab);
-      })
+      });
     },
     [setState]
-  )
+  );
 
   useEffect(() => {
     if (geoPermission === "granted") {

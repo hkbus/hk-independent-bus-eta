@@ -1,11 +1,19 @@
 import React, { useCallback, useContext, useMemo } from "react";
-import { Box, IconButton, Input, Tabs, Tab, Toolbar, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Input,
+  Tabs,
+  Tab,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Link, useLocation, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { vibrate, checkMobile } from "../../utils";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const Header = () => {
   const {
@@ -14,7 +22,7 @@ const Header = () => {
     db: { routeList },
     colorMode,
     geoPermission,
-    updateGeolocation
+    updateGeolocation,
   } = useContext(AppContext);
   const { path } = useRouteMatch();
   const { t, i18n } = useTranslation();
@@ -29,13 +37,15 @@ const Header = () => {
 
   const relocateGeolocation = useCallback(() => {
     try {
-      navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
-        updateGeolocation({lat: latitude, lng: longitude})
-      })
+      navigator.geolocation.getCurrentPosition(
+        ({ coords: { latitude, longitude } }) => {
+          updateGeolocation({ lat: latitude, lng: longitude });
+        }
+      );
     } catch (e) {
-      console.log('error in getting location')
+      console.log("error in getting location");
     }
-  }, [updateGeolocation])  
+  }, [updateGeolocation]);
 
   return useMemo(
     () => (
@@ -83,10 +93,13 @@ const Header = () => {
           disabled={path.includes("route")}
         />
         <Box className={classes.funcPanel}>
-          { geoPermission === 'granted' && (
-            <IconButton aria-label="relocate" onClick={() => relocateGeolocation()}>
+          {geoPermission === "granted" && (
+            <IconButton
+              aria-label="relocate"
+              onClick={() => relocateGeolocation()}
+            >
               <LocationOnIcon />
-            </IconButton> 
+            </IconButton>
           )}
           <LanguageTabs
             className={classes.languageTabs}
@@ -165,9 +178,9 @@ const AppToolbar = styled(Toolbar)(({ theme }) => ({
     },
   },
   [`& .${classes.funcPanel}`]: {
-    display: 'flex',
-    alignItems: 'center',
-  }
+    display: "flex",
+    alignItems: "center",
+  },
 }));
 
 const LanguageTabs = styled(Tabs)(({ theme }) => ({
