@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useEffect, useCallback, useContext, useMemo } from "react";
 import {
   Box,
   IconButton,
@@ -46,6 +46,31 @@ const Header = () => {
       console.log("error in getting location");
     }
   }, [updateGeolocation]);
+
+  const handleKeydown = useCallback(({key, ctrlKey, altKey, metaKey, target}: KeyboardEvent) => {
+    // escape if key is functional
+    if ( ctrlKey || altKey || metaKey ) return;
+    // escape if any <input> has already been focused
+    if ( ( target as HTMLElement).tagName.toUpperCase() === 'INPUT' ) return;
+    if ( ( target as HTMLElement).tagName.toUpperCase() === 'TEXTAREA' ) return;
+
+    if ( key === 'Escape' ) {
+      setSearchRoute('');
+    } else if ( key === 'Backspace' ) {
+      setSearchRoute(searchRoute.slice(0,-1));
+    } else if ( key.length === 1 ) {
+      setSearchRoute(searchRoute+key);
+      history.replace(`/${i18n.language}/board`);
+    }
+    // eslint-disable-next-line
+  }, [searchRoute, i18n.language, setSearchRoute])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeydown)
+    return () => {
+      window.removeEventListener('keydown', handleKeydown)
+    }
+  }, [handleKeydown])
 
   return useMemo(
     () => (
