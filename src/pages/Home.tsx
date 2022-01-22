@@ -1,11 +1,15 @@
-import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
-import { List, Paper, Typography } from "@mui/material";
+import React, { useContext, useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { List, Paper, Tabs, Tab, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
+import { useTranslation } from "react-i18next";
+import CloudIcon from '@mui/icons-material/Cloud';
+import StarIcon from '@mui/icons-material/Star';
+import CompassCalibrationIcon from '@mui/icons-material/CompassCalibration';
+
 import AppContext from "../AppContext";
 import { getDistance, setSeoHeader } from "../utils";
 import SuccinctTimeReport from "../components/home/SuccinctTimeReport";
-import { useTranslation } from "react-i18next";
 import throttle from "lodash.throttle";
 import { Location, RouteList, StopListEntry, StopList } from "hk-bus-eta";
 import { isHoliday, isRouteAvaliable } from "../timetable";
@@ -19,6 +23,8 @@ const Home = () => {
     savedEtas,
     db: { holidays, routeList, stopList },
     isRouteFilter,
+    homeTab,
+    setHomeTab
   } = useContext(AppContext);
   const { t, i18n } = useTranslation();
   const isTodayHoliday = isHoliday(holidays, new Date());
@@ -33,6 +39,7 @@ const Home = () => {
       stopList,
       isRouteFilter,
       isTodayHoliday,
+      homeTab
     })
   );
 
@@ -46,6 +53,7 @@ const Home = () => {
         stopList,
         isRouteFilter,
         isTodayHoliday,
+        homeTab
       });
       if (_selectedRoutes !== selectedRoutes) {
         setSelectedRoute(_selectedRoutes);
@@ -68,6 +76,22 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geolocation]);
 
+  useEffect(() => {
+    const _selectedRoutes = getSelectedRoutes({
+      geolocation,
+      hotRoute,
+      savedEtas,
+      routeList,
+      stopList,
+      isRouteFilter,
+      isTodayHoliday,
+      homeTab
+    });
+    if (_selectedRoutes !== selectedRoutes) {
+      setSelectedRoute(_selectedRoutes);
+    }
+  }, [homeTab])
+
   return useMemo(
     () => (
       <Root className={classes.root} square elevation={0}>
@@ -77,6 +101,15 @@ const Home = () => {
         <Typography component="h2" style={visuallyHidden}>
           {t("home-page-description")}
         </Typography>
+        <Tabs 
+          value={homeTab} 
+          onChange={(e, v) => setHomeTab(v)}
+          className={classes.tabbar} 
+        >
+          <Tab iconPosition="start" icon={<CloudIcon />} label={t('綜合')} value="both" disableRipple />
+          <Tab iconPosition="start" icon={<StarIcon />} label={t('常用')} value="saved" disableRipple />
+          <Tab iconPosition="start" icon={<CompassCalibrationIcon />} label={t('附近')} value="nearby" disableRipple />
+        </Tabs>
         <BadWeatherCard />
         <List disablePadding>
           {selectedRoutes.split("|").map((selectedRoute, idx) => (
@@ -89,7 +122,7 @@ const Home = () => {
       </Root>
     ),
     // eslint-disable-next-line
-    [selectedRoutes]
+    [selectedRoutes, homeTab]
   );
 };
 
@@ -103,6 +136,7 @@ const getSelectedRoutes = ({
   routeList,
   isRouteFilter,
   isTodayHoliday,
+  homeTab
 }: {
   hotRoute: Record<string, number>;
   savedEtas: string[];
@@ -111,6 +145,7 @@ const getSelectedRoutes = ({
   routeList: RouteList;
   isRouteFilter: boolean;
   isTodayHoliday: boolean;
+  homeTab: "both" | "saved" | "nearby";
 }): string => {
   const selectedRoutes = savedEtas
     .concat(
@@ -163,8 +198,10 @@ const getSelectedRoutes = ({
       });
       return acc.concat(routeIds);
     }, []);
-  return selectedRoutes
-    .concat(nearbyRoutes)
+  
+  return []
+    .concat(homeTab !== "nearby" ? selectedRoutes : [])
+    .concat(homeTab !== "saved" ? nearbyRoutes : [])
     .filter((v, i, s) => s.indexOf(v) === i) // uniqify
     .filter((routeUrl) => {
       const [routeId] = routeUrl.split("/");
@@ -182,6 +219,7 @@ const PREFIX = "home";
 
 const classes = {
   root: `${PREFIX}-root`,
+  tabbar: `${PREFIX}-tabbar`
 };
 
 const Root = styled(Paper)(({ theme }) => ({
@@ -194,4 +232,28 @@ const Root = styled(Paper)(({ theme }) => ({
     overflowY: "scroll",
     textAlign: "center",
   },
+  [`& .${classes.tabbar}`]: {
+    background: theme.palette.background.default,
+    minHeight: '36px',
+    [`& .MuiTab-root`]: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingTop: 0,
+      paddingBottom: 0,
+      minHeight: '32px',
+      [`&.Mui-selected`]: {
+        color: theme.palette.mode === "dark"
+          ? theme.palette.primary.main
+          : "black"
+      }
+    },
+    [`& .MuiTabs-flexContainer`]: {
+      justifyContent: 'center'
+    },
+    [`& .MuiTabs-indicator`]: {
+      backgroundColor: theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : "black"
+    }
+  }
 }));

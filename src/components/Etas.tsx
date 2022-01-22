@@ -44,7 +44,7 @@ export const useEtas = (routeId) => {
       clearInterval(fetchEtaInterval);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVisible]);
+  }, [routeId, isVisible]);
 
   return etas;
 };

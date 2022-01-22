@@ -31,7 +31,7 @@ const Footer = () => {
         classes={{ root: classes.root }}
       >
         <BottomNavigationAction
-          label={t("常用")}
+          label={t("首頁")}
           component={Link}
           to={`/${i18n.language}`}
           onClick={(e) => handleClick(`/${i18n.language}`, e)}

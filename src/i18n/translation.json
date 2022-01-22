@@ -16,7 +16,7 @@
       "由": "From",
       "往": "To",
       "分鐘": "min",
-      "常用": "Home",
+      "首頁": "Home",
       "搜尋": "Search",
       "規劃": "P2P",
       "設定": "Settings",
@@ -88,7 +88,10 @@
       "星期六": "Saturday",
       "星期日及公眾假期": "Sunday & Public Holidays",
       "所有日子": "All day",
-      "時間表": "skd"
+      "時間表": "skd",
+      "綜合": "All",
+      "常用": "Starred",
+      "附近": "Nearby"
     }
   },
   "zh": {

@@ -47,6 +47,10 @@ interface AppState {
    * check if window is on active in mobile
    */
   isVisible: boolean;
+  /**
+   * Home Tab
+   */
+  homeTab: "both" | "saved" | "nearby";
 }
 
 interface AppContextValue extends AppState, DatabaseContextValue {
@@ -57,6 +61,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   updateGeolocation: (geoLocation: GeoLocation) => void;
   updateSavedEtas: (keys: string) => void;
   resetUsageRecord: () => void;
+  setHomeTab: (val: string) => void;
   // settings
   updateGeoPermission: (
     geoPermission: AppState["geoPermission"],
@@ -97,6 +102,10 @@ const isGeoLocation = (input: unknown): input is GeoLocation => {
 const isEtaFormat = (input: unknown): input is AppState["etaFormat"] => {
   return input === "exact" || input === "diff";
 };
+
+const isHomeTab = (input: unknown): input is AppState["homeTab"] => {
+  return input === 'both' || input === "saved" || input === "nearby";
+}
 
 const isStrings = (input: unknown[]): input is string[] => {
   if (input.some((v) => typeof v !== "string")) {
@@ -142,6 +151,7 @@ export const AppContextProvider = ({
     const etaFormat: unknown = localStorage.getItem("etaFormat");
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
+    const homeTab: unknown = localStorage.getItem('homeTab') || 'both';
     return {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
@@ -161,6 +171,7 @@ export const AppContextProvider = ({
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       isVisible: true,
+      homeTab: isHomeTab(homeTab) ? homeTab : "both"
     };
   };
   type State = AppState;
@@ -181,6 +192,15 @@ export const AppContextProvider = ({
     },
     [setState]
   );
+  const setHomeTab = useCallback(
+    (val: string) => {
+      setState((state) => {
+        state.homeTab = isHomeTab(val) ? val : "both";
+        localStorage.setItem("homeTab", state.homeTab);
+      })
+    },
+    [setState]
+  )
 
   useEffect(() => {
     if (geoPermission === "granted") {
@@ -391,6 +411,7 @@ export const AppContextProvider = ({
       updateGeolocation,
       updateSavedEtas,
       resetUsageRecord,
+      setHomeTab,
       updateGeoPermission,
       toggleRouteFilter,
       toggleEtaFormat,
@@ -407,6 +428,7 @@ export const AppContextProvider = ({
     updateGeolocation,
     updateSavedEtas,
     resetUsageRecord,
+    setHomeTab,
     updateGeoPermission,
     toggleRouteFilter,
     toggleEtaFormat,
