@@ -1,10 +1,11 @@
-import React, { useContext, useMemo } from "react";
-import { Input, Tabs, Tab, Toolbar, Typography } from "@mui/material";
+import React, { useCallback, useContext, useMemo } from "react";
+import { Box, IconButton, Input, Tabs, Tab, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Link, useLocation, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { vibrate, checkMobile } from "../../utils";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const Header = () => {
   const {
@@ -12,6 +13,8 @@ const Header = () => {
     setSearchRoute,
     db: { routeList },
     colorMode,
+    geoPermission,
+    updateGeolocation
   } = useContext(AppContext);
   const { path } = useRouteMatch();
   const { t, i18n } = useTranslation();
@@ -23,6 +26,16 @@ const Header = () => {
     history.replace(location.pathname.replace("/" + i18n.language, "/" + lang));
     i18n.changeLanguage(lang);
   };
+
+  const relocateGeolocation = useCallback(() => {
+    try {
+      navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
+        updateGeolocation({lat: latitude, lng: longitude})
+      })
+    } catch (e) {
+      console.log('error in getting location')
+    }
+  }, [updateGeolocation])  
 
   return useMemo(
     () => (
@@ -69,36 +82,43 @@ const Header = () => {
           }}
           disabled={path.includes("route")}
         />
-        <LanguageTabs
-          className={classes.languageTabs}
-          value={i18n.language}
-          onChange={(e, v) => handleLanguageChange(v)}
-        >
-          <Tab
-            disableRipple
-            className={classes.languageTab}
-            id="en-selector"
-            value="en"
-            label="En"
-            component={Link}
-            to={`${window.location.pathname.replace("/zh", "/en")}`}
-            onClick={(e) => e.preventDefault()}
-          />
-          <Tab
-            disableRipple
-            className={classes.languageTab}
-            id="zh-selector"
-            value="zh"
-            label="繁"
-            component={Link}
-            to={`${window.location.pathname.replace("/en", "/zh")}`}
-            onClick={(e) => e.preventDefault()}
-          />
-        </LanguageTabs>
+        <Box className={classes.funcPanel}>
+          { geoPermission === 'granted' && (
+            <IconButton aria-label="relocate" onClick={() => relocateGeolocation()}>
+              <LocationOnIcon />
+            </IconButton> 
+          )}
+          <LanguageTabs
+            className={classes.languageTabs}
+            value={i18n.language}
+            onChange={(e, v) => handleLanguageChange(v)}
+          >
+            <Tab
+              disableRipple
+              className={classes.languageTab}
+              id="en-selector"
+              value="en"
+              label="En"
+              component={Link}
+              to={`${window.location.pathname.replace("/zh", "/en")}`}
+              onClick={(e) => e.preventDefault()}
+            />
+            <Tab
+              disableRipple
+              className={classes.languageTab}
+              id="zh-selector"
+              value="zh"
+              label="繁"
+              component={Link}
+              to={`${window.location.pathname.replace("/en", "/zh")}`}
+              onClick={(e) => e.preventDefault()}
+            />
+          </LanguageTabs>
+        </Box>
       </AppToolbar>
     ),
     // eslint-disable-next-line
-    [searchRoute, i18n.language, location.pathname, colorMode]
+    [searchRoute, i18n.language, location.pathname, colorMode, geoPermission]
   );
 };
 
@@ -110,6 +130,7 @@ const classes = {
   toolbar: `${PREFIX}-toolbar`,
   appTitle: `${PREFIX}-appTitle`,
   searchRouteInput: `${PREFIX}-searchRouteInput`,
+  funcPanel: `${PREFIX}-funcPanel`,
   languageTabs: `${PREFIX}-languagetabs`,
   languageTab: `${PREFIX}-languagetab`,
 };
@@ -143,6 +164,10 @@ const AppToolbar = styled(Toolbar)(({ theme }) => ({
       borderBottom: `1px ${theme.palette.text.primary} solid`,
     },
   },
+  [`& .${classes.funcPanel}`]: {
+    display: 'flex',
+    alignItems: 'center',
+  }
 }));
 
 const LanguageTabs = styled(Tabs)(({ theme }) => ({
