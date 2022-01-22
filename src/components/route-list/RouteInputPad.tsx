@@ -107,7 +107,7 @@ const InputPadBox = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "row",
-    height: "208px",
+    height: "248px",
     justifyContent: "space-around",
   },
   [`& .${classes.numPadContainer}`]: {
@@ -115,7 +115,7 @@ const InputPadBox = styled(Box)(({ theme }) => ({
   },
   [`& .${classes.alphabetPadContainer}`]: {
     width: "20%",
-    height: "206px",
+    height: "246px",
     overflowX: "hidden",
     overflowY: "scroll",
   },
@@ -123,8 +123,7 @@ const InputPadBox = styled(Box)(({ theme }) => ({
     background: theme.palette.background.paper,
     color: theme.palette.text.primary,
     width: "100%",
-    height: "44px",
-    fontSize: "1.2em",
+    fontSize: "1.4em",
     borderRadius: "unset",
     "&:selected": {
       color: theme.palette.text.primary,
@@ -134,12 +133,12 @@ const InputPadBox = styled(Box)(({ theme }) => ({
     },
   },
   [`& .${classes.cancel}`]: {
-    fontSize: "0.8em",
+    fontSize: "0.9em",
   },
   [`& .${classes.alphabet}`]: {
-    height: "42px",
+    height: "52px",
   },
   [`& .${classes.number}`]: {
-    height: "52px",
+    height: "62px",
   },
 }));
