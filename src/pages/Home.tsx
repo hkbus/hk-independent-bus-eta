@@ -4,7 +4,6 @@ import React, {
   useRef,
   useState,
   useMemo,
-  useCallback,
 } from "react";
 import { List, Paper, Tabs, Tab, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -97,6 +96,7 @@ const Home = () => {
     if (_selectedRoutes !== selectedRoutes) {
       setSelectedRoute(_selectedRoutes);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homeTab]);
 
   return useMemo(
