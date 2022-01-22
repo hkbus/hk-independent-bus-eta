@@ -47,30 +47,33 @@ const Header = () => {
     }
   }, [updateGeolocation]);
 
-  const handleKeydown = useCallback(({key, ctrlKey, altKey, metaKey, target}: KeyboardEvent) => {
-    // escape if key is functional
-    if ( ctrlKey || altKey || metaKey ) return;
-    // escape if any <input> has already been focused
-    if ( ( target as HTMLElement).tagName.toUpperCase() === 'INPUT' ) return;
-    if ( ( target as HTMLElement).tagName.toUpperCase() === 'TEXTAREA' ) return;
+  const handleKeydown = useCallback(
+    ({ key, ctrlKey, altKey, metaKey, target }: KeyboardEvent) => {
+      // escape if key is functional
+      if (ctrlKey || altKey || metaKey) return;
+      // escape if any <input> has already been focused
+      if ((target as HTMLElement).tagName.toUpperCase() === "INPUT") return;
+      if ((target as HTMLElement).tagName.toUpperCase() === "TEXTAREA") return;
 
-    if ( key === 'Escape' ) {
-      setSearchRoute('');
-    } else if ( key === 'Backspace' ) {
-      setSearchRoute(searchRoute.slice(0,-1));
-    } else if ( key.length === 1 ) {
-      setSearchRoute(searchRoute+key);
-      history.replace(`/${i18n.language}/board`);
-    }
-    // eslint-disable-next-line
-  }, [searchRoute, i18n.language, setSearchRoute])
+      if (key === "Escape") {
+        setSearchRoute("");
+      } else if (key === "Backspace") {
+        setSearchRoute(searchRoute.slice(0, -1));
+      } else if (key.length === 1) {
+        setSearchRoute(searchRoute + key);
+        history.replace(`/${i18n.language}/board`);
+      }
+      // eslint-disable-next-line
+    },
+    [searchRoute, i18n.language, setSearchRoute]
+  );
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeydown)
+    window.addEventListener("keydown", handleKeydown);
     return () => {
-      window.removeEventListener('keydown', handleKeydown)
-    }
-  }, [handleKeydown])
+      window.removeEventListener("keydown", handleKeydown);
+    };
+  }, [handleKeydown]);
 
   return useMemo(
     () => (
