@@ -63,8 +63,8 @@ const Header = () => {
         setSearchRoute(searchRoute + key);
         history.replace(`/${i18n.language}/board`);
       }
-      // eslint-disable-next-line
     },
+    // eslint-disable-next-line
     [searchRoute, i18n.language, setSearchRoute]
   );
 
