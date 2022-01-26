@@ -8,7 +8,7 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
-import DirectionsIcon from '@mui/icons-material/Directions';
+import DirectionsIcon from "@mui/icons-material/Directions";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { styled } from "@mui/material/styles";
@@ -70,9 +70,11 @@ const StopAccordions = ({
         handleChange(idx, expand);
       };
       const onClickDirection = () => {
-        const { lat: tLat, lng: tLng} = stop.location;
-        window.open(`https://www.google.com/maps/dir/?api=1&destination=${tLat},${tLng}&travelmode=walking`)
-      }
+        const { lat: tLat, lng: tLng } = stop.location;
+        window.open(
+          `https://www.google.com/maps/dir/?api=1&destination=${tLat},${tLng}&travelmode=walking`
+        );
+      };
       return (
         <StopAccordion
           key={"stop-" + idx}
@@ -120,7 +122,7 @@ const StopAccordions = ({
               <IconButton
                 aria-label="direction"
                 onClick={onClickDirection}
-                style={{ background: 'transparent' }}
+                style={{ background: "transparent" }}
                 size="large"
               >
                 <DirectionsIcon />
