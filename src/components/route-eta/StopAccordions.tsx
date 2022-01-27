@@ -190,6 +190,7 @@ const StopAccordions = ({
     });
   }, [
     AppTitle,
+    colorMode,
     dest,
     expanded,
     fares,
