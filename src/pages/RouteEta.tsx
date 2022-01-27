@@ -166,7 +166,7 @@ const RouteEta = () => {
   return (
     <>
       <input hidden id={id} />
-      <Root className={classes.header} elevation={0}>
+      <Root id="route-eta-header" className={classes.header} elevation={0}>
         <RouteNo routeNo={route} component="h1" align="center" />
         <Typography component="h2" variant="caption" align="center">
           {t("往")} {toProperCase(dest[i18n.language])}{" "}

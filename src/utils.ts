@@ -76,6 +76,26 @@ export const triggerShare = (url: string, title: string) => {
   return new Promise((resolve) => resolve(""));
 };
 
+export const triggerShareImg = (
+  base64Img: string,
+  title: string,
+  text: string
+) => {
+  if (navigator.share) {
+    fetch(base64Img)
+      .then((res) => res)
+      .then((ret) => ret.blob())
+      .then((blob) => {
+        const file = new File([blob], "hkbus.png", { type: blob.type });
+        navigator.share({
+          title: title,
+          text: text,
+          files: [file],
+        });
+      });
+  }
+};
+
 export const setSeoHeader = ({
   title,
   description,

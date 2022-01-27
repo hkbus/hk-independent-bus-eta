@@ -199,7 +199,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
     }, list);
   }, [stops]);
   return (
-    <RouteMapBox className={classes.mapContainerBox}>
+    <RouteMapBox id="route-map" className={classes.mapContainerBox}>
       <MapContainer
         center={mapRef.current.initialCenter}
         zoom={16}

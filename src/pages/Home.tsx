@@ -141,7 +141,7 @@ const Home = () => {
       </Root>
     ),
     // eslint-disable-next-line
-    [selectedRoutes, homeTab]
+    [selectedRoutes, homeTab, t]
   );
 };
 

@@ -8,13 +8,15 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
-import DirectionsIcon from '@mui/icons-material/Directions';
+import DirectionsIcon from "@mui/icons-material/Directions";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { styled } from "@mui/material/styles";
+import domtoimage from "dom-to-image";
+import mergeBase64 from "merge-base64";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
-import { toProperCase, triggerShare } from "../../utils";
+import { toProperCase, triggerShare, triggerShareImg } from "../../utils";
 import TimeReport from "./TimeReport";
 import ShareIcon from "@mui/icons-material/Share";
 import type { StopListEntry, RouteListEntry } from "hk-bus-eta";
@@ -36,7 +38,7 @@ const StopAccordions = ({
   handleChange,
 }: StopAccordionsProps) => {
   const id = routeId;
-  const { AppTitle, savedEtas, updateSavedEtas, energyMode } =
+  const { AppTitle, savedEtas, updateSavedEtas, energyMode, colorMode } =
     useContext(AppContext);
   const [isCopied, setIsCopied] = useState(false);
   const { route, dest, fares, faresHoliday } = routeListEntry;
@@ -57,24 +59,56 @@ const StopAccordions = ({
   const stopListElements = useMemo(() => {
     return stopListExtracted.map((stop, idx) => {
       const onClickShare = () => {
-        triggerShare(
-          `https://${window.location.hostname}/${i18n.language}/route/${id}`,
-          `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
-            "往"
-          )} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}`
-        ).then(() => {
-          if (navigator.clipboard) setIsCopied(true);
-        });
+        if (navigator.share) {
+          Promise.all([
+            domtoimage.toPng(document.getElementById(`route-eta-header`), {
+              bgcolor: colorMode === "light" ? "#fedb00" : "#000",
+            }),
+            domtoimage.toPng(document.getElementById(`route-map`)),
+            domtoimage.toPng(document.getElementById(`stop-${idx}`)),
+          ])
+            .then((rawBase64s) =>
+              mergeBase64(
+                rawBase64s.map((rawBase64) => rawBase64.substr(22)),
+                { direction: true, isPng: true }
+              )
+            )
+            .then((dataUrl) => {
+              triggerShareImg(
+                dataUrl,
+                `https://${window.location.hostname}/${i18n.language}/route/${id}`,
+                `${idx + 1}. ${toProperCase(
+                  stop.name[i18n.language]
+                )} - ${route} ${t("往")} ${toProperCase(
+                  dest[i18n.language]
+                )} - https://hkbus.app/`
+              );
+            });
+        } else {
+          triggerShare(
+            `https://${window.location.hostname}/${i18n.language}/route/${id}`,
+            `${idx + 1}. ${toProperCase(
+              stop.name[i18n.language]
+            )} - ${route} ${t("往")} ${toProperCase(dest[i18n.language])} - ${t(
+              AppTitle
+            )}`
+          ).then(() => {
+            if (navigator.clipboard) setIsCopied(true);
+          });
+        }
       };
       const handleChangeInner = (_: unknown, expand: boolean) => {
         handleChange(idx, expand);
       };
       const onClickDirection = () => {
-        const { lat: tLat, lng: tLng} = stop.location;
-        window.open(`https://www.google.com/maps/dir/?api=1&destination=${tLat},${tLng}&travelmode=walking`)
-      }
+        const { lat, lng } = stop.location;
+        window.open(
+          `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`
+        );
+      };
       return (
         <StopAccordion
+          id={`stop-${idx}`}
           key={"stop-" + idx}
           expanded={stopIdx === idx && expanded}
           onChange={handleChangeInner}
@@ -115,12 +149,16 @@ const StopAccordions = ({
           <StopAccordionDetails
             classes={{ root: classes.accordionDetailsRoot }}
           >
-            <TimeReport routeId={`${id.toUpperCase()}`} seq={idx} />
+            <TimeReport
+              containerClass={classes.accordionTimeReport}
+              routeId={`${id.toUpperCase()}`}
+              seq={idx}
+            />
             <div style={{ display: "flex" }}>
               <IconButton
                 aria-label="direction"
                 onClick={onClickDirection}
-                style={{ background: 'transparent' }}
+                style={{ background: "transparent" }}
                 size="large"
               >
                 <DirectionsIcon />
@@ -199,6 +237,7 @@ const classes = {
   accordionSummaryContent: `${PREFIX}-summary-content`,
   accordionSummaryExpanded: `${PREFIX}-summary-expanded`,
   accordionDetailsRoot: `${PREFIX}-details-root`,
+  accordionTimeReport: `${PREFIX}-accordionTimeReport`,
 };
 
 const StopAccordionsBox = styled(Box)(({ theme }) => ({
@@ -257,5 +296,8 @@ const StopAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     paddingBottom: theme.spacing(1),
     justifyContent: "space-between",
     display: "flex",
+  },
+  [`& .${classes.accordionTimeReport}`]: {
+    flex: 1,
   },
 }));
