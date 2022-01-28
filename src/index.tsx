@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import Leaflet from "leaflet";
 import "./index.css";
 import App from "./App";
 import { DbProvider } from "./DbContext";
@@ -39,7 +38,10 @@ if (isHuman()) {
       skipWaiting();
       const message: WarnUpMessageData = {
         type: "WARN_UP_MAP_CACHE",
-        retinaDisplay: Leaflet.Browser.retina,
+        retinaDisplay:
+          (window.devicePixelRatio ||
+            // @ts-ignore: Property does not exist on type 'Screen'.
+            window.screen.deviceXDPI / window.screen.logicalXDPI) > 1,
         zoomLevels: [14, 15],
       };
       workbox.messageSW(message);

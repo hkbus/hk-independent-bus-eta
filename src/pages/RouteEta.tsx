@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import RouteMap from "../components/route-eta/RouteMap";
+import loadable from "@loadable/component";
 import StopAccordions from "../components/route-eta/StopAccordions";
 import StopDialog from "../components/route-eta/StopDialog";
 import { Button, Divider, Paper, Typography } from "@mui/material";
@@ -11,8 +11,8 @@ import RouteNo from "../components/route-list/RouteNo";
 import { setSeoHeader, toProperCase, getDistance } from "../utils";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import TimetableDrawer from "../components/route-eta/TimetableDrawer";
-import Leaflet from "leaflet";
 import type { WarnUpMessageData } from "../typing";
+const RouteMap = loadable(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
   const { id, panel } = useParams<{ id: string; panel: string }>();
@@ -153,7 +153,10 @@ const RouteEta = () => {
     if (!energyMode) {
       const message: WarnUpMessageData = {
         type: "WARN_UP_MAP_CACHE",
-        retinaDisplay: Leaflet.Browser.retina,
+        retinaDisplay:
+          (window.devicePixelRatio ||
+            // @ts-ignore: Property does not exist on type 'Screen'.
+            window.screen.deviceXDPI / window.screen.logicalXDPI) > 1,
         zoomLevels: [14, 15, 16, 17, 18],
         stopList: getStops(co, stops)
           .map((id) => stopList[id])

@@ -8,18 +8,18 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
+import loadable from "@loadable/component";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { styled } from "@mui/material/styles";
-import domtoimage from "dom-to-image";
-import mergeBase64 from "merge-base64";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
-import { toProperCase, triggerShare, triggerShareImg } from "../../utils";
+import { toProperCase } from "../../utils";
 import TimeReport from "./TimeReport";
 import ShareIcon from "@mui/icons-material/Share";
 import type { StopListEntry, RouteListEntry } from "hk-bus-eta";
+const SharingBackdrop = loadable(() => import("./SharingBackdrop"));
 
 interface StopAccordionsProps {
   routeId: string;
@@ -38,9 +38,9 @@ const StopAccordions = ({
   handleChange,
 }: StopAccordionsProps) => {
   const id = routeId;
-  const { AppTitle, savedEtas, updateSavedEtas, energyMode, colorMode } =
-    useContext(AppContext);
+  const { savedEtas, updateSavedEtas, energyMode } = useContext(AppContext);
   const [isCopied, setIsCopied] = useState(false);
+  const [sharingObj, setSharingObj] = useState<any | null>(null);
   const { route, dest, fares, faresHoliday } = routeListEntry;
   const { t, i18n } = useTranslation();
   const accordionRef = useRef<HTMLElement[]>([]);
@@ -58,44 +58,16 @@ const StopAccordions = ({
 
   const stopListElements = useMemo(() => {
     return stopListExtracted.map((stop, idx) => {
-      const onClickShare = () => {
-        if (navigator.share) {
-          Promise.all([
-            domtoimage.toPng(document.getElementById(`route-eta-header`), {
-              bgcolor: colorMode === "light" ? "#fedb00" : "#000",
-            }),
-            domtoimage.toPng(document.getElementById(`route-map`)),
-            domtoimage.toPng(document.getElementById(`stop-${idx}`)),
-          ])
-            .then((rawBase64s) =>
-              mergeBase64(
-                rawBase64s.map((rawBase64) => rawBase64.substr(22)),
-                { direction: true, isPng: true }
-              )
-            )
-            .then((dataUrl) => {
-              triggerShareImg(
-                dataUrl,
-                `https://${window.location.hostname}/${i18n.language}/route/${id}`,
-                `${idx + 1}. ${toProperCase(
-                  stop.name[i18n.language]
-                )} - ${route} ${t("往")} ${toProperCase(
-                  dest[i18n.language]
-                )} - https://hkbus.app/`
-              );
-            });
-        } else {
-          triggerShare(
-            `https://${window.location.hostname}/${i18n.language}/route/${id}`,
-            `${idx + 1}. ${toProperCase(
-              stop.name[i18n.language]
-            )} - ${route} ${t("往")} ${toProperCase(dest[i18n.language])} - ${t(
-              AppTitle
-            )}`
-          ).then(() => {
-            if (navigator.clipboard) setIsCopied(true);
-          });
-        }
+      const onClickShare = (e) => {
+        setSharingObj({
+          id,
+          route,
+          dest,
+          idx,
+          setIsCopied,
+          stop,
+          event: e,
+        });
       };
       const handleChangeInner = (_: unknown, expand: boolean) => {
         handleChange(idx, expand);
@@ -189,8 +161,6 @@ const StopAccordions = ({
       );
     });
   }, [
-    AppTitle,
-    colorMode,
     dest,
     expanded,
     fares,
@@ -200,6 +170,7 @@ const StopAccordions = ({
     id,
     route,
     savedEtas,
+    setSharingObj,
     stopIdx,
     stopListExtracted,
     t,
@@ -212,6 +183,7 @@ const StopAccordions = ({
       }
     >
       {stopListElements}
+      {sharingObj && <SharingBackdrop {...sharingObj} />}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={isCopied}
