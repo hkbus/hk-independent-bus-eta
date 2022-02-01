@@ -49,10 +49,16 @@ const StopAccordions = ({
     // scroll to specific bus stop
     // check acordion ref not null to ensure it is not in rendering
     if (expanded && accordionRef.current[stopIdx]) {
-      accordionRef.current[stopIdx]?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
+      // scroll in next rendering, i.e., all DOMs are well formed
+      const scrollingTimeout = setTimeout(() => {
+        accordionRef.current[stopIdx]?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 50);
+      return () => {
+        clearTimeout(scrollingTimeout);
+      };
     }
   }, [expanded, stopIdx]);
 
@@ -216,11 +222,9 @@ const classes = {
 const StopAccordionsBox = styled(Box)(({ theme }) => ({
   [`&.${classes.boxContainer}`]: {
     overflowY: "scroll",
-    height: "calc(100vh - 30vh - 47px)",
   },
   [`&.${classes.boxContainerEnergy}`]: {
     overflowY: "scroll",
-    height: "calc(100vh - 47px)",
   },
 }));
 
