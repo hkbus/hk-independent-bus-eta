@@ -39,13 +39,6 @@ const SharingModal = ({
       )
       .then((dataUrl) => {
         setImgBase64(dataUrl);
-        triggerShareImg(
-          dataUrl,
-          `https://${window.location.hostname}/${i18n.language}/route/${id}`,
-          `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
-            "往"
-          )} ${toProperCase(dest[i18n.language])} - https://hkbus.app/`
-        );
       });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
