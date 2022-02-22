@@ -7841,10 +7841,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hk-bus-eta@npm:^1.3.5":
-  version: 1.3.5
-  resolution: "hk-bus-eta@npm:1.3.5"
-  checksum: 2460bc6b919b8537db47a35ff0320ea8ec2b1b63c1e90b548e5467c0bbb5aaa5461573bce08caaff9acfd695caf562aa84ab96ef08e9ea88c81a78a403cf9ed2
+"hk-bus-eta@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "hk-bus-eta@npm:1.4.0"
+  checksum: 33ca1fec7b188565c7589d35e6b365dcb1ddafd3166226e3f4d26a107c1b1b533d635d68b058352d599b08e070a458c6c2619856a971c68389487cdce68edd93
   languageName: node
   linkType: hard
 
@@ -7877,14 +7877,14 @@ __metadata:
     express: ^4.17.1
     fbjs: ^1.0.0
     gh-pages: ^3.1.0
-    hk-bus-eta: ^1.3.5
+    hk-bus-eta: ^1.4.0
     i18next: ^20.2.1
     immer: ^8.0.1
     leaflet: ^1.7.1
     lodash.debounce: ^4.0.8
     lodash.throttle: ^4.1.1
     lzutf8: ^0.6.0
-    merge-base64: "https://github.com/chunlaw/merge-base64#commit=4b5d2e122d2cc099a65ef863ef6633fbc4ec932d"
+    merge-base64: ^1.0.4
     prettier: 2.4.0
     proj4: ^2.7.4
     puppeteer: ^13.0.1
@@ -9971,12 +9971,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"merge-base64@https://github.com/chunlaw/merge-base64#commit=4b5d2e122d2cc099a65ef863ef6633fbc4ec932d":
-  version: 1.0.3
-  resolution: "merge-base64@https://github.com/chunlaw/merge-base64.git#commit=4b5d2e122d2cc099a65ef863ef6633fbc4ec932d"
+"merge-base64@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "merge-base64@npm:1.0.4"
   dependencies:
     jimp: ^0.8.5
-  checksum: b72e7c257d589fa518aeb626ae4ecd7d17b0b07895f79e4530e7fb04f10a0ee91b9e19b6fc9dda08f8ad30d99502408996eabf4750f82000cc708d7fe7d63560
+  checksum: 3a5ee2999c164d5eb85134090ce4d83faf20b636e26475948f0714ffb3b2f2f05cfe7c140bc2cdc32d7237c31b030389720f7036073d57467305f3ee02940c76
   languageName: node
   linkType: hard
 
