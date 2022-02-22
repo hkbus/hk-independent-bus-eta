@@ -194,7 +194,6 @@ const AppToolbar = styled(Toolbar)(({ theme }) => ({
     },
     display: "flex",
     justifyContent: "space-between",
-    zIndex: theme.zIndex.drawer * 2,
   },
   [`& .${classes.searchRouteInput}`]: {
     maxWidth: "50px",

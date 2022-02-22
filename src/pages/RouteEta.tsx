@@ -89,7 +89,7 @@ const RouteEta = () => {
 
   const handleCloseDialog = useCallback(() => {
     setIsDialogOpen(false);
-  }, []);
+  }, [setIsDialogOpen]);
 
   useEffect(() => {
     setIsDialogOpen(false);

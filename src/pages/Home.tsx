@@ -43,24 +43,23 @@ const Home = () => {
     })
   );
 
-  const throttledUpdateRoutes = useRef(
-    throttle((newGeolocation) => {
-      const _selectedRoutes = getSelectedRoutes({
-        geolocation: newGeolocation,
-        hotRoute,
-        savedEtas,
-        routeList,
-        stopList,
-        isRouteFilter,
-        isTodayHoliday,
-        homeTab,
-      });
-      if (_selectedRoutes !== selectedRoutes) {
-        setSelectedRoute(_selectedRoutes);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, 60000)
-  ).current;
+  const updateRoutes = useRef((newGeolocation) => {
+    const _selectedRoutes = getSelectedRoutes({
+      geolocation: newGeolocation,
+      hotRoute,
+      savedEtas,
+      routeList,
+      stopList,
+      isRouteFilter,
+      isTodayHoliday,
+      homeTab,
+    });
+    if (_selectedRoutes !== selectedRoutes) {
+      setSelectedRoute(_selectedRoutes);
+    }
+  }).current;
+
+  const throttledUpdateRoutes = useRef(throttle(updateRoutes, 60000)).current;
 
   useEffect(() => {
     setSeoHeader({
@@ -75,6 +74,12 @@ const Home = () => {
     throttledUpdateRoutes(geolocation);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geolocation]);
+
+  useEffect(() => {
+    // update geolocation after 1 second, assume geolocation has been updated (if possible)
+    setTimeout(() => updateRoutes(geolocation), 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const _selectedRoutes = getSelectedRoutes({

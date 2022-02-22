@@ -24,7 +24,7 @@
       "巴士線": "Route",
       "你的位置": "Your location",
       "目的地": "Destination",
-      "鏈結已複製到剪貼簿": "Link copied to clipboard",
+      "已複製到剪貼簿": "Copied to clipboard",
       "資料更新中": "Data updating",
       "未有班次資料": "No information available",
       "架構版本": "Schema version",
@@ -91,7 +91,9 @@
       "時間表": "skd",
       "綜合": "All",
       "常用": "Starred",
-      "附近": "Nearby"
+      "附近": "Nearby",
+      "以鏈結分享": "Share link",
+      "以圖片分享": "Share image"
     }
   },
   "zh": {

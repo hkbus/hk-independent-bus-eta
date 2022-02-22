@@ -19,7 +19,7 @@ import { toProperCase } from "../../utils";
 import TimeReport from "./TimeReport";
 import ShareIcon from "@mui/icons-material/Share";
 import type { StopListEntry, RouteListEntry } from "hk-bus-eta";
-const SharingBackdrop = loadable(() => import("./SharingBackdrop"));
+const SharingModal = loadable(() => import("./SharingModal"));
 
 interface StopAccordionsProps {
   routeId: string;
@@ -189,7 +189,7 @@ const StopAccordions = ({
       }
     >
       {stopListElements}
-      {sharingObj && <SharingBackdrop {...sharingObj} />}
+      {sharingObj && <SharingModal {...sharingObj} />}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={isCopied}
@@ -197,7 +197,7 @@ const StopAccordions = ({
         onClose={() => {
           setIsCopied(false);
         }}
-        message={t("鏈結已複製到剪貼簿")}
+        message={t("已複製到剪貼簿")}
       />
     </StopAccordionsBox>
   );

@@ -81,19 +81,23 @@ export const triggerShareImg = (
   title: string,
   text: string
 ) => {
-  if (navigator.share) {
-    fetch(base64Img)
-      .then((res) => res)
-      .then((ret) => ret.blob())
-      .then((blob) => {
-        const file = new File([blob], "hkbus.png", { type: blob.type });
-        navigator.share({
+  return fetch(base64Img)
+    .then((res) => res)
+    .then((ret) => ret.blob())
+    .then((blob) => {
+      const file = new File([blob], "hkbus.png", { type: blob.type });
+      if (navigator.share) {
+        return navigator.share({
           title: title,
           text: text,
           files: [file],
         });
-      });
-  }
+      } else if (navigator.clipboard) {
+        return navigator.clipboard.write([
+          new ClipboardItem({ "image/png": blob }),
+        ]);
+      }
+    });
 };
 
 export const setSeoHeader = ({
