@@ -28,12 +28,13 @@ const SharingModal = ({
       domtoimage.toPng(document.getElementById(`route-eta-header`), {
         bgcolor: colorMode === "light" ? "#fedb00" : "#000",
       }),
-      domtoimage.toPng(document.getElementById(`route-map`)),
+      document.getElementById(`route-map`) &&
+        domtoimage.toPng(document.getElementById(`route-map`)),
       domtoimage.toPng(document.getElementById(`stop-${idx}`)),
     ])
       .then((rawBase64s) =>
         mergeBase64(
-          rawBase64s.map((rawBase64) => rawBase64.substr(22)),
+          rawBase64s.filter((v) => v).map((rawBase64) => rawBase64.substr(22)),
           { direction: true, isPng: true }
         )
       )
