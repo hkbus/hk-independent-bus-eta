@@ -257,3 +257,29 @@ export const isWarnUpMessageData = (
 ): value is WarnUpMessageData => {
   return typeof value === "object" && value["type"] === "WARN_UP_MAP_CACHE";
 };
+
+export const checkAppInstalled = () => {
+  if (window.matchMedia("(display-mode: standalone)").matches) return true;
+  // @ts-ignore
+  const standalone = window.navigator.standalone;
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  const safari = /safari/.test(userAgent);
+  const ios = /iphone|ipod|ipad/.test(userAgent);
+
+  if (ios) {
+    if (!standalone && safari) {
+      // Safari
+    } else if (!standalone && !safari) {
+      // iOS webview
+      return true;
+    }
+  } else {
+    if (userAgent.includes("wv")) {
+      // Android webview
+      return true;
+    } else {
+      // Chrome
+    }
+  }
+  return false;
+};

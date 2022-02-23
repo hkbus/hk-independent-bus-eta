@@ -129,6 +129,7 @@ const RootModal = styled(Modal)(({ theme }) => ({
   [`& .${classes.container}`]: {
     display: "flex",
     justifyContent: "center",
+    outline: "none",
   },
   [`& .${classes.boxContainer}`]: {
     display: "flex",

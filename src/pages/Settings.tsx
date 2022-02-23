@@ -33,7 +33,12 @@ import {
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
-import { vibrate, setSeoHeader, triggerShare } from "../utils";
+import {
+  vibrate,
+  setSeoHeader,
+  triggerShare,
+  checkAppInstalled,
+} from "../utils";
 import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
 
@@ -78,7 +83,7 @@ const Settings = () => {
         AppTitle
       )}`}</Typography>
       <List>
-        {window.matchMedia("(display-mode: standalone)").matches ? null : (
+        {!checkAppInstalled() && (
           <ListItem
             button
             onClick={() => {
