@@ -30,6 +30,8 @@ import {
   NightsStay as NightsStayIcon,
   AllInclusive as AllInclusiveIcon,
   FilterAlt as FilterAltIcon,
+  Fingerprint as FingerprintIcon,
+  Gavel as GavelIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -363,6 +365,40 @@ const Settings = () => {
             primary={<ListPrimaryText>{t("圖標來源")}</ListPrimaryText>}
             secondary={"Freepik from Flaticon"}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
+          />
+        </ListItem>
+        <ListItem
+          button
+          component={"a"}
+          href={`/${i18n.language}/privacy`}
+          onClick={() => {
+            vibrate(1);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <FingerprintIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={<ListPrimaryText>{t("隱私權聲明")}</ListPrimaryText>}
+          />
+        </ListItem>
+        <ListItem
+          button
+          component={"a"}
+          href={`/${i18n.language}/terms`}
+          onClick={() => {
+            vibrate(1);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <GavelIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={<ListPrimaryText>{t("條款")}</ListPrimaryText>}
           />
         </ListItem>
         <ListItem>
