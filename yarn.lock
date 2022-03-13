@@ -7841,10 +7841,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hk-bus-eta@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "hk-bus-eta@npm:1.4.0"
-  checksum: 33ca1fec7b188565c7589d35e6b365dcb1ddafd3166226e3f4d26a107c1b1b533d635d68b058352d599b08e070a458c6c2619856a971c68389487cdce68edd93
+"hk-bus-eta@npm:^1.5.1":
+  version: 1.5.1
+  resolution: "hk-bus-eta@npm:1.5.1"
+  checksum: eacc22aa911337568fba868f8ffb6230e6b780fd4235cb7b5dea790146b8011278b2c8512d57ff3bd6b2690451239f1bbbcd294bb83f7f274dd9306ba11bb42a
   languageName: node
   linkType: hard
 
@@ -7877,7 +7877,7 @@ __metadata:
     express: ^4.17.1
     fbjs: ^1.0.0
     gh-pages: ^3.1.0
-    hk-bus-eta: ^1.4.0
+    hk-bus-eta: ^1.5.1
     i18next: ^20.2.1
     immer: ^8.0.1
     leaflet: ^1.7.1
