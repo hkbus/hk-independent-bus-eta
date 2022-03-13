@@ -55,7 +55,7 @@ const DefaultRoute = {
   dest: { zh: "", en: "" },
   bound: "",
   nlbId: 0,
-  gtfsId: '',
+  gtfsId: "",
   fares: [],
   faresHoliday: [],
 };
