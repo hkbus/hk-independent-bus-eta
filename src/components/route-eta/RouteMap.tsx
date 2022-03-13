@@ -190,7 +190,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
       }
       prev.push(
         <Polyline
-          key={`${stop.location.lng}-${stop.location.lat}-line`}
+          key={`${stop.location.lng}-${stop.location.lat}-line-${idx}`}
           positions={[getPoint(lastStop.location), getPoint(stop.location)]}
           color={"#FF9090"}
         />
