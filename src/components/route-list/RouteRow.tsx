@@ -114,7 +114,7 @@ const RowCard = styled(Card)(({ theme }) => ({
     display: "flex",
     justifyContent: "flex-start",
     alignItems: "center",
-    padding: "4px 16px",
+    padding: "0 16px",
   },
   [`& .${classes.busInfoContainer}`]: {
     width: "25%",
