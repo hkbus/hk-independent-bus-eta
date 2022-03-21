@@ -1,8 +1,8 @@
 {
   "en": {
     "translation": {
-      "bad-weather-text":"Services may be impacted by bad weather. Data displayed below might not be accurate. Check here to see offical announcements.",
-      "bad-weather-link":"https://www.td.gov.hk/en/special_news/spnews.htm",
+      "bad-weather-text": "Services may be impacted by bad weather. Data displayed below might not be accurate. Check here to see offical announcements.",
+      "bad-weather-link": "https://www.td.gov.hk/en/special_news/spnews.htm",
       "巴士到站預報 App （免費無廣告）": "HK Bus ETA App (Free and Ad-free)",
       "巴士到站預報": "HK BUS ETA",
       "點對點路線搜尋": "Point to point route search",
@@ -85,10 +85,11 @@
       "星期六至日": "Saturday & Sunday",
       "星期二至四": "Tuesday to Thursday",
       "星期一至四": "Monday to Thursday",
-      "星期五": "Friday", 
+      "星期五": "Friday",
       "星期六": "Saturday",
       "星期日及公眾假期": "Sunday & Public Holidays",
       "所有日子": "All day",
+      "除星期三外": "Except Wednesday",
       "時間表": "skd",
       "綜合": "All",
       "常用": "Starred",
@@ -101,8 +102,8 @@
   },
   "zh": {
     "translation": {
-      "bad-weather-text":"公共交通及班次或受惡劣天氣影響，以下資料未必反映最新狀況。按此查看官方公佈。",
-      "bad-weather-link":"https://www.td.gov.hk/tc/special_news/spnews.htm",
+      "bad-weather-text": "公共交通及班次或受惡劣天氣影響，以下資料未必反映最新狀況。按此查看官方公佈。",
+      "bad-weather-link": "https://www.td.gov.hk/tc/special_news/spnews.htm",
       "kmb": "九巴",
       "ctb": "城巴",
       "nwfb": "新巴",

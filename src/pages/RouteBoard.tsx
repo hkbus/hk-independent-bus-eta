@@ -29,7 +29,7 @@ const RouteList = () => {
     )
     .filter(
       ([routeNo, { freq }]) =>
-        !isRouteFilter || isRouteAvaliable(freq, isTodayHoliday)
+        !isRouteFilter || isRouteAvaliable(routeNo, freq, isTodayHoliday)
     );
   const { t, i18n } = useTranslation();
 
