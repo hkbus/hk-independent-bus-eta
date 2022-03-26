@@ -76,7 +76,7 @@ const TimetableDrawer = ({ freq, jt, open, onClose }) => {
             <div className={classes.jtContainer}>
               <Typography variant="subtitle1">{t("車程")}</Typography>
               <Typography variant="subtitle1">
-                {jt}
+                {Math.round(jt)}
                 {t("分鐘")}
               </Typography>
             </div>
