@@ -21,6 +21,7 @@ const Header = () => {
     setSearchRoute,
     db: { routeList },
     colorMode,
+    vibrateDuration,
     geoPermission,
     updateGeolocation,
   } = useContext(AppContext);
@@ -30,7 +31,7 @@ const Header = () => {
   const history = useHistory();
 
   const handleLanguageChange = (lang) => {
-    vibrate(1);
+    vibrate(vibrateDuration);
     history.replace(location.pathname.replace("/" + i18n.language, "/" + lang));
     i18n.changeLanguage(lang);
   };
@@ -82,7 +83,7 @@ const Header = () => {
           to={`/${i18n.language}/board`}
           onClick={(e) => {
             e.preventDefault();
-            vibrate(1);
+            vibrate(vibrateDuration);
             history.push(`/${i18n.language}/board`);
           }}
           rel="nofollow"
@@ -112,7 +113,7 @@ const Header = () => {
             setSearchRoute(e.target.value);
           }}
           onFocus={(e) => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             if (navigator.userAgent !== "prerendering" && checkMobile()) {
               (document.activeElement as HTMLElement).blur();
             }
@@ -159,7 +160,14 @@ const Header = () => {
       </AppToolbar>
     ),
     // eslint-disable-next-line
-    [searchRoute, i18n.language, location.pathname, colorMode, geoPermission]
+    [
+      searchRoute,
+      i18n.language,
+      location.pathname,
+      colorMode,
+      geoPermission,
+      vibrateDuration,
+    ]
   );
 };
 

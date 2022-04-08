@@ -44,6 +44,10 @@ interface AppState {
    */
   energyMode: boolean;
   /**
+   * vibrate duration
+   */
+  vibrateDuration: number;
+  /**
    * check if window is on active in mobile
    */
   isVisible: boolean;
@@ -71,6 +75,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
   toggleEnergyMode: () => void;
+  toggleVibrateDuration: () => void;
   workbox?: Workbox;
 }
 
@@ -170,6 +175,8 @@ export const AppContextProvider = ({
         ? devicePreferColorScheme
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
+      vibrateDuration:
+        JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
       isVisible: true,
       homeTab: isHomeTab(homeTab) ? homeTab : "both",
     };
@@ -322,9 +329,23 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const toggleVibrateDuration = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prevVibrateDuration = state.vibrateDuration;
+        const vibrateDuration = prevVibrateDuration ? 0 : 1;
+        localStorage.setItem(
+          "vibrateDuration",
+          JSON.stringify(vibrateDuration)
+        );
+        state.vibrateDuration = vibrateDuration;
+      })
+    );
+  }, []);
+
   const updateSearchRouteByButton = useCallback(
     (buttonValue: string) => {
-      vibrate(1);
+      vibrate(state.vibrateDuration);
       setTimeout(() => {
         setStateRaw(
           produce((state: State) => {
@@ -346,7 +367,7 @@ export const AppContextProvider = ({
         );
       }, 0);
     },
-    [routeList]
+    [routeList, state.vibrateDuration]
   );
 
   const updateSelectedRoute = useCallback((route: string, seq: string = "") => {
@@ -417,6 +438,7 @@ export const AppContextProvider = ({
       toggleEtaFormat,
       toggleColorMode,
       toggleEnergyMode,
+      toggleVibrateDuration,
       workbox,
     };
   }, [
@@ -434,6 +456,7 @@ export const AppContextProvider = ({
     toggleEtaFormat,
     toggleColorMode,
     toggleEnergyMode,
+    toggleVibrateDuration,
     workbox,
   ]);
   return (

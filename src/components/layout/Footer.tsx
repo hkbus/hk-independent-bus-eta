@@ -14,12 +14,12 @@ import { vibrate } from "../../utils";
 const Footer = () => {
   const { t, i18n } = useTranslation();
   const location = useLocation();
-  const { selectedRoute, colorMode } = useContext(AppContext);
+  const { selectedRoute, colorMode, vibrateDuration } = useContext(AppContext);
 
   const history = useHistory();
   const handleClick = (link, e) => {
     e.preventDefault();
-    vibrate(1);
+    vibrate(vibrateDuration);
     setTimeout(() => history.push(link), 0);
   };
 
@@ -104,7 +104,13 @@ const Footer = () => {
       </Root>
     ),
     // eslint-disable-next-line
-    [location.pathname, i18n.language, colorMode, selectedRoute]
+    [
+      location.pathname,
+      i18n.language,
+      colorMode,
+      selectedRoute,
+      vibrateDuration,
+    ]
   );
 };
 

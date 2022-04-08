@@ -11,7 +11,10 @@ import { useTranslation } from "react-i18next";
 import { setSeoHeader } from "../utils";
 import { isHoliday, isRouteAvaliable } from "../timetable";
 
-const createItemData = memorize((routeList) => ({ routeList }));
+const createItemData = memorize((routeList, vibrateDuration) => ({
+  routeList,
+  vibrateDuration,
+}));
 
 const RouteList = () => {
   const {
@@ -19,6 +22,7 @@ const RouteList = () => {
     db: { holidays, routeList },
     searchRoute,
     isRouteFilter,
+    vibrateDuration,
   } = useContext(AppContext);
   const isTodayHoliday = isHoliday(holidays, new Date());
   const targetRouteList = Object.entries(routeList)
@@ -42,7 +46,7 @@ const RouteList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language]);
 
-  const itemData = createItemData(targetRouteList);
+  const itemData = createItemData(targetRouteList, vibrateDuration);
   if (navigator.userAgent === "prerendering") {
     return (
       <PrerenderList className={classes.prerenderList}>

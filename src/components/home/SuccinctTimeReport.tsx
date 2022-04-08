@@ -54,6 +54,7 @@ const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
   const { t, i18n } = useTranslation();
   const {
     db: { routeList, stopList },
+    vibrateDuration,
   } = useContext(AppContext);
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
@@ -64,7 +65,7 @@ const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
   const history = useHistory();
   const handleClick = (e) => {
     e.preventDefault();
-    vibrate(1);
+    vibrate(vibrateDuration);
     setTimeout(() => {
       history.push(`/${i18n.language}/route/${routeId.toLowerCase()}`);
     }, 0);

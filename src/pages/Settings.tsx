@@ -32,6 +32,8 @@ import {
   FilterAlt as FilterAltIcon,
   Fingerprint as FingerprintIcon,
   Gavel as GavelIcon,
+  Vibration as VibrationIcon,
+  DoNotDisturbOn as DoNotDisturbOnIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -60,6 +62,8 @@ const Settings = () => {
     toggleColorMode,
     energyMode,
     toggleEnergyMode,
+    vibrateDuration,
+    toggleVibrateDuration,
   } = useContext(AppContext);
   const [updating, setUpdating] = useState(false);
   const [showGeoPermissionDenied, setShowGeoPermissionDenied] = useState(false);
@@ -89,7 +93,7 @@ const Settings = () => {
           <ListItem
             button
             onClick={() => {
-              vibrate(1);
+              vibrate(vibrateDuration);
               setTimeout(() => setIsOpenInstallDialog(true), 0);
             }}
           >
@@ -108,7 +112,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             setUpdating(true);
             renewDb();
           }}
@@ -143,7 +147,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             if (geoPermission === "granted") {
               updateGeoPermission("closed");
             } else {
@@ -177,7 +181,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             toggleColorMode();
           }}
         >
@@ -194,7 +198,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             toggleRouteFilter();
           }}
         >
@@ -211,7 +215,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             toggleEtaFormat();
           }}
         >
@@ -228,7 +232,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             toggleEnergyMode();
           }}
         >
@@ -245,7 +249,24 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration ^ 1); // tricky, vibrate when switch on and vice versa
+            toggleVibrateDuration();
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              {vibrateDuration ? <VibrationIcon /> : <DoNotDisturbOnIcon />}
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={t("按鍵震動")}
+            secondary={t(vibrateDuration ? "開啟" : "關閉")}
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            vibrate(vibrateDuration);
             resetUsageRecord();
           }}
         >
@@ -264,7 +285,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             triggerShare(
               `https://${window.location.hostname}`,
               t("巴士到站預報 App")
@@ -290,7 +311,7 @@ const Settings = () => {
           href={`https://t.me/hkbusapp`}
           target="_blank"
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
           }}
         >
           <ListItemAvatar>
@@ -310,7 +331,7 @@ const Settings = () => {
           href={Donations[donationId].url[i18n.language]}
           target="_blank"
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
           }}
         >
           <ListItemAvatar>
@@ -331,7 +352,7 @@ const Settings = () => {
           href={`https://github.com/hkbus/hk-independent-bus-eta`}
           target="_blank"
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
           }}
         >
           <ListItemAvatar>
@@ -351,7 +372,7 @@ const Settings = () => {
           href={`https://www.flaticon.com/free-icon/double-decker_1032967`}
           target="_blank"
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
           }}
         >
           <ListItemAvatar>
@@ -372,7 +393,7 @@ const Settings = () => {
           component={"a"}
           href={`/${i18n.language}/privacy`}
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
           }}
         >
           <ListItemAvatar>
@@ -389,7 +410,7 @@ const Settings = () => {
           component={"a"}
           href={`/${i18n.language}/terms`}
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
           }}
         >
           <ListItemAvatar>
