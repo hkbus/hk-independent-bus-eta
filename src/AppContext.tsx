@@ -13,6 +13,7 @@ import type { DatabaseContextValue } from "./DbContext";
 import { Workbox } from "workbox-window";
 import { produce, freeze, current } from "immer";
 import type { Location as GeoLocation } from "hk-bus-eta";
+import { ETA_FORMAT_NEXT_TYPES } from "./constants";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -37,7 +38,7 @@ interface AppState {
   /**
    * time display format
    */
-  etaFormat: "exact" | "diff";
+  etaFormat: "exact" | "diff" | "mixed";
   colorMode: "dark" | "light";
   /**
    * energy saving mode
@@ -299,7 +300,7 @@ export const AppContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         const prev = state.etaFormat;
-        const etaFormat = prev === "diff" ? "exact" : "diff";
+        const etaFormat = ETA_FORMAT_NEXT_TYPES[prev];
         localStorage.setItem("etaFormat", etaFormat);
         state.etaFormat = etaFormat;
       })

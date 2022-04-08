@@ -159,7 +159,9 @@ const RootListItem = styled(ListItem)(({ theme }) => ({
     width: "15%",
   },
   [`& .${classes.routeDest}`]: {
-    width: "65%",
+    width: "50%",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
   },
   [`& .${classes.fromToWrapper}`]: {
     display: "flex",

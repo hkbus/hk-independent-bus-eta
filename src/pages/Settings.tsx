@@ -45,6 +45,7 @@ import {
 } from "../utils";
 import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
+import { ETA_FORMAT_STR } from "../constants";
 
 const Settings = () => {
   const {
@@ -226,7 +227,7 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText
             primary={t("報時格式")}
-            secondary={t(etaFormat === "diff" ? "到站時差" : "到站時間")}
+            secondary={t(ETA_FORMAT_STR[etaFormat])}
           />
         </ListItem>
         <ListItem

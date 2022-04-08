@@ -18,15 +18,19 @@ const SuccinctEtas = ({ routeId }) => {
       const waitTime = Math.round(
         (new Date(eta.eta).getTime() - new Date().getTime()) / 60 / 1000
       );
-      if (etaFormat === "exact" && Number.isInteger(waitTime)) {
-        return eta.eta.substr(11, 5);
-      }
-      if (waitTime < 1) {
-        return `- ${t("分鐘")}`;
-      } else if (Number.isInteger(waitTime)) {
-        return `${waitTime} ${t("分鐘")}`;
-      } else {
+      if (!Number.isInteger(waitTime)) {
         return eta.remark[i18n.language];
+      }
+      const exactTimeStr = eta.eta.substr(11, 5);
+      const waitTimeStr =
+        waitTime < 1 ? `- ${t("分鐘")}` : `${waitTime} ${t("分鐘")}`;
+      switch (etaFormat) {
+        case "exact":
+          return exactTimeStr;
+        case "diff":
+          return waitTimeStr;
+        default:
+          return `${exactTimeStr} (${waitTimeStr})`;
       }
     }
   };
@@ -72,8 +76,7 @@ const classes = {
 
 const EtaListItemText = styled(ListItemText)(({ theme }) => ({
   [`&.${classes.root}`]: {
-    width: "20%",
-    paddingLeft: "10px",
+    width: "25%",
     textAlign: "right",
   },
   [`& .${classes.secondary}`]: {

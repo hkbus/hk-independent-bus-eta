@@ -64,6 +64,7 @@
       "報時格式": "ETA format",
       "到站時差": "Minutes remaining",
       "到站時間": "Clock time",
+      "到站時間（到站時差）": "Clock time (Minutes remaining)",
       "車站": "Bus station",
       "車程": "Trip duration",
       "地圖功能": "Map function",
