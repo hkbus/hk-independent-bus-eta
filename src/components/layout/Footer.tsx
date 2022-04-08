@@ -136,6 +136,9 @@ const Root = styled(BottomNavigation)(({ theme }) => ({
       width: "20%",
       minWidth: 0,
     },
+    [`& .MuiBottomNavigationAction-label`]: {
+      fontSize: "0.875rem",
+    },
     [`& .Mui-selected.${classes.selected}`]: {
       color:
         theme.palette.mode === "dark"

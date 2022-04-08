@@ -43,11 +43,11 @@ const RouteNoTypography = styled(Typography)(({ theme }) => ({
     display: "inline",
   },
   [`& .${classes.prefix}`]: {
-    fontSize: "1.2rem",
+    fontSize: "1.5rem",
     fontFamily: '"Oswald", sans-serif',
   },
   [`& .${classes.suffix}`]: {
-    fontSize: "0.95rem",
+    fontSize: "1.2rem",
     fontFamily: '"Oswald", sans-serif',
   },
 }));

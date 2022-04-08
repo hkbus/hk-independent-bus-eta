@@ -111,7 +111,7 @@ const InputPadBox = styled(Box)(({ theme }) => ({
     justifyContent: "space-around",
   },
   [`& .${classes.numPadContainer}`]: {
-    width: "60%",
+    width: "72%",
   },
   [`& .${classes.alphabetPadContainer}`]: {
     width: "20%",
@@ -123,7 +123,7 @@ const InputPadBox = styled(Box)(({ theme }) => ({
     background: theme.palette.background.paper,
     color: theme.palette.text.primary,
     width: "100%",
-    fontSize: "1.4em",
+    fontSize: "1.8em",
     borderRadius: "unset",
     "&:selected": {
       color: theme.palette.text.primary,
