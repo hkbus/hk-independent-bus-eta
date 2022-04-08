@@ -7,7 +7,7 @@ import { Button, Divider, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AppContext from "../AppContext";
 import { useTranslation } from "react-i18next";
-import RouteNo from "../components/route-list/RouteNo";
+import RouteNo from "../components/route-board/RouteNo";
 import { setSeoHeader, toProperCase, getDistance } from "../utils";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import TimetableDrawer from "../components/route-eta/TimetableDrawer";

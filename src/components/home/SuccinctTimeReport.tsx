@@ -7,7 +7,7 @@ import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import SuccinctEtas from "./SuccinctEtas";
 import { getDistance, toProperCase } from "../../utils";
-import RouteNo from "../route-list/RouteNo";
+import RouteNo from "../route-board/RouteNo";
 import { Location } from "hk-bus-eta";
 
 interface DistAndFareProps {

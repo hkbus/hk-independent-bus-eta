@@ -39,13 +39,22 @@ const SuccinctEtas = ({ routeId }) => {
         </Typography>
       }
       secondary={
-        <Typography
-          component="h6"
-          color="textSecondary"
-          className={classes.secondary}
-        >
-          {etas ? getEtaString(etas[1]) : ""}
-        </Typography>
+        <>
+          <Typography
+            variant="h6"
+            color="textSecondary"
+            className={classes.secondary}
+          >
+            {etas ? getEtaString(etas[1]) : ""}
+          </Typography>
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            className={classes.secondary}
+          >
+            {etas ? getEtaString(etas[2]) : ""}
+          </Typography>
+        </>
       }
       className={classes.root}
     />
