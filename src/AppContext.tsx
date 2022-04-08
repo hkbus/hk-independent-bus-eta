@@ -175,8 +175,7 @@ export const AppContextProvider = ({
         ? devicePreferColorScheme
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
-      vibrateDuration:
-        JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
+      vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
       isVisible: true,
       homeTab: isHomeTab(homeTab) ? homeTab : "both",
     };
