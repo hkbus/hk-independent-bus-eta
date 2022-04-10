@@ -1,9 +1,9 @@
 import React from "react";
-import { Link } from "@mui/material";
+import { Paper, Link } from "@mui/material";
 
 const TermsAndConditions = () => {
   return (
-    <>
+    <Paper sx={{ p: 2 }}>
       <strong>Terms &amp; Conditions</strong>{" "}
       <p>
         By downloading or using the app, these terms will automatically apply to
@@ -49,6 +49,7 @@ const TermsAndConditions = () => {
               href="https://marketingplatform.google.com/about/analytics/terms/us/"
               target="_blank"
               rel="noopener noreferrer"
+              color="secondary"
             >
               Google Analytics
             </Link>
@@ -58,6 +59,7 @@ const TermsAndConditions = () => {
               href="https://firebase.google.com/terms/analytics"
               target="_blank"
               rel="noopener noreferrer"
+              color="secondary"
             >
               Google Analytics for Firebase
             </Link>
@@ -133,7 +135,7 @@ const TermsAndConditions = () => {
         If you have any questions or suggestions about our Terms and Conditions,
         do not hesitate to contact us at no-reply@hkbus.app.
       </p>
-    </>
+    </Paper>
   );
 };
 

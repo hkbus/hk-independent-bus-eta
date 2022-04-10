@@ -244,7 +244,7 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText
             primary={t("省電模式")}
-            secondary={t(energyMode ? "開啟" : "關閉") + " - " + t("地圖功能")}
+            secondary={t(!energyMode ? "開啟" : "關閉") + t("地圖功能")}
           />
         </ListItem>
         <ListItem

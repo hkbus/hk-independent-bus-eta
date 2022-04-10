@@ -1,9 +1,9 @@
 import React from "react";
-import { Link } from "@mui/material";
+import { Paper, Link } from "@mui/material";
 
 const PrivacyPolicy = () => {
   return (
-    <>
+    <Paper sx={{ p: 2 }}>
       <strong>Privacy Policy</strong>{" "}
       <p>
         HKBUS.APP built the hkbus.app app as an Open Source app. This SERVICE is
@@ -50,6 +50,7 @@ const PrivacyPolicy = () => {
               href="https://marketingplatform.google.com/about/analytics/terms/us/"
               target="_blank"
               rel="noopener noreferrer"
+              color="secondary"
             >
               Google Analytics
             </Link>
@@ -59,6 +60,7 @@ const PrivacyPolicy = () => {
               href="https://firebase.google.com/policies/analytics"
               target="_blank"
               rel="noopener noreferrer"
+              color="secondary"
             >
               Google Analytics for Firebase
             </Link>
@@ -163,7 +165,7 @@ const PrivacyPolicy = () => {
         If you have any questions or suggestions about our Privacy Policy, do
         not hesitate to contact us at no-reply@hkbus.app.
       </p>
-    </>
+    </Paper>
   );
 };
 
