@@ -21,6 +21,7 @@ const isHuman = () => {
     "facebot",
     "ia_archiver",
     "sitecheckerbotcrawler",
+    "chrome-lighthouse",
   ];
   return !navigator.userAgent.match(new RegExp(agents.join("|"), "i"));
 };

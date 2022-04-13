@@ -150,7 +150,7 @@ const RouteEta = () => {
   ]);
 
   useEffect(() => {
-    if (!energyMode) {
+    if (!energyMode && navigator.userAgent !== "prerendering") {
       const message: WarnUpMessageData = {
         type: "WARN_UP_MAP_CACHE",
         retinaDisplay:
@@ -202,14 +202,12 @@ const RouteEta = () => {
           <></>
         )}
       </Root>
-      {!energyMode ? (
+      {!energyMode && navigator.userAgent !== "prerendering" && (
         <RouteMap
           stops={stopsExtracted}
           stopIdx={stopIdx}
           onMarkerClick={onMarkerClick}
         />
-      ) : (
-        <></>
       )}
       <StopAccordions
         routeId={id}

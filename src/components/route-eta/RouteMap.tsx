@@ -126,11 +126,8 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
       dragend: stopFollowingDeviceGeoLocation,
       dragstart: stopFollowingDeviceGeoLocation,
     });
-    if (navigator.userAgent === "prerendering") {
-      map.setView(mapRef.current.center, 11);
-    } else {
-      map.setView(mapRef.current.center);
-    }
+    map.setView(mapRef.current.center);
+
     console.log("try invalidateSize");
     map.invalidateSize();
   }, []);
