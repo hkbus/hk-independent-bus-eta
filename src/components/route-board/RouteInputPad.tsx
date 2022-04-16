@@ -105,10 +105,13 @@ const classes = {
 
 const InputPadBox = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
+    zIndex: 0,
+    background: theme.palette.background.default,
     display: "flex",
     flexDirection: "row",
     height: "248px",
     justifyContent: "space-around",
+    paddingTop: "8px",
   },
   [`& .${classes.numPadContainer}`]: {
     width: "72%",

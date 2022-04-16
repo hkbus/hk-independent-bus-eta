@@ -11,3 +11,9 @@ export const ETA_FORMAT_STR = {
   exact: "到站時間",
   mixed: "到站時間（到站時差）",
 };
+
+export const TRANSPORT_SEARCH_OPTIONS = {
+  all: ["kmb", "ctb", "nwfb", "lrtfeeder", "nlb", "gmb"],
+  bus: ["kmb", "ctb", "nwfb", "lrtfeeder", "nlb"],
+  minibus: ["gmb"],
+};
