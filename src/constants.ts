@@ -18,3 +18,13 @@ export const TRANSPORT_SEARCH_OPTIONS = {
   minibus: ["gmb"],
   lightRail: ["lightRail"],
 };
+
+export const TRANSPORT_ORDER = [
+  "kmb",
+  "ctb",
+  "nwfb",
+  "lrtfeeder",
+  "nlb",
+  "gmb",
+  "lightRail",
+];
