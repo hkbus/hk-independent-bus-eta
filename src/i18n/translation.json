@@ -104,6 +104,7 @@
       "all": "All",
       "bus": "Bus",
       "minibus": "Minibus",
+      "lightRail": "Light Rail",
       "route-search-no-result": "No Result"
     }
   },
@@ -131,6 +132,7 @@
       "all": "全部",
       "bus": "巴士",
       "minibus": "小巴",
+      "lightRail": "輕鐵",
       "route-search-no-result": "沒有結果"
     }
   }

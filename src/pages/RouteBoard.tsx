@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import AppContext from "../AppContext";
 import { styled } from "@mui/material/styles";
-import { List, AppBar, Tabs, Tab } from "@mui/material";
+import { Box, List, AppBar, Tabs, Tab } from "@mui/material";
 import { FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import memorize from "memoize-one";
@@ -72,19 +72,17 @@ const RouteList = () => {
 
   return (
     <Root className={classes.list}>
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Tabs
-            value={searchTab}
-            onChange={(e, v) => setSearchTab(v)}
-            className={classes.tabbar}
-          >
-            {Object.keys(TRANSPORT_SEARCH_OPTIONS).map((option) => (
-              <Tab label={t(option)} value={option} disableRipple />
-            ))}
-          </Tabs>
-        </AppBar>
-      </div>
+      <Box className={classes.root}>
+        <Tabs
+          value={searchTab}
+          onChange={(e, v) => setSearchTab(v)}
+          className={classes.tabbar}
+        >
+          {Object.keys(TRANSPORT_SEARCH_OPTIONS).map((option) => (
+            <Tab label={t(option)} value={option} disableRipple />
+          ))}
+        </Tabs>
+      </Box>
       {!!targetRouteList.length ? (
         <AutoSizer>
           {({ height, width }) => (

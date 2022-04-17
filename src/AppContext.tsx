@@ -59,7 +59,7 @@ interface AppState {
   /**
    * Search Tab
    */
-  searchTab: "all" | "bus" | "minibus";
+  searchTab: "all" | "bus" | "minibus" | "lightRail";
 }
 
 interface AppContextValue extends AppState, DatabaseContextValue {
@@ -119,7 +119,12 @@ const isHomeTab = (input: unknown): input is AppState["homeTab"] => {
 };
 
 const isSearchTab = (input: unknown): input is AppState["searchTab"] => {
-  return input === "all" || input === "bus" || input === "minibus";
+  return (
+    input === "all" ||
+    input === "bus" ||
+    input === "minibus" ||
+    input === "lightRail"
+  );
 };
 
 const isStrings = (input: unknown[]): input is string[] => {
@@ -231,7 +236,7 @@ export const AppContextProvider = ({
         );
       });
     },
-    [setState]
+    [setState, routeList]
   );
 
   useEffect(() => {

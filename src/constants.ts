@@ -13,7 +13,8 @@ export const ETA_FORMAT_STR = {
 };
 
 export const TRANSPORT_SEARCH_OPTIONS = {
-  all: ["kmb", "ctb", "nwfb", "lrtfeeder", "nlb", "gmb"],
+  all: ["kmb", "ctb", "nwfb", "lrtfeeder", "nlb", "gmb", "lightRail"],
   bus: ["kmb", "ctb", "nwfb", "lrtfeeder", "nlb"],
   minibus: ["gmb"],
+  lightRail: ["lightRail"],
 };
