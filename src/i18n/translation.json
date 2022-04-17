@@ -100,7 +100,11 @@
       "以鏈結分享": "Share link",
       "以圖片分享": "Share image",
       "隱私權聲明": "Privacy Policy",
-      "條款": "Terms and Conditions"
+      "條款": "Terms and Conditions",
+      "all": "All",
+      "bus": "Bus",
+      "minibus": "Minibus",
+      "route-search-no-result": "No Result"
     }
   },
   "zh": {
@@ -123,7 +127,11 @@
       "Route Search constraint": "條件如下：",
       "Route Search caption 1": "最多轉乘一班車",
       "Route Search caption 2": "起點終點和車站之間的最大步行距離 500m",
-      "Route Search caption 3": "App 亦會確認路線頭站有即將出發的車，以減少過量的搜尋結果"
+      "Route Search caption 3": "App 亦會確認路線頭站有即將出發的車，以減少過量的搜尋結果",
+      "all": "全部",
+      "bus": "巴士",
+      "minibus": "小巴",
+      "route-search-no-result": "沒有結果"
     }
   }
 }

@@ -13,7 +13,7 @@ import type { DatabaseContextValue } from "./DbContext";
 import { Workbox } from "workbox-window";
 import { produce, freeze, current } from "immer";
 import type { Location as GeoLocation } from "hk-bus-eta";
-import { ETA_FORMAT_NEXT_TYPES } from "./constants";
+import { ETA_FORMAT_NEXT_TYPES, TRANSPORT_SEARCH_OPTIONS } from "./constants";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -56,6 +56,10 @@ interface AppState {
    * Home Tab
    */
   homeTab: "both" | "saved" | "nearby";
+  /**
+   * Search Tab
+   */
+  searchTab: "all" | "bus" | "minibus"
 }
 
 interface AppContextValue extends AppState, DatabaseContextValue {
@@ -67,6 +71,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   updateSavedEtas: (keys: string) => void;
   resetUsageRecord: () => void;
   setHomeTab: (val: string) => void;
+  setSearchTab: (val: string) => void;
   // settings
   updateGeoPermission: (
     geoPermission: AppState["geoPermission"],
@@ -111,6 +116,10 @@ const isEtaFormat = (input: unknown): input is AppState["etaFormat"] => {
 
 const isHomeTab = (input: unknown): input is AppState["homeTab"] => {
   return input === "both" || input === "saved" || input === "nearby";
+};
+
+const isSearchTab = (input: unknown): input is AppState["searchTab"] => {
+  return input === "all" || input === "bus" || input === "minibus";
 };
 
 const isStrings = (input: unknown[]): input is string[] => {
@@ -158,6 +167,7 @@ export const AppContextProvider = ({
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
     const homeTab: unknown = localStorage.getItem("homeTab") || "both";
+    const searchTab: AppState["searchTab"] = "all";
     return {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
@@ -170,7 +180,7 @@ export const AppContextProvider = ({
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       isRouteFilter:
         !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
-      possibleChar: getPossibleChar(searchRoute, routeList) || [],
+      possibleChar: getPossibleChar(searchRoute, routeList, searchTab) || [],
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
       colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
@@ -179,6 +189,7 @@ export const AppContextProvider = ({
       vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
       isVisible: true,
       homeTab: isHomeTab(homeTab) ? homeTab : "both",
+      searchTab: isSearchTab(searchTab) ? searchTab : "all",
     };
   };
   type State = AppState;
@@ -208,6 +219,16 @@ export const AppContextProvider = ({
     },
     [setState]
   );
+
+  const setSearchTab = useCallback(
+    (val: string) => {
+      setState((state) => {
+        state.searchTab = isSearchTab(val) ? val : "all";
+        state.possibleChar = getPossibleChar(state.searchRoute, routeList, state.searchTab);
+      });
+    },
+    [setState]
+    );
 
   useEffect(() => {
     if (geoPermission === "granted") {
@@ -362,7 +383,7 @@ export const AppContextProvider = ({
                 ret = prevSearchRoute + buttonValue;
             }
             state.searchRoute = ret;
-            state.possibleChar = getPossibleChar(ret, routeList);
+            state.possibleChar = getPossibleChar(ret, routeList, state.searchTab);
           })
         );
       }, 0);
@@ -433,6 +454,7 @@ export const AppContextProvider = ({
       updateSavedEtas,
       resetUsageRecord,
       setHomeTab,
+      setSearchTab,
       updateGeoPermission,
       toggleRouteFilter,
       toggleEtaFormat,
@@ -451,6 +473,7 @@ export const AppContextProvider = ({
     updateSavedEtas,
     resetUsageRecord,
     setHomeTab,
+    setSearchTab,
     updateGeoPermission,
     toggleRouteFilter,
     toggleEtaFormat,
@@ -469,13 +492,14 @@ export type { AppContextValue };
 
 const getPossibleChar = (
   searchRoute: string,
-  routeList: Record<string, unknown>
+  routeList: Record<string, unknown>,
+  searchTab: AppState["searchTab"],
 ) => {
   if (routeList == null) return [];
   let possibleChar = {};
-  Object.entries(routeList).forEach((route) => {
-    if (route[0].startsWith(searchRoute.toUpperCase())) {
-      let c = route[0].slice(searchRoute.length, searchRoute.length + 1);
+  Object.entries(routeList).forEach(([routeNo, meta]) => {
+    if (routeNo.startsWith(searchRoute.toUpperCase()) && meta["co"].some((c) => TRANSPORT_SEARCH_OPTIONS[searchTab].includes(c))) {
+      let c = routeNo.slice(searchRoute.length, searchRoute.length + 1);
       possibleChar[c] = isNaN(possibleChar[c]) ? 1 : possibleChar[c] + 1;
     }
   });
