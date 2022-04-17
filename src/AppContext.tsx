@@ -59,7 +59,7 @@ interface AppState {
   /**
    * Search Tab
    */
-  searchTab: "all" | "bus" | "minibus"
+  searchTab: "all" | "bus" | "minibus";
 }
 
 interface AppContextValue extends AppState, DatabaseContextValue {
@@ -224,11 +224,15 @@ export const AppContextProvider = ({
     (val: string) => {
       setState((state) => {
         state.searchTab = isSearchTab(val) ? val : "all";
-        state.possibleChar = getPossibleChar(state.searchRoute, routeList, state.searchTab);
+        state.possibleChar = getPossibleChar(
+          state.searchRoute,
+          routeList,
+          state.searchTab
+        );
       });
     },
     [setState]
-    );
+  );
 
   useEffect(() => {
     if (geoPermission === "granted") {
@@ -383,7 +387,11 @@ export const AppContextProvider = ({
                 ret = prevSearchRoute + buttonValue;
             }
             state.searchRoute = ret;
-            state.possibleChar = getPossibleChar(ret, routeList, state.searchTab);
+            state.possibleChar = getPossibleChar(
+              ret,
+              routeList,
+              state.searchTab
+            );
           })
         );
       }, 0);
@@ -493,12 +501,15 @@ export type { AppContextValue };
 const getPossibleChar = (
   searchRoute: string,
   routeList: Record<string, unknown>,
-  searchTab: AppState["searchTab"],
+  searchTab: AppState["searchTab"]
 ) => {
   if (routeList == null) return [];
   let possibleChar = {};
   Object.entries(routeList).forEach(([routeNo, meta]) => {
-    if (routeNo.startsWith(searchRoute.toUpperCase()) && meta["co"].some((c) => TRANSPORT_SEARCH_OPTIONS[searchTab].includes(c))) {
+    if (
+      routeNo.startsWith(searchRoute.toUpperCase()) &&
+      meta["co"].some((c) => TRANSPORT_SEARCH_OPTIONS[searchTab].includes(c))
+    ) {
       let c = routeNo.slice(searchRoute.length, searchRoute.length + 1);
       possibleChar[c] = isNaN(possibleChar[c]) ? 1 : possibleChar[c] + 1;
     }
