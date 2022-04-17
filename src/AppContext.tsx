@@ -172,7 +172,7 @@ export const AppContextProvider = ({
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
     const homeTab: unknown = localStorage.getItem("homeTab") || "both";
-    const searchTab: AppState["searchTab"] = "all";
+    const searchTab: unknown = localStorage.getItem("searchTab") || "all";
     return {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
@@ -229,6 +229,7 @@ export const AppContextProvider = ({
     (val: string) => {
       setState((state) => {
         state.searchTab = isSearchTab(val) ? val : "all";
+        localStorage.setItem("searchTab", state.searchTab);
         state.possibleChar = getPossibleChar(
           state.searchRoute,
           routeList,
@@ -506,14 +507,16 @@ export type { AppContextValue };
 const getPossibleChar = (
   searchRoute: string,
   routeList: Record<string, unknown>,
-  searchTab: AppState["searchTab"]
+  searchTab: AppState["searchTab"] | unknown
 ) => {
   if (routeList == null) return [];
   let possibleChar = {};
   Object.entries(routeList).forEach(([routeNo, meta]) => {
     if (
       routeNo.startsWith(searchRoute.toUpperCase()) &&
-      meta["co"].some((c) => TRANSPORT_SEARCH_OPTIONS[searchTab].includes(c))
+      meta["co"].some((c) =>
+        TRANSPORT_SEARCH_OPTIONS[searchTab as AppState["searchTab"]].includes(c)
+      )
     ) {
       let c = routeNo.slice(searchRoute.length, searchRoute.length + 1);
       possibleChar[c] = isNaN(possibleChar[c]) ? 1 : possibleChar[c] + 1;
