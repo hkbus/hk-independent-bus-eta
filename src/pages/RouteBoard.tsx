@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import AppContext from "../AppContext";
 import { styled } from "@mui/material/styles";
-import { Box, List, AppBar, Tabs, Tab } from "@mui/material";
+import { Box, List, Tabs, Tab } from "@mui/material";
 import { FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import memorize from "memoize-one";
@@ -107,9 +107,7 @@ const RouteList = () => {
       }
 
       // Smaller service Type should come first
-      if (aRoute[1] > bRoute[1]) {
-        return 1;
-      }
+      return aRoute[1] > bRoute[1] ? 1 : -1;
     });
 
   const { t, i18n } = useTranslation();

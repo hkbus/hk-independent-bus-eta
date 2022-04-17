@@ -59,7 +59,7 @@ interface AppState {
   /**
    * Search Tab
    */
-  searchTab: "all" | "bus" | "minibus" | "lightRail";
+  searchTab: "all" | "bus" | "minibus" | "lightRail" | "mtr";
 }
 
 interface AppContextValue extends AppState, DatabaseContextValue {
@@ -123,7 +123,8 @@ const isSearchTab = (input: unknown): input is AppState["searchTab"] => {
     input === "all" ||
     input === "bus" ||
     input === "minibus" ||
-    input === "lightRail"
+    input === "lightRail" ||
+    input === "mtr"
   );
 };
 
