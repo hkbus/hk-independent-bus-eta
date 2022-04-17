@@ -10,7 +10,7 @@ import RouteRow from "../components/route-board/RouteRow";
 import { useTranslation } from "react-i18next";
 import { setSeoHeader } from "../utils";
 import { isHoliday, isRouteAvaliable } from "../timetable";
-import { TRANSPORT_SEARCH_OPTIONS } from "../constants";
+import { TRANSPORT_SEARCH_OPTIONS, TRANSPORT_ORDER } from "../constants";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 
 const createItemData = memorize((routeList, vibrateDuration) => ({
@@ -42,7 +42,76 @@ const RouteList = () => {
     .filter(
       ([routeNo, { freq }]) =>
         !isRouteFilter || isRouteAvaliable(routeNo, freq, isTodayHoliday)
-    );
+    )
+    .sort((a, b) => {
+      const aRoute = a[0].split("-");
+      const bRoute = b[0].split("-");
+
+      // Exclude A-Z from end of strings, smaller number should come first
+      if (
+        +aRoute[0].replaceAll(/[A-z]$/gi, "") >
+        +bRoute[0].replaceAll(/[A-z]$/gi, "")
+      ) {
+        return 1;
+      } else if (
+        +aRoute[0].replaceAll(/[A-z]$/gi, "") <
+        +bRoute[0].replaceAll(/[A-z]$/gi, "")
+      ) {
+        return -1;
+      }
+
+      // Exclude numbers, smaller alphabet should come first
+      if (
+        aRoute[0].replaceAll(/[0-9]/gi, "") >
+        bRoute[0].replaceAll(/[0-9]/gi, "")
+      ) {
+        return 1;
+      } else if (
+        aRoute[0].replaceAll(/[0-9]/gi, "") <
+        bRoute[0].replaceAll(/[0-9]/gi, "")
+      ) {
+        return -1;
+      }
+
+      // Remove all A-Z, smaller number should come first
+      if (
+        +aRoute[0].replaceAll(/[A-z]/gi, "") >
+        +bRoute[0].replaceAll(/[A-z]/gi, "")
+      ) {
+        return 1;
+      } else if (
+        +aRoute[0].replaceAll(/[A-z]/gi, "") <
+        +bRoute[0].replaceAll(/[A-z]/gi, "")
+      ) {
+        return -1;
+      }
+
+      // Sort by TRANSPORT_ORDER
+      const aCompany = a[1]["co"].sort(
+        (a, b) => TRANSPORT_ORDER.indexOf(a) - TRANSPORT_ORDER.indexOf(b)
+      );
+      const bCompany = b[1]["co"].sort(
+        (a, b) => TRANSPORT_ORDER.indexOf(a) - TRANSPORT_ORDER.indexOf(b)
+      );
+
+      if (
+        TRANSPORT_ORDER.indexOf(aCompany[0]) >
+        TRANSPORT_ORDER.indexOf(bCompany[0])
+      ) {
+        return 1;
+      } else if (
+        TRANSPORT_ORDER.indexOf(aCompany[0]) <
+        TRANSPORT_ORDER.indexOf(bCompany[0])
+      ) {
+        return -1;
+      }
+
+      // Smaller service Type should come first
+      if (aRoute[1] > bRoute[1]) {
+        return 1;
+      }
+    });
+
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
