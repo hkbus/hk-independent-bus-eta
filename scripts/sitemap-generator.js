@@ -29,6 +29,10 @@ request(
         `/zh/route/${route[0]
           .replace(/\+/g, "-")
           .replace(/ /g, "-")
+          .replace(/\(/g, "%28")
+          .replace(/\)/g, "%29")
+          .replace(/\//g, "%2F")
+          .replace(/／/g, "%EF%BC%8F")
           .toLowerCase()}`
     );
     enRoutes = Object.entries(routeList).map(
@@ -36,6 +40,9 @@ request(
         `/en/route/${route[0]
           .replace(/\+/g, "-")
           .replace(/ /g, "-")
+          .replace(/\(/g, "%28")
+          .replace(/\)/g, "%29")
+          .replace(/／/g, "%EF%BC%8F")
           .toLowerCase()}`
     );
 
