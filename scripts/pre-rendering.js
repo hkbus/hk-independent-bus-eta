@@ -110,7 +110,7 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
       if (idx === 0) await page.waitForTimeout(3000); // wait decompression & loading data
     } else {
       const lang = pageUrl.split("/").slice(-3)[0];
-      const q = pageUrl.split("/").slice(-1)[0];
+      const q = decodeURIComponent(pageUrl.split("/").slice(-1)[0]);
       await page.evaluate(
         `document.querySelector('style[prerender]').innerText = ''`
       );

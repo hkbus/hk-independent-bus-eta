@@ -31,8 +31,9 @@ request(
           .replace(/ /g, "-")
           .replace(/\(/g, "%28")
           .replace(/\)/g, "%29")
-          .replace(/\//g, "%2F")
           .replace(/／/g, "%EF%BC%8F")
+          .replace(/'/g, "%27")
+          .replace(/,/g, "%2C")
           .toLowerCase()}`
     );
     enRoutes = Object.entries(routeList).map(
@@ -43,6 +44,8 @@ request(
           .replace(/\(/g, "%28")
           .replace(/\)/g, "%29")
           .replace(/／/g, "%EF%BC%8F")
+          .replace(/'/g, "%27")
+          .replace(/,/g, "%2C")
           .toLowerCase()}`
     );
 
