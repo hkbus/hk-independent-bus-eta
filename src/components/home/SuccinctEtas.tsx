@@ -21,7 +21,8 @@ const SuccinctEtas = ({ routeId }) => {
       if (!Number.isInteger(waitTime)) {
         return eta.remark[i18n.language];
       }
-      const exactTimeStr = eta.eta.substr(11, 5);
+
+      const exactTimeStr = eta.eta.slice(11, 16);
       const waitTimeStr =
         waitTime < 1 ? `- ${t("分鐘")}` : `${waitTime} ${t("分鐘")}`;
       switch (etaFormat) {
@@ -43,22 +44,15 @@ const SuccinctEtas = ({ routeId }) => {
         </Typography>
       }
       secondary={
-        <>
-          <Typography
-            variant="h6"
-            color="textSecondary"
-            className={classes.secondary}
-          >
-            {etas ? getEtaString(etas[1]) : ""}
-          </Typography>
-          <Typography
-            variant="caption"
-            color="textSecondary"
-            className={classes.secondary}
-          >
-            {etas ? getEtaString(etas[2]) : ""}
-          </Typography>
-        </>
+        <Typography
+          variant="h6"
+          color="textSecondary"
+          className={classes.secondary}
+        >
+          {etas ? getEtaString(etas[1]) : ""}
+          <br />
+          {etas ? getEtaString(etas[2]) : ""}
+        </Typography>
       }
       className={classes.root}
     />

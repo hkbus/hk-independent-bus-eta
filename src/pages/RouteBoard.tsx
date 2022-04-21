@@ -146,7 +146,7 @@ const RouteList = () => {
           className={classes.tabbar}
         >
           {Object.keys(TRANSPORT_SEARCH_OPTIONS).map((option) => (
-            <Tab label={t(option)} value={option} disableRipple />
+            <Tab key={option} label={t(option)} value={option} disableRipple />
           ))}
         </Tabs>
       </Box>
