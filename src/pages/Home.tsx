@@ -10,7 +10,7 @@ import CompassCalibrationIcon from "@mui/icons-material/CompassCalibration";
 import AppContext from "../AppContext";
 import { getDistance, setSeoHeader } from "../utils";
 import SuccinctTimeReport from "../components/home/SuccinctTimeReport";
-import throttle from "lodash.throttle";
+import debounce from "lodash.debounce";
 import { Location, RouteList, StopListEntry, StopList } from "hk-bus-eta";
 import { isHoliday, isRouteAvaliable } from "../timetable";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
@@ -54,12 +54,13 @@ const Home = () => {
       isTodayHoliday,
       homeTab,
     });
+    console.log('updated')
     if (_selectedRoutes !== selectedRoutes) {
       setSelectedRoute(_selectedRoutes);
     }
   }).current;
 
-  const throttledUpdateRoutes = useRef(throttle(updateRoutes, 60000)).current;
+  const debouncedUpdateRoutes = useRef(debounce(updateRoutes, 1000)).current;
 
   useEffect(() => {
     setSeoHeader({
@@ -71,15 +72,9 @@ const Home = () => {
   }, [i18n.language]);
 
   useEffect(() => {
-    throttledUpdateRoutes(geolocation);
+    debouncedUpdateRoutes(geolocation);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geolocation]);
-
-  useEffect(() => {
-    // update geolocation after 1 second, assume geolocation has been updated (if possible)
-    setTimeout(() => updateRoutes(geolocation), 1000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     const _selectedRoutes = getSelectedRoutes({
