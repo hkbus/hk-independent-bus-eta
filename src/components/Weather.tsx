@@ -39,7 +39,9 @@ export const useWeather = () => {
         "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en"
       )
         .then((r) => r.json())
-        .then((d) => setWeather(d));
+        .then((d) => {
+          if (isMounted) setWeather(d);
+        });
     };
 
     const fetchEtaInterval = setInterval(() => {
@@ -125,7 +127,7 @@ export const WeatherIcons = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/HK_Monsoon_Signal.png/25px-HK_Monsoon_Signal.png",
 };
 
-const TEST = {
+export const TEST = {
   WFROST: {
     name: "霜凍警告",
     code: "WFROST",
