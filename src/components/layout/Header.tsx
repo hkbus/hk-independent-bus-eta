@@ -1,12 +1,14 @@
 import React, { useEffect, useCallback, useContext, useMemo } from "react";
 import {
+  Avatar,
   Box,
   IconButton,
   Input,
-  Tabs,
-  Tab,
   Toolbar,
   Typography,
+  Button,
+  SxProps,
+  Theme,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Link, useLocation, useHistory, useRouteMatch } from "react-router-dom";
@@ -14,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { vibrate, checkMobile } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useWeatherCode, WeatherIcons } from "../Weather";
 
 const Header = () => {
   const {
@@ -29,6 +32,7 @@ const Header = () => {
   const { t, i18n } = useTranslation();
   let location = useLocation();
   const history = useHistory();
+  const weatherCodes = useWeatherCode();
 
   const handleLanguageChange = (lang) => {
     vibrate(vibrateDuration);
@@ -122,6 +126,14 @@ const Header = () => {
           disabled={path.includes("route")}
         />
         <Box className={classes.funcPanel}>
+          {weatherCodes.slice(0, 2).map((code) => (
+            <Avatar
+              key={code}
+              variant="square"
+              src={WeatherIcons[code]}
+              sx={{ height: 24, width: 24, m: 1 }}
+            />
+          ))}
           {geoPermission === "granted" && (
             <IconButton
               aria-label="relocate"
@@ -130,32 +142,17 @@ const Header = () => {
               <LocationOnIcon />
             </IconButton>
           )}
-          <LanguageTabs
-            className={classes.languageTabs}
-            value={i18n.language}
-            onChange={(e, v) => handleLanguageChange(v)}
+          <Button
+            sx={languageSx}
+            onClick={() =>
+              handleLanguageChange(i18n.language === "zh" ? "en" : "zh")
+            }
+            variant="text"
+            disableElevation
+            disableRipple
           >
-            <Tab
-              disableRipple
-              className={classes.languageTab}
-              id="en-selector"
-              value="en"
-              label="En"
-              component={Link}
-              to={`${window.location.pathname.replace("/zh", "/en")}`}
-              onClick={(e) => e.preventDefault()}
-            />
-            <Tab
-              disableRipple
-              className={classes.languageTab}
-              id="zh-selector"
-              value="zh"
-              label="繁"
-              component={Link}
-              to={`${window.location.pathname.replace("/en", "/zh")}`}
-              onClick={(e) => e.preventDefault()}
-            />
-          </LanguageTabs>
+            {i18n.language !== "zh" ? "繁" : "En"}
+          </Button>
         </Box>
       </AppToolbar>
     ),
@@ -180,8 +177,6 @@ const classes = {
   appTitle: `${PREFIX}-appTitle`,
   searchRouteInput: `${PREFIX}-searchRouteInput`,
   funcPanel: `${PREFIX}-funcPanel`,
-  languageTabs: `${PREFIX}-languagetabs`,
-  languageTab: `${PREFIX}-languagetab`,
 };
 
 const AppToolbar = styled(Toolbar)(({ theme }) => ({
@@ -204,7 +199,7 @@ const AppToolbar = styled(Toolbar)(({ theme }) => ({
     justifyContent: "space-between",
   },
   [`& .${classes.searchRouteInput}`]: {
-    maxWidth: "50px",
+    maxWidth: "100px",
     "& input": {
       textAlign: "center",
     },
@@ -218,36 +213,11 @@ const AppToolbar = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
-const LanguageTabs = styled(Tabs)(({ theme }) => ({
-  [`&.${classes.languageTabs}`]: {
-    borderBottom: "none",
-    minHeight: 24,
-    "& .MuiTabs-indicator": {
-      backgroundColor: "transparent",
-    },
-  },
-  [`& .${classes.languageTab}`]: {
-    textTransform: "none",
-    minWidth: 36,
-    minHeight: 24,
-    fontWeight: 900,
-    marginRight: theme.spacing(0),
-    fontSize: "15px",
-    opacity: 1,
-    padding: "6px 6px",
-    "&.MuiTab-root": {
-      color: theme.palette.text.primary,
-      borderRadius: "30px",
-      padding: "0px 10px 0px 10px",
-    },
-    "&.Mui-selected": {
-      "&.MuiTab-root": {
-        color: "black",
-        backgroundColor:
-          theme.palette.mode === "dark"
-            ? theme.palette.primary.main
-            : theme.palette.background.paper,
-      },
-    },
-  },
-}));
+const languageSx: SxProps<Theme> = {
+  color: (theme) => theme.palette.text.primary,
+  minWidth: "40px",
+  p: 1,
+  borderRadius: 5,
+  fontWeight: 900,
+  textTransform: "none",
+};

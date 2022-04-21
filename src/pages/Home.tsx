@@ -54,7 +54,6 @@ const Home = () => {
       isTodayHoliday,
       homeTab,
     });
-    console.log('updated')
     if (_selectedRoutes !== selectedRoutes) {
       setSelectedRoute(_selectedRoutes);
     }

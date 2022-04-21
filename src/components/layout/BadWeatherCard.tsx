@@ -7,18 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useWeather } from "../Weather";
 
 const BadWeatherCard = () => {
   const { t } = useTranslation();
-  const [weather, setWeather] = useState(null);
-
-  useEffect(() => {
-    fetch(
-      "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en"
-    )
-      .then((r) => r.json())
-      .then((d) => setWeather(d));
-  }, []);
+  const weather = useWeather();
 
   const isAdverse = () => {
     if (!weather) {
