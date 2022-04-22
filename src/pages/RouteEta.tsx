@@ -214,7 +214,7 @@ const RouteEta = () => {
         stopIdx={stopIdx}
         routeListEntry={routeListEntry}
         stopListExtracted={stopsExtracted}
-        expanded={expanded}
+        expanded={expanded && navigator.userAgent !== "prerendering"}
         handleChange={handleChange}
       />
       <StopDialog

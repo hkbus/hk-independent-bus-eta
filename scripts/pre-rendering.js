@@ -55,7 +55,7 @@ async function runStaticServer(port, routes, dir) {
  */
 async function createNewHTMLPage(route, html, dir) {
   try {
-    const fname = route === "/" ? "/index" : route;
+    const fname = decodeURIComponent( route === "/" ? "/index" : route );
     if (route.indexOf("/") !== route.lastIndexOf("/")) {
       const subDir = route.slice(0, route.lastIndexOf("/"));
       await ensureDirExists(`${dir}${subDir}`);
@@ -114,7 +114,15 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
       await page.evaluate(
         `document.querySelector('style[prerender]').innerText = ''`
       );
-      await page.click(`[id="${lang}-selector"]`);
+      page.eva
+      await page.evaluate(`
+        if ( document.querySelector('[id="lang-selector"]').textContent === 'En' && '${lang}' === 'en' ) {
+          document.querySelector('[id="lang-selector"]').click()
+        }
+        if ( document.querySelector('[id="lang-selector"]').textContent === '繁' && '${lang}' === 'zh' ) {
+          document.querySelector('[id="lang-selector"]').click()
+        }
+      `);
       await page.evaluate((q) => {
         // programmatically change the search route value
         var input = document.getElementById("searchInput");
@@ -227,7 +235,7 @@ async function run() {
     options.routes || [],
     options.buildDirectory || "./build"
   );
-
+  await new Promise(resolve =>  setTimeout(resolve, 10000000));
   if (!staticServerURL) return 0;
 
   await runPuppeteer(

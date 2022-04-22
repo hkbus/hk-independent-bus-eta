@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import loadable from "@loadable/component";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
 import { DbProvider } from "./DbContext";
 import { AppContextProvider } from "./AppContext";
 import "./i18n";
@@ -9,6 +9,7 @@ import { fetchDbFunc } from "./db";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import type { WarnUpMessageData } from "./typing";
+const App = loadable(() => import("./App"));
 
 const isHuman = () => {
   const agents = [

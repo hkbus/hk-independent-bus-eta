@@ -147,6 +147,7 @@ const Header = () => {
             onClick={() =>
               handleLanguageChange(i18n.language === "zh" ? "en" : "zh")
             }
+            id="lang-selector"
             variant="text"
             disableElevation
             disableRipple
