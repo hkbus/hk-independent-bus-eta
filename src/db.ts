@@ -1,7 +1,6 @@
 import { fetchEtaObj, fetchEtaObjMd5 } from "hk-bus-eta";
 import type { BusDb } from "hk-bus-eta";
-import { decompress as decompressJson } from "lzutf8";
-import { decompress as _decompressJson } from "compressed-json";
+import { decompress as decompressJson } from "lzutf8-light";
 
 const isBusDb = (input: unknown): input is BusDb => {
   return (
@@ -33,13 +32,8 @@ const decompressJsonString = (txt): BusDb => {
         }, {}),
     };
   } catch (e) {
-    try {
-      // backward compactability
-      return _decompressJson(JSON.parse(txt));
-    } catch (e2) {
-      // return empty object if no valid JSON string parsed
-      return { holidays: [], routeList: {}, stopList: {}, stopMap: {} };
-    }
+    // throw the error
+    throw e;
   }
 };
 

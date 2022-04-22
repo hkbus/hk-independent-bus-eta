@@ -5330,13 +5330,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"compressed-json@npm:^1.0.16":
-  version: 1.0.16
-  resolution: "compressed-json@npm:1.0.16"
-  checksum: ef3823d27807e504661a1cb1cb4518e6f55be9e483ee0ebb8ed20ab443cd9806e7dc6eb604d265d942cb58abd792092ecb6aa99e3ee4bdc51535ec1c17afe76a
-  languageName: node
-  linkType: hard
-
 "compressible@npm:~2.0.16":
   version: 2.0.18
   resolution: "compressible@npm:2.0.18"
@@ -7870,7 +7863,6 @@ __metadata:
     "@types/react-router-dom": ^5.1.8
     "@types/react-window": ^1.8.5
     clean-css: ^4.2.3
-    compressed-json: ^1.0.16
     dom-to-image: ^2.6.0
     dotenv: ^8.2.0
     dotenv-cli: ^4.0.0
@@ -7883,7 +7875,7 @@ __metadata:
     leaflet: ^1.7.1
     lodash.debounce: ^4.0.8
     lodash.throttle: ^4.1.1
-    lzutf8: ^0.6.0
+    lzutf8-light: ^0.6.2
     merge-base64: ^1.0.4
     prettier: 2.4.0
     proj4: ^2.7.4
@@ -9874,12 +9866,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lzutf8@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "lzutf8@npm:0.6.0"
-  dependencies:
-    readable-stream: ^3.6.0
-  checksum: 32c71aa37c1e3f94d85c8f380d16c0438609262ec74bbd0452d4b8dd5ec450d869d700636724236e7a7772580785ef6c6c21a81dbc5e810b6b835f4a3b89255a
+"lzutf8-light@npm:^0.6.2":
+  version: 0.6.2
+  resolution: "lzutf8-light@npm:0.6.2"
+  checksum: 39a63e0e120997bd539c94274d6b8604744ee2c8a65238415fe7a02f00a3969315e532e611a7129e045bec16708121d6399d3a79d3dfd781bdd81d7dbdeed5f4
   languageName: node
   linkType: hard
 
