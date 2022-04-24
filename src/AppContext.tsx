@@ -13,7 +13,7 @@ import type { DatabaseContextValue } from "./DbContext";
 import { Workbox } from "workbox-window";
 import { produce, freeze, current } from "immer";
 import type { Location as GeoLocation } from "hk-bus-eta";
-import { ETA_FORMAT_NEXT_TYPES, TRANSPORT_SEARCH_OPTIONS } from "./constants";
+import { ETA_FORMAT_NEXT_TYPES } from "./constants";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -32,10 +32,6 @@ interface AppState {
    */
   isRouteFilter: boolean;
   /**
-   * possible Char for RouteInputPad
-   */
-  possibleChar: string[];
-  /**
    * time display format
    */
   etaFormat: "exact" | "diff" | "mixed";
@@ -52,10 +48,6 @@ interface AppState {
    * check if window is on active in mobile
    */
   isVisible: boolean;
-  /**
-   * Search Tab
-   */
-  searchTab: "all" | "bus" | "minibus" | "lightRail" | "mtr";
 }
 
 interface AppContextValue extends AppState, DatabaseContextValue {
@@ -66,7 +58,6 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   updateGeolocation: (geoLocation: GeoLocation) => void;
   updateSavedEtas: (keys: string) => void;
   resetUsageRecord: () => void;
-  setSearchTab: (val: string) => void;
   // settings
   updateGeoPermission: (
     geoPermission: AppState["geoPermission"],
@@ -109,16 +100,6 @@ const isEtaFormat = (input: unknown): input is AppState["etaFormat"] => {
   return input === "exact" || input === "diff";
 };
 
-const isSearchTab = (input: unknown): input is AppState["searchTab"] => {
-  return (
-    input === "all" ||
-    input === "bus" ||
-    input === "minibus" ||
-    input === "lightRail" ||
-    input === "mtr"
-  );
-};
-
 const isStrings = (input: unknown[]): input is string[] => {
   if (input.some((v) => typeof v !== "string")) {
     return false;
@@ -146,7 +127,6 @@ export const AppContextProvider = ({
   children,
 }: AppContextProviderProps) => {
   const dbContext = useContext(DbContext);
-  const { routeList } = dbContext.db;
   const getInitialState = (): AppState => {
     const devicePreferColorScheme =
       localStorage.getItem("colorMode") ||
@@ -163,7 +143,7 @@ export const AppContextProvider = ({
     const etaFormat: unknown = localStorage.getItem("etaFormat");
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
-    const searchTab: unknown = localStorage.getItem("searchTab") || "all";
+
     return {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
@@ -176,7 +156,6 @@ export const AppContextProvider = ({
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       isRouteFilter:
         !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
-      possibleChar: getPossibleChar(searchRoute, routeList, searchTab) || [],
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
       colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
@@ -184,7 +163,6 @@ export const AppContextProvider = ({
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
       isVisible: true,
-      searchTab: isSearchTab(searchTab) ? searchTab : "all",
     };
   };
   type State = AppState;
@@ -204,21 +182,6 @@ export const AppContextProvider = ({
       });
     },
     [setState]
-  );
-
-  const setSearchTab = useCallback(
-    (val: string) => {
-      setState((state) => {
-        state.searchTab = isSearchTab(val) ? val : "all";
-        localStorage.setItem("searchTab", state.searchTab);
-        state.possibleChar = getPossibleChar(
-          state.searchRoute,
-          routeList,
-          state.searchTab
-        );
-      });
-    },
-    [setState, routeList]
   );
 
   useEffect(() => {
@@ -374,16 +337,11 @@ export const AppContextProvider = ({
                 ret = prevSearchRoute + buttonValue;
             }
             state.searchRoute = ret;
-            state.possibleChar = getPossibleChar(
-              ret,
-              routeList,
-              state.searchTab
-            );
           })
         );
       }, 0);
     },
-    [routeList, state.vibrateDuration]
+    [state.vibrateDuration]
   );
 
   const updateSelectedRoute = useCallback((route: string, seq: string = "") => {
@@ -448,7 +406,6 @@ export const AppContextProvider = ({
       updateGeolocation,
       updateSavedEtas,
       resetUsageRecord,
-      setSearchTab,
       updateGeoPermission,
       toggleRouteFilter,
       toggleEtaFormat,
@@ -466,7 +423,6 @@ export const AppContextProvider = ({
     updateGeolocation,
     updateSavedEtas,
     resetUsageRecord,
-    setSearchTab,
     updateGeoPermission,
     toggleRouteFilter,
     toggleEtaFormat,
@@ -482,26 +438,3 @@ export const AppContextProvider = ({
 
 export default AppContext;
 export type { AppContextValue };
-
-const getPossibleChar = (
-  searchRoute: string,
-  routeList: Record<string, unknown>,
-  searchTab: AppState["searchTab"] | unknown
-) => {
-  if (routeList == null) return [];
-  let possibleChar = {};
-  Object.entries(routeList).forEach(([routeNo, meta]) => {
-    if (
-      routeNo.startsWith(searchRoute.toUpperCase()) &&
-      meta["co"].some((c) =>
-        TRANSPORT_SEARCH_OPTIONS[searchTab as AppState["searchTab"]].includes(c)
-      )
-    ) {
-      let c = routeNo.slice(searchRoute.length, searchRoute.length + 1);
-      possibleChar[c] = isNaN(possibleChar[c]) ? 1 : possibleChar[c] + 1;
-    }
-  });
-  return Object.entries(possibleChar)
-    .map((k) => k[0])
-    .filter((k) => k !== "-");
-};

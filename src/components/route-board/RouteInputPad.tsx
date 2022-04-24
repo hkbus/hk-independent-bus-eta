@@ -4,6 +4,8 @@ import { styled } from "@mui/material/styles";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
+import { BoardTabType } from "./BoardTabbar";
+import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 
 const KeyButton = ({ k, handleClick, disabled = false, className }) => {
   const { t } = useTranslation();
@@ -27,9 +29,8 @@ const KeyButton = ({ k, handleClick, disabled = false, className }) => {
   );
 };
 
-const RouteNumPad = () => {
-  const { searchRoute, updateSearchRouteByButton, possibleChar } =
-    useContext(AppContext);
+const RouteNumPad = ({ possibleChar }) => {
+  const { searchRoute, updateSearchRouteByButton } = useContext(AppContext);
 
   return (
     <Grid container spacing={0}>
@@ -51,8 +52,8 @@ const RouteNumPad = () => {
   );
 };
 
-const RouteAlphabetPad = () => {
-  const { updateSearchRouteByButton, possibleChar } = useContext(AppContext);
+const RouteAlphabetPad = ({ possibleChar }) => {
+  const { updateSearchRouteByButton } = useContext(AppContext);
 
   return (
     <Grid container spacing={1}>
@@ -71,7 +72,14 @@ const RouteAlphabetPad = () => {
   );
 };
 
-const RouteInputPad = () => {
+const RouteInputPad = ({ boardTab }) => {
+  const {
+    searchRoute,
+    db: { routeList },
+  } = useContext(AppContext);
+
+  const possibleChar = getPossibleChar(searchRoute, routeList, boardTab);
+
   const padding = 0;
   if (navigator.userAgent === "prerendering") {
     return <></>;
@@ -80,10 +88,10 @@ const RouteInputPad = () => {
   return (
     <InputPadBox className={classes.root} padding={padding}>
       <Box className={classes.numPadContainer} padding={padding}>
-        <RouteNumPad />
+        <RouteNumPad possibleChar={possibleChar} />
       </Box>
       <Box className={classes.alphabetPadContainer} padding={padding}>
-        <RouteAlphabetPad />
+        <RouteAlphabetPad possibleChar={possibleChar} />
       </Box>
     </InputPadBox>
   );
@@ -145,3 +153,26 @@ const InputPadBox = styled(Box)(({ theme }) => ({
     height: "62px",
   },
 }));
+
+const getPossibleChar = (
+  searchRoute: string,
+  routeList: Record<string, unknown>,
+  boardTab: BoardTabType
+) => {
+  if (routeList == null) return [];
+  let possibleChar = {};
+  Object.entries(routeList).forEach(([routeNo, meta]) => {
+    if (
+      routeNo.startsWith(searchRoute.toUpperCase()) &&
+      meta["co"].some((c) =>
+        TRANSPORT_SEARCH_OPTIONS[boardTab as BoardTabType].includes(c)
+      )
+    ) {
+      let c = routeNo.slice(searchRoute.length, searchRoute.length + 1);
+      possibleChar[c] = isNaN(possibleChar[c]) ? 1 : possibleChar[c] + 1;
+    }
+  });
+  return Object.entries(possibleChar)
+    .map((k) => k[0])
+    .filter((k) => k !== "-");
+};
