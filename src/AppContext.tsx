@@ -53,10 +53,6 @@ interface AppState {
    */
   isVisible: boolean;
   /**
-   * Home Tab
-   */
-  homeTab: "both" | "saved" | "nearby";
-  /**
    * Search Tab
    */
   searchTab: "all" | "bus" | "minibus" | "lightRail" | "mtr";
@@ -70,7 +66,6 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   updateGeolocation: (geoLocation: GeoLocation) => void;
   updateSavedEtas: (keys: string) => void;
   resetUsageRecord: () => void;
-  setHomeTab: (val: string) => void;
   setSearchTab: (val: string) => void;
   // settings
   updateGeoPermission: (
@@ -112,10 +107,6 @@ const isGeoLocation = (input: unknown): input is GeoLocation => {
 
 const isEtaFormat = (input: unknown): input is AppState["etaFormat"] => {
   return input === "exact" || input === "diff";
-};
-
-const isHomeTab = (input: unknown): input is AppState["homeTab"] => {
-  return input === "both" || input === "saved" || input === "nearby";
 };
 
 const isSearchTab = (input: unknown): input is AppState["searchTab"] => {
@@ -172,7 +163,6 @@ export const AppContextProvider = ({
     const etaFormat: unknown = localStorage.getItem("etaFormat");
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
-    const homeTab: unknown = localStorage.getItem("homeTab") || "both";
     const searchTab: unknown = localStorage.getItem("searchTab") || "all";
     return {
       searchRoute: searchRoute,
@@ -194,7 +184,6 @@ export const AppContextProvider = ({
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
       isVisible: true,
-      homeTab: isHomeTab(homeTab) ? homeTab : "both",
       searchTab: isSearchTab(searchTab) ? searchTab : "all",
     };
   };
@@ -212,15 +201,6 @@ export const AppContextProvider = ({
     (searchRoute: string) => {
       setState((state) => {
         state.searchRoute = searchRoute;
-      });
-    },
-    [setState]
-  );
-  const setHomeTab = useCallback(
-    (val: string) => {
-      setState((state) => {
-        state.homeTab = isHomeTab(val) ? val : "both";
-        localStorage.setItem("homeTab", state.homeTab);
       });
     },
     [setState]
@@ -468,7 +448,6 @@ export const AppContextProvider = ({
       updateGeolocation,
       updateSavedEtas,
       resetUsageRecord,
-      setHomeTab,
       setSearchTab,
       updateGeoPermission,
       toggleRouteFilter,
@@ -487,7 +466,6 @@ export const AppContextProvider = ({
     updateGeolocation,
     updateSavedEtas,
     resetUsageRecord,
-    setHomeTab,
     setSearchTab,
     updateGeoPermission,
     toggleRouteFilter,
