@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import AppContext from "../AppContext";
 import { Box } from "@mui/material";
 import RouteInputPad from "../components/route-board/RouteInputPad";
@@ -19,7 +19,6 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
   const { AppTitle } = useContext(AppContext);
 
   const { t, i18n } = useTranslation();
-  const swipeableList = useRef(null);
 
   useEffect(() => {
     setSeoHeader({
@@ -30,22 +29,18 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language]);
 
-  const handleTabChange = (v, rerenderList = false) => {
-    setBoardTab(v);
-    localStorage.setItem("boardTab", v);
-    if (swipeableList.current && rerenderList) {
-      swipeableList.current.changeTab(v);
-    }
-  };
+  const handleTabChange = useCallback(
+    (v) => {
+      setBoardTab(v);
+      localStorage.setItem("boardTab", v);
+    },
+    [setBoardTab]
+  );
 
   return (
     <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <BoardTabbar boardTab={boardTab} onChangeTab={handleTabChange} />
-      <SwipeableRoutesBoard
-        ref={swipeableList}
-        boardTab="all"
-        onChangeTab={handleTabChange}
-      />
+      <SwipeableRoutesBoard boardTab={boardTab} onChangeTab={handleTabChange} />
     </Box>
   );
 };

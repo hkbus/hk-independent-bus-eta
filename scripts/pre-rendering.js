@@ -235,7 +235,7 @@ async function run() {
     options.routes || [],
     options.buildDirectory || "./build"
   );
-  await new Promise(resolve =>  setTimeout(resolve, 10000000));
+  
   if (!staticServerURL) return 0;
 
   await runPuppeteer(
