@@ -97,7 +97,7 @@ const isGeoLocation = (input: unknown): input is GeoLocation => {
 };
 
 const isEtaFormat = (input: unknown): input is AppState["etaFormat"] => {
-  return input === "exact" || input === "diff";
+  return input === "exact" || input === "diff" || input === "mixed";
 };
 
 const isStrings = (input: unknown[]): input is string[] => {
