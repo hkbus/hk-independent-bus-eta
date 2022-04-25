@@ -39,7 +39,11 @@ const SuccinctEtas = ({ routeId }) => {
   return (
     <EtaListItemText
       primary={
-        <Typography component="h5" color="textPrimary">
+        <Typography
+          component="h5"
+          color="textPrimary"
+          sx={{ whiteSpace: "nowrap" }}
+        >
           {etas ? getEtaString(etas[0]) : ""}
         </Typography>
       }
