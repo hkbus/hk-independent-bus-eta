@@ -16,7 +16,7 @@
       "秒": "s",
       "由": "From",
       "往": "To",
-      "分鐘": "min",
+      "分鐘": "m",
       "首頁": "Home",
       "搜尋": "Search",
       "規劃": "P2P",
@@ -135,7 +135,8 @@
       "minibus": "小巴",
       "lightRail": "輕鐵",
       "mtr": "港鐵",
-      "route-search-no-result": "沒有結果"
+      "route-search-no-result": "沒有結果",
+      "分鐘": "分"
     }
   }
 }
