@@ -29,6 +29,7 @@ const RouteSearch = () => {
     geolocation,
     energyMode,
     db: { routeList, stopList },
+    vibrateDuration,
   } = useContext(AppContext);
   const {
     locations,
@@ -211,7 +212,7 @@ const RouteSearch = () => {
   };
 
   const handleRouteClick = (idx) => {
-    vibrate(1);
+    vibrate(vibrateDuration);
     setTimeout(() => {
       setResultIdx({ resultIdx: idx, stopIdx: [0, 0] });
     }, 0);

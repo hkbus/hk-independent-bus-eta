@@ -30,12 +30,22 @@ import {
   NightsStay as NightsStayIcon,
   AllInclusive as AllInclusiveIcon,
   FilterAlt as FilterAltIcon,
+  Fingerprint as FingerprintIcon,
+  Gavel as GavelIcon,
+  Vibration as VibrationIcon,
+  DoNotDisturbOn as DoNotDisturbOnIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
-import { vibrate, setSeoHeader, triggerShare } from "../utils";
+import {
+  vibrate,
+  setSeoHeader,
+  triggerShare,
+  checkAppInstalled,
+} from "../utils";
 import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
+import { ETA_FORMAT_STR } from "../constants";
 
 const Settings = () => {
   const {
@@ -53,6 +63,8 @@ const Settings = () => {
     toggleColorMode,
     energyMode,
     toggleEnergyMode,
+    vibrateDuration,
+    toggleVibrateDuration,
   } = useContext(AppContext);
   const [updating, setUpdating] = useState(false);
   const [showGeoPermissionDenied, setShowGeoPermissionDenied] = useState(false);
@@ -78,11 +90,11 @@ const Settings = () => {
         AppTitle
       )}`}</Typography>
       <List>
-        {window.matchMedia("(display-mode: standalone)").matches ? null : (
+        {!checkAppInstalled() && (
           <ListItem
             button
             onClick={() => {
-              vibrate(1);
+              vibrate(vibrateDuration);
               setTimeout(() => setIsOpenInstallDialog(true), 0);
             }}
           >
@@ -101,7 +113,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             setUpdating(true);
             renewDb();
           }}
@@ -136,7 +148,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             if (geoPermission === "granted") {
               updateGeoPermission("closed");
             } else {
@@ -170,7 +182,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             toggleColorMode();
           }}
         >
@@ -187,7 +199,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             toggleRouteFilter();
           }}
         >
@@ -204,7 +216,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             toggleEtaFormat();
           }}
         >
@@ -215,13 +227,13 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText
             primary={t("報時格式")}
-            secondary={t(etaFormat === "diff" ? "到站時差" : "到站時間")}
+            secondary={t(ETA_FORMAT_STR[etaFormat])}
           />
         </ListItem>
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             toggleEnergyMode();
           }}
         >
@@ -232,13 +244,30 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText
             primary={t("省電模式")}
-            secondary={t(energyMode ? "開啟" : "關閉") + " - " + t("地圖功能")}
+            secondary={t(!energyMode ? "開啟地圖功能" : "關閉地圖功能")}
           />
         </ListItem>
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration ^ 1); // tricky, vibrate when switch on and vice versa
+            toggleVibrateDuration();
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              {vibrateDuration ? <VibrationIcon /> : <DoNotDisturbOnIcon />}
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={t("按鍵震動")}
+            secondary={t(vibrateDuration ? "開啟" : "關閉")}
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            vibrate(vibrateDuration);
             resetUsageRecord();
           }}
         >
@@ -257,7 +286,7 @@ const Settings = () => {
         <ListItem
           button
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
             triggerShare(
               `https://${window.location.hostname}`,
               t("巴士到站預報 App")
@@ -283,7 +312,7 @@ const Settings = () => {
           href={`https://t.me/hkbusapp`}
           target="_blank"
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
           }}
         >
           <ListItemAvatar>
@@ -303,7 +332,7 @@ const Settings = () => {
           href={Donations[donationId].url[i18n.language]}
           target="_blank"
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
           }}
         >
           <ListItemAvatar>
@@ -324,7 +353,7 @@ const Settings = () => {
           href={`https://github.com/hkbus/hk-independent-bus-eta`}
           target="_blank"
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
           }}
         >
           <ListItemAvatar>
@@ -344,7 +373,7 @@ const Settings = () => {
           href={`https://www.flaticon.com/free-icon/double-decker_1032967`}
           target="_blank"
           onClick={() => {
-            vibrate(1);
+            vibrate(vibrateDuration);
           }}
         >
           <ListItemAvatar>
@@ -358,6 +387,40 @@ const Settings = () => {
             primary={<ListPrimaryText>{t("圖標來源")}</ListPrimaryText>}
             secondary={"Freepik from Flaticon"}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
+          />
+        </ListItem>
+        <ListItem
+          button
+          component={"a"}
+          href={`/${i18n.language}/privacy`}
+          onClick={() => {
+            vibrate(vibrateDuration);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <FingerprintIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={<ListPrimaryText>{t("隱私權聲明")}</ListPrimaryText>}
+          />
+        </ListItem>
+        <ListItem
+          button
+          component={"a"}
+          href={`/${i18n.language}/terms`}
+          onClick={() => {
+            vibrate(vibrateDuration);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <GavelIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={<ListPrimaryText>{t("條款")}</ListPrimaryText>}
           />
         </ListItem>
         <ListItem>

@@ -19,6 +19,7 @@ const ServiceIds = {
   320: "星期日及公眾假期",
   448: "星期日及公眾假期",
   511: "所有日子",
+  111: "除星期三外",
 };
 
 const TimetableDrawer = ({ freq, jt, open, onClose }) => {
@@ -75,7 +76,7 @@ const TimetableDrawer = ({ freq, jt, open, onClose }) => {
             <div className={classes.jtContainer}>
               <Typography variant="subtitle1">{t("車程")}</Typography>
               <Typography variant="subtitle1">
-                {jt}
+                {Math.round(jt)}
                 {t("分鐘")}
               </Typography>
             </div>

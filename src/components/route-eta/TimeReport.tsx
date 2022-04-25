@@ -38,13 +38,20 @@ const TimeReport = ({
       const waitTime = Math.round(
         (new Date(eta).getTime() - new Date().getTime()) / 60 / 1000
       );
-      if (etaFormat === "exact" && Number.isInteger(waitTime)) {
-        return eta.substr(11, 5);
+
+      if (!Number.isInteger(waitTime)) {
+        return eta.remark[i18n.language];
       }
-      if (waitTime < 1) {
-        return "- " + t("分鐘");
-      } else if (Number.isInteger(waitTime)) {
-        return waitTime + " " + t("分鐘");
+      const exactTimeStr = eta.substr(11, 5);
+      const waitTimeStr =
+        waitTime < 1 ? `- ${t("分鐘")}` : `${waitTime} ${t("分鐘")}`;
+      switch (etaFormat) {
+        case "exact":
+          return exactTimeStr;
+        case "diff":
+          return waitTimeStr;
+        default:
+          return `${exactTimeStr} (${waitTimeStr})`;
       }
     }
   };

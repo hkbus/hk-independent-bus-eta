@@ -13,6 +13,7 @@ import type { DatabaseContextValue } from "./DbContext";
 import { Workbox } from "workbox-window";
 import { produce, freeze, current } from "immer";
 import type { Location as GeoLocation } from "hk-bus-eta";
+import { ETA_FORMAT_NEXT_TYPES } from "./constants";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -31,18 +32,18 @@ interface AppState {
    */
   isRouteFilter: boolean;
   /**
-   * possible Char for RouteInputPad
-   */
-  possibleChar: string[];
-  /**
    * time display format
    */
-  etaFormat: "exact" | "diff";
+  etaFormat: "exact" | "diff" | "mixed";
   colorMode: "dark" | "light";
   /**
    * energy saving mode
    */
   energyMode: boolean;
+  /**
+   * vibrate duration
+   */
+  vibrateDuration: number;
   /**
    * check if window is on active in mobile
    */
@@ -66,6 +67,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
   toggleEnergyMode: () => void;
+  toggleVibrateDuration: () => void;
   workbox?: Workbox;
 }
 
@@ -125,10 +127,10 @@ export const AppContextProvider = ({
   children,
 }: AppContextProviderProps) => {
   const dbContext = useContext(DbContext);
-  const { routeList } = dbContext.db;
   const getInitialState = (): AppState => {
     const devicePreferColorScheme =
       localStorage.getItem("colorMode") ||
+      (navigator.userAgent === "prerendering" && "dark") || // set default color theme in prerendering to "dark"
       (window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: light)").matches
         ? "light"
@@ -141,6 +143,7 @@ export const AppContextProvider = ({
     const etaFormat: unknown = localStorage.getItem("etaFormat");
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
+
     return {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
@@ -153,12 +156,12 @@ export const AppContextProvider = ({
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       isRouteFilter:
         !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
-      possibleChar: getPossibleChar(searchRoute, routeList) || [],
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
       colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
+      vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
       isVisible: true,
     };
   };
@@ -272,7 +275,7 @@ export const AppContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         const prev = state.etaFormat;
-        const etaFormat = prev === "diff" ? "exact" : "diff";
+        const etaFormat = ETA_FORMAT_NEXT_TYPES[prev];
         localStorage.setItem("etaFormat", etaFormat);
         state.etaFormat = etaFormat;
       })
@@ -301,9 +304,23 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const toggleVibrateDuration = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prevVibrateDuration = state.vibrateDuration;
+        const vibrateDuration = prevVibrateDuration ? 0 : 1;
+        localStorage.setItem(
+          "vibrateDuration",
+          JSON.stringify(vibrateDuration)
+        );
+        state.vibrateDuration = vibrateDuration;
+      })
+    );
+  }, []);
+
   const updateSearchRouteByButton = useCallback(
     (buttonValue: string) => {
-      vibrate(1);
+      vibrate(state.vibrateDuration);
       setTimeout(() => {
         setStateRaw(
           produce((state: State) => {
@@ -320,12 +337,11 @@ export const AppContextProvider = ({
                 ret = prevSearchRoute + buttonValue;
             }
             state.searchRoute = ret;
-            state.possibleChar = getPossibleChar(ret, routeList);
           })
         );
       }, 0);
     },
-    [routeList]
+    [state.vibrateDuration]
   );
 
   const updateSelectedRoute = useCallback((route: string, seq: string = "") => {
@@ -395,6 +411,7 @@ export const AppContextProvider = ({
       toggleEtaFormat,
       toggleColorMode,
       toggleEnergyMode,
+      toggleVibrateDuration,
       workbox,
     };
   }, [
@@ -411,6 +428,7 @@ export const AppContextProvider = ({
     toggleEtaFormat,
     toggleColorMode,
     toggleEnergyMode,
+    toggleVibrateDuration,
     workbox,
   ]);
   return (
@@ -420,20 +438,3 @@ export const AppContextProvider = ({
 
 export default AppContext;
 export type { AppContextValue };
-
-const getPossibleChar = (
-  searchRoute: string,
-  routeList: Record<string, unknown>
-) => {
-  if (routeList == null) return [];
-  let possibleChar = {};
-  Object.entries(routeList).forEach((route) => {
-    if (route[0].startsWith(searchRoute.toUpperCase())) {
-      let c = route[0].slice(searchRoute.length, searchRoute.length + 1);
-      possibleChar[c] = isNaN(possibleChar[c]) ? 1 : possibleChar[c] + 1;
-    }
-  });
-  return Object.entries(possibleChar)
-    .map((k) => k[0])
-    .filter((k) => k !== "-");
-};

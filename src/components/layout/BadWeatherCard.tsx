@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React from "react";
 import {
   Card,
   CardActionArea,
@@ -7,18 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useWeather } from "../Weather";
 
 const BadWeatherCard = () => {
   const { t } = useTranslation();
-  const [weather, setWeather] = useState(null);
-
-  useEffect(() => {
-    fetch(
-      "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en"
-    )
-      .then((r) => r.json())
-      .then((d) => setWeather(d));
-  }, []);
+  const weather = useWeather();
 
   const isAdverse = () => {
     if (!weather) {
@@ -60,7 +53,6 @@ const classes = {
 
 const WeatherCard = styled(Card)(({ theme }) => ({
   [`&.${classes.card}`]: {
-    backgroundColor: theme.palette.main,
     borderRadius: theme.shape.borderRadius,
     margin: 0.2,
   },

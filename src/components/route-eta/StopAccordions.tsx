@@ -8,15 +8,18 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
+import loadable from "@loadable/component";
+import DirectionsIcon from "@mui/icons-material/Directions";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
-import { toProperCase, triggerShare } from "../../utils";
+import { toProperCase } from "../../utils";
 import TimeReport from "./TimeReport";
 import ShareIcon from "@mui/icons-material/Share";
 import type { StopListEntry, RouteListEntry } from "hk-bus-eta";
+const SharingModal = loadable(() => import("./SharingModal"));
 
 interface StopAccordionsProps {
   routeId: string;
@@ -35,9 +38,9 @@ const StopAccordions = ({
   handleChange,
 }: StopAccordionsProps) => {
   const id = routeId;
-  const { AppTitle, savedEtas, updateSavedEtas, energyMode } =
-    useContext(AppContext);
+  const { savedEtas, updateSavedEtas, energyMode } = useContext(AppContext);
   const [isCopied, setIsCopied] = useState(false);
+  const [sharingObj, setSharingObj] = useState<any | null>(null);
   const { route, dest, fares, faresHoliday } = routeListEntry;
   const { t, i18n } = useTranslation();
   const accordionRef = useRef<HTMLElement[]>([]);
@@ -46,30 +49,44 @@ const StopAccordions = ({
     // scroll to specific bus stop
     // check acordion ref not null to ensure it is not in rendering
     if (expanded && accordionRef.current[stopIdx]) {
-      accordionRef.current[stopIdx]?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
+      // scroll in next rendering, i.e., all DOMs are well formed
+      const scrollingTimeout = setTimeout(() => {
+        accordionRef.current[stopIdx]?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 50);
+      return () => {
+        clearTimeout(scrollingTimeout);
+      };
     }
   }, [expanded, stopIdx]);
 
   const stopListElements = useMemo(() => {
     return stopListExtracted.map((stop, idx) => {
-      const onClickShare = () => {
-        triggerShare(
-          `https://${window.location.hostname}/${i18n.language}/route/${id}`,
-          `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
-            "往"
-          )} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}`
-        ).then(() => {
-          if (navigator.clipboard) setIsCopied(true);
+      const onClickShare = (e) => {
+        setSharingObj({
+          id,
+          route,
+          dest,
+          idx,
+          setIsCopied,
+          stop,
+          event: e,
         });
       };
       const handleChangeInner = (_: unknown, expand: boolean) => {
         handleChange(idx, expand);
       };
+      const onClickDirection = () => {
+        const { lat, lng } = stop.location;
+        window.open(
+          `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`
+        );
+      };
       return (
         <StopAccordion
+          id={`stop-${idx}`}
           key={"stop-" + idx}
           expanded={stopIdx === idx && expanded}
           onChange={handleChangeInner}
@@ -110,8 +127,20 @@ const StopAccordions = ({
           <StopAccordionDetails
             classes={{ root: classes.accordionDetailsRoot }}
           >
-            <TimeReport routeId={`${id.toUpperCase()}`} seq={idx} />
+            <TimeReport
+              containerClass={classes.accordionTimeReport}
+              routeId={`${id.toUpperCase()}`}
+              seq={idx}
+            />
             <div style={{ display: "flex" }}>
+              <IconButton
+                aria-label="direction"
+                onClick={onClickDirection}
+                style={{ background: "transparent" }}
+                size="large"
+              >
+                <DirectionsIcon />
+              </IconButton>
               <IconButton
                 aria-label="share"
                 onClick={onClickShare}
@@ -138,7 +167,6 @@ const StopAccordions = ({
       );
     });
   }, [
-    AppTitle,
     dest,
     expanded,
     fares,
@@ -148,6 +176,7 @@ const StopAccordions = ({
     id,
     route,
     savedEtas,
+    setSharingObj,
     stopIdx,
     stopListExtracted,
     t,
@@ -160,6 +189,7 @@ const StopAccordions = ({
       }
     >
       {stopListElements}
+      {sharingObj && <SharingModal {...sharingObj} />}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={isCopied}
@@ -167,7 +197,7 @@ const StopAccordions = ({
         onClose={() => {
           setIsCopied(false);
         }}
-        message={t("鏈結已複製到剪貼簿")}
+        message={t("已複製到剪貼簿")}
       />
     </StopAccordionsBox>
   );
@@ -186,16 +216,15 @@ const classes = {
   accordionSummaryContent: `${PREFIX}-summary-content`,
   accordionSummaryExpanded: `${PREFIX}-summary-expanded`,
   accordionDetailsRoot: `${PREFIX}-details-root`,
+  accordionTimeReport: `${PREFIX}-accordionTimeReport`,
 };
 
 const StopAccordionsBox = styled(Box)(({ theme }) => ({
   [`&.${classes.boxContainer}`]: {
     overflowY: "scroll",
-    height: "calc(100vh - 30vh - 47px)",
   },
   [`&.${classes.boxContainerEnergy}`]: {
     overflowY: "scroll",
-    height: "calc(100vh - 47px)",
   },
 }));
 
@@ -244,5 +273,8 @@ const StopAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     paddingBottom: theme.spacing(1),
     justifyContent: "space-between",
     display: "flex",
+  },
+  [`& .${classes.accordionTimeReport}`]: {
+    flex: 1,
   },
 }));

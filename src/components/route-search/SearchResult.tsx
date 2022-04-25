@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
-import RouteNo from "../route-list/RouteNo";
+import RouteNo from "../route-board/RouteNo";
 import TimeReport from "../route-eta/TimeReport";
 
 const SearchResult = ({ routes, idx, handleRouteClick, expanded, stopIdx }) => {

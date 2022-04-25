@@ -7,7 +7,7 @@ import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import SuccinctEtas from "./SuccinctEtas";
 import { getDistance, toProperCase } from "../../utils";
-import RouteNo from "../route-list/RouteNo";
+import RouteNo from "../route-board/RouteNo";
 import { Location } from "hk-bus-eta";
 
 interface DistAndFareProps {
@@ -54,6 +54,7 @@ const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
   const { t, i18n } = useTranslation();
   const {
     db: { routeList, stopList },
+    vibrateDuration,
   } = useContext(AppContext);
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
@@ -64,7 +65,7 @@ const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
   const history = useHistory();
   const handleClick = (e) => {
     e.preventDefault();
-    vibrate(1);
+    vibrate(vibrateDuration);
     setTimeout(() => {
       history.push(`/${i18n.language}/route/${routeId.toLowerCase()}`);
     }, 0);
@@ -158,11 +159,14 @@ const RootListItem = styled(ListItem)(({ theme }) => ({
     width: "15%",
   },
   [`& .${classes.routeDest}`]: {
-    width: "65%",
+    width: "50%",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
   },
   [`& .${classes.fromToWrapper}`]: {
     display: "flex",
     alignItems: "baseline",
+    fontSize: "1.2rem",
   },
   [`& .${classes.fromToText}`]: {
     fontSize: "0.85rem",

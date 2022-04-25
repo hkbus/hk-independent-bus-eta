@@ -1,18 +1,18 @@
 import { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import RouteMap from "../components/route-eta/RouteMap";
+import loadable from "@loadable/component";
 import StopAccordions from "../components/route-eta/StopAccordions";
 import StopDialog from "../components/route-eta/StopDialog";
 import { Button, Divider, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AppContext from "../AppContext";
 import { useTranslation } from "react-i18next";
-import RouteNo from "../components/route-list/RouteNo";
+import RouteNo from "../components/route-board/RouteNo";
 import { setSeoHeader, toProperCase, getDistance } from "../utils";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import TimetableDrawer from "../components/route-eta/TimetableDrawer";
-import Leaflet from "leaflet";
 import type { WarnUpMessageData } from "../typing";
+const RouteMap = loadable(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
   const { id, panel } = useParams<{ id: string; panel: string }>();
@@ -89,7 +89,7 @@ const RouteEta = () => {
 
   const handleCloseDialog = useCallback(() => {
     setIsDialogOpen(false);
-  }, []);
+  }, [setIsDialogOpen]);
 
   useEffect(() => {
     setIsDialogOpen(false);
@@ -150,10 +150,13 @@ const RouteEta = () => {
   ]);
 
   useEffect(() => {
-    if (!energyMode) {
+    if (!energyMode && navigator.userAgent !== "prerendering") {
       const message: WarnUpMessageData = {
         type: "WARN_UP_MAP_CACHE",
-        retinaDisplay: Leaflet.Browser.retina,
+        retinaDisplay:
+          (window.devicePixelRatio ||
+            // @ts-ignore: Property does not exist on type 'Screen'.
+            window.screen.deviceXDPI / window.screen.logicalXDPI) > 1,
         zoomLevels: [14, 15, 16, 17, 18],
         stopList: getStops(co, stops)
           .map((id) => stopList[id])
@@ -166,7 +169,7 @@ const RouteEta = () => {
   return (
     <>
       <input hidden id={id} />
-      <Root className={classes.header} elevation={0}>
+      <Root id="route-eta-header" className={classes.header} elevation={0}>
         <RouteNo routeNo={route} component="h1" align="center" />
         <Typography component="h2" variant="caption" align="center">
           {t("往")} {toProperCase(dest[i18n.language])}{" "}
@@ -199,21 +202,19 @@ const RouteEta = () => {
           <></>
         )}
       </Root>
-      {!energyMode ? (
+      {!energyMode && navigator.userAgent !== "prerendering" && (
         <RouteMap
           stops={stopsExtracted}
           stopIdx={stopIdx}
           onMarkerClick={onMarkerClick}
         />
-      ) : (
-        <></>
       )}
       <StopAccordions
         routeId={id}
         stopIdx={stopIdx}
         routeListEntry={routeListEntry}
         stopListExtracted={stopsExtracted}
-        expanded={expanded}
+        expanded={expanded && navigator.userAgent !== "prerendering"}
         handleChange={handleChange}
       />
       <StopDialog
