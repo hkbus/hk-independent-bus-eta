@@ -3,7 +3,7 @@ import { Paper, Link } from "@mui/material";
 
 const PrivacyPolicy = () => {
   return (
-    <Paper sx={{ p: 2 }}>
+    <Paper sx={{ p: 2, maxHeight: "100%", overflow: "auto" }}>
       <strong>Privacy Policy</strong>{" "}
       <p>
         HKBUS.APP built the hkbus.app app as an Open Source app. This SERVICE is
