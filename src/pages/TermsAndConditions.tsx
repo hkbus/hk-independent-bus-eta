@@ -3,7 +3,7 @@ import { Paper, Link } from "@mui/material";
 
 const TermsAndConditions = () => {
   return (
-    <Paper sx={{ p: 2, maxHeight: "100%", overflow: "auto" }}>
+    <Paper sx={{ p: 2, flex: 1, overflow: "auto" }}>
       <strong>Terms &amp; Conditions</strong>{" "}
       <p>
         By downloading or using the app, these terms will automatically apply to
