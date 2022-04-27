@@ -53,6 +53,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               isRouteFilter,
               isTodayHoliday,
               homeTab,
+              sortByDist: homeTab !== "saved",
             }),
           }),
           {}
@@ -134,6 +135,7 @@ const getSelectedRoutes = ({
   isRouteFilter,
   isTodayHoliday,
   homeTab,
+  sortByDist,
 }: {
   hotRoute: Record<string, number>;
   savedEtas: string[];
@@ -143,6 +145,7 @@ const getSelectedRoutes = ({
   isRouteFilter: boolean;
   isTodayHoliday: boolean;
   homeTab: "both" | "saved" | "nearby";
+  sortByDist: boolean;
 }): string => {
   const selectedRoutes = savedEtas
     .concat(
@@ -156,7 +159,7 @@ const getSelectedRoutes = ({
         self.indexOf(routeUrl) === index && routeUrl.split("/")[0] in routeList
       );
     })
-    .map((routeUrl): [string, number] => {
+    .map((routeUrl, idx): [string, number] => {
       const [routeId, stopIdx] = routeUrl.split("/");
       // TODO: taking the longest stop array to avoid error, should be fixed in the database
       const stop =
@@ -165,7 +168,7 @@ const getSelectedRoutes = ({
             (a, b) => b.length - a.length
           )[0][stopIdx]
         ];
-      return [routeUrl, getDistance(geolocation, stop.location)];
+      return [routeUrl, sortByDist ? getDistance(geolocation, stop.location) : idx];
     })
     .sort((a, b) => a[1] - b[1])
     .map((v) => v[0])

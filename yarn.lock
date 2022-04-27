@@ -5460,10 +5460,10 @@ history@^4.9.0:
     tiny-warning "^1.0.0"
     value-equal "^1.0.1"
 
-hk-bus-eta@^1.7.3:
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-1.7.3.tgz#4e6646aa10c3442e1142d457b5fa7d59aeab88dd"
-  integrity sha512-ozQhHnl236McQH/bhxxxn3SlEF+so4fm5DmFgFC97cN2Bk0BJKBAa/0kVwnIVj95cMRGDHM9m3cTKqF0s1QoXw==
+hk-bus-eta@^1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-1.7.4.tgz#03e04405506f4c94881249f3c3c5f68dfffbc7a4"
+  integrity sha512-xbbBtDm8crxCXlKkgMn6PD3tozs4VZziu8lyj6ScNEoV/ufRPo+4MWeO5FxGiF1KwQ16eL9vgoR4jduFjeYmzg==
 
 hoist-non-react-statics@^3.1.0, hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
