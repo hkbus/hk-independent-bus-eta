@@ -91,5 +91,6 @@
     "puppeteer": "^13.0.1",
     "request": "^2.88.2",
     "source-map-explorer": "^2.5.2"
-  }
+  },
+  "license": "GPL-3.0"
 }
