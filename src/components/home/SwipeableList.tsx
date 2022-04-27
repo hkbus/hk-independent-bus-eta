@@ -168,7 +168,10 @@ const getSelectedRoutes = ({
             (a, b) => b.length - a.length
           )[0][stopIdx]
         ];
-      return [routeUrl, sortByDist ? getDistance(geolocation, stop.location) : idx];
+      return [
+        routeUrl,
+        sortByDist ? getDistance(geolocation, stop.location) : idx,
+      ];
     })
     .sort((a, b) => a[1] - b[1])
     .map((v) => v[0])
