@@ -106,7 +106,8 @@
       "minibus": "Minibus",
       "lightRail": "Light Rail",
       "mtr": "MTR",
-      "route-search-no-result": "No Result"
+      "route-search-no-result": "No Result",
+      "對頭線": "REV"
     }
   },
   "zh": {

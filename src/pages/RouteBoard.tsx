@@ -8,7 +8,7 @@ import BoardTabbar, {
   BoardTabType,
   isBoardTab,
 } from "../components/route-board/BoardTabbar";
-import SwipeableRoutesBoard from "../components/route-board/SwipeableDashBoard";
+import SwipeableRoutesBoard from "../components/route-board/SwipeableRoutesBoard";
 
 interface RouteListProps {
   boardTab: BoardTabType;
