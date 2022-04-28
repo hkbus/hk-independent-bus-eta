@@ -14,7 +14,7 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
     db: { routeList, holidays, stopList },
     vibrateDuration,
   } = useContext(AppContext);
-  const { route, stops, orig, dest, nlbId, freq, jt, co } = routeList[routeId];
+  const { route, stops, co } = routeList[routeId];
   const history = useHistory();
 
   const isTodayHoliday = useMemo(
@@ -39,21 +39,24 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
           },
           []
         )
-        .sort(([, a], [, b]) =>
-          isRouteAvaliable(a.route, a.freq, isTodayHoliday) <
-          isRouteAvaliable(b.route, b.freq, isTodayHoliday)
-            ? -1
-            : 1
-        )
         .sort(([, a], [, b]) => {
-          const refOrig = stopList[Object.values(stops)[0][0]];
-          const aOrig = stopList[Object.values(a.stops)[0][0]];
-          const bOrig = stopList[Object.values(b.stops)[0][0]];
-          return getDistance(aOrig.location, refOrig.location) <
-            getDistance(bOrig.location, refOrig.location)
-            ? -1
-            : 1;
-        }),
+          const aAval = isRouteAvaliable(a.route, a.freq, isTodayHoliday);
+          const bAval = isRouteAvaliable(b.route, b.freq, isTodayHoliday);
+          if (aAval === bAval) {
+            const refOrig = stopList[Object.values(stops)[0][0]];
+            // calculate distance between starting stop of reference route and candidate route A
+            const aOrig = stopList[Object.values(a.stops)[0][0]];
+            const aDist = getDistance(aOrig.location, refOrig.location);
+            // calculate distance between starting stop of reference route and candidate route B
+            const bOrig = stopList[Object.values(b.stops)[0][0]];
+            const bDist = getDistance(bOrig.location, refOrig.location);
+            // pick furtherest one
+            return aDist > bDist ? -1 : 1;
+          }
+          // compare boolean, available route first
+          return aAval > bAval ? -1 : 1;
+        })
+        .map(([_routeId]) => _routeId),
     [route, co, routeList, stopList, isTodayHoliday, routeId, stops]
   );
 
@@ -63,7 +66,7 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
       vibrate(vibrateDuration);
       setTimeout(() => {
         history.push(
-          `/${i18n.language}/route/${reverseRoute[0][0].toLowerCase()}`
+          `/${i18n.language}/route/${reverseRoute[0].toLowerCase()}`
         );
       }, 0);
     },
