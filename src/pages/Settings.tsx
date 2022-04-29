@@ -36,6 +36,7 @@ import {
   DoNotDisturbOn as DoNotDisturbOnIcon,
   Filter1 as Filter1Icon,
   Filter7 as Filter7Icon,
+  Sort as SortIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -59,6 +60,8 @@ const Settings = () => {
     resetUsageRecord,
     isRouteFilter,
     toggleRouteFilter,
+    busSortOrder,
+    toggleBusSortOrder,
     numPadOrder,
     toggleNumPadOrder,
     etaFormat,
@@ -216,6 +219,20 @@ const Settings = () => {
             primary={t("路線篩選")}
             secondary={t(isRouteFilter ? "只顯示現時路線" : "顯示所有路線")}
           />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            vibrate(vibrateDuration);
+            toggleBusSortOrder();
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <SortIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={t("巴士排序")} secondary={t(busSortOrder)} />
         </ListItem>
         <ListItem
           button

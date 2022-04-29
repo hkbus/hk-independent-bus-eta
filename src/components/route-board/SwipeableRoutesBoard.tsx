@@ -28,6 +28,7 @@ const SwipeableRoutesBoard = ({
     searchRoute,
     db: { holidays, routeList },
     isRouteFilter,
+    busSortOrder,
     vibrateDuration,
   } = useContext(AppContext);
   const isTodayHoliday = useMemo(
@@ -49,7 +50,7 @@ const SwipeableRoutesBoard = ({
         ([routeNo, { freq }]) =>
           !isRouteFilter || isRouteAvaliable(routeNo, freq, isTodayHoliday)
       )
-      .sort(routeSortFunc);
+      .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]));
     return Object.entries(TRANSPORT_SEARCH_OPTIONS).map(
       ([tab, searchOptions]) =>
         createItemData(
@@ -59,7 +60,14 @@ const SwipeableRoutesBoard = ({
           vibrateDuration
         )
     );
-  }, [routeList, isTodayHoliday, searchRoute, isRouteFilter, vibrateDuration]);
+  }, [
+    routeList,
+    isTodayHoliday,
+    searchRoute,
+    isRouteFilter,
+    vibrateDuration,
+    busSortOrder,
+  ]);
 
   const ListRenderer = useCallback(
     ({ key, index }) => (
@@ -167,7 +175,7 @@ const noResultSx: SxProps<Theme> = {
   },
 };
 
-const routeSortFunc = (a, b) => {
+const routeSortFunc = (a, b, transportOrder: string[]) => {
   const aRoute = a[0].split("-");
   const bRoute = b[0].split("-");
 
@@ -208,18 +216,18 @@ const routeSortFunc = (a, b) => {
 
   // Sort by TRANSPORT_ORDER
   const aCompany = a[1]["co"].sort(
-    (a, b) => TRANSPORT_ORDER.indexOf(a) - TRANSPORT_ORDER.indexOf(b)
+    (a, b) => transportOrder.indexOf(a) - transportOrder.indexOf(b)
   );
   const bCompany = b[1]["co"].sort(
-    (a, b) => TRANSPORT_ORDER.indexOf(a) - TRANSPORT_ORDER.indexOf(b)
+    (a, b) => transportOrder.indexOf(a) - transportOrder.indexOf(b)
   );
 
   if (
-    TRANSPORT_ORDER.indexOf(aCompany[0]) > TRANSPORT_ORDER.indexOf(bCompany[0])
+    transportOrder.indexOf(aCompany[0]) > transportOrder.indexOf(bCompany[0])
   ) {
     return 1;
   } else if (
-    TRANSPORT_ORDER.indexOf(aCompany[0]) < TRANSPORT_ORDER.indexOf(bCompany[0])
+    transportOrder.indexOf(aCompany[0]) < transportOrder.indexOf(bCompany[0])
   ) {
     return -1;
   }

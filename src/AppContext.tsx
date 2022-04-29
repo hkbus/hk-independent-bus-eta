@@ -32,6 +32,10 @@ interface AppState {
    */
   isRouteFilter: boolean;
   /**
+   * bus sorting order
+   */
+  busSortOrder: "KMB first" | "CTB-NWFB first";
+  /**
    * number pad order
    */
   numPadOrder: "789456123c0b" | "123456789c0b";
@@ -68,6 +72,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
     deniedCallback?: () => void
   ) => void;
   toggleRouteFilter: () => void;
+  toggleBusSortOrder: () => void;
   toggleNumPadOrder: () => void;
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
@@ -99,6 +104,10 @@ const isGeoLocation = (input: unknown): input is GeoLocation => {
     }
   }
   return false;
+};
+
+const isBusSortOrder = (input: unknown): input is AppState["busSortOrder"] => {
+  return input === "KMB first" || input === "CTB-NWFB first";
 };
 
 const isNumPadOrder = (input: unknown): input is AppState["numPadOrder"] => {
@@ -149,6 +158,7 @@ export const AppContextProvider = ({
     const geoLocation: unknown = JSON.parse(
       localStorage.getItem("geolocation")
     );
+    const busSortOrder: unknown = localStorage.getItem("busSortOrder");
     const numPadOrder: unknown = localStorage.getItem("numPadOrder");
     const etaFormat: unknown = localStorage.getItem("etaFormat");
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
@@ -166,6 +176,7 @@ export const AppContextProvider = ({
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       isRouteFilter:
         !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
+      busSortOrder: isBusSortOrder(busSortOrder) ? busSortOrder : "KMB first",
       numPadOrder: isNumPadOrder(numPadOrder) ? numPadOrder : "123456789c0b",
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
       colorMode: isColorMode(devicePreferColorScheme)
@@ -278,6 +289,18 @@ export const AppContextProvider = ({
         const isRouteFilter = prev ? false : true;
         localStorage.setItem("isRouteFilter", JSON.stringify(isRouteFilter));
         state.isRouteFilter = isRouteFilter;
+      })
+    );
+  }, []);
+
+  const toggleBusSortOrder = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prevOrder = state.busSortOrder;
+        const busSortOrder =
+          prevOrder === "KMB first" ? "CTB-NWFB first" : "KMB first";
+        localStorage.setItem("busSortOrder", busSortOrder);
+        state.busSortOrder = busSortOrder;
       })
     );
   }, []);
@@ -431,6 +454,7 @@ export const AppContextProvider = ({
       resetUsageRecord,
       updateGeoPermission,
       toggleRouteFilter,
+      toggleBusSortOrder,
       toggleNumPadOrder,
       toggleEtaFormat,
       toggleColorMode,
@@ -449,6 +473,7 @@ export const AppContextProvider = ({
     resetUsageRecord,
     updateGeoPermission,
     toggleRouteFilter,
+    toggleBusSortOrder,
     toggleNumPadOrder,
     toggleEtaFormat,
     toggleColorMode,

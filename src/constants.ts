@@ -20,13 +20,25 @@ export const TRANSPORT_SEARCH_OPTIONS = {
   mtr: ["mtr"],
 };
 
-export const TRANSPORT_ORDER = [
-  "kmb",
-  "ctb",
-  "nwfb",
-  "lrtfeeder",
-  "nlb",
-  "gmb",
-  "lightRail",
-  "mtr",
-];
+export const TRANSPORT_ORDER = {
+  "KMB first": [
+    "kmb",
+    "ctb",
+    "nwfb",
+    "lrtfeeder",
+    "nlb",
+    "gmb",
+    "lightRail",
+    "mtr",
+  ],
+  "CTB-NWFB first": [
+    "ctb",
+    "nwfb",
+    "kmb",
+    "lrtfeeder",
+    "nlb",
+    "gmb",
+    "lightRail",
+    "mtr",
+  ],
+};
