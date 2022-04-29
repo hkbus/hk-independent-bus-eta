@@ -56,7 +56,8 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
           // compare boolean, available route first
           return aAval > bAval ? -1 : 1;
         })
-        .map(([_routeId]) => _routeId),
+        .map(([_routeId]) => _routeId)
+        .filter((_routeId) => _routeId.toLowerCase() !== routeId),
     [route, co, routeList, stopList, isTodayHoliday, routeId, stops]
   );
 
@@ -72,8 +73,9 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
     },
     [reverseRoute, history, i18n.language, vibrateDuration]
   );
+
   return (
-    reverseRoute.length >= 0 && (
+    reverseRoute.length > 0 && (
       <>
         <Divider orientation="vertical" sx={buttonDividerSx} />
         <Button
