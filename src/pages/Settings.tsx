@@ -34,6 +34,8 @@ import {
   Gavel as GavelIcon,
   Vibration as VibrationIcon,
   DoNotDisturbOn as DoNotDisturbOnIcon,
+  Filter1 as Filter1Icon,
+  Filter7 as Filter7Icon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -57,6 +59,8 @@ const Settings = () => {
     resetUsageRecord,
     isRouteFilter,
     toggleRouteFilter,
+    numPadOrder,
+    toggleNumPadOrder,
     etaFormat,
     toggleEtaFormat,
     colorMode,
@@ -212,6 +216,20 @@ const Settings = () => {
             primary={t("路線篩選")}
             secondary={t(isRouteFilter ? "只顯示現時路線" : "顯示所有路線")}
           />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            vibrate(vibrateDuration);
+            toggleNumPadOrder();
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              {numPadOrder[0] === "1" ? <Filter1Icon /> : <Filter7Icon />}
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={t("鍵盤格式")} secondary={numPadOrder} />
         </ListItem>
         <ListItem
           button

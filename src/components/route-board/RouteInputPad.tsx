@@ -30,11 +30,12 @@ const KeyButton = ({ k, handleClick, disabled = false, className }) => {
 };
 
 const RouteNumPad = ({ possibleChar }) => {
-  const { searchRoute, updateSearchRouteByButton } = useContext(AppContext);
+  const { numPadOrder, searchRoute, updateSearchRouteByButton } =
+    useContext(AppContext);
 
   return (
     <Grid container spacing={0}>
-      {"789456123c0b".split("").map((k) => (
+      {numPadOrder.split("").map((k) => (
         <Grid item xs={4} key={"input-" + k}>
           <KeyButton
             k={k}

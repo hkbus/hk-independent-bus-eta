@@ -32,6 +32,10 @@ interface AppState {
    */
   isRouteFilter: boolean;
   /**
+   * number pad order
+   */
+  numPadOrder: "789456123c0b" | "123456789c0b";
+  /**
    * time display format
    */
   etaFormat: "exact" | "diff" | "mixed";
@@ -64,6 +68,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
     deniedCallback?: () => void
   ) => void;
   toggleRouteFilter: () => void;
+  toggleNumPadOrder: () => void;
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
   toggleEnergyMode: () => void;
@@ -94,6 +99,10 @@ const isGeoLocation = (input: unknown): input is GeoLocation => {
     }
   }
   return false;
+};
+
+const isNumPadOrder = (input: unknown): input is AppState["numPadOrder"] => {
+  return input === "789456123c0b" || input === "123456789c0b";
 };
 
 const isEtaFormat = (input: unknown): input is AppState["etaFormat"] => {
@@ -140,6 +149,7 @@ export const AppContextProvider = ({
     const geoLocation: unknown = JSON.parse(
       localStorage.getItem("geolocation")
     );
+    const numPadOrder: unknown = localStorage.getItem("numPadOrder");
     const etaFormat: unknown = localStorage.getItem("etaFormat");
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
@@ -156,6 +166,7 @@ export const AppContextProvider = ({
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       isRouteFilter:
         !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
+      numPadOrder: isNumPadOrder(numPadOrder) ? numPadOrder : "123456789c0b",
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
       colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
@@ -267,6 +278,18 @@ export const AppContextProvider = ({
         const isRouteFilter = prev ? false : true;
         localStorage.setItem("isRouteFilter", JSON.stringify(isRouteFilter));
         state.isRouteFilter = isRouteFilter;
+      })
+    );
+  }, []);
+
+  const toggleNumPadOrder = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prevOrder = state.numPadOrder;
+        const numPadOrder =
+          prevOrder === "123456789c0b" ? "789456123c0b" : "123456789c0b";
+        localStorage.setItem("numPadOrder", numPadOrder);
+        state.numPadOrder = numPadOrder;
       })
     );
   }, []);
@@ -408,6 +431,7 @@ export const AppContextProvider = ({
       resetUsageRecord,
       updateGeoPermission,
       toggleRouteFilter,
+      toggleNumPadOrder,
       toggleEtaFormat,
       toggleColorMode,
       toggleEnergyMode,
@@ -425,6 +449,7 @@ export const AppContextProvider = ({
     resetUsageRecord,
     updateGeoPermission,
     toggleRouteFilter,
+    toggleNumPadOrder,
     toggleEtaFormat,
     toggleColorMode,
     toggleEnergyMode,
