@@ -15,28 +15,16 @@ import { styled } from "@mui/material/styles";
 import {
   GetApp as GetAppIcon,
   Build as BuildIcon,
-  Timer as TimerIcon,
   LocationOn as LocationOnIcon,
   LocationOff as LocationOffIcon,
   MonetizationOn as MonetizationOnIcon,
   DataUsage as DataUsageIcon,
-  Battery20 as Battery20Icon,
-  BatteryStd as BatteryStdIcon,
-  Delete as DeleteIcon,
   GitHub as GitHubIcon,
   Share as ShareIcon,
   Telegram as TelegramIcon,
-  Brightness7 as Brightness7Icon,
-  NightsStay as NightsStayIcon,
-  AllInclusive as AllInclusiveIcon,
-  FilterAlt as FilterAltIcon,
   Fingerprint as FingerprintIcon,
   Gavel as GavelIcon,
-  Vibration as VibrationIcon,
-  DoNotDisturbOn as DoNotDisturbOnIcon,
-  Filter1 as Filter1Icon,
-  Filter7 as Filter7Icon,
-  Sort as SortIcon,
+  InsertEmoticon as InsertEmoticonIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -48,7 +36,7 @@ import {
 } from "../utils";
 import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
-import { ETA_FORMAT_STR } from "../constants";
+import PersonalizeDialog from "../components/settings/PersonalizeDialog";
 
 const Settings = () => {
   const {
@@ -57,26 +45,13 @@ const Settings = () => {
     renewDb,
     geoPermission,
     updateGeoPermission,
-    resetUsageRecord,
-    isRouteFilter,
-    toggleRouteFilter,
-    busSortOrder,
-    toggleBusSortOrder,
-    numPadOrder,
-    toggleNumPadOrder,
-    etaFormat,
-    toggleEtaFormat,
-    colorMode,
-    toggleColorMode,
-    energyMode,
-    toggleEnergyMode,
     vibrateDuration,
-    toggleVibrateDuration,
   } = useContext(AppContext);
   const [updating, setUpdating] = useState(false);
   const [showGeoPermissionDenied, setShowGeoPermissionDenied] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isOpenInstallDialog, setIsOpenInstallDialog] = useState(false);
+  const [isPersonalizeDialog, setIsPersonalizeDialog] = useState(false);
 
   const { t, i18n } = useTranslation();
   const donationId = Math.floor(Math.random() * Donations.length);
@@ -111,7 +86,7 @@ const Settings = () => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText
-              primary={<ListPrimaryText>{t("安裝")}</ListPrimaryText>}
+              primary={t("安裝")}
               secondary={t("安裝巴士預報 App 到裝置")}
               secondaryTypographyProps={{ component: "h3", variant: "body2" }}
             />
@@ -132,13 +107,8 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText
             primary={
-              <ListPrimaryText>
-                {t("架構版本") +
-                  ": " +
-                  schemaVersion +
-                  " - " +
-                  versionMd5.substr(0, 6)}
-              </ListPrimaryText>
+              `${t("架構版本")}: ` +
+              `${schemaVersion} - ${versionMd5.slice(0, 6)}`
             }
             secondary={
               t("更新時間") +
@@ -175,7 +145,7 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={<ListPrimaryText>{t("地理位置定位功能")}</ListPrimaryText>}
+            primary={t("地理位置定位功能")}
             secondary={t(
               geoPermission === "granted"
                 ? "開啟"
@@ -190,132 +160,15 @@ const Settings = () => {
           button
           onClick={() => {
             vibrate(vibrateDuration);
-            toggleColorMode();
+            setIsPersonalizeDialog(true);
           }}
         >
           <ListItemAvatar>
             <Avatar>
-              {colorMode === "dark" ? <NightsStayIcon /> : <Brightness7Icon />}
+              <InsertEmoticonIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText
-            primary={t("黑夜模式")}
-            secondary={t(colorMode === "dark" ? "開啟" : "關閉")}
-          />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            vibrate(vibrateDuration);
-            toggleRouteFilter();
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              {isRouteFilter ? <FilterAltIcon /> : <AllInclusiveIcon />}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={t("路線篩選")}
-            secondary={t(isRouteFilter ? "只顯示現時路線" : "顯示所有路線")}
-          />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            vibrate(vibrateDuration);
-            toggleBusSortOrder();
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <SortIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary={t("巴士排序")} secondary={t(busSortOrder)} />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            vibrate(vibrateDuration);
-            toggleNumPadOrder();
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              {numPadOrder[0] === "1" ? <Filter1Icon /> : <Filter7Icon />}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary={t("鍵盤格式")} secondary={numPadOrder} />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            vibrate(vibrateDuration);
-            toggleEtaFormat();
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <TimerIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={t("報時格式")}
-            secondary={t(ETA_FORMAT_STR[etaFormat])}
-          />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            vibrate(vibrateDuration);
-            toggleEnergyMode();
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              {energyMode ? <Battery20Icon /> : <BatteryStdIcon />}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={t("省電模式")}
-            secondary={t(!energyMode ? "開啟地圖功能" : "關閉地圖功能")}
-          />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            vibrate(vibrateDuration ^ 1); // tricky, vibrate when switch on and vice versa
-            toggleVibrateDuration();
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              {vibrateDuration ? <VibrationIcon /> : <DoNotDisturbOnIcon />}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={t("按鍵震動")}
-            secondary={t(vibrateDuration ? "開啟" : "關閉")}
-          />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            vibrate(vibrateDuration);
-            resetUsageRecord();
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <DeleteIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={<ListPrimaryText>{t("一鍵清空用戶記錄")}</ListPrimaryText>}
-            secondary={t("包括鎖定和常用報時")}
-            secondaryTypographyProps={{ component: "h3", variant: "body2" }}
-          />
+          <ListItemText primary={t("個性化設定")} />
         </ListItem>
         <Divider />
         <ListItem
@@ -336,7 +189,7 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={<ListPrimaryText>{t("複製應用程式鏈結")}</ListPrimaryText>}
+            primary={t("複製應用程式鏈結")}
             secondary={t("經不同媒介分享給親友")}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
@@ -356,7 +209,7 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={<ListPrimaryText>{t("Telegram 交流區")}</ListPrimaryText>}
+            primary={t("Telegram 交流區")}
             secondary={t("歡迎意見及技術交流")}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
@@ -376,7 +229,7 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={<ListPrimaryText>{t("捐款支持")}</ListPrimaryText>}
+            primary={t("捐款支持")}
             secondary={Donations[donationId].description[i18n.language]}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
@@ -397,7 +250,7 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={<ListPrimaryText>Source code</ListPrimaryText>}
+            primary="Source code"
             secondary={"GPL-3.0 License"}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
@@ -419,7 +272,7 @@ const Settings = () => {
             ></Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={<ListPrimaryText>{t("圖標來源")}</ListPrimaryText>}
+            primary={t("圖標來源")}
             secondary={"Freepik from Flaticon"}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
@@ -437,9 +290,7 @@ const Settings = () => {
               <FingerprintIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText
-            primary={<ListPrimaryText>{t("隱私權聲明")}</ListPrimaryText>}
-          />
+          <ListItemText primary={t("隱私權聲明")} />
         </ListItem>
         <ListItem
           button
@@ -454,9 +305,7 @@ const Settings = () => {
               <GavelIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText
-            primary={<ListPrimaryText>{t("條款")}</ListPrimaryText>}
-          />
+          <ListItemText primary={t("條款")} />
         </ListItem>
         <ListItem>
           <ListItemAvatar>
@@ -465,7 +314,7 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={<ListPrimaryText>{t("交通資料來源")}</ListPrimaryText>}
+            primary={t("交通資料來源")}
             secondary={t("資料一線通") + "  https://data.gov.hk"}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
@@ -498,15 +347,11 @@ const Settings = () => {
         open={isOpenInstallDialog}
         handleClose={() => setIsOpenInstallDialog(false)}
       />
+      <PersonalizeDialog
+        open={isPersonalizeDialog}
+        handleClose={() => setIsPersonalizeDialog(false)}
+      />
     </Root>
-  );
-};
-
-const ListPrimaryText = ({ children }) => {
-  return (
-    <Typography component="h2" variant="body1">
-      {children}
-    </Typography>
   );
 };
 
