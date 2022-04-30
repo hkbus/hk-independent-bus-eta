@@ -1,5 +1,13 @@
 import React, { useContext } from "react";
-import { Divider, ListItem, ListItemText, Typography } from "@mui/material";
+import {
+  Divider,
+  ListItem,
+  ListItemText,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
+import ReorderIcon from "@mui/icons-material/Reorder";
 import { Link, useHistory } from "react-router-dom";
 import { vibrate } from "../../utils";
 import { styled } from "@mui/material/styles";
@@ -50,7 +58,15 @@ const DistAndFare = ({
   );
 };
 
-const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
+interface SuccinctTimeReportProps {
+  routeId: string;
+  disabled?: boolean;
+}
+
+const SuccinctTimeReport = ({
+  routeId,
+  disabled = false,
+}: SuccinctTimeReportProps) => {
   const { t, i18n } = useTranslation();
   const {
     db: { routeList, stopList },
@@ -75,9 +91,9 @@ const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
     <>
       <RootListItem
         // @ts-ignore
-        component={Link}
+        component={!disabled ? Link : undefined}
         to={`/${i18n.language}/route/${routeKey.toLowerCase()}`}
-        onClick={handleClick}
+        onClick={!disabled ? handleClick : () => {}}
         className={classes.listItem}
       >
         <ListItemText
@@ -111,7 +127,11 @@ const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
           }}
           className={classes.routeDest}
         />
-        <SuccinctEtas routeId={routeId} />
+        {!disabled ? (
+          <SuccinctEtas routeId={routeId} />
+        ) : (
+          <ReorderIcon sx={iconSx} />
+        )}
       </RootListItem>
       <Divider />
     </>
@@ -173,3 +193,7 @@ const RootListItem = styled(ListItem)(({ theme }) => ({
     marginRight: theme.spacing(0.5),
   },
 }));
+
+const iconSx: SxProps<Theme> = {
+  color: (theme) => theme.palette.text.primary,
+};

@@ -36,7 +36,6 @@ const Home = () => {
   const [_geolocation, set_geolocation] = useState<Location>(geolocation);
   const debouncedUpdateGeolocation = useRef(
     debounce(() => {
-      console.log("update location", geolocation);
       set_geolocation(geolocation);
     }, 1000)
   ).current;

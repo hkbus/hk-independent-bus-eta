@@ -46,7 +46,7 @@ export const useWeather = () => {
 
     const fetchEtaInterval = setInterval(() => {
       fetchData();
-    }, 30000);
+    }, 300000);
 
     fetchData();
 

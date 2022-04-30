@@ -65,6 +65,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   // UX
   updateGeolocation: (geoLocation: GeoLocation) => void;
   updateSavedEtas: (keys: string) => void;
+  setSavedEtas: (savedEtas: string[]) => void;
   resetUsageRecord: () => void;
   // settings
   updateGeoPermission: (
@@ -432,6 +433,16 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  // for re-ordering
+  const setSavedEtas = useCallback((savedEtas) => {
+    setStateRaw(
+      produce((state: State) => {
+        localStorage.setItem("savedEtas", JSON.stringify(savedEtas));
+        state.savedEtas = savedEtas;
+      })
+    );
+  }, []);
+
   const resetUsageRecord = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
@@ -451,6 +462,7 @@ export const AppContextProvider = ({
       updateSelectedRoute,
       updateGeolocation,
       updateSavedEtas,
+      setSavedEtas,
       resetUsageRecord,
       updateGeoPermission,
       toggleRouteFilter,
@@ -470,6 +482,7 @@ export const AppContextProvider = ({
     updateSelectedRoute,
     updateGeolocation,
     updateSavedEtas,
+    setSavedEtas,
     resetUsageRecord,
     updateGeoPermission,
     toggleRouteFilter,
