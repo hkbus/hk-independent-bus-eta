@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import {
+  Box,
   Divider,
   ListItem,
   ListItemText,
@@ -130,7 +131,9 @@ const SuccinctTimeReport = ({
         {!disabled ? (
           <SuccinctEtas routeId={routeId} />
         ) : (
-          <ReorderIcon sx={iconSx} />
+          <Box sx={iconContainerSx}>
+            <ReorderIcon />
+          </Box>
         )}
       </RootListItem>
       <Divider />
@@ -194,6 +197,10 @@ const RootListItem = styled(ListItem)(({ theme }) => ({
   },
 }));
 
-const iconSx: SxProps<Theme> = {
+const iconContainerSx: SxProps<Theme> = {
   color: (theme) => theme.palette.text.primary,
+  flex: 1,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };

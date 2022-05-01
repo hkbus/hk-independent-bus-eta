@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import AppContext from "../AppContext";
 import {
   Avatar,
@@ -25,6 +25,7 @@ import {
   Fingerprint as FingerprintIcon,
   Gavel as GavelIcon,
   InsertEmoticon as InsertEmoticonIcon,
+  SsidChart as SsidChartIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -54,7 +55,10 @@ const Settings = () => {
   const [isPersonalizeDialog, setIsPersonalizeDialog] = useState(false);
 
   const { t, i18n } = useTranslation();
-  const donationId = Math.floor(Math.random() * Donations.length);
+  const donationId = useMemo(
+    () => Math.floor(Math.random() * Donations.length),
+    []
+  );
 
   useEffect(() => {
     setSeoHeader({
@@ -88,7 +92,6 @@ const Settings = () => {
             <ListItemText
               primary={t("安裝")}
               secondary={t("安裝巴士預報 App 到裝置")}
-              secondaryTypographyProps={{ component: "h3", variant: "body2" }}
             />
           </ListItem>
         )}
@@ -118,7 +121,6 @@ const Settings = () => {
                 .slice(0, 20)
                 .replace(",", " ")
             }
-            secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
         </ListItem>
         <Divider />
@@ -153,7 +155,6 @@ const Settings = () => {
                 ? "開啟中..."
                 : "關閉"
             )}
-            secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
         </ListItem>
         <ListItem
@@ -168,7 +169,10 @@ const Settings = () => {
               <InsertEmoticonIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={t("個性化設定")} />
+          <ListItemText
+            primary={t("個性化設定")}
+            secondary={t("日夜模式、時間格式、路線次序等")}
+          />
         </ListItem>
         <Divider />
         <ListItem
@@ -191,7 +195,6 @@ const Settings = () => {
           <ListItemText
             primary={t("複製應用程式鏈結")}
             secondary={t("經不同媒介分享給親友")}
-            secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
         </ListItem>
         <ListItem
@@ -211,7 +214,25 @@ const Settings = () => {
           <ListItemText
             primary={t("Telegram 交流區")}
             secondary={t("歡迎意見及技術交流")}
-            secondaryTypographyProps={{ component: "h3", variant: "body2" }}
+          />
+        </ListItem>
+        <ListItem
+          button
+          component="a"
+          href={`https://datastudio.google.com/embed/reporting/de590428-525e-4865-9d37-a955204b807a/page/psfZC`}
+          target="_blank"
+          onClick={() => {
+            vibrate(vibrateDuration);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <SsidChartIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={t("統計數據彙整")}
+            secondary={t("整理從 Google 收集的數據")}
           />
         </ListItem>
         <ListItem
@@ -231,7 +252,6 @@ const Settings = () => {
           <ListItemText
             primary={t("捐款支持")}
             secondary={Donations[donationId].description[i18n.language]}
-            secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
         </ListItem>
         <Divider />
@@ -249,11 +269,7 @@ const Settings = () => {
               <GitHubIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText
-            primary="Source code"
-            secondary={"GPL-3.0 License"}
-            secondaryTypographyProps={{ component: "h3", variant: "body2" }}
-          />
+          <ListItemText primary="Source code" secondary={"GPL-3.0 License"} />
         </ListItem>
         <ListItem
           button
@@ -274,7 +290,6 @@ const Settings = () => {
           <ListItemText
             primary={t("圖標來源")}
             secondary={"Freepik from Flaticon"}
-            secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
         </ListItem>
         <ListItem
@@ -316,7 +331,6 @@ const Settings = () => {
           <ListItemText
             primary={t("交通資料來源")}
             secondary={t("資料一線通") + "  https://data.gov.hk"}
-            secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
         </ListItem>
       </List>
