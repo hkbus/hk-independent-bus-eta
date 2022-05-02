@@ -7,7 +7,7 @@ usage_model = ''
 compatibility_flags = []
 workers_dev = true
 site = {bucket = "./build",entry-point = "workers-site"}
-compatibility_date = "2021-11-04"
+compatibility_date = "2022-11-04"
 
 [env.production]
 # The ID of the domain to deploying to
