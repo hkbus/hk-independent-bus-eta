@@ -93,6 +93,6 @@
     "request": "^2.88.2",
     "source-map-explorer": "^2.5.2"
   },
-  "packageManager": "yarn@3.1.0"
+  "packageManager": "yarn@3.1.0",
   "license": "GPL-3.0-only"
 }
