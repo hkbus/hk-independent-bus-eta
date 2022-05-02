@@ -22,11 +22,14 @@ import AppContext from "./AppContext";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import Home from "./pages/Home";
-import RouteEta from "./pages/RouteEta";
 import { SearchContextProvider } from "./SearchContext";
+
+const RouteEta = loadable(() => import("./pages/RouteEta"));
 const RouteBoard = loadable(() => import("./pages/RouteBoard"));
 const RouteSearch = loadable(() => import("./pages/RouteSearch"));
 const Settings = loadable(() => import("./pages/Settings"));
+const PrivacyPolicy = loadable(() => import("./pages/PrivacyPolicy"));
+const TermsAndConditions = loadable(() => import("./pages/TermsAndConditions"));
 
 const PageSwitch = () => {
   const { path } = useRouteMatch();
@@ -37,6 +40,8 @@ const PageSwitch = () => {
         <Route path={`${path}/settings`} component={Settings} />
         <Route path={`${path}/board`} component={RouteBoard} />
         <Route path={`${path}/search`} component={RouteSearch} />
+        <Route path={`${path}/privacy`} component={PrivacyPolicy} />
+        <Route path={`${path}/terms`} component={TermsAndConditions} />
         <Route path={`${path}`} component={Home} />
       </Switch>
     </SearchContextProvider>
@@ -102,7 +107,7 @@ const emotionCache = createCache({
 
 const getThemeTokens = (mode: PaletteMode) => ({
   typography: {
-    fontFamily: "Noto Sans TC, Chivo, sans-serif",
+    fontFamily: "'Chiron Sans HK Pro WS', sans-serif",
   },
   palette: {
     mode,

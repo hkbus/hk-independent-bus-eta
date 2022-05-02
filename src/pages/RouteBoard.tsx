@@ -1,36 +1,23 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import AppContext from "../AppContext";
-import { styled } from "@mui/material/styles";
-import { List } from "@mui/material";
-import { FixedSizeList } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
-import memorize from "memoize-one";
-import RouteInputPad from "../components/route-list/RouteInputPad";
-import RouteRow from "../components/route-list/RouteRow";
+import { Box } from "@mui/material";
+import RouteInputPad from "../components/route-board/RouteInputPad";
 import { useTranslation } from "react-i18next";
 import { setSeoHeader } from "../utils";
-import { isHoliday, isRouteAvaliable } from "../timetable";
+import BoardTabbar, {
+  BoardTabType,
+  isBoardTab,
+} from "../components/route-board/BoardTabbar";
+import SwipeableRoutesBoard from "../components/route-board/SwipeableRoutesBoard";
 
-const createItemData = memorize((routeList) => ({ routeList }));
+interface RouteListProps {
+  boardTab: BoardTabType;
+  setBoardTab: (v: BoardTabType) => void;
+}
 
-const RouteList = () => {
-  const {
-    AppTitle,
-    db: { holidays, routeList },
-    searchRoute,
-    isRouteFilter,
-  } = useContext(AppContext);
-  const isTodayHoliday = isHoliday(holidays, new Date());
-  const targetRouteList = Object.entries(routeList)
-    .filter(
-      ([routeNo, { stops, co }]) =>
-        routeNo.startsWith(searchRoute.toUpperCase()) &&
-        (stops[co[0]] == null || stops[co[0]].length > 0)
-    )
-    .filter(
-      ([routeNo, { freq }]) =>
-        !isRouteFilter || isRouteAvaliable(freq, isTodayHoliday)
-    );
+const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
+  const { AppTitle } = useContext(AppContext);
+
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
@@ -42,79 +29,34 @@ const RouteList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language]);
 
-  const itemData = createItemData(targetRouteList);
-  if (navigator.userAgent === "prerendering") {
-    return (
-      <PrerenderList className={classes.prerenderList}>
-        {targetRouteList.map((data, idx) => (
-          <RouteRow
-            data={itemData}
-            key={`route-${idx}`}
-            index={idx}
-            style={null}
-          />
-        ))}
-      </PrerenderList>
-    );
-  }
+  const handleTabChange = useCallback(
+    (v) => {
+      setBoardTab(v);
+      localStorage.setItem("boardTab", v);
+    },
+    [setBoardTab]
+  );
 
   return (
-    <Root className={classes.list}>
-      <AutoSizer>
-        {({ height, width }) => (
-          <FixedSizeList
-            height={height * 0.98}
-            itemCount={targetRouteList.length}
-            itemSize={56}
-            width={width}
-            itemData={itemData}
-            className={classes.root}
-          >
-            {RouteRow}
-          </FixedSizeList>
-        )}
-      </AutoSizer>
-    </Root>
+    <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <BoardTabbar boardTab={boardTab} onChangeTab={handleTabChange} />
+      <SwipeableRoutesBoard boardTab={boardTab} onChangeTab={handleTabChange} />
+    </Box>
   );
 };
 
 const RouteBoard = () => {
+  const _boardTab = localStorage.getItem("boardTab");
+  const [boardTab, setBoardTab] = useState<BoardTabType>(
+    isBoardTab(_boardTab) ? _boardTab : "all"
+  );
+
   return (
     <>
-      <RouteList />
-      <RouteInputPad />
+      <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
+      <RouteInputPad boardTab={boardTab} />
     </>
   );
 };
 
 export default RouteBoard;
-
-const PREFIX = "routeBoard";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  list: `${PREFIX}-list`,
-  prerenderList: `${PREFIX}-prerenderList`,
-};
-
-const PrerenderList = styled("div")(({ theme }) => ({
-  [`&.${classes.prerenderList}`]: {
-    height: "100%",
-    overflowY: "scroll",
-    "& a": {
-      textDecoration: "none",
-    },
-  },
-}));
-
-const Root = styled(List)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    background:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : "white",
-  },
-  [`&.${classes.list}`]: {
-    flex: "1 1 auto",
-  },
-}));

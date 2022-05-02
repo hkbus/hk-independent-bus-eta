@@ -1,5 +1,13 @@
 import React, { useContext } from "react";
-import { Divider, ListItem, ListItemText, Typography } from "@mui/material";
+import {
+  Divider,
+  ListItem,
+  ListItemText,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
+import ReorderIcon from "@mui/icons-material/Reorder";
 import { Link, useHistory } from "react-router-dom";
 import { vibrate } from "../../utils";
 import { styled } from "@mui/material/styles";
@@ -7,7 +15,7 @@ import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import SuccinctEtas from "./SuccinctEtas";
 import { getDistance, toProperCase } from "../../utils";
-import RouteNo from "../route-list/RouteNo";
+import RouteNo from "../route-board/RouteNo";
 import { Location } from "hk-bus-eta";
 
 interface DistAndFareProps {
@@ -50,10 +58,19 @@ const DistAndFare = ({
   );
 };
 
-const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
+interface SuccinctTimeReportProps {
+  routeId: string;
+  disabled?: boolean;
+}
+
+const SuccinctTimeReport = ({
+  routeId,
+  disabled = false,
+}: SuccinctTimeReportProps) => {
   const { t, i18n } = useTranslation();
   const {
     db: { routeList, stopList },
+    vibrateDuration,
   } = useContext(AppContext);
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
@@ -64,7 +81,7 @@ const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
   const history = useHistory();
   const handleClick = (e) => {
     e.preventDefault();
-    vibrate(1);
+    vibrate(vibrateDuration);
     setTimeout(() => {
       history.push(`/${i18n.language}/route/${routeId.toLowerCase()}`);
     }, 0);
@@ -74,9 +91,9 @@ const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
     <>
       <RootListItem
         // @ts-ignore
-        component={Link}
+        component={!disabled ? Link : undefined}
         to={`/${i18n.language}/route/${routeKey.toLowerCase()}`}
-        onClick={handleClick}
+        onClick={!disabled ? handleClick : () => {}}
         className={classes.listItem}
       >
         <ListItemText
@@ -110,7 +127,11 @@ const SuccinctTimeReport = ({ routeId }: { routeId: string }) => {
           }}
           className={classes.routeDest}
         />
-        <SuccinctEtas routeId={routeId} />
+        {!disabled ? (
+          <SuccinctEtas routeId={routeId} />
+        ) : (
+          <ReorderIcon sx={iconSx} />
+        )}
       </RootListItem>
       <Divider />
     </>
@@ -158,14 +179,21 @@ const RootListItem = styled(ListItem)(({ theme }) => ({
     width: "15%",
   },
   [`& .${classes.routeDest}`]: {
-    width: "65%",
+    width: "50%",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
   },
   [`& .${classes.fromToWrapper}`]: {
     display: "flex",
     alignItems: "baseline",
+    fontSize: "1.2rem",
   },
   [`& .${classes.fromToText}`]: {
     fontSize: "0.85rem",
     marginRight: theme.spacing(0.5),
   },
 }));
+
+const iconSx: SxProps<Theme> = {
+  color: (theme) => theme.palette.text.primary,
+};

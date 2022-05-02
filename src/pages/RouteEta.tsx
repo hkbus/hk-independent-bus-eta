@@ -1,18 +1,14 @@
 import { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import RouteMap from "../components/route-eta/RouteMap";
+import loadable from "@loadable/component";
+import RouteHeader from "../components/route-eta/RouteHeader";
 import StopAccordions from "../components/route-eta/StopAccordions";
 import StopDialog from "../components/route-eta/StopDialog";
-import { Button, Divider, Paper, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import AppContext from "../AppContext";
 import { useTranslation } from "react-i18next";
-import RouteNo from "../components/route-list/RouteNo";
 import { setSeoHeader, toProperCase, getDistance } from "../utils";
-import ScheduleIcon from "@mui/icons-material/Schedule";
-import TimetableDrawer from "../components/route-eta/TimetableDrawer";
-import Leaflet from "leaflet";
 import type { WarnUpMessageData } from "../typing";
+const RouteMap = loadable(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
   const { id, panel } = useParams<{ id: string; panel: string }>();
@@ -26,8 +22,7 @@ const RouteEta = () => {
     geolocation,
   } = useContext(AppContext);
   const routeListEntry = routeList[id.toUpperCase()];
-  const { route, stops, co, orig, dest, nlbId, fares, freq, jt } =
-    routeListEntry;
+  const { route, stops, co, orig, dest, fares } = routeListEntry;
   const stopsExtracted = useMemo(() => {
     return getStops(co, stops)
       .map((id) => {
@@ -53,7 +48,6 @@ const RouteEta = () => {
   }
   const [expanded, setExpanded] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isOpenTimetable, setIsOpenTimetable] = useState(false);
   const dialogStop = useMemo(() => {
     return getDialogStops(co, stops, stopMap, String(stopIdx));
   }, [co, stopIdx, stopMap, stops]);
@@ -89,7 +83,7 @@ const RouteEta = () => {
 
   const handleCloseDialog = useCallback(() => {
     setIsDialogOpen(false);
-  }, []);
+  }, [setIsDialogOpen]);
 
   useEffect(() => {
     setIsDialogOpen(false);
@@ -150,10 +144,13 @@ const RouteEta = () => {
   ]);
 
   useEffect(() => {
-    if (!energyMode) {
+    if (!energyMode && navigator.userAgent !== "prerendering") {
       const message: WarnUpMessageData = {
         type: "WARN_UP_MAP_CACHE",
-        retinaDisplay: Leaflet.Browser.retina,
+        retinaDisplay:
+          (window.devicePixelRatio ||
+            // @ts-ignore: Property does not exist on type 'Screen'.
+            window.screen.deviceXDPI / window.screen.logicalXDPI) > 1,
         zoomLevels: [14, 15, 16, 17, 18],
         stopList: getStops(co, stops)
           .map((id) => stopList[id])
@@ -166,54 +163,20 @@ const RouteEta = () => {
   return (
     <>
       <input hidden id={id} />
-      <Root className={classes.header} elevation={0}>
-        <RouteNo routeNo={route} component="h1" align="center" />
-        <Typography component="h2" variant="caption" align="center">
-          {t("往")} {toProperCase(dest[i18n.language])}{" "}
-          {nlbId ? t("由") + " " + toProperCase(orig[i18n.language]) : ""}
-        </Typography>
-        {freq ? (
-          <>
-            <ButtonDivider
-              orientation="vertical"
-              className={classes.buttonDivider}
-            />
-            <TimeTableButton
-              variant="text"
-              aria-label="open-timetable"
-              className={classes.timeTableButton}
-              size="small"
-              startIcon={<ScheduleIcon />}
-              onClick={() => setIsOpenTimetable(true)}
-            >
-              {t("時間表")}
-            </TimeTableButton>
-            <TimetableDrawer
-              freq={freq}
-              jt={jt}
-              open={isOpenTimetable}
-              onClose={() => setIsOpenTimetable(false)}
-            />
-          </>
-        ) : (
-          <></>
-        )}
-      </Root>
-      {!energyMode ? (
+      <RouteHeader routeId={id.toUpperCase()} />
+      {!energyMode && navigator.userAgent !== "prerendering" && (
         <RouteMap
           stops={stopsExtracted}
           stopIdx={stopIdx}
           onMarkerClick={onMarkerClick}
         />
-      ) : (
-        <></>
       )}
       <StopAccordions
         routeId={id}
         stopIdx={stopIdx}
         routeListEntry={routeListEntry}
         stopListExtracted={stopsExtracted}
-        expanded={expanded}
+        expanded={expanded && navigator.userAgent !== "prerendering"}
         handleChange={handleChange}
       />
       <StopDialog
@@ -246,45 +209,3 @@ const getDialogStops = (co, stops, stopMap, panel) => {
 };
 
 export default RouteEta;
-
-const PREFIX = "route";
-
-const classes = {
-  header: `${PREFIX}-header`,
-  buttonDivider: "timetable-button-divider",
-  timeTableButton: "timetable-button",
-};
-
-const Root = styled(Paper)(({ theme }) => ({
-  [`&.${classes.header}`]: {
-    textAlign: "center",
-    background: "transparent",
-    position: "relative",
-  },
-}));
-
-const ButtonDivider = styled(Divider)(({ theme }) => ({
-  [`&.${classes.buttonDivider}`]: {
-    position: "absolute",
-    top: "0",
-    right: "calc(64px + 2%)",
-  },
-}));
-
-const TimeTableButton = styled(Button)(({ theme }) => ({
-  [`&.${classes.timeTableButton}`]: {
-    color: theme.palette.getContrastText(theme.palette.background.default),
-    position: "absolute",
-    top: "0",
-    right: "2%",
-    flexDirection: "column",
-    justifyContent: "center",
-    "& > .MuiButton-label": {
-      flexDirection: "column",
-      justifyContent: "center",
-    },
-    "& > .MuiButton-startIcon": {
-      margin: 0,
-    },
-  },
-}));

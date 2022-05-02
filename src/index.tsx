@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
+import loadable from "@loadable/component";
 import ReactDOM from "react-dom";
-import Leaflet from "leaflet";
 import "./index.css";
-import App from "./App";
 import { DbProvider } from "./DbContext";
 import { AppContextProvider } from "./AppContext";
 import "./i18n";
@@ -10,6 +9,7 @@ import { fetchDbFunc } from "./db";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 //import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import type { WarnUpMessageData } from "./typing";
+const App = loadable(() => import("./App"));
 
 const isHuman = () => {
   const agents = [
@@ -22,6 +22,7 @@ const isHuman = () => {
     "facebot",
     "ia_archiver",
     "sitecheckerbotcrawler",
+    "chrome-lighthouse",
   ];
   return !navigator.userAgent.match(new RegExp(agents.join("|"), "i"));
 };
@@ -39,7 +40,10 @@ if (isHuman()) {
       skipWaiting();
       const message: WarnUpMessageData = {
         type: "WARN_UP_MAP_CACHE",
-        retinaDisplay: Leaflet.Browser.retina,
+        retinaDisplay:
+          (window.devicePixelRatio ||
+            // @ts-ignore: Property does not exist on type 'Screen'.
+            window.screen.deviceXDPI / window.screen.logicalXDPI) > 1,
         zoomLevels: [14, 15],
       };
       workbox.messageSW(message);
@@ -54,7 +58,7 @@ if (isHuman()) {
     window.location.pathname.includes("/search") ||
     window.location.pathname.includes("/settings") ||
     (canonicalLink instanceof HTMLAnchorElement &&
-      !canonicalLink.href.endsWith(window.location.pathname)) ||
+      !canonicalLink.getAttribute("href").endsWith(window.location.pathname)) ||
     true // mui v5 make class name not preserved, prerendering fails......
   ) {
     // remove prerendered style

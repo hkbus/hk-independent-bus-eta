@@ -28,63 +28,71 @@ const RouteInfo = ({ route }) => {
 };
 
 interface RouteRowProps {
-  data: { routeList: [string, RouteListEntry][] };
+  data: {
+    routeList: [string, RouteListEntry][];
+    vibrateDuration;
+  };
   index: number;
   style: React.CSSProperties;
 }
 
-const RouteRow = React.memo(({ data, index, style }: RouteRowProps) => {
-  const { t, i18n } = useTranslation();
-  const { routeList } = data;
-  const route = routeList[index];
-  const [routeNo, serviceType] = route[0].split("-").slice(0, 2);
-  const history = useHistory();
-  const handleClick = (e) => {
-    e.preventDefault();
-    vibrate(1);
-    setTimeout(() => {
-      history.push(`/${i18n.language}/route/${route[0].toLowerCase()}`);
-    }, 0);
-  };
+const RouteRow = React.memo(
+  ({ data: { routeList, vibrateDuration }, index, style }: RouteRowProps) => {
+    const { t, i18n } = useTranslation();
+    const route = routeList[index];
+    const [routeNo, serviceType] = route[0].split("-").slice(0, 2);
+    const history = useHistory();
+    const handleClick = (e) => {
+      e.preventDefault();
+      vibrate(vibrateDuration);
+      setTimeout(() => {
+        history.push(`/${i18n.language}/route/${route[0].toLowerCase()}`);
+      }, 0);
+    };
 
-  return (
-    <Link
-      onClick={handleClick}
-      to={`/${i18n.language}/route/${route[0].toLowerCase()}`}
-    >
-      <RowCard
-        className={classes.card}
-        variant="outlined"
-        key={route[0]}
-        style={style}
-        square
+    return (
+      <Link
+        onClick={handleClick}
+        to={`/${i18n.language}/route/${route[0].toLowerCase()}`}
       >
-        <CardActionArea>
-          <CardContent className={classes.cardContent}>
-            <div className={classes.busInfoContainer}>
-              <div>
-                <RouteNo routeNo={routeNo} />
-                {parseInt(serviceType, 10) >= 2 && (
-                  <Typography variant="caption" className={classes.specialTrip}>
-                    {t("特別班")}
-                  </Typography>
-                )}
+        <RowCard
+          className={classes.card}
+          variant="outlined"
+          key={route[0]}
+          style={style}
+          square
+        >
+          <CardActionArea>
+            <CardContent className={classes.cardContent}>
+              <div className={classes.busInfoContainer}>
+                <div>
+                  <RouteNo routeNo={routeNo} />
+                  {parseInt(serviceType, 10) >= 2 && (
+                    <Typography
+                      variant="caption"
+                      className={classes.specialTrip}
+                    >
+                      {t("特別班")}
+                    </Typography>
+                  )}
+                </div>
+                <Typography
+                  component="h4"
+                  variant="caption"
+                  className={classes.company}
+                >
+                  {route[1].co.map((co) => t(co)).join("+")}
+                </Typography>
               </div>
-              <Typography
-                component="h4"
-                variant="caption"
-                className={classes.company}
-              >
-                {route[1].co.map((co) => t(co)).join("+")}
-              </Typography>
-            </div>
-            <RouteInfo route={route[1]} />
-          </CardContent>
-        </CardActionArea>
-      </RowCard>
-    </Link>
-  );
-}, areEqual);
+              <RouteInfo route={route[1]} />
+            </CardContent>
+          </CardActionArea>
+        </RowCard>
+      </Link>
+    );
+  },
+  areEqual
+);
 
 export default RouteRow;
 
@@ -114,7 +122,7 @@ const RowCard = styled(Card)(({ theme }) => ({
     display: "flex",
     justifyContent: "flex-start",
     alignItems: "center",
-    padding: "4px 16px",
+    padding: "0 16px",
   },
   [`& .${classes.busInfoContainer}`]: {
     width: "25%",

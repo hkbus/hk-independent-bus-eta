@@ -16,6 +16,7 @@ export const ServiceIds = {
   "320": "星期日及公眾假期",
   "448": "星期日及公眾假期",
   "511": "所有日子",
+  "111": "除星期三外",
 };
 
 const ServiceDayMap = {
@@ -35,6 +36,7 @@ const ServiceDayMap = {
   "511": [1, 1, 1, 1, 1, 1, 1],
   "31": [0, 1, 1, 1, 1, 1, 0],
   "63": [0, 1, 1, 1, 1, 1, 1],
+  "111": [1, 1, 0, 1, 1, 1, 1],
 };
 
 // return minute offset start from sunday 00:00
@@ -68,6 +70,7 @@ export const isHoliday = (holidays: string[], date: Date): boolean => {
 };
 
 export const isRouteAvaliable = (
+  routeNo: string,
   freq: Freq | null,
   isHoliday: boolean
 ): boolean => {
@@ -79,19 +82,23 @@ export const isRouteAvaliable = (
     ("0" + now.getHours()).slice(-2) + ("0" + now.getMinutes()).slice(-2)
   );
   Object.entries(freq).forEach(([serviceId, startTimes]) => {
-    ServiceDayMap[serviceId].forEach((validDay, idx: number) => {
-      if (validDay) {
-        Object.entries(startTimes).forEach(([startTime, endTime]) => {
-          let time_a = getWeeklyTimestamp(idx, startTime);
-          let time_b = getWeeklyTimestamp(
-            idx,
-            endTime ? endTime[0] : startTime
-          );
-          isAvailable =
-            isAvailable || checkValueBetween(time_a, time_b, currentWts);
-        });
-      }
-    });
+    try {
+      ServiceDayMap[serviceId].forEach((validDay, idx: number) => {
+        if (validDay) {
+          Object.entries(startTimes).forEach(([startTime, endTime]) => {
+            let time_a = getWeeklyTimestamp(idx, startTime);
+            let time_b = getWeeklyTimestamp(
+              idx,
+              endTime ? endTime[0] : startTime
+            );
+            isAvailable =
+              isAvailable || checkValueBetween(time_a, time_b, currentWts);
+          });
+        }
+      });
+    } catch (e) {
+      console.log(routeNo + " has unknown service ID");
+    }
   });
   return isAvailable;
 };

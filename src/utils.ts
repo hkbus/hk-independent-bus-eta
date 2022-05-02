@@ -76,6 +76,30 @@ export const triggerShare = (url: string, title: string) => {
   return new Promise((resolve) => resolve(""));
 };
 
+export const triggerShareImg = (
+  base64Img: string,
+  title: string,
+  text: string
+) => {
+  return fetch(base64Img)
+    .then((res) => res)
+    .then((ret) => ret.blob())
+    .then((blob) => {
+      const file = new File([blob], "hkbus.png", { type: blob.type });
+      if (navigator.share) {
+        return navigator.share({
+          title: title,
+          text: text,
+          files: [file],
+        });
+      } else if (navigator.clipboard) {
+        return navigator.clipboard.write([
+          new ClipboardItem({ "image/png": blob }),
+        ]);
+      }
+    });
+};
+
 export const setSeoHeader = ({
   title,
   description,
@@ -232,4 +256,41 @@ export const isWarnUpMessageData = (
   value: unknown
 ): value is WarnUpMessageData => {
   return typeof value === "object" && value["type"] === "WARN_UP_MAP_CACHE";
+};
+
+export const checkAppInstalled = () => {
+  if (window.matchMedia("(display-mode: standalone)").matches) return true;
+  // @ts-ignore
+  const standalone = window.navigator.standalone;
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  const safari = /safari/.test(userAgent);
+  const ios = /iphone|ipod|ipad/.test(userAgent);
+
+  if (ios) {
+    if (!standalone && safari) {
+      // Safari
+    } else if (!standalone && !safari) {
+      // iOS webview
+      return true;
+    }
+  } else {
+    if (userAgent.includes("wv")) {
+      // Android webview
+      return true;
+    } else {
+      // Chrome
+    }
+  }
+  return false;
+};
+
+export const reorder = <T>(
+  list: T[],
+  startIndex: number,
+  endIndex: number
+): T[] => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
 };

@@ -44,7 +44,7 @@ export const useEtas = (routeId) => {
       clearInterval(fetchEtaInterval);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVisible]);
+  }, [routeId, isVisible]);
 
   return etas;
 };
@@ -55,6 +55,7 @@ const DefaultRoute = {
   dest: { zh: "", en: "" },
   bound: "",
   nlbId: 0,
+  gtfsId: "",
   fares: [],
   faresHoliday: [],
 };

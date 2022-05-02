@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import type { ReactNode } from "react";
 import { isEmptyObj } from "./utils";
 import { fetchDbFunc } from "./db";
-import { compress as compressJson } from "lzutf8";
+import { compress as compressJson } from "lzutf8-light";
 import type { DatabaseType } from "./db";
 
 interface DatabaseContextValue {
