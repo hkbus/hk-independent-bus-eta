@@ -69,7 +69,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "docker": "docker-compose up -d --build"
   },
   "eslintConfig": {
     "extends": [
