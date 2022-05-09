@@ -32,7 +32,7 @@ COPY ./tsconfig.json ./
 COPY ./scripts ./scripts
 
 RUN if [ "$PRERENDER" = "true" ]; then ./scripts/puppeteer-deps.sh; fi;
-RUN if [ "$env" = "dev" ]; then yarn install --production --ignore-optional; else yarn install; fi;
+RUN if [ "$PRERENDER" = "true" ] || [ "$env" = "dev" ]; then yarn install; else yarn install --production --ignore-optional; fi;
 
 COPY ./src ./src
 COPY ./public ./public
