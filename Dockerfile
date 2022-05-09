@@ -26,7 +26,9 @@ WORKDIR /usr/src/app
 COPY ./package.json ./
 COPY ./yarn.lock ./
 COPY ./tsconfig.json ./
+COPY ./scripts ./scripts
 
+RUN if [ "$env" != "dev" ]; then ./scripts/puppeteer-deps.sh; fi;
 RUN if [ "$env" = "dev" ]; then yarn install --ignore-optional; else yarn install; fi;
 
 COPY ./src ./src

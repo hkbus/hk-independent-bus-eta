@@ -177,7 +177,9 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
  * @returns {number|undefined}
  */
 async function runPuppeteer(baseUrl, routes, dir) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   const page = await browser.newPage();
   page.setRequestInterception(true);
   page.on("request", (request) => {
