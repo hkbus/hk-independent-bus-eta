@@ -64,7 +64,7 @@ const tabbarSx: SxProps<Theme> = {
   },
   [`& .MuiTabs-scroller`]: {
     overflow: "auto !important",
-  }
+  },
 };
 
 const rootSx: SxProps<Theme> = {
