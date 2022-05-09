@@ -62,12 +62,19 @@ cd docker && docker-compose up -d --build
 
 ### Latest
 
-The latest lag contains the latest build (by wcyat), but WITHOUT any prerendered html (so you might expect bad seo). 
+The latest lag contains the latest build (by wcyat), but WITHOUT any prerendered html (so you might expect bad seo).
 
 #### Pull
 
 ```bash
 docker pull registry.gitlab.com/wcyat/hkbus/master:latest
+```
+
+#### Run
+
+```bash
+docker run -t -d -p 3000:3000 registry.gitlab.com/wcyat/hkbus/master:latest
+# deploys on port 3000
 ```
 
 ### Full
@@ -79,4 +86,11 @@ with prerendered html (better seo, should have a same behavior as [hkbus.app](ht
 
 ```bash
 docker pull registry.gitlab.com/wcyat/hkbus/master:full
+```
+
+#### Run
+
+```bash
+docker run -t -d -p 3000:3000 registry.gitlab.com/wcyat/hkbus/master:full
+# deploys on port 3000
 ```
