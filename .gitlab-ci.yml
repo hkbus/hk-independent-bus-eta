@@ -11,6 +11,8 @@ docker-build:
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest"
     - docker build --pull --build-arg $(tr '\n' ' ' < .env | sed "s/ / --build-arg /g") -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA" .
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
+    - if [ "$PRERENDER" = "true" ]; then docker build --pull --build-arg $(tr '\n' ' ' < .env | sed "s/ / --build-arg /g") --build-arg PRERENDER=true -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full" .
+    - if [ "$PRERENDER" = "true" ]; then docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; fi;
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH

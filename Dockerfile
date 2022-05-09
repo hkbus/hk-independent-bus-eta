@@ -9,6 +9,9 @@ ENV GENERATE_SOURCEMAP $GENERATE_SOURCEMAP
 ARG CI
 ENV CI $CI
 
+ARG PRERENDER
+ENV PRERENDER $PRERENDER
+
 ARG REACT_APP_OSM_PROVIDER_HOST
 ENV REACT_APP_OSM_PROVIDER_HOST $REACT_APP_OSM_PROVIDER_HOST
 
@@ -28,14 +31,14 @@ COPY ./yarn.lock ./
 COPY ./tsconfig.json ./
 COPY ./scripts ./scripts
 
-RUN if [ "$env" != "dev" ]; then ./scripts/puppeteer-deps.sh; fi;
+RUN if [ "$PRERENDER" = "true" ]; then ./scripts/puppeteer-deps.sh; fi;
 RUN if [ "$env" = "dev" ]; then yarn install --ignore-optional; else yarn install; fi;
 
 COPY ./src ./src
 COPY ./public ./public
 
 RUN if [ "$env" = "dev" ]; then mkdir build; else yarn build; fi;
-RUN if [ "$env" != "dev" ]; then node scripts/sitemap-generator.js && node scripts/pre-rendering.js; fi;
+RUN if [ "$PRERENDER" = "true" ]; then node scripts/sitemap-generator.js && node scripts/pre-rendering.js; fi;
 
 FROM node:17
 
