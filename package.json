@@ -70,7 +70,8 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
     "deploy": "gh-pages -d build",
-    "docker": "cd docker && docker-compose up -d --build"
+    "docker": "cd docker && docker-compose up -d --build",
+    "docker:build": "docker build --pull --build-arg $(tr '\\n' ' ' < .env | sed \"s/ / --build-arg /g\") -t hkbus ."
   },
   "eslintConfig": {
     "extends": [
