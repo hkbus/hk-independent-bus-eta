@@ -140,6 +140,19 @@ const getThemeTokens = (mode: PaletteMode) => ({
         body: {
           fontSize: "0.875rem",
           lineHeight: 1.43,
+          scrollbarColor: "#3f3f3f",
+          scrollbarWidth: "thin",
+        },
+        "&::-webkit-scrollbar": {
+          width: 4,
+          height: 4,
+        },
+        "&::-webkit-scrollbar-track": {
+          background: "transparent",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          background: "#3f3f3f",
+          borderRadius: 6,
         },
       },
     },

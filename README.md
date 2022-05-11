@@ -25,6 +25,10 @@ Note: KMB ETA data is diffrerent from the others, proccessing methods can be fou
 
 The project is a [React](https://reactjs.org/) web app with [Material-UI](https://material-ui.com/). You can clone the project and host it by your own. Please note that there are specific setups for `package.json` (i.e., ***homepage***) and Google Analytics Measure ID in `public/index.html`.
 
+## Docker
+
+See docker.md for more information about using docker for deployment / development.
+
 ## Available Scripts
 
 In the project directory, you can run:

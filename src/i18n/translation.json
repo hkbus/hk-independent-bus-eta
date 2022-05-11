@@ -109,7 +109,11 @@
       "lightRail": "Light Rail",
       "mtr": "MTR",
       "route-search-no-result": "No Result",
-      "對頭線": "REV"
+      "對頭線": "REV",
+      "個性化設定": "Customize",
+      "收藏嘅路線會係度顯示。": "Star a route to see it here.",
+      "常用報時排序": "Sort Starred Routes",
+      "未有收藏嘅路線。": "No starred routes."
     }
   },
   "zh": {
