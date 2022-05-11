@@ -81,7 +81,7 @@
       "新增至主畫面 / 安裝應用程式": "Add to Home screen / Install the app",
       "Route Search header": "Point-to-Point Bus route search",
       "Route Search description": "Point to point search",
-      "Route Search constraint": "Constraints：",
+      "Route Search constraint": "Constraints:",
       "Route Search caption 1": "Max. transfer once",
       "Route Search caption 2": "Max. walking distance is 500m",
       "Route Search caption 3": "Scheduled bus at the first station",
@@ -144,7 +144,8 @@
       "mtr": "港鐵",
       "KMB first": "九巴優先",
       "CTB-NWFB first": "新巴城巴優先",
-      "route-search-no-result": "沒有結果"
+      "route-search-no-result": "沒有結果",
+      "Source code":"原始碼"
     }
   }
 }
