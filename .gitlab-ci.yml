@@ -30,3 +30,23 @@ pages:
       - build
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+stages:
+  - build
+  - test
+  - deploy
+  - review
+  - dast
+  - staging
+  - canary
+  - production
+  - incremental rollout 10%
+  - incremental rollout 25%
+  - incremental rollout 50%
+  - incremental rollout 100%
+  - performance
+  - cleanup
+sast:
+  stage: test
+include:
+  - template: Auto-DevOps.gitlab-ci.yml
+
