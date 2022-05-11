@@ -5,6 +5,7 @@ import {
   Divider,
   List,
   ListItem,
+  ListItemButton,
   ListItemAvatar,
   ListItemText,
   Paper,
@@ -73,8 +74,7 @@ const Settings = () => {
       )}`}</Typography>
       <List>
         {!checkAppInstalled() && (
-          <ListItem
-            button
+          <ListItemButton
             onClick={() => {
               vibrate(vibrateDuration);
               setTimeout(() => setIsOpenInstallDialog(true), 0);
@@ -90,10 +90,9 @@ const Settings = () => {
               secondary={t("安裝巴士預報 App 到裝置")}
               secondaryTypographyProps={{ component: "h3", variant: "body2" }}
             />
-          </ListItem>
+          </ListItemButton>
         )}
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => {
             vibrate(vibrateDuration);
             setUpdating(true);
@@ -120,10 +119,9 @@ const Settings = () => {
             }
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
-        </ListItem>
+        </ListItemButton>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => {
             vibrate(vibrateDuration);
             if (geoPermission === "granted") {
@@ -155,9 +153,8 @@ const Settings = () => {
             )}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
-        </ListItem>
-        <ListItem
-          button
+        </ListItemButton>
+        <ListItemButton
           onClick={() => {
             vibrate(vibrateDuration);
             setIsPersonalizeDialog(true);
@@ -169,10 +166,9 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={t("個性化設定")} />
-        </ListItem>
+        </ListItemButton>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => {
             vibrate(vibrateDuration);
             triggerShare(
@@ -193,9 +189,8 @@ const Settings = () => {
             secondary={t("經不同媒介分享給親友")}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
-        </ListItem>
-        <ListItem
-          button
+        </ListItemButton>
+        <ListItemButton
           component="a"
           href={`https://t.me/hkbusapp`}
           target="_blank"
@@ -213,9 +208,8 @@ const Settings = () => {
             secondary={t("歡迎意見及技術交流")}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
-        </ListItem>
-        <ListItem
-          button
+        </ListItemButton>
+        <ListItemButton
           component="a"
           href={Donations[donationId].url[i18n.language]}
           target="_blank"
@@ -233,10 +227,9 @@ const Settings = () => {
             secondary={Donations[donationId].description[i18n.language]}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
-        </ListItem>
+        </ListItemButton>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           component={"a"}
           href={`https://github.com/hkbus/hk-independent-bus-eta`}
           target="_blank"
@@ -254,9 +247,8 @@ const Settings = () => {
             secondary={"GPL-3.0 License"}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
-        </ListItem>
-        <ListItem
-          button
+        </ListItemButton>
+        <ListItemButton
           component={"a"}
           href={`https://www.flaticon.com/free-icon/double-decker_1032967`}
           target="_blank"
@@ -276,9 +268,8 @@ const Settings = () => {
             secondary={"Freepik from Flaticon"}
             secondaryTypographyProps={{ component: "h3", variant: "body2" }}
           />
-        </ListItem>
-        <ListItem
-          button
+        </ListItemButton>
+        <ListItemButton
           component={"a"}
           href={`/${i18n.language}/privacy`}
           onClick={() => {
@@ -291,9 +282,8 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={t("隱私權聲明")} />
-        </ListItem>
-        <ListItem
-          button
+        </ListItemButton>
+        <ListItemButton
           component={"a"}
           href={`/${i18n.language}/terms`}
           onClick={() => {
@@ -306,7 +296,7 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={t("條款")} />
-        </ListItem>
+        </ListItemButton>
         <ListItem>
           <ListItemAvatar>
             <Avatar>

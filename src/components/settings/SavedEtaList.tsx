@@ -5,10 +5,11 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import AppContext from "../../AppContext";
 import SuccinctTimeReport from "../home/SuccinctTimeReport";
 import { reorder } from "../../utils";
+import { useTranslation } from "react-i18next";
 
 const SavedEtaList = () => {
   const {
@@ -20,6 +21,7 @@ const SavedEtaList = () => {
     // cannot use Array.reverse() as it is in-place reverse
     savedEtas.filter((id) => id.split("/")[0] in routeList).reverse()
   );
+  const { t } = useTranslation();
 
   const handleDragEnd = useCallback(
     ({ destination, source }: DropResult) => {
@@ -39,13 +41,19 @@ const SavedEtaList = () => {
       <Droppable droppableId="saved-eta-list">
         {(provided) => (
           <Box ref={provided.innerRef} {...provided.droppableProps}>
-            {items.map((eta, index) => (
-              <DraggableListItem
-                item={eta}
-                index={index}
-                key={`savedEta-${eta}`}
-              />
-            ))}
+            {items.length ? (
+              items.map((eta, index) => (
+                <DraggableListItem
+                  item={eta}
+                  index={index}
+                  key={`savedEta-${eta}`}
+                />
+              ))
+            ) : (
+              <Typography sx={{ textAlign: "center", marginTop: 5 }}>
+                <b>{t("未有收藏嘅路線。")}</b>
+              </Typography>
+            )}
             {provided.placeholder}
           </Box>
         )}

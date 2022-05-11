@@ -1,0 +1,32 @@
+services:
+  hkbus:
+    image: hkbus
+    container_name: hkbus
+    hostname: hkbus
+    restart: always
+    build:
+      context: ../
+      dockerfile: ./Dockerfile
+      args:
+        env: ${env}
+        GENERATE_SOURCEMAP: ${GENERATE_SOURCEMAP}
+        CI: ${CI}
+        PRERENDER: ${PRERENDER}
+        REACT_APP_OSM_PROVIDER_HOST: ${REACT_APP_OSM_PROVIDER_HOST}
+        REACT_APP_OSM_PROVIDER_URL: ${REACT_APP_OSM_PROVIDER_URL}
+        REACT_APP_OSM_PROVIDER_URL_DARK: ${REACT_APP_OSM_PROVIDER_URL_DARK}
+        REACT_APP_CI_JOB_ID: ${REACT_APP_CI_JOB_ID}
+    tty: true
+    environment:
+      env: ${env}
+      GENERATE_SOURCEMAP: ${GENERATE_SOURCEMAP}
+      CI: ${CI}
+      REACT_APP_OSM_PROVIDER_HOST: ${REACT_APP_OSM_PROVIDER_HOST}
+      REACT_APP_OSM_PROVIDER_URL: ${REACT_APP_OSM_PROVIDER_URL}
+      REACT_APP_OSM_PROVIDER_URL_DARK: ${REACT_APP_OSM_PROVIDER_URL_DARK}
+      REACT_APP_CI_JOB_ID: ${REACT_APP_CI_JOB_ID}
+    ports:
+      - ${port}:3000
+    volumes:
+      - ../src:/usr/src/app/src
+      - ../public:/usr/src/app/public
