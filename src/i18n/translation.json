@@ -31,6 +31,8 @@
       "架構版本": "Schema version",
       "更新時間": "Last updated",
       "地理位置定位功能": "Geolocation",
+      "個性化設定": "Customize",
+      "日夜模式、時間格式、路線次序等": "Routes ordering, time format, theme...",
       "開啟": "On",
       "開啟中...": "Switching...",
       "關閉": "Off",
@@ -44,6 +46,8 @@
       "經不同媒介分享給親友": "Share it!",
       "Telegram 交流區": "Telegram group",
       "歡迎意見及技術交流": "Comments & technology sharing are welcomed",
+      "統計數據彙整": "Data Aggregation",
+      "整理從 Google 收集的數據": "Data collected from Google",
       "車費": "Fare",
       "假日車費": "Holiday fare",
       "特別班": "Special",
@@ -56,6 +60,7 @@
       "安裝巴士預報 App 到裝置": "Install HK BUS ETA",
       "安裝步驟": "Installation steps",
       "黑夜模式": "Dark mode",
+      "常用報時排序": "Reorder Starred Routes",
       "路線篩選": "Route filtering",
       "只顯示現時路線": "Show ONLY operating routes",
       "顯示所有路線": "Show ALL routes",
@@ -81,7 +86,7 @@
       "新增至主畫面 / 安裝應用程式": "Add to Home screen / Install the app",
       "Route Search header": "Point-to-Point Bus route search",
       "Route Search description": "Point to point search",
-      "Route Search constraint": "Constraints：",
+      "Route Search constraint": "Constraints:",
       "Route Search caption 1": "Max. transfer once",
       "Route Search caption 2": "Max. walking distance is 500m",
       "Route Search caption 3": "Scheduled bus at the first station",
@@ -110,10 +115,7 @@
       "mtr": "MTR",
       "route-search-no-result": "No Result",
       "對頭線": "REV",
-      "個性化設定": "Customize",
-      "收藏嘅路線會係度顯示。": "Star a route to see it here.",
-      "常用報時排序": "Sort Starred Routes",
-      "未有收藏嘅路線。": "No starred routes."
+      "未有收藏路線": "No starred routes."
     }
   },
   "zh": {
@@ -144,7 +146,8 @@
       "mtr": "港鐵",
       "KMB first": "九巴優先",
       "CTB-NWFB first": "新巴城巴優先",
-      "route-search-no-result": "沒有結果"
+      "route-search-no-result": "沒有結果",
+      "Source code":"原始碼"
     }
   }
 }

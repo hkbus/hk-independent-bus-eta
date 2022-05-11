@@ -47,8 +47,8 @@ const tabbarSx: SxProps<Theme> = {
   overflow: "auto",
   maxWidth: "100%",
   [`& .MuiTab-root`]: {
-    paddingTop: 0,
-    paddingBottom: 0,
+    py: 0,
+    minWidth: "85px",
     minHeight: "32px",
     [`&.Mui-selected`]: {
       color: (theme) =>

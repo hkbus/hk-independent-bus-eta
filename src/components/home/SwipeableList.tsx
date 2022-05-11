@@ -86,7 +86,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
         <React.Fragment>
           {noRoutes ? (
             <Typography sx={{ marginTop: 5 }}>
-              <b>{t("收藏嘅路線會係度顯示。")}</b>
+              <b>{t("未有收藏路線")}</b>
             </Typography>
           ) : (
             <List disablePadding>

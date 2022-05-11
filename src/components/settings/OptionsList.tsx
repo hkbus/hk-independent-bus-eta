@@ -189,7 +189,6 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
         <ListItemText
           primary={t("一鍵清空用戶記錄")}
           secondary={t("包括鎖定和常用報時")}
-          secondaryTypographyProps={{ component: "h3", variant: "body2" }}
         />
       </ListItemButton>
     </List>

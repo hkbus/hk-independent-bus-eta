@@ -99,9 +99,8 @@ const SwipeableRoutesBoard = ({
     [coItemDataList, searchRoute, t]
   );
 
-  return useMemo(() => {
-    console.log("dump", boardTab);
-    return (
+  return useMemo(
+    () => (
       <>
         {navigator.userAgent === "prerendering" ? (
           <PrerenderList className={classes.prerenderList}>
@@ -130,8 +129,9 @@ const SwipeableRoutesBoard = ({
           />
         )}
       </>
-    );
-  }, [ListRenderer, coItemDataList, onChangeTab, boardTab]);
+    ),
+    [ListRenderer, coItemDataList, onChangeTab, boardTab]
+  );
 };
 
 const createItemData = memorize((routeList, vibrateDuration) => ({
