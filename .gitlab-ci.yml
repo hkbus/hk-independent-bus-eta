@@ -19,3 +19,14 @@ docker-build:
     - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
+pages:
+  stage: deploy
+  script:
+    - yarn install
+    - yarn build
+    - cp build/index.html build/404.html
+  artifacts:
+    paths:
+      - build
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
