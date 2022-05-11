@@ -20,6 +20,7 @@ docker-build:
       exists:
         - Dockerfile
 pages:
+  image: node:18
   stage: deploy
   script:
     - yarn install
