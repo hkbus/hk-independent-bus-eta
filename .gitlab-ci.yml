@@ -26,9 +26,10 @@ pages:
     - yarn install
     - yarn build
     - cp build/index.html build/404.html
+    - mv build public
   artifacts:
     paths:
-      - build
+      - public
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 stages:
