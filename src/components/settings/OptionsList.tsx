@@ -3,7 +3,7 @@ import {
   Avatar,
   Divider,
   List,
-  ListItem,
+  ListItemButton,
   ListItemAvatar,
   ListItemText,
   SxProps,
@@ -56,8 +56,7 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
 
   return (
     <List sx={ListSx}>
-      <ListItem
-        button
+      <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
           goToSavedRouteOrder();
@@ -69,9 +68,8 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary={t("常用報時排序")} />
-      </ListItem>
-      <ListItem
-        button
+      </ListItemButton>
+      <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
           toggleRouteFilter();
@@ -86,9 +84,8 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           primary={t("路線篩選")}
           secondary={t(isRouteFilter ? "只顯示現時路線" : "顯示所有路線")}
         />
-      </ListItem>
-      <ListItem
-        button
+      </ListItemButton>
+      <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
           toggleBusSortOrder();
@@ -100,10 +97,9 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary={t("巴士排序")} secondary={t(busSortOrder)} />
-      </ListItem>
+      </ListItemButton>
       <Divider />
-      <ListItem
-        button
+      <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
           toggleColorMode();
@@ -118,9 +114,8 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           primary={t("黑夜模式")}
           secondary={t(colorMode === "dark" ? "開啟" : "關閉")}
         />
-      </ListItem>
-      <ListItem
-        button
+      </ListItemButton>
+      <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
           toggleNumPadOrder();
@@ -132,9 +127,8 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary={t("鍵盤格式")} secondary={numPadOrder} />
-      </ListItem>
-      <ListItem
-        button
+      </ListItemButton>
+      <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
           toggleEtaFormat();
@@ -149,9 +143,8 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           primary={t("報時格式")}
           secondary={t(ETA_FORMAT_STR[etaFormat])}
         />
-      </ListItem>
-      <ListItem
-        button
+      </ListItemButton>
+      <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
           toggleEnergyMode();
@@ -164,9 +157,8 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           primary={t("省電模式")}
           secondary={t(!energyMode ? "開啟地圖功能" : "關閉地圖功能")}
         />
-      </ListItem>
-      <ListItem
-        button
+      </ListItemButton>
+      <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration ^ 1); // tricky, vibrate when switch on and vice versa
           toggleVibrateDuration();
@@ -181,10 +173,9 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           primary={t("按鍵震動")}
           secondary={t(vibrateDuration ? "開啟" : "關閉")}
         />
-      </ListItem>
+      </ListItemButton>
       <Divider />
-      <ListItem
-        button
+      <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
           resetUsageRecord();
@@ -199,7 +190,7 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           primary={t("一鍵清空用戶記錄")}
           secondary={t("包括鎖定和常用報時")}
         />
-      </ListItem>
+      </ListItemButton>
     </List>
   );
 };

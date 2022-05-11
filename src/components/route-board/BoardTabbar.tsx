@@ -44,9 +44,11 @@ export const isBoardTab = (input: unknown): input is BoardTabType => {
 const tabbarSx: SxProps<Theme> = {
   background: (theme) => theme.palette.background.default,
   minHeight: "36px",
+  overflow: "auto",
+  maxWidth: "100%",
   [`& .MuiTab-root`]: {
-    paddingTop: 0,
-    paddingBottom: 0,
+    py: 0,
+    minWidth: "85px",
     minHeight: "32px",
     [`&.Mui-selected`]: {
       color: (theme) =>
@@ -59,6 +61,9 @@ const tabbarSx: SxProps<Theme> = {
   [`& .MuiTabs-indicator`]: {
     backgroundColor: (theme) =>
       theme.palette.mode === "dark" ? theme.palette.primary.main : "black",
+  },
+  [`& .MuiTabs-scroller`]: {
+    overflow: "auto !important",
   },
 };
 

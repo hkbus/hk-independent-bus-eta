@@ -165,6 +165,7 @@ const Header = () => {
       colorMode,
       geoPermission,
       vibrateDuration,
+      weatherCodes,
     ]
   );
 };

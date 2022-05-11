@@ -444,6 +444,7 @@ export const AppContextProvider = ({
   }, []);
 
   const resetUsageRecord = useCallback(() => {
+    localStorage.clear();
     setStateRaw(
       produce((state: State) => {
         state.hotRoute = {};

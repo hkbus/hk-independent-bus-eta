@@ -99,39 +99,36 @@ const SwipeableRoutesBoard = ({
     [coItemDataList, searchRoute, t]
   );
 
-  return useMemo(() => {
-    console.log("dump", boardTab);
-    return (
-      <>
-        {navigator.userAgent === "prerendering" ? (
-          <PrerenderList className={classes.prerenderList}>
-            {coItemDataList[0].routeList.map((data, idx) => (
-              <RouteRow
-                data={coItemDataList[0]}
-                key={`route-${idx}`}
-                index={idx}
-                style={null}
-              />
-            ))}
-          </PrerenderList>
-        ) : (
-          <VirtualizeSwipeableViews
-            index={BOARD_TAB.indexOf(boardTab)}
-            onChangeIndex={(idx) => {
-              onChangeTab(BOARD_TAB[idx]);
-            }}
-            style={{ flex: 1, display: "flex" }}
-            containerStyle={{ flex: 1 }}
-            slideCount={coItemDataList.length}
-            overscanSlideAfter={1}
-            overscanSlideBefore={1}
-            slideRenderer={ListRenderer}
-            enableMouseEvents={true}
-          />
-        )}
-      </>
-    );
-  }, [ListRenderer, coItemDataList, onChangeTab, boardTab]);
+  return useMemo(() => (
+    <>
+      {navigator.userAgent === "prerendering" ? (
+        <PrerenderList className={classes.prerenderList}>
+          {coItemDataList[0].routeList.map((data, idx) => (
+            <RouteRow
+              data={coItemDataList[0]}
+              key={`route-${idx}`}
+              index={idx}
+              style={null}
+            />
+          ))}
+        </PrerenderList>
+      ) : (
+        <VirtualizeSwipeableViews
+          index={BOARD_TAB.indexOf(boardTab)}
+          onChangeIndex={(idx) => {
+            onChangeTab(BOARD_TAB[idx]);
+          }}
+          style={{ flex: 1, display: "flex" }}
+          containerStyle={{ flex: 1 }}
+          slideCount={coItemDataList.length}
+          overscanSlideAfter={1}
+          overscanSlideBefore={1}
+          slideRenderer={ListRenderer}
+          enableMouseEvents={true}
+        />
+      )}
+    </>
+  ), [ListRenderer, coItemDataList, onChangeTab, boardTab]);
 };
 
 const createItemData = memorize((routeList, vibrateDuration) => ({

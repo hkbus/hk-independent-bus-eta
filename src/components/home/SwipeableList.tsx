@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useRef, useImperativeHandle } from "react";
 import SwipeableViews from "react-swipeable-views";
-import { List } from "@mui/material";
+import { List, Typography } from "@mui/material";
 import { Location, RouteList, StopListEntry, StopList } from "hk-bus-eta";
 
 import AppContext from "../../AppContext";
@@ -8,6 +8,7 @@ import { isHoliday, isRouteAvaliable } from "../../timetable";
 import { getDistance } from "../../utils";
 import SuccinctTimeReport from "./SuccinctTimeReport";
 import type { HomeTabType } from "./HomeTabbar";
+import { useTranslation } from "react-i18next";
 
 interface SwipeableListProps {
   geolocation: Location;
@@ -32,6 +33,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       [holidays]
     );
     const defaultHometab = useRef(homeTab);
+    const { t } = useTranslation();
 
     useImperativeHandle(ref, () => ({
       changeTab: (v) => {
@@ -76,20 +78,34 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       [selectedRoutes]
     );
 
-    const SavedRouteList = useMemo(
-      () => (
-        <List disablePadding>
-          {selectedRoutes["saved"].split("|").map((selectedRoute, idx) => (
-            <SuccinctTimeReport
-              key={`route-shortcut-${idx}`}
-              routeId={selectedRoute}
-            />
-          ))}
-        </List>
-      ),
-      [selectedRoutes]
-    );
+    const SavedRouteList = useMemo(() => {
+      const savedRoutes = selectedRoutes["saved"].split("|");
+      const noRoutes = savedRoutes.every((routeId) => !routeId);
 
+      return (
+        <React.Fragment>
+          {noRoutes ? (
+            <Typography sx={{ marginTop: 5 }}>
+              <b>{t("未有收藏路線")}</b>
+            </Typography>
+          ) : (
+            <List disablePadding>
+              {selectedRoutes["saved"]
+                .split("|")
+                .map(
+                  (selectedRoute, idx) =>
+                    Boolean(selectedRoute) && (
+                      <SuccinctTimeReport
+                        key={`route-shortcut-${idx}`}
+                        routeId={selectedRoute}
+                      />
+                    )
+                )}
+            </List>
+          )}
+        </React.Fragment>
+      );
+    }, [selectedRoutes, t]);
     const NearbyRouteList = useMemo(
       () => (
         <List disablePadding>
