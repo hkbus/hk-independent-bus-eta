@@ -118,6 +118,7 @@ const InputPadBox = styled(Box)(({ theme }) => ({
     background: theme.palette.background.default,
     display: "flex",
     flexDirection: "row",
+    // TODO: increase to 258px or enable scroll
     height: "248px",
     justifyContent: "space-around",
     paddingTop: "8px",
