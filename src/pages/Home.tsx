@@ -81,4 +81,5 @@ const paperSx: SxProps<Theme> = {
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
+  overflow: "auto",
 };

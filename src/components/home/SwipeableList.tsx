@@ -67,12 +67,17 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     const BothRouteList = useMemo(
       () => (
         <List disablePadding>
-          {selectedRoutes["both"].split("|").map((selectedRoute, idx) => (
-            <SuccinctTimeReport
-              key={`route-shortcut-${idx}`}
-              routeId={selectedRoute}
-            />
-          ))}
+          {selectedRoutes["both"]
+            .split("|")
+            .map(
+              (selectedRoute, idx) =>
+                Boolean(selectedRoute) && (
+                  <SuccinctTimeReport
+                    key={`route-shortcut-${idx}`}
+                    routeId={selectedRoute}
+                  />
+                )
+            )}
         </List>
       ),
       [selectedRoutes]
@@ -109,12 +114,17 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     const NearbyRouteList = useMemo(
       () => (
         <List disablePadding>
-          {selectedRoutes["nearby"].split("|").map((selectedRoute, idx) => (
-            <SuccinctTimeReport
-              key={`route-shortcut-${idx}`}
-              routeId={selectedRoute}
-            />
-          ))}
+          {selectedRoutes["nearby"]
+            .split("|")
+            .map(
+              (selectedRoute, idx) =>
+                Boolean(selectedRoute) && (
+                  <SuccinctTimeReport
+                    key={`route-shortcut-${idx}`}
+                    routeId={selectedRoute}
+                  />
+                )
+            )}
         </List>
       ),
       [selectedRoutes]
