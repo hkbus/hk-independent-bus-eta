@@ -27,6 +27,7 @@ import {
   Gavel as GavelIcon,
   InsertEmoticon as InsertEmoticonIcon,
   SsidChart as SsidChartIcon,
+  BarChart as BarChartIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -48,6 +49,8 @@ const Settings = () => {
     geoPermission,
     updateGeoPermission,
     vibrateDuration,
+    toggleAnalytics,
+    analytics,
   } = useContext(AppContext);
   const [updating, setUpdating] = useState(false);
   const [showGeoPermissionDenied, setShowGeoPermissionDenied] = useState(false);
@@ -209,6 +212,17 @@ const Settings = () => {
           <ListItemText
             primary={t("Telegram 交流區")}
             secondary={t("歡迎意見及技術交流")}
+          />
+        </ListItemButton>
+        <ListItemButton onClick={toggleAnalytics}>
+          <ListItemAvatar>
+            <Avatar>
+              <BarChartIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={"Google Analytics"}
+            secondary={t(analytics ? "開啟" : "關閉")}
           />
         </ListItemButton>
         <ListItemButton

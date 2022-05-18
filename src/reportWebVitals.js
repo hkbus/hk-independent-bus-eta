@@ -11,6 +11,7 @@ const reportWebVitals = (onPerfEntry) => {
 };
 
 export const sendToGoogleAnalytics = ({ name, delta, value, id }) => {
+  console.log("analytics")
   if (!window.gtag) {
     console.log("gtag not found");
     return;

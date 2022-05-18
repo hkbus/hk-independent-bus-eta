@@ -7,7 +7,6 @@ import { AppContextProvider } from "./AppContext";
 import "./i18n";
 import { fetchDbFunc } from "./db";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import type { WarnUpMessageData } from "./typing";
 const App = loadable(() => import("./App"));
 
@@ -128,9 +127,4 @@ if (isHuman()) {
       );
     });
   }
-
-  // If you want to start measuring performance in your app, pass a function
-  // to log results (for example: reportWebVitals(console.log))
-  // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-  reportWebVitals(sendToGoogleAnalytics);
 }
