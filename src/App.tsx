@@ -23,6 +23,7 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import Home from "./pages/Home";
 import { SearchContextProvider } from "./SearchContext";
+import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 
 const RouteEta = loadable(() => import("./pages/RouteEta"));
 const RouteBoard = loadable(() => import("./pages/RouteBoard"));
@@ -49,7 +50,13 @@ const PageSwitch = () => {
 };
 
 const App = () => {
-  const { colorMode } = useContext(AppContext);
+  const { colorMode, analytics } = useContext(AppContext);
+
+  // If you want to start measuring performance in your app, pass a function
+  // to log results (for example: reportWebVitals(console.log))
+  // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+  analytics && reportWebVitals(sendToGoogleAnalytics);
+
   const theme = useMemo(() => {
     return createTheme(getThemeTokens(colorMode), [colorMode]);
   }, [colorMode]);
