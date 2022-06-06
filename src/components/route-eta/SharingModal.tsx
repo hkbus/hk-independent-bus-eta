@@ -31,16 +31,16 @@ const SharingModal = ({
       document.getElementById(`route-map`) &&
         domtoimage.toPng(document.getElementById(`route-map`)),
       domtoimage.toPng(document.getElementById(`stop-${idx}`)),
-    ])
-      // .then((rawBase64s) =>
-      //   mergeBase64(
-      //     rawBase64s.filter((v) => v).map((rawBase64) => rawBase64.substr(22)),
-      //     { direction: true, isPng: true }
-      //   )
-      // )
-      // .then((dataUrl) => {
-      //   setImgBase64(dataUrl);
-      // });
+    ]);
+    // .then((rawBase64s) =>
+    //   mergeBase64(
+    //     rawBase64s.filter((v) => v).map((rawBase64) => rawBase64.substr(22)),
+    //     { direction: true, isPng: true }
+    //   )
+    // )
+    // .then((dataUrl) => {
+    //   setImgBase64(dataUrl);
+    // });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
