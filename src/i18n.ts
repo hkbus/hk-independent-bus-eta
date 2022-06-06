@@ -7,7 +7,7 @@ const DEFAULT_LANG =
 
 i18n.use(initReactI18next).init({
   resources,
-  whitelist: ["en", "zh"],
+  supportedLngs: ["en", "zh"],
   lowerCaseLng: true,
   lng: DEFAULT_LANG,
   nsSeparator: false,

@@ -206,7 +206,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
         zoom={16}
         scrollWheelZoom={false}
         className={classes.mapContainer}
-        whenCreated={setMap}
+        ref={map}
       >
         <ChangeMapCenter
           center={center}

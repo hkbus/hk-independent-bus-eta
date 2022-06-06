@@ -122,14 +122,14 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         isFollow: false,
       };
     };
-    map.on({
-      dragend: stopFollowingDeviceGeoLocation,
-      dragstart: stopFollowingDeviceGeoLocation,
-    });
-    map.setView(mapRef.current.center);
+    // map.on({
+    //   dragend: stopFollowingDeviceGeoLocation,
+    //   dragstart: stopFollowingDeviceGeoLocation,
+    // });
+    // map.setView(mapRef.current.center);
 
     console.log("try invalidateSize");
-    map.invalidateSize();
+    // map.invalidateSize();
   }, []);
 
   const whenReady = useCallback(() => {
@@ -202,7 +202,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         zoom={16}
         scrollWheelZoom={false}
         className={classes.mapContainer}
-        whenCreated={whenCreated}
+        ref={whenCreated}
         whenReady={whenReady}
       >
         <TileLayer
