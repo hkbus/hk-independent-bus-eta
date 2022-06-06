@@ -115,13 +115,13 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
       ...mapRef.current,
       map,
     };
-    const stopFollowingDeviceGeoLocation = () => {
-      mapRef.current = {
-        ...mapRef.current,
-        center: mapRef.current.currentStopCenter,
-        isFollow: false,
-      };
-    };
+    // const stopFollowingDeviceGeoLocation = () => {
+    //   mapRef.current = {
+    //     ...mapRef.current,
+    //     center: mapRef.current.currentStopCenter,
+    //     isFollow: false,
+    //   };
+    // };
     // map.on({
     //   dragend: stopFollowingDeviceGeoLocation,
     //   dragstart: stopFollowingDeviceGeoLocation,
