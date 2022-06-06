@@ -263,8 +263,9 @@ const getPoint = ({ lat, lng }) => [lat, lng];
 const BusStopMarker = ({ active, passed, lv }) => {
   return Leaflet.icon({
     iconUrl: "https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png",
-    className: `${classes.marker} ${active ? classes.active : ""} ${passed ? classes.passed : ""
-      } lv-${lv}`,
+    className: `${classes.marker} ${active ? classes.active : ""} ${
+      passed ? classes.passed : ""
+    } lv-${lv}`,
   });
 };
 
