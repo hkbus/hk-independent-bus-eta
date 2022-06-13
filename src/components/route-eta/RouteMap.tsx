@@ -238,8 +238,9 @@ const BusStopMarker = ({ active, passed }) => {
   return Leaflet.divIcon({
     iconSize: [25, 41],
     iconAnchor: [12.5, 41],
-    className: `${classes.marker} ${active ? classes.active : ""} ${passed ? classes.passed : ""
-      }`,
+    className: `${classes.marker} ${active ? classes.active : ""} ${
+      passed ? classes.passed : ""
+    }`,
   });
 };
 
