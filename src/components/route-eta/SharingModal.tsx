@@ -26,8 +26,7 @@ const SharingModal = ({
 
     Promise.all([
       domtoimage.toPng(document.getElementById(`stop-${idx}`)),
-    ])
-    .then((dataUrl) => {
+    ]).then((dataUrl) => {
       setImgBase64(`${dataUrl}`);
     });
 
