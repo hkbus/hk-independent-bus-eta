@@ -3,7 +3,6 @@ import { Box, Button, Container, CircularProgress, Modal } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import domtoimage from "dom-to-image";
-// import mergeBase64 from "merge-base64";
 import { toProperCase, triggerShare, triggerShareImg } from "../../utils";
 import AppContext from "../../AppContext";
 
@@ -26,22 +25,11 @@ const SharingModal = ({
     if (isOpen === false) return;
 
     Promise.all([
-      domtoimage.toPng(document.getElementById(`route-eta-header`), {
-        bgcolor: colorMode === "light" ? "#fedb00" : "#000",
-      }),
-      document.getElementById(`route-map`) &&
-        domtoimage.toPng(document.getElementById(`route-map`)),
       domtoimage.toPng(document.getElementById(`stop-${idx}`)),
-    ]);
-    // .then((rawBase64s) =>
-    //   mergeBase64(
-    //     rawBase64s.filter((v) => v).map((rawBase64) => rawBase64.substr(22)),
-    //     { direction: true, isPng: true }
-    //   )
-    // )
-    // .then((dataUrl) => {
-    //   setImgBase64(dataUrl);
-    // });
+    ])
+    .then((dataUrl) => {
+      setImgBase64(`${dataUrl}`);
+    });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
