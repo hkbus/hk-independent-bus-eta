@@ -94,5 +94,8 @@
     "request": "^2.88.2",
     "source-map-explorer": "^2.5.2"
   },
+  "resolutions": {
+    "@svgr/webpack": "^6.2.1"
+},
   "license": "GPL-3.0-only"
 }
