@@ -115,21 +115,23 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
       ...mapRef.current,
       map,
     };
-    // const stopFollowingDeviceGeoLocation = () => {
-    //   mapRef.current = {
-    //     ...mapRef.current,
-    //     center: mapRef.current.currentStopCenter,
-    //     isFollow: false,
-    //   };
-    // };
-    // map.on({
-    //   dragend: stopFollowingDeviceGeoLocation,
-    //   dragstart: stopFollowingDeviceGeoLocation,
-    // });
-    // map.setView(mapRef.current.center);
+    if (map != null) {
+      const stopFollowingDeviceGeoLocation = () => {
+        mapRef.current = {
+          ...mapRef.current,
+          center: mapRef.current.currentStopCenter,
+          isFollow: false,
+        };
+      };
+      map.on({
+        dragend: stopFollowingDeviceGeoLocation,
+        dragstart: stopFollowingDeviceGeoLocation,
+      });
+      map.setView(mapRef.current.center);
 
-    console.log("try invalidateSize");
-    // map.invalidateSize();
+      console.log("try invalidateSize");
+      map.invalidateSize();
+    }
   }, []);
 
   const whenReady = useCallback(() => {
@@ -236,9 +238,8 @@ const BusStopMarker = ({ active, passed }) => {
   return Leaflet.divIcon({
     iconSize: [25, 41],
     iconAnchor: [12.5, 41],
-    className: `${classes.marker} ${active ? classes.active : ""} ${
-      passed ? classes.passed : ""
-    }`,
+    className: `${classes.marker} ${active ? classes.active : ""} ${passed ? classes.passed : ""
+      }`,
   });
 };
 
