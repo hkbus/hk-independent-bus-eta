@@ -64,7 +64,7 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false && react-scripts build",
     "render": "node scripts/pre-rendering.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -95,7 +95,8 @@
     "source-map-explorer": "^2.5.2"
   },
   "resolutions": {
-    "@svgr/webpack": "^6.2.1"
+    "@svgr/webpack": "^6.2.1",
+    "autoprefixer":"10.4.5"
 },
   "license": "GPL-3.0-only"
 }
