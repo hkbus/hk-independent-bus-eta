@@ -16,7 +16,7 @@ const SharingModal = ({
   event,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { AppTitle, colorMode } = useContext(AppContext);
+  const { AppTitle } = useContext(AppContext);
   const { t, i18n } = useTranslation();
   // eslint-disable-next-line
   const [imgBase64, setImgBase64] = useState<string>("");
