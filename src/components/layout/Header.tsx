@@ -11,7 +11,7 @@ import {
   Theme,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Link, useLocation, useHistory, useRouteMatch } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { vibrate, checkMobile } from "../../utils";
@@ -28,15 +28,16 @@ const Header = () => {
     geoPermission,
     updateGeolocation,
   } = useContext(AppContext);
-  const { path } = useRouteMatch();
   const { t, i18n } = useTranslation();
   let location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
 
   const handleLanguageChange = (lang) => {
     vibrate(vibrateDuration);
-    history.replace(location.pathname.replace("/" + i18n.language, "/" + lang));
+    navigate(location.pathname.replace("/" + i18n.language, "/" + lang), {
+      replace: true,
+    });
     i18n.changeLanguage(lang);
   };
 
@@ -66,7 +67,7 @@ const Header = () => {
         setSearchRoute(searchRoute.slice(0, -1));
       } else if (key.length === 1) {
         setSearchRoute(searchRoute + key);
-        history.replace(`/${i18n.language}/board`);
+        navigate(`/${i18n.language}/board`, { replace: true });
       }
     },
     // eslint-disable-next-line
@@ -88,7 +89,7 @@ const Header = () => {
           onClick={(e) => {
             e.preventDefault();
             vibrate(vibrateDuration);
-            history.push(`/${i18n.language}/board`);
+            navigate(`/${i18n.language}/board`);
           }}
           rel="nofollow"
         >
@@ -112,7 +113,7 @@ const Header = () => {
               e.target.value in routeList
             ) {
               (document.activeElement as HTMLElement).blur();
-              history.push(`/${i18n.language}/route/${e.target.value}`);
+              navigate(`/${i18n.language}/route/${e.target.value}`);
             }
             setSearchRoute(e.target.value);
           }}
@@ -121,9 +122,9 @@ const Header = () => {
             if (navigator.userAgent !== "prerendering" && checkMobile()) {
               (document.activeElement as HTMLElement).blur();
             }
-            history.replace(`/${i18n.language}/board`);
+            navigate(`/${i18n.language}/board`, { replace: true });
           }}
-          disabled={path.includes("route")}
+          disabled={location.pathname.includes("route")}
         />
         <Box className={classes.funcPanel}>
           {weatherCodes.slice(0, 2).map((code) => (
