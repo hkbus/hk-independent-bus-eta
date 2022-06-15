@@ -29,15 +29,17 @@ const RouteBoard = React.lazy(() => import("./pages/RouteBoard"));
 const RouteSearch = React.lazy(() => import("./pages/RouteSearch"));
 const Settings = React.lazy(() => import("./pages/Settings"));
 const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
-const TermsAndConditions = React.lazy(() => import("./pages/TermsAndConditions"));
+const TermsAndConditions = React.lazy(
+  () => import("./pages/TermsAndConditions")
+);
 
 const PageSwitch = () => {
   return (
     <SearchContextProvider>
-    <Outlet />
-  </SearchContextProvider>
-  )
-}
+      <Outlet />
+    </SearchContextProvider>
+  );
+};
 
 const App = () => {
   const { colorMode, analytics } = useContext(AppContext);
@@ -61,16 +63,18 @@ const App = () => {
           >
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Navigate to="/zh" replace />}>
-                </Route>
-                <Route path="/:lang" element={
+                <Route path="/" element={<Navigate to="/zh" replace />}></Route>
+                <Route
+                  path="/:lang"
+                  element={
                     <Fragment>
                       <CssBaseline />
                       <Header />
                       <PageSwitch />
                       <Footer />
                     </Fragment>
-                  }>
+                  }
+                >
                   <Route path={`route/:id/`}>
                     <Route path={`:panel`} element={<RouteEta />} />
                     <Route index element={<RouteEta />} />
