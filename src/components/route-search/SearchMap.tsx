@@ -19,18 +19,18 @@ import { Location as GeoLocation } from "hk-bus-eta";
 const ChangeMapCenter = ({ center, start, end, setMapState }) => {
   const map = useMap();
 
-  const updateDragCenter:Leaflet.DragEndEventHandlerFn = (event)=>{
+  const updateDragCenter: Leaflet.DragEndEventHandlerFn = (event) => {
     setMapState({
       center: map.getCenter(),
       isFollow: false,
     });
-  }  
+  };
 
   useEffect(() => {
     if (!map) return;
     map.on("dragend", updateDragCenter);
     return () => {
-      console.log('mapOff')
+      console.log("mapOff");
       map.off("dragend", updateDragCenter);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
