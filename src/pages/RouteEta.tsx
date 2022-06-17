@@ -1,6 +1,11 @@
-import { useState, useEffect, useContext, useMemo, useCallback } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import loadable from "@loadable/component";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback,
+} from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import RouteHeader from "../components/route-eta/RouteHeader";
 import StopAccordions from "../components/route-eta/StopAccordions";
 import StopDialog from "../components/route-eta/StopDialog";
@@ -8,7 +13,7 @@ import AppContext from "../AppContext";
 import { useTranslation } from "react-i18next";
 import { setSeoHeader, toProperCase, getDistance } from "../utils";
 import type { WarnUpMessageData } from "../typing";
-const RouteMap = loadable(() => import("../components/route-eta/RouteMap"));
+const RouteMap = React.lazy(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
   const { id, panel } = useParams<{ id: string; panel: string }>();
@@ -53,13 +58,15 @@ const RouteEta = () => {
   }, [co, stopIdx, stopMap, stops]);
 
   const { t, i18n } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleChange = useCallback(
     (newStopIdx: number, expanded: boolean) => {
       if (expanded) {
         if (stopIdx !== newStopIdx) {
-          history.replace(`/${i18n.language}/route/${id}/${newStopIdx}`);
+          navigate(`/${i18n.language}/route/${id}/${newStopIdx}`, {
+            replace: true,
+          });
         }
       }
       if (stopIdx === newStopIdx && !expanded) {
@@ -68,7 +75,7 @@ const RouteEta = () => {
         setExpanded(expanded);
       }
     },
-    [history, i18n.language, id, stopIdx]
+    [navigate, i18n.language, id, stopIdx]
   );
 
   const onMarkerClick = useCallback(
@@ -76,9 +83,11 @@ const RouteEta = () => {
       if (stopIdx === newStopIdx) {
         setIsDialogOpen(true);
       }
-      history.replace(`/${i18n.language}/route/${id}/${newStopIdx}`);
+      navigate(`/${i18n.language}/route/${id}/${newStopIdx}`, {
+        replace: true,
+      });
     },
-    [history, i18n.language, id, stopIdx]
+    [navigate, i18n.language, id, stopIdx]
   );
 
   const handleCloseDialog = useCallback(() => {

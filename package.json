@@ -6,7 +6,6 @@
     "@emotion/cache": "^11.4.0",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
-    "@loadable/component": "^5.15.0",
     "@mui/icons-material": "^5.0.1",
     "@mui/material": "^5.0.1",
     "@mui/styles": "^5.0.1",
@@ -37,7 +36,7 @@
     "react-dom": "^18.1.0",
     "react-i18next": "^11.8.13",
     "react-leaflet": "^4.0.0",
-    "react-router-dom": "^5.3.3",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-select": "^5.3.2",
     "react-select-search": "^3.0.5",
@@ -95,8 +94,7 @@
     "source-map-explorer": "^2.5.2"
   },
   "resolutions": {
-    "@svgr/webpack": "^6.2.1",
-    "autoprefixer":"10.4.5"
-},
+    "@svgr/webpack": "^6.2.1"
+  },
   "license": "GPL-3.0-only"
 }
