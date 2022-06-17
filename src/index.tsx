@@ -8,6 +8,7 @@ import "./i18n";
 import { fetchDbFunc } from "./db";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import type { WarnUpMessageData } from "./typing";
+import { createRoot } from 'react-dom/client';
 const App = loadable(() => import("./App"));
 
 const isHuman = () => {
@@ -87,11 +88,10 @@ if (isHuman()) {
         </DbProvider>
       );
     };
-    ReactDOM.render(
+    createRoot(document.getElementById("root")).render(
       <React.StrictMode>
         <Container />
       </React.StrictMode>,
-      document.getElementById("root")
     );
   } else {
     fetchDb.then((db) => {

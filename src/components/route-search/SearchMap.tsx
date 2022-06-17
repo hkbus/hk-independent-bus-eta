@@ -16,8 +16,26 @@ import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { checkPosition } from "../../utils";
 import { Location as GeoLocation } from "hk-bus-eta";
 
-const ChangeMapCenter = ({ center, start, end }) => {
+const ChangeMapCenter = ({ center, start, end, setMapState }) => {
   const map = useMap();
+
+  const updateDragCenter:Leaflet.DragEndEventHandlerFn = (event)=>{
+    setMapState({
+      center: map.getCenter(),
+      isFollow: false,
+    });
+  }  
+
+  useEffect(() => {
+    if (!map) return;
+    map.on("dragend", updateDragCenter);
+    return () => {
+      console.log('mapOff')
+      map.off("dragend", updateDragCenter);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map]);
+
   if (center) map.flyTo(checkPosition(center));
   else if (end)
     map.fitBounds(
@@ -184,15 +202,6 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
   };
 
   useEffect(() => {
-    if (!map) return;
-    map.on("dragend", updateCenter);
-    return () => {
-      map.off("dragend", updateCenter);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map]);
-
-  useEffect(() => {
     if (isFollow) {
       if (geolocation.lat !== center.lat || geolocation.lng !== center.lng)
         updateCenter({ center: geolocation, isFollow: true });
@@ -213,6 +222,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
           center={center}
           start={checkPosition(start)}
           end={end}
+          setMapState={setMapState}
         />
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
