@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import ReorderIcon from "@mui/icons-material/Reorder";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { vibrate } from "../../utils";
 import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
@@ -79,12 +79,12 @@ const SuccinctTimeReport = ({
     routeList[routeKey] || DefaultRoute;
   const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DefaultStop;
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleClick = (e) => {
     e.preventDefault();
     vibrate(vibrateDuration);
     setTimeout(() => {
-      history.push(`/${i18n.language}/route/${routeId.toLowerCase()}`);
+      navigate(`/${i18n.language}/route/${routeId.toLowerCase()}`);
     }, 0);
   };
 

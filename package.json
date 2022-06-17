@@ -38,7 +38,7 @@
     "react-dom": "^17.0.2",
     "react-i18next": "^11.8.13",
     "react-leaflet": "^3.1.0",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "react-select": "^4.3.1",
     "react-select-search": "^3.0.5",
@@ -94,6 +94,9 @@
     "puppeteer": "^13.0.1",
     "request": "^2.88.2",
     "source-map-explorer": "^2.5.2"
+  },
+  "resolutions": {
+    "@svgr/webpack": "^6.2.1"
   },
   "license": "GPL-3.0-only"
 }
