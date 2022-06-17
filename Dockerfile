@@ -1,4 +1,4 @@
-FROM node:17 as build
+FROM node:18-alpine as build
 
 ARG env
 ENV env $env
@@ -40,7 +40,10 @@ COPY ./public ./public
 RUN if [ "$env" = "dev" ]; then mkdir build; else yarn build; fi;
 RUN if [ "$PRERENDER" = "true" ]; then node scripts/sitemap-generator.js && node scripts/pre-rendering.js; fi;
 
-FROM node:17
+FROM node:18-alpine
+
+ARG env
+ENV env $env
 
 WORKDIR /usr/src/app
 
@@ -48,7 +51,7 @@ COPY ./package.json ./
 COPY ./yarn.lock ./
 COPY ./tsconfig.json ./
 
-COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/build ./build
 
+RUN if [ "$env" = "dev" ]; then yarn install;
 CMD if [ "$env" = "dev" ]; then yarn start; else npx -y serve -s build; fi;

@@ -96,5 +96,8 @@
     "request": "^2.88.2",
     "source-map-explorer": "^2.5.2"
   },
+  "resolutions": {
+    "autoprefixer": "10.4.5"
+  },
   "license": "GPL-3.0-only"
 }
