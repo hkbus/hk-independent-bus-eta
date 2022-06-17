@@ -250,7 +250,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
             }
           }}
         />
-      </MapContainer>
+        </MapContainer>
     </SearchMapBox>
   );
 };
