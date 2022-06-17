@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext, useRef } from "react";
+import { useEffect, useState, useMemo, useContext, useRef } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -8,6 +8,7 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
+import loadable from "@loadable/component";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -18,7 +19,7 @@ import { toProperCase } from "../../utils";
 import TimeReport from "./TimeReport";
 import ShareIcon from "@mui/icons-material/Share";
 import type { StopListEntry, RouteListEntry } from "hk-bus-eta";
-const SharingModal = React.lazy(() => import("./SharingModal"));
+const SharingModal = loadable(() => import("./SharingModal"));
 
 interface StopAccordionsProps {
   routeId: string;

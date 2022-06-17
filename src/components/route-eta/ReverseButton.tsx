@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useCallback } from "react";
 import { Button, Divider, SxProps, Theme } from "@mui/material";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { RouteListEntry } from "hk-bus-eta";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { vibrate, getDistance } from "../../utils";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
@@ -15,7 +15,7 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
     vibrateDuration,
   } = useContext(AppContext);
   const { route, stops, co } = routeList[routeId];
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const isTodayHoliday = useMemo(
     () => isHoliday(holidays, new Date()),
@@ -66,10 +66,12 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
       e.preventDefault();
       vibrate(vibrateDuration);
       setTimeout(() => {
-        navigate(`/${i18n.language}/route/${reverseRoute[0].toLowerCase()}`);
+        history.push(
+          `/${i18n.language}/route/${reverseRoute[0].toLowerCase()}`
+        );
       }, 0);
     },
-    [reverseRoute, navigate, i18n.language, vibrateDuration]
+    [reverseRoute, history, i18n.language, vibrateDuration]
   );
 
   return (
