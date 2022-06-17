@@ -1,4 +1,5 @@
-import React, { Fragment, useContext, useMemo } from "react";
+import React, { useContext, useMemo } from "react";
+import loadable from "@loadable/component";
 import "./App.css";
 import "leaflet/dist/leaflet.css";
 import {
@@ -7,11 +8,11 @@ import {
   createTheme,
 } from "@mui/material/styles";
 import {
-  BrowserRouter,
-  Navigate,
-  Routes,
+  BrowserRouter as Router,
+  Redirect,
+  Switch,
   Route,
-  Outlet,
+  useRouteMatch,
 } from "react-router-dom";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
@@ -24,19 +25,26 @@ import Home from "./pages/Home";
 import { SearchContextProvider } from "./SearchContext";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 
-const RouteEta = React.lazy(() => import("./pages/RouteEta"));
-const RouteBoard = React.lazy(() => import("./pages/RouteBoard"));
-const RouteSearch = React.lazy(() => import("./pages/RouteSearch"));
-const Settings = React.lazy(() => import("./pages/Settings"));
-const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
-const TermsAndConditions = React.lazy(
-  () => import("./pages/TermsAndConditions")
-);
+const RouteEta = loadable(() => import("./pages/RouteEta"));
+const RouteBoard = loadable(() => import("./pages/RouteBoard"));
+const RouteSearch = loadable(() => import("./pages/RouteSearch"));
+const Settings = loadable(() => import("./pages/Settings"));
+const PrivacyPolicy = loadable(() => import("./pages/PrivacyPolicy"));
+const TermsAndConditions = loadable(() => import("./pages/TermsAndConditions"));
 
 const PageSwitch = () => {
+  const { path } = useRouteMatch();
   return (
     <SearchContextProvider>
-      <Outlet />
+      <Switch>
+        <Route path={`${path}/route/:id/:panel?`} component={RouteEta} />
+        <Route path={`${path}/settings`} component={Settings} />
+        <Route path={`${path}/board`} component={RouteBoard} />
+        <Route path={`${path}/search`} component={RouteSearch} />
+        <Route path={`${path}/privacy`} component={PrivacyPolicy} />
+        <Route path={`${path}/terms`} component={TermsAndConditions} />
+        <Route path={`${path}`} component={Home} />
+      </Switch>
     </SearchContextProvider>
   );
 };
@@ -61,33 +69,17 @@ const App = () => {
             disableGutters
             className={classes.container}
           >
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Navigate to="/zh" replace />}></Route>
-                <Route
-                  path="/:lang"
-                  element={
-                    <Fragment>
-                      <CssBaseline />
-                      <Header />
-                      <PageSwitch />
-                      <Footer />
-                    </Fragment>
-                  }
-                >
-                  <Route path={`route/:id/`}>
-                    <Route path={`:panel`} element={<RouteEta />} />
-                    <Route index element={<RouteEta />} />
-                  </Route>
-                  <Route path={`settings`} element={<Settings />} />
-                  <Route path={`board`} element={<RouteBoard />} />
-                  <Route path={`search`} element={<RouteSearch />} />
-                  <Route path={`privacy`} element={<PrivacyPolicy />} />
-                  <Route path={`terms`} element={<TermsAndConditions />} />
-                  <Route index element={<Home />} />
-                </Route>
-              </Routes>
-            </BrowserRouter>
+            <Router>
+              <Route exact path="/">
+                <Redirect to="/zh" />
+              </Route>
+              <Route path="/:lang">
+                <CssBaseline />
+                <Header />
+                <PageSwitch />
+                <Footer />
+              </Route>
+            </Router>
           </AppContainer>
         </CacheProvider>
       </ThemeProvider>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { createRoot, hydrateRoot } from "react-dom/client";
+import loadable from "@loadable/component";
+import ReactDOM from "react-dom";
 import "./index.css";
 import { DbProvider } from "./DbContext";
 import { AppContextProvider } from "./AppContext";
@@ -7,7 +8,7 @@ import "./i18n";
 import { fetchDbFunc } from "./db";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import type { WarnUpMessageData } from "./typing";
-const App = React.lazy(() => import("./App"));
+const App = loadable(() => import("./App"));
 
 const isHuman = () => {
   const agents = [
@@ -86,11 +87,11 @@ if (isHuman()) {
         </DbProvider>
       );
     };
-    const root = createRoot(document.getElementById("root")!);
-    root.render(
+    ReactDOM.render(
       <React.StrictMode>
         <Container />
-      </React.StrictMode>
+      </React.StrictMode>,
+      document.getElementById("root")
     );
   } else {
     fetchDb.then((db) => {
@@ -113,11 +114,16 @@ if (isHuman()) {
         );
       };
       // hydrate in production
-      hydrateRoot(
-        document.getElementById("root"),
+      ReactDOM.hydrate(
         <React.StrictMode>
           <Container />
-        </React.StrictMode>
+        </React.StrictMode>,
+        document.getElementById("root"),
+        () => {
+          if (prerenderStyle instanceof HTMLStyleElement) {
+            prerenderStyle.innerHTML = "";
+          }
+        }
       );
     });
   }

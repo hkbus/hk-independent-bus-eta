@@ -5,7 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import TimerIcon from "@mui/icons-material/Timer";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { styled } from "@mui/material/styles";
@@ -16,11 +16,11 @@ const Footer = () => {
   const location = useLocation();
   const { selectedRoute, colorMode, vibrateDuration } = useContext(AppContext);
 
-  const navigate = useNavigate();
+  const history = useHistory();
   const handleClick = (link, e) => {
     e.preventDefault();
     vibrate(vibrateDuration);
-    setTimeout(() => navigate(link), 0);
+    setTimeout(() => history.push(link), 0);
   };
 
   return useMemo(

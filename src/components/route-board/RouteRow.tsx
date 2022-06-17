@@ -3,7 +3,7 @@ import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { areEqual } from "react-window";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { vibrate, toProperCase } from "../../utils";
 import RouteNo from "./RouteNo";
 import { RouteListEntry } from "hk-bus-eta";
@@ -41,12 +41,12 @@ const RouteRow = React.memo(
     const { t, i18n } = useTranslation();
     const route = routeList[index];
     const [routeNo, serviceType] = route[0].split("-").slice(0, 2);
-    const naviagte = useNavigate();
+    const history = useHistory();
     const handleClick = (e) => {
       e.preventDefault();
       vibrate(vibrateDuration);
       setTimeout(() => {
-        naviagte(`/${i18n.language}/route/${route[0].toLowerCase()}`);
+        history.push(`/${i18n.language}/route/${route[0].toLowerCase()}`);
       }, 0);
     };
 
