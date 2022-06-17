@@ -18,19 +18,19 @@ export const useEtas = (routeId) => {
   useEffect(() => {
     let isMounted = true;
 
-    const fetchData = async () => {
+    const fetchData = () => {
       if (!isVisible || navigator.userAgent === "prerendering") {
         // skip if prerendering
         setEtas(null);
         return new Promise((resolve) => resolve([]));
       }
-      const _etas = await fetchEtas({
+      return fetchEtas({
         ...routeObj,
         seq: parseInt(seq, 10),
         language,
+      }).then((_etas) => {
+        if (isMounted) setEtas(_etas);
       });
-      if (isMounted)
-        setEtas(_etas);
     };
 
     const fetchEtaInterval = setInterval(() => {
