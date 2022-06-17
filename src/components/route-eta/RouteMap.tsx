@@ -115,21 +115,23 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
       ...mapRef.current,
       map,
     };
-    const stopFollowingDeviceGeoLocation = () => {
-      mapRef.current = {
-        ...mapRef.current,
-        center: mapRef.current.currentStopCenter,
-        isFollow: false,
+    if (map != null) {
+      const stopFollowingDeviceGeoLocation = () => {
+        mapRef.current = {
+          ...mapRef.current,
+          center: mapRef.current.currentStopCenter,
+          isFollow: false,
+        };
       };
-    };
-    map.on({
-      dragend: stopFollowingDeviceGeoLocation,
-      dragstart: stopFollowingDeviceGeoLocation,
-    });
-    map.setView(mapRef.current.center);
+      map.on({
+        dragend: stopFollowingDeviceGeoLocation,
+        dragstart: stopFollowingDeviceGeoLocation,
+      });
+      map.setView(mapRef.current.center);
 
-    console.log("try invalidateSize");
-    map.invalidateSize();
+      console.log("try invalidateSize");
+      map.invalidateSize();
+    }
   }, []);
 
   const whenReady = useCallback(() => {
@@ -202,7 +204,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         zoom={16}
         scrollWheelZoom={false}
         className={classes.mapContainer}
-        whenCreated={whenCreated}
+        ref={whenCreated}
         whenReady={whenReady}
       >
         <TileLayer

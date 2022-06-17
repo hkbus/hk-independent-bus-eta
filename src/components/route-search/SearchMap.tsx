@@ -155,6 +155,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
     isFollow: false,
   });
   const { center, isFollow } = mapState;
+  // eslint-disable-next-line
   const [map, setMap] = useState(null);
 
   const updateCenter = ({
@@ -206,7 +207,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
         zoom={16}
         scrollWheelZoom={false}
         className={classes.mapContainer}
-        whenCreated={setMap}
+        ref={map}
       >
         <ChangeMapCenter
           center={center}
