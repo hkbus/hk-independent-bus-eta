@@ -7,12 +7,12 @@ docker-build:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - if [ "$PRERENDER" = "true" ]; then docker build --pull --build-arg $(tr '\n' ' ' < .env | sed "s/ / --build-arg /g") --build-arg PRERENDER=true -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full" .; fi;
+    - if [ "$PRERENDER" = "true" ]; then yarn docker:build-noenv --build-arg PRERENDER=true -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; fi;
     - if [ "$PRERENDER" = "true" ]; then docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; fi;
     - if [ "$PRERENDER" = "true" ]; then exit 0; fi;
-    - docker build --pull --build-arg $(tr '\n' ' ' < .env | sed "s/ / --build-arg /g") -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest" .
+    - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest"
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest"
-    - docker build --pull --build-arg $(tr '\n' ' ' < .env | sed "s/ / --build-arg /g") -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA" .
+    - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA" .
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
   # Run this job in a branch where a Dockerfile exists
   rules:

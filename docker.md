@@ -27,6 +27,12 @@ PRERENDER=
 
 ## Build
 
+### Using docker
+
+```bash
+yarn docker:build -t hkbus
+```
+
 ### Using docker-compose
 
 ```bash

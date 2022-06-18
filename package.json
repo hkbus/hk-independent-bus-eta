@@ -75,7 +75,8 @@
     "predeploy": "yarn build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
     "deploy": "gh-pages -d build",
     "docker": "cd docker && docker-compose up -d --build",
-    "docker:build": "docker build --pull --build-arg $(tr '\\n' ' ' < .env | sed \"s/ / --build-arg /g\") -t hkbus ."
+    "docker:build": "docker build . --pull --build-arg $(sed 's:#.*$::g' .env | sed '/^\\s*$/d' | sed ':a;N;$!ba;s/\\n/ --build-arg /g')",
+    "docker:build-noenv": "docker build . --pull --build-arg $(sed 's:#.*$::g' .env | sed '/^\\s*$/d' | sed ':a;N;$!ba;s/\\n/ --build-arg /g')"
   },
   "eslintConfig": {
     "extends": [
