@@ -1,10 +1,11 @@
 docker-build:
   # Use the official docker image.
-  image: docker:latest
+  image: node:18
   stage: build
   services:
     - docker:dind
   before_script:
+    - apt update && apt install docker.io
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - if [ "$PRERENDER" = "true" ]; then yarn docker:build-noenv --build-arg PRERENDER=true -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; fi;
