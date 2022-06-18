@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import loadable from "@loadable/component";
 import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./index.css";
 import { DbProvider } from "./DbContext";
 import { AppContextProvider } from "./AppContext";
@@ -87,11 +88,11 @@ if (isHuman()) {
         </DbProvider>
       );
     };
-    ReactDOM.render(
+    const root = createRoot(document.getElementById("root"));
+    root.render(
       <React.StrictMode>
         <Container />
-      </React.StrictMode>,
-      document.getElementById("root")
+      </React.StrictMode>
     );
   } else {
     fetchDb.then((db) => {

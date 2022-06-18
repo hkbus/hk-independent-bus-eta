@@ -62,6 +62,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } =
     useContext(AppContext);
   const { i18n } = useTranslation();
+  const map = useRef<Leaflet.Map>(null);
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
     currentStopCenter: stops[stopIdx]
@@ -109,28 +110,30 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
     };
   }, [stops, stopIdx, geolocation]);
 
-  const whenCreated = useCallback((map: LeafletMap) => {
-    console.log("got map", map);
-    mapRef.current = {
-      ...mapRef.current,
-      map,
-    };
-    const stopFollowingDeviceGeoLocation = () => {
+  useEffect(() => {
+    if (map.current) {
+      console.log("got map", map);
       mapRef.current = {
         ...mapRef.current,
-        center: mapRef.current.currentStopCenter,
-        isFollow: false,
+        map: map.current,
       };
-    };
-    map.on({
-      dragend: stopFollowingDeviceGeoLocation,
-      dragstart: stopFollowingDeviceGeoLocation,
-    });
-    map.setView(mapRef.current.center);
+      const stopFollowingDeviceGeoLocation = () => {
+        mapRef.current = {
+          ...mapRef.current,
+          center: mapRef.current.currentStopCenter,
+          isFollow: false,
+        };
+      };
+      map.current?.on({
+        dragend: stopFollowingDeviceGeoLocation,
+        dragstart: stopFollowingDeviceGeoLocation,
+      });
+      map.current?.setView(mapRef.current.center);
 
-    console.log("try invalidateSize");
-    map.invalidateSize();
-  }, []);
+      console.log("try invalidateSize");
+      map.current?.invalidateSize();
+    }
+  }, [map]);
 
   const whenReady = useCallback(() => {
     console.log("map is ready");
@@ -195,6 +198,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
       return prev;
     }, list);
   }, [stops]);
+
   return (
     <RouteMapBox id="route-map" className={classes.mapContainerBox}>
       <MapContainer
@@ -202,7 +206,6 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         zoom={16}
         scrollWheelZoom={false}
         className={classes.mapContainer}
-        whenCreated={whenCreated}
         whenReady={whenReady}
       >
         <TileLayer

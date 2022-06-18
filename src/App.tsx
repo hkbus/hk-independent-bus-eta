@@ -51,8 +51,8 @@ const App = () => {
             disableGutters
             className={classes.container}
           >
-            <SearchContextProvider>
-              <Router>
+            <Router>
+              <SearchContextProvider>
                 <CssBaseline />
                 <Header />
                 <Routes>
@@ -69,8 +69,8 @@ const App = () => {
                   </Route>
                 </Routes>
                 <Footer />
-              </Router>
-            </SearchContextProvider>
+              </SearchContextProvider>
+            </Router>
           </AppContainer>
         </CacheProvider>
       </ThemeProvider>
