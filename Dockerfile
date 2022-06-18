@@ -53,5 +53,5 @@ COPY ./tsconfig.json ./
 
 COPY --from=build /usr/src/app/build ./build
 
-RUN if [ "$env" = "dev" ]; then yarn install;
+RUN if [ "$env" = "dev" ]; then yarn install; fi;
 CMD if [ "$env" = "dev" ]; then yarn start; else npx -y serve -s build; fi;
