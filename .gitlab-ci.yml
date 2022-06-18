@@ -13,7 +13,7 @@ docker-build:
     - if [ "$PRERENDER" = "true" ]; then exit 0; fi;
     - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest"
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest"
-    - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA" .
+    - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
   # Run this job in a branch where a Dockerfile exists
   rules:
