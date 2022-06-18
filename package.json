@@ -17,6 +17,7 @@
     "@types/leaflet": "^1.7.11",
     "@types/loadable__component": "^5.13.4",
     "@types/node": "^18.0.0",
+    "@types/proj4": "^2.5.2",
     "@types/react": "18.0.14",
     "@types/react-dom": "^18.0.5",
     "@types/react-router-dom": "^5.1.8",
@@ -71,7 +72,7 @@
     "render": "node scripts/pre-rendering.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
+    "predeploy": "yarn build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
     "deploy": "gh-pages -d build",
     "docker": "cd docker && docker-compose up -d --build",
     "docker:build": "docker build --pull --build-arg $(tr '\\n' ' ' < .env | sed \"s/ / --build-arg /g\") -t hkbus ."
@@ -94,7 +95,6 @@
     "express": "^4.18.1",
     "prettier": "2.7.1",
     "puppeteer": "^14.4.1",
-    "request": "^2.88.2",
     "source-map-explorer": "^2.5.2"
   },
   "resolutions": {

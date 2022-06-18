@@ -27,12 +27,6 @@ PRERENDER=
 
 ## Build
 
-### Using docker
-
-```bash
-docker build --pull --build-arg $(tr '\n' ' ' < docker/.env | sed "s/ / --build-arg /g") -t hkbus .
-```
-
 ### Using docker-compose
 
 ```bash

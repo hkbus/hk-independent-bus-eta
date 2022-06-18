@@ -6,7 +6,6 @@ const jsdom = require("jsdom");
 const CleanCSS = require("clean-css");
 require("dotenv").config();
 const cleanCss = new CleanCSS();
-let app;
 
 /**
  * @returns {object}
@@ -29,16 +28,16 @@ async function readOptionsFromFile() {
  * @param {string} dir
  * @returns {string|boolean}
  */
-async function runStaticServer(port, routes, dir) {
+function runStaticServer(port, routes, dir) {
   try {
-    app = express();
+    const app = express();
     const resolvedPath = resolve(dir);
     app.use(express.static(resolvedPath));
     app.get("/*", (req, res) => {
       res.sendFile(`${resolvedPath}/index.html`);
     });
 
-    await app.listen(port);
+    app.listen(port);
     return `http://localhost:${port}`;
   } catch (err) {
     throw new Error(
@@ -60,7 +59,7 @@ async function createNewHTMLPage(route, html, dir) {
       const subDir = route.slice(0, route.lastIndexOf("/"));
       await ensureDirExists(`${dir}${subDir}`);
     }
-    await fs.writeFileSync(`${dir}${fname}.html`, html, {
+    fs.writeFileSync(`${dir}${fname}.html`, html, {
       encoding: "utf-8",
       flag: "w",
     });
@@ -94,17 +93,16 @@ function ensureDirExists(dir) {
  */
 async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
   const url = new URL(pageUrl);
+  await page.goto(pageUrl, { waitUntil: "networkidle0" });
   try {
     if (!pageUrl.includes("/route/")) {
       if (idx === 0) {
-        await page.goto(pageUrl, { waitUntil: "networkidle0" });
       } else if (pageUrl.includes("search")) {
         await page.click(`a[href="${url.pathname}"]`);
         await new Promise((resolve) => {
           setTimeout(resolve, 500);
         });
       } else {
-        await page.goto(pageUrl, { waitUntil: "networkidle0" });
         await page.waitForTimeout(3000);
       }
       if (idx === 0) await page.waitForTimeout(3000); // wait decompression & loading data
@@ -125,13 +123,13 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
       `);
       await page.evaluate((q) => {
         // programmatically change the search route value
-        var input = document.getElementById("searchInput");
-        var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        const input = document.getElementById("searchInput");
+        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
           window.HTMLInputElement.prototype,
           "value"
         ).set;
         nativeInputValueSetter.call(input, q);
-        var ev2 = new Event("input", { bubbles: true });
+        const ev2 = new Event("input", { bubbles: true });
         input.dispatchEvent(ev2);
       }, q);
       await page.waitForSelector(`input[id="${q}"][value="${q}"]`, {
@@ -144,11 +142,8 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
 
     const dom = new jsdom.JSDOM(html);
     const css = cleanCss.minify(
-      Array.prototype.map
-        .call(
-          dom.window.document.querySelectorAll("style[data-emotion]"),
-          (e) => e.textContent
-        )
+      Array.from(dom.window.document.querySelectorAll("style[data-emotion]"))
+        .map((e) => e.textContent)
         .join("")
     ).styles;
     dom.window.document
@@ -231,12 +226,12 @@ async function runPuppeteer(baseUrl, routes, dir) {
 
 async function run() {
   const options = await readOptionsFromFile();
-  const staticServerURL = await runStaticServer(
+  const staticServerURL = runStaticServer(
     options.port || 3000,
     options.routes || [],
     options.buildDirectory || "./build"
   );
-
+  console.log(staticServerURL);
   if (!staticServerURL) return 0;
 
   await runPuppeteer(

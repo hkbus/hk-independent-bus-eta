@@ -76,28 +76,24 @@ export const triggerShare = (url: string, title: string) => {
   return new Promise((resolve) => resolve(""));
 };
 
-export const triggerShareImg = (
+export const triggerShareImg = async (
   base64Img: string,
   title: string,
   text: string
 ) => {
-  return fetch(base64Img)
-    .then((res) => res)
-    .then((ret) => ret.blob())
-    .then((blob) => {
-      const file = new File([blob], "hkbus.png", { type: blob.type });
-      if (navigator.share) {
-        return navigator.share({
-          title: title,
-          text: text,
-          files: [file],
-        });
-      } else if (navigator.clipboard) {
-        return navigator.clipboard.write([
-          new ClipboardItem({ "image/png": blob }),
-        ]);
-      }
+  const blob = await fetch(base64Img).then((res) => res.blob());
+  const file = new File([blob], "hkbus.png", { type: blob.type });
+  if (navigator.share) {
+    return navigator.share({
+      title: title,
+      text: text,
+      files: [file],
     });
+  } else if (navigator.clipboard) {
+    return navigator.clipboard.write([
+      new ClipboardItem({ "image/png": blob }),
+    ]);
+  }
 };
 
 export const setSeoHeader = ({
