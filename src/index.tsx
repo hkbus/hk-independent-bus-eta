@@ -68,9 +68,8 @@ if (isHuman()) {
       });
     }, []);
 
-    if (!state.initialized)
-      return <></>;
-    
+    if (!state.initialized) return <></>;
+
     return (
       <DbProvider initialDb={state.db}>
         <AppContextProvider workbox={state.workbox}>

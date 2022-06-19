@@ -94,7 +94,7 @@ const loadAddressFromGeodata = async (
     `https://geodata.gov.hk/gs/api/v1.0.0/locationSearch?q=${encodeURI(addr)}`,
     options
   ).then((res) => res.json());
-  
+
   return suggestions.map((sug) => {
     const [lng, lat] = proj4(
       // from EPSG:2326 to EPSG:4326

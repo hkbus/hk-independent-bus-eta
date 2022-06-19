@@ -189,7 +189,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
-  
+
   useEffect(() => {
     if (isFollow) {
       if (geolocation.lat !== center.lat || geolocation.lng !== center.lng)
