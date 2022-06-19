@@ -173,55 +173,65 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
  */
 async function runPuppeteer(baseUrl, routes, dir) {
   const browser = await puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
   });
-  const page = await browser.newPage();
-  page.setRequestInterception(true);
-  page.on("request", (request) => {
-    // block map loading, google font, gov.hk and service-worker
-    if (
-      request.url().includes(process.env.REACT_APP_OSM_PROVIDER_HOST) ||
-      request.url().includes("data.gov.hk") ||
-      request.url().includes("gstatic") ||
-      request.url().includes("service-worker")
-    ) {
-      request.abort();
-    } else request.continue();
-  });
-  page.setUserAgent("prerendering");
-  let start = Date.now();
-  for (let i = 0; i < routes.length; i++) {
-    const startTime = Date.now();
-    let trial = 0;
-    do {
-      try {
-        console.log(`Processing route "${routes[i]}"`);
-        const html = await getHTMLfromPuppeteerPage(
-          page,
-          `${baseUrl}${routes[i]}`,
-          i
-        );
-        if (html) {
-          createNewHTMLPage(routes[i], html, dir);
-          break;
-        } else return 0;
-      } catch (err) {
-        console.log(`Retrying ${routes[i]}\nMessage: ${err}`);
-        if (trial === 3) {
-          console.error(
-            `Error: Failed to process route "${routes[i]}"\nMessage: ${err}`
-          );
-          process.exit(1);
+  const threads = 4;
+  const arrLength = Math.ceil(routes.length / threads);
+  const start = Date.now();
+  await Promise.all(
+    Array(threads)
+      .fill(undefined)
+      .map(async (v, index) => {
+        const startIndex = index * arrLength;
+        const arr = routes.slice(startIndex, startIndex + arrLength);
+        const page = await browser.newPage();
+        page.setRequestInterception(true);
+        page.on("request", (request) => {
+          // block map loading, google font, gov.hk and service-worker
+          if (
+            request.url().includes(process.env.REACT_APP_OSM_PROVIDER_HOST) ||
+            request.url().includes("data.gov.hk") ||
+            request.url().includes("gstatic") ||
+            request.url().includes("service-worker")
+          ) {
+            request.abort();
+          } else request.continue();
+        });
+        page.setUserAgent("prerendering");
+
+        for (let i = 0; i < arr.length; i++) {
+          const startTime = Date.now();
+          let trial = 0;
+          do {
+            try {
+              console.log(`Processing route "${arr[i]}"`);
+              const html = await getHTMLfromPuppeteerPage(
+                page,
+                `${baseUrl}${routes[i]}`,
+                i
+              );
+              if (html) {
+                createNewHTMLPage(routes[i], html, dir);
+                break;
+              } else return 0;
+            } catch (err) {
+              console.log(`Retrying ${routes[i]}\nMessage: ${err}`);
+              if (trial === 3) {
+                console.error(
+                  `Error: Failed to process route "${routes[i]}"\nMessage: ${err}`
+                );
+                process.exit(1);
+              }
+            }
+            trial += 1;
+          } while (trial < 3);
+          console.log(`${(Date.now() - startTime) / 1000}s`);
         }
-      }
-      trial += 1;
-    } while (trial < 3);
-    console.log(`${(Date.now() - startTime) / 1000}s`);
-  }
+      })
+  );
 
   await browser.close();
   console.log("Finished in " + (Date.now() - start) / 1000 + "s.");
-  start = Date.now();
 }
 
 async function run() {
