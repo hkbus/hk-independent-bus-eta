@@ -207,15 +207,15 @@ async function runPuppeteer(baseUrl, routes, dir) {
               console.log(`Processing route "${arr[i]}"`);
               const html = await getHTMLfromPuppeteerPage(
                 page,
-                `${baseUrl}${routes[i]}`,
+                `${baseUrl}${arr[i]}`,
                 i
               );
               if (html) {
-                createNewHTMLPage(routes[i], html, dir);
+                createNewHTMLPage(arr[i], html, dir);
                 break;
               } else return 0;
             } catch (err) {
-              console.log(`Retrying ${routes[i]}\nMessage: ${err}`);
+              console.log(`Retrying ${arr[i]}\nMessage: ${err}`);
               if (trial === 3) {
                 console.error(
                   `Error: Failed to process route "${routes[i]}"\nMessage: ${err}`
