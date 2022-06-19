@@ -6,6 +6,7 @@ const jsdom = require("jsdom");
 const CleanCSS = require("clean-css");
 require("dotenv").config();
 const cleanCss = new CleanCSS();
+let app;
 
 /**
  * @returns {object}
@@ -28,16 +29,16 @@ async function readOptionsFromFile() {
  * @param {string} dir
  * @returns {string|boolean}
  */
-function runStaticServer(port, routes, dir) {
+async function runStaticServer(port, routes, dir) {
   try {
-    const app = express();
+    app = express();
     const resolvedPath = resolve(dir);
     app.use(express.static(resolvedPath));
     app.get("/*", (req, res) => {
       res.sendFile(`${resolvedPath}/index.html`);
     });
 
-    app.listen(port);
+    await app.listen(port);
     return `http://localhost:${port}`;
   } catch (err) {
     throw new Error(
@@ -59,7 +60,7 @@ async function createNewHTMLPage(route, html, dir) {
       const subDir = route.slice(0, route.lastIndexOf("/"));
       await ensureDirExists(`${dir}${subDir}`);
     }
-    fs.writeFileSync(`${dir}${fname}.html`, html, {
+    await fs.writeFileSync(`${dir}${fname}.html`, html, {
       encoding: "utf-8",
       flag: "w",
     });
@@ -93,16 +94,17 @@ function ensureDirExists(dir) {
  */
 async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
   const url = new URL(pageUrl);
-  await page.goto(pageUrl, { waitUntil: "networkidle0" });
   try {
     if (!pageUrl.includes("/route/")) {
       if (idx === 0) {
+        await page.goto(pageUrl, { waitUntil: "networkidle0" });
       } else if (pageUrl.includes("search")) {
         await page.click(`a[href="${url.pathname}"]`);
         await new Promise((resolve) => {
           setTimeout(resolve, 500);
         });
       } else {
+        await page.goto(pageUrl, { waitUntil: "networkidle0" });
         await page.waitForTimeout(3000);
       }
       if (idx === 0) await page.waitForTimeout(3000); // wait decompression & loading data
@@ -123,13 +125,13 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
       `);
       await page.evaluate((q) => {
         // programmatically change the search route value
-        const input = document.getElementById("searchInput");
-        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        var input = document.getElementById("searchInput");
+        var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
           window.HTMLInputElement.prototype,
           "value"
         ).set;
         nativeInputValueSetter.call(input, q);
-        const ev2 = new Event("input", { bubbles: true });
+        var ev2 = new Event("input", { bubbles: true });
         input.dispatchEvent(ev2);
       }, q);
       await page.waitForSelector(`input[id="${q}"][value="${q}"]`, {
@@ -142,8 +144,11 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
 
     const dom = new jsdom.JSDOM(html);
     const css = cleanCss.minify(
-      Array.from(dom.window.document.querySelectorAll("style[data-emotion]"))
-        .map((e) => e.textContent)
+      Array.prototype.map
+        .call(
+          dom.window.document.querySelectorAll("style[data-emotion]"),
+          (e) => e.textContent
+        )
         .join("")
     ).styles;
     dom.window.document
@@ -173,75 +178,65 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
  */
 async function runPuppeteer(baseUrl, routes, dir) {
   const browser = await puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
-  const threads = 4;
-  const arrLength = Math.ceil(routes.length / threads);
-  const start = Date.now();
-  await Promise.all(
-    Array(threads)
-      .fill(undefined)
-      .map(async (v, index) => {
-        const startIndex = index * arrLength;
-        const arr = routes.slice(startIndex, startIndex + arrLength);
-        const page = await browser.newPage();
-        page.setRequestInterception(true);
-        page.on("request", (request) => {
-          // block map loading, google font, gov.hk and service-worker
-          if (
-            request.url().includes(process.env.REACT_APP_OSM_PROVIDER_HOST) ||
-            request.url().includes("data.gov.hk") ||
-            request.url().includes("gstatic") ||
-            request.url().includes("service-worker")
-          ) {
-            request.abort();
-          } else request.continue();
-        });
-        page.setUserAgent("prerendering");
-
-        for (let i = 0; i < arr.length; i++) {
-          const startTime = Date.now();
-          let trial = 0;
-          do {
-            try {
-              console.log(`Processing route "${arr[i]}"`);
-              const html = await getHTMLfromPuppeteerPage(
-                page,
-                `${baseUrl}${arr[i]}`,
-                i
-              );
-              if (html) {
-                createNewHTMLPage(arr[i], html, dir);
-                break;
-              } else return 0;
-            } catch (err) {
-              console.log(`Retrying ${arr[i]}\nMessage: ${err}`);
-              if (trial === 3) {
-                console.error(
-                  `Error: Failed to process route "${routes[i]}"\nMessage: ${err}`
-                );
-                process.exit(1);
-              }
-            }
-            trial += 1;
-          } while (trial < 3);
-          console.log(`${(Date.now() - startTime) / 1000}s`);
+  const page = await browser.newPage();
+  page.setRequestInterception(true);
+  page.on("request", (request) => {
+    // block map loading, google font, gov.hk and service-worker
+    if (
+      request.url().includes(process.env.REACT_APP_OSM_PROVIDER_HOST) ||
+      request.url().includes("data.gov.hk") ||
+      request.url().includes("gstatic") ||
+      request.url().includes("service-worker")
+    ) {
+      request.abort();
+    } else request.continue();
+  });
+  page.setUserAgent("prerendering");
+  let start = Date.now();
+  for (let i = 0; i < routes.length; i++) {
+    const startTime = Date.now();
+    let trial = 0;
+    do {
+      try {
+        console.log(`Processing route "${routes[i]}"`);
+        const html = await getHTMLfromPuppeteerPage(
+          page,
+          `${baseUrl}${routes[i]}`,
+          i
+        );
+        if (html) {
+          createNewHTMLPage(routes[i], html, dir);
+          break;
+        } else return 0;
+      } catch (err) {
+        console.log(`Retrying ${routes[i]}\nMessage: ${err}`);
+        if (trial === 3) {
+          console.error(
+            `Error: Failed to process route "${routes[i]}"\nMessage: ${err}`
+          );
+          process.exit(1);
         }
-      })
-  );
+      }
+      trial += 1;
+    } while (trial < 3);
+    console.log(`${(Date.now() - startTime) / 1000}s`);
+  }
 
   await browser.close();
   console.log("Finished in " + (Date.now() - start) / 1000 + "s.");
+  start = Date.now();
 }
 
 async function run() {
   const options = await readOptionsFromFile();
-  const staticServerURL = runStaticServer(
+  const staticServerURL = await runStaticServer(
     options.port || 3000,
     options.routes || [],
     options.buildDirectory || "./build"
   );
-  console.log(staticServerURL);
+
   if (!staticServerURL) return 0;
 
   await runPuppeteer(
