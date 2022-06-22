@@ -102,7 +102,8 @@
   "resolutions": {
     "autoprefixer": "10.4.5",
     "core-js": "^3.23.1",
-    "svgo": "^2.8.0"
+    "svgo": "^2.8.0",
+    "@svgr/webpack": "^6.2.1"
   },
   "license": "GPL-3.0-only"
 }
