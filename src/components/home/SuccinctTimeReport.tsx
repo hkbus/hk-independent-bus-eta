@@ -103,7 +103,6 @@ const SuccinctTimeReport = ({
       >
         <ListItemText
           primary={<RouteNo routeNo={routeNo} />}
-          className={classes.route}
         />
         <ListItemText
           primary={
@@ -178,16 +177,13 @@ const classes = {
 };
 
 const RootListItem = styled(ListItem)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '15% 1fr 18%',
   [`&.${classes.listItem}`]: {
     padding: "4px 16px",
     color: "rgba(0,0,0,0.87)",
   },
-  [`& .${classes.route}`]: {
-    width: "15%",
-  },
   [`& .${classes.routeDest}`]: {
-    width: "50%",
-    whiteSpace: "nowrap",
     overflow: "hidden",
   },
   [`& .${classes.fromToWrapper}`]: {
