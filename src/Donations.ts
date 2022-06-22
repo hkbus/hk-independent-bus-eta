@@ -5,8 +5,8 @@ const Donations = [
       en: "https://www.inmediahk.net/supportus",
     },
     description: {
-      zh: "請捐款到《獨立媒體》",
-      en: "Please donate to inmediahk.net",
+      zh: "請訂閱《獨立媒體》",
+      en: "Please subscribe inmediahk.net",
     },
   },
   {
@@ -16,7 +16,7 @@ const Donations = [
     },
     description: {
       zh: "請訂閱《誌》",
-      en: "Please subscribe to HK Feature",
+      en: "Please subscribe HK Feature",
     },
   },
   {
@@ -31,12 +31,22 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://www.factwire.org/support-us/",
-      en: "https://www.factwire.org/en/support-us/",
+      zh: "https://thewitnesshk.com/subscription/",
+      en: "https://thewitnesshk.com/subscription/",
     },
     description: {
-      zh: "請捐款到《FactWire》",
-      en: "Please subscribe to FactWire",
+      zh: "請訂閱《法庭線》",
+      en: "Please subscribe The Witness",
+    },
+  },
+  {
+    url: {
+      zh: "https://www.patreon.com/factchecklab",
+      en: "https://www.patreon.com/factchecklab",
+    },
+    description: {
+      zh: "請捐款到《事實查核實驗室》",
+      en: "Please subscribe Factcheck Lab",
     },
   },
 ];
