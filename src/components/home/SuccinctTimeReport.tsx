@@ -101,9 +101,7 @@ const SuccinctTimeReport = ({
         onClick={!disabled ? handleClick : () => {}}
         className={classes.listItem}
       >
-        <ListItemText
-          primary={<RouteNo routeNo={routeNo} />}
-        />
+        <ListItemText primary={<RouteNo routeNo={routeNo} />} />
         <ListItemText
           primary={
             <Typography
@@ -177,8 +175,8 @@ const classes = {
 };
 
 const RootListItem = styled(ListItem)(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: '15% 1fr 18%',
+  display: "grid",
+  gridTemplateColumns: "15% 1fr 18%",
   [`&.${classes.listItem}`]: {
     padding: "4px 16px",
     color: "rgba(0,0,0,0.87)",
