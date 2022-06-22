@@ -246,10 +246,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
             if (geoPermission === "granted") {
               // load from cache to avoid unintentional re-rending
               // becoz geolocation is updated frequently
-              updateCenter({
-                center: checkPosition(geolocation),
-                isFollow: true,
-              });
+              updateCenter({ isFollow: true });
             } else if (geoPermission !== "denied") {
               // ask for loading geolocation
               updateCenter({ isFollow: true });
