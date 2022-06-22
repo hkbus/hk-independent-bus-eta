@@ -15,7 +15,7 @@ import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import SuccinctEtas from "./SuccinctEtas";
-import { getDistance, toProperCase } from "../../utils";
+import { getDistanceWithUnit, toProperCase } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
 import { Location } from "hk-bus-eta";
 
@@ -43,6 +43,7 @@ const DistAndFare = ({
     .filter((v) => v)
     .join(", ");
 
+    const { distance, unit, decimalPlace } = getDistanceWithUnit(location, geolocation)
   if (geoPermission !== "granted" || location.lat === 0) {
     return <>{name + "　" + (fareString ? "(" + fareString + ")" : "")}</>;
   }
@@ -51,8 +52,8 @@ const DistAndFare = ({
     <>
       {name +
         " - " +
-        getDistance(location, geolocation).toFixed(0) +
-        t("米") +
+        distance.toFixed(decimalPlace) +
+        t(unit) +
         "　" +
         (fareString ? "(" + fareString + ")" : "")}
     </>
