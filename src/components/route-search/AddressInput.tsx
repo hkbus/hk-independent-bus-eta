@@ -73,24 +73,23 @@ interface Suggestion {
   lng: number;
 }
 
+interface GeoAddrData {
+  x: number;
+  y: number;
+  addressZH: string;
+  addressEN: string;
+  nameZH: string;
+  nameEN: string;
+}
+
 const loadAddressFromGeodata = async (
   addr: string,
   options
 ): Promise<Suggestion[]> => {
   if (!addr) return new Promise((resolve) => resolve([]));
+
   // use geodata.gov.hk api, potentially add als.ogcio.gov.hk api
-  const {
-    data: suggestions,
-  }: {
-    data: {
-      x: number;
-      y: number;
-      addressZH: string;
-      addressEN: string;
-      nameZH: string;
-      nameEN: string;
-    }[];
-  } = await fetch(
+  const suggestions: GeoAddrData[] = await fetch(
     `https://geodata.gov.hk/gs/api/v1.0.0/locationSearch?q=${encodeURI(addr)}`,
     options
   ).then((res) => res.json());

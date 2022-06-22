@@ -1,4 +1,11 @@
-import { useContext, useEffect, useRef, useCallback, useMemo } from "react";
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import {
   MapContainer,
   Marker,
@@ -62,7 +69,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } =
     useContext(AppContext);
   const { i18n } = useTranslation();
-  const map = useRef<Leaflet.Map>(null);
+  const [map, setMap] = useState<Leaflet.Map>(null);
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
     currentStopCenter: stops[stopIdx]
@@ -111,11 +118,10 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
   }, [stops, stopIdx, geolocation]);
 
   useEffect(() => {
-    if (map.current) {
-      console.log("got map", map);
+    if (map) {
       mapRef.current = {
         ...mapRef.current,
-        map: map.current,
+        map: map,
       };
       const stopFollowingDeviceGeoLocation = () => {
         mapRef.current = {
@@ -124,20 +130,23 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
           isFollow: false,
         };
       };
-      map.current?.on({
+      map?.on({
         dragend: stopFollowingDeviceGeoLocation,
         dragstart: stopFollowingDeviceGeoLocation,
       });
-      map.current?.setView(mapRef.current.center);
+      map?.setView(mapRef.current.center);
 
       console.log("try invalidateSize");
-      map.current?.invalidateSize();
+      map?.invalidateSize();
+
+      return () => {
+        map.off({
+          dragstart: stopFollowingDeviceGeoLocation,
+          dragend: stopFollowingDeviceGeoLocation,
+        });
+      };
     }
   }, [map]);
-
-  const whenReady = useCallback(() => {
-    console.log("map is ready");
-  }, []);
 
   const onClickJumpToMyLocation = useCallback(() => {
     if (geoPermission === "granted") {
@@ -206,7 +215,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         zoom={16}
         scrollWheelZoom={false}
         className={classes.mapContainer}
-        whenReady={whenReady}
+        ref={setMap}
       >
         <TileLayer
           crossOrigin="anonymous"

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   MapContainer,
   Marker,
@@ -155,18 +155,18 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
     isFollow: false,
   });
   const { center, isFollow } = mapState;
-  const map = useRef<Leaflet.Map>(null);
+  const [map, setMap] = useState<Leaflet.Map>(null);
 
-  const updateCenter = (state?: {
-    center?: GeoLocation;
-    isFollow?: boolean;
-  }) => {
-    const { center, isFollow } = state;
-    setMapState({
-      center: center || map.current?.getCenter(),
-      isFollow: isFollow || false,
-    });
-  };
+  const updateCenter = useCallback(
+    (state?: { center?: GeoLocation; isFollow?: boolean }) => {
+      const { center, isFollow } = state ?? {};
+      setMapState({
+        center: center || map?.getCenter(),
+        isFollow: isFollow || false,
+      });
+    },
+    [setMapState]
+  );
 
   const getMapCenter = () => {
     if (center) return center;
@@ -181,22 +181,30 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
   };
 
   useEffect(() => {
-    if (!map) return;
-    const currentMap = map.current;
-    currentMap?.on("dragend", () => updateCenter());
-    return () => {
-      currentMap?.off("dragend", () => updateCenter());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map]);
+    if (map) {
+      const dragCallback = () => {
+        updateCenter({
+          center: map.getCenter(),
+        });
+      };
+
+      map.on({
+        dragend: dragCallback,
+      });
+      return () => {
+        map.off({
+          dragend: dragCallback,
+        });
+      };
+    }
+  }, [map, updateCenter]);
 
   useEffect(() => {
     if (isFollow) {
       if (geolocation.lat !== center.lat || geolocation.lng !== center.lng)
-        updateCenter({ isFollow: true });
+        updateCenter({ center: geolocation, isFollow: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geolocation]);
+  }, [geolocation, updateCenter]);
 
   return (
     <SearchMapBox className={classes.mapContainerBox}>
@@ -205,7 +213,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
         zoom={16}
         scrollWheelZoom={false}
         className={classes.mapContainer}
-        ref={map}
+        ref={setMap}
       >
         <ChangeMapCenter
           center={center}
@@ -238,7 +246,10 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
             if (geoPermission === "granted") {
               // load from cache to avoid unintentional re-rending
               // becoz geolocation is updated frequently
-              updateCenter({ isFollow: true });
+              updateCenter({
+                center: checkPosition(geolocation),
+                isFollow: true,
+              });
             } else if (geoPermission !== "denied") {
               // ask for loading geolocation
               updateCenter({ isFollow: true });

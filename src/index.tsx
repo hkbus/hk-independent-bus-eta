@@ -63,7 +63,6 @@ if (isHuman()) {
 
     useEffect(() => {
       allPromise.then(([fetchDbResult, workbox]) => {
-        console.log(fetchDbResult);
         setState({ initialized: true, workbox: workbox, db: fetchDbResult });
       });
     }, []);
