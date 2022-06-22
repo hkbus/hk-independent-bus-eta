@@ -165,7 +165,8 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
         isFollow: isFollow || false,
       });
     },
-    [map]
+    // eslint-disable-next-line
+    [setMapState]
   );
 
   const getMapCenter = () => {
@@ -204,7 +205,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
       if (geolocation.lat !== center.lat || geolocation.lng !== center.lng)
         updateCenter({ center: geolocation, isFollow: true });
     }
-  }, [center.lat, center.lng, geolocation, isFollow, updateCenter]);
+  }, [geolocation, center?.lat, center?.lng, isFollow, updateCenter]);
 
   return (
     <SearchMapBox className={classes.mapContainerBox}>
