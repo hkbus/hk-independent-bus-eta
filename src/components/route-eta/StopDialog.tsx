@@ -77,6 +77,9 @@ const DialogRoot = styled(Dialog)(({ theme }) => ({
         ? theme.palette.primary.main
         : theme.palette.text.primary,
   },
+  [`& .MuiDialogContent-root`]: {
+    padding: 0,
+  },
 }));
 
 export default StopDialog;
