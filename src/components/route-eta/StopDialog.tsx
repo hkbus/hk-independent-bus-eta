@@ -4,10 +4,13 @@ import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import SuccinctTimeReport from "../home/SuccinctTimeReport";
+import { routeSortFunc } from "../../utils";
+import { TRANSPORT_ORDER } from "../../constants";
 
 const StopDialog = ({ open, stops, handleClose }) => {
   const {
     db: { routeList, stopList },
+    busSortOrder,
   } = useContext(AppContext);
   const { i18n } = useTranslation();
   const [routes, setRoutes] = useState([]);
@@ -18,15 +21,17 @@ const StopDialog = ({ open, stops, handleClose }) => {
       return;
     }
     let _routes = [];
-    Object.entries(routeList).forEach(([key, route]) => {
-      stops.some(([co, stopId]) => {
-        if (route.stops[co] && route.stops[co].includes(stopId)) {
-          _routes.push(key + "/" + route.stops[co].indexOf(stopId));
-          return true;
-        }
-        return false;
+    Object.entries(routeList)
+      .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]))
+      .forEach(([key, route]) => {
+        stops.some(([co, stopId]) => {
+          if (route.stops[co] && route.stops[co].includes(stopId)) {
+            _routes.push(key + "/" + route.stops[co].indexOf(stopId));
+            return true;
+          }
+          return false;
+        });
       });
-    });
     setRoutes(_routes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stops]);
@@ -71,6 +76,9 @@ const DialogRoot = styled(Dialog)(({ theme }) => ({
       theme.palette.mode === "dark"
         ? theme.palette.primary.main
         : theme.palette.text.primary,
+  },
+  [`& .MuiDialogContent-root`]: {
+    padding: 0,
   },
 }));
 
