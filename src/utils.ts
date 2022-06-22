@@ -290,3 +290,64 @@ export const reorder = <T>(
   result.splice(endIndex, 0, removed);
   return result;
 };
+
+export const routeSortFunc = (a, b, transportOrder: string[]) => {
+  const aRoute = a[0].split("-");
+  const bRoute = b[0].split("-");
+
+  // Exclude A-Z from end of strings, smaller number should come first
+  if (
+    +aRoute[0].replaceAll(/[A-z]$/gi, "") >
+    +bRoute[0].replaceAll(/[A-z]$/gi, "")
+  ) {
+    return 1;
+  } else if (
+    +aRoute[0].replaceAll(/[A-z]$/gi, "") <
+    +bRoute[0].replaceAll(/[A-z]$/gi, "")
+  ) {
+    return -1;
+  }
+
+  // Exclude numbers, smaller alphabet should come first
+  if (
+    aRoute[0].replaceAll(/[0-9]/gi, "") > bRoute[0].replaceAll(/[0-9]/gi, "")
+  ) {
+    return 1;
+  } else if (
+    aRoute[0].replaceAll(/[0-9]/gi, "") < bRoute[0].replaceAll(/[0-9]/gi, "")
+  ) {
+    return -1;
+  }
+
+  // Remove all A-Z, smaller number should come first
+  if (
+    +aRoute[0].replaceAll(/[A-z]/gi, "") > +bRoute[0].replaceAll(/[A-z]/gi, "")
+  ) {
+    return 1;
+  } else if (
+    +aRoute[0].replaceAll(/[A-z]/gi, "") < +bRoute[0].replaceAll(/[A-z]/gi, "")
+  ) {
+    return -1;
+  }
+
+  // Sort by TRANSPORT_ORDER
+  const aCompany = a[1]["co"].sort(
+    (a, b) => transportOrder.indexOf(a) - transportOrder.indexOf(b)
+  );
+  const bCompany = b[1]["co"].sort(
+    (a, b) => transportOrder.indexOf(a) - transportOrder.indexOf(b)
+  );
+
+  if (
+    transportOrder.indexOf(aCompany[0]) > transportOrder.indexOf(bCompany[0])
+  ) {
+    return 1;
+  } else if (
+    transportOrder.indexOf(aCompany[0]) < transportOrder.indexOf(bCompany[0])
+  ) {
+    return -1;
+  }
+
+  // Smaller service Type should come first
+  return aRoute[1] > bRoute[1] ? 1 : -1;
+};
