@@ -23,6 +23,7 @@
     "@types/react-router-dom": "^5.1.8",
     "@types/react-window": "^1.8.5",
     "autoprefixer": "10.4.7",
+    "core-js": "^3.23.1",
     "dom-to-image": "^2.6.0",
     "dotenv": "^16.0.1",
     "fbjs": "^3.0.4",
