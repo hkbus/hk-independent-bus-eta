@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   MapContainer,
   Marker,
@@ -155,18 +155,16 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
     isFollow: false,
   });
   const { center, isFollow } = mapState;
-  const [map, setMap] = useState(null);
+  const map = useRef<Leaflet.Map>(null);
 
-  const updateCenter = ({
-    center,
-    isFollow = false,
-  }: {
+  const updateCenter = (state?: {
     center?: GeoLocation;
     isFollow?: boolean;
   }) => {
+    const { center, isFollow } = state;
     setMapState({
-      center: center ? center : map.getCenter(),
-      isFollow: isFollow,
+      center: center || map.current?.getCenter(),
+      isFollow: isFollow || false,
     });
   };
 
@@ -184,9 +182,10 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
 
   useEffect(() => {
     if (!map) return;
-    map.on("dragend", updateCenter);
+    const currentMap = map.current;
+    currentMap?.on("dragend", () => updateCenter());
     return () => {
-      map.off("dragend", updateCenter);
+      currentMap?.off("dragend", () => updateCenter());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
@@ -194,7 +193,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
   useEffect(() => {
     if (isFollow) {
       if (geolocation.lat !== center.lat || geolocation.lng !== center.lng)
-        updateCenter({ center: geolocation, isFollow: true });
+        updateCenter({ isFollow: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geolocation]);
@@ -206,7 +205,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
         zoom={16}
         scrollWheelZoom={false}
         className={classes.mapContainer}
-        whenCreated={setMap}
+        ref={map}
       >
         <ChangeMapCenter
           center={center}
@@ -239,10 +238,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
             if (geoPermission === "granted") {
               // load from cache to avoid unintentional re-rending
               // becoz geolocation is updated frequently
-              updateCenter({
-                center: checkPosition(geolocation),
-                isFollow: true,
-              });
+              updateCenter({ isFollow: true });
             } else if (geoPermission !== "denied") {
               // ask for loading geolocation
               updateCenter({ isFollow: true });

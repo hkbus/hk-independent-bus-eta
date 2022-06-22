@@ -105,8 +105,8 @@ export const fetchDbFunc = async (
 
   try {
     const [_schemaVersion, _md5] = await Promise.all([
-      fetch(process.env.PUBLIC_URL + "/schema-version.txt").then((r) =>
-        r.text()
+      fetch(process.env.PUBLIC_URL + "/schema-version.txt").then((res) =>
+        res.text()
       ),
       fetchEtaObjMd5(),
     ]);

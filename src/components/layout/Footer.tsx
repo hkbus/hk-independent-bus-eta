@@ -5,7 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import TimerIcon from "@mui/icons-material/Timer";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Link, useLocation, useHistory } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { styled } from "@mui/material/styles";
@@ -16,11 +16,14 @@ const Footer = () => {
   const location = useLocation();
   const { selectedRoute, colorMode, vibrateDuration } = useContext(AppContext);
 
-  const history = useHistory();
-  const handleClick = (link, e) => {
+  const navigate = useNavigate();
+  const handleClick = (
+    link: string,
+    e: React.MouseEvent<HTMLAnchorElement>
+  ) => {
     e.preventDefault();
     vibrate(vibrateDuration);
-    setTimeout(() => history.push(link), 0);
+    setTimeout(() => navigate(link), 0);
   };
 
   return useMemo(
@@ -80,7 +83,9 @@ const Footer = () => {
           label={t("規劃")}
           component={Link}
           to={`/${i18n.language}/search`}
-          onClick={(e) => handleClick(`/${i18n.language}/search`, e)}
+          onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
+            handleClick(`/${i18n.language}/search`, e)
+          }
           value={`/${i18n.language}/search`}
           icon={<NearMeIcon />}
           classes={{
@@ -93,7 +98,9 @@ const Footer = () => {
           component={Link}
           to={`/${i18n.language}/settings`}
           rel="nofollow"
-          onClick={(e) => handleClick(`/${i18n.language}/settings`, e)}
+          onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
+            handleClick(`/${i18n.language}/settings`, e)
+          }
           value={`/${i18n.language}/settings`}
           icon={<SettingsIcon />}
           classes={{

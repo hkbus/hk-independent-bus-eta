@@ -9,10 +9,9 @@ import {
 } from "@mui/material/styles";
 import {
   BrowserRouter as Router,
-  Redirect,
-  Switch,
+  Navigate,
+  Routes,
   Route,
-  useRouteMatch,
 } from "react-router-dom";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
@@ -31,23 +30,6 @@ const RouteSearch = loadable(() => import("./pages/RouteSearch"));
 const Settings = loadable(() => import("./pages/Settings"));
 const PrivacyPolicy = loadable(() => import("./pages/PrivacyPolicy"));
 const TermsAndConditions = loadable(() => import("./pages/TermsAndConditions"));
-
-const PageSwitch = () => {
-  const { path } = useRouteMatch();
-  return (
-    <SearchContextProvider>
-      <Switch>
-        <Route path={`${path}/route/:id/:panel?`} component={RouteEta} />
-        <Route path={`${path}/settings`} component={Settings} />
-        <Route path={`${path}/board`} component={RouteBoard} />
-        <Route path={`${path}/search`} component={RouteSearch} />
-        <Route path={`${path}/privacy`} component={PrivacyPolicy} />
-        <Route path={`${path}/terms`} component={TermsAndConditions} />
-        <Route path={`${path}`} component={Home} />
-      </Switch>
-    </SearchContextProvider>
-  );
-};
 
 const App = () => {
   const { colorMode, analytics } = useContext(AppContext);
@@ -70,15 +52,24 @@ const App = () => {
             className={classes.container}
           >
             <Router>
-              <Route exact path="/">
-                <Redirect to="/zh" />
-              </Route>
-              <Route path="/:lang">
+              <SearchContextProvider>
                 <CssBaseline />
                 <Header />
-                <PageSwitch />
+                <Routes>
+                  <Route path="/" element={<Navigate to="/zh" />} />
+                  <Route path="/:lang">
+                    <Route path={`route/:id`} element={<RouteEta />} />
+                    <Route path={`route/:id/:panel`} element={<RouteEta />} />
+                    <Route path={`settings`} element={<Settings />} />
+                    <Route path={`board`} element={<RouteBoard />} />
+                    <Route path={`search`} element={<RouteSearch />} />
+                    <Route path={`privacy`} element={<PrivacyPolicy />} />
+                    <Route path={`terms`} element={<TermsAndConditions />} />
+                    <Route path={``} element={<Home />} />
+                  </Route>
+                </Routes>
                 <Footer />
-              </Route>
+              </SearchContextProvider>
             </Router>
           </AppContainer>
         </CacheProvider>
@@ -138,7 +129,7 @@ const getThemeTokens = (mode: PaletteMode) => ({
           },
         }),
   },
-  components: {
+  elements: {
     MuiCssBaseline: {
       styleOverrides: {
         html: {
@@ -149,17 +140,6 @@ const getThemeTokens = (mode: PaletteMode) => ({
           lineHeight: 1.43,
           scrollbarColor: "#3f3f3f",
           scrollbarWidth: "thin",
-        },
-        "&::-webkit-scrollbar": {
-          width: 4,
-          height: 4,
-        },
-        "&::-webkit-scrollbar-track": {
-          background: "transparent",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          background: "#3f3f3f",
-          borderRadius: 6,
         },
       },
     },

@@ -30,7 +30,7 @@ PRERENDER=
 ### Using docker
 
 ```bash
-docker build --pull --build-arg $(tr '\n' ' ' < docker/.env | sed "s/ / --build-arg /g") -t hkbus .
+yarn docker:build -t hkbus
 ```
 
 ### Using docker-compose

@@ -38,9 +38,9 @@ export const useWeather = () => {
       return fetch(
         "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en"
       )
-        .then((r) => r.json())
-        .then((d) => {
-          if (isMounted) setWeather(d);
+        .then((res) => res.json())
+        .then((data) => {
+          if (isMounted) setWeather(data);
         });
     };
 
