@@ -15,6 +15,22 @@ export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   return R * c; // in metres
 };
 
+export const getDistanceWithUnit = (a: GeoLocation, b: GeoLocation) => {
+  const distanceInMetre = getDistance(a, b)
+  if (distanceInMetre >= 1000) {
+    return {
+      distance: distanceInMetre / 1000,
+      unit: "公里",
+      decimalPlace: 1,
+    }
+  }
+  return {
+    distance: distanceInMetre,
+    unit: "米",
+    decimalPlace: 0,
+  }
+}
+
 const defaultLocation = { lat: 22.302711, lng: 114.177216 };
 // HK location if no valid value
 export const checkPosition = (position?: GeoLocation): GeoLocation => {
