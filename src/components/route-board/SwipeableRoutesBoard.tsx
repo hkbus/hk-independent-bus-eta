@@ -14,7 +14,7 @@ import { isHoliday, isRouteAvaliable } from "../../timetable";
 import type { BoardTabType } from "./BoardTabbar";
 import { TRANSPORT_SEARCH_OPTIONS, TRANSPORT_ORDER } from "../../constants";
 import RouteRow from "./RouteRow";
-import { routeSortFunc } from "../../utils"
+import { routeSortFunc } from "../../utils";
 
 interface SwipeableRouteBoardProps {
   boardTab: BoardTabType;

@@ -43,7 +43,10 @@ const DistAndFare = ({
     .filter((v) => v)
     .join(", ");
 
-    const { distance, unit, decimalPlace } = getDistanceWithUnit(location, geolocation)
+  const { distance, unit, decimalPlace } = getDistanceWithUnit(
+    location,
+    geolocation
+  );
   if (geoPermission !== "granted" || location.lat === 0) {
     return <>{name + "　" + (fareString ? "(" + fareString + ")" : "")}</>;
   }
