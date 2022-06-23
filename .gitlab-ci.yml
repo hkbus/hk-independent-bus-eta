@@ -20,6 +20,24 @@ docker-build:
     - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
+
+pull:
+  image: alpine:latest
+  before_script:
+    - apk add git
+    - git checkout master
+    - git remote set-url origin https://actions-bot:$gitlab_token@gitlab.com/$CI_PROJECT_PATH
+    - git remote add hkbus https://github.com/hkbus/hk-independent-bus-eta
+    - git config --global user.email "actions-bot@example.com"
+    - git config --global user.name "actions-bot"
+    - git config pull.rebase false
+    - git pull origin master
+  script:
+    - |
+      git fetch hkbus
+      git merge -X theirs hkbus/master -m "Pull upstream" --allow-unrelated-histories
+      git push origin --all
+
 pages:
   image: node:18
   stage: deploy
