@@ -69,10 +69,10 @@ stages:
   - incremental rollout 100%
   - performance
   - cleanup
+  
 sast:
   stage: test
-  rules:
-    - if: $PULL != "true"
+
 include:
   - template: Auto-DevOps.gitlab-ci.yml
     rules:
