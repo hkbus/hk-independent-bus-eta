@@ -37,7 +37,7 @@ pull:
       git fetch hkbus
       git merge -X theirs hkbus/master -m "Pull upstream" --allow-unrelated-histories
       git push origin --all
-rules:
+  rules:
     - if: $PULL == "true"
 
 pages:
@@ -53,10 +53,6 @@ pages:
       - public
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
-default:
-  rules:
-    - if: $PULL != "true"
 
 stages:
   - build
@@ -79,4 +75,6 @@ sast:
     - if: $PULL != "true"
 include:
   - template: Auto-DevOps.gitlab-ci.yml
+    rules:
+      - if: $PULL != "true"
 
