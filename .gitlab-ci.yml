@@ -17,7 +17,7 @@ docker-build:
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
   # Run this job in a branch where a Dockerfile exists
   rules:
-    - if: $CI_COMMIT_BRANCH && $PULL != "true"
+    - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
 
@@ -37,7 +37,7 @@ pull:
       git fetch hkbus
       git merge -X theirs hkbus/master -m "Pull upstream" --allow-unrelated-histories
       git push origin --all
-  rules:
+rules:
     - if: $PULL == "true"
 
 pages:
@@ -52,7 +52,12 @@ pages:
     paths:
       - public
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $PULL != "true"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+default:
+  rules:
+    - if: $PULL != "true"
+
 stages:
   - build
   - test
@@ -70,6 +75,8 @@ stages:
   - cleanup
 sast:
   stage: test
+  rules:
+    - if: $PULL != "true"
 include:
   - template: Auto-DevOps.gitlab-ci.yml
 
