@@ -37,6 +37,8 @@ pull:
       git fetch hkbus
       git merge -X theirs hkbus/master -m "Pull upstream" --allow-unrelated-histories
       git push origin --all
+  rules:
+    - if: $PULL == "true"
 
 pages:
   image: node:18
