@@ -130,6 +130,13 @@ const Header = () => {
         <Box className={classes.funcPanel}>
           {weatherCodes.slice(0, 2).map((code) => (
             <Avatar
+              onClick={() =>
+                window.open(
+                  `https://www.hko.gov.hk/${
+                    i18n.language === "zh" ? "tc" : "en"
+                  }/detail.htm`
+                )
+              }
               key={code}
               variant="square"
               src={WeatherIcons[code]}

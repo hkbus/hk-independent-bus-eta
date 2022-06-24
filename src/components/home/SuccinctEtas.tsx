@@ -74,7 +74,6 @@ const classes = {
 
 const EtaListItemText = styled(ListItemText)(({ theme }) => ({
   [`&.${classes.root}`]: {
-    width: "25%",
     textAlign: "right",
   },
   [`& .${classes.secondary}`]: {
