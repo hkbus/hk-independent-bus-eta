@@ -95,49 +95,50 @@ const SuccinctTimeReport = ({
   return (
     <>
       <RootListItem
-        // @ts-ignore
-        component={!disabled ? Link : undefined}
-        to={`/${i18n.language}/route/${routeKey.toLowerCase()}`}
         onClick={!disabled ? handleClick : () => {}}
         className={classes.listItem}
       >
-        <ListItemText primary={<RouteNo routeNo={routeNo} />} />
-        <ListItemText
-          primary={
-            <Typography
-              component="h3"
-              variant="body1"
-              color="textPrimary"
-              className={classes.fromToWrapper}
-            >
-              <span className={classes.fromToText}>{t("往")}</span>
-              <b>{toProperCase(dest[i18n.language])}</b>
-            </Typography>
-          }
-          secondary={
-            <DistAndFare
-              name={toProperCase(stop.name[i18n.language])}
-              location={stop.location}
-              fares={fares}
-              faresHoliday={faresHoliday}
-              seq={parseInt(seq, 10)}
+        <Link to={`/${i18n.language}/route/${routeKey.toLowerCase()}`}>
+          <div className={classes.routeListItem}>
+            <ListItemText primary={<RouteNo routeNo={routeNo} />} />
+            <ListItemText
+              primary={
+                <Typography
+                  component="h3"
+                  variant="body1"
+                  color="textPrimary"
+                  className={classes.fromToWrapper}
+                >
+                  <span className={classes.fromToText}>{t("往")}</span>
+                  <b>{toProperCase(dest[i18n.language])}</b>
+                </Typography>
+              }
+              secondary={
+                <DistAndFare
+                  name={toProperCase(stop.name[i18n.language])}
+                  location={stop.location}
+                  fares={fares}
+                  faresHoliday={faresHoliday}
+                  seq={parseInt(seq, 10)}
+                />
+              }
+              secondaryTypographyProps={{
+                component: "h4",
+                variant: "subtitle2",
+              }}
+              className={classes.routeDest}
             />
-          }
-          secondaryTypographyProps={{
-            component: "h4",
-            variant: "subtitle2",
-          }}
-          className={classes.routeDest}
-        />
-        {!disabled ? (
-          <SuccinctEtas routeId={routeId} />
-        ) : (
-          <Box sx={iconContainerSx}>
-            <ReorderIcon />
-          </Box>
-        )}
+            {!disabled ? (
+              <SuccinctEtas routeId={routeId} />
+            ) : (
+              <Box sx={iconContainerSx}>
+                <ReorderIcon />
+              </Box>
+            )}
+          </div>
+          <Divider />
+        </Link>
       </RootListItem>
-      <Divider />
     </>
   );
 };
@@ -169,17 +170,25 @@ const PREFIX = "succinctTimeReport";
 const classes = {
   listItem: `${PREFIX}-listItem`,
   route: `${PREFIX}-route`,
+  routeListItem: `${PREFIX}-routeListItem`,
   routeDest: `${PREFIX}-routeDest`,
   fromToWrapper: `${PREFIX}-fromToWrapper`,
   fromToText: `${PREFIX}-fromToText`,
 };
 
 const RootListItem = styled(ListItem)(({ theme }) => ({
-  display: "grid",
-  gridTemplateColumns: "15% 1fr minmax(18%, max-content)",
-  [`&.${classes.listItem}`]: {
-    padding: "4px 8px",
+  padding: 0,
+  [`& a`]: {
+    display: "block",
+    width: "100%",
+    textDecoration: "none",
+  },
+  [`& .${classes.routeListItem}`]: {
+    width: "100%",
+    display: "grid",
+    gridTemplateColumns: "15% 1fr 18%",
     color: "rgba(0,0,0,0.87)",
+    padding: "8px 16px",
   },
   [`& .${classes.routeDest}`]: {
     overflow: "hidden",
