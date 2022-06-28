@@ -15,6 +15,22 @@ export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   return R * c; // in metres
 };
 
+export const getDistanceWithUnit = (a: GeoLocation, b: GeoLocation) => {
+  const distanceInMetre = getDistance(a, b);
+  if (distanceInMetre >= 1000) {
+    return {
+      distance: distanceInMetre / 1000,
+      unit: "公里",
+      decimalPlace: 1,
+    };
+  }
+  return {
+    distance: distanceInMetre,
+    unit: "米",
+    decimalPlace: 0,
+  };
+};
+
 const defaultLocation = { lat: 22.302711, lng: 114.177216 };
 // HK location if no valid value
 export const checkPosition = (position?: GeoLocation): GeoLocation => {
@@ -289,4 +305,65 @@ export const reorder = <T>(
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
   return result;
+};
+
+export const routeSortFunc = (a, b, transportOrder: string[]) => {
+  const aRoute = a[0].split("-");
+  const bRoute = b[0].split("-");
+
+  // Exclude A-Z from end of strings, smaller number should come first
+  if (
+    +aRoute[0].replaceAll(/[A-z]$/gi, "") >
+    +bRoute[0].replaceAll(/[A-z]$/gi, "")
+  ) {
+    return 1;
+  } else if (
+    +aRoute[0].replaceAll(/[A-z]$/gi, "") <
+    +bRoute[0].replaceAll(/[A-z]$/gi, "")
+  ) {
+    return -1;
+  }
+
+  // Exclude numbers, smaller alphabet should come first
+  if (
+    aRoute[0].replaceAll(/[0-9]/gi, "") > bRoute[0].replaceAll(/[0-9]/gi, "")
+  ) {
+    return 1;
+  } else if (
+    aRoute[0].replaceAll(/[0-9]/gi, "") < bRoute[0].replaceAll(/[0-9]/gi, "")
+  ) {
+    return -1;
+  }
+
+  // Remove all A-Z, smaller number should come first
+  if (
+    +aRoute[0].replaceAll(/[A-z]/gi, "") > +bRoute[0].replaceAll(/[A-z]/gi, "")
+  ) {
+    return 1;
+  } else if (
+    +aRoute[0].replaceAll(/[A-z]/gi, "") < +bRoute[0].replaceAll(/[A-z]/gi, "")
+  ) {
+    return -1;
+  }
+
+  // Sort by TRANSPORT_ORDER
+  const aCompany = a[1]["co"].sort(
+    (a, b) => transportOrder.indexOf(a) - transportOrder.indexOf(b)
+  );
+  const bCompany = b[1]["co"].sort(
+    (a, b) => transportOrder.indexOf(a) - transportOrder.indexOf(b)
+  );
+
+  if (
+    transportOrder.indexOf(aCompany[0]) > transportOrder.indexOf(bCompany[0])
+  ) {
+    return 1;
+  } else if (
+    transportOrder.indexOf(aCompany[0]) < transportOrder.indexOf(bCompany[0])
+  ) {
+    return -1;
+  }
+
+  // Smaller service Type should come first
+  return aRoute[1] > bRoute[1] ? 1 : -1;
 };
