@@ -1,6 +1,13 @@
-import React, { useContext, useMemo, useRef, useImperativeHandle } from "react";
+import React, {
+  useContext,
+  useMemo,
+  useRef,
+  useImperativeHandle,
+  useState,
+  useEffect,
+} from "react";
 import SwipeableViews from "react-swipeable-views";
-import { List, Typography } from "@mui/material";
+import { CircularProgress, List, Typography } from "@mui/material";
 import { Location, RouteList, StopListEntry, StopList } from "hk-bus-eta";
 
 import AppContext from "../../AppContext";
@@ -20,6 +27,12 @@ interface SwipeableListRef {
   changeTab: (v: HomeTabType) => void;
 }
 
+interface SelectedRoutes {
+  both: string;
+  saved: string;
+  nearby: string;
+}
+
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ geolocation, homeTab, onChangeTab }, ref) => {
     const {
@@ -34,6 +47,9 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     );
     const defaultHometab = useRef(homeTab);
     const { t } = useTranslation();
+    const [selectedRoutes, setSelectedRoutes] = useState<SelectedRoutes | null>(
+      null
+    );
 
     useImperativeHandle(ref, () => ({
       changeTab: (v) => {
@@ -41,49 +57,47 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       },
     }));
 
-    const selectedRoutes = useMemo(
-      () =>
-        ["both", "saved", "nearby"].reduce(
-          (acc, homeTab: "both" | "saved" | "nearby") => ({
-            ...acc,
-            [homeTab]: getSelectedRoutes({
-              geolocation,
-              hotRoute,
-              savedEtas,
-              routeList,
-              stopList,
-              isRouteFilter,
-              isTodayHoliday,
-              homeTab,
-              sortByDist: homeTab !== "saved",
-            }),
-          }),
-          {}
-        ),
+    useEffect(() => {
+      setSelectedRoutes(
+        getSelectedRoutes({
+          geolocation,
+          hotRoute,
+          savedEtas,
+          routeList,
+          stopList,
+          isRouteFilter,
+          isTodayHoliday,
+        })
+      );
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [geolocation]
-    );
+    }, [geolocation]);
 
     const BothRouteList = useMemo(
-      () => (
-        <List disablePadding>
-          {selectedRoutes["both"]
-            .split("|")
-            .map(
-              (selectedRoute, idx) =>
-                Boolean(selectedRoute) && (
-                  <SuccinctTimeReport
-                    key={`route-shortcut-${idx}`}
-                    routeId={selectedRoute}
-                  />
-                )
-            )}
-        </List>
-      ),
+      () =>
+        selectedRoutes ? (
+          <List disablePadding>
+            {selectedRoutes["both"]
+              .split("|")
+              .map(
+                (selectedRoute, idx) =>
+                  Boolean(selectedRoute) && (
+                    <SuccinctTimeReport
+                      key={`route-shortcut-${idx}`}
+                      routeId={selectedRoute}
+                    />
+                  )
+              )}
+          </List>
+        ) : (
+          <CircularProgress />
+        ),
       [selectedRoutes]
     );
 
     const SavedRouteList = useMemo(() => {
+      if (selectedRoutes === null) {
+        return <CircularProgress />;
+      }
       const savedRoutes = selectedRoutes["saved"].split("|");
       const noRoutes = savedRoutes.every((routeId) => !routeId);
 
@@ -111,22 +125,26 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
         </React.Fragment>
       );
     }, [selectedRoutes, t]);
+
     const NearbyRouteList = useMemo(
-      () => (
-        <List disablePadding>
-          {selectedRoutes["nearby"]
-            .split("|")
-            .map(
-              (selectedRoute, idx) =>
-                Boolean(selectedRoute) && (
-                  <SuccinctTimeReport
-                    key={`route-shortcut-${idx}`}
-                    routeId={selectedRoute}
-                  />
-                )
-            )}
-        </List>
-      ),
+      () =>
+        selectedRoutes ? (
+          <List disablePadding>
+            {selectedRoutes["nearby"]
+              .split("|")
+              .map(
+                (selectedRoute, idx) =>
+                  Boolean(selectedRoute) && (
+                    <SuccinctTimeReport
+                      key={`route-shortcut-${idx}`}
+                      routeId={selectedRoute}
+                    />
+                  )
+              )}
+          </List>
+        ) : (
+          <CircularProgress />
+        ),
       [selectedRoutes]
     );
 
@@ -160,8 +178,6 @@ const getSelectedRoutes = ({
   routeList,
   isRouteFilter,
   isTodayHoliday,
-  homeTab,
-  sortByDist,
 }: {
   hotRoute: Record<string, number>;
   savedEtas: string[];
@@ -170,9 +186,7 @@ const getSelectedRoutes = ({
   routeList: RouteList;
   isRouteFilter: boolean;
   isTodayHoliday: boolean;
-  homeTab: "both" | "saved" | "nearby";
-  sortByDist: boolean;
-}): string => {
+}): SelectedRoutes => {
   const selectedRoutes = savedEtas
     .concat(
       Object.entries(hotRoute)
@@ -185,7 +199,7 @@ const getSelectedRoutes = ({
         self.indexOf(routeUrl) === index && routeUrl.split("/")[0] in routeList
       );
     })
-    .map((routeUrl, idx, self): [string, number] => {
+    .map((routeUrl, idx, self): [string, number, number] => {
       const [routeId, stopIdx] = routeUrl.split("/");
       // TODO: taking the longest stop array to avoid error, should be fixed in the database
       const stop =
@@ -196,14 +210,10 @@ const getSelectedRoutes = ({
         ];
       return [
         routeUrl,
-        sortByDist
-          ? getDistance(geolocation, stop.location)
-          : self.length - idx,
+        getDistance(geolocation, stop.location),
+        self.length - idx,
       ];
-    })
-    .sort((a, b) => a[1] - b[1])
-    .map((v) => v[0])
-    .slice(0, 20);
+    });
 
   const nearbyRoutes = Object.entries(stopList)
     .map((stop: [string, StopListEntry]): [string, StopListEntry, number] =>
@@ -216,7 +226,7 @@ const getSelectedRoutes = ({
         stop[2] < 1000
     )
     .sort((a, b) => a[2] - b[2])
-    .slice(0, 5)
+    .slice(0, 20)
     .reduce((acc, [stopId]) => {
       // keep only the nearest 5 stops
       let routeIds = [];
@@ -230,18 +240,38 @@ const getSelectedRoutes = ({
       return acc.concat(routeIds);
     }, []);
 
-  return []
-    .concat(homeTab !== "nearby" ? selectedRoutes : [])
-    .concat(homeTab !== "saved" ? nearbyRoutes : [])
-    .filter((v, i, s) => s.indexOf(v) === i) // uniqify
-    .filter((routeUrl) => {
-      const [routeId] = routeUrl.split("/");
-      return (
-        !isRouteFilter ||
-        isRouteAvaliable(routeId, routeList[routeId].freq, isTodayHoliday)
-      );
-    })
-    .concat(Array(20).fill("")) // padding
-    .slice(0, 20)
-    .join("|");
+  const formatHandling = (routes) => {
+    return routes
+      .filter((v, i, s) => s.indexOf(v) === i) // uniqify
+      .filter((routeUrl) => {
+        const [routeId] = routeUrl.split("/");
+        return (
+          !isRouteFilter ||
+          isRouteAvaliable(routeId, routeList[routeId].freq, isTodayHoliday)
+        );
+      })
+      .concat(Array(40).fill("")) // padding
+      .slice(0, 40)
+      .join("|");
+  };
+
+  return {
+    saved: formatHandling(
+      selectedRoutes
+        .sort((a, b) => a[1] - b[1])
+        .map((v) => v[0])
+        .slice(0, 40)
+    ),
+    nearby: formatHandling(nearbyRoutes),
+    both: formatHandling(
+      []
+        .concat(
+          selectedRoutes
+            .sort((a, b) => a[2] - b[2])
+            .map((v) => v[0])
+            .slice(0, 40)
+        )
+        .concat(nearbyRoutes)
+    ),
+  };
 };

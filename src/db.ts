@@ -20,17 +20,14 @@ export const DB_CONTEXT_VERSION = "1.2.0";
 const decompressJsonString = (txt): BusDb => {
   try {
     const ret = JSON.parse(decompressJson(txt, { inputEncoding: "Base64" }));
-    return {
-      ...ret,
-      // sort the routeList object order based on the key
-      routeList: Object.keys(ret.routeList)
-        .sort()
-        .reduce((acc, k) => {
-          acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
-            ret.routeList[k];
-          return acc;
-        }, {}),
-    };
+    ret.routeList = Object.keys(ret.routeList)
+      .sort()
+      .reduce((acc, k) => {
+        acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
+          ret.routeList[k];
+        return acc;
+      }, {});
+    return ret;
   } catch (e) {
     // throw the error
     throw e;

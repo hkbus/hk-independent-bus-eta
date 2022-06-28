@@ -42,6 +42,7 @@ const App = () => {
   const theme = useMemo(() => {
     return createTheme(getThemeTokens(colorMode), [colorMode]);
   }, [colorMode]);
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
