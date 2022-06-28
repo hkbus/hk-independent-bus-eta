@@ -176,7 +176,7 @@ const classes = {
 
 const RootListItem = styled(ListItem)(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "15% 1fr 25%",
+  gridTemplateColumns: "15% 1fr minmax(18%, max-content)",
   [`&.${classes.listItem}`]: {
     padding: "4px 8px",
     color: "rgba(0,0,0,0.87)",
