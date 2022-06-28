@@ -80,5 +80,7 @@ const EtaListItemText = styled(ListItemText)(({ theme }) => ({
     fontSize: "0.875rem",
     fontWeight: "400",
     lineHeight: "1.43",
+    whiteSpace: "nowrap",
+    textAlign: "right",
   },
 }));
