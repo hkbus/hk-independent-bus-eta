@@ -176,9 +176,9 @@ const classes = {
 
 const RootListItem = styled(ListItem)(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "15% 1fr 18%",
+  gridTemplateColumns: "15% 1fr 25%",
   [`&.${classes.listItem}`]: {
-    padding: "4px 16px",
+    padding: "4px 8px",
     color: "rgba(0,0,0,0.87)",
   },
   [`& .${classes.routeDest}`]: {
