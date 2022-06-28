@@ -49,6 +49,16 @@ const Donations = [
       en: "Please subscribe Factcheck Lab",
     },
   },
+  {
+    url: {
+      zh: "https://www.swallowlife.org/plans-pricing",
+      en: "https://www.swallowlife.org/plans-pricing",
+    },
+    description: {
+      zh: "請《燕子生命》飲咖啡",
+      en: "Buy SwallowLife a coffee",
+    },
+  },
 ];
 
 export default Donations;
