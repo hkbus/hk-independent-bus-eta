@@ -258,7 +258,7 @@ const getSelectedRoutes = ({
   return {
     saved: formatHandling(
       selectedRoutes
-        .sort((a, b) => a[1] - b[1])
+        .sort((a, b) => a[2] - b[2])
         .map((v) => v[0])
         .slice(0, 40)
     ),
@@ -267,7 +267,7 @@ const getSelectedRoutes = ({
       []
         .concat(
           selectedRoutes
-            .sort((a, b) => a[2] - b[2])
+            .sort((a, b) => a[1] - b[1])
             .map((v) => v[0])
             .slice(0, 40)
         )
