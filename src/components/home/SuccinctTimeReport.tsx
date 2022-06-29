@@ -186,7 +186,8 @@ const RootListItem = styled(ListItem)(({ theme }) => ({
   [`& .${classes.routeListItem}`]: {
     width: "100%",
     display: "grid",
-    gridTemplateColumns: "15% 1fr 18%",
+    gridTemplateColumns: "minmax(12%, max-content) 1fr max-content",
+    gridGap: "8px",
     color: "rgba(0,0,0,0.87)",
     padding: "8px 16px",
   },
