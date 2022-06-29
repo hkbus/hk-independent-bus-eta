@@ -322,7 +322,6 @@ const Root = styled(Paper)(({ theme }) => ({
       theme.palette.mode === "dark"
         ? theme.palette.background.default
         : "white",
-    height: "calc(100vh - 125px)",
     overflowY: "hidden",
     textAlign: "left",
   },

@@ -120,7 +120,6 @@ const InputPadBox = styled(Box)(({ theme }) => ({
     // TODO: increase to 258px or enable scroll
     height: "248px",
     justifyContent: "space-around",
-    paddingTop: "8px",
   },
   [`& .${classes.numPadContainer}`]: {
     width: "72%",
