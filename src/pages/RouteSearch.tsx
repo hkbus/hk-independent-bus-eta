@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
 import {
   Box,
-  CircularProgress,
   Divider,
   Paper,
   Typography,
@@ -15,6 +14,7 @@ import SearchResult from "../components/route-search/SearchResult";
 import SearchMap from "../components/route-search/SearchMap";
 import { fetchEtas, Eta } from "hk-bus-eta";
 import { setSeoHeader, getDistance, vibrate } from "../utils";
+import Progress from "../components/Progress";
 
 export type SearchResultType = Array<{
   routeId: string;
@@ -263,7 +263,9 @@ const RouteSearch = () => {
         {!locations.end ? (
           <RouteSearchDetails />
         ) : "waiting|rendering".includes(status) && result.length === 0 ? (
-          <CircularProgress size={30} className={classes.routeLoading} />
+          <div className={classes.routeLoading}>
+            <Progress />
+          </div>
         ) : "ready|waiting|rendering".includes(status) && result.length ? (
           result.map((routes, resIdx) => (
             <SearchResult
