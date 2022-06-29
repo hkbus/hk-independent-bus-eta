@@ -52,6 +52,7 @@ if (isHuman()) {
 
   // remove prerendered style
   if (prerenderStyle instanceof HTMLStyleElement) {
+    document.getElementById("root").innerHTML = "";
     prerenderStyle.innerHTML = "";
   }
   const Container = () => {
