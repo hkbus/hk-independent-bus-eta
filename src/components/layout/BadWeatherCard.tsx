@@ -55,5 +55,9 @@ const WeatherCard = styled(Card)(({ theme }) => ({
   [`&.${classes.card}`]: {
     borderRadius: theme.shape.borderRadius,
     margin: 0.2,
+    height: "100%",
+    [`> a`]: {
+      height: "100%",
+    },
   },
 }));
