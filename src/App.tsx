@@ -118,15 +118,17 @@ const getThemeTokens = (mode: PaletteMode) => ({
           },
           primary: {
             main: "#fedb00", // yellow
+            contrastText: "rgba(0, 0, 0, 0.12)",
           },
         }
       : {
           //dark mode
-          primary: {
-            main: "#fedb00", // yellow
-          },
           background: {
             default: "#000",
+            contrast: "rgba(255, 255, 255, 0.12)",
+          },
+          primary: {
+            main: "#fedb00", // yellow
           },
         }),
   },
