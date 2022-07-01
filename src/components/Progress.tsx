@@ -5,6 +5,7 @@ import LinearProgress, {
 
 const Progress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
+  width: "100%",
   borderRadius: 5,
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,

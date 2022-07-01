@@ -345,7 +345,4 @@ const Root = styled(Paper)(({ theme }) => ({
     overflowY: "scroll",
     height: "calc(100% - 76px)",
   },
-  ".search-route-loading": {
-    margin: "10%",
-  },
 }));
