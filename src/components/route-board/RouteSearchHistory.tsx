@@ -45,11 +45,13 @@ const RouteSearchHistory = () => {
         {routeSearchHistoryList.map((route, index) => {
           return (
             <div className={classes.historyItem} key={index}>
-              <RouteRow
-                handleClick={(e) => handleClick(e, route[0])}
-                route={route}
-                style={{}}
-              />
+              <div className={classes.routeRow}>
+                <RouteRow
+                  handleClick={(e) => handleClick(e, route[0])}
+                  route={route}
+                  style={{}}
+                />
+              </div>
               <CloseIcon
                 className={classes.closeIcon}
                 onClick={(e) => handleCloseButtonClick(e, route[0])}
@@ -70,7 +72,7 @@ const classes = {
   title: `${PREFIX}-title`,
   historyItems: `${PREFIX}-historyItems`,
   historyItem: `${PREFIX}-historyItem`,
-  closeIconWrapper: `${PREFIX}-closeIconWrapper`,
+  routeRow: `${PREFIX}-routeRow`,
   closeIcon: `${PREFIX}-closeIcon`,
 };
 
@@ -86,10 +88,14 @@ const StyledRouteSearchHistory = styled("div")(({ theme }) => ({
         : "white",
   },
   [`& .${classes.historyItem}`]: {
+    width: "100%",
     display: "grid",
-    gridTemplateColumns: "1fr max-content",
+    gridTemplateColumns: "minmax(0, 1fr) 32px",
     alignItems: "center",
     borderBottom: `1px solid ${theme.palette.primary.contrastText}`,
+  },
+  [`& .${classes.routeRow}`]: {
+    // width: "50%",
   },
   [`& .${classes.closeIcon}`]: {
     marginRight: theme.spacing(2),
