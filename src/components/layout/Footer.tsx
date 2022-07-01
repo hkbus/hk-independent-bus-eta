@@ -136,11 +136,11 @@ const Root = styled(BottomNavigation)(({ theme }) => ({
       theme.palette.mode === "dark"
         ? theme.palette.background.default
         : theme.palette.primary.main,
-    position: "sticky",
     bottom: "0",
     height: "initial",
     [`& .MuiBottomNavigationAction-root`]: {
       width: "20%",
+      padding: "6px 0",
       minWidth: 0,
     },
     [`& .MuiBottomNavigationAction-label`]: {
