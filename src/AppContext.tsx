@@ -28,6 +28,10 @@ interface AppState {
   hotRoute: Record<string, number>;
   savedEtas: string[];
   /**
+   * route search history
+   */
+  routeSearchHistory: string[];
+  /**
    * filter routes by route schedule against time
    */
   isRouteFilter: boolean;
@@ -70,6 +74,8 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   updateGeolocation: (geoLocation: GeoLocation) => void;
   updateSavedEtas: (keys: string) => void;
   setSavedEtas: (savedEtas: string[]) => void;
+  addSearchHistory: (routeSearchHistory: string) => void;
+  removeSearchHistoryByRouteId: (routeSearchHistoryId: string) => void;
   resetUsageRecord: () => void;
   // settings
   updateGeoPermission: (
@@ -168,6 +174,9 @@ export const AppContextProvider = ({
     const numPadOrder: unknown = localStorage.getItem("numPadOrder");
     const etaFormat: unknown = localStorage.getItem("etaFormat");
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
+    const routeSearchHistory: unknown = JSON.parse(
+      localStorage.getItem("routeSearchHistory")
+    );
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
 
     return {
@@ -185,6 +194,10 @@ export const AppContextProvider = ({
       busSortOrder: isBusSortOrder(busSortOrder) ? busSortOrder : "KMB first",
       numPadOrder: isNumPadOrder(numPadOrder) ? numPadOrder : "123456789c0b",
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
+      routeSearchHistory:
+        Array.isArray(routeSearchHistory) && isStrings(routeSearchHistory)
+          ? routeSearchHistory
+          : [],
       colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
         : "dark",
@@ -460,6 +473,37 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const addSearchHistory = useCallback((route) => {
+    setStateRaw(
+      produce((state: State) => {
+        const newSearchHistory = [route, ...state.routeSearchHistory].slice(
+          0,
+          2
+        );
+        localStorage.setItem(
+          "routeSearchHistory",
+          JSON.stringify(newSearchHistory)
+        );
+        state.routeSearchHistory = newSearchHistory;
+      })
+    );
+  }, []);
+
+  const removeSearchHistoryByRouteId = useCallback((routeId) => {
+    setStateRaw(
+      produce((state: State) => {
+        const newSearchHistory = state.routeSearchHistory.filter(
+          (item) => item !== routeId
+        );
+        localStorage.setItem(
+          "routeSearchHistory",
+          JSON.stringify(newSearchHistory)
+        );
+        state.routeSearchHistory = newSearchHistory;
+      })
+    );
+  }, []);
+
   const resetUsageRecord = useCallback(() => {
     localStorage.clear();
     setStateRaw(
@@ -481,6 +525,8 @@ export const AppContextProvider = ({
       updateGeolocation,
       updateSavedEtas,
       setSavedEtas,
+      addSearchHistory,
+      removeSearchHistoryByRouteId,
       resetUsageRecord,
       updateGeoPermission,
       toggleRouteFilter,
@@ -502,6 +548,8 @@ export const AppContextProvider = ({
     updateGeolocation,
     updateSavedEtas,
     setSavedEtas,
+    addSearchHistory,
+    removeSearchHistoryByRouteId,
     resetUsageRecord,
     updateGeoPermission,
     toggleRouteFilter,

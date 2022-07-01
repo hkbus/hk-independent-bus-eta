@@ -9,6 +9,7 @@ import BoardTabbar, {
   isBoardTab,
 } from "../components/route-board/BoardTabbar";
 import SwipeableRoutesBoard from "../components/route-board/SwipeableRoutesBoard";
+import RouteSearchHistory from "../components/route-board/RouteSearchHistory";
 
 interface RouteListProps {
   boardTab: BoardTabType;
@@ -53,6 +54,7 @@ const RouteBoard = () => {
 
   return (
     <>
+      <RouteSearchHistory />
       <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
       <RouteInputPad boardTab={boardTab} />
     </>
