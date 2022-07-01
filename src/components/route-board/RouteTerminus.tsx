@@ -11,7 +11,6 @@ const RouteTerminus = ({ terminus }) => {
       <Typography
         component="h3"
         variant="body1"
-        className={classes.routeTerminus}
       >
         <div>
           <div className={classes.fromToWrapper}>
@@ -32,18 +31,13 @@ export default RouteTerminus;
 const PREFIX = "routeTerminus";
 
 const classes = {
-  routeTerminus: `${PREFIX}-routeTerminus`,
   fromToWrapper: `${PREFIX}-fromToWrapper`,
   fromToText: `${PREFIX}-fromToText`,
   fromWrapper: `${PREFIX}-fromWrapper`,
 };
 
 const StyledRouteTerminus = styled("div")(({ theme }) => ({
-  [`& .${classes.routeTerminus}`]: {
-    textAlign: "left",
-    fontSize: "1rem",
-    width: "75%",
-  },
+  textAlign: "left",
   [`& .${classes.fromToWrapper}`]: {
     display: "flex",
     alignItems: "baseline",

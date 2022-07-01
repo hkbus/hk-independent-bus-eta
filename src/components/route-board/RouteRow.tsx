@@ -38,7 +38,7 @@ const RowCard = styled(Card)(({ theme }) => ({
   border: "none",
   [`& .${classes.cardContent}`]: {
     display: "grid",
-    gridTemplateColumns: "25% 1fr",
+    gridTemplateColumns: "25% 75%",
     padding: `0 ${theme.spacing(2)}`,
     alignItems: "center",
   },
