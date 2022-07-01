@@ -263,9 +263,7 @@ const RouteSearch = () => {
         {!locations.end ? (
           <RouteSearchDetails />
         ) : "waiting|rendering".includes(status) && result.length === 0 ? (
-          <div className={classes.routeLoading}>
-            <Progress />
-          </div>
+          <Progress />
         ) : "ready|waiting|rendering".includes(status) && result.length ? (
           result.map((routes, resIdx) => (
             <SearchResult
@@ -315,7 +313,6 @@ const classes = {
   description: `${PREFIX}-description`,
   resultList: `${PREFIX}-result-list`,
   resultListEnergy: `${PREFIX}-result-list-energy`,
-  routeLoading: `${PREFIX}-route-loading`,
 };
 
 const Root = styled(Paper)(({ theme }) => ({
