@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { CircularProgress, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { useEtas } from "../Etas";
-
+import { LinearProgress } from "../Progress";
 interface TimeReportProps {
   routeId: string;
   seq: number;
@@ -24,10 +24,10 @@ const TimeReport = ({
   } = useContext(AppContext);
   const etas = useEtas(`${routeId}/${seq}`);
 
-  if (etas == null) {
+  if (true || etas == null) {
     return (
       <div className={containerClass}>
-        <CircularProgress size={20} style={{}} />
+        <LinearProgress />
       </div>
     );
   }
