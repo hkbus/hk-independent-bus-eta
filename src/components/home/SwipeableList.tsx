@@ -7,7 +7,7 @@ import React, {
   useEffect,
 } from "react";
 import SwipeableViews from "react-swipeable-views";
-import { CircularProgress, List, Typography } from "@mui/material";
+import { List, Typography } from "@mui/material";
 import { Location, RouteList, StopListEntry, StopList } from "hk-bus-eta";
 
 import AppContext from "../../AppContext";
@@ -16,6 +16,7 @@ import { getDistance } from "../../utils";
 import SuccinctTimeReport from "./SuccinctTimeReport";
 import type { HomeTabType } from "./HomeTabbar";
 import { useTranslation } from "react-i18next";
+import { CircularProgress } from "../Progress";
 
 interface SwipeableListProps {
   geolocation: Location;
@@ -74,7 +75,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
 
     const BothRouteList = useMemo(
       () =>
-        selectedRoutes ? (
+        selectedRoutes && false ? (
           <List disablePadding>
             {selectedRoutes["both"]
               .split("|")
@@ -89,14 +90,14 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               )}
           </List>
         ) : (
-          <CircularProgress />
+          <CircularProgress sx={{ my: 10 }} />
         ),
       [selectedRoutes]
     );
 
     const SavedRouteList = useMemo(() => {
       if (selectedRoutes === null) {
-        return <CircularProgress />;
+        return <CircularProgress sx={{ my: 10 }} />;
       }
       const savedRoutes = selectedRoutes["saved"].split("|");
       const noRoutes = savedRoutes.every((routeId) => !routeId);
@@ -143,7 +144,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               )}
           </List>
         ) : (
-          <CircularProgress />
+          <CircularProgress sx={{ my: 10 }} />
         ),
       [selectedRoutes]
     );

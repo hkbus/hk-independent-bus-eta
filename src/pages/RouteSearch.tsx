@@ -1,11 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import {
-  Box,
-  CircularProgress,
-  Divider,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AppContext from "../AppContext";
 import SearchContext from "../SearchContext";
@@ -15,6 +9,7 @@ import SearchResult from "../components/route-search/SearchResult";
 import SearchMap from "../components/route-search/SearchMap";
 import { fetchEtas, Eta } from "hk-bus-eta";
 import { setSeoHeader, getDistance, vibrate } from "../utils";
+import { LinearProgress } from "../components/Progress";
 
 export type SearchResultType = Array<{
   routeId: string;
@@ -263,7 +258,7 @@ const RouteSearch = () => {
         {!locations.end ? (
           <RouteSearchDetails />
         ) : "waiting|rendering".includes(status) && result.length === 0 ? (
-          <CircularProgress size={30} className={classes.routeLoading} />
+          <LinearProgress />
         ) : "ready|waiting|rendering".includes(status) && result.length ? (
           result.map((routes, resIdx) => (
             <SearchResult
@@ -313,7 +308,6 @@ const classes = {
   description: `${PREFIX}-description`,
   resultList: `${PREFIX}-result-list`,
   resultListEnergy: `${PREFIX}-result-list-energy`,
-  routeLoading: `${PREFIX}-route-loading`,
 };
 
 const Root = styled(Paper)(({ theme }) => ({
@@ -341,8 +335,5 @@ const Root = styled(Paper)(({ theme }) => ({
   ".search-result-list-energy": {
     overflowY: "scroll",
     height: "calc(100% - 76px)",
-  },
-  ".search-route-loading": {
-    margin: "10%",
   },
 }));
