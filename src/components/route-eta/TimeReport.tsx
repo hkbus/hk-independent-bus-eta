@@ -24,7 +24,7 @@ const TimeReport = ({
   } = useContext(AppContext);
   const etas = useEtas(`${routeId}/${seq}`);
 
-  if (true || etas == null) {
+  if (etas == null) {
     return (
       <div className={containerClass}>
         <LinearProgress />
