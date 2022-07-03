@@ -1,31 +1,43 @@
-import { styled } from "@mui/material/styles";
-import LinearProgress, {
-  linearProgressClasses,
-} from "@mui/material/LinearProgress";
+import React from "react";
+import {
+  LinearProgress as MuiLinearProgress,
+  CircularProgress as MuiCircularProgress,
+  LinearProgressProps,
+  CircularProgressProps,
+} from "@mui/material";
 
-const ProgressWrapper = styled("div")(({ theme }) => ({
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  alignItems: "center",
-  padding: `0 ${theme.spacing(2)}`,
-}));
-
-const ProgressBar = styled(LinearProgress)(({ theme }) => ({
-  height: 10,
-  width: "100%",
-  borderRadius: 5,
-  [`& .${linearProgressClasses.bar}`]: {
-    borderRadius: 5,
-    backgroundColor: theme.palette.background.default,
-  },
-}));
-
-const Progress = () => {
+export const LinearProgress = React.forwardRef<
+  HTMLElement,
+  LinearProgressProps
+>(({ sx, color, ...props }, ref) => {
   return (
-    <ProgressWrapper>
-      <ProgressBar />
-    </ProgressWrapper>
+    <MuiLinearProgress
+      color={color ?? "inherit"}
+      sx={{
+        m: 1,
+        height: 5,
+        borderRadius: 5,
+        ...sx,
+      }}
+      ref={ref}
+      {...props}
+    />
   );
-};
-export default Progress;
+});
+
+export const CircularProgress = React.forwardRef<
+  HTMLElement,
+  CircularProgressProps
+>(({ sx, color, ...props }, ref) => {
+  return (
+    <MuiCircularProgress
+      color={color ?? "inherit"}
+      sx={{
+        m: 1,
+        ...sx,
+      }}
+      ref={ref}
+      {...props}
+    />
+  );
+});

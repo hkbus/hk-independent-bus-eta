@@ -1,10 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import {
-  Box,
-  Divider,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AppContext from "../AppContext";
 import SearchContext from "../SearchContext";
@@ -14,7 +9,7 @@ import SearchResult from "../components/route-search/SearchResult";
 import SearchMap from "../components/route-search/SearchMap";
 import { fetchEtas, Eta } from "hk-bus-eta";
 import { setSeoHeader, getDistance, vibrate } from "../utils";
-import Progress from "../components/Progress";
+import { LinearProgress } from "../components/Progress";
 
 export type SearchResultType = Array<{
   routeId: string;
@@ -263,7 +258,7 @@ const RouteSearch = () => {
         {!locations.end ? (
           <RouteSearchDetails />
         ) : "waiting|rendering".includes(status) && result.length === 0 ? (
-          <Progress />
+          <LinearProgress />
         ) : "ready|waiting|rendering".includes(status) && result.length ? (
           result.map((routes, resIdx) => (
             <SearchResult

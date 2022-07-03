@@ -6,7 +6,7 @@ import domtoimage from "dom-to-image";
 import mergeBase64 from "merge-base64";
 import { toProperCase, triggerShare, triggerShareImg } from "../../utils";
 import AppContext from "../../AppContext";
-import Progress from "../Progress";
+import { CircularProgress } from "../Progress";
 
 const SharingModal = ({
   id,
@@ -104,7 +104,7 @@ const SharingModal = ({
             </Box>
           </Box>
         )}
-        {!imgBase64 && <Progress />}
+        {!imgBase64 && <CircularProgress color="inherit" />}
       </Container>
     </RootModal>
   );
