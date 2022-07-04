@@ -75,7 +75,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
 
     const BothRouteList = useMemo(
       () =>
-        selectedRoutes && false ? (
+        selectedRoutes ? (
           <List disablePadding>
             {selectedRoutes["both"]
               .split("|")
