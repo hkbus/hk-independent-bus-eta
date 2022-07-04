@@ -37,10 +37,7 @@ const RouteSearchHistory = () => {
 
   return (
     <StyledRouteSearchHistory>
-      {Array.isArray(routeSearchHistoryList) &&
-        routeSearchHistoryList.length > 0 && (
-          <div className={classes.title}>{t("搜尋記錄")}</div>
-        )}
+      <div className={classes.title}>{t("最近搜尋")}</div>
       <div className={classes.historyItems}>
         {routeSearchHistoryList.map((route, index) => {
           return (

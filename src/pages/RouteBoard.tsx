@@ -47,6 +47,7 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
 };
 
 const RouteBoard = () => {
+  const { searchRoute, routeSearchHistory } = useContext(AppContext);
   const _boardTab = localStorage.getItem("boardTab");
   const [boardTab, setBoardTab] = useState<BoardTabType>(
     isBoardTab(_boardTab) ? _boardTab : "all"
@@ -54,8 +55,13 @@ const RouteBoard = () => {
 
   return (
     <>
-      <RouteSearchHistory />
-      <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
+      {searchRoute.length === 0 &&
+      Array.isArray(routeSearchHistory) &&
+      routeSearchHistory.length > 0 ? (
+        <RouteSearchHistory />
+      ) : (
+        <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
+      )}
       <RouteInputPad boardTab={boardTab} />
     </>
   );
