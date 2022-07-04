@@ -478,7 +478,7 @@ export const AppContextProvider = ({
       produce((state: State) => {
         const newSearchHistory = [route, ...state.routeSearchHistory].slice(
           0,
-          2
+          20
         );
         localStorage.setItem(
           "routeSearchHistory",
