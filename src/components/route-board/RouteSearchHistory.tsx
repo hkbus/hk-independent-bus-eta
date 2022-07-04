@@ -74,25 +74,25 @@ const classes = {
 };
 
 const StyledRouteSearchHistory = styled("div")(({ theme }) => ({
+  display: "grid",
+  overflowY: "scroll",
+  flexGrow: 1,
+  gridTemplateRows: "fit-content(0) auto",
   [`& .${classes.title}`]: {
     padding: `0 ${theme.spacing(2)} ${theme.spacing(0.5)}`,
-    fontSize: "0.75rem",
+    fontSize: "0.85rem",
   },
-  [`& .${classes.historyItems}`]: {
-    background:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : "white",
-  },
+  [`& .${classes.historyItems}`]: {},
   [`& .${classes.historyItem}`]: {
     width: "100%",
     display: "grid",
     gridTemplateColumns: "minmax(0, 1fr) 32px",
     alignItems: "center",
+    background:
+      theme.palette.mode === "dark"
+        ? theme.palette.background.default
+        : "white",
     borderBottom: `1px solid ${theme.palette.primary.contrastText}`,
-  },
-  [`& .${classes.routeRow}`]: {
-    // width: "50%",
   },
   [`& .${classes.closeIcon}`]: {
     marginRight: theme.spacing(2),
