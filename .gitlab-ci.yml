@@ -11,10 +11,10 @@ docker-build:
     - if [ "$PRERENDER" = "true" ]; then yarn docker:build-noenv --build-arg PRERENDER=true -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; fi;
     - if [ "$PRERENDER" = "true" ]; then docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; fi;
     - if [ "$PRERENDER" = "true" ]; then exit 0; fi;
-    - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest"
+    - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest" -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest"
-    - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
+    - if [ "$CI_COMMIT_BRANCH" = "master" ]; then yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE:latest"; docker push "$CI_REGISTRY_IMAGE:latest"; fi;
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH && $PULL != "true"
