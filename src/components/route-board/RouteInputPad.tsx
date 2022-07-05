@@ -2,13 +2,12 @@ import React, { useContext } from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
+import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
 import AppContext from "../../AppContext";
-import { useTranslation } from "react-i18next";
 import { BoardTabType } from "./BoardTabbar";
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 
 const KeyButton = ({ k, handleClick, disabled = false, className }) => {
-  const { t } = useTranslation();
   return (
     <Button
       size="large"
@@ -21,7 +20,7 @@ const KeyButton = ({ k, handleClick, disabled = false, className }) => {
       {k === "b" ? (
         <BackspaceOutlinedIcon />
       ) : k === "c" ? (
-        <div className={classes.cancel}>{t("C")}</div>
+        <DoNotDisturbOnOutlinedIcon />
       ) : (
         k
       )}
@@ -121,7 +120,6 @@ const InputPadBox = styled(Box)(({ theme }) => ({
     // TODO: increase to 258px or enable scroll
     height: "248px",
     justifyContent: "space-around",
-    paddingTop: "8px",
   },
   [`& .${classes.numPadContainer}`]: {
     width: "72%",
