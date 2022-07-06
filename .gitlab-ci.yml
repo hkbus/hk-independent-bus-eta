@@ -8,13 +8,25 @@ docker-build:
     - apk add yarn
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - if [ "$PRERENDER" = "true" ]; then yarn docker:build-noenv --build-arg PRERENDER=true -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; fi;
-    - if [ "$PRERENDER" = "true" ]; then docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; fi;
-    - if [ "$PRERENDER" = "true" ]; then exit 0; fi;
-    - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest" -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
+    - |
+      if [ "$PRERENDER" = "true" ]; then yarn docker:build-noenv \
+      --build-arg REACT_APP_REPO_URL="https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}" \
+      --build-arg REACT_APP_COMMIT_HASH=$CI_COMMIT_SHORT_SHA \
+      --build-arg REACT_APP_COMMIT_MESSAGE=$CI_COMMIT_MESSAGE \
+      --build-arg PRERENDER=true \
+      -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full";
+      docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; exit 0; fi;
+    - |
+      yarn docker:build-noenv  \
+      --build-arg REACT_APP_REPO_URL="https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}" \
+      --build-arg REACT_APP_COMMIT_HASH=$CI_COMMIT_SHORT_SHA \
+      --build-arg REACT_APP_COMMIT_MESSAGE=$CI_COMMIT_MESSAGE \
+      -t "$CI_REGISTRY_IMAGE:latest" \
+      -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest" \
+      -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA" \
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest"
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
-    - if [ "$CI_COMMIT_BRANCH" = "master" ]; then yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE:latest"; docker push "$CI_REGISTRY_IMAGE:latest"; fi;
+    - if [ "$CI_COMMIT_BRANCH" = "master" ]; then docker push "$CI_REGISTRY_IMAGE:latest"; fi;
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH && $PULL != "true"
@@ -74,4 +86,3 @@ include:
   - template: Auto-DevOps.gitlab-ci.yml
     rules:
       - if: $PULL != "true"
-
