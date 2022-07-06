@@ -31,7 +31,6 @@ const Header = () => {
   const { t, i18n } = useTranslation();
   let location = useLocation();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const weatherCodes = useWeatherCode();
 
   const handleLanguageChange = (lang) => {
@@ -125,7 +124,6 @@ const Header = () => {
             }
             navigate(`/${i18n.language}/board`, { replace: true });
           }}
-          disabled={pathname.includes("route")}
         />
         <Box className={classes.funcPanel}>
           {weatherCodes.slice(0, 2).map((code) => (
