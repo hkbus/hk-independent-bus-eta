@@ -66,8 +66,8 @@ pages:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $PULL != "true"
 
 stages:
-  - build
   - test
+  - build
   - deploy
   - review
   - dast
