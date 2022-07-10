@@ -87,7 +87,7 @@ const Settings = () => {
       <Typography component="h1" style={visuallyHidden}>{`${t("設定")} - ${t(
         AppTitle
       )}`}</Typography>
-      <List>
+      <List sx={{ py: 0 }}>
         {!checkAppInstalled() && (
           <ListItemButton
             onClick={() => {

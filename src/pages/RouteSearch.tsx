@@ -318,6 +318,7 @@ const Root = styled(Paper)(({ theme }) => ({
         : "white",
     overflowY: "hidden",
     textAlign: "left",
+    width: "100%",
   },
   ".search-input-container": {
     marginTop: "2%",
