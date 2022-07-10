@@ -28,19 +28,19 @@ const Header = () => {
     vibrateDuration,
     geoPermission,
     updateGeolocation,
+    changeLanguage,
   } = useContext(AppContext);
   const { t, i18n } = useTranslation();
   let location = useLocation();
   const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
 
-  const handleLanguageChange = (lang) => {
+  const handleLanguageChange = (lang: "zh" | "en") => {
     vibrate(vibrateDuration);
     navigate(location.pathname.replace("/" + i18n.language, "/" + lang), {
       replace: true,
     });
-    i18n.changeLanguage(lang);
-    localStorage.setItem("lang", lang);
+    changeLanguage(lang);
   };
 
   const relocateGeolocation = useCallback(() => {
