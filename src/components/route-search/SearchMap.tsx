@@ -209,7 +209,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
       )
         updateCenter({ center: geolocation, isFollow: true });
     }
-  }, [geolocation, center?.lat, center?.lng, isFollow, updateCenter]);
+  }, [geolocation, center, isFollow, updateCenter]);
 
   return (
     <SearchMapBox className={classes.mapContainerBox}>
