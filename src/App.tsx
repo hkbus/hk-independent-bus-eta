@@ -21,6 +21,7 @@ import Main from "./components/layout/Main";
 import Home from "./pages/Home";
 import { SearchContextProvider } from "./SearchContext";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
+import { useTranslation } from "react-i18next";
 
 const RouteEta = loadable(() => import("./pages/RouteEta"));
 const RouteBoard = loadable(() => import("./pages/RouteBoard"));
@@ -31,6 +32,9 @@ const TermsAndConditions = loadable(() => import("./pages/TermsAndConditions"));
 
 const App = () => {
   const { colorMode, analytics } = useContext(AppContext);
+  const {
+    i18n: { language },
+  } = useTranslation();
 
   // If you want to start measuring performance in your app, pass a function
   // to log results (for example: reportWebVitals(console.log))
@@ -48,7 +52,7 @@ const App = () => {
           <Router>
             <SearchContextProvider>
               <Routes>
-                <Route path="/" element={<Navigate to="/zh" />} />
+                <Route path="/" element={<Navigate to={`/${language}`} />} />
                 <Route path="/:lang" element={<Main />}>
                   <Route path={`route/:id`} element={<RouteEta />} />
                   <Route path={`route/:id/:panel`} element={<RouteEta />} />

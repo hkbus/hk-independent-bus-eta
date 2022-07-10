@@ -39,6 +39,7 @@ const Header = () => {
       replace: true,
     });
     i18n.changeLanguage(lang);
+    localStorage.setItem("lang", lang);
   };
 
   const relocateGeolocation = useCallback(() => {
