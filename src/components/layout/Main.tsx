@@ -28,7 +28,7 @@ const mainSx: SxProps<Theme> = {
   display: "flex",
   flexDirection: "column",
   flex: 1,
-  overflow: "clip",
+  overflow: "hidden",
 };
 
 export default Main;
