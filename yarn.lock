@@ -5439,10 +5439,10 @@ history@^5.2.0:
   dependencies:
     "@babel/runtime" "^7.7.6"
 
-hk-bus-eta@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-1.8.0.tgz#c903107ad0a6de6f0aee880d1bc8c7a94bdecd8c"
-  integrity sha512-E/DgxZ8aOCXomBQwFzY03zme9Cq8RR0RPN7GpYK9TqnSexj2bUdSr/AHPENHEQjSf0rSDTfmFrhCAfFlJ/mTCg==
+hk-bus-eta@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-1.8.1.tgz#90f11420c78c39c8d1af956af2c1f06119b0f76a"
+  integrity sha512-CeVCXe9tG92wFT1gaz/Pe1X2Te8VIWdPLQkqI7oAbCKEOnAVZ4woh241xy3H2p/m5uqoTcf7GjKLRWew0GDEFw==
 
 hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
