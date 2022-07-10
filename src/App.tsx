@@ -15,11 +15,9 @@ import {
 } from "react-router-dom";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
-import { Container, CssBaseline, PaletteMode } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { PaletteMode } from "@mui/material";
 import AppContext from "./AppContext";
-import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
+import Main from "./components/layout/Main";
 import Home from "./pages/Home";
 import { SearchContextProvider } from "./SearchContext";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
@@ -47,32 +45,23 @@ const App = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CacheProvider value={emotionCache}>
-          <AppContainer
-            maxWidth="xs"
-            disableGutters
-            className={classes.container}
-          >
-            <Router>
-              <SearchContextProvider>
-                <CssBaseline />
-                <Header />
-                <Routes>
-                  <Route path="/" element={<Navigate to="/zh" />} />
-                  <Route path="/:lang">
-                    <Route path={`route/:id`} element={<RouteEta />} />
-                    <Route path={`route/:id/:panel`} element={<RouteEta />} />
-                    <Route path={`settings`} element={<Settings />} />
-                    <Route path={`board`} element={<RouteBoard />} />
-                    <Route path={`search`} element={<RouteSearch />} />
-                    <Route path={`privacy`} element={<PrivacyPolicy />} />
-                    <Route path={`terms`} element={<TermsAndConditions />} />
-                    <Route path={``} element={<Home />} />
-                  </Route>
-                </Routes>
-                <Footer />
-              </SearchContextProvider>
-            </Router>
-          </AppContainer>
+          <Router>
+            <SearchContextProvider>
+              <Routes>
+                <Route path="/" element={<Navigate to="/zh" />} />
+                <Route path="/:lang" element={<Main />}>
+                  <Route path={`route/:id`} element={<RouteEta />} />
+                  <Route path={`route/:id/:panel`} element={<RouteEta />} />
+                  <Route path={`settings`} element={<Settings />} />
+                  <Route path={`board`} element={<RouteBoard />} />
+                  <Route path={`search`} element={<RouteSearch />} />
+                  <Route path={`privacy`} element={<PrivacyPolicy />} />
+                  <Route path={`terms`} element={<TermsAndConditions />} />
+                  <Route path={``} element={<Home />} />
+                </Route>
+              </Routes>
+            </SearchContextProvider>
+          </Router>
         </CacheProvider>
       </ThemeProvider>
     </StyledEngineProvider>
@@ -80,21 +69,6 @@ const App = () => {
 };
 
 export default App;
-
-const PREFIX = "app";
-
-const classes = {
-  container: `${PREFIX}-container`,
-};
-
-const AppContainer = styled(Container)(({ theme }) => ({
-  [`&.${classes.container}`]: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    height: "100%",
-  },
-}));
 
 const emotionCache = createCache({
   key: "hkbus",
