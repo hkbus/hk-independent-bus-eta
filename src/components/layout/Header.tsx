@@ -13,6 +13,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import SettingsIcon from "@mui/icons-material/Settings";
 import AppContext from "../../AppContext";
 import { vibrate, checkMobile } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -27,18 +28,19 @@ const Header = () => {
     vibrateDuration,
     geoPermission,
     updateGeolocation,
+    changeLanguage,
   } = useContext(AppContext);
   const { t, i18n } = useTranslation();
   let location = useLocation();
   const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
 
-  const handleLanguageChange = (lang) => {
+  const handleLanguageChange = (lang: "zh" | "en") => {
     vibrate(vibrateDuration);
     navigate(location.pathname.replace("/" + i18n.language, "/" + lang), {
       replace: true,
     });
-    i18n.changeLanguage(lang);
+    changeLanguage(lang);
   };
 
   const relocateGeolocation = useCallback(() => {
@@ -161,6 +163,13 @@ const Header = () => {
           >
             {i18n.language !== "zh" ? "繁" : "En"}
           </Button>
+          <IconButton
+            component={Link}
+            to={`/${i18n.language}/settings`}
+            rel="nofollow"
+          >
+            <SettingsIcon fontSize="small" />
+          </IconButton>
         </Box>
       </AppToolbar>
     ),
@@ -201,11 +210,12 @@ const AppToolbar = styled(Toolbar)(({ theme }) => ({
         ? theme.palette.background.default
         : theme.palette.primary.main,
     "& a": {
-      color: "black",
       textDecoration: "none",
     },
     display: "flex",
     justifyContent: "space-between",
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
   },
   [`& .${classes.searchRouteInput}`]: {
     maxWidth: "100px",
