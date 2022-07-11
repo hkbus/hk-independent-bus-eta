@@ -21,7 +21,7 @@ const rootSx: SxProps<Theme> = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
-  height: "100vh",
+  height: "100%",
 };
 
 const mainSx: SxProps<Theme> = {
