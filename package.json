@@ -70,8 +70,8 @@
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "source ./scripts/prebuild.sh && react-scripts start",
-    "build": "source ./scripts/prebuild.sh && react-scripts build",
+    "start": ". ./scripts/prebuild.sh && react-scripts start",
+    "build": ". ./scripts/prebuild.sh && react-scripts build",
     "render": "node scripts/pre-rendering.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
