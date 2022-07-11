@@ -1,4 +1,4 @@
-FROM node:18 as build
+FROM node:18-alpine as build
 
 ARG env
 ENV env $env
