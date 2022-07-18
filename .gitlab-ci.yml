@@ -5,21 +5,54 @@ docker-build:
   services:
     - docker:dind
   before_script:
-    - apk add yarn
+    - apk add yarn nodejs-current
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - if [ "$PRERENDER" = "true" ]; then yarn docker:build-noenv --build-arg PRERENDER=true -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; fi;
-    - if [ "$PRERENDER" = "true" ]; then docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; fi;
-    - if [ "$PRERENDER" = "true" ]; then exit 0; fi;
-    - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest"
+    - |
+      if [ "$PRERENDER" = "true" ]; then yarn docker:build-noenv \
+      --build-arg REACT_APP_REPO_URL="https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}" \
+      --build-arg REACT_APP_COMMIT_HASH="$CI_COMMIT_SHORT_SHA" \
+      --build-arg REACT_APP_COMMIT_MESSAGE="$CI_COMMIT_MESSAGE" \
+      --build-arg REACT_APP_VERSION="$(node -e 'console.log(require("package.json").version)')" \
+      --build-arg PRERENDER=true \
+      -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:full"; exit 0; fi;
+    - |
+      yarn docker:build-noenv  \
+      --build-arg REACT_APP_REPO_URL="https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}" \
+      --build-arg REACT_APP_COMMIT_HASH="$CI_COMMIT_SHORT_SHA" \
+      --build-arg REACT_APP_COMMIT_MESSAGE="$CI_COMMIT_MESSAGE" \
+      --build-arg REACT_APP_VERSION="$(node -e 'console.log(require("package.json").version)')" \
+      -t "$CI_REGISTRY_IMAGE:latest" \
+      -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest" \
+      -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA";
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:latest"
-    - yarn docker:build-noenv -t "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
     - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_BRANCH:$CI_COMMIT_SHORT_SHA"
+    - if [ "$CI_COMMIT_BRANCH" = "master" ]; then docker push "$CI_REGISTRY_IMAGE:latest"; fi;
   # Run this job in a branch where a Dockerfile exists
   rules:
-    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_BRANCH && $PULL != "true"
       exists:
         - Dockerfile
+
+pull:
+  image: alpine:latest
+  before_script:
+    - apk add git
+    - git checkout master
+    - git remote set-url origin https://actions-bot:$gitlab_token@gitlab.com/$CI_PROJECT_PATH
+    - git remote add hkbus https://github.com/hkbus/hk-independent-bus-eta
+    - git config --global user.email "actions-bot@example.com"
+    - git config --global user.name "actions-bot"
+    - git config pull.rebase false
+    - git pull origin master
+  script:
+    - |
+      git fetch hkbus
+      git merge -X theirs hkbus/master -m "Pull upstream" --allow-unrelated-histories
+      git push origin --all
+  rules:
+    - if: $PULL == "true"
+
 pages:
   image: node:18
   stage: deploy
@@ -32,10 +65,11 @@ pages:
     paths:
       - public
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $PULL != "true"
+
 stages:
-  - build
   - test
+  - build
   - deploy
   - review
   - dast
@@ -48,8 +82,8 @@ stages:
   - incremental rollout 100%
   - performance
   - cleanup
-sast:
-  stage: test
+
 include:
   - template: Auto-DevOps.gitlab-ci.yml
-
+    rules:
+      - if: $PULL != "true"

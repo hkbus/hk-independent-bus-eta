@@ -28,6 +28,7 @@ import {
   InsertEmoticon as InsertEmoticonIcon,
   SsidChart as SsidChartIcon,
   BarChart as BarChartIcon,
+  Info as InfoIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -64,6 +65,13 @@ const Settings = () => {
     []
   );
 
+  console.log(
+    process.env.REACT_APP_COMMIT_HASH,
+    process.env.REACT_APP_VERSION,
+    process.env.REACT_APP_COMMIT_MESSAGE,
+    process.env.REACT_APP_REPO_URL
+  );
+
   useEffect(() => {
     setSeoHeader({
       title: t("設定") + " - " + t(AppTitle),
@@ -95,6 +103,38 @@ const Settings = () => {
             <ListItemText
               primary={t("安裝")}
               secondary={t("安裝巴士預報 App 到裝置")}
+            />
+          </ListItemButton>
+        )}
+        {(process.env.REACT_APP_COMMIT_HASH ||
+          process.env.REACT_APP_VERSION) && (
+          <ListItemButton
+            component="a"
+            href={`${
+              process.env.REACT_APP_REPO_URL ||
+              "https://github.com/hkbus/hk-independent-bus-eta"
+            }${
+              process.env.REACT_APP_COMMIT_HASH
+                ? `/commit/${process.env.REACT_APP_COMMIT_HASH}`
+                : ""
+            }`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <InfoIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={`${t("版本")}: ${
+                process.env.REACT_APP_VERSION || "unknown"
+              }${
+                process.env.REACT_APP_COMMIT_HASH
+                  ? ` - ${process.env.REACT_APP_COMMIT_HASH}`
+                  : ""
+              }`}
+              secondary={process.env.REACT_APP_COMMIT_MESSAGE || ""}
             />
           </ListItemButton>
         )}
@@ -264,7 +304,10 @@ const Settings = () => {
         <Divider />
         <ListItemButton
           component={"a"}
-          href={`https://github.com/hkbus/hk-independent-bus-eta`}
+          href={
+            process.env.REACT_APP_REPO_URL ||
+            `https://github.com/hkbus/hk-independent-bus-eta`
+          }
           target="_blank"
           onClick={() => {
             vibrate(vibrateDuration);
