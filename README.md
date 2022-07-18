@@ -9,9 +9,7 @@
 An ad-free bus ETA site for Hong Kong, with arrival times from KMB, NWFB and LNB. 
 With a clutter-free UI that lets you get what you need, fast.
 
-
 ## 資料來源 Data Sources
-
 
 本網站一切到站預報資料均來自[資料一站通](https://data.gov.hk)及相關機構，路線及收費資料來自[HK Bus Crawling](https://github.com/hkbus/hk-bus-crawling/)
 
@@ -30,6 +28,8 @@ The project is a [React](https://reactjs.org/) web app with [Material-UI](https:
 See docker.md for more information about using docker for deployment / development.
 
 ## Available Scripts
+
+> ***Note***: It is assumed that you are running the scripts in a unix-like environment. Windows is not supported.
 
 In the project directory, you can run:
 
@@ -52,6 +52,7 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ## Contributors
+
 Project owner [chunlaw](https://github.com/chunlaw) is the initiator of the whole project. Everyone is welcome to contribute. Other contributors are:
 
 [lzwn128](https://github.com/lzwn128 )
