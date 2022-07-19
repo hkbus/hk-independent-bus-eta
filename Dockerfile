@@ -50,6 +50,7 @@ RUN if [ "$PRERENDER" = "true" ] || [ "$env" = "dev" ]; then yarn install; else 
 
 COPY ./src ./src
 COPY ./public ./public
+COPY ./scripts ./scripts
 
 RUN if [ "$env" = "dev" ]; then mkdir build; else yarn build; fi;
 
