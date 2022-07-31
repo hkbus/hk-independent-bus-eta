@@ -1,12 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import {
-  Box,
-  CircularProgress,
-  Divider,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AppContext from "../AppContext";
 import SearchContext from "../SearchContext";
@@ -16,6 +10,8 @@ import SearchResult from "../components/route-search/SearchResult";
 import type { Eta } from "hk-bus-eta";
 import { getDistance, vibrate } from "../utils";
 import SeoHeader from "../SeoHeader";
+import { LinearProgress } from "../components/Progress";
+
 const SearchMap = dynamic(import("../components/route-search/SearchMap"), {
   ssr: false,
 });
@@ -264,7 +260,7 @@ const RouteSearch = () => {
           {!locations.end ? (
             <RouteSearchDetails />
           ) : "waiting|rendering".includes(status) && result.length === 0 ? (
-            <CircularProgress size={30} className={classes.routeLoading} />
+            <LinearProgress />
           ) : "ready|waiting|rendering".includes(status) && result.length ? (
             result.map((routes, resIdx) => (
               <SearchResult

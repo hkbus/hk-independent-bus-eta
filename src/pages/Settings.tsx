@@ -28,6 +28,7 @@ import {
   InsertEmoticon as InsertEmoticonIcon,
   SsidChart as SsidChartIcon,
   BarChart as BarChartIcon,
+  Info as InfoIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -95,6 +96,38 @@ const Settings = () => {
               />
             </ListItemButton>
           )}
+          {(process.env.REACT_APP_COMMIT_HASH ||
+          process.env.REACT_APP_VERSION) && (
+          <ListItemButton
+            component="a"
+            href={`${
+              process.env.REACT_APP_REPO_URL ||
+              "https://github.com/hkbus/hk-independent-bus-eta"
+            }${
+              process.env.REACT_APP_COMMIT_HASH
+                ? `/commit/${process.env.REACT_APP_COMMIT_HASH}`
+                : ""
+            }`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <InfoIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={`${t("版本")}: ${
+                process.env.REACT_APP_VERSION || "unknown"
+              }${
+                process.env.REACT_APP_COMMIT_HASH
+                  ? ` - ${process.env.REACT_APP_COMMIT_HASH}`
+                  : ""
+              }`}
+              secondary={process.env.REACT_APP_COMMIT_MESSAGE || ""}
+            />
+          </ListItemButton>
+        )}
           <ListItemButton
             onClick={() => {
               vibrate(vibrateDuration);

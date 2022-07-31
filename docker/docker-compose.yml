@@ -8,25 +8,20 @@ services:
       context: ../
       dockerfile: ./Dockerfile
       args:
-        env: ${env}
-        GENERATE_SOURCEMAP: ${GENERATE_SOURCEMAP}
         CI: ${CI}
-        PRERENDER: ${PRERENDER}
         NEXT_PUBLIC_OSM_PROVIDER_HOST: ${NEXT_PUBLIC_OSM_PROVIDER_HOST}
         NEXT_PUBLIC_OSM_PROVIDER_URL: ${NEXT_PUBLIC_OSM_PROVIDER_URL}
         NEXT_PUBLIC_OSM_PROVIDER_URL_DARK: ${NEXT_PUBLIC_OSM_PROVIDER_URL_DARK}
         NEXT_PUBLIC_CI_JOB_ID: ${NEXT_PUBLIC_CI_JOB_ID}
     tty: true
     environment:
-      env: ${env}
-      GENERATE_SOURCEMAP: ${GENERATE_SOURCEMAP}
       CI: ${CI}
       NEXT_PUBLIC_OSM_PROVIDER_HOST: ${NEXT_PUBLIC_OSM_PROVIDER_HOST}
       NEXT_PUBLIC_OSM_PROVIDER_URL: ${NEXT_PUBLIC_OSM_PROVIDER_URL}
       NEXT_PUBLIC_OSM_PROVIDER_URL_DARK: ${NEXT_PUBLIC_OSM_PROVIDER_URL_DARK}
       NEXT_PUBLIC_CI_JOB_ID: ${NEXT_PUBLIC_CI_JOB_ID}
     ports:
-      - ${port}:3000
+      - ${port}:80
     volumes:
       - ../src:/usr/src/app/src
       - ../public:/usr/src/app/public

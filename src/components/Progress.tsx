@@ -25,6 +25,8 @@ export const LinearProgress = React.forwardRef<
   );
 });
 
+LinearProgress.displayName = "LinearProgress";
+
 export const CircularProgress = React.forwardRef<
   HTMLElement,
   CircularProgressProps
@@ -41,3 +43,5 @@ export const CircularProgress = React.forwardRef<
     />
   );
 });
+
+CircularProgress.displayName = "CircularProgress";

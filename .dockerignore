@@ -3,3 +3,8 @@ node_modules/
 .idea/
 .vscode/
 .lh/
+.out/
+.next/
+docker/
+.github/
+.husky/
