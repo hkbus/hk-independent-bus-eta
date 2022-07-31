@@ -1,11 +1,12 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Box, Button, Container, CircularProgress, Modal } from "@mui/material";
+import { Box, Button, Container, Modal } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import domtoimage from "dom-to-image";
 import mergeBase64 from "merge-base64";
 import { toProperCase, triggerShare, triggerShareImg } from "../../utils";
 import AppContext from "../../AppContext";
+import { CircularProgress } from "../Progress";
 
 const SharingModal = ({
   id,

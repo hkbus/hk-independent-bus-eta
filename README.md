@@ -9,9 +9,7 @@
 An ad-free bus ETA site for Hong Kong, with arrival times from KMB, NWFB and LNB. 
 With a clutter-free UI that lets you get what you need, fast.
 
-
 ## 資料來源 Data Sources
-
 
 本網站一切到站預報資料均來自[資料一站通](https://data.gov.hk)及相關機構，路線及收費資料來自[HK Bus Crawling](https://github.com/hkbus/hk-bus-crawling/)
 
@@ -33,7 +31,7 @@ See docker.md for more information about using docker for deployment / developme
 
 In the project directory, you can run:
 
-### `yarn run start`
+### `yarn run dev`
 
 Runs the app in development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
@@ -43,15 +41,16 @@ You will also see lint errors in the console.
 
 ### `yarn run build`
 
-Builds the app for production to the `build` folder.\
+Builds the app for production to the `out` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+See the section about [deployment](https://nextjs.org/docs/advanced-features/static-html-export) for more information.
 
 ## Contributors
+
 Project owner [chunlaw](https://github.com/chunlaw) is the initiator of the whole project. Everyone is welcome to contribute. Other contributors are:
 
 [lzwn128](https://github.com/lzwn128 )

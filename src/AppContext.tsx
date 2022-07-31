@@ -21,6 +21,8 @@ import { PaletteMode } from "@mui/material";
 import { fetchDbFunc } from "./db";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import reportWebVitals, { sendToGoogleAnalytics } from "../src/reportWebVitals";
+import { useTranslation } from "react-i18next";
+
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
 interface AppState {
@@ -90,6 +92,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   toggleEnergyMode: () => void;
   toggleVibrateDuration: () => void;
   toggleAnalytics: () => void; // not
+  changeLanguage: (lang: "zh" | "en") => void;
   workbox?: Workbox;
 }
 
@@ -301,6 +304,7 @@ export const AppContextProvider = ({
   useEffect(() => {
     state.analytics && reportWebVitals(sendToGoogleAnalytics);
   });
+  const { i18n } = useTranslation();
   type State = AppState;
   const [state, setStateRaw] = useState(getInitialState);
   const { geoPermission } = state;
@@ -578,6 +582,14 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const changeLanguage = useCallback(
+    (lang: "zh" | "en") => {
+      i18n.changeLanguage(lang);
+      localStorage.setItem("lang", lang);
+    },
+    [i18n]
+  );
+
   const contextValue = useMemo(() => {
     return {
       ...state,
@@ -600,6 +612,7 @@ export const AppContextProvider = ({
       toggleEnergyMode,
       toggleVibrateDuration,
       toggleAnalytics,
+      changeLanguage,
       workbox,
     };
   }, [
@@ -622,6 +635,7 @@ export const AppContextProvider = ({
     toggleEnergyMode,
     toggleVibrateDuration,
     toggleAnalytics,
+    changeLanguage,
     workbox,
   ]);
   const theme = useMemo(() => {

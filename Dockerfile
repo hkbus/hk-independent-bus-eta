@@ -24,37 +24,23 @@ ENV NEXT_PUBLIC_OSM_PROVIDER_URL_DARK $NEXT_PUBLIC_OSM_PROVIDER_URL_DARK
 ARG NEXT_PUBLIC_CI_JOB_ID
 ENV NEXT_PUBLIC_CI_JOB_ID $NEXT_PUBLIC_CI_JOB_ID
 
-WORKDIR /usr/src/app
+ARG NEXT_COMMIT_HASH
+ENV NEXT_COMMIT_HASH $NEXT_COMMIT_HASH
 
-COPY ./package.json ./
-COPY ./yarn.lock ./
-COPY ./tsconfig.json ./
+ARG NEXT_COMMIT_MESSAGE
+ENV NEXT_COMMIT_MESSAGE $NEXT_COMMIT_MESSAGE
 
-# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ARG NEXT_COMMIT_VERSION
+ENV NEXT_COMMIT_VERSION $NEXT_COMMIT_VERSION
 
-RUN if [ "$PRERENDER" = "true" ] || [ "$env" = "dev" ]; then yarn install; else yarn install --production --ignore-optional; fi;
-
-COPY ./src ./src
-COPY ./public ./public
-
-RUN if [ "$env" = "dev" ]; then mkdir build; else yarn build; fi;
-
-FROM node:18-alpine
-
-ARG env
-ENV env $env
+ARG NEXT_REPO_URL
+ENV NEXT_REPO_URL $NEXT_REPO_URL
 
 WORKDIR /usr/src/app
 
-COPY ./package.json ./
-COPY ./yarn.lock ./
-COPY ./tsconfig.json ./
+COPY . ./
 
-COPY --from=build /usr/src/app/build ./build
+RUN yarn install && yarn build
 
-RUN yarn global add serve
-RUN if [ "$env" = "dev" ]; then yarn install && yarn cache clean; fi;
-
-CMD if [ "$env" = "dev" ]; then yarn start; else serve -s out; fi;
+FROM nginx:1.23.1-alpine
+COPY --from=build /usr/src/app/out /usr/share/nginx/html
