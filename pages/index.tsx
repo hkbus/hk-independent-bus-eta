@@ -8,7 +8,7 @@ import { makeStaticProps } from "../util/getStatic";
 const IndexPage: NextPage = () => {
   const router = useRouter();
   useEffect(() => {
-    router.replace("/zh");
+    router.replace("/" + (localStorage.getItem("lang") ?? "zh"));
   });
   return (
     <>

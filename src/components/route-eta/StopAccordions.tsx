@@ -268,11 +268,13 @@ const StopAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
 
 const StopAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
   [`&.${classes.accordionDetailsRoot}`]: {
-    padding: theme.spacing(2),
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(1),
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     justifyContent: "space-between",
-    display: "flex",
   },
   [`& .${classes.accordionTimeReport}`]: {
     flex: 1,

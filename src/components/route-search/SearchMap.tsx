@@ -244,10 +244,14 @@ const SearchMap = ({
 
   useEffect(() => {
     if (isFollow) {
-      if (geolocation.lat !== center.lat || geolocation.lng !== center.lng)
+      if (
+        !center ||
+        geolocation.lat !== center.lat ||
+        geolocation.lng !== center.lng
+      )
         updateCenter({ center: geolocation, isFollow: true });
     }
-  }, [geolocation, center?.lat, center?.lng, isFollow, updateCenter]);
+  }, [geolocation, center, isFollow, updateCenter]);
 
   return (
     <SearchMapBox className={classes.mapContainerBox}>

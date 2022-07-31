@@ -315,7 +315,6 @@ const classes = {
   description: `${PREFIX}-description`,
   resultList: `${PREFIX}-result-list`,
   resultListEnergy: `${PREFIX}-result-list-energy`,
-  routeLoading: `${PREFIX}-route-loading`,
 };
 
 const Root = styled(Paper)(({ theme }) => ({
@@ -326,6 +325,7 @@ const Root = styled(Paper)(({ theme }) => ({
         : "white",
     overflowY: "hidden",
     textAlign: "left",
+    width: "100%",
   },
   ".search-input-container": {
     marginTop: "2%",
@@ -343,8 +343,5 @@ const Root = styled(Paper)(({ theme }) => ({
   ".search-result-list-energy": {
     overflowY: "scroll",
     height: "calc(100% - 76px)",
-  },
-  ".search-route-loading": {
-    margin: "10%",
   },
 }));
