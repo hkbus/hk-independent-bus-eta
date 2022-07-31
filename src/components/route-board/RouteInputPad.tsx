@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
@@ -72,21 +72,19 @@ const RouteAlphabetPad = ({ possibleChar }) => {
   );
 };
 
-const RouteInputPad = ({ boardTab }) => {
+const RouteInputPad = ({ boardTab }: { boardTab: BoardTabType }) => {
   const {
     searchRoute,
     db: { routeList },
   } = useContext(AppContext);
-
   const possibleChar = getPossibleChar(searchRoute, routeList, boardTab);
-
   const padding = 0;
-  if (navigator.userAgent === "prerendering") {
-    return <></>;
-  }
-
   return (
-    <InputPadBox className={classes.root} padding={padding}>
+    <InputPadBox
+      sx={{ flex: "0 0 248px" }}
+      className={classes.root}
+      padding={padding}
+    >
       <Box className={classes.numPadContainer} padding={padding}>
         <RouteNumPad possibleChar={possibleChar} />
       </Box>
@@ -117,8 +115,6 @@ const InputPadBox = styled(Box)(({ theme }) => ({
     background: theme.palette.background.default,
     display: "flex",
     flexDirection: "row",
-    // TODO: increase to 258px or enable scroll
-    height: "248px",
     justifyContent: "space-around",
   },
   [`& .${classes.numPadContainer}`]: {

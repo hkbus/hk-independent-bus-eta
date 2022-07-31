@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import {
   Box,
   CircularProgress,
@@ -12,10 +13,12 @@ import SearchContext from "../SearchContext";
 import { useTranslation } from "react-i18next";
 import AddressInput from "../components/route-search/AddressInput";
 import SearchResult from "../components/route-search/SearchResult";
-import SearchMap from "../components/route-search/SearchMap";
-import { fetchEtas, Eta } from "hk-bus-eta";
-import { setSeoHeader, getDistance, vibrate } from "../utils";
-
+import type { Eta } from "hk-bus-eta";
+import { getDistance, vibrate } from "../utils";
+import SeoHeader from "../SeoHeader";
+const SearchMap = dynamic(import("../components/route-search/SearchMap"), {
+  ssr: false,
+});
 export type SearchResultType = Array<{
   routeId: string;
   on: number;
@@ -50,7 +53,7 @@ const RouteSearch = () => {
     }
   };
 
-  const updateRoutes = (routeResults: SearchResultType[]) => {
+  const updateRoutes = async (routeResults: SearchResultType[]) => {
     const uniqueRoutes = routeResults
       .reduce(
         (acc, routeArr) =>
@@ -63,14 +66,14 @@ const RouteSearch = () => {
         [] as string[]
       )
       .filter((v, i, s) => s.indexOf(v) === i);
-
+    const fetchEtas = await import("hk-bus-eta").then((mod) => mod.fetchEtas);
     // check currently available routes by fetching ETA
     Promise.all(
-      uniqueRoutes.map((routeIdSeq): Promise<Eta[]> => {
+      uniqueRoutes.map(async (routeIdSeq): Promise<Eta[]> => {
         const [routeId, seq] = routeIdSeq.split("/");
         return !navigator.onLine
-          ? new Promise((resolve) => resolve([]))
-          : fetchEtas({
+          ? []
+          : await fetchEtas({
               ...routeList[routeId],
               seq: parseInt(seq, 10),
               routeStops: routeList[routeId].stops,
@@ -141,15 +144,6 @@ const RouteSearch = () => {
         ]);
       });
   };
-
-  useEffect(() => {
-    setSeoHeader({
-      title: t("點對點路線搜尋") + " - " + t(AppTitle),
-      description: t("route-search-page-description"),
-      lang: i18n.language,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
 
   useEffect(() => {
     // update status if status is rendering
@@ -233,55 +227,63 @@ const RouteSearch = () => {
   };
 
   return (
-    <Root className={classes.root} square elevation={0}>
-      {!energyMode ? (
-        <SearchMap
-          start={locations.start ? locations.start.location : geolocation}
-          end={locations.end ? locations.end.location : null}
-          routes={result[resultIdx.resultIdx]}
-          stopIdx={resultIdx.stopIdx}
-          onMarkerClick={handleMarkerClick}
-        />
-      ) : null}
-      <div className={classes.inputContainer}>
-        <AddressInput
-          value={locations.start}
-          placeholder={t("你的位置")}
-          onChange={handleStartChange}
-          stopList={stopList}
-        />
-        <AddressInput
-          value={locations.end}
-          placeholder={t("目的地")}
-          onChange={handleEndChange}
-          stopList={stopList}
-        />
-      </div>
-      <Box
-        className={!energyMode ? classes.resultList : classes.resultListEnergy}
-      >
-        {!locations.end ? (
-          <RouteSearchDetails />
-        ) : "waiting|rendering".includes(status) && result.length === 0 ? (
-          <CircularProgress size={30} className={classes.routeLoading} />
-        ) : "ready|waiting|rendering".includes(status) && result.length ? (
-          result.map((routes, resIdx) => (
-            <SearchResult
-              key={`search-result-${resIdx}`}
-              routes={routes}
-              idx={resIdx}
-              handleRouteClick={handleRouteClick}
-              expanded={resIdx === resultIdx.resultIdx}
-              stopIdx={
-                resIdx === resultIdx.resultIdx ? resultIdx.stopIdx : null
-              }
-            />
-          ))
-        ) : (
-          <>{t("找不到合適的巴士路線")}</>
-        )}
-      </Box>
-    </Root>
+    <>
+      <SeoHeader
+        title={`${t("點對點路線搜尋")} - ${t(AppTitle)}`}
+        description={t("route-search-page-description")}
+      />
+      <Root className={classes.root} square elevation={0}>
+        {!energyMode ? (
+          <SearchMap
+            start={locations.start ? locations.start.location : geolocation}
+            end={locations.end ? locations.end.location : null}
+            routes={result[resultIdx.resultIdx]}
+            stopIdx={resultIdx.stopIdx}
+            onMarkerClick={handleMarkerClick}
+          />
+        ) : null}
+        <div className={classes.inputContainer}>
+          <AddressInput
+            value={locations.start}
+            placeholder={t("你的位置")}
+            onChange={handleStartChange}
+            stopList={stopList}
+          />
+          <AddressInput
+            value={locations.end}
+            placeholder={t("目的地")}
+            onChange={handleEndChange}
+            stopList={stopList}
+          />
+        </div>
+        <Box
+          className={
+            !energyMode ? classes.resultList : classes.resultListEnergy
+          }
+        >
+          {!locations.end ? (
+            <RouteSearchDetails />
+          ) : "waiting|rendering".includes(status) && result.length === 0 ? (
+            <CircularProgress size={30} className={classes.routeLoading} />
+          ) : "ready|waiting|rendering".includes(status) && result.length ? (
+            result.map((routes, resIdx) => (
+              <SearchResult
+                key={`search-result-${resIdx}`}
+                routes={routes}
+                idx={resIdx}
+                handleRouteClick={handleRouteClick}
+                expanded={resIdx === resultIdx.resultIdx}
+                stopIdx={
+                  resIdx === resultIdx.resultIdx ? resultIdx.stopIdx : null
+                }
+              />
+            ))
+          ) : (
+            <>{t("找不到合適的巴士路線")}</>
+          )}
+        </Box>
+      </Root>
+    </>
   );
 };
 

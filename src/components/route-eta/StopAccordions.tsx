@@ -115,7 +115,7 @@ const StopAccordions = ({
             }}
           >
             <Typography component="h3" variant="body1">
-              {idx + 1}. {toProperCase(stop.name[i18n.language])}
+              {idx + 1}. {toProperCase(stop.name[i18n.language] ?? "")}
             </Typography>
             <Typography variant="caption">
               {fares && fares[idx] ? t("車費") + ": $" + fares[idx] : ""}

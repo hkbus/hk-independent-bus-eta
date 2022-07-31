@@ -1,75 +1,76 @@
 import React, { useContext, useMemo, useCallback } from "react";
 import { Button, Divider, SxProps, Theme } from "@mui/material";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { RouteListEntry } from "hk-bus-eta";
-import { useNavigate } from "react-router-dom";
+import type { RouteListEntry } from "hk-bus-eta";
+import { useRouter } from "next/router";
 import { vibrate, getDistance } from "../../utils";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 
-const ReverseButton = ({ routeId }: { routeId: string }) => {
+const ReverseButton = ({
+  routeId,
+  routeListEntry,
+}: {
+  routeId: string;
+  routeListEntry: RouteListEntry;
+}) => {
   const { t, i18n } = useTranslation();
-  const {
-    db: { routeList, holidays, stopList },
-    vibrateDuration,
-  } = useContext(AppContext);
-  const { route, stops, co } = routeList[routeId];
-  const navigate = useNavigate();
+  const { db, vibrateDuration } = useContext(AppContext);
+  const { route, stops, co } = routeListEntry;
+  const router = useRouter();
 
   const isTodayHoliday = useMemo(
-    () => isHoliday(holidays, new Date()),
-    [holidays]
+    () => isHoliday(db.holidays ?? [], new Date()),
+    [db.holidays]
   );
 
-  const reverseRoute = useMemo(
-    () =>
-      Object.entries(routeList)
-        .reduce<Array<[string, RouteListEntry]>>(
-          (acc, [key, _routeListEntry]) => {
-            if (key === routeId) return acc;
-            const { co: _co, route: _route } = _routeListEntry;
-            if (
-              _route === route &&
-              JSON.stringify(co) === JSON.stringify(_co)
-            ) {
-              return [...acc, [key, _routeListEntry]];
-            }
-            return acc;
-          },
-          []
-        )
-        .sort(([, a], [, b]) => {
-          const aAval = isRouteAvaliable(a.route, a.freq, isTodayHoliday);
-          const bAval = isRouteAvaliable(b.route, b.freq, isTodayHoliday);
-          if (aAval === bAval) {
-            const refOrig = stopList[Object.values(stops)[0][0]];
-            // calculate distance between starting stop of reference route and candidate route A
-            const aOrig = stopList[Object.values(a.stops)[0][0]];
-            const aDist = getDistance(aOrig.location, refOrig.location);
-            // calculate distance between starting stop of reference route and candidate route B
-            const bOrig = stopList[Object.values(b.stops)[0][0]];
-            const bDist = getDistance(bOrig.location, refOrig.location);
-            // pick furtherest one
-            return aDist > bDist ? -1 : 1;
+  const reverseRoute = useMemo(() => {
+    if (db.routeList === undefined || db.stopList === undefined) {
+      return [];
+    }
+    return Object.entries(db.routeList)
+      .reduce<Array<[string, RouteListEntry]>>(
+        (acc, [key, _routeListEntry]) => {
+          if (key === routeId) return acc;
+          const { co: _co, route: _route } = _routeListEntry;
+          if (_route === route && JSON.stringify(co) === JSON.stringify(_co)) {
+            return [...acc, [key, _routeListEntry]];
           }
-          // compare boolean, available route first
-          return aAval > bAval ? -1 : 1;
-        })
-        .map(([_routeId]) => _routeId)
-        .filter((_routeId) => _routeId.toLowerCase() !== routeId),
-    [route, co, routeList, stopList, isTodayHoliday, routeId, stops]
-  );
+          return acc;
+        },
+        []
+      )
+      .sort(([, a], [, b]) => {
+        const aAval = isRouteAvaliable(a.route, a.freq, isTodayHoliday);
+        const bAval = isRouteAvaliable(b.route, b.freq, isTodayHoliday);
+        if (aAval === bAval) {
+          const refOrig = db.stopList[Object.values(stops)[0][0]];
+          // calculate distance between starting stop of reference route and candidate route A
+          const aOrig = db.stopList[Object.values(a.stops)[0][0]];
+          const aDist = getDistance(aOrig.location, refOrig.location);
+          // calculate distance between starting stop of reference route and candidate route B
+          const bOrig = db.stopList[Object.values(b.stops)[0][0]];
+          const bDist = getDistance(bOrig.location, refOrig.location);
+          // pick furtherest one
+          return aDist > bDist ? -1 : 1;
+        }
+        // compare boolean, available route first
+        return aAval > bAval ? -1 : 1;
+      })
+      .map(([_routeId]) => _routeId)
+      .filter((_routeId) => _routeId.toLowerCase() !== routeId);
+  }, [db.routeList, db.stopList, routeId, route, co, isTodayHoliday, stops]);
 
   const handleRevserClick = useCallback(
     (e) => {
       e.preventDefault();
       vibrate(vibrateDuration);
       setTimeout(() => {
-        navigate(`/${i18n.language}/route/${reverseRoute[0].toLowerCase()}`);
+        router.push(`/${i18n.language}/route/${reverseRoute[0].toLowerCase()}`);
       }, 0);
     },
-    [reverseRoute, navigate, i18n.language, vibrateDuration]
+    [i18n.language, reverseRoute, router, vibrateDuration]
   );
 
   return (

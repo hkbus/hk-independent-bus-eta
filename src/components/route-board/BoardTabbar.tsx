@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Tabs, Tab, SxProps, Theme } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 

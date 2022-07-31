@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React, {
   useContext,
   useMemo,
@@ -35,15 +36,10 @@ interface SelectedRoutes {
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ geolocation, homeTab, onChangeTab }, ref) => {
-    const {
-      hotRoute,
-      savedEtas,
-      db: { holidays, routeList, stopList },
-      isRouteFilter,
-    } = useContext(AppContext);
+    const { hotRoute, savedEtas, db, isRouteFilter } = useContext(AppContext);
     const isTodayHoliday = useMemo(
-      () => isHoliday(holidays, new Date()),
-      [holidays]
+      () => isHoliday(db.holidays ?? [], new Date()),
+      [db.holidays]
     );
     const defaultHometab = useRef(homeTab);
     const { t } = useTranslation();
@@ -63,14 +59,14 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           geolocation,
           hotRoute,
           savedEtas,
-          routeList,
-          stopList,
+          routeList: db.routeList ?? {},
+          stopList: db.stopList ?? {},
           isRouteFilter,
           isTodayHoliday,
         })
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [geolocation]);
+    }, [geolocation, db.routeList]);
 
     const BothRouteList = useMemo(
       () =>
@@ -233,7 +229,7 @@ const getSelectedRoutes = ({
       Object.entries(routeList).forEach(([key, route]) => {
         ["kmb", "nwfb", "ctb", "nlb"].forEach((co) => {
           if (route.stops[co] && route.stops[co].includes(stopId)) {
-            routeIds.push(key + "/" + route.stops[co].indexOf(stopId));
+            routeIds.push(key + "/#" + route.stops[co].indexOf(stopId));
           }
         });
       });

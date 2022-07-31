@@ -1,4 +1,4 @@
-import { Freq } from "hk-bus-eta";
+import type { Freq } from "hk-bus-eta";
 
 export const ServiceIds = {
   "31": "星期一至五",

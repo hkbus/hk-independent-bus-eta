@@ -1,5 +1,4 @@
 import React, {
-  useContext,
   useEffect,
   useState,
   useRef,
@@ -8,13 +7,20 @@ import React, {
 } from "react";
 import type { ReactNode } from "react";
 import { vibrate } from "./utils";
-import DbContext from "./DbContext";
-import type { DatabaseContextValue } from "./DbContext";
+import { DatabaseContextValue, DatabaseType, DbProvider } from "./DbContext";
 import { Workbox } from "workbox-window";
 import { produce, freeze, current } from "immer";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import { ETA_FORMAT_NEXT_TYPES } from "./constants";
-
+import {
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from "@mui/material/styles";
+import { PaletteMode } from "@mui/material";
+import { fetchDbFunc } from "./db";
+import { CacheProvider, EmotionCache } from "@emotion/react";
+import reportWebVitals, { sendToGoogleAnalytics } from "../src/reportWebVitals";
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
 interface AppState {
@@ -88,8 +94,10 @@ interface AppContextValue extends AppState, DatabaseContextValue {
 }
 
 interface AppContextProviderProps {
+  initialDb: DatabaseType;
   children: ReactNode;
   workbox?: Workbox;
+  emotionCache?: EmotionCache;
 }
 
 const AppContext = React.createContext<AppContextValue>(null);
@@ -146,29 +154,106 @@ const isNumberRecord = (input: unknown): input is Record<string, number> => {
   return false;
 };
 
+const getThemeTokens = (mode: PaletteMode) => ({
+  typography: {
+    fontFamily: "'Chiron Sans HK Pro WS', sans-serif",
+  },
+  palette: {
+    mode,
+    ...(mode === "light"
+      ? {
+          // light mode
+          background: {
+            default: "#fedb00",
+          },
+          primary: {
+            main: "#fedb00", // yellow
+          },
+        }
+      : {
+          //dark mode
+          primary: {
+            main: "#fedb00", // yellow
+          },
+          background: {
+            default: "#000",
+          },
+        }),
+  },
+  elements: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          userSelect: "none",
+        },
+        body: {
+          fontSize: "0.875rem",
+          lineHeight: 1.43,
+          scrollbarColor: "#3f3f3f",
+          scrollbarWidth: "thin",
+        },
+      },
+    },
+  },
+});
+
 export const AppContextProvider = ({
+  initialDb,
   workbox,
   children,
+  emotionCache,
 }: AppContextProviderProps) => {
-  const dbContext = useContext(DbContext);
+  const AppTitle = "巴士到站預報 App （免費無廣告）";
+  // route list & stop list & route-stop list
+  const [db, setDb] = useState<DatabaseType>(initialDb);
+  const renewDb = useCallback(
+    () =>
+      fetchDbFunc(true).then((a) => {
+        setDb(a);
+      }),
+    []
+  );
+  useEffect(() => {
+    renewDb();
+  }, [renewDb]);
+
   const getInitialState = (): AppState => {
-    const devicePreferColorScheme =
-      localStorage.getItem("colorMode") ||
-      (navigator.userAgent === "prerendering" && "dark") || // set default color theme in prerendering to "dark"
-      (window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: light)").matches
-        ? "light"
-        : "dark");
+    let devicePreferColorScheme = "dark"; // set default color theme in prerendering to "dark"
+    if (typeof window !== "undefined") {
+      devicePreferColorScheme =
+        localStorage.getItem("colorMode") ||
+        (window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: light)").matches
+          ? "light"
+          : "dark");
+    }
     const searchRoute = "";
-    const geoPermission: unknown = localStorage.getItem("geoPermission");
-    const geoLocation: unknown = JSON.parse(
-      localStorage.getItem("geolocation")
-    );
-    const busSortOrder: unknown = localStorage.getItem("busSortOrder");
-    const numPadOrder: unknown = localStorage.getItem("numPadOrder");
-    const etaFormat: unknown = localStorage.getItem("etaFormat");
-    const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
-    const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
+    const geoPermission: unknown =
+      typeof window !== "undefined"
+        ? localStorage.getItem("geoPermission")
+        : null;
+    const geoLocation: unknown =
+      typeof window !== "undefined"
+        ? JSON.parse(localStorage.getItem("geolocation"))
+        : null;
+    const busSortOrder: unknown =
+      typeof window !== "undefined"
+        ? localStorage.getItem("busSortOrder")
+        : null;
+    const numPadOrder: unknown =
+      typeof window !== "undefined"
+        ? localStorage.getItem("numPadOrder")
+        : null;
+    const etaFormat: unknown =
+      typeof window !== "undefined" ? localStorage.getItem("etaFormat") : null;
+    const savedEtas: unknown =
+      typeof window !== "undefined"
+        ? JSON.parse(localStorage.getItem("savedEtas"))
+        : null;
+    const hotRoute: unknown =
+      typeof window !== "undefined"
+        ? JSON.parse(localStorage.getItem("hotRoute"))
+        : null;
 
     return {
       searchRoute: searchRoute,
@@ -181,19 +266,41 @@ export const AppContextProvider = ({
       savedEtas:
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       isRouteFilter:
-        !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
+        !!JSON.parse(
+          typeof window !== "undefined"
+            ? localStorage.getItem("isRouteFilter")
+            : "false"
+        ) || false,
       busSortOrder: isBusSortOrder(busSortOrder) ? busSortOrder : "KMB first",
       numPadOrder: isNumPadOrder(numPadOrder) ? numPadOrder : "123456789c0b",
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
       colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
         : "dark",
-      energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
-      vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
+      energyMode:
+        !!JSON.parse(
+          typeof window !== "undefined"
+            ? localStorage.getItem("energyMode")
+            : "false"
+        ) || false,
+      vibrateDuration:
+        JSON.parse(
+          typeof window !== "undefined"
+            ? localStorage.getItem("vibrateDuration")
+            : "1"
+        ) ?? 1,
       isVisible: true,
-      analytics: JSON.parse(localStorage.getItem("analytics")) ?? true,
+      analytics:
+        JSON.parse(
+          typeof window !== "undefined"
+            ? localStorage.getItem("analytics")
+            : "true"
+        ) ?? true,
     };
   };
+  useEffect(() => {
+    state.analytics && reportWebVitals(sendToGoogleAnalytics);
+  });
   type State = AppState;
   const [state, setStateRaw] = useState(getInitialState);
   const { geoPermission } = state;
@@ -473,8 +580,10 @@ export const AppContextProvider = ({
 
   const contextValue = useMemo(() => {
     return {
-      ...dbContext,
       ...state,
+      AppTitle,
+      db,
+      renewDb,
       setSearchRoute,
       updateSearchRouteByButton,
       updateSelectedRoute,
@@ -494,8 +603,9 @@ export const AppContextProvider = ({
       workbox,
     };
   }, [
-    dbContext,
     state,
+    db,
+    renewDb,
     setSearchRoute,
     updateSearchRouteByButton,
     updateSelectedRoute,
@@ -514,8 +624,19 @@ export const AppContextProvider = ({
     toggleAnalytics,
     workbox,
   ]);
+  const theme = useMemo(() => {
+    return createTheme(getThemeTokens(state.colorMode), [state.colorMode]);
+  }, [state.colorMode]);
   return (
-    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+    <DbProvider AppTitle={AppTitle} db={db} renewDb={renewDb}>
+      <AppContext.Provider value={contextValue}>
+        <ThemeProvider theme={theme}>
+          <StyledEngineProvider injectFirst>
+            <CacheProvider value={emotionCache}>{children}</CacheProvider>
+          </StyledEngineProvider>
+        </ThemeProvider>
+      </AppContext.Provider>
+    </DbProvider>
   );
 };
 

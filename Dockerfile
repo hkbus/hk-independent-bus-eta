@@ -12,17 +12,17 @@ ENV CI $CI
 ARG PRERENDER
 ENV PRERENDER $PRERENDER
 
-ARG REACT_APP_OSM_PROVIDER_HOST
-ENV REACT_APP_OSM_PROVIDER_HOST $REACT_APP_OSM_PROVIDER_HOST
+ARG NEXT_PUBLIC_OSM_PROVIDER_HOST
+ENV NEXT_PUBLIC_OSM_PROVIDER_HOST $NEXT_PUBLIC_OSM_PROVIDER_HOST
 
-ARG REACT_APP_OSM_PROVIDER_URL
-ENV REACT_APP_OSM_PROVIDER_URL $REACT_APP_OSM_PROVIDER_URL
+ARG NEXT_PUBLIC_OSM_PROVIDER_URL
+ENV NEXT_PUBLIC_OSM_PROVIDER_URL $NEXT_PUBLIC_OSM_PROVIDER_URL
 
-ARG REACT_APP_OSM_PROVIDER_URL_DARK
-ENV REACT_APP_OSM_PROVIDER_URL_DARK $REACT_APP_OSM_PROVIDER_URL_DARK
+ARG NEXT_PUBLIC_OSM_PROVIDER_URL_DARK
+ENV NEXT_PUBLIC_OSM_PROVIDER_URL_DARK $NEXT_PUBLIC_OSM_PROVIDER_URL_DARK
 
-ARG REACT_APP_CI_JOB_ID
-ENV REACT_APP_CI_JOB_ID $REACT_APP_CI_JOB_ID
+ARG NEXT_PUBLIC_CI_JOB_ID
+ENV NEXT_PUBLIC_CI_JOB_ID $NEXT_PUBLIC_CI_JOB_ID
 
 WORKDIR /usr/src/app
 
@@ -41,10 +41,6 @@ COPY ./public ./public
 
 RUN if [ "$env" = "dev" ]; then mkdir build; else yarn build; fi;
 
-COPY ./scripts ./scripts
-RUN if [ "$PRERENDER" = "true" ]; then ./scripts/puppeteer-deps.sh; fi;
-RUN if [ "$PRERENDER" = "true" ] && [ "$env" != "dev" ]; then node scripts/sitemap-generator.js && node scripts/pre-rendering.js; fi;
-
 FROM node:18-alpine
 
 ARG env
@@ -61,4 +57,4 @@ COPY --from=build /usr/src/app/build ./build
 RUN yarn global add serve
 RUN if [ "$env" = "dev" ]; then yarn install && yarn cache clean; fi;
 
-CMD if [ "$env" = "dev" ]; then yarn start; else serve -s build; fi;
+CMD if [ "$env" = "dev" ]; then yarn start; else serve -s out; fi;

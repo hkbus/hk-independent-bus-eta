@@ -1,17 +1,18 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Button, Divider, SxProps, Theme } from "@mui/material";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
 import TimetableDrawer from "./TimetableDrawer";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
+import type { RouteListEntry } from "hk-bus-eta";
 
-const TimeTableButton = ({ routeId }: { routeId: string }) => {
+const TimeTableButton = ({
+  routeListEntry,
+}: {
+  routeListEntry: RouteListEntry;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
-  const {
-    db: { routeList },
-  } = useContext(AppContext);
-  const { freq, jt } = routeList[routeId];
+  const { freq, jt } = routeListEntry;
 
   return (
     freq && (

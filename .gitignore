@@ -35,3 +35,11 @@ yarn-error.log*
 
 /docker/.env
 .vscode/
+.next
+out
+public/sitemap*
+public/sw.js
+public/workbox*.js
+public/worker*.js
+public/robots.txt
+public/*.js.map

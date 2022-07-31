@@ -1,30 +1,55 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import {
-  MapContainer,
-  Marker,
-  TileLayer,
-  Polyline,
-  Circle,
-  useMap,
-} from "react-leaflet";
-import Leaflet from "leaflet";
+import dynamic from "next/dynamic";
+import { latLngBounds, latLng, icon } from "leaflet";
+import type { Map as LeafletMap } from "leaflet";
 import { useTranslation } from "react-i18next";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { checkPosition } from "../../utils";
-import { Location as GeoLocation } from "hk-bus-eta";
+import type { Location as GeoLocation } from "hk-bus-eta";
+import { MapContainer } from "react-leaflet";
+const Marker = dynamic(
+  async () => {
+    return (await import("react-leaflet")).Marker;
+  },
+  { ssr: false }
+);
+const TileLayer = dynamic(
+  async () => {
+    return (await import("react-leaflet")).TileLayer;
+  },
+  { ssr: false }
+);
+const Polyline = dynamic(
+  async () => {
+    return (await import("react-leaflet")).Polyline;
+  },
+  { ssr: false }
+);
+const Circle = dynamic(
+  async () => {
+    return (await import("react-leaflet")).Circle;
+  },
+  { ssr: false }
+);
 
-const ChangeMapCenter = ({ center, start, end }) => {
-  const map = useMap();
-  if (center) map.flyTo(checkPosition(center));
+const ChangeMapCenter = ({
+  center,
+  start,
+  end,
+  map,
+}: {
+  center: GeoLocation;
+  start: GeoLocation;
+  end: GeoLocation;
+  map: LeafletMap | null;
+}) => {
+  if (center) map?.flyTo(checkPosition(center));
   else if (end)
-    map.fitBounds(
-      Leaflet.latLngBounds(
-        Leaflet.latLng(start.lat, start.lng),
-        Leaflet.latLng(end.lat, end.lng)
-      )
+    map?.fitBounds(
+      latLngBounds(latLng(start.lat, start.lng), latLng(end.lat, end.lng))
     );
   return <></>;
 };
@@ -69,12 +94,15 @@ const BusRoute = ({
   lv,
   stopIdx,
   onMarkerClick,
+}: {
+  route: any;
+  lv: any;
+  stopIdx: number;
+  onMarkerClick: (routeId: number, idx: number) => void;
 }) => {
-  const {
-    db: { routeList, stopList },
-  } = useContext(AppContext);
+  const { db } = useContext(AppContext);
   const { i18n } = useTranslation();
-  const stops = Object.values(routeList[routeId].stops)
+  const stops = Object.values(db.routeList?.[routeId]?.stops ?? {})
     .sort((a, b) => b.length - a.length)[0]
     .slice(on, off + 1);
   const routeNo = routeId.split("-")[0];
@@ -84,13 +112,15 @@ const BusRoute = ({
       {stops.map((stopId, idx) => (
         <Marker
           key={`${stopId}-${idx}`}
-          position={stopList[stopId].location}
+          position={db.stopList?.[stopId]?.location}
           icon={BusStopMarker({
             active: stopIdx === idx,
             passed: idx < stopIdx,
             lv,
           })}
-          alt={`${idx}. ${routeNo} - ${stopList[stopId].name[i18n.language]}`}
+          alt={`${idx}. ${routeNo} - ${
+            db.stopList?.[stopId].name[i18n.language]
+          }`}
           eventHandlers={{
             click: (e) => {
               onMarkerClick(routeId, idx);
@@ -102,8 +132,8 @@ const BusRoute = ({
         <Polyline
           key={`${stopId}-line`}
           positions={[
-            getPoint(stopList[stops[idx]].location),
-            getPoint(stopList[stopId].location),
+            getPoint(checkPosition(db.stopList?.[stops[idx]].location)),
+            getPoint(checkPosition(db.stopList?.[stopId].location)),
           ]}
           color={lv === 0 ? "#FF9090" : "#d0b708"}
         />
@@ -116,8 +146,8 @@ const Walklines = ({ routes, start, end }) => {
   const {
     db: { routeList, stopList },
   } = useContext(AppContext);
-  const lines = [];
-  const points = [];
+  const lines: [GeoLocation, GeoLocation][] = [];
+  const points: GeoLocation[] = [];
 
   if (!(start && end)) return <></>;
 
@@ -147,7 +177,19 @@ const Walklines = ({ routes, start, end }) => {
   );
 };
 
-const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
+const SearchMap = ({
+  routes,
+  start,
+  end,
+  stopIdx,
+  onMarkerClick,
+}: {
+  routes: any;
+  start: GeoLocation;
+  end: GeoLocation;
+  stopIdx: number[];
+  onMarkerClick: (routeId: number, idx: number) => void;
+}) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } =
     useContext(AppContext);
   const [mapState, setMapState] = useState({
@@ -155,7 +197,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
     isFollow: false,
   });
   const { center, isFollow } = mapState;
-  const [map, setMap] = useState<Leaflet.Map>(null);
+  const [map, setMap] = useState<LeafletMap>(null);
 
   const updateCenter = useCallback(
     (state?: { center?: GeoLocation; isFollow?: boolean }) => {
@@ -217,6 +259,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
         ref={setMap}
       >
         <ChangeMapCenter
+          map={map}
           center={center}
           start={checkPosition(start)}
           end={end}
@@ -265,8 +308,8 @@ export default SearchMap;
 const getPoint = ({ lat, lng }) => [lat, lng];
 
 const BusStopMarker = ({ active, passed, lv }) => {
-  return Leaflet.icon({
-    iconUrl: "https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png",
+  return icon({
+    iconUrl: "/icons/marker-icon-2x.png",
     className: `${classes.marker} ${active ? classes.active : ""} ${
       passed ? classes.passed : ""
     } lv-${lv}`,
@@ -274,8 +317,8 @@ const BusStopMarker = ({ active, passed, lv }) => {
 };
 
 const EndsMarker = ({ isStart }) => {
-  return Leaflet.icon({
-    iconUrl: "https://unpkg.com/leaflet@1.0.1/dist/images/marker-icon-2x.png",
+  return icon({
+    iconUrl: "/icons/marker-icon-2x.png",
     className: `${classes.marker} ${isStart ? "start" : "end"}`,
   });
 };

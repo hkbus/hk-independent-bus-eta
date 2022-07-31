@@ -18,10 +18,7 @@ const TimeReport = ({
   showStopName = false,
 }: TimeReportProps) => {
   const { t, i18n } = useTranslation();
-  const {
-    db: { routeList, stopList },
-    etaFormat,
-  } = useContext(AppContext);
+  const { db, etaFormat } = useContext(AppContext);
   const etas = useEtas(`${routeId}/${seq}`);
 
   if (etas == null) {
@@ -55,13 +52,16 @@ const TimeReport = ({
       }
     }
   };
-  const stopId = Object.values(routeList[routeId].stops)[0][seq];
+  const stopId =
+    db.routeList !== undefined
+      ? Object.values(db.routeList[routeId].stops)[0][seq]
+      : 0;
 
   return (
     <div className={containerClass}>
       {showStopName ? (
         <Typography variant="caption">
-          {stopList[stopId].name[i18n.language]}
+          {db.stopList?.[stopId].name[i18n.language]}
         </Typography>
       ) : null}
       {etas.length === 0

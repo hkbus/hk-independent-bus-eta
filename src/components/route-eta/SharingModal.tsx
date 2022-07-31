@@ -53,9 +53,11 @@ const SharingModal = ({
   const handleShareLink = useCallback(() => {
     triggerShare(
       `https://${window.location.hostname}/${i18n.language}/route/${id}`,
-      `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
-        "往"
-      )} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}`
+      `${idx + 1}. ${toProperCase(
+        stop.name[i18n.language] ?? ""
+      )} - ${route} ${t("往")} ${toProperCase(dest[i18n.language] ?? "")} - ${t(
+        AppTitle
+      )}`
     )
       .then(() => {
         if (navigator.clipboard) setIsCopied(true);
@@ -70,9 +72,11 @@ const SharingModal = ({
     triggerShareImg(
       imgBase64,
       `https://${window.location.hostname}/${i18n.language}/route/${id}`,
-      `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
-        "往"
-      )} ${toProperCase(dest[i18n.language])} - https://hkbus.app/`
+      `${idx + 1}. ${toProperCase(
+        stop.name[i18n.language] ?? ""
+      )} - ${route} ${t("往")} ${toProperCase(
+        dest[i18n.language] ?? ""
+      )} - https://hkbus.app/`
     )
       .then(() => {
         if (navigator.clipboard) setIsCopied(true);

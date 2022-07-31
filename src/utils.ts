@@ -230,7 +230,7 @@ export const getTileListURL = (
   zoomLevel: number,
   stopLists: Array<StopListEntry>,
   retinaDisplay: boolean
-) => {
+): string[] => {
   const high = 255 * (zoomLevel + 5) * (zoomLevel + 5);
   const compare = (a: TempEntry, b: TempEntry) => b.key - a.key;
   return stopLists
@@ -251,12 +251,12 @@ export const getTileListURL = (
       return prev;
     }, [])
     .flatMap((entry) => [
-      process.env.REACT_APP_OSM_PROVIDER_URL.replaceAll("{s}", "a")
+      process.env.NEXT_PUBLIC_OSM_PROVIDER_URL.replaceAll("{s}", "a")
         .replaceAll("{x}", String(entry.x))
         .replaceAll("{y}", String(entry.y))
         .replaceAll("{z}", String(zoomLevel))
         .replaceAll("{r}", retinaDisplay ? "@2x" : ""),
-      process.env.REACT_APP_OSM_PROVIDER_URL_DARK.replaceAll("{s}", "a")
+      process.env.NEXT_PUBLIC_OSM_PROVIDER_URL_DARK.replaceAll("{s}", "a")
         .replaceAll("{x}", String(entry.x))
         .replaceAll("{y}", String(entry.y))
         .replaceAll("{z}", String(zoomLevel))

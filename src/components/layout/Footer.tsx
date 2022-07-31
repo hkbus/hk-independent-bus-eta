@@ -1,11 +1,12 @@
-import React, { useContext, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { BottomNavigation, BottomNavigationAction } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import TimerIcon from "@mui/icons-material/Timer";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { NextLinkComposed } from "../Link";
+import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { styled } from "@mui/material/styles";
@@ -13,32 +14,31 @@ import { vibrate } from "../../utils";
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
-  const location = useLocation();
-  const { selectedRoute, colorMode, vibrateDuration } = useContext(AppContext);
+  const { selectedRoute, vibrateDuration } = useContext(AppContext);
 
-  const navigate = useNavigate();
-  const handleClick = (
-    link: string,
-    e: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    e.preventDefault();
-    vibrate(vibrateDuration);
-    setTimeout(() => navigate(link), 0);
-  };
+  const router = useRouter();
+  const handleClick = useCallback(
+    (link: string, e: React.MouseEvent<unknown>) => {
+      e.preventDefault();
+      vibrate(vibrateDuration);
+      setTimeout(() => router.push(link), 0);
+    },
+    [router, vibrateDuration]
+  );
 
   return useMemo(
     () => (
       <Root
-        value={location.pathname.replace(/(.*)\/[0-9]*?$/, "$1")}
+        value={router.pathname.replace(/(.*)\/[0-9]*?$/, "$1")}
         showLabels={true}
         classes={{ root: classes.root }}
       >
         <BottomNavigationAction
           label={t("首頁")}
-          component={Link}
-          to={`/${i18n.language}`}
-          onClick={(e) => handleClick(`/${i18n.language}`, e)}
-          value={`/${i18n.language}`}
+          component={NextLinkComposed}
+          to={`/${i18n.language}/`}
+          onClick={(e) => handleClick(`/${i18n.language}/`, e)}
+          value={`/${i18n.language}/`}
           icon={<HomeIcon />}
           classes={{
             root: "footer-actionItem",
@@ -47,7 +47,7 @@ const Footer = () => {
         />
         <BottomNavigationAction
           label={t("搜尋")}
-          component={Link}
+          component={NextLinkComposed}
           to={`/${i18n.language}/board`}
           onClick={(e) => handleClick(`/${i18n.language}/board`, e)}
           value={`/${i18n.language}/board`}
@@ -59,7 +59,7 @@ const Footer = () => {
         />
         <BottomNavigationAction
           label={selectedRoute.split("-")[0]}
-          component={Link}
+          component={NextLinkComposed}
           to={`/${i18n.language}/route/${selectedRoute
             .replace(/(.*)\/.*$/, "$1")
             .toLowerCase()}`}
@@ -81,9 +81,9 @@ const Footer = () => {
         />
         <BottomNavigationAction
           label={t("規劃")}
-          component={Link}
+          component={NextLinkComposed}
           to={`/${i18n.language}/search`}
-          onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
+          onClick={(e: React.MouseEvent<unknown>) =>
             handleClick(`/${i18n.language}/search`, e)
           }
           value={`/${i18n.language}/search`}
@@ -95,10 +95,10 @@ const Footer = () => {
         />
         <BottomNavigationAction
           label={t("設定")}
-          component={Link}
+          component={NextLinkComposed}
           to={`/${i18n.language}/settings`}
           rel="nofollow"
-          onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
+          onClick={(e: React.MouseEvent<unknown>) =>
             handleClick(`/${i18n.language}/settings`, e)
           }
           value={`/${i18n.language}/settings`}
@@ -110,14 +110,7 @@ const Footer = () => {
         />
       </Root>
     ),
-    // eslint-disable-next-line
-    [
-      location.pathname,
-      i18n.language,
-      colorMode,
-      selectedRoute,
-      vibrateDuration,
-    ]
+    [router.pathname, t, i18n.language, selectedRoute, handleClick]
   );
 };
 

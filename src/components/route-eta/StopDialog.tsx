@@ -16,7 +16,7 @@ const StopDialog = ({ open, stops, handleClose }) => {
   const [routes, setRoutes] = useState([]);
 
   useEffect(() => {
-    if (stops === undefined) {
+    if (stops === undefined || routeList === undefined) {
       setRoutes([]);
       return;
     }
@@ -39,7 +39,7 @@ const StopDialog = ({ open, stops, handleClose }) => {
   return (
     <DialogRoot open={open} onClose={handleClose} className={classes.root}>
       <DialogTitle className={classes.title}>
-        {stopList[stops[0][1]].name[i18n.language]}
+        {stopList?.[stops[0][1]].name?.[i18n.language] ?? ""}
       </DialogTitle>
       <DialogContent>
         <List>

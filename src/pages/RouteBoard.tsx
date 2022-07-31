@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, { useContext, useState, useCallback, useEffect } from "react";
 import AppContext from "../AppContext";
 import { Box } from "@mui/material";
 import RouteInputPad from "../components/route-board/RouteInputPad";
 import { useTranslation } from "react-i18next";
-import { setSeoHeader } from "../utils";
 import BoardTabbar, {
   BoardTabType,
   isBoardTab,
 } from "../components/route-board/BoardTabbar";
 import SwipeableRoutesBoard from "../components/route-board/SwipeableRoutesBoard";
+import SeoHeader from "../SeoHeader";
 
 interface RouteListProps {
   boardTab: BoardTabType;
@@ -16,21 +16,8 @@ interface RouteListProps {
 }
 
 const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
-  const { AppTitle } = useContext(AppContext);
-
-  const { t, i18n } = useTranslation();
-
-  useEffect(() => {
-    setSeoHeader({
-      title: t("搜尋") + " - " + t(AppTitle),
-      description: t("route-board-page-description"),
-      lang: i18n.language,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
-
   const handleTabChange = useCallback(
-    (v) => {
+    (v: BoardTabType) => {
       setBoardTab(v);
       localStorage.setItem("boardTab", v);
     },
@@ -46,13 +33,24 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
 };
 
 const RouteBoard = () => {
-  const _boardTab = localStorage.getItem("boardTab");
-  const [boardTab, setBoardTab] = useState<BoardTabType>(
-    isBoardTab(_boardTab) ? _boardTab : "all"
-  );
+  const { t } = useTranslation();
+  const { AppTitle } = useContext(AppContext);
+  const [boardTab, setBoardTab] = useState<BoardTabType>("all");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const _boardTab = localStorage.getItem("boardTab");
+      if (isBoardTab(_boardTab) && _boardTab !== "all") {
+        setBoardTab(_boardTab);
+      }
+    }
+  }, []);
 
   return (
     <>
+      <SeoHeader
+        title={`${t("搜尋")} - ${t(AppTitle)}`}
+        description={t("route-board-page-description")}
+      />
       <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
       <RouteInputPad boardTab={boardTab} />
     </>

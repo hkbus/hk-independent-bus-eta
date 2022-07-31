@@ -29,19 +29,14 @@ export const useWeather = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const fetchData = () => {
-      if (navigator.userAgent === "prerendering") {
-        // skip if prerendering
-        setWeather({});
-        return new Promise((resolve) => resolve([]));
-      }
-      return fetch(
+    const fetchData = async () => {
+      const res = await fetch(
         "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en"
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (isMounted) setWeather(data);
-        });
+      );
+      const data = await res.json();
+      if (isMounted) {
+        setWeather(data);
+      }
     };
 
     const fetchEtaInterval = setInterval(() => {

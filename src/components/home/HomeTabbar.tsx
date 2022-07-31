@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Tabs, Tab, SxProps, Theme } from "@mui/material";
 import {
   Cloud as CloudIcon,
@@ -14,13 +14,15 @@ interface HomeTabbarProps {
 
 const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
   const { t } = useTranslation();
-
+  const onTabChaneg: React.ComponentProps<typeof Tabs>["onChange"] =
+    useCallback(
+      (e, v) => {
+        onChangeTab(v, true);
+      },
+      [onChangeTab]
+    );
   return (
-    <Tabs
-      value={homeTab}
-      onChange={(e, v) => onChangeTab(v, true)}
-      sx={tabbarSx}
-    >
+    <Tabs value={homeTab} onChange={onTabChaneg} sx={tabbarSx}>
       <Tab
         iconPosition="start"
         icon={<CloudIcon />}

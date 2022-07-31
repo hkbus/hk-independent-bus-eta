@@ -25,7 +25,7 @@ const BadWeatherCard = () => {
     }
   };
 
-  if (navigator.userAgent !== "prerendering" && isAdverse()) {
+  if (isAdverse()) {
     return (
       <WeatherCard variant="outlined" className={classes.card}>
         <CardActionArea href={t("bad-weather-link")} target="_blank">

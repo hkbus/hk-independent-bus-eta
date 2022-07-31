@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import {
   useContext,
   useEffect,
@@ -6,15 +7,8 @@ import {
   useMemo,
   useState,
 } from "react";
-import {
-  MapContainer,
-  Marker,
-  TileLayer,
-  Polyline,
-  Circle,
-} from "react-leaflet";
-import Leaflet from "leaflet";
-import markerIcon2X from "leaflet/dist/images/marker-icon-2x.png";
+import dynamic from "next/dynamic";
+import { divIcon, Browser } from "leaflet";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
@@ -24,6 +18,31 @@ import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { checkPosition, locationEqual } from "../../utils";
 import type { Map as LeafletMap } from "leaflet";
 import type { Location as GeoLocation } from "hk-bus-eta";
+import { MapContainer } from "react-leaflet";
+const Marker = dynamic(
+  async () => {
+    return (await import("react-leaflet")).Marker;
+  },
+  { ssr: false }
+);
+const TileLayer = dynamic(
+  async () => {
+    return (await import("react-leaflet")).TileLayer;
+  },
+  { ssr: false }
+);
+const Polyline = dynamic(
+  async () => {
+    return (await import("react-leaflet")).Polyline;
+  },
+  { ssr: false }
+);
+const Circle = dynamic(
+  async () => {
+    return (await import("react-leaflet")).Circle;
+  },
+  { ssr: false }
+);
 
 const SelfCircle = () => {
   const { geolocation, geoPermission } = useContext(AppContext);
@@ -69,7 +88,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } =
     useContext(AppContext);
   const { i18n } = useTranslation();
-  const [map, setMap] = useState<Leaflet.Map>(null);
+  const [map, setMap] = useState<LeafletMap>(null);
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
     currentStopCenter: stops[stopIdx]
@@ -179,6 +198,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         alt={`${idx}. ${stop.name[i18n.language]}`}
         eventHandlers={{
           click: (e) => {
+            console.log("onMarkerClick", idx, e);
             onMarkerClick(idx, e);
           },
         }}
@@ -220,15 +240,15 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         <TileLayer
           crossOrigin="anonymous"
           detectRetina
-          maxZoom={Leaflet.Browser.retina ? 20 : 19}
+          maxZoom={Browser.retina ? 20 : 19}
           maxNativeZoom={18}
           keepBuffer={10}
           updateWhenIdle={false}
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url={
             colorMode === "light"
-              ? process.env.REACT_APP_OSM_PROVIDER_URL
-              : process.env.REACT_APP_OSM_PROVIDER_URL_DARK
+              ? process.env.NEXT_PUBLIC_OSM_PROVIDER_URL
+              : process.env.NEXT_PUBLIC_OSM_PROVIDER_URL_DARK
           }
         />
         {stopMarkers}
@@ -245,7 +265,7 @@ export default RouteMap;
 const getPoint = ({ lat, lng }) => [lat, lng];
 
 const BusStopMarker = ({ active, passed }) => {
-  return Leaflet.divIcon({
+  return divIcon({
     iconSize: [25, 41],
     iconAnchor: [12.5, 41],
     className: `${classes.marker} ${active ? classes.active : ""} ${
@@ -280,7 +300,7 @@ const RouteMapBox = styled(Box)(({ theme }) => ({
     zIndex: 618,
     outline: "none",
     filter: "hue-rotate(130deg)",
-    backgroundImage: `url(${markerIcon2X})`,
+    backgroundImage: "url(/icons/marker-icon-2x.png)",
     backgroundSize: "cover",
   },
   [`& .${classes.active}`]: {

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import {
   Box,
   Divider,
@@ -9,7 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import ReorderIcon from "@mui/icons-material/Reorder";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { NextLinkComposed } from "../Link";
+import { useRouter } from "next/router";
 import { vibrate } from "../../utils";
 import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
@@ -17,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import SuccinctEtas from "./SuccinctEtas";
 import { getDistanceWithUnit, toProperCase } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
-import { Location } from "hk-bus-eta";
+import type { Location } from "hk-bus-eta";
 
 interface DistAndFareProps {
   name: string;
@@ -73,70 +75,72 @@ const SuccinctTimeReport = ({
   disabled = false,
 }: SuccinctTimeReportProps) => {
   const { t, i18n } = useTranslation();
-  const {
-    db: { routeList, stopList },
-    vibrateDuration,
-  } = useContext(AppContext);
+  const { db, vibrateDuration } = useContext(AppContext);
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
   const { co, stops, dest, fares, faresHoliday } =
-    routeList[routeKey] || DefaultRoute;
-  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DefaultStop;
+    db.routeList?.[routeKey] ?? DefaultRoute;
+  const stop =
+    db.stopList?.[getStops(co, stops)[parseInt(seq, 10)]] ?? DefaultStop;
 
-  const navigate = useNavigate();
-  const handleClick = (e) => {
-    e.preventDefault();
-    vibrate(vibrateDuration);
-    setTimeout(() => {
-      navigate(`/${i18n.language}/route/${routeId.toLowerCase()}`);
-    }, 0);
-  };
+  const router = useRouter();
+  const newPath = `/${i18n.language}/route/${routeKey.toLowerCase()}`;
+  const handleClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      vibrate(vibrateDuration);
+      setTimeout(() => {
+        router.push(newPath);
+      }, 0);
+    },
+    [newPath, router, vibrateDuration]
+  );
 
   return (
     <>
-      <RootListItem
-        // @ts-ignore
-        component={!disabled ? Link : undefined}
-        to={`/${i18n.language}/route/${routeKey.toLowerCase()}`}
-        onClick={!disabled ? handleClick : () => {}}
-        className={classes.listItem}
-      >
-        <ListItemText primary={<RouteNo routeNo={routeNo} />} />
-        <ListItemText
-          primary={
-            <Typography
-              component="h3"
-              variant="body1"
-              color="textPrimary"
-              className={classes.fromToWrapper}
-            >
-              <span className={classes.fromToText}>{t("往")}</span>
-              <b>{toProperCase(dest[i18n.language])}</b>
-            </Typography>
-          }
-          secondary={
-            <DistAndFare
-              name={toProperCase(stop.name[i18n.language])}
-              location={stop.location}
-              fares={fares}
-              faresHoliday={faresHoliday}
-              seq={parseInt(seq, 10)}
-            />
-          }
-          secondaryTypographyProps={{
-            component: "h4",
-            variant: "subtitle2",
-          }}
-          className={classes.routeDest}
-        />
-        {!disabled ? (
-          <SuccinctEtas routeId={routeId} />
-        ) : (
-          <Box sx={iconContainerSx}>
-            <ReorderIcon />
-          </Box>
-        )}
-      </RootListItem>
+      <Link href={`/[locale]/route/[id]`} as={newPath}>
+        <RootListItem
+          className={classes.listItem}
+          disabled={disabled}
+          onClick={!disabled ? handleClick : undefined}
+        >
+          <ListItemText primary={<RouteNo routeNo={routeNo} />} />
+          <ListItemText
+            primary={
+              <Typography
+                component="h3"
+                variant="body1"
+                color="textPrimary"
+                className={classes.fromToWrapper}
+              >
+                <span className={classes.fromToText}>{t("往")}</span>
+                <b>{toProperCase(dest[i18n.language] ?? "")}</b>
+              </Typography>
+            }
+            secondary={
+              <DistAndFare
+                name={toProperCase(stop.name[i18n.language])}
+                location={stop.location}
+                fares={fares}
+                faresHoliday={faresHoliday}
+                seq={parseInt(seq, 10)}
+              />
+            }
+            secondaryTypographyProps={{
+              component: "h4",
+              variant: "subtitle2",
+            }}
+            className={classes.routeDest}
+          />
+          {!disabled ? (
+            <SuccinctEtas routeId={routeId} />
+          ) : (
+            <Box sx={iconContainerSx}>
+              <ReorderIcon />
+            </Box>
+          )}
+        </RootListItem>
+      </Link>
       <Divider />
     </>
   );

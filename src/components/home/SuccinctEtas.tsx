@@ -4,9 +4,9 @@ import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { useEtas } from "../Etas";
 import AppContext from "../../AppContext";
-import { Eta } from "hk-bus-eta";
+import type { Eta } from "hk-bus-eta";
 
-const SuccinctEtas = ({ routeId }) => {
+const SuccinctEtas = ({ routeId }: { routeId: string }) => {
   const { t, i18n } = useTranslation();
   const { etaFormat } = useContext(AppContext);
   const etas = useEtas(routeId);

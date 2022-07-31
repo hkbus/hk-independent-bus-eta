@@ -1,15 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { fetchEtas } from "hk-bus-eta";
 import AppContext from "../AppContext";
-
-export const useEtas = (routeId) => {
-  const {
-    db: { routeList },
-    isVisible,
-  } = useContext(AppContext);
+export const useEtas = (routeId: string) => {
+  const { db, isVisible } = useContext(AppContext);
   const [routeKey, seq] = routeId.split("/");
-  const routeObj = routeList[routeKey] || DefaultRoute;
+  const routeObj = db.routeList?.[routeKey] ?? DefaultRoute;
   const [etas, setEtas] = useState(null);
   const {
     i18n: { language },
@@ -18,19 +13,20 @@ export const useEtas = (routeId) => {
   useEffect(() => {
     let isMounted = true;
 
-    const fetchData = () => {
-      if (!isVisible || navigator.userAgent === "prerendering") {
-        // skip if prerendering
+    const fetchData = async () => {
+      if (!isVisible) {
         setEtas(null);
-        return new Promise((resolve) => resolve([]));
+        return [];
       }
-      return fetchEtas({
+      const fetchEtas = await import("hk-bus-eta").then((mod) => mod.fetchEtas);
+      const _etas = await fetchEtas({
         ...routeObj,
         seq: parseInt(seq, 10),
         language,
-      }).then((_etas) => {
-        if (isMounted) setEtas(_etas);
       });
+      if (isMounted) {
+        setEtas(_etas);
+      }
     };
 
     const fetchEtaInterval = setInterval(() => {

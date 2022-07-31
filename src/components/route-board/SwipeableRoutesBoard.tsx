@@ -1,10 +1,15 @@
-import React, { useContext, useMemo, useCallback } from "react";
+import React, {
+  useContext,
+  useMemo,
+  useCallback,
+  useState,
+  useEffect,
+} from "react";
 import SwipeableViews from "react-swipeable-views";
 import { virtualize, bindKeyboard } from "react-swipeable-views-utils";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import { FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
-import memorize from "memoize-one";
 import { useTranslation } from "react-i18next";
 import { styled } from "@mui/material/styles";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
@@ -25,21 +30,19 @@ const SwipeableRoutesBoard = ({
   boardTab,
   onChangeTab,
 }: SwipeableRouteBoardProps) => {
-  const {
-    searchRoute,
-    db: { holidays, routeList },
-    isRouteFilter,
-    busSortOrder,
-    vibrateDuration,
-  } = useContext(AppContext);
+  const { searchRoute, db, isRouteFilter, busSortOrder, vibrateDuration } =
+    useContext(AppContext);
   const isTodayHoliday = useMemo(
-    () => isHoliday(holidays, new Date()),
-    [holidays]
+    () => isHoliday(db.holidays ?? [], new Date()),
+    [db.holidays]
   );
   const { t } = useTranslation();
 
   const coItemDataList = useMemo(() => {
-    const baseRouteList = Object.entries(routeList)
+    if (db.routeList === undefined) {
+      return [];
+    }
+    const baseRouteList = Object.entries(db.routeList)
       // filter by route no
       .filter(
         ([routeNo, { stops, co }]) =>
@@ -52,32 +55,29 @@ const SwipeableRoutesBoard = ({
           !isRouteFilter || isRouteAvaliable(routeNo, freq, isTodayHoliday)
       )
       .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]));
-    return Object.entries(TRANSPORT_SEARCH_OPTIONS).map(
-      ([tab, searchOptions]) =>
-        createItemData(
-          baseRouteList.filter(([routeNo, { co }]) =>
-            co.some((c) => searchOptions.includes(c))
-          ),
-          vibrateDuration
-        )
-    );
+    return Object.values(TRANSPORT_SEARCH_OPTIONS).map((searchOptions) => ({
+      routeList: baseRouteList.filter(([routeNo, { co }]) =>
+        co.some((c) => searchOptions.includes(c))
+      ),
+      vibrateDuration,
+    }));
   }, [
-    routeList,
-    isTodayHoliday,
+    db.routeList,
     searchRoute,
     isRouteFilter,
-    vibrateDuration,
+    isTodayHoliday,
     busSortOrder,
+    vibrateDuration,
   ]);
 
   const ListRenderer = useCallback(
     ({ key, index }) => (
-      <React.Fragment key={key}>
-        {!!coItemDataList[index].routeList.length ? (
+      <div key={key} style={{ height: "100%" }}>
+        {!!coItemDataList[index]?.routeList.length ? (
           <AutoSizer>
             {({ height, width }) => (
               <FixedSizeList
-                height={height * 0.98}
+                height={Math.min(height * 0.98, window.screen.height)}
                 itemCount={coItemDataList[index].routeList.length}
                 itemSize={56}
                 width={width}
@@ -91,21 +91,32 @@ const SwipeableRoutesBoard = ({
         ) : (
           <Box sx={noResultSx}>
             <SentimentVeryDissatisfiedIcon />
-            <Typography variant="h6">"{searchRoute}"</Typography>
+            <Typography variant="h6">&quot;{searchRoute}&quot;</Typography>
             <Typography variant="h6">{t("route-search-no-result")}</Typography>
           </Box>
         )}
-      </React.Fragment>
+      </div>
     ),
     [coItemDataList, searchRoute, t]
   );
 
-  return useMemo(
-    () => (
+  const onChangeIndex = useCallback(
+    (idx: number) => {
+      onChangeTab(BOARD_TAB[idx]);
+    },
+    [onChangeTab]
+  );
+  const [prerender, setPrerender] = useState(true);
+  useEffect(() => {
+    setPrerender(false);
+  }, []);
+  return useMemo(() => {
+    const list = coItemDataList[0]?.routeList ?? [];
+    return (
       <>
-        {navigator.userAgent === "prerendering" ? (
+        {prerender ? (
           <PrerenderList className={classes.prerenderList}>
-            {coItemDataList[0].routeList.map((data, idx) => (
+            {list.slice(0, Math.min(list.length, 100)).map((data, idx) => (
               <RouteRow
                 data={coItemDataList[0]}
                 key={`route-${idx}`}
@@ -117,9 +128,7 @@ const SwipeableRoutesBoard = ({
         ) : (
           <VirtualizeSwipeableViews
             index={BOARD_TAB.indexOf(boardTab)}
-            onChangeIndex={(idx) => {
-              onChangeTab(BOARD_TAB[idx]);
-            }}
+            onChangeIndex={onChangeIndex}
             style={{ flex: 1, display: "flex" }}
             containerStyle={{ flex: 1 }}
             slideCount={coItemDataList.length}
@@ -130,15 +139,9 @@ const SwipeableRoutesBoard = ({
           />
         )}
       </>
-    ),
-    [ListRenderer, coItemDataList, onChangeTab, boardTab]
-  );
+    );
+  }, [prerender, coItemDataList, boardTab, onChangeIndex, ListRenderer]);
 };
-
-const createItemData = memorize((routeList, vibrateDuration) => ({
-  routeList,
-  vibrateDuration,
-}));
 
 const VirtualizeSwipeableViews = bindKeyboard(virtualize(SwipeableViews));
 
