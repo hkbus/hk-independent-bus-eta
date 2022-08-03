@@ -29,6 +29,7 @@ import {
   SsidChart as SsidChartIcon,
   BarChart as BarChartIcon,
   Info as InfoIcon,
+  SendToMobile as SendToMobileIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -41,6 +42,7 @@ import {
 import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
 import PersonalizeDialog from "../components/settings/PersonalizeDialog";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const {
@@ -65,12 +67,7 @@ const Settings = () => {
     []
   );
 
-  console.log(
-    process.env.REACT_APP_COMMIT_HASH,
-    process.env.REACT_APP_VERSION,
-    process.env.REACT_APP_COMMIT_MESSAGE,
-    process.env.REACT_APP_REPO_URL
-  );
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSeoHeader({
@@ -213,6 +210,19 @@ const Settings = () => {
             primary={t("個性化設定")}
             secondary={t("日夜模式、時間格式、路線次序等")}
           />
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            vibrate(vibrateDuration);
+            navigate(`/${i18n.language}/qr-code`);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <SendToMobileIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={t("資料匯出匯入")} />
         </ListItemButton>
         <Divider />
         <ListItemButton
