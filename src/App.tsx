@@ -22,6 +22,7 @@ import Home from "./pages/Home";
 import { SearchContextProvider } from "./SearchContext";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import { useTranslation } from "react-i18next";
+import DataImport from "./pages/DataImport";
 
 const RouteEta = loadable(() => import("./pages/RouteEta"));
 const RouteBoard = loadable(() => import("./pages/RouteBoard"));
@@ -57,6 +58,7 @@ const App = () => {
                   <Route path={`route/:id`} element={<RouteEta />} />
                   <Route path={`route/:id/:panel`} element={<RouteEta />} />
                   <Route path={`settings`} element={<Settings />} />
+                  <Route path={`qr-code`} element={<DataImport />} />
                   <Route path={`board`} element={<RouteBoard />} />
                   <Route path={`search`} element={<RouteSearch />} />
                   <Route path={`privacy`} element={<PrivacyPolicy />} />
