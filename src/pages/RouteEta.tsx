@@ -57,11 +57,10 @@ const RouteEta = () => {
 
   const handleChange = useCallback(
     (newStopIdx: number, expanded: boolean) => {
-      if (expanded)
-        if (stopIdx !== newStopIdx)
-          navigate(`/${i18n.language}/route/${id}/${newStopIdx}`, {
-            replace: true,
-          });
+      if (expanded && stopIdx !== newStopIdx)
+        navigate(`/${i18n.language}/route/${id}/${newStopIdx}`, {
+          replace: true,
+        });
 
       if (stopIdx === newStopIdx && !expanded) setIsDialogOpen(true);
       else setExpanded(expanded);
@@ -80,6 +79,10 @@ const RouteEta = () => {
     },
     [navigate, i18n.language, id, stopIdx]
   );
+
+  const handleStopInfo = useCallback(() => {
+    setIsDialogOpen(true);
+  }, [setIsDialogOpen]);
 
   const handleCloseDialog = useCallback(() => {
     setIsDialogOpen(false);
@@ -178,6 +181,7 @@ const RouteEta = () => {
         stopListExtracted={stopsExtracted}
         expanded={expanded && navigator.userAgent !== "prerendering"}
         handleChange={handleChange}
+        onStopInfo={handleStopInfo}
       />
       <StopDialog
         open={isDialogOpen}
