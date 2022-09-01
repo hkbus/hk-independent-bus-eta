@@ -162,7 +162,7 @@ const PrerenderList = styled("div")(({ theme }) => ({
   [`&.${classes.prerenderList}`]: {
     height: "100%",
     overflowY: "scroll",
-  }
+  },
 }));
 
 const noResultSx: SxProps<Theme> = {
