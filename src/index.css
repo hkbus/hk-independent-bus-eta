@@ -41,6 +41,10 @@ code {
     monospace;
 }
 
+a.tg {
+  color: #fedb00 !important;
+}
+
 @keyframes blinker {
   50% {
     opacity: 0.3;

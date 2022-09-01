@@ -90,9 +90,13 @@ const SwipeableRoutesBoard = ({
           </AutoSizer>
         ) : (
           <Box sx={noResultSx}>
-            <SentimentVeryDissatisfiedIcon />
-            <Typography variant="h6">"{searchRoute}"</Typography>
-            <Typography variant="h6">{t("route-search-no-result")}</Typography>
+            <SentimentVeryDissatisfiedIcon fontSize="small" />
+            <Box>
+              <Typography variant="h6">"{searchRoute}"</Typography>
+              <Typography variant="h6">
+                {t("route-search-no-result")}
+              </Typography>
+            </Box>
           </Box>
         )}
       </React.Fragment>
@@ -162,13 +166,13 @@ const PrerenderList = styled("div")(({ theme }) => ({
 }));
 
 const noResultSx: SxProps<Theme> = {
-  height: "300px",
+  height: "140px",
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "row",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: "1rem",
   [`& .MuiSvgIcon-root`]: {
-    fontSize: "8rem",
+    fontSize: "4rem",
+    mr: 2,
   },
 };

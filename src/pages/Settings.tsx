@@ -28,6 +28,8 @@ import {
   InsertEmoticon as InsertEmoticonIcon,
   SsidChart as SsidChartIcon,
   BarChart as BarChartIcon,
+  Info as InfoIcon,
+  SendToMobile as SendToMobileIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -40,6 +42,7 @@ import {
 import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
 import PersonalizeDialog from "../components/settings/PersonalizeDialog";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const {
@@ -64,6 +67,8 @@ const Settings = () => {
     []
   );
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     setSeoHeader({
       title: t("設定") + " - " + t(AppTitle),
@@ -79,7 +84,7 @@ const Settings = () => {
       <Typography component="h1" style={visuallyHidden}>{`${t("設定")} - ${t(
         AppTitle
       )}`}</Typography>
-      <List>
+      <List sx={{ py: 0 }}>
         {!checkAppInstalled() && (
           <ListItemButton
             onClick={() => {
@@ -95,6 +100,38 @@ const Settings = () => {
             <ListItemText
               primary={t("安裝")}
               secondary={t("安裝巴士預報 App 到裝置")}
+            />
+          </ListItemButton>
+        )}
+        {(process.env.REACT_APP_COMMIT_HASH ||
+          process.env.REACT_APP_VERSION) && (
+          <ListItemButton
+            component="a"
+            href={`${
+              process.env.REACT_APP_REPO_URL ||
+              "https://github.com/hkbus/hk-independent-bus-eta"
+            }${
+              process.env.REACT_APP_COMMIT_HASH
+                ? `/commit/${process.env.REACT_APP_COMMIT_HASH}`
+                : ""
+            }`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <InfoIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={`${t("版本")}: ${
+                process.env.REACT_APP_VERSION || "unknown"
+              }${
+                process.env.REACT_APP_COMMIT_HASH
+                  ? ` - ${process.env.REACT_APP_COMMIT_HASH}`
+                  : ""
+              }`}
+              secondary={process.env.REACT_APP_COMMIT_MESSAGE || ""}
             />
           </ListItemButton>
         )}
@@ -173,6 +210,19 @@ const Settings = () => {
             primary={t("個性化設定")}
             secondary={t("日夜模式、時間格式、路線次序等")}
           />
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            vibrate(vibrateDuration);
+            navigate(`/${i18n.language}/qr-code`);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <SendToMobileIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={t("資料匯出匯入")} />
         </ListItemButton>
         <Divider />
         <ListItemButton
@@ -264,7 +314,10 @@ const Settings = () => {
         <Divider />
         <ListItemButton
           component={"a"}
-          href={`https://github.com/hkbus/hk-independent-bus-eta`}
+          href={
+            process.env.REACT_APP_REPO_URL ||
+            `https://github.com/hkbus/hk-independent-bus-eta`
+          }
           target="_blank"
           onClick={() => {
             vibrate(vibrateDuration);

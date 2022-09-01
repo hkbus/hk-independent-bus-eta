@@ -14,6 +14,7 @@ import { Workbox } from "workbox-window";
 import { produce, freeze, current } from "immer";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import { ETA_FORMAT_NEXT_TYPES } from "./constants";
+import { useTranslation } from "react-i18next";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -90,6 +91,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   toggleEnergyMode: () => void;
   toggleVibrateDuration: () => void;
   toggleAnalytics: () => void; // not
+  changeLanguage: (lang: "zh" | "en") => void;
   workbox?: Workbox;
 }
 
@@ -207,6 +209,7 @@ export const AppContextProvider = ({
       analytics: JSON.parse(localStorage.getItem("analytics")) ?? true,
     };
   };
+  const { i18n } = useTranslation();
   type State = AppState;
   const [state, setStateRaw] = useState(getInitialState);
   const { geoPermission } = state;
@@ -515,6 +518,14 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const changeLanguage = useCallback(
+    (lang: "zh" | "en") => {
+      i18n.changeLanguage(lang);
+      localStorage.setItem("lang", lang);
+    },
+    [i18n]
+  );
+
   const contextValue = useMemo(() => {
     return {
       ...dbContext,
@@ -537,6 +548,7 @@ export const AppContextProvider = ({
       toggleEnergyMode,
       toggleVibrateDuration,
       toggleAnalytics,
+      changeLanguage,
       workbox,
     };
   }, [
@@ -560,6 +572,7 @@ export const AppContextProvider = ({
     toggleEnergyMode,
     toggleVibrateDuration,
     toggleAnalytics,
+    changeLanguage,
     workbox,
   ]);
   return (
