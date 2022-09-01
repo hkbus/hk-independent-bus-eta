@@ -13,7 +13,7 @@ import AppContext from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 import type { BoardTabType } from "./BoardTabbar";
 import { TRANSPORT_SEARCH_OPTIONS, TRANSPORT_ORDER } from "../../constants";
-import RouteRow from "./RouteRow";
+import RouteRowList from "./RouteRowList";
 import { routeSortFunc } from "../../utils";
 
 interface SwipeableRouteBoardProps {
@@ -84,7 +84,7 @@ const SwipeableRoutesBoard = ({
                 itemData={coItemDataList[index]}
                 className={classes.root}
               >
-                {RouteRow}
+                {RouteRowList}
               </FixedSizeList>
             )}
           </AutoSizer>
@@ -110,11 +110,11 @@ const SwipeableRoutesBoard = ({
         {navigator.userAgent === "prerendering" ? (
           <PrerenderList className={classes.prerenderList}>
             {coItemDataList[0].routeList.map((data, idx) => (
-              <RouteRow
+              <RouteRowList
                 data={coItemDataList[0]}
                 key={`route-${idx}`}
                 index={idx}
-                style={null}
+                style={null} // required by react-window
               />
             ))}
           </PrerenderList>
@@ -162,9 +162,6 @@ const PrerenderList = styled("div")(({ theme }) => ({
   [`&.${classes.prerenderList}`]: {
     height: "100%",
     overflowY: "scroll",
-    "& a": {
-      textDecoration: "none",
-    },
   },
 }));
 
