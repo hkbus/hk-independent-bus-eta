@@ -1,0 +1,6 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target" : { "namespace": "android_app", "package_name": "app.hkbus.twa",
+                 "sha256_cert_fingerprints": ["9F:5B:E9:E4:18:93:78:E4:06:CA:AA:97:A3:04:0C:63:D3:28:54:7D:8B:76:58:5A:2F:58:C5:BE:DE:59:E9:21","89:2A:1D:8D:C9:8D:76:61:D7:34:E9:ED:85:CE:4E:AD:F9:4C:91:AC:4F:15:BC:D2:87:8E:3E:D1:E6:82:BC:25"] }
+  }
+]
