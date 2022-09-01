@@ -9,6 +9,7 @@ import BoardTabbar, {
   isBoardTab,
 } from "../components/route-board/BoardTabbar";
 import SwipeableRoutesBoard from "../components/route-board/SwipeableRoutesBoard";
+import RouteSearchHistory from "../components/route-board/RouteSearchHistory";
 
 interface RouteListProps {
   boardTab: BoardTabType;
@@ -46,6 +47,7 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
 };
 
 const RouteBoard = () => {
+  const { searchRoute, routeSearchHistory } = useContext(AppContext);
   const _boardTab = localStorage.getItem("boardTab");
   const [boardTab, setBoardTab] = useState<BoardTabType>(
     isBoardTab(_boardTab) ? _boardTab : "all"
@@ -53,7 +55,13 @@ const RouteBoard = () => {
 
   return (
     <>
-      <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
+      {searchRoute.length === 0 &&
+      Array.isArray(routeSearchHistory) &&
+      routeSearchHistory.length > 0 ? (
+        <RouteSearchHistory />
+      ) : (
+        <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
+      )}
       <RouteInputPad boardTab={boardTab} />
     </>
   );
