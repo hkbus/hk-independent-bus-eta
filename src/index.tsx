@@ -8,6 +8,7 @@ import "./i18n";
 import { fetchDbFunc } from "./db";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import type { WarnUpMessageData } from "./typing";
+import ErrorBoundary from "./ErrorBoundary";
 const App = loadable(() => import("./App"));
 
 const isHuman = () => {
@@ -71,11 +72,13 @@ if (isHuman()) {
     if (!state.initialized) return <></>;
 
     return (
-      <DbProvider initialDb={state.db}>
-        <AppContextProvider workbox={state.workbox}>
-          <App />
-        </AppContextProvider>
-      </DbProvider>
+      <ErrorBoundary>
+        <DbProvider initialDb={state.db}>
+          <AppContextProvider workbox={state.workbox}>
+            <App />
+          </AppContextProvider>
+        </DbProvider>
+      </ErrorBoundary>
     );
   };
 

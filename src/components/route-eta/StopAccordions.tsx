@@ -12,6 +12,7 @@ import loadable from "@loadable/component";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
@@ -28,6 +29,7 @@ interface StopAccordionsProps {
   stopListExtracted: Array<StopListEntry>;
   expanded: boolean;
   handleChange: (stopIdx: number, expanded: boolean) => void;
+  onStopInfo: () => void;
 }
 const StopAccordions = ({
   routeId,
@@ -36,6 +38,7 @@ const StopAccordions = ({
   routeListEntry,
   stopListExtracted,
   handleChange,
+  onStopInfo,
 }: StopAccordionsProps) => {
   const id = routeId;
   const { savedEtas, updateSavedEtas, energyMode } = useContext(AppContext);
@@ -132,36 +135,48 @@ const StopAccordions = ({
               routeId={`${id.toUpperCase()}`}
               seq={idx}
             />
-            <div style={{ display: "flex" }}>
-              <IconButton
-                aria-label="direction"
-                onClick={onClickDirection}
-                style={{ background: "transparent" }}
-                size="large"
-              >
-                <DirectionsIcon />
-              </IconButton>
-              <IconButton
-                aria-label="share"
-                onClick={onClickShare}
-                style={{ backgroundColor: "transparent" }}
-                size="large"
-              >
-                <ShareIcon />
-              </IconButton>
-              <IconButton
-                aria-label="favourite"
-                onClick={() => updateSavedEtas(`${id.toUpperCase()}/${idx}`)}
-                style={{ backgroundColor: "transparent" }}
-                size="large"
-              >
-                {savedEtas.includes(`${id.toUpperCase()}/${idx}`) ? (
-                  <StarIcon />
-                ) : (
-                  <StarBorderIcon />
-                )}
-              </IconButton>
-            </div>
+            <Box>
+              <Box>
+                <IconButton
+                  aria-label="direction"
+                  onClick={onClickDirection}
+                  style={{ background: "transparent" }}
+                  size="large"
+                >
+                  <DirectionsIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="stop-info"
+                  onClick={onStopInfo}
+                  style={{ background: "transparent" }}
+                  size="large"
+                >
+                  <InfoIcon />
+                </IconButton>
+              </Box>
+              <Box>
+                <IconButton
+                  aria-label="share"
+                  onClick={onClickShare}
+                  style={{ backgroundColor: "transparent" }}
+                  size="large"
+                >
+                  <ShareIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="favourite"
+                  onClick={() => updateSavedEtas(`${id.toUpperCase()}/${idx}`)}
+                  style={{ backgroundColor: "transparent" }}
+                  size="large"
+                >
+                  {savedEtas.includes(`${id.toUpperCase()}/${idx}`) ? (
+                    <StarIcon />
+                  ) : (
+                    <StarBorderIcon />
+                  )}
+                </IconButton>
+              </Box>
+            </Box>
           </StopAccordionDetails>
         </StopAccordion>
       );
@@ -181,6 +196,7 @@ const StopAccordions = ({
     stopListExtracted,
     t,
     updateSavedEtas,
+    onStopInfo,
   ]);
   return (
     <StopAccordionsBox

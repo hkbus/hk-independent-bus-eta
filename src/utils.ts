@@ -312,15 +312,9 @@ export const routeSortFunc = (a, b, transportOrder: string[]) => {
   const bRoute = b[0].split("-");
 
   // Exclude A-Z from end of strings, smaller number should come first
-  if (
-    +aRoute[0].replaceAll(/[A-z]$/gi, "") >
-    +bRoute[0].replaceAll(/[A-z]$/gi, "")
-  ) {
+  if (parseInt(aRoute[0], 10) > parseInt(bRoute[0], 10)) {
     return 1;
-  } else if (
-    +aRoute[0].replaceAll(/[A-z]$/gi, "") <
-    +bRoute[0].replaceAll(/[A-z]$/gi, "")
-  ) {
+  } else if (parseInt(aRoute[0], 10) < parseInt(bRoute[0], 10)) {
     return -1;
   }
 
@@ -336,13 +330,9 @@ export const routeSortFunc = (a, b, transportOrder: string[]) => {
   }
 
   // Remove all A-Z, smaller number should come first
-  if (
-    +aRoute[0].replaceAll(/[A-z]/gi, "") > +bRoute[0].replaceAll(/[A-z]/gi, "")
-  ) {
+  if (parseInt(aRoute[0], 10) > parseInt(bRoute[0], 10)) {
     return 1;
-  } else if (
-    +aRoute[0].replaceAll(/[A-z]/gi, "") < +bRoute[0].replaceAll(/[A-z]/gi, "")
-  ) {
+  } else if (parseInt(aRoute[0], 10) < parseInt(bRoute[0], 10)) {
     return -1;
   }
 
