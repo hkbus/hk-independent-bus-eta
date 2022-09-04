@@ -8,10 +8,7 @@ const RouteTerminus = ({ terminus }) => {
 
   return (
     <StyledRouteTerminus>
-      <Typography
-        component="h3"
-        variant="body1"
-      >
+      <Typography component="h3" variant="body1">
         <div>
           <div className={classes.fromToWrapper}>
             <span className={classes.fromToText}>{`${t("往")} `}</span>
