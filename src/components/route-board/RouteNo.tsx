@@ -9,7 +9,7 @@ interface RouteNoProps {
 }
 
 const RouteNo = ({ routeNo, component, align }: RouteNoProps) => {
-  const [prefix, suffix] = routeNo.match(/[A-Z]+$/)
+  const [prefix, suffix] = routeNo.match(/[0-9][A-Z]+$/)
     ? [routeNo.slice(0, -1), routeNo.slice(-1)]
     : [routeNo, ""];
   return (
