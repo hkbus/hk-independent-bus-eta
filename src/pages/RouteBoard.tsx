@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, {
+  useContext,
+  useMemo,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import AppContext from "../AppContext";
 import { Box } from "@mui/material";
 import RouteInputPad from "../components/route-board/RouteInputPad";
@@ -53,16 +59,22 @@ const RouteBoard = () => {
     isBoardTab(_boardTab) ? _boardTab : "all"
   );
 
+  const isShowSearchHistory = useMemo(() => {
+    return (
+      searchRoute.length === 0 &&
+      Array.isArray(routeSearchHistory) &&
+      routeSearchHistory.length > 0
+    );
+  }, [searchRoute, routeSearchHistory]);
+
   return (
     <>
-      {searchRoute.length === 0 &&
-      Array.isArray(routeSearchHistory) &&
-      routeSearchHistory.length > 0 ? (
+      {isShowSearchHistory ? (
         <RouteSearchHistory />
       ) : (
         <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
       )}
-      <RouteInputPad boardTab={boardTab} />
+      <RouteInputPad boardTab={isShowSearchHistory ? "all" : boardTab} />
     </>
   );
 };

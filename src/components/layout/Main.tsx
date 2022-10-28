@@ -29,6 +29,7 @@ const mainSx: SxProps<Theme> = {
   flexDirection: "column",
   flex: 1,
   overflow: "hidden",
+  backgroundColor: (theme) => theme.palette.background.default,
 };
 
 export default Main;

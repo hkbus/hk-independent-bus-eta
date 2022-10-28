@@ -38,6 +38,7 @@ import {
   setSeoHeader,
   triggerShare,
   checkAppInstalled,
+  iOSRNWebView,
 } from "../utils";
 import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
@@ -85,7 +86,7 @@ const Settings = () => {
         AppTitle
       )}`}</Typography>
       <List sx={{ py: 0 }}>
-        {!checkAppInstalled() && (
+        {!checkAppInstalled() && !iOSRNWebView() && (
           <ListItemButton
             onClick={() => {
               vibrate(vibrateDuration);
@@ -293,24 +294,26 @@ const Settings = () => {
             secondary={t("整理從 Google 收集的數據")}
           />
         </ListItemButton>
-        <ListItemButton
-          component="a"
-          href={Donations[donationId].url[i18n.language]}
-          target="_blank"
-          onClick={() => {
-            vibrate(vibrateDuration);
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <MonetizationOnIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={t("捐款支持")}
-            secondary={Donations[donationId].description[i18n.language]}
-          />
-        </ListItemButton>
+        {!iOSRNWebView() && (
+          <ListItemButton
+            component="a"
+            href={Donations[donationId].url[i18n.language]}
+            target="_blank"
+            onClick={() => {
+              vibrate(vibrateDuration);
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <MonetizationOnIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={t("捐款支持")}
+              secondary={Donations[donationId].description[i18n.language]}
+            />
+          </ListItemButton>
+        )}
         <Divider />
         <ListItemButton
           component={"a"}
