@@ -38,8 +38,8 @@ const PrivacyPolicy = () => {
       <div>
         <p>
           The app does use third-party services that may collect information
-          used to identify you. You can disable the collection of information
-          at anytime in the settings.
+          used to identify you. You can disable the collection of information at
+          anytime in the settings.
           <br />
           This does not affect users using the hkbus.app ios app, in which the
           analytics are disabled.
