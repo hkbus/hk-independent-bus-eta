@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import type { ReactNode } from "react";
-import { vibrate } from "./utils";
+import { iOSRNWebView, vibrate } from "./utils";
 import DbContext from "./DbContext";
 import type { DatabaseContextValue } from "./DbContext";
 import { Workbox } from "workbox-window";
@@ -206,7 +206,9 @@ export const AppContextProvider = ({
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
       isVisible: true,
-      analytics: JSON.parse(localStorage.getItem("analytics")) ?? true,
+      analytics: iOSRNWebView()
+        ? false
+        : JSON.parse(localStorage.getItem("analytics")) ?? true,
     };
   };
   const { i18n } = useTranslation();

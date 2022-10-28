@@ -265,17 +265,19 @@ const Settings = () => {
             secondary={t("歡迎意見及技術交流")}
           />
         </ListItemButton>
-        <ListItemButton onClick={toggleAnalytics}>
-          <ListItemAvatar>
-            <Avatar>
-              <BarChartIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={"Google Analytics"}
-            secondary={t(analytics ? "開啟" : "關閉")}
-          />
-        </ListItemButton>
+        {!iOSRNWebView() && (
+          <ListItemButton onClick={toggleAnalytics}>
+            <ListItemAvatar>
+              <Avatar>
+                <BarChartIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={"Google Analytics"}
+              secondary={t(analytics ? "開啟" : "關閉")}
+            />
+          </ListItemButton>
+        )}
         <ListItemButton
           component="a"
           href={`https://datastudio.google.com/embed/reporting/de590428-525e-4865-9d37-a955204b807a/page/psfZC`}
