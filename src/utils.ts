@@ -357,3 +357,8 @@ export const routeSortFunc = (a, b, transportOrder: string[]) => {
   // Smaller service Type should come first
   return aRoute[1] > bRoute[1] ? 1 : -1;
 };
+
+export const iOSRNWebView = (): boolean => {
+  // @ts-ignore
+  return window.iOSRNWebView;
+};
