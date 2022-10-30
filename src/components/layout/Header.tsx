@@ -87,11 +87,11 @@ const Header = () => {
     () => (
       <AppToolbar className={classes.toolbar}>
         <Link
-          to={`/${i18n.language}/board`}
+          to={`/${i18n.language}`}
           onClick={(e) => {
             e.preventDefault();
             vibrate(vibrateDuration);
-            navigate(`/${i18n.language}/board`);
+            navigate(`/${i18n.language}`);
           }}
           rel="nofollow"
         >
