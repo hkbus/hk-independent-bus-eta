@@ -151,7 +151,10 @@
       "KMB first": "九巴優先",
       "CTB-NWFB first": "新巴城巴優先",
       "route-search-no-result": "沒有結果",
-      "Source code": "原始碼"
+      "Source code": "原始碼",
+      "We'd like to set analytics cookies that help us improve hkbus.app by measuring how you use it.": "我們希望設置 cookie，了解你如何使用 hkbus.app 來幫助我們改進。",
+      "Accept": "好的",
+      "Reject": "不要"
     }
   }
 }

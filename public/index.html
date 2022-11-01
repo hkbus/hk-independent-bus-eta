@@ -95,18 +95,17 @@
       src="https://www.googletagmanager.com/gtag/js?id=G-GHB6RFYM15"
     ></script>
     <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
       const analytics = window.iOSRNWebView
         ? false
         : JSON.parse(localStorage.getItem("analytics")) ?? true;
+
       if (analytics) {
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-
         gtag("js", new Date());
-
         gtag("config", "G-GHB6RFYM15");
       }
     </script>
