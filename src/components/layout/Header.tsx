@@ -140,7 +140,7 @@ const Header = () => {
               key={code}
               variant="square"
               src={WeatherIcons[code]}
-              sx={{ height: 24, width: 24, m: 1 }}
+              sx={weatherImg}
             />
           ))}
           {geoPermission === "granted" && (
@@ -239,4 +239,11 @@ const languageSx: SxProps<Theme> = {
   borderRadius: 5,
   fontWeight: 900,
   textTransform: "none",
+};
+
+const weatherImg: SxProps<Theme> = {
+  background: "white",
+  height: 24,
+  width: 24,
+  m: 1,
 };
