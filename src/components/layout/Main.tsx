@@ -11,8 +11,8 @@ const Main = () => {
       <CssBaseline />
       <Header />
       <Box sx={mainSx}>
-        <Outlet />
         <GACookieConsent />
+        <Outlet />
       </Box>
       <Footer />
     </Container>

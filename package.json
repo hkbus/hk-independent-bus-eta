@@ -41,7 +41,6 @@
     "proj4": "^2.7.4",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
-    "react-cookie-consent": "^8.0.1",
     "react-dom": "^18.2.0",
     "react-i18next": "^11.17.2",
     "react-leaflet": "4.0.0",
