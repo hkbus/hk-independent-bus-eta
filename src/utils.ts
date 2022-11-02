@@ -362,3 +362,8 @@ export const iOSRNWebView = (): boolean => {
   // @ts-ignore
   return window.iOSRNWebView;
 };
+
+export const iOSTracking = (): boolean => {
+  // @ts-ignore
+  return window.iOSTracking;
+};

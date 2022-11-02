@@ -100,9 +100,10 @@
         dataLayer.push(arguments);
       }
 
-      const analytics = window.iOSRNWebView
-        ? false
-        : JSON.parse(localStorage.getItem("analytics")) ?? true;
+      const analytics =
+        window.iOSRNWebView && !window.iOSTracking
+          ? false
+          : JSON.parse(localStorage.getItem("analytics")) ?? true;
 
       if (analytics) {
         gtag("js", new Date());
