@@ -45,6 +45,9 @@ a.tg {
   color: #fedb00 !important;
 }
 
+.cookie-consent-btn-wrapper {
+}
+
 @keyframes blinker {
   50% {
     opacity: 0.3;

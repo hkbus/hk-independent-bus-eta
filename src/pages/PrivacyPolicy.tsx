@@ -38,7 +38,11 @@ const PrivacyPolicy = () => {
       <div>
         <p>
           The app does use third-party services that may collect information
-          used to identify you.
+          used to identify you. You can disable the collection of information at
+          anytime in the settings.
+          <br />
+          This does not affect users using the hkbus.app ios app, in which the
+          analytics are disabled.
         </p>{" "}
         <p>
           Link to the privacy policy of third-party service providers used by
@@ -157,7 +161,7 @@ const PrivacyPolicy = () => {
         advised to review this page periodically for any changes. We will notify
         you of any changes by posting the new Privacy Policy on this page.
       </p>{" "}
-      <p>This policy is effective as of 2022-02-23</p>{" "}
+      <p>This policy is effective as of 2022-10-28</p>{" "}
       <p>
         <strong>Contact Us</strong>
       </p>{" "}

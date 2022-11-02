@@ -7,7 +7,7 @@ const TermsAndConditions = () => {
       <strong>Terms &amp; Conditions</strong>{" "}
       <p>
         By downloading or using the app, these terms will automatically apply to
-        you – you should make sure therefore that you read them carefully before
+        you - you should make sure therefore that you read them carefully before
         using the app. You’re not allowed to copy or modify the app, any part of
         the app, or our trademarks in any way. You’re not allowed to attempt to
         extract the source code of the app, and you also shouldn’t try to
@@ -92,7 +92,7 @@ const TermsAndConditions = () => {
       <p>
         Along the same lines, HKBUS.APP cannot always take responsibility for
         the way you use the app i.e. You need to make sure that your device
-        stays charged – if it runs out of battery and you can’t turn it on to
+        stays charged - if it runs out of battery and you can’t turn it on to
         avail the Service, HKBUS.APP cannot accept responsibility.
       </p>{" "}
       <p>
@@ -106,7 +106,7 @@ const TermsAndConditions = () => {
       </p>{" "}
       <p>
         At some point, we may wish to update the app. The app is currently
-        available on Android &amp; iOS – the requirements for the both
+        available on Android &amp; iOS - the requirements for the both
         systems(and for any additional systems we decide to extend the
         availability of the app to) may change, and you’ll need to download the
         updates if you want to keep using the app. HKBUS.APP does not promise
