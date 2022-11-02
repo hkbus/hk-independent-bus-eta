@@ -1,18 +1,10 @@
 import React, { useCallback, useContext, useState } from "react";
-import {
-  Box,
-  Button,
-  SxProps,
-  Theme,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 
 const GACookieConsent = () => {
   const { t } = useTranslation();
-  const theme = useTheme();
   const { analytics, toggleAnalytics } = useContext(AppContext);
   const [show, setShow] = useState<boolean>(
     !analytics && !Boolean(localStorage.getItem("consent"))
@@ -39,13 +31,18 @@ const GACookieConsent = () => {
 
   return (
     <Box sx={rootSx}>
-      <Typography variant="subtitle2" sx={{ p: 1 }}>
+      <Typography variant="subtitle2" sx={statementSx}>
         {t(
           "We'd like to set analytics cookies that help us improve hkbus.app by measuring how you use it."
         )}
       </Typography>
       <Box sx={btnContainerSx}>
-        <Button size="small" variant="contained" onClick={handleAccept}>
+        <Button
+          size="small"
+          variant="contained"
+          sx={{ color: "#000" }}
+          onClick={handleAccept}
+        >
           {t("Accept")}
         </Button>
         <Button
@@ -74,4 +71,9 @@ const btnContainerSx: SxProps<Theme> = {
   alignItems: "center",
   gap: 1,
   p: 1,
+};
+
+const statementSx: SxProps<Theme> = {
+  p: 1,
+  color: "#fff",
 };
