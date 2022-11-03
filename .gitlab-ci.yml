@@ -39,8 +39,8 @@ pull:
   before_script:
     - apk add git
     - git checkout master
-    - git remote set-url origin https://actions-bot:$gitlab_token@gitlab.com/$CI_PROJECT_PATH
-    - git remote add hkbus https://github.com/hkbus/hk-independent-bus-eta
+    - git remote set-url origin https://actions-bot:$gitlab_token@$CI_SERVER_HOST/$CI_PROJECT_PATH
+    - git remote add hkbus https://github.com/hkbus/hk-independent-bus-eta || git remote set-url hkbus https://github.com/hkbus/hk-independent-bus-eta
     - git config --global user.email "actions-bot@example.com"
     - git config --global user.name "actions-bot"
     - git config pull.rebase false
