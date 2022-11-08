@@ -2,12 +2,13 @@ import React, { useCallback, useContext, useState } from "react";
 import { Box, Button, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
+import { iOSRNWebView } from "../../utils";
 
 const GACookieConsent = () => {
   const { t } = useTranslation();
   const { analytics, toggleAnalytics } = useContext(AppContext);
   const [show, setShow] = useState<boolean>(
-    !analytics && !Boolean(localStorage.getItem("consent"))
+    !analytics && !Boolean(localStorage.getItem("consent")) && !iOSRNWebView()
   );
 
   const handleAccept = useCallback(() => {

@@ -30,6 +30,7 @@ import {
   BarChart as BarChartIcon,
   Info as InfoIcon,
   SendToMobile as SendToMobileIcon,
+  HelpOutline as HelpIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -39,7 +40,6 @@ import {
   triggerShare,
   checkAppInstalled,
   iOSRNWebView,
-  iOSTracking,
 } from "../utils";
 import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
@@ -248,25 +248,44 @@ const Settings = () => {
             secondary={t("經不同媒介分享給親友")}
           />
         </ListItemButton>
-        <ListItemButton
-          component="a"
-          href={`https://t.me/hkbusapp`}
-          target="_blank"
-          onClick={() => {
-            vibrate(vibrateDuration);
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <TelegramIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={t("Telegram 交流區")}
-            secondary={t("歡迎意見及技術交流")}
-          />
-        </ListItemButton>
-        {!(iOSRNWebView() && !iOSTracking()) && (
+        {!iOSRNWebView() ? (
+          <ListItemButton
+            component="a"
+            href={`https://t.me/hkbusapp`}
+            target="_blank"
+            onClick={() => {
+              vibrate(vibrateDuration);
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <TelegramIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={t("Telegram 交流區")}
+              secondary={t("歡迎意見及技術交流")}
+            />
+          </ListItemButton>
+        ) : (
+          <ListItemButton
+            onClick={() => {
+              vibrate(vibrateDuration);
+              navigate(`/${i18n.language}/support`);
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <HelpIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={t("協助")}
+              secondary={t("歡迎意見及技術交流")}
+            />
+          </ListItemButton>
+        )}
+        {!iOSRNWebView() && (
           <ListItemButton onClick={toggleAnalytics}>
             <ListItemAvatar>
               <Avatar>
