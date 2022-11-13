@@ -10,6 +10,6 @@ test("renders App", async () => {
       <InstallDialog open />
     </ThemeProvider>
   );
-  const initializingElement = screen.getByText(/iOS/);
+  const initializingElement = screen.getByText(/App/);
   expect(initializingElement).toBeInTheDocument();
 });
