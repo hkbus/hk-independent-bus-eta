@@ -65,6 +65,10 @@ interface AppState {
    * enable analytics or not
    */
   analytics: boolean;
+  /**
+   * ETA refresh interval (millisecond)
+   */
+  refreshInterval: number;
 }
 
 interface AppContextValue extends AppState, DatabaseContextValue {
@@ -91,6 +95,7 @@ interface AppContextValue extends AppState, DatabaseContextValue {
   toggleEnergyMode: () => void;
   toggleVibrateDuration: () => void;
   toggleAnalytics: () => void; // not
+  updateRefreshInterval: (interval: number) => void;
   changeLanguage: (lang: "zh" | "en") => void;
   workbox?: Workbox;
 }
@@ -210,6 +215,8 @@ export const AppContextProvider = ({
         iOSRNWebView() && !iOSTracking()
           ? false
           : JSON.parse(localStorage.getItem("analytics")) ?? true,
+      refreshInterval:
+        JSON.parse(localStorage.getItem("refreshInterval")) ?? 30000,
     };
   };
   const { i18n } = useTranslation();
@@ -387,6 +394,18 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const updateRefreshInterval = useCallback((refreshInterval: number) => {
+    setStateRaw(
+      produce((state: State) => {
+        localStorage.setItem(
+          "refreshInterval",
+          JSON.stringify(refreshInterval)
+        );
+        state.refreshInterval = refreshInterval;
+      })
+    );
+  }, []);
+
   const toggleVibrateDuration = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
@@ -551,6 +570,7 @@ export const AppContextProvider = ({
       toggleEnergyMode,
       toggleVibrateDuration,
       toggleAnalytics,
+      updateRefreshInterval,
       changeLanguage,
       workbox,
     };
@@ -575,6 +595,7 @@ export const AppContextProvider = ({
     toggleEnergyMode,
     toggleVibrateDuration,
     toggleAnalytics,
+    updateRefreshInterval,
     changeLanguage,
     workbox,
   ]);

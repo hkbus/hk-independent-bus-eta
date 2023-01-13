@@ -8,6 +8,7 @@ import {
   ListItemText,
   SxProps,
   Theme,
+  Slider,
 } from "@mui/material";
 import {
   Code as CodeIcon,
@@ -24,6 +25,7 @@ import {
   Filter1 as Filter1Icon,
   Filter7 as Filter7Icon,
   Sort as SortIcon,
+  HourglassTop as HourglassTopIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../AppContext";
@@ -51,6 +53,8 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
     toggleEnergyMode,
     vibrateDuration,
     toggleVibrateDuration,
+    refreshInterval,
+    updateRefreshInterval,
   } = useContext(AppContext);
   const { t } = useTranslation();
 
@@ -97,6 +101,30 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary={t("巴士排序")} secondary={t(busSortOrder)} />
+      </ListItemButton>
+      <ListItemButton onClick={() => {}}>
+        <ListItemAvatar>
+          <Avatar>
+            <HourglassTopIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={t("更新頻率")}
+          secondary={
+            <Slider
+              step={1}
+              min={5}
+              max={60}
+              value={refreshInterval / 1000}
+              valueLabelDisplay="auto"
+              size="small"
+              valueLabelFormat={(v: number) => `${v}s`}
+              onChange={(e: Event, v: number) =>
+                updateRefreshInterval(v * 1000)
+              }
+            />
+          }
+        />
       </ListItemButton>
       <Divider />
       <ListItemButton
@@ -203,6 +231,12 @@ const ListSx: SxProps<Theme> = {
       theme.palette.mode === "dark"
         ? theme.palette.background.default
         : "white",
+  },
+  "& .MuiSlider-colorPrimary": {
+    color: (theme) =>
+      theme.palette.mode === "dark"
+        ? "rgba(255, 255, 255, 0.7)"
+        : "rgba(0, 0, 0, 0.6)",
   },
   overflow: "scroll",
 };

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { fetchEtas } from "hk-bus-eta";
 import AppContext from "../AppContext";
@@ -7,6 +7,7 @@ export const useEtas = (routeId) => {
   const {
     db: { routeList },
     isVisible,
+    refreshInterval,
   } = useContext(AppContext);
   const [routeKey, seq] = routeId.split("/");
   const routeObj = routeList[routeKey] || DefaultRoute;
@@ -14,37 +15,36 @@ export const useEtas = (routeId) => {
   const {
     i18n: { language },
   } = useTranslation();
+  const isMounted = useRef<boolean>(false);
+
+  const fetchData = useCallback(() => {
+    if (!isVisible || navigator.userAgent === "prerendering") {
+      // skip if prerendering
+      setEtas(null);
+      return new Promise((resolve) => resolve([]));
+    }
+    return fetchEtas({
+      ...routeObj,
+      seq: parseInt(seq, 10),
+      language,
+    }).then((_etas) => {
+      if (isMounted.current) setEtas(_etas);
+    });
+  }, [isVisible, language, routeObj, seq]);
 
   useEffect(() => {
-    let isMounted = true;
-
-    const fetchData = () => {
-      if (!isVisible || navigator.userAgent === "prerendering") {
-        // skip if prerendering
-        setEtas(null);
-        return new Promise((resolve) => resolve([]));
-      }
-      return fetchEtas({
-        ...routeObj,
-        seq: parseInt(seq, 10),
-        language,
-      }).then((_etas) => {
-        if (isMounted) setEtas(_etas);
-      });
-    };
-
+    isMounted.current = true;
     const fetchEtaInterval = setInterval(() => {
       fetchData();
-    }, 30000);
+    }, refreshInterval);
 
     fetchData();
 
     return () => {
-      isMounted = false;
+      isMounted.current = false;
       clearInterval(fetchEtaInterval);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeId, isVisible]);
+  }, [routeId, fetchData, refreshInterval]);
 
   return etas;
 };
