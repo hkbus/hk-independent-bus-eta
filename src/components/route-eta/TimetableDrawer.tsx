@@ -49,7 +49,7 @@ const TimetableDrawer = ({ freq, jt, open, onClose }) => {
               className={classes.freqContainer}
             >
               <Typography variant="body1">
-                {start} {details ? `-${details[0]}` : ""}
+                {start} {details ? `- ${details[0]}` : ""}
               </Typography>
               {details ? (
                 <Typography variant="body1">
