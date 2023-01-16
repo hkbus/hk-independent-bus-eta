@@ -8,17 +8,13 @@ const RouteTerminus = ({ terminus }) => {
 
   return (
     <StyledRouteTerminus>
-      <Typography component="h3" variant="body1">
-        <div>
           <div className={classes.fromToWrapper}>
             <span className={classes.fromToText}>{`${t("往")} `}</span>
-            <b>{toProperCase(terminus.dest[i18n.language])}</b>
+            <Typography component="h3" variant="h6" className={classes.destination}>{toProperCase(terminus.dest[i18n.language])}</Typography>
           </div>
           <div className={classes.fromWrapper}>
-            <span>{toProperCase(terminus.orig[i18n.language])}</span>
+            <Typography variant="body2">{toProperCase(terminus.orig[i18n.language])}</Typography>
           </div>
-        </div>
-      </Typography>
     </StyledRouteTerminus>
   );
 };
@@ -31,6 +27,7 @@ const classes = {
   fromToWrapper: `${PREFIX}-fromToWrapper`,
   fromToText: `${PREFIX}-fromToText`,
   fromWrapper: `${PREFIX}-fromWrapper`,
+  destination: `${PREFIX}-destination`,
 };
 
 const StyledRouteTerminus = styled("div")(({ theme }) => ({
@@ -50,6 +47,8 @@ const StyledRouteTerminus = styled("div")(({ theme }) => ({
     alignItems: "baseline",
     whiteSpace: "nowrap",
     overflowX: "hidden",
-    fontSize: "0.75rem",
+  },
+  [`& .${classes.destination}`]: {
+    fontWeight: 700,
   },
 }));

@@ -79,7 +79,7 @@ const SwipeableRoutesBoard = ({
               <FixedSizeList
                 height={height * 0.98}
                 itemCount={coItemDataList[index].routeList.length}
-                itemSize={56}
+                itemSize={64}
                 width={width}
                 itemData={coItemDataList[index]}
                 className={classes.root}
