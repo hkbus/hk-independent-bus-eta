@@ -8,13 +8,17 @@ const RouteTerminus = ({ terminus }) => {
 
   return (
     <StyledRouteTerminus>
-          <div className={classes.fromToWrapper}>
-            <span className={classes.fromToText}>{`${t("往")} `}</span>
-            <Typography component="h3" variant="h6" className={classes.destination}>{toProperCase(terminus.dest[i18n.language])}</Typography>
-          </div>
-          <div className={classes.fromWrapper}>
-            <Typography variant="body2">{toProperCase(terminus.orig[i18n.language])}</Typography>
-          </div>
+      <div className={classes.fromToWrapper}>
+        <span className={classes.fromToText}>{`${t("往")} `}</span>
+        <Typography component="h3" variant="h6" className={classes.destination}>
+          {toProperCase(terminus.dest[i18n.language])}
+        </Typography>
+      </div>
+      <div className={classes.fromWrapper}>
+        <Typography variant="body2">
+          {toProperCase(terminus.orig[i18n.language])}
+        </Typography>
+      </div>
     </StyledRouteTerminus>
   );
 };

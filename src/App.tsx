@@ -90,7 +90,7 @@ const getThemeTokens = (mode: PaletteMode) => ({
   typography: {
     fontFamily: "'Chiron Sans HK Pro WS', sans-serif",
     h6: {
-      fontSize: '1.2rem',
+      fontSize: "1.2rem",
       fontWeight: 700,
     },
   },

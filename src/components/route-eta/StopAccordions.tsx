@@ -117,10 +117,13 @@ const StopAccordions = ({
               expanded: classes.accordionSummaryExpanded,
             }}
           >
-            <Typography component="h3" variant="body1"
-            classes={{
-              root: classes.accordionSummaryContentTitle,
-            }}>
+            <Typography
+              component="h3"
+              variant="body1"
+              classes={{
+                root: classes.accordionSummaryContentTitle,
+              }}
+            >
               {idx + 1}. {toProperCase(stop.name[i18n.language])}
             </Typography>
             <Typography variant="body2">
