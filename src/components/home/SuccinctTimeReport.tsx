@@ -176,9 +176,10 @@ const classes = {
 
 const RootListItem = styled(ListItem)(({ theme }) => ({
   display: "grid",
+  gap: theme.spacing(1),
   gridTemplateColumns: "15% 1fr minmax(18%, max-content)",
   [`&.${classes.listItem}`]: {
-    padding: "4px 8px",
+    padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
     color: "rgba(0,0,0,0.87)",
   },
   [`& .${classes.routeDest}`]: {
