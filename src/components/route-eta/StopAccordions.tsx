@@ -270,7 +270,9 @@ const StopAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
       theme.palette.mode === "dark"
         ? theme.palette.background.default
         : "rgba(0, 0, 0, .03)",
-    borderBottom: "1px solid rgba(0, 0, 0, .125)",
+    [`&.${classes.accordionSummaryExpanded}`]: {
+      borderBottom: "1px solid rgba(0, 0, 0, .125)",
+    },
     marginBottom: -1,
     minHeight: 44,
     [`&.${classes.accordionSummaryExpanded}`]: {
