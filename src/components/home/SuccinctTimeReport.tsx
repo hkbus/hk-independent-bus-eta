@@ -106,7 +106,7 @@ const SuccinctTimeReport = ({
           primary={
             <Typography
               component="h3"
-              variant="body1"
+              variant="h6"
               color="textPrimary"
               className={classes.fromToWrapper}
             >
@@ -187,7 +187,6 @@ const RootListItem = styled(ListItem)(({ theme }) => ({
   [`& .${classes.fromToWrapper}`]: {
     display: "flex",
     alignItems: "baseline",
-    fontSize: "1.2rem",
   },
   [`& .${classes.fromToText}`]: {
     fontSize: "0.85rem",

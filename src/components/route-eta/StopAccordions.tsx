@@ -117,10 +117,13 @@ const StopAccordions = ({
               expanded: classes.accordionSummaryExpanded,
             }}
           >
-            <Typography component="h3" variant="body1">
+            <Typography component="h3" variant="body1"
+            classes={{
+              root: classes.accordionSummaryContentTitle,
+            }}>
               {idx + 1}. {toProperCase(stop.name[i18n.language])}
             </Typography>
-            <Typography variant="caption">
+            <Typography variant="body2">
               {fares && fares[idx] ? t("車費") + ": $" + fares[idx] : ""}
               {faresHoliday && faresHoliday[idx]
                 ? "　　　　" + t("假日車費") + ": $" + faresHoliday[idx]
@@ -230,6 +233,7 @@ const classes = {
   accordionExpanded: `${PREFIX}-accordion-expanded`,
   accordionSummaryRoot: `${PREFIX}-summary-root`,
   accordionSummaryContent: `${PREFIX}-summary-content`,
+  accordionSummaryContentTitle: `${PREFIX}-summary-content-title`,
   accordionSummaryExpanded: `${PREFIX}-summary-expanded`,
   accordionDetailsRoot: `${PREFIX}-details-root`,
   accordionTimeReport: `${PREFIX}-accordionTimeReport`,
@@ -278,6 +282,9 @@ const StopAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
       [`&.${classes.accordionSummaryExpanded}`]: {
         margin: "8px 0",
       },
+    },
+    [`& .${classes.accordionSummaryContentTitle}`]: {
+      fontWeight: 700,
     },
   },
 }));

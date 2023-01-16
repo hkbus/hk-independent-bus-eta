@@ -48,11 +48,11 @@ const TimetableDrawer = ({ freq, jt, open, onClose }) => {
               key={`${serviceId}-${start}`}
               className={classes.freqContainer}
             >
-              <Typography variant="caption">
+              <Typography variant="body1">
                 {start} {details ? `-${details[0]}` : ""}
               </Typography>
               {details ? (
-                <Typography variant="caption">
+                <Typography variant="body1">
                   {parseInt(details[1], 10) / 60}
                   {t("分鐘")}
                 </Typography>

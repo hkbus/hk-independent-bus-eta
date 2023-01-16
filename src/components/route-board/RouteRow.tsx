@@ -39,7 +39,7 @@ const RowCard = styled(Card)(({ theme }) => ({
   [`& .${classes.cardContent}`]: {
     display: "grid",
     gridTemplateColumns: "25% 75%",
-    padding: `0 ${theme.spacing(2)}`,
+    padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
     alignItems: "center",
   },
 }));
