@@ -44,14 +44,21 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
           const bAval = isRouteAvaliable(b.route, b.freq, isTodayHoliday);
           if (aAval === bAval) {
             const refOrig = stopList[Object.values(stops)[0][0]];
+            const refDest = stopList[Object.values(stops)[0].slice(-1)[0]];
             // calculate distance between starting stop of reference route and candidate route A
             const aOrig = stopList[Object.values(a.stops)[0][0]];
-            const aDist = getDistance(aOrig.location, refOrig.location);
+            const aDest = stopList[Object.values(a.stops)[0].slice(-1)[0]];
+            const aDist =
+              getDistance(aOrig.location, refDest.location) +
+              getDistance(refOrig.location, aDest.location);
             // calculate distance between starting stop of reference route and candidate route B
             const bOrig = stopList[Object.values(b.stops)[0][0]];
-            const bDist = getDistance(bOrig.location, refOrig.location);
+            const bDest = stopList[Object.values(b.stops)[0].slice(-1)[0]];
+            const bDist =
+              getDistance(bOrig.location, refDest.location) +
+              getDistance(refOrig.location, bDest.location);
             // pick furtherest one
-            return aDist > bDist ? -1 : 1;
+            return aDist < bDist ? -1 : 1;
           }
           // compare boolean, available route first
           return aAval > bAval ? -1 : 1;
