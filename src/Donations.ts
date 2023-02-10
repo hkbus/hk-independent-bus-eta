@@ -69,6 +69,16 @@ const Donations = [
       en: "Buy SwallowLife a coffee",
     },
   },
+  {
+    url: {
+      zh: "https://www.patreon.com/hkbus",
+      en: "https://www.patreon.com/hkbus",
+    },
+    description: {
+      zh: "撐 HKBUS.APP",
+      en: "Support us",
+    },
+  },
 ];
 
 export default Donations;

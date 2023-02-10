@@ -24,6 +24,7 @@ import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import { useTranslation } from "react-i18next";
 import DataImport from "./pages/DataImport";
 import Support from "./pages/Support";
+import RedirectPage from "./pages/RedirectPage";
 
 const RouteEta = loadable(() => import("./pages/RouteEta"));
 const RouteBoard = loadable(() => import("./pages/RouteBoard"));
@@ -65,6 +66,12 @@ const App = () => {
                   <Route path={`privacy`} element={<PrivacyPolicy />} />
                   <Route path={`terms`} element={<TermsAndConditions />} />
                   <Route path={`support`} element={<Support />} />
+                  <Route
+                    path={"patreon"}
+                    element={
+                      <RedirectPage url="https://www.patreon.com/hkbus" />
+                    }
+                  />
                   <Route path={``} element={<Home />} />
                 </Route>
               </Routes>
