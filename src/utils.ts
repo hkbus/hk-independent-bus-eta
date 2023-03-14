@@ -251,16 +251,16 @@ export const getTileListURL = (
       return prev;
     }, [])
     .flatMap((entry) => [
-      process.env.REACT_APP_OSM_PROVIDER_URL.replaceAll("{s}", "a")
-        .replaceAll("{x}", String(entry.x))
-        .replaceAll("{y}", String(entry.y))
-        .replaceAll("{z}", String(zoomLevel))
-        .replaceAll("{r}", retinaDisplay ? "@2x" : ""),
-      process.env.REACT_APP_OSM_PROVIDER_URL_DARK.replaceAll("{s}", "a")
-        .replaceAll("{x}", String(entry.x))
-        .replaceAll("{y}", String(entry.y))
-        .replaceAll("{z}", String(zoomLevel))
-        .replaceAll("{r}", retinaDisplay ? "@2x" : ""),
+      process.env.REACT_APP_OSM_PROVIDER_URL.replace(/\{s\}/g, "a")
+        .replace(/\{x\}/g, String(entry.x))
+        .replace(/\{y\}/g, String(entry.y))
+        .replace(/\{z\}/g, String(zoomLevel))
+        .replace(/\{r\}/g, retinaDisplay ? "@2x" : ""),
+      process.env.REACT_APP_OSM_PROVIDER_URL_DARK.replace(/\{s\}/g, "a")
+        .replace(/\{x\}/g, String(entry.x))
+        .replace(/\{y\}/g, String(entry.y))
+        .replace(/\{z\}/g, String(zoomLevel))
+        .replace(/\{r\}/g, retinaDisplay ? "@2x" : ""),
     ]);
 };
 
@@ -320,11 +320,11 @@ export const routeSortFunc = (a, b, transportOrder: string[]) => {
 
   // Exclude numbers, smaller alphabet should come first
   if (
-    aRoute[0].replaceAll(/[0-9]/gi, "") > bRoute[0].replaceAll(/[0-9]/gi, "")
+    aRoute[0].replace(/[0-9]/gi, "") > bRoute[0].replace(/[0-9]/gi, "")
   ) {
     return 1;
   } else if (
-    aRoute[0].replaceAll(/[0-9]/gi, "") < bRoute[0].replaceAll(/[0-9]/gi, "")
+    aRoute[0].replace(/[0-9]/gi, "") < bRoute[0].replace(/[0-9]/gi, "")
   ) {
     return -1;
   }
