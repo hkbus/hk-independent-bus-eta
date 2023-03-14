@@ -319,9 +319,7 @@ export const routeSortFunc = (a, b, transportOrder: string[]) => {
   }
 
   // Exclude numbers, smaller alphabet should come first
-  if (
-    aRoute[0].replace(/[0-9]/gi, "") > bRoute[0].replace(/[0-9]/gi, "")
-  ) {
+  if (aRoute[0].replace(/[0-9]/gi, "") > bRoute[0].replace(/[0-9]/gi, "")) {
     return 1;
   } else if (
     aRoute[0].replace(/[0-9]/gi, "") < bRoute[0].replace(/[0-9]/gi, "")
