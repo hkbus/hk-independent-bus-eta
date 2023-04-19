@@ -99,7 +99,7 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
       if (idx === 0) {
         await page.goto(pageUrl, { waitUntil: "networkidle0" });
       } else if (pageUrl.includes("search")) {
-        await page.click(`a[href="${url.pathname}"]`);
+        await page.click(`[id="lang-selector"]`);
         await new Promise((resolve) => {
           setTimeout(resolve, 500);
         });

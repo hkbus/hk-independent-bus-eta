@@ -22,30 +22,38 @@ fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json")
   .then((res) => res.json())
   .then((res) => {
     const { routeList } = res;
-    const zhRoutes = Object.entries(routeList).map(
-      (route) =>
-        `/zh/route/${route[0]
-          .replace(/\+/g, "-")
-          .replace(/ /g, "-")
-          .replace(/\(/g, "%28")
-          .replace(/\)/g, "%29")
-          .replace(/／/g, "%EF%BC%8F")
-          .replace(/'/g, "%27")
-          .replace(/,/g, "%2C")
-          .toLowerCase()}`
-    );
-    const enRoutes = Object.entries(routeList).map(
-      (route) =>
-        `/en/route/${route[0]
-          .replace(/\+/g, "-")
-          .replace(/ /g, "-")
-          .replace(/\(/g, "%28")
-          .replace(/\)/g, "%29")
-          .replace(/／/g, "%EF%BC%8F")
-          .replace(/'/g, "%27")
-          .replace(/,/g, "%2C")
-          .toLowerCase()}`
-    );
+    const zhRoutes = Object.entries(routeList)
+      .filter(([id, {stops}]) =>   
+        Object.values(stops)[0].length > 0
+      )
+      .map(
+        (route) =>
+          `/zh/route/${route[0]
+            .replace(/\+/g, "-")
+            .replace(/ /g, "-")
+            .replace(/\(/g, "%28")
+            .replace(/\)/g, "%29")
+            .replace(/／/g, "%EF%BC%8F")
+            .replace(/'/g, "%27")
+            .replace(/,/g, "%2C")
+            .toLowerCase()}`
+      );
+    const enRoutes = Object.entries(routeList)
+      .filter(([id, {stops}]) =>   
+        Object.values(stops)[0].length > 0
+      )
+      .map(
+        (route) =>
+          `/en/route/${route[0]
+            .replace(/\+/g, "-")
+            .replace(/ /g, "-")
+            .replace(/\(/g, "%28")
+            .replace(/\)/g, "%29")
+            .replace(/／/g, "%EF%BC%8F")
+            .replace(/'/g, "%27")
+            .replace(/,/g, "%2C")
+            .toLowerCase()}`
+      );
 
     // write to file
     fs.writeFileSync(
