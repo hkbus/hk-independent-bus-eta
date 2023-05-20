@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import type { ReactNode } from "react";
-import { iOSRNWebView, iOSTracking, vibrate } from "./utils";
+import { iOSRNWebView, iOSTracking, isStrings, vibrate } from "./utils";
 import DbContext from "./DbContext";
 import type { DatabaseContextValue } from "./DbContext";
 import { Workbox } from "workbox-window";
@@ -15,6 +15,7 @@ import { produce, freeze, current } from "immer";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import { ETA_FORMAT_NEXT_TYPES } from "./constants";
 import { useTranslation } from "react-i18next";
+import CollectionContext, { CollectionContextValue } from "./CollectionContext";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -27,7 +28,6 @@ interface AppState {
    * hot query count
    */
   hotRoute: Record<string, number>;
-  savedEtas: string[];
   /**
    * route search history
    */
@@ -71,14 +71,15 @@ interface AppState {
   refreshInterval: number;
 }
 
-interface AppContextValue extends AppState, DatabaseContextValue {
+interface AppContextValue
+  extends AppState,
+    DatabaseContextValue,
+    CollectionContextValue {
   setSearchRoute: (searchRoute: string) => void;
   updateSearchRouteByButton: (buttonValue: string) => void;
   updateSelectedRoute: (route: string, seq?: string) => void;
   // UX
   updateGeolocation: (geoLocation: GeoLocation) => void;
-  updateSavedEtas: (keys: string) => void;
-  setSavedEtas: (savedEtas: string[]) => void;
   addSearchHistory: (routeSearchHistory: string) => void;
   removeSearchHistoryByRouteId: (routeSearchHistoryId: string) => void;
   resetUsageRecord: () => void;
@@ -137,13 +138,6 @@ const isEtaFormat = (input: unknown): input is AppState["etaFormat"] => {
   return input === "exact" || input === "diff" || input === "mixed";
 };
 
-const isStrings = (input: unknown[]): input is string[] => {
-  if (input.some((v) => typeof v !== "string")) {
-    return false;
-  }
-  return true;
-};
-
 const isColorMode = (input: unknown): input is "dark" | "light" => {
   return input === "dark" || input === "light";
 };
@@ -164,6 +158,7 @@ export const AppContextProvider = ({
   children,
 }: AppContextProviderProps) => {
   const dbContext = useContext(DbContext);
+  const collectionContext = useContext(CollectionContext);
   const getInitialState = (): AppState => {
     const devicePreferColorScheme =
       localStorage.getItem("colorMode") ||
@@ -180,7 +175,6 @@ export const AppContextProvider = ({
     const busSortOrder: unknown = localStorage.getItem("busSortOrder");
     const numPadOrder: unknown = localStorage.getItem("numPadOrder");
     const etaFormat: unknown = localStorage.getItem("etaFormat");
-    const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
     const routeSearchHistory: unknown = JSON.parse(
       localStorage.getItem("routeSearchHistory")
     );
@@ -194,8 +188,6 @@ export const AppContextProvider = ({
         ? geoLocation
         : defaultGeolocation,
       hotRoute: isNumberRecord(hotRoute) ? hotRoute : {},
-      savedEtas:
-        Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       isRouteFilter:
         !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
       busSortOrder: isBusSortOrder(busSortOrder) ? busSortOrder : "KMB first",
@@ -466,38 +458,6 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const updateSavedEtas = useCallback((key: string) => {
-    setStateRaw(
-      produce((state: State) => {
-        const prevSavedEtas = state.savedEtas;
-        if (prevSavedEtas.includes(key)) {
-          prevSavedEtas.splice(prevSavedEtas.indexOf(key), 1);
-          localStorage.setItem(
-            "savedEtas",
-            JSON.stringify(current(prevSavedEtas))
-          );
-          state.savedEtas = prevSavedEtas;
-          return;
-        }
-        const newSavedEtas = prevSavedEtas
-          .concat(key)
-          .filter((v, i, s) => s.indexOf(v) === i);
-        localStorage.setItem("savedEtas", JSON.stringify(newSavedEtas));
-        state.savedEtas = newSavedEtas;
-      })
-    );
-  }, []);
-
-  // for re-ordering
-  const setSavedEtas = useCallback((savedEtas) => {
-    setStateRaw(
-      produce((state: State) => {
-        localStorage.setItem("savedEtas", JSON.stringify(savedEtas));
-        state.savedEtas = savedEtas;
-      })
-    );
-  }, []);
-
   const addSearchHistory = useCallback((route) => {
     setStateRaw(
       produce((state: State) => {
@@ -535,7 +495,6 @@ export const AppContextProvider = ({
       produce((state: State) => {
         state.hotRoute = {};
         state.geolocation = defaultGeolocation;
-        state.savedEtas = [];
       })
     );
   }, []);
@@ -551,13 +510,12 @@ export const AppContextProvider = ({
   const contextValue = useMemo(() => {
     return {
       ...dbContext,
+      ...collectionContext,
       ...state,
       setSearchRoute,
       updateSearchRouteByButton,
       updateSelectedRoute,
       updateGeolocation,
-      updateSavedEtas,
-      setSavedEtas,
       addSearchHistory,
       removeSearchHistoryByRouteId,
       resetUsageRecord,
@@ -576,13 +534,12 @@ export const AppContextProvider = ({
     };
   }, [
     dbContext,
+    collectionContext,
     state,
     setSearchRoute,
     updateSearchRouteByButton,
     updateSelectedRoute,
     updateGeolocation,
-    updateSavedEtas,
-    setSavedEtas,
     addSearchHistory,
     removeSearchHistoryByRouteId,
     resetUsageRecord,

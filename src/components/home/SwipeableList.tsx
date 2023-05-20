@@ -17,6 +17,7 @@ import SuccinctTimeReport from "./SuccinctTimeReport";
 import type { HomeTabType } from "./HomeTabbar";
 import { useTranslation } from "react-i18next";
 import { CircularProgress } from "../Progress";
+import { RouteCollection } from "../../typing";
 
 interface SwipeableListProps {
   geolocation: Location;
@@ -32,6 +33,7 @@ interface SelectedRoutes {
   both: string;
   saved: string;
   nearby: string;
+  collections: string;
 }
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
@@ -41,6 +43,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       savedEtas,
       db: { holidays, routeList, stopList },
       isRouteFilter,
+      collections,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -64,6 +67,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           geolocation,
           hotRoute,
           savedEtas,
+          collections,
           routeList,
           stopList,
           isRouteFilter,
@@ -149,31 +153,62 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       [selectedRoutes]
     );
 
+    const CollectionRouteList = useMemo(
+      () =>
+        selectedRoutes ? (
+          <List disablePadding>
+            {selectedRoutes["collections"]
+              .split("|")
+              .map(
+                (selectedRoute, idx) =>
+                  Boolean(selectedRoute) && (
+                    <SuccinctTimeReport
+                      key={`route-shortcut-${idx}`}
+                      routeId={selectedRoute}
+                    />
+                  )
+              )}
+          </List>
+        ) : (
+          <CircularProgress sx={{ my: 10 }} />
+        ),
+      [selectedRoutes]
+    );
+
     return useMemo(
       () => (
         <SwipeableViews
           index={HOME_TAB.indexOf(defaultHometab.current)}
           onChangeIndex={(idx) => {
+            console.log(idx);
             onChangeTab(HOME_TAB[idx]);
           }}
         >
           {BothRouteList}
           {SavedRouteList}
           {NearbyRouteList}
+          {CollectionRouteList}
         </SwipeableViews>
       ),
-      [onChangeTab, BothRouteList, SavedRouteList, NearbyRouteList]
+      [
+        onChangeTab,
+        BothRouteList,
+        SavedRouteList,
+        NearbyRouteList,
+        CollectionRouteList,
+      ]
     );
   }
 );
 
 export default SwipeableList;
 
-const HOME_TAB = ["both", "saved", "nearby"];
+const HOME_TAB = ["both", "saved", "nearby", "collections"];
 
 const getSelectedRoutes = ({
   hotRoute,
   savedEtas,
+  collections,
   geolocation,
   stopList,
   routeList,
@@ -182,6 +217,7 @@ const getSelectedRoutes = ({
 }: {
   hotRoute: Record<string, number>;
   savedEtas: string[];
+  collections: RouteCollection[];
   geolocation: Location;
   stopList: StopList;
   routeList: RouteList;
@@ -241,6 +277,27 @@ const getSelectedRoutes = ({
       return acc.concat(routeIds);
     }, []);
 
+  const collectionRoutes = collections
+    // check if collection should be shown at the moment
+    .filter(({ schedules }) =>
+      schedules.reduce((acc, { day, allDay, start, end }) => {
+        if (acc) return acc;
+        const curDate = new Date();
+        curDate.setHours(curDate.getUTCHours() + 8);
+        const _day = curDate.getUTCDay();
+        // skip handling timezone here
+        if ((isHoliday && day === 0) || day === _day) {
+          let sTs = start.hour * 60 + start.minute;
+          let eTs = end.hour * 60 + end.minute;
+          let curTs =
+            (curDate.getUTCHours() * 60 + curDate.getUTCMinutes() + 480) % 1440;
+          return allDay || (sTs <= curTs && curTs <= eTs);
+        }
+        return false;
+      }, false)
+    )
+    .reduce((acc, cur) => [...acc, ...cur.list], []);
+
   const formatHandling = (routes) => {
     return routes
       .filter((v, i, s) => s.indexOf(v) === i) // uniqify
@@ -274,5 +331,6 @@ const getSelectedRoutes = ({
         )
         .concat(nearbyRoutes)
     ),
+    collections: formatHandling(collectionRoutes),
   };
 };

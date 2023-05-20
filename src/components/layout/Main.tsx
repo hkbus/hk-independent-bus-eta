@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import Footer from "./Footer";
 import Header from "./Header";
 import GACookieConsent from "./GACookieConsent";
+import CollectionDrawer from "./CollectionDrawer";
 
 const Main = () => {
   return (
@@ -15,6 +16,7 @@ const Main = () => {
         <Outlet />
       </Box>
       <Footer />
+      <CollectionDrawer />
     </Container>
   );
 };

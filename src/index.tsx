@@ -9,6 +9,7 @@ import { fetchDbFunc } from "./db";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import type { WarnUpMessageData } from "./typing";
 import ErrorBoundary from "./ErrorBoundary";
+import { CollectionContextProvider } from "./CollectionContext";
 const App = loadable(() => import("./App"));
 
 const isHuman = () => {
@@ -74,9 +75,11 @@ if (isHuman()) {
     return (
       <ErrorBoundary>
         <DbProvider initialDb={state.db}>
-          <AppContextProvider workbox={state.workbox}>
-            <App />
-          </AppContextProvider>
+          <CollectionContextProvider>
+            <AppContextProvider workbox={state.workbox}>
+              <App />
+            </AppContextProvider>
+          </CollectionContextProvider>
         </DbProvider>
       </ErrorBoundary>
     );

@@ -365,3 +365,10 @@ export const iOSTracking = (): boolean => {
   // @ts-ignore
   return window.iOSTracking;
 };
+
+export const isStrings = (input: unknown[]): input is string[] => {
+  if (input.some((v) => typeof v !== "string")) {
+    return false;
+  }
+  return true;
+};

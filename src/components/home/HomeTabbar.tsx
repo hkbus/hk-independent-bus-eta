@@ -4,6 +4,7 @@ import {
   Cloud as CloudIcon,
   Star as StarIcon,
   CompassCalibration as CompassCalibrationIcon,
+  Bookmark as BookmarkIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
@@ -40,6 +41,13 @@ const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
         icon={<CompassCalibrationIcon />}
         label={t("附近")}
         value="nearby"
+        disableRipple
+      />
+      <Tab
+        iconPosition="start"
+        icon={<BookmarkIcon />}
+        label={t("Collections")}
+        value="collections"
         disableRipple
       />
     </Tabs>

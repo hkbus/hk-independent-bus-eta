@@ -41,7 +41,8 @@ const StopAccordions = ({
   onStopInfo,
 }: StopAccordionsProps) => {
   const id = routeId;
-  const { savedEtas, updateSavedEtas, energyMode } = useContext(AppContext);
+  const { savedEtas, updateSavedEtas, energyMode, setCollectionDrawerRoute } =
+    useContext(AppContext);
   const [isCopied, setIsCopied] = useState(false);
   const [sharingObj, setSharingObj] = useState<any | null>(null);
   const { route, dest, fares, faresHoliday } = routeListEntry;
@@ -171,7 +172,11 @@ const StopAccordions = ({
                 </IconButton>
                 <IconButton
                   aria-label="favourite"
-                  onClick={() => updateSavedEtas(`${id.toUpperCase()}/${idx}`)}
+                  onClick={() => {
+                    const targetRouteId = `${id.toUpperCase()}/${idx}`;
+                    setCollectionDrawerRoute(targetRouteId);
+                    updateSavedEtas(targetRouteId);
+                  }}
                   style={{ backgroundColor: "transparent" }}
                   size="large"
                 >
@@ -201,6 +206,7 @@ const StopAccordions = ({
     stopIdx,
     stopListExtracted,
     t,
+    setCollectionDrawerRoute,
     updateSavedEtas,
     onStopInfo,
   ]);

@@ -121,7 +121,14 @@
       "未有收藏路線": "No starred routes.",
       "最近搜尋": "Recent",
       "資料匯出匯入": "Data Import/Export",
-      "協助": "Support"
+      "協助": "Support",
+      "weekday-0": "SUN",
+      "weekday-1": "MON",
+      "weekday-2": "TUE",
+      "weekday-3": "WED",
+      "weekday-4": "THUR",
+      "weekday-5": "FRI",
+      "weekday-6": "SAT"
     }
   },
   "zh": {
@@ -156,7 +163,16 @@
       "Source code": "原始碼",
       "We'd like to set analytics cookies that help us improve hkbus.app by measuring how you use it.": "我們希望設置 cookie，了解你如何使用 hkbus.app 來幫助我們改進。",
       "Accept": "好的",
-      "Reject": "不要"
+      "Reject": "不要",
+      "Collections": "收藏",
+      "Number of ETAs: ": "到站預報數量：",
+      "weekday-0": "周日",
+      "weekday-1": "周一",
+      "weekday-2": "周二",
+      "weekday-3": "周三",
+      "weekday-4": "周四",
+      "weekday-5": "周五",
+      "weekday-6": "周六"
     }
   }
 }
