@@ -49,7 +49,11 @@ const CollectionDialog = () => {
           onChange={({ target: { value } }) => updateCollectionName(value)}
           fullWidth
         />
-        <Tabs value={tab} onChange={(e, value) => changeTab(value)}>
+        <Tabs
+          value={tab}
+          onChange={(e, value) => changeTab(value)}
+          sx={tabbarSx}
+        >
           <Tab value="routes" label={t("路線")} />
           <Tab value="time" label={t("顯示時間")} />
         </Tabs>
@@ -91,5 +95,27 @@ const deleteSx: SxProps<Theme> = {
   opacity: 0.3,
   "&:hover": {
     opacity: 1,
+  },
+};
+
+const tabbarSx: SxProps<Theme> = {
+  minHeight: "36px",
+  [`& .MuiTab-root`]: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 0,
+    paddingBottom: 0,
+    minHeight: "32px",
+    [`&.Mui-selected`]: {
+      color: (theme) =>
+        theme.palette.mode === "dark" ? theme.palette.primary.main : "black",
+    },
+  },
+  [`& .MuiTabs-flexContainer`]: {
+    justifyContent: "center",
+  },
+  [`& .MuiTabs-indicator`]: {
+    backgroundColor: (theme) =>
+      theme.palette.mode === "dark" ? theme.palette.primary.main : "black",
   },
 };

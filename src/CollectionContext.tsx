@@ -38,7 +38,28 @@ export const CollectionContextProvider = ({ children }) => {
     return {
       savedEtas:
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
-      collections: JSON.parse(localStorage.getItem("collections")) ?? [],
+      collections: JSON.parse(localStorage.getItem("collections")) ?? [
+        {
+          name: "Home",
+          list: [],
+          schedules: Array(7)
+            .fill(0)
+            .map((v, idx) => ({
+              ...DEFAULT_DAY_SCHEDULE,
+              day: idx,
+            })),
+        },
+        {
+          name: "Work",
+          list: [],
+          schedules: Array(7)
+            .fill(0)
+            .map((v, idx) => ({
+              ...DEFAULT_DAY_SCHEDULE,
+              day: idx,
+            })),
+        },
+      ],
       collectionDrawerRoute: null,
       collectionIdx: null,
     };
