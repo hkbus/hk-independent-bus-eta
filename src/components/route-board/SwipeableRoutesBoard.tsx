@@ -65,7 +65,8 @@ const SwipeableRoutesBoard = ({
             : baseRouteList.filter(([routeNo, { co }]) =>
                 co.some((c) => searchOptions.includes(c))
               ),
-          vibrateDuration
+          vibrateDuration,
+          tab
         );
       }
     );
@@ -101,10 +102,18 @@ const SwipeableRoutesBoard = ({
           <Box sx={noResultSx}>
             <SentimentVeryDissatisfiedIcon fontSize="small" />
             <Box>
-              <Typography variant="h6">"{searchRoute}"</Typography>
-              <Typography variant="h6">
-                {t("route-search-no-result")}
-              </Typography>
+              {index > 0 ? (
+                <>
+                  <Typography variant="h6">"{searchRoute}"</Typography>
+                  <Typography variant="h6">
+                    {t("route-search-no-result")}
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  <Typography variant="h6">{t("no-recent-search")}</Typography>
+                </>
+              )}
             </Box>
           </Box>
         )}
@@ -148,9 +157,10 @@ const SwipeableRoutesBoard = ({
   );
 };
 
-const createItemData = memorize((routeList, vibrateDuration) => ({
+const createItemData = memorize((routeList, vibrateDuration, tab) => ({
   routeList,
   vibrateDuration,
+  tab,
 }));
 
 const VirtualizeSwipeableViews = bindKeyboard(virtualize(SwipeableViews));

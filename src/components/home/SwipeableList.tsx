@@ -280,7 +280,7 @@ const getSelectedRoutes = ({
   const collectionRoutes = collections
     // check if collection should be shown at the moment
     .filter(({ schedules }) =>
-      schedules.reduce((acc, { day, allDay, start, end }) => {
+      schedules.reduce((acc, { day, start, end }) => {
         if (acc) return acc;
         const curDate = new Date();
         curDate.setHours(curDate.getUTCHours() + 8);
@@ -291,7 +291,7 @@ const getSelectedRoutes = ({
           let eTs = end.hour * 60 + end.minute;
           let curTs =
             (curDate.getUTCHours() * 60 + curDate.getUTCMinutes() + 480) % 1440;
-          return allDay || (sTs <= curTs && curTs <= eTs);
+          return sTs <= curTs && curTs <= eTs;
         }
         return false;
       }, false)

@@ -1,16 +1,17 @@
 import React, { useContext } from "react";
-import { useTranslation } from "react-i18next";
 import { areEqual } from "react-window";
-import { useNavigate } from "react-router-dom";
 import { vibrate } from "../../utils";
 import RouteRow from "./RouteRow";
 import { RouteListEntry } from "hk-bus-eta";
 import AppContext from "../../AppContext";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 interface RouteRowListProps {
   data: {
     routeList: [string, RouteListEntry][];
     vibrateDuration: number;
+    tab: "recent" | "all" | "bus" | "minibus" | "lightRail" | "mtr";
   };
   index: number;
   style: React.CSSProperties;
@@ -18,14 +19,15 @@ interface RouteRowListProps {
 
 const RouteRowList = React.memo(
   ({
-    data: { routeList, vibrateDuration },
+    data: { routeList, vibrateDuration, tab },
     index,
     style,
   }: RouteRowListProps) => {
-    const { i18n } = useTranslation();
     const route = routeList[index];
+    const { addSearchHistory, removeSearchHistoryByRouteId } =
+      useContext(AppContext);
+    const { i18n } = useTranslation();
     const navigate = useNavigate();
-    const { addSearchHistory } = useContext(AppContext);
 
     const handleClick = (e) => {
       e.preventDefault();
@@ -36,7 +38,20 @@ const RouteRowList = React.memo(
       }, 0);
     };
 
-    return <RouteRow handleClick={handleClick} route={route} style={style} />;
+    const handleRemove = (e) => {
+      e.preventDefault();
+      vibrate(vibrateDuration);
+      removeSearchHistoryByRouteId(route[0]);
+    };
+
+    return (
+      <RouteRow
+        handleClick={handleClick}
+        route={route}
+        style={style}
+        onRemove={tab === "recent" ? handleRemove : null}
+      />
+    );
   },
   areEqual
 );

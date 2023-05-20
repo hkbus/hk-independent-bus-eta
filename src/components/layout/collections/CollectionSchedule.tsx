@@ -3,8 +3,6 @@ import AppContext from "../../../AppContext";
 import {
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
   IconButton,
   MenuItem,
   SxProps,
@@ -44,13 +42,11 @@ const CollectionSchedule = () => {
             </IconButton>
             <TextField
               variant="standard"
-              sx={{ flex: 0.3 }}
               value={daySchedule.day}
-              fullWidth
               select
               size="small"
               onChange={({ target: { value } }) =>
-                updateCollectionSchedule(idx, "weekday", parseInt(value))
+                updateCollectionSchedule(idx, "day", parseInt(value))
               }
             >
               {Array(7)
@@ -60,21 +56,9 @@ const CollectionSchedule = () => {
                     {t(`weekday-${_weekday}`)}
                   </MenuItem>
                 ))}
-              {t(`weekday-${daySchedule.day}`)}
             </TextField>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  onClick={() =>
-                    updateCollectionSchedule(idx, "allDay", !daySchedule.allDay)
-                  }
-                />
-              }
-              checked={daySchedule.allDay}
-              label={t("全日")}
-            />
             <TimePicker
-              sx={{ flex: 0.5 }}
+              sx={{ flex: 0.45 }}
               slotProps={{
                 textField: {
                   size: "small",
@@ -90,11 +74,10 @@ const CollectionSchedule = () => {
                   minute: v.$m,
                 })
               }
-              disabled={daySchedule.allDay}
             />
             -
             <TimePicker
-              sx={{ flex: 0.5 }}
+              sx={{ flex: 0.45 }}
               slotProps={{
                 textField: {
                   size: "small",
@@ -110,7 +93,6 @@ const CollectionSchedule = () => {
                   minute: v.$m,
                 })
               }
-              disabled={daySchedule.allDay}
             />
           </Box>
         ))}
@@ -127,14 +109,13 @@ export default CollectionSchedule;
 const rootSx: SxProps<Theme> = {
   display: "flex",
   flexDirection: "column",
-  gap: 0.5,
-  px: 2,
-  overflow: "scroll",
+  gap: 1.5,
+  fontSize: "0.8em !important",
 };
 
 const daySx: SxProps<Theme> = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  gap: 1,
+  gap: 0.5,
 };

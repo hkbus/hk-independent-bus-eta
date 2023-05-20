@@ -461,10 +461,9 @@ export const AppContextProvider = ({
   const addSearchHistory = useCallback((route) => {
     setStateRaw(
       produce((state: State) => {
-        const newSearchHistory = [route, ...state.routeSearchHistory].slice(
-          0,
-          20
-        );
+        const newSearchHistory = [route, ...state.routeSearchHistory]
+          .filter((v, i, arr) => arr.indexOf(v) === i)
+          .slice(0, 20);
         localStorage.setItem(
           "routeSearchHistory",
           JSON.stringify(newSearchHistory)

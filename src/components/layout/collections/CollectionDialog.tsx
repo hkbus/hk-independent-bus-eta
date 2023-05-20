@@ -84,6 +84,11 @@ const contentContainerSx: SxProps<Theme> = {
 
 const mainSx: SxProps<Theme> = {
   height: "50vh",
+  pr: 1,
+  overflow: "scroll",
+  ["&::-webkit-scrollbar"]: {
+    display: "none",
+  },
 };
 
 const actionSx: SxProps<Theme> = {

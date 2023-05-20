@@ -52,12 +52,17 @@ export const CollectionContextProvider = ({ children }) => {
         {
           name: "Work",
           list: [],
-          schedules: Array(7)
-            .fill(0)
-            .map((v, idx) => ({
-              ...DEFAULT_DAY_SCHEDULE,
-              day: idx,
-            })),
+          schedules: [1, 2, 3, 4, 5].map((v, idx) => ({
+            day: idx,
+            start: {
+              hour: 7,
+              minute: 30,
+            },
+            end: {
+              hour: 11,
+              minute: 30,
+            },
+          })),
         },
       ],
       collectionDrawerRoute: null,

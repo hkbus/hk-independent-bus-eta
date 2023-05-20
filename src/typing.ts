@@ -8,7 +8,6 @@ export interface WarnUpMessageData {
 }
 
 export interface DaySchedule {
-  allDay: boolean;
   day: number;
   // use start, end only if allDay is false
   start: {
@@ -28,15 +27,14 @@ export interface RouteCollection {
 }
 
 export const DEFAULT_DAY_SCHEDULE: DaySchedule = {
-  allDay: true,
   day: 0, // 0: Sunday, 1: Monday, ...
   start: {
-    hour: 8,
+    hour: 0,
     minute: 0,
   },
   end: {
-    hour: 18,
-    minute: 0,
+    hour: 23,
+    minute: 59,
   },
 };
 
