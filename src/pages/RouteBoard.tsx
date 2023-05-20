@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useMemo,
-  useEffect,
-  useState,
-  useCallback,
-} from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import AppContext from "../AppContext";
 import { Box } from "@mui/material";
 import RouteInputPad from "../components/route-board/RouteInputPad";
@@ -15,7 +9,6 @@ import BoardTabbar, {
   isBoardTab,
 } from "../components/route-board/BoardTabbar";
 import SwipeableRoutesBoard from "../components/route-board/SwipeableRoutesBoard";
-import RouteSearchHistory from "../components/route-board/RouteSearchHistory";
 
 interface RouteListProps {
   boardTab: BoardTabType;
@@ -53,28 +46,15 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
 };
 
 const RouteBoard = () => {
-  const { searchRoute, routeSearchHistory } = useContext(AppContext);
   const _boardTab = localStorage.getItem("boardTab");
   const [boardTab, setBoardTab] = useState<BoardTabType>(
     isBoardTab(_boardTab) ? _boardTab : "all"
   );
 
-  const isShowSearchHistory = useMemo(() => {
-    return (
-      searchRoute.length === 0 &&
-      Array.isArray(routeSearchHistory) &&
-      routeSearchHistory.length > 0
-    );
-  }, [searchRoute, routeSearchHistory]);
-
   return (
     <>
-      {isShowSearchHistory ? (
-        <RouteSearchHistory />
-      ) : (
-        <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
-      )}
-      <RouteInputPad boardTab={isShowSearchHistory ? "all" : boardTab} />
+      <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
+      <RouteInputPad boardTab={boardTab} />
     </>
   );
 };

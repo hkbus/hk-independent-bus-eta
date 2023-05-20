@@ -30,6 +30,7 @@ const SwipeableRoutesBoard = ({
     db: { holidays, routeList },
     isRouteFilter,
     busSortOrder,
+    routeSearchHistory,
     vibrateDuration,
   } = useContext(AppContext);
   const isTodayHoliday = useMemo(
@@ -53,13 +54,20 @@ const SwipeableRoutesBoard = ({
       )
       .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]));
     return Object.entries(TRANSPORT_SEARCH_OPTIONS).map(
-      ([tab, searchOptions]) =>
-        createItemData(
-          baseRouteList.filter(([routeNo, { co }]) =>
-            co.some((c) => searchOptions.includes(c))
-          ),
+      ([tab, searchOptions], idx) => {
+        return createItemData(
+          tab === "recent"
+            ? routeSearchHistory
+                .filter((routeNo) =>
+                  routeNo.startsWith(searchRoute.toUpperCase())
+                )
+                .map((routeNo) => [routeNo, routeList[routeNo]])
+            : baseRouteList.filter(([routeNo, { co }]) =>
+                co.some((c) => searchOptions.includes(c))
+              ),
           vibrateDuration
-        )
+        );
+      }
     );
   }, [
     routeList,
@@ -68,12 +76,13 @@ const SwipeableRoutesBoard = ({
     isRouteFilter,
     vibrateDuration,
     busSortOrder,
+    routeSearchHistory,
   ]);
 
   const ListRenderer = useCallback(
     ({ key, index }) => (
       <React.Fragment key={key}>
-        {!!coItemDataList[index].routeList.length ? (
+        {coItemDataList[index].routeList.length > 0 ? (
           <AutoSizer>
             {({ height, width }) => (
               <FixedSizeList
@@ -148,7 +157,7 @@ const VirtualizeSwipeableViews = bindKeyboard(virtualize(SwipeableViews));
 
 export default SwipeableRoutesBoard;
 
-const BOARD_TAB = ["all", "bus", "minibus", "lightRail", "mtr"];
+const BOARD_TAB = ["recent", "all", "bus", "minibus", "lightRail", "mtr"];
 
 const PREFIX = "routeBoard";
 

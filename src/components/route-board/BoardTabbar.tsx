@@ -29,10 +29,17 @@ const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
 
 export default BoardTabbar;
 
-export type BoardTabType = "all" | "bus" | "minibus" | "lightRail" | "mtr";
+export type BoardTabType =
+  | "recent"
+  | "all"
+  | "bus"
+  | "minibus"
+  | "lightRail"
+  | "mtr";
 
 export const isBoardTab = (input: unknown): input is BoardTabType => {
   return (
+    input === "recent" ||
     input === "all" ||
     input === "bus" ||
     input === "minibus" ||
