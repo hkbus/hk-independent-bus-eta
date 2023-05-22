@@ -31,6 +31,8 @@ import {
   Info as InfoIcon,
   SendToMobile as SendToMobileIcon,
   HelpOutline as HelpIcon,
+  Sync as SyncIcon,
+  SyncDisabled as SyncDisabledIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -51,6 +53,8 @@ const Settings = () => {
     AppTitle,
     db: { schemaVersion, versionMd5, updateTime },
     renewDb,
+    autoRenew,
+    toggleAutoDbRenew,
     geoPermission,
     updateGeoPermission,
     vibrateDuration,
@@ -195,6 +199,20 @@ const Settings = () => {
                 ? "開啟中..."
                 : "關閉"
             )}
+          />
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            vibrate(vibrateDuration);
+            toggleAutoDbRenew();
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>{autoRenew ? <SyncIcon /> : <SyncDisabledIcon />}</Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={t("自動更新路線資料")}
+            secondary={t(autoRenew ? "開啟" : "關閉")}
           />
         </ListItemButton>
         <ListItemButton

@@ -11,6 +11,7 @@ import HomeTabbar, { isHomeTab } from "../components/home/HomeTabbar";
 import type { HomeTabType } from "../components/home/HomeTabbar";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
 import SwipeableList from "../components/home/SwipeableList";
+import DbRenewReminder from "../components/layout/DbRenewReminder";
 
 const Home = () => {
   const { AppTitle, geolocation } = useContext(AppContext);
@@ -62,6 +63,7 @@ const Home = () => {
       </Typography>
       <HomeTabbar homeTab={homeTab} onChangeTab={handleTabChange} />
       <BadWeatherCard />
+      <DbRenewReminder />
       <SwipeableList
         ref={swipeableList}
         homeTab={homeTab}

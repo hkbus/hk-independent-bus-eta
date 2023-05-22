@@ -5,10 +5,15 @@ import { fetchDbFunc } from "./db";
 import { compress as compressJson } from "lzutf8-light";
 import type { DatabaseType } from "./db";
 
-interface DatabaseContextValue {
+interface DatabaseContextState {
   db: DatabaseType;
+  autoRenew: boolean;
+}
+
+interface DatabaseContextValue extends DatabaseContextState {
   AppTitle: string;
   renewDb: () => Promise<void>;
+  toggleAutoDbRenew: () => void;
 }
 
 interface DbProviderProps {
@@ -21,11 +26,32 @@ const DbContext = React.createContext<DatabaseContextValue>(null);
 export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
   const AppTitle = "巴士到站預報 App （免費無廣告）";
   // route list & stop list & route-stop list
-  const [db, setDb] = useState<DatabaseType>(initialDb);
+  const [{ db, autoRenew }, setState] = useState<DatabaseContextState>({
+    db: initialDb,
+    autoRenew: !!JSON.parse(localStorage.getItem("autoRenew")) || false,
+  });
+
   const renewDb = useCallback(
-    () => fetchDbFunc(true).then((a) => setDb(a)),
+    () =>
+      fetchDbFunc(true).then((db) =>
+        setState((prev) => ({
+          ...prev,
+          db,
+        }))
+      ),
     []
   );
+
+  const toggleAutoDbRenew = useCallback(() => {
+    setState((prev) => {
+      localStorage.setItem("autoRenew", JSON.stringify(!prev.autoRenew));
+      return {
+        ...prev,
+        autoRenew: !prev.autoRenew,
+      };
+    });
+  }, []);
+
   useEffect(() => {
     // skip if db is {}
     if (
@@ -47,8 +73,8 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
   }, [db]);
 
   const contextValue = useMemo(
-    () => ({ AppTitle, db, renewDb }),
-    [db, renewDb]
+    () => ({ AppTitle, db, autoRenew, renewDb, toggleAutoDbRenew }),
+    [db, autoRenew, renewDb, toggleAutoDbRenew]
   );
 
   return (

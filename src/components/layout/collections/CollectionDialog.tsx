@@ -86,7 +86,7 @@ const mainSx: SxProps<Theme> = {
   height: "50vh",
   pr: 1,
   overflow: "scroll",
-  ["&::-webkit-scrollbar"]: {
+  "&::-webkit-scrollbar": {
     display: "none",
   },
 };

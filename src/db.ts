@@ -51,6 +51,7 @@ export interface DatabaseType extends BusDb {
 export const fetchDbFunc = async (
   forceRenew = false
 ): Promise<DatabaseType> => {
+  const autoRenew = !!JSON.parse(localStorage.getItem("autoRenew")) || false;
   if (localStorage.getItem("dbv") !== DB_CONTEXT_VERSION) {
     console.log("New DB, will refetch data");
     localStorage.removeItem("db");
@@ -89,15 +90,16 @@ export const fetchDbFunc = async (
       }
     });
 
-  if (
-    raw !== null &&
-    (!navigator.onLine ||
-      (!forceRenew && Date.now() - lastUpdateTime < 7 * 24 * 3600 * 1000))
-  ) {
-    try {
-      const db = await storedDb(raw);
-      return db;
-    } catch {}
+  if (raw !== null) {
+    let isOffline = !navigator.onLine;
+    let shouldAutoRenew =
+      autoRenew && Date.now() - lastUpdateTime > 7 * 24 * 3600 * 1000;
+    if (isOffline || !forceRenew || !shouldAutoRenew) {
+      try {
+        const db = await storedDb(raw);
+        return db;
+      } catch {}
+    }
   }
 
   try {
