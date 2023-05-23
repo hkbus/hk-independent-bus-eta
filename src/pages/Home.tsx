@@ -47,6 +47,7 @@ const Home = () => {
 
   const handleTabChange = (v: HomeTabType, rerenderList = false) => {
     setHomeTab(v);
+    console.log(v);
     localStorage.setItem("homeTab", v);
     if (swipeableList.current && rerenderList) {
       swipeableList.current.changeTab(v);

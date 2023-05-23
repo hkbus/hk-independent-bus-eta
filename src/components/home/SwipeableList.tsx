@@ -7,7 +7,7 @@ import React, {
   useEffect,
 } from "react";
 import SwipeableViews from "react-swipeable-views";
-import { List, Typography } from "@mui/material";
+import { Box, List, Typography } from "@mui/material";
 import { Location, RouteList, StopListEntry, StopList } from "hk-bus-eta";
 
 import AppContext from "../../AppContext";
@@ -33,7 +33,7 @@ interface SelectedRoutes {
   both: string;
   saved: string;
   nearby: string;
-  collections: string;
+  collections: Array<{ name: string; routes: string }>;
 }
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
@@ -155,24 +155,40 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
 
     const CollectionRouteList = useMemo(
       () =>
-        selectedRoutes ? (
-          <List disablePadding>
-            {selectedRoutes["collections"]
-              .split("|")
-              .map(
-                (selectedRoute, idx) =>
-                  Boolean(selectedRoute) && (
-                    <SuccinctTimeReport
-                      key={`route-shortcut-${idx}`}
-                      routeId={selectedRoute}
-                    />
-                  )
-              )}
-          </List>
+        selectedRoutes?.collections.length > 0 ? (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {selectedRoutes.collections.map(({ name, routes }, idx) => (
+              <Box key={`collection-${idx}`}>
+                <Typography variant="body1" sx={{ textAlign: "left" }}>
+                  <b>{name}</b>
+                </Typography>
+                <List disablePadding>
+                  {routes
+                    .split("|")
+                    .map(
+                      (selectedRoute, idx) =>
+                        Boolean(selectedRoute) && (
+                          <SuccinctTimeReport
+                            key={`route-shortcut-${idx}`}
+                            routeId={selectedRoute}
+                          />
+                        )
+                    )}
+                </List>
+                {routes.split("|").filter((v) => Boolean(v)).length === 0 && (
+                  <Typography sx={{ marginTop: 1 }}>
+                    {t("未有收藏路線")}
+                  </Typography>
+                )}
+              </Box>
+            ))}
+          </Box>
         ) : (
-          <CircularProgress sx={{ my: 10 }} />
+          <Typography sx={{ marginTop: 5 }}>
+            <b>{t("未有收藏路線")}</b>
+          </Typography>
         ),
-      [selectedRoutes]
+      [t, selectedRoutes]
     );
 
     return useMemo(
@@ -283,20 +299,26 @@ const getSelectedRoutes = ({
       schedules.reduce((acc, { day, start, end }) => {
         if (acc) return acc;
         const curDate = new Date();
-        curDate.setHours(curDate.getUTCHours() + 8);
+        curDate.setUTCHours(curDate.getUTCHours() + 8);
         const _day = curDate.getUTCDay();
         // skip handling timezone here
-        if ((isHoliday && day === 0) || day === _day) {
+        if ((isTodayHoliday && day === 0) || day === _day) {
           let sTs = start.hour * 60 + start.minute;
           let eTs = end.hour * 60 + end.minute;
           let curTs =
-            (curDate.getUTCHours() * 60 + curDate.getUTCMinutes() + 480) % 1440;
+            (curDate.getUTCHours() * 60 + curDate.getUTCMinutes()) % 1440;
           return sTs <= curTs && curTs <= eTs;
         }
         return false;
       }, false)
     )
-    .reduce((acc, cur) => [...acc, ...cur.list], []);
+    .reduce((acc, cur) => {
+      acc.push({
+        name: cur.name,
+        routes: cur.list,
+      });
+      return acc;
+    }, []);
 
   const formatHandling = (routes) => {
     return routes
@@ -331,6 +353,9 @@ const getSelectedRoutes = ({
         )
         .concat(nearbyRoutes)
     ),
-    collections: formatHandling(collectionRoutes),
+    collections: collectionRoutes.map((v) => ({
+      ...v,
+      routes: formatHandling(v.routes),
+    })),
   };
 };

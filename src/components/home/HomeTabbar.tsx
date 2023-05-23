@@ -56,10 +56,15 @@ const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
 
 export default HomeTabbar;
 
-export type HomeTabType = "both" | "saved" | "nearby";
+export type HomeTabType = "both" | "saved" | "nearby" | "collections";
 
 export const isHomeTab = (input: unknown): input is HomeTabType => {
-  return input === "both" || input === "saved" || input === "nearby";
+  return (
+    input === "both" ||
+    input === "saved" ||
+    input === "nearby" ||
+    input === "collections"
+  );
 };
 
 const tabbarSx: SxProps<Theme> = {

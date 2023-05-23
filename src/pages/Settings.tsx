@@ -155,7 +155,7 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText
             primary={
-              `${t("架構版本")}: ` +
+              `${t("更新路線資料庫")}: ` +
               `${schemaVersion} - ${versionMd5.slice(0, 6)}`
             }
             secondary={
