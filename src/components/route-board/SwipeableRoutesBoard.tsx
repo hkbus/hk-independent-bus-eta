@@ -61,6 +61,7 @@ const SwipeableRoutesBoard = ({
                 .filter((routeNo) =>
                   routeNo.startsWith(searchRoute.toUpperCase())
                 )
+                .filter((routeNo) => routeList[routeNo])
                 .map((routeNo) => [routeNo, routeList[routeNo]])
             : baseRouteList.filter(([routeNo, { co }]) =>
                 co.some((c) => searchOptions.includes(c))
