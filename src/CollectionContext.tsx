@@ -52,8 +52,8 @@ export const CollectionContextProvider = ({ children }) => {
         {
           name: "Work",
           list: [],
-          schedules: [1, 2, 3, 4, 5].map((v, idx) => ({
-            day: idx,
+          schedules: [1, 2, 3, 4, 5].map((day) => ({
+            day,
             start: {
               hour: 7,
               minute: 30,
