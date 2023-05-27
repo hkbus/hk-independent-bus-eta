@@ -90,11 +90,11 @@ export const fetchDbFunc = async (
       }
     });
 
-  if (raw !== null) {
+  if (raw !== null && !forceRenew) {
     let isOffline = !navigator.onLine;
     let shouldAutoRenew =
       autoRenew && Date.now() - lastUpdateTime > 7 * 24 * 3600 * 1000;
-    if (isOffline || !forceRenew || !shouldAutoRenew) {
+    if (isOffline || !shouldAutoRenew) {
       try {
         const db = await storedDb(raw);
         return db;
