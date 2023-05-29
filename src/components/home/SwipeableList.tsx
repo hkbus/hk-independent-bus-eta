@@ -327,7 +327,8 @@ const getSelectedRoutes = ({
         const [routeId] = routeUrl.split("/");
         return (
           !isRouteFilter ||
-          isRouteAvaliable(routeId, routeList[routeId].freq, isTodayHoliday)
+          (routeList[routeId] &&
+            isRouteAvaliable(routeId, routeList[routeId].freq, isTodayHoliday))
         );
       })
       .concat(Array(40).fill("")) // padding
