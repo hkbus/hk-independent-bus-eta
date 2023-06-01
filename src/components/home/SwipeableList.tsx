@@ -326,8 +326,8 @@ const getSelectedRoutes = ({
       .filter((routeUrl) => {
         const [routeId] = routeUrl.split("/");
         return (
-          !isRouteFilter ||
-          (routeList[routeId] &&
+          routeList[routeId] &&
+          (!isRouteFilter ||
             isRouteAvaliable(routeId, routeList[routeId].freq, isTodayHoliday))
         );
       })
