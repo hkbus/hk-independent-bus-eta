@@ -43,7 +43,10 @@ const Collection = ({ name, list, collectionIdx = null }: CollectionProps) => {
           <Typography variant="body1">{name}</Typography>
           <Typography variant="caption">
             {t("Number of ETAs: ")}
-            {list.map((r) => routeList[r.split("/")[0]] !== undefined).length}
+            {
+              list.filter((r) => routeList[r.split("/")[0]] !== undefined)
+                .length
+            }
           </Typography>
         </Box>
       </Box>
