@@ -21,8 +21,8 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://hkfeature.com/join/",
-      en: "https://hkfeature.com/join/",
+      zh: "https://hkfeature.com/%E5%8A%A0%E5%85%A5%E6%9C%83%E5%93%A1/",
+      en: "https://hkfeature.com/%E5%8A%A0%E5%85%A5%E6%9C%83%E5%93%A1/",
     },
     description: {
       zh: "請訂閱《誌》",
@@ -77,6 +77,16 @@ const Donations = [
     description: {
       zh: "撐 HKBUS.APP",
       en: "Support us",
+    },
+  },
+  {
+    url: {
+      zh: "https://channelchk.com/plan",
+      en: "https://channelchk.com/plan",
+    },
+    description: {
+      zh: "Channel C HK",
+      en: "Channel C HK",
     },
   },
 ];
