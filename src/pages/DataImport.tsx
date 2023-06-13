@@ -14,14 +14,25 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const DataImport = () => {
   const { t } = useTranslation();
-  const { savedEtas, setSavedEtas } = useContext(AppContext);
-  const [data, setData] = useState<string>(JSON.stringify(savedEtas, null, 2));
+  const { savedEtas, setSavedEtas, collections, setCollections } =
+    useContext(AppContext);
+  const [data, setData] = useState<string>(
+    JSON.stringify(
+      {
+        savedEtas: savedEtas,
+        collections: collections,
+      },
+      null,
+      2
+    )
+  );
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const handleChange = ({ target: { value } }) => {
     setData(value);
     try {
-      const _savedEtas = JSON.parse(value);
+      const { savedEtas: _savedEtas, collections: _collections } =
+        JSON.parse(value);
       if (Array.isArray(_savedEtas)) {
         setSavedEtas(
           _savedEtas.filter(
@@ -29,6 +40,9 @@ const DataImport = () => {
               typeof routeId === "string" || routeId instanceof String
           )
         );
+      }
+      if (Array.isArray(_collections)) {
+        setCollections(_collections);
       }
     } catch {}
   };
@@ -39,7 +53,12 @@ const DataImport = () => {
         {t("資料匯出匯入")}
       </Typography>
       <Box sx={{ display: "flex", flexDirection: "column", m: 1 }}>
-        <TextField multiline value={data} onChange={handleChange} />
+        <TextField
+          multiline
+          maxRows={10}
+          value={data}
+          onChange={handleChange}
+        />
         <Box sx={{ m: 1 }}>
           <IconButton
             onClick={() => {

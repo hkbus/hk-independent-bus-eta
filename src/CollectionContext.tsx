@@ -27,6 +27,7 @@ interface CollectionContextValue extends CollectionState {
   updateCollectionSchedule: (idx: number, field: string, value: any) => void;
   toggleCollectionEta: (eta: string, idx: number | null) => void;
   setCollectionEtas: (etas: string[]) => void;
+  setCollections: (collections: RouteCollection[]) => void;
 }
 
 const CollectionContext = React.createContext<CollectionContextValue>(null);
@@ -240,6 +241,15 @@ export const CollectionContextProvider = ({ children }) => {
     []
   );
 
+  const setCollections = useCallback((collections: RouteCollection[]) => {
+    setStateRaw(
+      produce((state: State) => {
+        localStorage.setItem("collections", JSON.stringify(collections));
+        state.collections = collections;
+      })
+    );
+  }, []);
+
   return (
     <CollectionContext.Provider
       value={{
@@ -256,6 +266,7 @@ export const CollectionContextProvider = ({ children }) => {
         removeCollectionSchedule,
         toggleCollectionEta,
         setCollectionEtas,
+        setCollections,
       }}
     >
       {children}
