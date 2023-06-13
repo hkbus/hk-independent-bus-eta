@@ -3,7 +3,8 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  styled,
+  SxProps,
+  Theme,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -24,17 +25,13 @@ const DbRenewReminder = () => {
 
   if (navigator.userAgent !== "prerendering" && isOutdated) {
     return (
-      <DbRenewCard
-        variant="outlined"
-        className={classes.card}
-        onClick={renewDb}
-      >
+      <Card variant="outlined" sx={rootSx} onClick={renewDb}>
         <CardActionArea>
           <CardContent>
             <Typography>{t("db-renew-text")}</Typography>
           </CardContent>
         </CardActionArea>
-      </DbRenewCard>
+      </Card>
     );
   } else {
     return null;
@@ -43,17 +40,9 @@ const DbRenewReminder = () => {
 
 export default DbRenewReminder;
 
-const PREFIX = "db-renew";
-
-const classes = {
-  card: `${PREFIX}-card`,
+const rootSx: SxProps<Theme> = {
+  borderRadius: (theme) => theme.shape.borderRadius,
+  margin: 0.2,
+  height: "100%",
+  display: "flex",
 };
-
-const DbRenewCard = styled(Card)(({ theme }) => ({
-  [`&.${classes.card}`]: {
-    borderRadius: theme.shape.borderRadius,
-    margin: 0.2,
-    height: "100%",
-    display: "flex",
-  },
-}));

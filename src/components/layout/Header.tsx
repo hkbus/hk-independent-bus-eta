@@ -10,7 +10,6 @@ import {
   SxProps,
   Theme,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -85,7 +84,7 @@ const Header = () => {
 
   return useMemo(
     () => (
-      <AppToolbar className={classes.toolbar}>
+      <Toolbar sx={rootSx}>
         <Link
           to={`/${i18n.language}`}
           onClick={(e) => {
@@ -95,17 +94,13 @@ const Header = () => {
           }}
           rel="nofollow"
         >
-          <Typography
-            component="h1"
-            variant="subtitle2"
-            className={classes.appTitle}
-          >
+          <Typography component="h1" variant="subtitle2" sx={appTitleSx}>
             {t("巴士到站預報")}
           </Typography>
         </Link>
         <Input
           id="searchInput"
-          className={classes.searchRouteInput}
+          sx={searchRouteInputSx}
           type="text"
           value={searchRoute}
           placeholder={t("巴士線")}
@@ -127,7 +122,7 @@ const Header = () => {
             navigate(`/${i18n.language}/board`, { replace: true });
           }}
         />
-        <Box className={classes.funcPanel}>
+        <Box sx={funcPanelSx}>
           {weatherCodes.slice(0, 2).map((code) => (
             <Avatar
               onClick={() =>
@@ -171,7 +166,7 @@ const Header = () => {
             <SettingsIcon fontSize="small" />
           </IconButton>
         </Box>
-      </AppToolbar>
+      </Toolbar>
     ),
     // eslint-disable-next-line
     [
@@ -188,49 +183,40 @@ const Header = () => {
 
 export default Header;
 
-const PREFIX = "header";
-
-const classes = {
-  toolbar: `${PREFIX}-toolbar`,
-  appTitle: `${PREFIX}-appTitle`,
-  searchRouteInput: `${PREFIX}-searchRouteInput`,
-  funcPanel: `${PREFIX}-funcPanel`,
+const rootSx: SxProps<Theme> = {
+  backgroundColor: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : theme.palette.primary.main,
+  "& a": {
+    textDecoration: "none",
+  },
+  display: "flex",
+  justifyContent: "space-between",
+  px: 1,
 };
 
-const AppToolbar = styled(Toolbar)(({ theme }) => ({
-  [`& .${classes.appTitle}`]: {
-    color:
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary,
+const appTitleSx: SxProps<Theme> = {
+  color: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : theme.palette.text.primary,
+};
+
+const searchRouteInputSx: SxProps<Theme> = {
+  maxWidth: "100px",
+  "& input": {
+    textAlign: "center",
   },
-  [`&.${classes.toolbar}`]: {
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : theme.palette.primary.main,
-    "& a": {
-      textDecoration: "none",
-    },
-    display: "flex",
-    justifyContent: "space-between",
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
+  "& input::before": {
+    borderBottom: (theme) => `1px ${theme.palette.text.primary} solid`,
   },
-  [`& .${classes.searchRouteInput}`]: {
-    maxWidth: "100px",
-    "& input": {
-      textAlign: "center",
-    },
-    "& input::before": {
-      borderBottom: `1px ${theme.palette.text.primary} solid`,
-    },
-  },
-  [`& .${classes.funcPanel}`]: {
-    display: "flex",
-    alignItems: "center",
-  },
-}));
+};
+
+const funcPanelSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "center",
+};
 
 const languageSx: SxProps<Theme> = {
   color: (theme) => theme.palette.text.primary,

@@ -1,58 +1,52 @@
 import { useTranslation } from "react-i18next";
-import { Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { toProperCase } from "../../utils";
 
 const RouteTerminus = ({ terminus }) => {
   const { t, i18n } = useTranslation();
 
   return (
-    <StyledRouteTerminus>
-      <div className={classes.fromToWrapper}>
-        <span className={classes.fromToText}>{`${t("往")} `}</span>
-        <Typography component="h3" variant="h6" className={classes.destination}>
+    <Box sx={rootSx}>
+      <Box sx={fromToWrapperSx}>
+        <span>{`${t("往")} `}</span>
+        <Typography component="h3" variant="h6" sx={destinationSx}>
           {toProperCase(terminus.dest[i18n.language])}
         </Typography>
-      </div>
-      <div className={classes.fromWrapper}>
+      </Box>
+      <Box sx={fromWrapperSx}>
         <Typography variant="body2">
           {toProperCase(terminus.orig[i18n.language])}
         </Typography>
-      </div>
-    </StyledRouteTerminus>
+      </Box>
+    </Box>
   );
 };
 
 export default RouteTerminus;
 
-const PREFIX = "routeTerminus";
-
-const classes = {
-  fromToWrapper: `${PREFIX}-fromToWrapper`,
-  fromToText: `${PREFIX}-fromToText`,
-  fromWrapper: `${PREFIX}-fromWrapper`,
-  destination: `${PREFIX}-destination`,
+const rootSx: SxProps<Theme> = {
+  textAlign: "left",
+  "& > span": {},
 };
 
-const StyledRouteTerminus = styled("div")(({ theme }) => ({
-  textAlign: "left",
-  [`& .${classes.fromToWrapper}`]: {
-    display: "flex",
-    alignItems: "baseline",
-    whiteSpace: "nowrap",
-    overflowX: "hidden",
-  },
-  [`& .${classes.fromToText}`]: {
+const fromToWrapperSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "baseline",
+  whiteSpace: "nowrap",
+  overflowX: "hidden",
+  "& > span": {
     fontSize: "0.95rem",
-    marginRight: theme.spacing(0.5),
+    mr: 0.5,
   },
-  [`& .${classes.fromWrapper}`]: {
-    display: "flex",
-    alignItems: "baseline",
-    whiteSpace: "nowrap",
-    overflowX: "hidden",
-  },
-  [`& .${classes.destination}`]: {
-    fontWeight: 700,
-  },
-}));
+};
+
+const fromWrapperSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "baseline",
+  whiteSpace: "nowrap",
+  overflowX: "hidden",
+};
+
+const destinationSx: SxProps<Theme> = {
+  fontWeight: 700,
+};

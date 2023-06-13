@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Box, Button, Container, Modal } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, Button, Container, Modal, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import domtoimage from "dom-to-image";
 import mergeBase64 from "merge-base64";
@@ -85,20 +84,16 @@ const SharingModal = ({
   }, [triggerShareImg, imgBase64, i18n.language, id, idx, route]);
 
   return (
-    <RootModal
-      className={classes.root}
-      onClose={() => setIsOpen(false)}
-      open={isOpen}
-    >
-      <Container maxWidth="xs" className={classes.container}>
+    <Modal sx={rootSx} onClose={() => setIsOpen(false)} open={isOpen}>
+      <Container maxWidth="xs" sx={containerSx}>
         {imgBase64 && (
-          <Box className={classes.boxContainer}>
+          <Box sx={boxContainerSx}>
             <img src={imgBase64} style={{ width: "100%" }} alt="" />
-            <Box className={classes.buttonContainer}>
-              <Button className={classes.button} onClick={handleShareLink}>
+            <Box sx={buttonContainerSx}>
+              <Button sx={buttonSx} onClick={handleShareLink}>
                 {t("以鏈結分享")}
               </Button>
-              <Button className={classes.button} onClick={handleShareImg}>
+              <Button sx={buttonSx} onClick={handleShareImg}>
                 {t("以圖片分享")}
               </Button>
             </Box>
@@ -106,50 +101,42 @@ const SharingModal = ({
         )}
         {!imgBase64 && <CircularProgress color="inherit" />}
       </Container>
-    </RootModal>
+    </Modal>
   );
 };
 
 export default SharingModal;
 
-const PREFIX = "sharingModal";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  container: `${PREFIX}-container`,
-  boxContainer: `${PREFIX}-boxContainer`,
-  buttonContainer: `${PREFIX}-buttonContainer`,
-  button: `${PREFIX}-button`,
+const rootSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "center",
 };
 
-const RootModal = styled(Modal)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    display: "flex",
-    alignItems: "center",
-  },
-  [`& .${classes.container}`]: {
-    display: "flex",
-    justifyContent: "center",
-    outline: "none",
-  },
-  [`& .${classes.boxContainer}`]: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  [`& .${classes.buttonContainer}`]: {
-    display: "flex",
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : "#fedb00",
-  },
-  [`& .${classes.button}`]: {
-    flex: 1,
-    border: "1px solid rgba(255, 255, 255, 0.3)",
-    color:
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary,
-  },
-}));
+const containerSx: SxProps<Theme> = {
+  display: "flex",
+  justifyContent: "center",
+  outline: "none",
+};
+
+const boxContainerSx: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+};
+
+const buttonContainerSx: SxProps<Theme> = {
+  display: "flex",
+  backgroundColor: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : "#fedb00",
+};
+
+const buttonSx: SxProps<Theme> = {
+  flex: 1,
+  border: "1px solid rgba(255, 255, 255, 0.3)",
+  color: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : theme.palette.text.primary,
+};

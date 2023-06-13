@@ -1,18 +1,17 @@
 import React, { useContext } from "react";
-import { Box, Button, Grid } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, Button, Grid, SxProps, Theme } from "@mui/material";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
 import AppContext from "../../AppContext";
 import { BoardTabType } from "./BoardTabbar";
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 
-const KeyButton = ({ k, handleClick, disabled = false, className }) => {
+const KeyButton = ({ k, handleClick, disabled = false, sx }) => {
   return (
     <Button
       size="large"
       variant="contained"
-      className={`${classes.button} ${className}`}
+      sx={{ ...buttonSx, ...sx }}
       onClick={() => handleClick(k)}
       disabled={disabled}
       disableRipple
@@ -39,7 +38,7 @@ const RouteNumPad = ({ possibleChar }) => {
           <KeyButton
             k={k}
             handleClick={updateSearchRouteByButton}
-            className={classes.number}
+            sx={numberSx}
             disabled={
               (k === "b" && searchRoute === "") ||
               (!"bc".includes(k) && !possibleChar.includes(k)) ||
@@ -64,7 +63,7 @@ const RouteAlphabetPad = ({ possibleChar }) => {
             <KeyButton
               k={k}
               handleClick={updateSearchRouteByButton}
-              className={classes.alphabet}
+              sx={alphabetSx}
             />
           </Grid>
         ))}
@@ -86,73 +85,61 @@ const RouteInputPad = ({ boardTab }) => {
   }
 
   return (
-    <InputPadBox className={classes.root} padding={padding}>
-      <Box className={classes.numPadContainer} padding={padding}>
+    <Box sx={rootSx} padding={padding}>
+      <Box sx={numPadContainerSx} padding={padding}>
         <RouteNumPad possibleChar={possibleChar} />
       </Box>
-      <Box className={classes.alphabetPadContainer} padding={padding}>
+      <Box sx={alphabetPadContainerSx} padding={padding}>
         <RouteAlphabetPad possibleChar={possibleChar} />
       </Box>
-    </InputPadBox>
+    </Box>
   );
 };
 
 export default RouteInputPad;
 
-const PREFIX = "inputpad";
-
-const classes = {
-  root: `${PREFIX}-boxContainer`,
-  numPadContainer: `${PREFIX}-numPadContainer`,
-  alphabetPadContainer: `${PREFIX}-alphabetPadContainer`,
-  button: `${PREFIX}-button`,
-  alphabet: `${PREFIX}-alphabet`,
-  cancel: `${PREFIX}-cancel`,
-  number: `${PREFIX}-number`,
+const rootSx: SxProps<Theme> = {
+  zIndex: 0,
+  background: (theme) => theme.palette.background.default,
+  display: "flex",
+  flexDirection: "row",
+  // TODO: increase to 258px or enable scroll
+  height: "248px",
+  justifyContent: "space-around",
 };
 
-const InputPadBox = styled(Box)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    zIndex: 0,
-    background: theme.palette.background.default,
-    display: "flex",
-    flexDirection: "row",
-    // TODO: increase to 258px or enable scroll
-    height: "248px",
-    justifyContent: "space-around",
+const buttonSx: SxProps<Theme> = {
+  background: (theme) => theme.palette.background.paper,
+  color: (theme) => theme.palette.text.primary,
+  width: "100%",
+  fontSize: "1.8em",
+  borderRadius: "unset",
+  "&:selected": {
+    color: (theme) => theme.palette.text.primary,
   },
-  [`& .${classes.numPadContainer}`]: {
-    width: "72%",
+  "&:hover": {
+    backgroundColor: (theme) => theme.palette.background.paper,
   },
-  [`& .${classes.alphabetPadContainer}`]: {
-    width: "20%",
-    height: "246px",
-    overflowX: "hidden",
-    overflowY: "scroll",
-  },
-  [`& .${classes.button}`]: {
-    background: theme.palette.background.paper,
-    color: theme.palette.text.primary,
-    width: "100%",
-    fontSize: "1.8em",
-    borderRadius: "unset",
-    "&:selected": {
-      color: theme.palette.text.primary,
-    },
-    "&:hover": {
-      backgroundColor: theme.palette.background.paper,
-    },
-  },
-  [`& .${classes.cancel}`]: {
-    fontSize: "0.9em",
-  },
-  [`& .${classes.alphabet}`]: {
-    height: "52px",
-  },
-  [`& .${classes.number}`]: {
-    height: "62px",
-  },
-}));
+};
+
+const numberSx: SxProps<Theme> = {
+  height: "62px",
+};
+
+const alphabetSx: SxProps<Theme> = {
+  height: "52px",
+};
+
+const alphabetPadContainerSx: SxProps<Theme> = {
+  width: "20%",
+  height: "246px",
+  overflowX: "hidden",
+  overflowY: "scroll",
+};
+
+const numPadContainerSx: SxProps<Theme> = {
+  width: "72%",
+};
 
 const getPossibleChar = (
   searchRoute: string,

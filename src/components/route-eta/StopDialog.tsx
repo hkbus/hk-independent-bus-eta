@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Dialog, DialogContent, DialogTitle, List } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  List,
+  SxProps,
+  Theme,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import SuccinctTimeReport from "../home/SuccinctTimeReport";
@@ -37,8 +43,8 @@ const StopDialog = ({ open, stops, handleClose }) => {
   }, [stops]);
 
   return (
-    <DialogRoot open={open} onClose={handleClose} className={classes.root}>
-      <DialogTitle className={classes.title}>
+    <Dialog open={open} onClose={handleClose} sx={rootSx}>
+      <DialogTitle sx={titleSx}>
         {stopList[stops[0][1]].name[i18n.language]}
       </DialogTitle>
       <DialogContent>
@@ -48,38 +54,30 @@ const StopDialog = ({ open, stops, handleClose }) => {
           ))}
         </List>
       </DialogContent>
-    </DialogRoot>
+    </Dialog>
   );
 };
 
-const PREFIX = "stopDialog";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  title: `${PREFIX}-title`,
-};
-
-const DialogRoot = styled(Dialog)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    "& .MuiPaper-root": {
-      width: "100%",
-      marginTop: "90px",
-      height: "calc(100vh - 100px)",
-    },
+const rootSx: SxProps<Theme> = {
+  "& .MuiPaper-root": {
+    width: "100%",
+    marginTop: "90px",
+    height: "calc(100vh - 100px)",
   },
-  [`& .${classes.title}`]: {
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : theme.palette.primary.main,
-    color:
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary,
-  },
-  [`& .MuiDialogContent-root`]: {
+  "& .MuiDialogContent-root": {
     padding: 0,
   },
-}));
+};
+
+const titleSx: SxProps<Theme> = {
+  backgroundColor: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : theme.palette.primary.main,
+  color: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : theme.palette.text.primary,
+};
 
 export default StopDialog;

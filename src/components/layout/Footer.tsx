@@ -1,5 +1,10 @@
 import React, { useContext, useMemo } from "react";
-import { BottomNavigation, BottomNavigationAction } from "@mui/material";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  SxProps,
+  Theme,
+} from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import NearMeIcon from "@mui/icons-material/NearMe";
@@ -8,7 +13,6 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
-import { styled } from "@mui/material/styles";
 import { vibrate } from "../../utils";
 
 const Footer = () => {
@@ -28,10 +32,10 @@ const Footer = () => {
 
   return useMemo(
     () => (
-      <Root
+      <BottomNavigation
         value={location.pathname.replace(/(.*)\/[0-9]*?$/, "$1")}
         showLabels={true}
-        classes={{ root: classes.root }}
+        sx={rootSx}
       >
         <BottomNavigationAction
           label={t("首頁")}
@@ -40,10 +44,6 @@ const Footer = () => {
           onClick={(e) => handleClick(`/${i18n.language}`, e)}
           value={`/${i18n.language}`}
           icon={<HomeIcon />}
-          classes={{
-            root: "footer-actionItem",
-            selected: "footer-selected",
-          }}
         />
         <BottomNavigationAction
           label={t("搜尋")}
@@ -52,10 +52,6 @@ const Footer = () => {
           onClick={(e) => handleClick(`/${i18n.language}/board`, e)}
           value={`/${i18n.language}/board`}
           icon={<SearchIcon />}
-          classes={{
-            root: "footer-actionItem",
-            selected: "footer-selected",
-          }}
         />
         <BottomNavigationAction
           label={selectedRoute.split("-")[0]}
@@ -74,10 +70,6 @@ const Footer = () => {
             .toLowerCase()}`}
           icon={<TimerIcon />}
           style={{ textTransform: "uppercase" }}
-          classes={{
-            root: "footer-actionItem",
-            selected: "footer-selected",
-          }}
         />
         <BottomNavigationAction
           label={t("規劃")}
@@ -88,10 +80,6 @@ const Footer = () => {
           }
           value={`/${i18n.language}/search`}
           icon={<NearMeIcon />}
-          classes={{
-            root: "footer-actionItem",
-            selected: "footer-selected",
-          }}
         />
         <BottomNavigationAction
           label={t("設定")}
@@ -103,12 +91,8 @@ const Footer = () => {
           }
           value={`/${i18n.language}/settings`}
           icon={<SettingsIcon />}
-          classes={{
-            root: "footer-actionItem",
-            selected: classes.selected,
-          }}
         />
-      </Root>
+      </BottomNavigation>
     ),
     // eslint-disable-next-line
     [
@@ -123,34 +107,25 @@ const Footer = () => {
 
 export default Footer;
 
-const PREFIX = "footer";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  selected: `${PREFIX}-selected`,
-};
-
-const Root = styled(BottomNavigation)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    background:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : theme.palette.primary.main,
-    bottom: "0",
-    height: "initial",
-    [`& .MuiBottomNavigationAction-root`]: {
-      width: "20%",
-      padding: "6px 0",
-      minWidth: 0,
-    },
-    [`& .MuiBottomNavigationAction-label`]: {
-      fontSize: "0.875rem",
-    },
-    [`& .Mui-selected.${classes.selected}`]: {
-      color:
-        theme.palette.mode === "dark"
-          ? theme.palette.primary.main
-          : theme.palette.text.primary,
-    },
+const rootSx: SxProps<Theme> = {
+  background: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : theme.palette.primary.main,
+  bottom: "0",
+  height: "initial",
+  "& .MuiBottomNavigationAction-root": {
+    width: "20%",
+    padding: "6px 0",
+    minWidth: 0,
   },
-}));
+  "& .MuiBottomNavigationAction-label": {
+    fontSize: "0.875rem",
+  },
+  "& .Mui-selected": {
+    color: (theme) =>
+      theme.palette.mode === "dark"
+        ? theme.palette.primary.main
+        : theme.palette.text.primary,
+  },
+};

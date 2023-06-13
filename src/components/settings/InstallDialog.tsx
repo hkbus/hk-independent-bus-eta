@@ -11,7 +11,6 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { IosShare, MoreVert } from "@mui/icons-material";
 
@@ -20,8 +19,8 @@ const InstallDialog = ({ open, handleClose }) => {
   const [tab, setTab] = useState<"PWA" | "App">("App");
 
   return (
-    <DialogRoot open={open} onClose={handleClose} className={classes.root}>
-      <DialogTitle className={classes.title}>{t("安裝步驟")}</DialogTitle>
+    <Dialog open={open} onClose={handleClose} PaperProps={{ sx: dialogSx }}>
+      <DialogTitle sx={titleSx}>{t("安裝步驟")}</DialogTitle>
       <DialogContent>
         <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={tabbarSx}>
           <Tab value="App" label="App" />
@@ -55,7 +54,7 @@ const InstallDialog = ({ open, handleClose }) => {
         )}
         {tab === "PWA" && (
           <>
-            <Box className={classes.section}>
+            <Box sx={sectionSx}>
               <Typography variant="h5">iOS:</Typography>
               <br />
               <Typography variant="body1">1. {t("用 Safari 開")}</Typography>
@@ -66,7 +65,7 @@ const InstallDialog = ({ open, handleClose }) => {
               <Typography variant="body1">3. {t("加至主畫面")}</Typography>
             </Box>
             <Divider />
-            <Box className={classes.section}>
+            <Box sx={sectionSx}>
               <Typography variant="h5">Android:</Typography>
               <br />
               <Typography variant="body1">1. {t("用 Chrome 開")}</Typography>
@@ -81,42 +80,32 @@ const InstallDialog = ({ open, handleClose }) => {
           </>
         )}
       </DialogContent>
-    </DialogRoot>
+    </Dialog>
   );
 };
 
-const PREFIX = "installDialog";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  title: `${PREFIX}-title`,
-  section: `${PREFIX}-section`,
+const dialogSx: SxProps<Theme> = {
+  width: "100%",
+  height: "fit-content",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
 };
 
-const DialogRoot = styled(Dialog)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    "& .MuiPaper-root": {
-      width: "100%",
-      height: "fit-content",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-    },
-  },
-  [`& .${classes.title}`]: {
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : theme.palette.primary.main,
-    color:
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary,
-  },
-  [`& .${classes.section}`]: {
-    padding: "10px 0px",
-  },
-}));
+const titleSx: SxProps<Theme> = {
+  backgroundColor: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : theme.palette.primary.main,
+  color: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : theme.palette.text.primary,
+};
+
+const sectionSx: SxProps<Theme> = {
+  padding: "10px 0px",
+};
 
 const tabbarSx: SxProps<Theme> = {
   minHeight: "36px",

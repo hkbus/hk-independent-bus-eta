@@ -6,8 +6,9 @@ import {
   AccordionDetails,
   ListItemText,
   Typography,
+  SxProps,
+  Theme,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
 import RouteNo from "../route-board/RouteNo";
 import TimeReport from "../route-eta/TimeReport";
@@ -41,120 +42,99 @@ const SearchResult = ({ routes, idx, handleRouteClick, expanded, stopIdx }) => {
   };
 
   return (
-    <ResultAccordion
+    <Accordion
       TransitionProps={{ unmountOnExit: true }}
-      classes={{ root: classes.root, expanded: classes.expandedAccordion }}
+      sx={rootSx}
       onChange={() => handleRouteClick(idx)}
       expanded={expanded}
     >
-      <AccordionSummary
-        classes={{
-          root: classes.summaryRoot,
-          content: classes.content,
-          expanded: classes.summaryExpanded,
-        }}
-      >
+      <AccordionSummary sx={summaryRootSx}>
         <ListItemText
           primary={routes.map((selectedRoute, routeIdx) => {
             const { routeId } = selectedRoute;
             const { route, serviceType } = routeList[routeId];
 
             return (
-              <span
-                className={classes.routeNo}
-                key={`search-${idx}-${routeIdx}`}
-              >
+              <span key={`search-${idx}-${routeIdx}`}>
                 <RouteNo routeNo={route} />
                 {parseInt(serviceType, 10) >= 2 && (
-                  <Typography variant="caption" className={classes.specialTrip}>
-                    {t("特別班")}
-                  </Typography>
+                  <Typography variant="caption">{t("特別班")}</Typography>
                 )}
               </span>
             );
           })}
           secondary={getStopString(routes)}
+          sx={listItemTextSx}
         />
       </AccordionSummary>
-      <AccordionDetails classes={{ root: classes.details }}>
+      <AccordionDetails sx={detailsSx}>
         {routes.map((selectedRoute, routeIdx) => (
           <TimeReport
             key={`timereport-${idx}-${routeIdx}`}
             routeId={selectedRoute.routeId.toUpperCase()}
             seq={selectedRoute.on + (stopIdx ? stopIdx[routeIdx] : 0)}
-            containerClass={classes.timerReport}
+            containerSx={timeReportSx}
             showStopName={true}
           />
         ))}
       </AccordionDetails>
-    </ResultAccordion>
+    </Accordion>
   );
 };
 
 export default SearchResult;
 
-const PREFIX = "search-result";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  expandedAccordion: `${PREFIX}-expanded`,
-  summaryRoot: `${PREFIX}-summary-root`,
-  summaryExpanded: `${PREFIX}-summary-root-expanded`,
-  content: `${PREFIX}-content`,
-  details: `${PREFIX}-details`,
-  timerReport: `${PREFIX}-timer-report`,
-  routeNo: `${PREFIX}-route-no`,
-  specialTrip: `${PREFIX}-special-trip`,
+const rootSx: SxProps<Theme> = {
+  border: "1px solid rgba(0, 0, 0, .125)",
+  boxShadow: "none",
+  "&:not(:last-child)": {
+    borderBottom: 0,
+  },
+  "&:before": {
+    display: "none",
+  },
+  "&.Mui-expanded": {
+    margin: "auto",
+  },
 };
 
-const ResultAccordion = styled(Accordion)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    border: "1px solid rgba(0, 0, 0, .125)",
-    boxShadow: "none",
-    "&:not(:last-child)": {
-      borderBottom: 0,
-    },
-    "&:before": {
-      display: "none",
-    },
-    [`&.${classes.expandedAccordion}`]: {
-      margin: "auto",
-    },
-  },
-  [`& .${classes.summaryRoot}`]: {
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : "rgba(0, 0, 0, .03)",
-    borderBottom: "1px solid rgba(0, 0, 0, .125)",
-    marginBottom: -1,
+const summaryRootSx: SxProps<Theme> = {
+  backgroundColor: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : "rgba(0, 0, 0, .03)",
+  borderBottom: "1px solid rgba(0, 0, 0, .125)",
+  marginBottom: -1,
+  minHeight: 44,
+  "&.Mui-expanded": {
     minHeight: 44,
-    [`&.${classes.summaryExpanded}`]: {
-      minHeight: 44,
-    },
   },
-  [`& .${classes.content}`]: {
+  "& .MuiAccordionSummary-content": {
     margin: "8px 0",
     flexDirection: "column",
-    [`&.${classes.summaryExpanded}`]: {
+    [`&.Mui-expanded`]: {
       margin: "8px 0",
     },
   },
-  [`& .${classes.details}`]: {
-    padding: theme.spacing(2),
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    display: "flex",
-  },
-  [`& .${classes.timerReport}`]: {
-    width: "50%",
-  },
-  [`& .${classes.routeNo}`]: {
+};
+
+const detailsSx: SxProps<Theme> = {
+  px: (theme) => theme.spacing(2),
+  py: (theme) => theme.spacing(1),
+  display: "flex",
+};
+
+const timeReportSx: SxProps<Theme> = {
+  width: "50%",
+};
+
+const listItemTextSx: SxProps<Theme> = {
+  "& .MuiListItemText-primary > span": {
     width: "50%",
     display: "inline-block",
+    "& > span": {
+      fontSize: "0.6rem",
+      marginLeft: "8px",
+    },
   },
-  [`& .${classes.specialTrip}`]: {
-    fontSize: "0.6rem",
-    marginLeft: "8px",
-  },
-}));
+};

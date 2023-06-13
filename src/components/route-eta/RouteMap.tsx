@@ -15,8 +15,7 @@ import {
 } from "react-leaflet";
 import Leaflet from "leaflet";
 import markerIcon2X from "leaflet/dist/images/marker-icon-2x.png";
-import { Box } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import type { StopListEntry } from "hk-bus-eta";
@@ -36,12 +35,13 @@ const SelfCircle = () => {
 const CenterControl = ({ onClick }) => {
   return (
     <div className="leaflet-bottom leaflet-right">
-      <CenterControlRoot
-        className={`${classes.centerControlContainer} leaflet-control leaflet-bar`}
+      <Box
+        sx={centerControlSx}
+        className="leaflet-control leaflet-bar"
         onClick={onClick}
       >
         <MyLocationIcon className={classes.centerControl} />
-      </CenterControlRoot>
+      </Box>
     </div>
   );
 };
@@ -209,7 +209,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
   }, [stops]);
 
   return (
-    <RouteMapBox id="route-map" className={classes.mapContainerBox}>
+    <Box id="route-map" sx={rootSx}>
       <MapContainer
         center={mapRef.current.initialCenter}
         zoom={16}
@@ -236,7 +236,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         <SelfCircle />
         <CenterControl onClick={onClickJumpToMyLocation} />
       </MapContainer>
-    </RouteMapBox>
+    </Box>
   );
 };
 
@@ -259,18 +259,16 @@ const PREFIX = "routeMap";
 const classes = {
   mapContainerBox: `${PREFIX}-mapContainerBox`,
   mapContainer: `${PREFIX}-mapContainer`,
-  centerControlContainer: `${PREFIX}-centerControlContainer`,
   centerControl: `${PREFIX}-centerControl`,
   marker: `${PREFIX}-marker`,
   active: `${PREFIX}-active`,
   passed: `${PREFIX}-passed`,
 };
 
-const RouteMapBox = styled(Box)(({ theme }) => ({
-  [`&.${classes.mapContainerBox}`]: {
-    height: "30vh",
-    filter: theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
-  },
+const rootSx: SxProps<Theme> = {
+  height: "30vh",
+  filter: (theme) =>
+    theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
   [`& .${classes.mapContainer}`]: {
     height: "30vh",
   },
@@ -289,17 +287,15 @@ const RouteMapBox = styled(Box)(({ theme }) => ({
   [`& .${classes.passed}`]: {
     filter: "grayscale(100%)",
   },
-}));
+};
 
-const CenterControlRoot = styled("div")(({ theme }) => ({
+const centerControlSx: SxProps<Theme> = {
+  background: "white",
+  height: "28px",
+  marginBottom: "20px !important",
+  marginRight: "5px !important",
   [`& .${classes.centerControl}`]: {
     padding: "5px",
     color: "black",
   },
-  [`&.${classes.centerControlContainer}`]: {
-    background: "white",
-    height: "28px",
-    marginBottom: "20px !important",
-    marginRight: "5px !important",
-  },
-}));
+};

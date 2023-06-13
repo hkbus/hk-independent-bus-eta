@@ -9,8 +9,7 @@ import {
 } from "react-leaflet";
 import Leaflet from "leaflet";
 import { useTranslation } from "react-i18next";
-import { Box } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, SxProps, Theme } from "@mui/material";
 import AppContext from "../../AppContext";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { checkPosition } from "../../utils";
@@ -54,12 +53,13 @@ const EndMarker = ({ end }) => {
 const CenterControl = ({ onClick }) => {
   return (
     <div className="leaflet-bottom leaflet-right">
-      <CenterControlRoot
-        className={`${classes.centralControlContainer} leaflet-control leaflet-bar`}
+      <Box
+        sx={centerControlSx}
+        className="leaflet-control leaflet-bar"
         onClick={onClick}
       >
         <MyLocationIcon className={classes.centralControl} />
-      </CenterControlRoot>
+      </Box>
     </div>
   );
 };
@@ -212,7 +212,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
   }, [geolocation, center, isFollow, updateCenter]);
 
   return (
-    <SearchMapBox className={classes.mapContainerBox}>
+    <Box sx={rootSx}>
       <MapContainer
         center={getMapCenter()}
         zoom={16}
@@ -260,7 +260,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
           }}
         />
       </MapContainer>
-    </SearchMapBox>
+    </Box>
   );
 };
 
@@ -287,20 +287,17 @@ const EndsMarker = ({ isStart }) => {
 const PREFIX = "searchMap";
 
 const classes = {
-  mapContainerBox: `${PREFIX}-mapContainerBox`,
   mapContainer: `${PREFIX}-mapContainer`,
-  centralControlContainer: `${PREFIX}-centralControlContainer`,
   centralControl: `${PREFIX}-centralControl`,
   marker: `${PREFIX}-marker`,
   active: `${PREFIX}-active`,
   passed: `${PREFIX}-passed`,
 };
 
-const SearchMapBox = styled(Box)(({ theme }) => ({
-  [`&.${classes.mapContainerBox}`]: {
-    height: "30vh",
-    filter: theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
-  },
+const rootSx: SxProps<Theme> = {
+  height: "30vh",
+  filter: (theme) =>
+    theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
   [`& .${classes.mapContainer}`]: {
     height: "30vh",
   },
@@ -328,17 +325,15 @@ const SearchMapBox = styled(Box)(({ theme }) => ({
   [`& .${classes.passed}`]: {
     filter: "grayscale(100%)",
   },
-}));
+};
 
-const CenterControlRoot = styled("div")(({ theme }) => ({
+const centerControlSx = {
+  background: "white",
+  height: "28px",
+  marginBottom: "20px !important",
+  marginRight: "5px !important",
   [`& .${classes.centralControl}`]: {
     padding: "5px",
     color: "black",
   },
-  [`&.${classes.centralControlContainer}`]: {
-    background: "white",
-    height: "28px",
-    marginBottom: "20px !important",
-    marginRight: "5px !important",
-  },
-}));
+};

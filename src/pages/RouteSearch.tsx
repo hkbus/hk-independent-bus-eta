@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { Box, Divider, Paper, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, Divider, Paper, SxProps, Theme, Typography } from "@mui/material";
 import AppContext from "../AppContext";
 import SearchContext from "../SearchContext";
 import { useTranslation } from "react-i18next";
@@ -228,7 +227,7 @@ const RouteSearch = () => {
   };
 
   return (
-    <Root className={classes.root} square elevation={0}>
+    <Paper sx={rootSx} square elevation={0}>
       {!energyMode ? (
         <SearchMap
           start={locations.start ? locations.start.location : geolocation}
@@ -238,7 +237,7 @@ const RouteSearch = () => {
           onMarkerClick={handleMarkerClick}
         />
       ) : null}
-      <div className={classes.inputContainer}>
+      <Box sx={inputContainerSx}>
         <AddressInput
           value={locations.start}
           placeholder={t("你的位置")}
@@ -251,10 +250,8 @@ const RouteSearch = () => {
           onChange={handleEndChange}
           stopList={stopList}
         />
-      </div>
-      <Box
-        className={!energyMode ? classes.resultList : classes.resultListEnergy}
-      >
+      </Box>
+      <Box sx={!energyMode ? resultListSx : resultListEnergySx}>
         {!locations.end ? (
           <RouteSearchDetails />
         ) : "waiting|rendering".includes(status) && result.length === 0 ? (
@@ -276,14 +273,14 @@ const RouteSearch = () => {
           <>{t("找不到合適的巴士路線")}</>
         )}
       </Box>
-    </Root>
+    </Paper>
   );
 };
 
 const RouteSearchDetails = () => {
   const { t } = useTranslation();
   return (
-    <div className={classes.description}>
+    <Box sx={descriptionSx}>
       <Typography variant="h5">{t("Route Search header")}</Typography>
       <Divider />
       <Typography variant="subtitle1">
@@ -294,47 +291,37 @@ const RouteSearchDetails = () => {
       <Typography variant="body2">1. {t("Route Search caption 1")}</Typography>
       <Typography variant="body2">2. {t("Route Search caption 2")}</Typography>
       <Typography variant="body2">3. {t("Route Search caption 3")}</Typography>
-    </div>
+    </Box>
   );
 };
 
 export default RouteSearch;
 
-const PREFIX = "search";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  inputContainer: `${PREFIX}-input-container`,
-  description: `${PREFIX}-description`,
-  resultList: `${PREFIX}-result-list`,
-  resultListEnergy: `${PREFIX}-result-list-energy`,
+const rootSx: SxProps<Theme> = {
+  background: (theme) =>
+    theme.palette.mode === "dark" ? theme.palette.background.default : "white",
+  overflowY: "hidden",
+  textAlign: "left",
+  width: "100%",
 };
 
-const Root = styled(Paper)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    background:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : "white",
-    overflowY: "hidden",
-    textAlign: "left",
-    width: "100%",
-  },
-  ".search-input-container": {
-    marginTop: "2%",
-    padding: "0% 2%",
-  },
-  ".search-description": {
-    textAlign: "left",
-    marginTop: "5%",
-    padding: "5%",
-  },
-  ".search-result-list": {
-    overflowY: "scroll",
-    height: "calc(100% - 30vh - 76px)",
-  },
-  ".search-result-list-energy": {
-    overflowY: "scroll",
-    height: "calc(100% - 76px)",
-  },
-}));
+const inputContainerSx: SxProps<Theme> = {
+  marginTop: "2%",
+  padding: "0% 2%",
+};
+
+const resultListSx: SxProps<Theme> = {
+  overflowY: "scroll",
+  height: "calc(100% - 30vh - 76px)",
+};
+
+const resultListEnergySx: SxProps<Theme> = {
+  overflowY: "scroll",
+  height: "calc(100% - 76px)",
+};
+
+const descriptionSx: SxProps<Theme> = {
+  textAlign: "left",
+  marginTop: "5%",
+  padding: "5%",
+};

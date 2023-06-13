@@ -7,13 +7,14 @@ import {
   IconButton,
   Snackbar,
   Typography,
+  SxProps,
+  Theme,
 } from "@mui/material";
 import loadable from "@loadable/component";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import InfoIcon from "@mui/icons-material/Info";
-import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import { toProperCase } from "../../utils";
@@ -41,7 +42,7 @@ const StopAccordions = ({
   onStopInfo,
 }: StopAccordionsProps) => {
   const id = routeId;
-  const { savedEtas, updateSavedEtas, energyMode, setCollectionDrawerRoute } =
+  const { savedEtas, updateSavedEtas, setCollectionDrawerRoute } =
     useContext(AppContext);
   const [isCopied, setIsCopied] = useState(false);
   const [sharingObj, setSharingObj] = useState<any | null>(null);
@@ -89,7 +90,7 @@ const StopAccordions = ({
         );
       };
       return (
-        <StopAccordion
+        <Accordion
           id={`stop-${idx}`}
           key={"stop-" + idx}
           expanded={stopIdx === idx && expanded}
@@ -106,25 +107,10 @@ const StopAccordions = ({
               }
             }
           }}
-          classes={{
-            root: classes.accordionRoot,
-            expanded: classes.accordionExpanded,
-          }}
+          sx={accordionSx}
         >
-          <StopAccordionSummary
-            classes={{
-              root: classes.accordionSummaryRoot,
-              content: classes.accordionSummaryContent,
-              expanded: classes.accordionSummaryExpanded,
-            }}
-          >
-            <Typography
-              component="h3"
-              variant="body1"
-              classes={{
-                root: classes.accordionSummaryContentTitle,
-              }}
-            >
+          <AccordionSummary sx={accordionSummarySx}>
+            <Typography component="h3" variant="body1" sx={{ fontWeight: 700 }}>
               {idx + 1}. {toProperCase(stop.name[i18n.language])}
             </Typography>
             <Typography variant="body2">
@@ -133,12 +119,10 @@ const StopAccordions = ({
                 ? "　　　　" + t("假日車費") + ": $" + faresHoliday[idx]
                 : ""}
             </Typography>
-          </StopAccordionSummary>
-          <StopAccordionDetails
-            classes={{ root: classes.accordionDetailsRoot }}
-          >
+          </AccordionSummary>
+          <AccordionDetails sx={accordionDetailsRootSx}>
             <TimeReport
-              containerClass={classes.accordionTimeReport}
+              containerSx={accordionTimeReportSx}
               routeId={`${id.toUpperCase()}`}
               seq={idx}
             />
@@ -188,8 +172,8 @@ const StopAccordions = ({
                 </IconButton>
               </Box>
             </Box>
-          </StopAccordionDetails>
-        </StopAccordion>
+          </AccordionDetails>
+        </Accordion>
       );
     });
   }, [
@@ -211,11 +195,7 @@ const StopAccordions = ({
     onStopInfo,
   ]);
   return (
-    <StopAccordionsBox
-      className={
-        !energyMode ? classes.boxContainer : classes.boxContainerEnergy
-      }
-    >
+    <Box sx={rootSx}>
       {stopListElements}
       {sharingObj && <SharingModal {...sharingObj} />}
       <Snackbar
@@ -227,90 +207,58 @@ const StopAccordions = ({
         }}
         message={t("已複製到剪貼簿")}
       />
-    </StopAccordionsBox>
+    </Box>
   );
 };
 
 export default StopAccordions;
 
-const PREFIX = "stopAccordions";
-
-const classes = {
-  boxContainer: `${PREFIX}-boxContainer`,
-  boxContainerEnergy: `${PREFIX}-boxContainerEnergy`,
-  accordionRoot: `${PREFIX}-accordion-root`,
-  accordionExpanded: `${PREFIX}-accordion-expanded`,
-  accordionSummaryRoot: `${PREFIX}-summary-root`,
-  accordionSummaryContent: `${PREFIX}-summary-content`,
-  accordionSummaryContentTitle: `${PREFIX}-summary-content-title`,
-  accordionSummaryExpanded: `${PREFIX}-summary-expanded`,
-  accordionDetailsRoot: `${PREFIX}-details-root`,
-  accordionTimeReport: `${PREFIX}-accordionTimeReport`,
+const rootSx: SxProps<Theme> = {
+  overflowY: "scroll",
 };
 
-const StopAccordionsBox = styled(Box)(({ theme }) => ({
-  [`&.${classes.boxContainer}`]: {
-    overflowY: "scroll",
+const accordionSx: SxProps<Theme> = {
+  border: "1px solid rgba(0, 0, 0, .125)",
+  boxShadow: "none",
+  "&:not(:last-child)": {
+    borderBottom: 0,
   },
-  [`&.${classes.boxContainerEnergy}`]: {
-    overflowY: "scroll",
+  "&:before": {
+    display: "none",
   },
-}));
+  "&.Mui-expanded": {
+    margin: "auto",
+  },
+};
 
-const StopAccordion = styled(Accordion)(({ theme }) => ({
-  [`&.${classes.accordionRoot}`]: {
-    border: "1px solid rgba(0, 0, 0, .125)",
-    boxShadow: "none",
-    "&:not(:last-child)": {
-      borderBottom: 0,
-    },
-    "&:before": {
-      display: "none",
-    },
-    [`&.${classes.accordionExpanded}`]: {
-      margin: "auto",
-    },
-  },
-}));
-
-const StopAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
-  [`&.${classes.accordionSummaryRoot}`]: {
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : "rgba(0, 0, 0, .03)",
-    [`&.${classes.accordionSummaryExpanded}`]: {
-      borderBottom: "1px solid rgba(0, 0, 0, .125)",
-    },
-    marginBottom: -1,
+const accordionSummarySx: SxProps<Theme> = {
+  backgroundColor: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : "rgba(0, 0, 0, .03)",
+  "&.Mui-expanded": {
+    borderBottom: "1px solid rgba(0, 0, 0, .125)",
     minHeight: 44,
-    [`&.${classes.accordionSummaryExpanded}`]: {
-      minHeight: 44,
-    },
-    [`& .${classes.accordionSummaryContent}`]: {
+  },
+  minHeight: 44,
+  "& .MuiAccordionSummary-content": {
+    margin: "8px 0",
+    flexDirection: "column",
+    "&.Mui-expanded": {
       margin: "8px 0",
-      flexDirection: "column",
-      [`&.${classes.accordionSummaryExpanded}`]: {
-        margin: "8px 0",
-      },
-    },
-    [`& .${classes.accordionSummaryContentTitle}`]: {
-      fontWeight: 700,
     },
   },
-}));
+};
 
-const StopAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-  [`&.${classes.accordionDetailsRoot}`]: {
-    display: "flex",
-    alignItems: "center",
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    justifyContent: "space-between",
-  },
-  [`& .${classes.accordionTimeReport}`]: {
-    flex: 1,
-  },
-}));
+const accordionDetailsRootSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "center",
+  pl: 2,
+  pr: 1,
+  py: 1,
+  justifyContent: "space-between",
+};
+
+const accordionTimeReportSx: SxProps<Theme> = {
+  flex: 1,
+};

@@ -6,7 +6,6 @@ import { FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import memorize from "memoize-one";
 import { useTranslation } from "react-i18next";
-import { styled } from "@mui/material/styles";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 
 import AppContext from "../../AppContext";
@@ -93,7 +92,6 @@ const SwipeableRoutesBoard = ({
                 itemSize={64}
                 width={width}
                 itemData={coItemDataList[index]}
-                className={classes.root}
               >
                 {RouteRowList}
               </FixedSizeList>
@@ -127,7 +125,7 @@ const SwipeableRoutesBoard = ({
     () => (
       <>
         {navigator.userAgent === "prerendering" ? (
-          <PrerenderList className={classes.prerenderList}>
+          <Box sx={prerenderListSx}>
             {coItemDataList[0].routeList.map((data, idx) => (
               <RouteRowList
                 data={coItemDataList[0]}
@@ -136,7 +134,7 @@ const SwipeableRoutesBoard = ({
                 style={null} // required by react-window
               />
             ))}
-          </PrerenderList>
+          </Box>
         ) : (
           <VirtualizeSwipeableViews
             index={BOARD_TAB.indexOf(boardTab)}
@@ -170,20 +168,10 @@ export default SwipeableRoutesBoard;
 
 const BOARD_TAB = ["recent", "all", "bus", "minibus", "lightRail", "mtr"];
 
-const PREFIX = "routeBoard";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  prerenderList: `${PREFIX}-prerenderList`,
-  noResult: `${PREFIX}-noResult`,
+const prerenderListSx: SxProps<Theme> = {
+  height: "100%",
+  overflowY: "scroll",
 };
-
-const PrerenderList = styled("div")(({ theme }) => ({
-  [`&.${classes.prerenderList}`]: {
-    height: "100%",
-    overflowY: "scroll",
-  },
-}));
 
 const noResultSx: SxProps<Theme> = {
   height: "140px",

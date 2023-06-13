@@ -3,7 +3,8 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  styled,
+  SxProps,
+  Theme,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -27,13 +28,13 @@ const BadWeatherCard = () => {
 
   if (navigator.userAgent !== "prerendering" && isAdverse()) {
     return (
-      <WeatherCard variant="outlined" className={classes.card}>
+      <Card variant="outlined" sx={rootSx}>
         <CardActionArea href={t("bad-weather-link")} target="_blank">
           <CardContent>
             <Typography>{t("bad-weather-text")}</Typography>
           </CardContent>
         </CardActionArea>
-      </WeatherCard>
+      </Card>
     );
   } else {
     return null;
@@ -45,19 +46,11 @@ export default BadWeatherCard;
 const adverseWCode = ["TC8NE", "TC8SE", "TC8NW", "TC8SW", "TC9", "TC10"];
 const adverseRCode = ["WARINR", "WRAINB"];
 
-const PREFIX = "route";
-
-const classes = {
-  card: `${PREFIX}-card`,
-};
-
-const WeatherCard = styled(Card)(({ theme }) => ({
-  [`&.${classes.card}`]: {
-    borderRadius: theme.shape.borderRadius,
-    margin: 0.2,
+const rootSx: SxProps<Theme> = {
+  borderRadius: (theme) => theme.shape.borderRadius,
+  margin: 0.2,
+  height: "100%",
+  [`> a`]: {
     height: "100%",
-    [`> a`]: {
-      height: "100%",
-    },
   },
-}));
+};

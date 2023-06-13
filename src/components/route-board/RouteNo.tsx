@@ -1,6 +1,5 @@
 import React from "react";
-import { Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { SxProps, Theme, Typography } from "@mui/material";
 
 interface RouteNoProps {
   routeNo: string;
@@ -13,41 +12,31 @@ const RouteNo = ({ routeNo, component, align }: RouteNoProps) => {
     ? [routeNo.slice(0, -1), routeNo.slice(-1)]
     : [routeNo, ""];
   return (
-    <RouteNoTypography
+    <Typography
       // @ts-ignore
       component={component || "h2"}
       align={align}
       variant="caption"
       color="textPrimary"
-      className={classes.root}
+      sx={rootSx}
     >
-      <span className={classes.prefix}>{prefix}</span>
-      <span className={classes.suffix}>{suffix}</span>
-    </RouteNoTypography>
+      <span>{prefix}</span>
+      <span>{suffix}</span>
+    </Typography>
   );
 };
 
 export default RouteNo;
 
-const PREFIX = "routeNo";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  prefix: `${PREFIX}-prefix`,
-  suffix: `${PREFIX}-suffix`,
-};
-
-const RouteNoTypography = styled(Typography)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    lineHeight: "normal",
-    display: "inline",
-  },
-  [`& .${classes.prefix}`]: {
+const rootSx: SxProps<Theme> = {
+  lineHeight: "normal",
+  display: "inline",
+  "& > span:nth-child(1)": {
     fontSize: "1.5rem",
     fontFamily: '"Oswald", sans-serif',
   },
-  [`& .${classes.suffix}`]: {
+  "& > span:nth-child(2)": {
     fontSize: "1.2rem",
     fontFamily: '"Oswald", sans-serif',
   },
-}));
+};

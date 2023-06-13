@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import { ListItemText, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { ListItemText, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useEtas } from "../Etas";
 import AppContext from "../../AppContext";
@@ -37,7 +36,7 @@ const SuccinctEtas = ({ routeId }) => {
   };
 
   return (
-    <EtaListItemText
+    <ListItemText
       primary={
         <Typography
           component="h5"
@@ -48,39 +47,27 @@ const SuccinctEtas = ({ routeId }) => {
         </Typography>
       }
       secondary={
-        <Typography
-          variant="h6"
-          color="textSecondary"
-          className={classes.secondary}
-        >
+        <Typography variant="h6" color="textSecondary" sx={secondarySx}>
           {etas ? getEtaString(etas[1]) : ""}
           <br />
           {etas ? getEtaString(etas[2]) : ""}
         </Typography>
       }
-      className={classes.root}
+      sx={rootSx}
     />
   );
 };
 
 export default SuccinctEtas;
 
-const PREFIX = "etas";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  secondary: `${PREFIX}-secondary`,
+const rootSx: SxProps<Theme> = {
+  textAlign: "right",
 };
 
-const EtaListItemText = styled(ListItemText)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    textAlign: "right",
-  },
-  [`& .${classes.secondary}`]: {
-    fontSize: "0.875rem",
-    fontWeight: "400",
-    lineHeight: "1.43",
-    whiteSpace: "nowrap",
-    textAlign: "right",
-  },
-}));
+const secondarySx: SxProps<Theme> = {
+  fontSize: "0.875rem",
+  fontWeight: "400",
+  lineHeight: "1.43",
+  whiteSpace: "nowrap",
+  textAlign: "right",
+};

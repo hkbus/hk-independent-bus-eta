@@ -1,20 +1,21 @@
 import React, { useContext } from "react";
-import { Typography } from "@mui/material";
+import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { useEtas } from "../Etas";
 import { LinearProgress } from "../Progress";
+
 interface TimeReportProps {
   routeId: string;
   seq: number;
-  containerClass?: string;
+  containerSx?: SxProps<Theme>;
   showStopName?: boolean;
 }
 
 const TimeReport = ({
   routeId,
   seq,
-  containerClass = "",
+  containerSx,
   showStopName = false,
 }: TimeReportProps) => {
   const { t, i18n } = useTranslation();
@@ -26,9 +27,9 @@ const TimeReport = ({
 
   if (etas == null) {
     return (
-      <div className={containerClass}>
+      <Box sx={containerSx}>
         <LinearProgress />
-      </div>
+      </Box>
     );
   }
 
@@ -58,7 +59,7 @@ const TimeReport = ({
   const stopId = Object.values(routeList[routeId].stops)[0][seq];
 
   return (
-    <div className={containerClass}>
+    <Box sx={containerSx}>
       {showStopName ? (
         <Typography variant="caption">
           {stopList[stopId].name[i18n.language]}
@@ -73,7 +74,7 @@ const TimeReport = ({
               {t(eta.co)}
             </Typography>
           ))}
-    </div>
+    </Box>
   );
 };
 

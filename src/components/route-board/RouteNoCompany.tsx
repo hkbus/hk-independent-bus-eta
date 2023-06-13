@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "./RouteNo";
 
 const RouteNoCompany = ({ route }) => {
@@ -8,37 +7,29 @@ const RouteNoCompany = ({ route }) => {
   const [routeNo, serviceType] = route[0].split("-").slice(0, 2);
 
   return (
-    <StyledRouteNoCompany>
+    <Box>
       <div>
         <RouteNo routeNo={routeNo} />
         {parseInt(serviceType, 10) >= 2 && (
-          <Typography variant="caption" className={classes.specialTrip}>
+          <Typography variant="caption" sx={specialTripSx}>
             {t("特別班")}
           </Typography>
         )}
       </div>
-      <Typography component="h4" variant="caption" className={classes.company}>
+      <Typography component="h4" variant="caption" sx={companySx}>
         {route[1].co.map((co) => t(co)).join("+")}
       </Typography>
-    </StyledRouteNoCompany>
+    </Box>
   );
 };
 
 export default RouteNoCompany;
 
-const PREFIX = "routeNoCompany";
-
-const classes = {
-  company: `${PREFIX}-company`,
-  specialTrip: `${PREFIX}-specialTrip`,
+const companySx: SxProps<Theme> = {
+  color: (theme) => theme.palette.text.secondary,
 };
 
-const StyledRouteNoCompany = styled("div")(({ theme }) => ({
-  [`& .${classes.company}`]: {
-    color: theme.palette.text.secondary,
-  },
-  [`& .${classes.specialTrip}`]: {
-    fontSize: "0.6rem",
-    marginLeft: "8px",
-  },
-}));
+const specialTripSx: SxProps<Theme> = {
+  fontSize: "0.6rem",
+  marginLeft: "8px",
+};

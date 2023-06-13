@@ -11,8 +11,9 @@ import {
   Paper,
   Snackbar,
   Typography,
+  SxProps,
+  Theme,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import {
   GetApp as GetAppIcon,
   Build as BuildIcon,
@@ -86,7 +87,7 @@ const Settings = () => {
   }, [updateTime, i18n.language]);
 
   return (
-    <Root className={classes.root} square elevation={0}>
+    <Paper sx={rootSx} square elevation={0}>
       <Typography component="h1" style={visuallyHidden}>{`${t("設定")} - ${t(
         AppTitle
       )}`}</Typography>
@@ -385,11 +386,7 @@ const Settings = () => {
           }}
         >
           <ListItemAvatar>
-            <Avatar
-              className={classes.icon}
-              src="/logo128.png"
-              alt="App Logo"
-            ></Avatar>
+            <Avatar sx={iconSx} src="/logo128.png" alt="App Logo"></Avatar>
           </ListItemAvatar>
           <ListItemText
             primary={t("圖標來源")}
@@ -467,38 +464,26 @@ const Settings = () => {
         open={isPersonalizeDialog}
         handleClose={() => setIsPersonalizeDialog(false)}
       />
-    </Root>
+    </Paper>
   );
 };
 
 export default Settings;
 
-const PREFIX = "settings";
-
-const classes = {
-  root: `${PREFIX}-root`,
-  icon: `${PREFIX}-icon`,
-};
-
-const Root = styled(Paper)(({ theme }) => ({
-  [`&.${classes.root}`]: {
-    background:
+const rootSx: SxProps<Theme> = {
+  background: (theme) =>
+    theme.palette.mode === "dark" ? theme.palette.background.default : "white",
+  height: "calc(100vh - 120px)",
+  overflowY: "scroll",
+  "& .MuiAvatar-colorDefault": {
+    color: (theme) =>
       theme.palette.mode === "dark"
         ? theme.palette.background.default
         : "white",
-    height: "calc(100vh - 120px)",
-    overflowY: "scroll",
-    "& .MuiAvatar-colorDefault": {
-      color:
-        theme.palette.mode === "dark"
-          ? theme.palette.background.default
-          : "white",
-    },
   },
-  [`& .${classes.icon}`]: {
-    filter:
-      theme.palette.mode === "dark"
-        ? "grayscale(100%) brightness(0.5)"
-        : "none",
-  },
-}));
+};
+
+const iconSx: SxProps<Theme> = {
+  filter: (theme) =>
+    theme.palette.mode === "dark" ? "grayscale(100%) brightness(0.5)" : "none",
+};

@@ -11,7 +11,6 @@ import {
 import ReorderIcon from "@mui/icons-material/Reorder";
 import { Link, useNavigate } from "react-router-dom";
 import { vibrate } from "../../utils";
-import { styled } from "@mui/material/styles";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import SuccinctEtas from "./SuccinctEtas";
@@ -94,12 +93,11 @@ const SuccinctTimeReport = ({
 
   return (
     <>
-      <RootListItem
-        // @ts-ignore
+      <ListItem
         component={!disabled ? Link : undefined}
         to={`/${i18n.language}/route/${routeKey.toLowerCase()}`}
         onClick={!disabled ? handleClick : () => {}}
-        className={classes.listItem}
+        sx={rootSx}
       >
         <ListItemText primary={<RouteNo routeNo={routeNo} />} />
         <ListItemText
@@ -108,9 +106,9 @@ const SuccinctTimeReport = ({
               component="h3"
               variant="h6"
               color="textPrimary"
-              className={classes.fromToWrapper}
+              sx={fromToWrapperSx}
             >
-              <span className={classes.fromToText}>{t("往")}</span>
+              <span>{t("往")}</span>
               <b>{toProperCase(dest[i18n.language])}</b>
             </Typography>
           }
@@ -127,7 +125,7 @@ const SuccinctTimeReport = ({
             component: "h4",
             variant: "subtitle2",
           }}
-          className={classes.routeDest}
+          sx={routeDestSx}
         />
         {!disabled ? (
           <SuccinctEtas routeId={routeId} />
@@ -136,7 +134,7 @@ const SuccinctTimeReport = ({
             <ReorderIcon />
           </Box>
         )}
-      </RootListItem>
+      </ListItem>
       <Divider />
     </>
   );
@@ -164,36 +162,26 @@ const getStops = (co, stops) => {
   }
 };
 
-const PREFIX = "succinctTimeReport";
-
-const classes = {
-  listItem: `${PREFIX}-listItem`,
-  route: `${PREFIX}-route`,
-  routeDest: `${PREFIX}-routeDest`,
-  fromToWrapper: `${PREFIX}-fromToWrapper`,
-  fromToText: `${PREFIX}-fromToText`,
+const rootSx: SxProps<Theme> = {
+  display: "grid",
+  gap: (theme) => theme.spacing(1),
+  gridTemplateColumns: "15% 1fr minmax(18%, max-content)",
+  padding: (theme) => `${theme.spacing(0.5)} ${theme.spacing(1)}`,
+  color: "rgba(0,0,0,0.87)",
 };
 
-const RootListItem = styled(ListItem)(({ theme }) => ({
-  display: "grid",
-  gap: theme.spacing(1),
-  gridTemplateColumns: "15% 1fr minmax(18%, max-content)",
-  [`&.${classes.listItem}`]: {
-    padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
-    color: "rgba(0,0,0,0.87)",
-  },
-  [`& .${classes.routeDest}`]: {
-    overflow: "hidden",
-  },
-  [`& .${classes.fromToWrapper}`]: {
-    display: "flex",
-    alignItems: "baseline",
-  },
-  [`& .${classes.fromToText}`]: {
+const routeDestSx: SxProps<Theme> = {
+  overflow: "hidden",
+};
+
+const fromToWrapperSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "baseline",
+  "& > span": {
     fontSize: "0.85rem",
-    marginRight: theme.spacing(0.5),
+    marginRight: (theme) => theme.spacing(0.5),
   },
-}));
+};
 
 const iconContainerSx: SxProps<Theme> = {
   color: (theme) => theme.palette.text.primary,
