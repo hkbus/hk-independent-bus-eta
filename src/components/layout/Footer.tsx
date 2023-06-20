@@ -122,7 +122,7 @@ const rootSx: SxProps<Theme> = {
   "& .MuiBottomNavigationAction-label": {
     fontSize: "0.875rem",
   },
-  "& .Mui-selected": {
+  "& *.Mui-selected": {
     color: (theme) =>
       theme.palette.mode === "dark"
         ? theme.palette.primary.main

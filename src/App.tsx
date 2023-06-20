@@ -128,9 +128,6 @@ const getThemeTokens = (mode: PaletteMode) => ({
   elements: {
     MuiCssBaseline: {
       styleOverrides: {
-        html: {
-          userSelect: "none",
-        },
         body: {
           fontSize: "0.875rem",
           lineHeight: 1.43,

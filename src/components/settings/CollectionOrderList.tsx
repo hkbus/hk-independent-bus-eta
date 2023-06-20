@@ -5,21 +5,17 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
+import { DragHandle as DragHandleIcon } from "@mui/icons-material";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import AppContext from "../../AppContext";
-import SuccinctTimeReport from "../home/SuccinctTimeReport";
 import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
 
-const SavedEtaList = () => {
-  const {
-    db: { routeList },
-    savedEtas,
-    setSavedEtas,
-  } = useContext(AppContext);
+const CollectionOrderList = () => {
+  const { collections, setCollections } = useContext(AppContext);
   const [items, setItems] = useState(
     // cannot use Array.reverse() as it is in-place reverse
-    savedEtas.filter((id) => id.split("/")[0] in routeList).reverse()
+    collections
   );
   const { t } = useTranslation();
 
@@ -31,9 +27,9 @@ const SavedEtaList = () => {
       const newItems = reorder(items, source.index, destination.index);
 
       setItems(newItems);
-      setSavedEtas(Array.from(newItems).reverse());
+      setCollections(newItems);
     },
-    [items, setItems, setSavedEtas]
+    [items, setItems, setCollections]
   );
 
   return (
@@ -46,16 +42,17 @@ const SavedEtaList = () => {
             sx={containerSx}
           >
             {items.length ? (
-              items.map((eta, index) => (
+              items.map((item, index) => (
                 <DraggableListItem
-                  item={eta}
+                  item={item}
                   index={index}
-                  key={`savedEta-${eta}`}
+                  key={`collection-${item.name}`}
+                  t={t}
                 />
               ))
             ) : (
               <Typography sx={{ textAlign: "center", marginTop: 5 }}>
-                <b>{t("未有收藏嘅路線。")}</b>
+                <b>{t("未有收藏。")}</b>
               </Typography>
             )}
             {provided.placeholder}
@@ -66,17 +63,25 @@ const SavedEtaList = () => {
   );
 };
 
-export default SavedEtaList;
+export default CollectionOrderList;
 
-const DraggableListItem = ({ item, index }) => (
-  <Draggable draggableId={item} index={index} sx={entrySx}>
+const DraggableListItem = ({ item: { name, list }, index, t }) => (
+  <Draggable draggableId={name} index={index}>
     {(provided) => (
       <Box
         ref={provided.innerRef}
         {...provided.draggableProps}
         {...provided.dragHandleProps}
+        sx={entrySx}
       >
-        <SuccinctTimeReport routeId={item} disabled />
+        <Box>
+          <Typography variant="body1">{name}</Typography>
+          <Typography variant="caption">
+            {t("Number of ETAs: ")}
+            {list.length}
+          </Typography>
+        </Box>
+        <DragHandleIcon />
       </Box>
     )}
   </Draggable>
@@ -89,5 +94,8 @@ const containerSx: SxProps<Theme> = {
 const entrySx: SxProps<Theme> = {
   px: 2,
   py: 1,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
   boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.1)",
 };

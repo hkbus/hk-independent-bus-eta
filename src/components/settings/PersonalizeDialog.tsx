@@ -15,14 +15,17 @@ import {
 import { useTranslation } from "react-i18next";
 import OptionsList from "./OptionsList";
 import SavedEtaList from "./SavedEtaList";
+import CollectionOrderList from "./CollectionOrderList";
 
 interface PersonalizeModalProps {
   open: boolean;
   handleClose: () => void;
 }
 
+type TAB = "savedOrder" | "options" | "collectionOrder";
+
 const PersonalizeDialog = ({ open, handleClose }: PersonalizeModalProps) => {
-  const [tab, setTab] = useState<"savedOrder" | "options">("options");
+  const [tab, setTab] = useState<TAB>("options");
   const { t } = useTranslation();
 
   return (
@@ -36,23 +39,24 @@ const PersonalizeDialog = ({ open, handleClose }: PersonalizeModalProps) => {
       fullWidth
     >
       <DialogTitle sx={DialogTitleSx}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          {tab === "savedOrder" && (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          {["savedOrder", "collectionOrder"].includes(tab) && (
             <IconButton onClick={() => setTab("options")}>
               <BackIcon />
             </IconButton>
           )}
-          {t(tab === "options" ? "個性化設定" : "常用報時排序")}
+          {t(tab === "savedOrder" ? "常用報時排序" : "")}
+          {t(tab === "options" ? "個性化設定" : "")}
+          {t(tab === "collectionOrder" ? "收藏排序" : "")}
         </Box>
         <IconButton onClick={handleClose}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <Divider />
-      {tab === "options" && (
-        <OptionsList goToSavedRouteOrder={() => setTab("savedOrder")} />
-      )}
+      {tab === "options" && <OptionsList goToTab={(tab: TAB) => setTab(tab)} />}
       {tab === "savedOrder" && <SavedEtaList />}
+      {tab === "collectionOrder" && <CollectionOrderList />}
     </Dialog>
   );
 };

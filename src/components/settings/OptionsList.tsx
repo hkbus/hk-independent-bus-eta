@@ -24,6 +24,7 @@ import {
   DoNotDisturbOn as DoNotDisturbOnIcon,
   Filter1 as Filter1Icon,
   Filter7 as Filter7Icon,
+  SortByAlpha as SortByAlphaIcon,
   Sort as SortIcon,
   HourglassTop as HourglassTopIcon,
 } from "@mui/icons-material";
@@ -33,10 +34,10 @@ import { vibrate } from "../../utils";
 import { useTranslation } from "react-i18next";
 
 interface OptionsListProps {
-  goToSavedRouteOrder: () => void;
+  goToTab: (tab: string) => void;
 }
 
-const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
+const OptionsList = ({ goToTab }: OptionsListProps) => {
   const {
     resetUsageRecord,
     isRouteFilter,
@@ -63,7 +64,7 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
-          goToSavedRouteOrder();
+          goToTab("savedOrder");
         }}
       >
         <ListItemAvatar>
@@ -72,6 +73,19 @@ const OptionsList = ({ goToSavedRouteOrder }: OptionsListProps) => {
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary={t("常用報時排序")} />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration);
+          goToTab("collectionOrder");
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <SortByAlphaIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={t("收藏排序")} />
       </ListItemButton>
       <ListItemButton
         onClick={() => {

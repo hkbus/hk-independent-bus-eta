@@ -77,6 +77,12 @@ const leftContainerSx: SxProps<Theme> = {
   alignItems: "center",
   gap: 2,
   flex: 1,
+  "& .MuiAvatar-colorDefault": {
+    color: (theme) =>
+      theme.palette.mode === "dark"
+        ? theme.palette.background.default
+        : "white",
+  },
 };
 
 const nameContainerSx: SxProps<Theme> = {
