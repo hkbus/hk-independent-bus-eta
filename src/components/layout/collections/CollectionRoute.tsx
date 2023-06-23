@@ -19,10 +19,9 @@ const CollectionRoute = () => {
     setCollectionEtas,
   } = useContext(AppContext);
   const [items, setItems] = useState(
-    // cannot use Array.reverse() as it is in-place reverse
-    collections[collectionIdx].list
-      .filter((id) => id.split("/")[0] in routeList)
-      .reverse()
+    collections[collectionIdx].list.filter(
+      (id) => id.split("/")[0] in routeList
+    )
   );
   const { t } = useTranslation();
 
@@ -34,7 +33,7 @@ const CollectionRoute = () => {
       const newItems = reorder(items, source.index, destination.index);
 
       setItems(newItems);
-      setCollectionEtas(Array.from(newItems).reverse());
+      setCollectionEtas(Array.from(newItems));
     },
     [items, setItems, setCollectionEtas]
   );
