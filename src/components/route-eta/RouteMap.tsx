@@ -224,7 +224,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
           maxNativeZoom={18}
           keepBuffer={10}
           updateWhenIdle={false}
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url={
             colorMode === "light"
               ? process.env.REACT_APP_OSM_PROVIDER_URL
