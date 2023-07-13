@@ -20,7 +20,7 @@ const Home = () => {
   const swipeableList = useRef(null);
   const _homeTab = localStorage.getItem("homeTab");
   const [homeTab, setHomeTab] = useState<HomeTabType>(
-    isHomeTab(_homeTab) ? _homeTab : "both"
+    isHomeTab(_homeTab) ? _homeTab : "both",
   );
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Home = () => {
   const debouncedUpdateGeolocation = useRef(
     debounce(() => {
       set_geolocation(geolocation);
-    }, 1000)
+    }, 1000),
   ).current;
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const Home = () => {
   return (
     <Paper sx={paperSx} square elevation={0}>
       <Typography component="h1" style={visuallyHidden}>{`${t(
-        "Dashboard"
+        "Dashboard",
       )} - ${t(AppTitle)}`}</Typography>
       <Typography component="h2" style={visuallyHidden}>
         {t("home-page-description")}

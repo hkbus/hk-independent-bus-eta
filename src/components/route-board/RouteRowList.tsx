@@ -53,7 +53,7 @@ const RouteRowList = React.memo(
       />
     );
   },
-  areEqual
+  areEqual,
 );
 
 export default RouteRowList;

@@ -22,8 +22,8 @@ const ChangeMapCenter = ({ center, start, end }) => {
     map.fitBounds(
       Leaflet.latLngBounds(
         Leaflet.latLng(start.lat, start.lng),
-        Leaflet.latLng(end.lat, end.lng)
-      )
+        Leaflet.latLng(end.lat, end.lng),
+      ),
     );
   return <></>;
 };
@@ -124,7 +124,7 @@ const Walklines = ({ routes, start, end }) => {
   points.push(start);
   (routes || []).forEach(({ routeId, on, off }) => {
     const stops = Object.values(routeList[routeId].stops).sort(
-      (a, b) => b.length - a.length
+      (a, b) => b.length - a.length,
     )[0];
     points.push(stopList[stops[on]].location);
     points.push(stopList[stops[off]].location);
@@ -166,7 +166,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
       });
     },
     // eslint-disable-next-line
-    [setMapState]
+    [setMapState],
   );
 
   const getMapCenter = () => {

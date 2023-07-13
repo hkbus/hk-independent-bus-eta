@@ -8,7 +8,7 @@ test("renders App", async () => {
   render(
     <ThemeProvider theme={theme}>
       <InstallDialog open />
-    </ThemeProvider>
+    </ThemeProvider>,
   );
   const initializingElement = screen.getByText(/App/);
   expect(initializingElement).toBeInTheDocument();

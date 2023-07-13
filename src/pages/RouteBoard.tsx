@@ -34,7 +34,7 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
       setBoardTab(v);
       localStorage.setItem("boardTab", v);
     },
-    [setBoardTab]
+    [setBoardTab],
   );
 
   return (
@@ -48,7 +48,7 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
 const RouteBoard = () => {
   const _boardTab = localStorage.getItem("boardTab");
   const [boardTab, setBoardTab] = useState<BoardTabType>(
-    isBoardTab(_boardTab) ? _boardTab : "all"
+    isBoardTab(_boardTab) ? _boardTab : "all",
   );
 
   return (

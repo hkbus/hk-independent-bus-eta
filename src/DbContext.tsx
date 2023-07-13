@@ -37,9 +37,9 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
         setState((prev) => ({
           ...prev,
           db,
-        }))
+        })),
       ),
-    []
+    [],
   );
 
   const toggleAutoDbRenew = useCallback(() => {
@@ -66,7 +66,7 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
       setTimeout(() => {
         localStorage.setItem(
           "db",
-          compressJson(JSON.stringify(db), { outputEncoding: "Base64" })
+          compressJson(JSON.stringify(db), { outputEncoding: "Base64" }),
         );
       }, 0);
     }
@@ -74,7 +74,7 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
 
   const contextValue = useMemo(
     () => ({ AppTitle, db, autoRenew, renewDb, toggleAutoDbRenew }),
-    [db, autoRenew, renewDb, toggleAutoDbRenew]
+    [db, autoRenew, renewDb, toggleAutoDbRenew],
   );
 
   return (

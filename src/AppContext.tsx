@@ -86,7 +86,7 @@ interface AppContextValue
   // settings
   updateGeoPermission: (
     geoPermission: AppState["geoPermission"],
-    deniedCallback?: () => void
+    deniedCallback?: () => void,
   ) => void;
   toggleRouteFilter: () => void;
   toggleBusSortOrder: () => void;
@@ -170,13 +170,13 @@ export const AppContextProvider = ({
     const searchRoute = "";
     const geoPermission: unknown = localStorage.getItem("geoPermission");
     const geoLocation: unknown = JSON.parse(
-      localStorage.getItem("geolocation")
+      localStorage.getItem("geolocation"),
     );
     const busSortOrder: unknown = localStorage.getItem("busSortOrder");
     const numPadOrder: unknown = localStorage.getItem("numPadOrder");
     const etaFormat: unknown = localStorage.getItem("etaFormat");
     const routeSearchHistory: unknown = JSON.parse(
-      localStorage.getItem("routeSearchHistory")
+      localStorage.getItem("routeSearchHistory"),
     );
     const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
 
@@ -228,7 +228,7 @@ export const AppContextProvider = ({
         state.searchRoute = searchRoute;
       });
     },
-    [setState]
+    [setState],
   );
 
   useEffect(() => {
@@ -237,7 +237,7 @@ export const AppContextProvider = ({
         const _geoWatcherId = navigator.geolocation.watchPosition(
           ({ coords: { latitude, longitude } }) => {
             updateGeolocation({ lat: latitude, lng: longitude });
-          }
+          },
         );
         geoWatcherId.current = _geoWatcherId;
       } catch (e) {
@@ -248,7 +248,7 @@ export const AppContextProvider = ({
       setStateRaw(
         produce((state: State) => {
           state.isVisible = !document.hidden;
-        })
+        }),
       );
     };
     window.addEventListener("visibilitychange", onVisibilityChange);
@@ -266,7 +266,7 @@ export const AppContextProvider = ({
       produce((state: State) => {
         state.geolocation = geolocation;
         localStorage.setItem("geolocation", JSON.stringify(geolocation));
-      })
+      }),
     );
   }, []);
 
@@ -276,7 +276,7 @@ export const AppContextProvider = ({
         state.geoPermission = geoPermission;
       });
     },
-    [setState]
+    [setState],
   );
   const geoWatcherId = useRef(null);
 
@@ -294,7 +294,7 @@ export const AppContextProvider = ({
             setGeoPermission("denied");
             localStorage.setItem("geoPermission", "denied");
             if (deniedCallback) deniedCallback();
-          }
+          },
         );
         geoWatcherId.current = _geoWatcherId;
       } else if (geoWatcherId.current) {
@@ -304,7 +304,7 @@ export const AppContextProvider = ({
         localStorage.setItem("geoPermission", geoPermission);
       }
     },
-    [setGeoPermission, updateGeolocation]
+    [setGeoPermission, updateGeolocation],
   );
 
   const toggleRouteFilter = useCallback(() => {
@@ -314,7 +314,7 @@ export const AppContextProvider = ({
         const isRouteFilter = prev ? false : true;
         localStorage.setItem("isRouteFilter", JSON.stringify(isRouteFilter));
         state.isRouteFilter = isRouteFilter;
-      })
+      }),
     );
   }, []);
 
@@ -326,7 +326,7 @@ export const AppContextProvider = ({
           prevOrder === "KMB first" ? "CTB-NWFB first" : "KMB first";
         localStorage.setItem("busSortOrder", busSortOrder);
         state.busSortOrder = busSortOrder;
-      })
+      }),
     );
   }, []);
 
@@ -338,7 +338,7 @@ export const AppContextProvider = ({
           prevOrder === "123456789c0b" ? "789456123c0b" : "123456789c0b";
         localStorage.setItem("numPadOrder", numPadOrder);
         state.numPadOrder = numPadOrder;
-      })
+      }),
     );
   }, []);
 
@@ -349,7 +349,7 @@ export const AppContextProvider = ({
         const etaFormat = ETA_FORMAT_NEXT_TYPES[prev];
         localStorage.setItem("etaFormat", etaFormat);
         state.etaFormat = etaFormat;
-      })
+      }),
     );
   }, []);
 
@@ -360,7 +360,7 @@ export const AppContextProvider = ({
         const colorMode = prevColorMode === "dark" ? "light" : "dark";
         localStorage.setItem("colorMode", colorMode);
         state.colorMode = colorMode;
-      })
+      }),
     );
   }, []);
 
@@ -371,7 +371,7 @@ export const AppContextProvider = ({
         const energyMode = !prevEnergyMode;
         localStorage.setItem("energyMode", JSON.stringify(energyMode));
         state.energyMode = energyMode;
-      })
+      }),
     );
   }, []);
 
@@ -382,7 +382,7 @@ export const AppContextProvider = ({
         const analytics = !prev;
         localStorage.setItem("analytics", JSON.stringify(analytics));
         state.analytics = analytics;
-      })
+      }),
     );
   }, []);
 
@@ -391,10 +391,10 @@ export const AppContextProvider = ({
       produce((state: State) => {
         localStorage.setItem(
           "refreshInterval",
-          JSON.stringify(refreshInterval)
+          JSON.stringify(refreshInterval),
         );
         state.refreshInterval = refreshInterval;
-      })
+      }),
     );
   }, []);
 
@@ -405,10 +405,10 @@ export const AppContextProvider = ({
         const vibrateDuration = prevVibrateDuration ? 0 : 1;
         localStorage.setItem(
           "vibrateDuration",
-          JSON.stringify(vibrateDuration)
+          JSON.stringify(vibrateDuration),
         );
         state.vibrateDuration = vibrateDuration;
-      })
+      }),
     );
   }, []);
 
@@ -431,11 +431,11 @@ export const AppContextProvider = ({
                 ret = prevSearchRoute + buttonValue;
             }
             state.searchRoute = ret;
-          })
+          }),
         );
       }, 0);
     },
-    [state.vibrateDuration]
+    [state.vibrateDuration],
   );
 
   const updateSelectedRoute = useCallback((route: string, seq: string = "") => {
@@ -451,10 +451,10 @@ export const AppContextProvider = ({
           }
           localStorage.setItem(
             "hotRoute",
-            JSON.stringify(current(state.hotRoute))
+            JSON.stringify(current(state.hotRoute)),
           );
         }
-      })
+      }),
     );
   }, []);
 
@@ -466,10 +466,10 @@ export const AppContextProvider = ({
           .slice(0, 20);
         localStorage.setItem(
           "routeSearchHistory",
-          JSON.stringify(newSearchHistory)
+          JSON.stringify(newSearchHistory),
         );
         state.routeSearchHistory = newSearchHistory;
-      })
+      }),
     );
   }, []);
 
@@ -477,14 +477,14 @@ export const AppContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         const newSearchHistory = state.routeSearchHistory.filter(
-          (item) => item !== routeId
+          (item) => item !== routeId,
         );
         localStorage.setItem(
           "routeSearchHistory",
-          JSON.stringify(newSearchHistory)
+          JSON.stringify(newSearchHistory),
         );
         state.routeSearchHistory = newSearchHistory;
-      })
+      }),
     );
   }, []);
 
@@ -494,7 +494,7 @@ export const AppContextProvider = ({
       produce((state: State) => {
         state.hotRoute = {};
         state.geolocation = defaultGeolocation;
-      })
+      }),
     );
   }, []);
 
@@ -503,7 +503,7 @@ export const AppContextProvider = ({
       i18n.changeLanguage(lang);
       localStorage.setItem("lang", lang);
     },
-    [i18n]
+    [i18n],
   );
 
   const contextValue = useMemo(() => {

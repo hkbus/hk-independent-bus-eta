@@ -31,7 +31,7 @@ const InstallDialog = ({ open, handleClose }) => {
             <Box
               onClick={() =>
                 window.open(
-                  "https://play.google.com/store/apps/details?id=app.hkbus"
+                  "https://play.google.com/store/apps/details?id=app.hkbus",
                 )
               }
             >
@@ -40,7 +40,7 @@ const InstallDialog = ({ open, handleClose }) => {
             <Box
               onClick={() =>
                 window.open(
-                  "https://apps.apple.com/hk/app/%E5%B7%B4%E5%A3%AB%E5%88%B0%E7%AB%99%E9%A0%90%E5%A0%B1-hkbus-app/id1612184906"
+                  "https://apps.apple.com/hk/app/%E5%B7%B4%E5%A3%AB%E5%88%B0%E7%AB%99%E9%A0%90%E5%A0%B1-hkbus-app/id1612184906",
                 )
               }
             >

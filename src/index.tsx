@@ -89,6 +89,6 @@ if (isHuman()) {
   root.render(
     <React.StrictMode>
       <Container />
-    </React.StrictMode>
+    </React.StrictMode>,
   );
 }

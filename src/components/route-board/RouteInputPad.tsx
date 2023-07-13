@@ -144,7 +144,7 @@ const numPadContainerSx: SxProps<Theme> = {
 const getPossibleChar = (
   searchRoute: string,
   routeList: Record<string, unknown>,
-  boardTab: BoardTabType
+  boardTab: BoardTabType,
 ) => {
   if (routeList == null) return [];
   let possibleChar = {};
@@ -152,7 +152,7 @@ const getPossibleChar = (
     if (
       routeNo.startsWith(searchRoute.toUpperCase()) &&
       meta["co"].some((c) =>
-        TRANSPORT_SEARCH_OPTIONS[boardTab as BoardTabType].includes(c)
+        TRANSPORT_SEARCH_OPTIONS[boardTab as BoardTabType].includes(c),
       )
     ) {
       let c = routeNo.slice(searchRoute.length, searchRoute.length + 1);
