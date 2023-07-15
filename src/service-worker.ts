@@ -54,7 +54,7 @@ registerRoute(
 
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html"),
+  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html")
 );
 
 class CacheFirstCORS extends Strategy {
@@ -85,7 +85,7 @@ registerRoute(
         statuses: [200],
       }),
     ],
-  }),
+  })
 );
 
 registerRoute(
@@ -101,7 +101,7 @@ registerRoute(
       }),
       new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 60 * 24 * 30 }),
     ],
-  }),
+  })
 );
 
 const maphost = process.env.REACT_APP_OSM_PROVIDER_HOST || "";
@@ -132,7 +132,7 @@ registerRoute(
       }),
       new ExpirationPlugin({ maxAgeSeconds: 60 * 24 * 365 }),
     ],
-  }),
+  })
 );
 
 registerRoute(
@@ -147,14 +147,14 @@ registerRoute(
       }),
       new ExpirationPlugin({ maxAgeSeconds: 60 * 24 * 30 }),
     ],
-  }),
+  })
 );
 
 const warnUpCache = async (
   zoomLevels: Array<number>,
   event: ExtendableEvent,
   retina: boolean,
-  stopListInput?: Array<StopListEntry>,
+  stopListInput?: Array<StopListEntry>
 ) => {
   try {
     let stopList;
@@ -189,7 +189,7 @@ const warnUpCache = async (
           result = a.next();
         }
         return;
-      }),
+      })
     );
   } catch (e) {
     console.error("error on warn cache", e);
@@ -214,8 +214,8 @@ self.addEventListener("message", (event) => {
           client.postMessage({
             type: "CURRENT_VERSION",
             payload: `build ${CIJobID}`,
-          }),
-        ),
+          })
+        )
       );
   }
   const data: unknown = event.data;
@@ -227,7 +227,7 @@ self.addEventListener("message", (event) => {
           data.zoomLevels,
           event,
           data.retinaDisplay,
-          data.stopList,
+          data.stopList
         );
       } catch (e) {
         console.error("error on warn cache", e);

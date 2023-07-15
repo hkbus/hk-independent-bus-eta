@@ -66,7 +66,7 @@ const CollectionSchedule = () => {
                 },
               }}
               value={dayjs(
-                `1991-12-02${daySchedule.start.hour}:${daySchedule.start.minute}`,
+                `1991-12-02${daySchedule.start.hour}:${daySchedule.start.minute}`
               )}
               onChange={(v: any) =>
                 updateCollectionSchedule(idx, "start", {
@@ -85,7 +85,7 @@ const CollectionSchedule = () => {
                 },
               }}
               value={dayjs(
-                `1991-12-02T${daySchedule.end.hour}:${daySchedule.end.minute}`,
+                `1991-12-02T${daySchedule.end.hour}:${daySchedule.end.minute}`
               )}
               onChange={(v: any) =>
                 updateCollectionSchedule(idx, "end", {

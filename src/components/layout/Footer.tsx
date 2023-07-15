@@ -23,7 +23,7 @@ const Footer = () => {
   const navigate = useNavigate();
   const handleClick = (
     link: string,
-    e: React.MouseEvent<HTMLAnchorElement>,
+    e: React.MouseEvent<HTMLAnchorElement>
   ) => {
     e.preventDefault();
     vibrate(vibrateDuration);
@@ -62,7 +62,7 @@ const Footer = () => {
           onClick={(e) =>
             handleClick(
               `/${i18n.language}/route/${selectedRoute.toLowerCase()}`,
-              e,
+              e
             )
           }
           value={`/${i18n.language}/route/${selectedRoute
@@ -101,7 +101,7 @@ const Footer = () => {
       colorMode,
       selectedRoute,
       vibrateDuration,
-    ],
+    ]
   );
 };
 

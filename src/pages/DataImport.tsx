@@ -23,8 +23,8 @@ const DataImport = () => {
         collections: collections,
       },
       null,
-      2,
-    ),
+      2
+    )
   );
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
@@ -37,8 +37,8 @@ const DataImport = () => {
         setSavedEtas(
           _savedEtas.filter(
             (routeId) =>
-              typeof routeId === "string" || routeId instanceof String,
-          ),
+              typeof routeId === "string" || routeId instanceof String
+          )
         );
       }
       if (Array.isArray(_collections)) {

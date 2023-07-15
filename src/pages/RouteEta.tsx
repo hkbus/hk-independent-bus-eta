@@ -65,7 +65,7 @@ const RouteEta = () => {
       if (stopIdx === newStopIdx && !expanded) setIsDialogOpen(true);
       else setExpanded(expanded);
     },
-    [navigate, i18n.language, id, stopIdx],
+    [navigate, i18n.language, id, stopIdx]
   );
 
   const onMarkerClick = useCallback(
@@ -77,7 +77,7 @@ const RouteEta = () => {
         replace: true,
       });
     },
-    [navigate, i18n.language, id, stopIdx],
+    [navigate, i18n.language, id, stopIdx]
   );
 
   const handleStopInfo = useCallback(() => {
@@ -207,7 +207,7 @@ const getDialogStops = (co, stops, stopMap, panel) => {
   for (let i = 0; i < co.length; ++i) {
     if (co[i] in stops)
       return [[co[i], stops[co[i]][panel]]].concat(
-        stopMap[stops[co[i]][panel]] || [],
+        stopMap[stops[co[i]][panel]] || []
       );
   }
 };

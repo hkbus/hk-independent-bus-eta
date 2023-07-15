@@ -81,7 +81,7 @@ export const CollectionContextProvider = ({ children }) => {
           prevSavedEtas.splice(prevSavedEtas.indexOf(key), 1);
           localStorage.setItem(
             "savedEtas",
-            JSON.stringify(current(prevSavedEtas)),
+            JSON.stringify(current(prevSavedEtas))
           );
           state.savedEtas = prevSavedEtas;
           return;
@@ -91,7 +91,7 @@ export const CollectionContextProvider = ({ children }) => {
           .filter((v, i, s) => s.indexOf(v) === i);
         localStorage.setItem("savedEtas", JSON.stringify(newSavedEtas));
         state.savedEtas = newSavedEtas;
-      }),
+      })
     );
   }, []);
 
@@ -101,7 +101,7 @@ export const CollectionContextProvider = ({ children }) => {
       produce((state: State) => {
         localStorage.setItem("savedEtas", JSON.stringify(savedEtas));
         state.savedEtas = savedEtas;
-      }),
+      })
     );
   }, []);
 
@@ -109,7 +109,7 @@ export const CollectionContextProvider = ({ children }) => {
     setStateRaw(
       produce((state: State) => {
         state.collectionIdx = idx;
-      }),
+      })
     );
   }, []);
 
@@ -117,12 +117,12 @@ export const CollectionContextProvider = ({ children }) => {
     setStateRaw(
       produce((state: State) => {
         const newCollections = state.collections.concat(
-          DEFAULT_ROUTE_COLLECTION,
+          DEFAULT_ROUTE_COLLECTION
         );
         localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
         state.collectionIdx = newCollections.length - 1;
-      }),
+      })
     );
   }, []);
 
@@ -130,12 +130,12 @@ export const CollectionContextProvider = ({ children }) => {
     setStateRaw(
       produce((state: State) => {
         const newCollections = state.collections.filter(
-          (v, _idx) => idx !== _idx,
+          (v, _idx) => idx !== _idx
         );
         localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
         state.collectionIdx = null;
-      }),
+      })
     );
   }, []);
 
@@ -147,7 +147,7 @@ export const CollectionContextProvider = ({ children }) => {
         newCollections[idx].name = v;
         localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
-      }),
+      })
     );
   }, []);
 
@@ -160,10 +160,10 @@ export const CollectionContextProvider = ({ children }) => {
           newCollections[collectionIdx].schedules[idx][field] = value;
           localStorage.setItem("collections", JSON.stringify(newCollections));
           state.collections = newCollections;
-        }),
+        })
       );
     },
-    [],
+    []
   );
 
   const addCollectionSchedule = useCallback(() => {
@@ -175,7 +175,7 @@ export const CollectionContextProvider = ({ children }) => {
           newCollections[collectionIdx].schedules.concat(DEFAULT_DAY_SCHEDULE);
         localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
-      }),
+      })
     );
   }, []);
 
@@ -189,7 +189,7 @@ export const CollectionContextProvider = ({ children }) => {
         ].schedules.filter((v, _idx) => idx !== _idx);
         localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
-      }),
+      })
     );
   }, []);
 
@@ -204,17 +204,17 @@ export const CollectionContextProvider = ({ children }) => {
           const newCollections = state.collections;
           if (newCollections[idx].list.includes(eta)) {
             newCollections[idx].list = newCollections[idx].list.filter(
-              (v) => v !== eta,
+              (v) => v !== eta
             );
           } else {
             newCollections[idx].list = [eta].concat(newCollections[idx].list);
           }
           localStorage.setItem("collections", JSON.stringify(newCollections));
           state.collections = newCollections;
-        }),
+        })
       );
     },
-    [updateSavedEtas],
+    [updateSavedEtas]
   );
 
   // for re-ordering
@@ -226,7 +226,7 @@ export const CollectionContextProvider = ({ children }) => {
         newCollections[collectionIdx].list = etas;
         localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
-      }),
+      })
     );
   }, []);
 
@@ -235,10 +235,10 @@ export const CollectionContextProvider = ({ children }) => {
       setStateRaw(
         produce((state: State) => {
           state.collectionDrawerRoute = collectionDrawerRoute;
-        }),
+        })
       );
     },
-    [],
+    []
   );
 
   const setCollections = useCallback((collections: RouteCollection[]) => {
@@ -246,7 +246,7 @@ export const CollectionContextProvider = ({ children }) => {
       produce((state: State) => {
         localStorage.setItem("collections", JSON.stringify(collections));
         state.collections = collections;
-      }),
+      })
     );
   }, []);
 

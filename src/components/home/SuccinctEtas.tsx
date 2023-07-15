@@ -15,7 +15,7 @@ const SuccinctEtas = ({ routeId }) => {
       return "";
     } else {
       const waitTime = Math.round(
-        (new Date(eta.eta).getTime() - new Date().getTime()) / 60 / 1000,
+        (new Date(eta.eta).getTime() - new Date().getTime()) / 60 / 1000
       );
       if (!Number.isInteger(waitTime)) {
         return eta.remark[i18n.language];

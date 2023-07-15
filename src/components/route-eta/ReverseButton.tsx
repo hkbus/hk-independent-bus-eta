@@ -19,7 +19,7 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
 
   const isTodayHoliday = useMemo(
     () => isHoliday(holidays, new Date()),
-    [holidays],
+    [holidays]
   );
 
   const reverseRoute = useMemo(
@@ -37,7 +37,7 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
             }
             return acc;
           },
-          [],
+          []
         )
         .sort(([, a], [, b]) => {
           const aAval = isRouteAvaliable(a.route, a.freq, isTodayHoliday);
@@ -65,7 +65,7 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
         })
         .map(([_routeId]) => _routeId)
         .filter((_routeId) => _routeId.toLowerCase() !== routeId),
-    [route, co, routeList, stopList, isTodayHoliday, routeId, stops],
+    [route, co, routeList, stopList, isTodayHoliday, routeId, stops]
   );
 
   const handleRevserClick = useCallback(
@@ -76,7 +76,7 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
         navigate(`/${i18n.language}/route/${reverseRoute[0].toLowerCase()}`);
       }, 0);
     },
-    [reverseRoute, navigate, i18n.language, vibrateDuration],
+    [reverseRoute, navigate, i18n.language, vibrateDuration]
   );
 
   return (

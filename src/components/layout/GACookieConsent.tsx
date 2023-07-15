@@ -8,7 +8,7 @@ const GACookieConsent = () => {
   const { t } = useTranslation();
   const { analytics, toggleAnalytics } = useContext(AppContext);
   const [show, setShow] = useState<boolean>(
-    !analytics && !Boolean(localStorage.getItem("consent")) && !iOSRNWebView(),
+    !analytics && !Boolean(localStorage.getItem("consent")) && !iOSRNWebView()
   );
 
   const handleAccept = useCallback(() => {
@@ -34,7 +34,7 @@ const GACookieConsent = () => {
     <Box sx={rootSx}>
       <Typography variant="subtitle2" sx={statementSx}>
         {t(
-          "We'd like to set analytics cookies that help us improve hkbus.app by measuring how you use it.",
+          "We'd like to set analytics cookies that help us improve hkbus.app by measuring how you use it."
         )}
       </Typography>
       <Box sx={btnContainerSx}>

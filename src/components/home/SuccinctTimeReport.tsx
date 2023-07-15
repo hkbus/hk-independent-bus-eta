@@ -44,7 +44,7 @@ const DistAndFare = ({
 
   const { distance, unit, decimalPlace } = getDistanceWithUnit(
     location,
-    geolocation,
+    geolocation
   );
   if (geoPermission !== "granted" || location.lat === 0) {
     return <>{name + "　" + (fareString ? "(" + fareString + ")" : "")}</>;

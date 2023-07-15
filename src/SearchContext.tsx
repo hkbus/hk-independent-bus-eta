@@ -23,7 +23,7 @@ const SearchContext = React.createContext({} as SearchContextProps);
 export const SearchContextProvider = (props) => {
   const [locations, setLocations] = useState({ start: null, end: null });
   const [status, setStatus] = useState<"ready" | "rendering" | "waiting">(
-    "ready",
+    "ready"
   );
   const [result, setResult] = useState([]);
   const [resultIdx, setResultIdx] = useState({ resultIdx: 0, stopIdx: [0, 0] });

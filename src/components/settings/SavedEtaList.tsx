@@ -19,7 +19,7 @@ const SavedEtaList = () => {
   } = useContext(AppContext);
   const [items, setItems] = useState(
     // cannot use Array.reverse() as it is in-place reverse
-    savedEtas.filter((id) => id.split("/")[0] in routeList).reverse(),
+    savedEtas.filter((id) => id.split("/")[0] in routeList).reverse()
   );
   const { t } = useTranslation();
 
@@ -33,7 +33,7 @@ const SavedEtaList = () => {
       setItems(newItems);
       setSavedEtas(Array.from(newItems).reverse());
     },
-    [items, setItems, setSavedEtas],
+    [items, setItems, setSavedEtas]
   );
 
   return (

@@ -37,7 +37,7 @@ const TimeReport = ({
     if (!eta) return "";
     else {
       const waitTime = Math.round(
-        (new Date(eta).getTime() - new Date().getTime()) / 60 / 1000,
+        (new Date(eta).getTime() - new Date().getTime()) / 60 / 1000
       );
 
       if (!Number.isInteger(waitTime)) {

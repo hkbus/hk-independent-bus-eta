@@ -47,7 +47,7 @@ const Header = () => {
       navigator.geolocation.getCurrentPosition(
         ({ coords: { latitude, longitude } }) => {
           updateGeolocation({ lat: latitude, lng: longitude });
-        },
+        }
       );
     } catch (e) {
       console.log("error in getting location");
@@ -72,7 +72,7 @@ const Header = () => {
       }
     },
     // eslint-disable-next-line
-    [searchRoute, i18n.language, setSearchRoute],
+    [searchRoute, i18n.language, setSearchRoute]
   );
 
   useEffect(() => {
@@ -129,7 +129,7 @@ const Header = () => {
                 window.open(
                   `https://www.hko.gov.hk/${
                     i18n.language === "zh" ? "tc" : "en"
-                  }/detail.htm`,
+                  }/detail.htm`
                 )
               }
               key={code}
@@ -177,7 +177,7 @@ const Header = () => {
       geoPermission,
       vibrateDuration,
       weatherCodes,
-    ],
+    ]
   );
 };
 
