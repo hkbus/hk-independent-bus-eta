@@ -27,7 +27,7 @@ const SearchResult = ({ routes, idx, handleRouteClick, expanded, stopIdx }) => {
       ret.push(
         stopList[
           Object.values(stops).sort((a, b) => b.length - a.length)[0][on]
-        ].name[i18n.language] + (fares ? ` ($${fares[on]})` : "")
+        ].name[i18n.language] + (fares ? ` ($${fares[on]})` : ""),
       );
     });
     const { routeId, off } = routes[routes.length - 1];
@@ -36,7 +36,7 @@ const SearchResult = ({ routes, idx, handleRouteClick, expanded, stopIdx }) => {
       .concat(
         stopList[
           Object.values(stops).sort((a, b) => b.length - a.length)[0][off]
-        ].name[i18n.language]
+        ].name[i18n.language],
       )
       .join(" → ");
   };

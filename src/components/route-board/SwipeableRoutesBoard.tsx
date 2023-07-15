@@ -34,7 +34,7 @@ const SwipeableRoutesBoard = ({
   } = useContext(AppContext);
   const isTodayHoliday = useMemo(
     () => isHoliday(holidays, new Date()),
-    [holidays]
+    [holidays],
   );
   const { t } = useTranslation();
 
@@ -44,12 +44,12 @@ const SwipeableRoutesBoard = ({
       .filter(
         ([routeNo, { stops, co }]) =>
           routeNo.startsWith(searchRoute.toUpperCase()) &&
-          (stops[co[0]] == null || stops[co[0]].length > 0)
+          (stops[co[0]] == null || stops[co[0]].length > 0),
       )
       // filter non available route
       .filter(
         ([routeNo, { freq }]) =>
-          !isRouteFilter || isRouteAvaliable(routeNo, freq, isTodayHoliday)
+          !isRouteFilter || isRouteAvaliable(routeNo, freq, isTodayHoliday),
       )
       .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]));
     return Object.entries(TRANSPORT_SEARCH_OPTIONS).map(
@@ -58,17 +58,17 @@ const SwipeableRoutesBoard = ({
           tab === "recent"
             ? routeSearchHistory
                 .filter((routeNo) =>
-                  routeNo.startsWith(searchRoute.toUpperCase())
+                  routeNo.startsWith(searchRoute.toUpperCase()),
                 )
                 .filter((routeNo) => routeList[routeNo])
                 .map((routeNo) => [routeNo, routeList[routeNo]])
             : baseRouteList.filter(([routeNo, { co }]) =>
-                co.some((c) => searchOptions.includes(c))
+                co.some((c) => searchOptions.includes(c)),
               ),
           vibrateDuration,
-          tab
+          tab,
         );
-      }
+      },
     );
   }, [
     routeList,
@@ -118,7 +118,7 @@ const SwipeableRoutesBoard = ({
         )}
       </React.Fragment>
     ),
-    [coItemDataList, searchRoute, t]
+    [coItemDataList, searchRoute, t],
   );
 
   return useMemo(
@@ -152,7 +152,7 @@ const SwipeableRoutesBoard = ({
         )}
       </>
     ),
-    [ListRenderer, coItemDataList, onChangeTab, boardTab]
+    [ListRenderer, coItemDataList, onChangeTab, boardTab],
   );
 };
 

@@ -20,8 +20,8 @@ const CollectionRoute = () => {
   } = useContext(AppContext);
   const [items, setItems] = useState(
     collections[collectionIdx].list.filter(
-      (id) => id.split("/")[0] in routeList
-    )
+      (id) => id.split("/")[0] in routeList,
+    ),
   );
   const { t } = useTranslation();
 
@@ -35,7 +35,7 @@ const CollectionRoute = () => {
       setItems(newItems);
       setCollectionEtas(Array.from(newItems));
     },
-    [items, setItems, setCollectionEtas]
+    [items, setItems, setCollectionEtas],
   );
 
   return (

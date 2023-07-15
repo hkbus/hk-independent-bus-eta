@@ -15,7 +15,7 @@ const CollectionOrderList = () => {
   const { collections, setCollections } = useContext(AppContext);
   const [items, setItems] = useState(
     // cannot use Array.reverse() as it is in-place reverse
-    collections
+    collections,
   );
   const { t } = useTranslation();
 
@@ -29,7 +29,7 @@ const CollectionOrderList = () => {
       setItems(newItems);
       setCollections(newItems);
     },
-    [items, setItems, setCollections]
+    [items, setItems, setCollections],
   );
 
   return (

@@ -52,9 +52,9 @@ const RouteSearch = () => {
             ...routeArr.map((r) => [
               `${r.routeId}/${r.on}`,
               `${r.routeId}/${r.off}`,
-            ])
+            ]),
           ),
-        [] as string[]
+        [] as string[],
       )
       .filter((v, i, s) => s.indexOf(v) === i);
 
@@ -71,7 +71,7 @@ const RouteSearch = () => {
               co: Object.keys(routeList[routeId].stops),
               language: i18n.language,
             });
-      })
+      }),
     )
       .then((etas) =>
         // filter out non available route
@@ -81,8 +81,8 @@ const RouteSearch = () => {
             (etas[idx].length &&
               etas[idx].reduce((acc, eta) => {
                 return acc || eta.eta;
-              }, null))
-        )
+              }, null)),
+        ),
       )
       .then((availableRoutes) => {
         setResult((prevResult) => [
@@ -98,7 +98,7 @@ const RouteSearch = () => {
                     availableRoutes.indexOf(`${route.routeId}/${route.off}`) !==
                       -1)
                 );
-              }, true)
+              }, true),
             )
             // refine nearest start if available
             .map((routes) => {
@@ -107,7 +107,7 @@ const RouteSearch = () => {
                 : geolocation;
               return routes.map((route, idx) => {
                 const stops = Object.values(
-                  routeList[route.routeId].stops
+                  routeList[route.routeId].stops,
                 ).sort((a, b) => b.length - a.length)[0];
                 let bestOn = -1;
                 let dist = 100000;

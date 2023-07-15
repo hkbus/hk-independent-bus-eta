@@ -35,8 +35,8 @@ const SharingModal = ({
       .then((rawBase64s) =>
         mergeBase64(
           rawBase64s.filter((v) => v).map((rawBase64) => rawBase64.substr(22)),
-          { direction: true, isPng: true }
-        )
+          { direction: true, isPng: true },
+        ),
       )
       .then((dataUrl) => {
         setImgBase64(dataUrl);
@@ -54,8 +54,8 @@ const SharingModal = ({
     triggerShare(
       `https://${window.location.hostname}/${i18n.language}/route/${id}`,
       `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
-        "往"
-      )} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}`
+        "往",
+      )} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}`,
     )
       .then(() => {
         if (navigator.clipboard) setIsCopied(true);
@@ -71,8 +71,8 @@ const SharingModal = ({
       imgBase64,
       `https://${window.location.hostname}/${i18n.language}/route/${id}`,
       `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
-        "往"
-      )} ${toProperCase(dest[i18n.language])} - https://hkbus.app/`
+        "往",
+      )} ${toProperCase(dest[i18n.language])} - https://hkbus.app/`,
     )
       .then(() => {
         if (navigator.clipboard) setIsCopied(true);

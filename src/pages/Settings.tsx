@@ -71,7 +71,7 @@ const Settings = () => {
   const { t, i18n } = useTranslation();
   const donationId = useMemo(
     () => Math.floor(Math.random() * Donations.length),
-    []
+    [],
   );
 
   const navigate = useNavigate();
@@ -89,7 +89,7 @@ const Settings = () => {
   return (
     <Paper sx={rootSx} square elevation={0}>
       <Typography component="h1" style={visuallyHidden}>{`${t("設定")} - ${t(
-        AppTitle
+        AppTitle,
       )}`}</Typography>
       <List sx={{ py: 0 }}>
         {!checkAppInstalled() && !iOSRNWebView() && (
@@ -198,7 +198,7 @@ const Settings = () => {
                 ? "開啟"
                 : geoPermission === "opening"
                 ? "開啟中..."
-                : "關閉"
+                : "關閉",
             )}
           />
         </ListItemButton>
@@ -251,7 +251,7 @@ const Settings = () => {
             vibrate(vibrateDuration);
             triggerShare(
               `https://${window.location.hostname}`,
-              t("巴士到站預報 App")
+              t("巴士到站預報 App"),
             ).then(() => {
               if (navigator.clipboard) setIsCopied(true);
             });

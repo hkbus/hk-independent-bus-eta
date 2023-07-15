@@ -20,7 +20,7 @@ const DbRenewReminder = () => {
 
   const isOutdated = useMemo(
     () => Date.now() > updateTime + 28 * 24 * 3600 * 1000,
-    [updateTime]
+    [updateTime],
   );
 
   if (navigator.userAgent !== "prerendering" && isOutdated) {

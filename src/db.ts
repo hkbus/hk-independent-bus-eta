@@ -49,7 +49,7 @@ export interface DatabaseType extends BusDb {
  * @returns {Promise<DatabaseType>}
  */
 export const fetchDbFunc = async (
-  forceRenew = false
+  forceRenew = false,
 ): Promise<DatabaseType> => {
   const autoRenew = !!JSON.parse(localStorage.getItem("autoRenew")) || false;
   if (localStorage.getItem("dbv") !== DB_CONTEXT_VERSION) {
@@ -65,7 +65,7 @@ export const fetchDbFunc = async (
   const versionMd5 = localStorage.getItem("versionMd5");
   const lastUpdateTime = parseInt(
     localStorage.getItem("updateTime") || "" + Date.now(),
-    10
+    10,
   );
   const raw = localStorage.getItem("db");
   const storedDb = (raw): Promise<DatabaseType> =>
@@ -105,7 +105,7 @@ export const fetchDbFunc = async (
   try {
     const [_schemaVersion, _md5] = await Promise.all([
       fetch(process.env.PUBLIC_URL + "/schema-version.txt").then((res) =>
-        res.text()
+        res.text(),
       ),
       fetchEtaObjMd5(),
     ]);

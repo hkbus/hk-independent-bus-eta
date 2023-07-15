@@ -50,7 +50,7 @@ const getWeeklyTimestamp = (day: number, dayTime: string): number => {
 const checkValueBetween = (
   start: number,
   end: number,
-  target: number
+  target: number,
 ): boolean => {
   if (start - 60 <= target && target <= end + 60) return true;
 
@@ -65,21 +65,21 @@ export const isHoliday = (holidays: string[], date: Date): boolean => {
   return holidays.includes(
     `${date.getFullYear()}${("0" + (date.getMonth() + 1)).slice(-2)}${(
       "0" + date.getDate()
-    ).slice(-2)}`
+    ).slice(-2)}`,
   );
 };
 
 export const isRouteAvaliable = (
   routeNo: string,
   freq: Freq | null,
-  isHoliday: boolean
+  isHoliday: boolean,
 ): boolean => {
   if (!freq) return true;
   let isAvailable = false;
   let now = new Date();
   let currentWts = getWeeklyTimestamp(
     isHoliday ? 0 : now.getDay(),
-    ("0" + now.getHours()).slice(-2) + ("0" + now.getMinutes()).slice(-2)
+    ("0" + now.getHours()).slice(-2) + ("0" + now.getMinutes()).slice(-2),
   );
   Object.entries(freq).forEach(([serviceId, startTimes]) => {
     try {
@@ -89,7 +89,7 @@ export const isRouteAvaliable = (
             let time_a = getWeeklyTimestamp(idx, startTime);
             let time_b = getWeeklyTimestamp(
               idx,
-              endTime ? endTime[0] : startTime
+              endTime ? endTime[0] : startTime,
             );
             isAvailable =
               isAvailable || checkValueBetween(time_a, time_b, currentWts);

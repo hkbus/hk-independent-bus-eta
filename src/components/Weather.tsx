@@ -36,7 +36,7 @@ export const useWeather = () => {
         return new Promise((resolve) => resolve([]));
       }
       return fetch(
-        "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en"
+        "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=en",
       )
         .then((res) => res.json())
         .then((data) => {

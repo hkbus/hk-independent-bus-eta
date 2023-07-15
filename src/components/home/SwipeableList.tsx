@@ -47,12 +47,12 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
-      [holidays]
+      [holidays],
     );
     const defaultHometab = useRef(homeTab);
     const { t } = useTranslation();
     const [selectedRoutes, setSelectedRoutes] = useState<SelectedRoutes | null>(
-      null
+      null,
     );
 
     useImperativeHandle(ref, () => ({
@@ -72,7 +72,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           stopList,
           isRouteFilter,
           isTodayHoliday,
-        })
+        }),
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [geolocation]);
@@ -90,13 +90,13 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                       key={`route-shortcut-${idx}`}
                       routeId={selectedRoute}
                     />
-                  )
+                  ),
               )}
           </List>
         ) : (
           <CircularProgress sx={{ my: 10 }} />
         ),
-      [selectedRoutes]
+      [selectedRoutes],
     );
 
     const SavedRouteList = useMemo(() => {
@@ -123,7 +123,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                         key={`route-shortcut-${idx}`}
                         routeId={selectedRoute}
                       />
-                    )
+                    ),
                 )}
             </List>
           )}
@@ -144,13 +144,13 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                       key={`route-shortcut-${idx}`}
                       routeId={selectedRoute}
                     />
-                  )
+                  ),
               )}
           </List>
         ) : (
           <CircularProgress sx={{ my: 10 }} />
         ),
-      [selectedRoutes]
+      [selectedRoutes],
     );
 
     const CollectionRouteList = useMemo(
@@ -172,7 +172,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                             key={`route-shortcut-${idx}`}
                             routeId={selectedRoute}
                           />
-                        )
+                        ),
                     )}
                 </List>
                 {routes.split("|").filter((v) => Boolean(v)).length === 0 && (
@@ -188,7 +188,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             <b>{t("未有收藏路線")}</b>
           </Typography>
         ),
-      [t, selectedRoutes]
+      [t, selectedRoutes],
     );
 
     return useMemo(
@@ -212,9 +212,9 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
         SavedRouteList,
         NearbyRouteList,
         CollectionRouteList,
-      ]
+      ],
     );
-  }
+  },
 );
 
 export default SwipeableList;
@@ -245,7 +245,7 @@ const getSelectedRoutes = ({
       Object.entries(hotRoute)
         .filter(([route, count]) => count > 5)
         .sort((a, b) => b[1] - a[1])
-        .map(([routeId]) => routeId)
+        .map(([routeId]) => routeId),
     )
     .filter((routeUrl, index, self) => {
       return (
@@ -258,7 +258,7 @@ const getSelectedRoutes = ({
       const stop =
         stopList[
           Object.values(routeList[routeId].stops).sort(
-            (a, b) => b.length - a.length
+            (a, b) => b.length - a.length,
           )[0][stopIdx]
         ];
       return [
@@ -271,12 +271,12 @@ const getSelectedRoutes = ({
   const nearbyRoutes = Object.entries(stopList)
     .map((stop: [string, StopListEntry]): [string, StopListEntry, number] =>
       // potentially could be optimized by other distance function
-      [...stop, getDistance(stop[1].location, geolocation)]
+      [...stop, getDistance(stop[1].location, geolocation)],
     )
     .filter(
       (stop) =>
         // keep only nearby 1000m stops
-        stop[2] < 1000
+        stop[2] < 1000,
     )
     .sort((a, b) => a[2] - b[2])
     .slice(0, 20)
@@ -310,7 +310,7 @@ const getSelectedRoutes = ({
           return sTs <= curTs && curTs <= eTs;
         }
         return false;
-      }, false)
+      }, false),
     )
     .reduce((acc, cur) => {
       acc.push({
@@ -341,7 +341,7 @@ const getSelectedRoutes = ({
       selectedRoutes
         .sort((a, b) => a[2] - b[2])
         .map((v) => v[0])
-        .slice(0, 40)
+        .slice(0, 40),
     ),
     nearby: formatHandling(nearbyRoutes),
     both: formatHandling(
@@ -350,9 +350,9 @@ const getSelectedRoutes = ({
           selectedRoutes
             .sort((a, b) => a[1] - b[1])
             .map((v) => v[0])
-            .slice(0, 40)
+            .slice(0, 40),
         )
-        .concat(nearbyRoutes)
+        .concat(nearbyRoutes),
     ),
     collections: collectionRoutes.map((v) => ({
       ...v,
