@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Box, Button, Container, Modal, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import domtoimage from "dom-to-image";
-import mergeBase64 from "merge-base64";
+import mergeImages from "merge-images";
 import { toProperCase, triggerShare, triggerShareImg } from "../../utils";
 import AppContext from "../../AppContext";
 import { CircularProgress } from "../Progress";
@@ -23,25 +23,32 @@ const SharingModal = ({
 
   useEffect(() => {
     if (isOpen === false) return;
-
     Promise.all([
-      domtoimage.toPng(document.getElementById(`route-eta-header`), {
-        bgcolor: colorMode === "light" ? "#fedb00" : "#000",
-      }),
-      document.getElementById(`route-map`) &&
-        domtoimage.toPng(document.getElementById(`route-map`)),
-      domtoimage.toPng(document.getElementById(`stop-${idx}`)),
+      domToImage("route-eta-header", colorMode),
+      domToImage("route-map", colorMode),
+      domToImage(`stop-${idx}`, colorMode),
     ])
-      .then((rawBase64s) =>
-        mergeBase64(
-          rawBase64s.filter((v) => v).map((rawBase64) => rawBase64.substr(22)),
-          { direction: true, isPng: true }
-        )
-      )
-      .then((dataUrl) => {
-        setImgBase64(dataUrl);
+      .then((rawBase64s) => {
+        let baseH = 0;
+        return mergeImages(
+          rawBase64s
+            .filter(([v]) => v)
+            .map(([rawBase64, h, w], idx) => {
+              baseH += h;
+              return {
+                src: rawBase64,
+                x: 0,
+                y: baseH - h,
+              };
+            }),
+          {
+            height: baseH,
+          }
+        );
+      })
+      .then((b64) => {
+        setImgBase64(b64);
       });
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
@@ -103,6 +110,22 @@ const SharingModal = ({
       </Container>
     </Modal>
   );
+};
+
+const domToImage = (domId: string, colorMode: "dark" | "light") => {
+  if (document.getElementById(domId)) {
+    return domtoimage
+      .toPng(document.getElementById(domId), {
+        bgcolor: colorMode === "light" ? "#fedb00" : "#000",
+      })
+      .then((base64) => [
+        base64,
+        document.getElementById(domId).clientHeight,
+        document.getElementById(domId).clientWidth,
+      ]);
+  } else {
+    return Promise.resolve([null, 0, 0]);
+  }
 };
 
 export default SharingModal;
