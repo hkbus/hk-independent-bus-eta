@@ -16,7 +16,6 @@ const SuccinctEtas = ({ routeId }) => {
   const { t, i18n } = useTranslation();
   const { etaFormat } = useContext(AppContext);
   const etas = useEtas(routeId);
-  const theme = useTheme();
 
   const getEtaString = (eta: Eta | null, highlight: boolean = false) => {
     if (!eta || !eta.eta) {
