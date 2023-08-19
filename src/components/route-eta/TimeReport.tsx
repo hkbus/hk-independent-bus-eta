@@ -33,7 +33,7 @@ const TimeReport = ({
     );
   }
 
-  const displayMsg = (eta) => {
+  const DisplayMsg = (eta) => {
     if (!eta) return "";
     else {
       const waitTime = Math.round(
@@ -43,16 +43,37 @@ const TimeReport = ({
       if (!Number.isInteger(waitTime)) {
         return eta.remark[i18n.language];
       }
-      const exactTimeStr = eta.substr(11, 5);
-      const waitTimeStr =
-        waitTime < 1 ? `- ${t("分鐘")}` : `${waitTime} ${t("分鐘")}`;
+
+      const exactTimeJsx = (
+        <Box
+          component="span"
+          sx={etaFormat !== "exact" ? { fontSize: "0.9em" } : {}}
+        >
+          {eta.substr(11, 5)}
+        </Box>
+      );
+      const waitTimeJsx = (
+        <Box component="span">
+          <Box component="span" sx={{ ...waitTimeSx, color: "#3285e3" }}>
+            {waitTime < 1 ? " - " : `${waitTime} `}
+          </Box>
+          <Box component="span" sx={{ fontSize: "0.8em" }}>
+            {t("分鐘")}
+          </Box>
+        </Box>
+      );
+
       switch (etaFormat) {
         case "exact":
-          return exactTimeStr;
+          return exactTimeJsx;
         case "diff":
-          return waitTimeStr;
+          return waitTimeJsx;
         default:
-          return `${exactTimeStr} (${waitTimeStr})`;
+          return (
+            <>
+              {exactTimeJsx}&emsp;{waitTimeJsx}
+            </>
+          );
       }
     }
   };
@@ -69,9 +90,11 @@ const TimeReport = ({
         ? t("未有班次資料")
         : etas.map((eta, idx) => (
             <Typography variant="subtitle1" key={`route-${idx}`}>
-              {displayMsg(eta.eta)} -{" "}
-              {eta.remark[i18n.language] ? eta.remark[i18n.language] : ""}{" "}
-              {t(eta.co)}
+              {DisplayMsg(eta.eta)}&emsp;-&nbsp;
+              <Box component="span" sx={{ fontSize: "0.8em" }}>
+                {eta.remark[i18n.language] ? eta.remark[i18n.language] : ""}{" "}
+                {t(eta.co)}
+              </Box>
             </Typography>
           ))}
     </Box>
@@ -79,3 +102,8 @@ const TimeReport = ({
 };
 
 export default TimeReport;
+
+const waitTimeSx: SxProps<Theme> = {
+  fontWeight: "700",
+  color: "#088bce",
+};

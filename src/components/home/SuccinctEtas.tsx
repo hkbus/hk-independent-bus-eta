@@ -1,5 +1,12 @@
 import React, { useContext } from "react";
-import { ListItemText, SxProps, Theme, Typography } from "@mui/material";
+import {
+  Box,
+  ListItemText,
+  SxProps,
+  Theme,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useEtas } from "../Etas";
 import AppContext from "../../AppContext";
@@ -9,8 +16,9 @@ const SuccinctEtas = ({ routeId }) => {
   const { t, i18n } = useTranslation();
   const { etaFormat } = useContext(AppContext);
   const etas = useEtas(routeId);
+  const theme = useTheme();
 
-  const getEtaString = (eta: Eta | null) => {
+  const getEtaString = (eta: Eta | null, highlight: boolean = false) => {
     if (!eta || !eta.eta) {
       return "";
     } else {
@@ -21,16 +29,38 @@ const SuccinctEtas = ({ routeId }) => {
         return eta.remark[i18n.language];
       }
 
-      const exactTimeStr = eta.eta.slice(11, 16);
-      const waitTimeStr =
-        waitTime < 1 ? `- ${t("分鐘")}` : `${waitTime} ${t("分鐘")}`;
+      const exactTimeJsx = (
+        <Box
+          component="span"
+          sx={etaFormat !== "exact" ? { fontSize: "0.9em" } : {}}
+        >
+          {eta.eta.slice(11, 16)}
+        </Box>
+      );
+      const waitTimeJsx = (
+        <Box component="span">
+          <Box
+            component="span"
+            sx={{ ...waitTimeSx, color: highlight ? "#3285e3" : "inherit" }}
+          >
+            {waitTime < 1 ? " - " : `${waitTime} `}
+          </Box>
+          <Box component="span" sx={{ fontSize: "0.8em" }}>
+            {t("分鐘")}
+          </Box>
+        </Box>
+      );
       switch (etaFormat) {
         case "exact":
-          return exactTimeStr;
+          return exactTimeJsx;
         case "diff":
-          return waitTimeStr;
+          return waitTimeJsx;
         default:
-          return `${exactTimeStr} (${waitTimeStr})`;
+          return (
+            <>
+              {exactTimeJsx}&emsp;{waitTimeJsx}
+            </>
+          );
       }
     }
   };
@@ -38,12 +68,8 @@ const SuccinctEtas = ({ routeId }) => {
   return (
     <ListItemText
       primary={
-        <Typography
-          component="h5"
-          color="textPrimary"
-          sx={{ whiteSpace: "nowrap" }}
-        >
-          {etas ? getEtaString(etas[0]) : ""}
+        <Typography component="h5" color="textPrimary" sx={primarySx}>
+          {etas ? getEtaString(etas[0], true) : ""}
         </Typography>
       }
       secondary={
@@ -64,10 +90,20 @@ const rootSx: SxProps<Theme> = {
   textAlign: "right",
 };
 
+const primarySx: SxProps<Theme> = {
+  whiteSpace: "nowrap",
+};
+
 const secondarySx: SxProps<Theme> = {
-  fontSize: "0.875rem",
+  fontSize: "0.875rem !important",
   fontWeight: "400",
   lineHeight: "1.43",
   whiteSpace: "nowrap",
   textAlign: "right",
+};
+
+const waitTimeSx: SxProps<Theme> = {
+  fontSize: "1.1em",
+  fontWeight: "700",
+  color: "#088bce",
 };

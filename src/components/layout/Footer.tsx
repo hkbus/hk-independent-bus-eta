@@ -124,8 +124,10 @@ const rootSx: SxProps<Theme> = {
   },
   "& .Mui-selected": {
     color: (theme) =>
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary,
+      `${
+        theme.palette.mode === "dark"
+          ? theme.palette.primary.main
+          : theme.palette.text.primary
+      } !important`,
   },
 };

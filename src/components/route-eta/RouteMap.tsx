@@ -266,11 +266,11 @@ const classes = {
 };
 
 const rootSx: SxProps<Theme> = {
-  height: "30vh",
+  height: "35vh",
   filter: (theme) =>
     theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
   [`& .${classes.mapContainer}`]: {
-    height: "30vh",
+    height: "35vh",
   },
   [`& .${classes.marker}`]: {
     width: "25px",
@@ -291,11 +291,15 @@ const rootSx: SxProps<Theme> = {
 
 const centerControlSx: SxProps<Theme> = {
   background: "white",
-  height: "28px",
+  width: 32,
+  height: 32,
   marginBottom: "20px !important",
   marginRight: "5px !important",
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   [`& .${classes.centerControl}`]: {
-    padding: "5px",
+    padding: "3px",
     color: "black",
   },
 };
