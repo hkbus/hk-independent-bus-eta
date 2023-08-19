@@ -295,9 +295,9 @@ const centerControlSx: SxProps<Theme> = {
   height: 32,
   marginBottom: "20px !important",
   marginRight: "5px !important",
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   [`& .${classes.centerControl}`]: {
     padding: "3px",
     color: "black",
