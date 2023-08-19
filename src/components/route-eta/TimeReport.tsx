@@ -54,7 +54,10 @@ const TimeReport = ({
       );
       const waitTimeJsx = (
         <Box component="span">
-          <Box component="span" sx={{ ...waitTimeSx, color: "#3285e3" }}>
+          <Box
+            component="span"
+            sx={{ ...waitTimeSx, color: (theme) => theme.palette.warning.main }}
+          >
             {waitTime < 1 ? " - " : `${waitTime} `}
           </Box>
           <Box component="span" sx={{ fontSize: "0.8em" }}>

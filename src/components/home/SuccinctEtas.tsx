@@ -41,7 +41,11 @@ const SuccinctEtas = ({ routeId }) => {
         <Box component="span">
           <Box
             component="span"
-            sx={{ ...waitTimeSx, color: highlight ? "#3285e3" : "inherit" }}
+            sx={{
+              ...waitTimeSx,
+              color: (theme) =>
+                highlight ? theme.palette.warning.main : "inherit",
+            }}
           >
             {waitTime < 1 ? " - " : `${waitTime} `}
           </Box>
