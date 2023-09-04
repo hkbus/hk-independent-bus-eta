@@ -1,11 +1,5 @@
 import React, { useContext } from "react";
-import {
-  Box,
-  ListItemText,
-  SxProps,
-  Theme,
-  Typography,
-} from "@mui/material";
+import { Box, ListItemText, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useEtas } from "../Etas";
 import AppContext from "../../AppContext";
