@@ -5,7 +5,6 @@ import {
   SxProps,
   Theme,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useEtas } from "../Etas";

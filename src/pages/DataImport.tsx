@@ -63,7 +63,7 @@ const DataImport = () => {
           <IconButton
             onClick={() => {
               navigator.clipboard
-                ?.writeText(JSON.stringify(savedEtas, null, 2))
+                ?.writeText(data)
                 .then(() => {
                   setIsCopied(true);
                 });
