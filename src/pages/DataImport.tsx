@@ -62,11 +62,9 @@ const DataImport = () => {
         <Box sx={{ m: 1 }}>
           <IconButton
             onClick={() => {
-              navigator.clipboard
-                ?.writeText(data)
-                .then(() => {
-                  setIsCopied(true);
-                });
+              navigator.clipboard?.writeText(data).then(() => {
+                setIsCopied(true);
+              });
             }}
           >
             <ContentCopyIcon />
