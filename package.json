@@ -1,6 +1,6 @@
 {
   "name": "hk-independent-bus-eta",
-  "version": "10.17.0",
+  "version": "10.18.0",
   "private": true,
   "dependencies": {
     "@emotion/cache": "^11.9.3",
@@ -11,14 +11,12 @@
     "@mui/material": "^5.11.4",
     "@mui/styles": "^5.8.4",
     "@mui/x-date-pickers": "^6.5.0",
-    "autoprefixer": "10.4.7",
     "core-js": "^3.23.1",
     "dayjs": "^1.11.7",
     "dom-to-image": "^2.6.0",
     "dotenv": "^16.0.1",
-    "fbjs": "^3.0.4",
     "gh-pages": "^4.0.0",
-    "hk-bus-eta": "^1.9.1",
+    "hk-bus-eta": "^1.9.2",
     "i18next": "^21.8.10",
     "immer": "^9.0.15",
     "leaflet": "^1.7.1",
@@ -39,7 +37,6 @@
     "react-swipeable-views": "^0.14.0",
     "react-virtualized-auto-sizer": "^1.0.5",
     "react-window": "^1.8.6",
-    "typescript": "^4.7.4",
     "web-vitals": "^2.1.4",
     "workbox-background-sync": "^6.3.0",
     "workbox-broadcast-update": "^6.3.0",
@@ -104,7 +101,8 @@
     "express": "^4.18.1",
     "prettier": "2.7.1",
     "puppeteer": "^14.4.1",
-    "source-map-explorer": "^2.5.2"
+    "source-map-explorer": "^2.5.2",
+    "typescript": "^4.7.4"
   },
   "resolutions": {
     "autoprefixer": "10.4.5",

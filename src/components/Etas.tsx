@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { fetchEtas } from "hk-bus-eta";
+import { Eta, fetchEtas } from "hk-bus-eta";
 import AppContext from "../AppContext";
 
 export const useEtas = (routeId) => {
@@ -11,7 +11,7 @@ export const useEtas = (routeId) => {
   } = useContext(AppContext);
   const [routeKey, seq] = routeId.split("/");
   const routeObj = routeList[routeKey] || DefaultRoute;
-  const [etas, setEtas] = useState(null);
+  const [etas, setEtas] = useState<Eta[] | null>(null);
   const {
     i18n: { language },
   } = useTranslation();
@@ -26,6 +26,7 @@ export const useEtas = (routeId) => {
     return fetchEtas({
       ...routeObj,
       seq: parseInt(seq, 10),
+      // @ts-ignore
       language,
     }).then((_etas) => {
       if (isMounted.current) setEtas(_etas);
