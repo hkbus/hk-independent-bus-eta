@@ -379,7 +379,7 @@ const Settings = () => {
         </ListItemButton>
         <ListItemButton
           component={"a"}
-          href={`https://www.flaticon.com/free-icon/double-decker_1032967`}
+          href={`https://instagram.com/chan_gua`}
           target="_blank"
           onClick={() => {
             vibrate(vibrateDuration);
@@ -388,10 +388,7 @@ const Settings = () => {
           <ListItemAvatar>
             <Avatar sx={iconSx} src="/logo128.png" alt="App Logo"></Avatar>
           </ListItemAvatar>
-          <ListItemText
-            primary={t("圖標來源")}
-            secondary={"Freepik from Flaticon"}
-          />
+          <ListItemText primary={t("圖標來源")} secondary={"陳瓜 Chan Gua"} />
         </ListItemButton>
         <ListItemButton
           component={"a"}
