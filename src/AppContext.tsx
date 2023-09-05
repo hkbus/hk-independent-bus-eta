@@ -16,6 +16,13 @@ import type { Location as GeoLocation } from "hk-bus-eta";
 import { ETA_FORMAT_NEXT_TYPES } from "./constants";
 import { useTranslation } from "react-i18next";
 import CollectionContext, { CollectionContextValue } from "./CollectionContext";
+import {
+  BusSortOrder,
+  ColorMode,
+  EtaFormat,
+  Language,
+  NumPadOrder,
+} from "./data";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -39,16 +46,16 @@ interface AppState {
   /**
    * bus sorting order
    */
-  busSortOrder: "KMB first" | "CTB-NWFB first";
+  busSortOrder: BusSortOrder;
   /**
    * number pad order
    */
-  numPadOrder: "789456123c0b" | "123456789c0b";
+  numPadOrder: NumPadOrder;
   /**
    * time display format
    */
-  etaFormat: "exact" | "diff" | "mixed";
-  colorMode: "dark" | "light";
+  etaFormat: EtaFormat;
+  colorMode: ColorMode;
   /**
    * energy saving mode
    */
@@ -97,7 +104,8 @@ interface AppContextValue
   toggleVibrateDuration: () => void;
   toggleAnalytics: () => void; // not
   updateRefreshInterval: (interval: number) => void;
-  changeLanguage: (lang: "zh" | "en") => void;
+  changeLanguage: (lang: Language) => void;
+  getColorTheme: () => "light" | "dark";
   workbox?: Workbox;
 }
 
@@ -126,20 +134,20 @@ const isGeoLocation = (input: unknown): input is GeoLocation => {
   return false;
 };
 
-const isBusSortOrder = (input: unknown): input is AppState["busSortOrder"] => {
+const isBusSortOrder = (input: unknown): input is BusSortOrder => {
   return input === "KMB first" || input === "CTB-NWFB first";
 };
 
-const isNumPadOrder = (input: unknown): input is AppState["numPadOrder"] => {
+const isNumPadOrder = (input: unknown): input is NumPadOrder => {
   return input === "789456123c0b" || input === "123456789c0b";
 };
 
-const isEtaFormat = (input: unknown): input is AppState["etaFormat"] => {
+const isEtaFormat = (input: unknown): input is EtaFormat => {
   return input === "exact" || input === "diff" || input === "mixed";
 };
 
-const isColorMode = (input: unknown): input is "dark" | "light" => {
-  return input === "dark" || input === "light";
+const isColorMode = (input: unknown): input is ColorMode => {
+  return input === "dark" || input === "light" || input === "system";
 };
 
 const isNumberRecord = (input: unknown): input is Record<string, number> => {
@@ -163,10 +171,7 @@ export const AppContextProvider = ({
     const devicePreferColorScheme =
       localStorage.getItem("colorMode") ||
       (navigator.userAgent === "prerendering" && "dark") || // set default color theme in prerendering to "dark"
-      (window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: light)").matches
-        ? "light"
-        : "dark");
+      "system";
     const searchRoute = "";
     const geoPermission: unknown = localStorage.getItem("geoPermission");
     const geoLocation: unknown = JSON.parse(
@@ -357,7 +362,18 @@ export const AppContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         const prevColorMode = state.colorMode;
-        const colorMode = prevColorMode === "dark" ? "light" : "dark";
+        let colorMode: ColorMode = "dark";
+        switch (prevColorMode) {
+          case "dark":
+            colorMode = "light";
+            break;
+          case "light":
+            colorMode = "system";
+            break;
+          default:
+            colorMode = "dark";
+            break;
+        }
         localStorage.setItem("colorMode", colorMode);
         state.colorMode = colorMode;
       })
@@ -499,12 +515,23 @@ export const AppContextProvider = ({
   }, []);
 
   const changeLanguage = useCallback(
-    (lang: "zh" | "en") => {
+    (lang: Language) => {
       i18n.changeLanguage(lang);
       localStorage.setItem("lang", lang);
     },
     [i18n]
   );
+
+  const getColorTheme = useCallback(() => {
+    if (state.colorMode === "light" || state.colorMode === "dark") {
+      return state.colorMode;
+    } else {
+      return window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: light)").matches
+        ? "light"
+        : "dark";
+    }
+  }, [state.colorMode]);
 
   const contextValue = useMemo(() => {
     return {
@@ -529,6 +556,7 @@ export const AppContextProvider = ({
       toggleAnalytics,
       updateRefreshInterval,
       changeLanguage,
+      getColorTheme,
       workbox,
     };
   }, [

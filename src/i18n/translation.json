@@ -63,7 +63,7 @@
       "安裝": "Install the App",
       "安裝巴士預報 App 到裝置": "Install HK BUS ETA",
       "安裝步驟": "Installation steps",
-      "黑夜模式": "Dark mode",
+      "外觀": "Appearance",
       "常用報時排序": "Reorder Starred Routes",
       "路線篩選": "Route filtering",
       "只顯示現時路線": "Show ONLY operating routes",
@@ -135,7 +135,10 @@
       "weekday-4": "THUR",
       "weekday-5": "FRI",
       "weekday-6": "SAT",
-      "收藏排序": "Reorder Collections"
+      "收藏排序": "Reorder Collections",
+      "color-system": "Same as System",
+      "color-dark": "Dark theme",
+      "color-light": "Light theme"
     }
   },
   "zh": {
@@ -182,7 +185,10 @@
       "weekday-3": "周三",
       "weekday-4": "周四",
       "weekday-5": "周五",
-      "weekday-6": "周六"
+      "weekday-6": "周六",
+      "color-system": "跟隨系統",
+      "color-dark": "黑夜模式",
+      "color-light": "日照模式"
     }
   }
 }

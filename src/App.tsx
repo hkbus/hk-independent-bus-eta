@@ -34,7 +34,7 @@ const PrivacyPolicy = loadable(() => import("./pages/PrivacyPolicy"));
 const TermsAndConditions = loadable(() => import("./pages/TermsAndConditions"));
 
 const App = () => {
-  const { colorMode, analytics } = useContext(AppContext);
+  const { analytics, getColorTheme } = useContext(AppContext);
   const {
     i18n: { language },
   } = useTranslation();
@@ -45,8 +45,8 @@ const App = () => {
   analytics && reportWebVitals(sendToGoogleAnalytics);
 
   const theme = useMemo(() => {
-    return createTheme(getThemeTokens(colorMode), [colorMode]);
-  }, [colorMode]);
+    return createTheme(getThemeTokens(getColorTheme()), [getColorTheme()]);
+  }, [getColorTheme]);
 
   return (
     <StyledEngineProvider injectFirst>

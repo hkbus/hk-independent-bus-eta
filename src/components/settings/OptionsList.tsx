@@ -16,6 +16,7 @@ import {
   BatteryStd as BatteryStdIcon,
   Delete as DeleteIcon,
   Timer as TimerIcon,
+  DarkMode as DarkModeIcon,
   Brightness7 as Brightness7Icon,
   NightsStay as NightsStayIcon,
   AllInclusive as AllInclusiveIcon,
@@ -149,13 +150,12 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
       >
         <ListItemAvatar>
           <Avatar>
-            {colorMode === "dark" ? <NightsStayIcon /> : <Brightness7Icon />}
+            {colorMode === "system" && <NightsStayIcon />}
+            {colorMode === "light" && <Brightness7Icon />}
+            {colorMode === "dark" && <DarkModeIcon />}
           </Avatar>
         </ListItemAvatar>
-        <ListItemText
-          primary={t("黑夜模式")}
-          secondary={t(colorMode === "dark" ? "開啟" : "關閉")}
-        />
+        <ListItemText primary={t("外觀")} secondary={t(`color-${colorMode}`)} />
       </ListItemButton>
       <ListItemButton
         onClick={() => {
