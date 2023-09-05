@@ -49,7 +49,7 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
     toggleNumPadOrder,
     etaFormat,
     toggleEtaFormat,
-    colorMode,
+    _colorMode: colorMode,
     toggleColorMode,
     energyMode,
     toggleEnergyMode,

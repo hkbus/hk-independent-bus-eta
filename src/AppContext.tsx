@@ -55,7 +55,7 @@ interface AppState {
    * time display format
    */
   etaFormat: EtaFormat;
-  colorMode: ColorMode;
+  _colorMode: ColorMode;
   /**
    * energy saving mode
    */
@@ -82,6 +82,7 @@ interface AppContextValue
   extends AppState,
     DatabaseContextValue,
     CollectionContextValue {
+  colorMode: "light" | "dark";
   setSearchRoute: (searchRoute: string) => void;
   updateSearchRouteByButton: (buttonValue: string) => void;
   updateSelectedRoute: (route: string, seq?: string) => void;
@@ -105,7 +106,6 @@ interface AppContextValue
   toggleAnalytics: () => void; // not
   updateRefreshInterval: (interval: number) => void;
   changeLanguage: (lang: Language) => void;
-  getColorTheme: () => "light" | "dark";
   workbox?: Workbox;
 }
 
@@ -202,7 +202,7 @@ export const AppContextProvider = ({
         Array.isArray(routeSearchHistory) && isStrings(routeSearchHistory)
           ? routeSearchHistory
           : [],
-      colorMode: isColorMode(devicePreferColorScheme)
+      _colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
@@ -361,7 +361,7 @@ export const AppContextProvider = ({
   const toggleColorMode = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
-        const prevColorMode = state.colorMode;
+        const prevColorMode = state._colorMode;
         let colorMode: ColorMode = "dark";
         switch (prevColorMode) {
           case "dark":
@@ -375,7 +375,7 @@ export const AppContextProvider = ({
             break;
         }
         localStorage.setItem("colorMode", colorMode);
-        state.colorMode = colorMode;
+        state._colorMode = colorMode;
       })
     );
   }, []);
@@ -522,22 +522,23 @@ export const AppContextProvider = ({
     [i18n]
   );
 
-  const getColorTheme = useCallback(() => {
-    if (state.colorMode === "light" || state.colorMode === "dark") {
-      return state.colorMode;
+  const colorMode = useMemo(() => {
+    if (state._colorMode === "light" || state._colorMode === "dark") {
+      return state._colorMode;
     } else {
       return window.matchMedia &&
         window.matchMedia("(prefers-color-scheme: light)").matches
         ? "light"
         : "dark";
     }
-  }, [state.colorMode]);
+  }, [state._colorMode]);
 
   const contextValue = useMemo(() => {
     return {
       ...dbContext,
       ...collectionContext,
       ...state,
+      colorMode,
       setSearchRoute,
       updateSearchRouteByButton,
       updateSelectedRoute,
@@ -556,13 +557,13 @@ export const AppContextProvider = ({
       toggleAnalytics,
       updateRefreshInterval,
       changeLanguage,
-      getColorTheme,
       workbox,
     };
   }, [
     dbContext,
     collectionContext,
     state,
+    colorMode,
     setSearchRoute,
     updateSearchRouteByButton,
     updateSelectedRoute,

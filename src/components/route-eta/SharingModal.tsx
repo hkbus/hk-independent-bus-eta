@@ -17,16 +17,16 @@ const SharingModal = ({
   event,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { AppTitle, getColorTheme } = useContext(AppContext);
+  const { AppTitle, colorMode } = useContext(AppContext);
   const { t, i18n } = useTranslation();
   const [imgBase64, setImgBase64] = useState<string>("");
 
   useEffect(() => {
     if (isOpen === false) return;
     Promise.all([
-      domToImage("route-eta-header", getColorTheme()),
-      domToImage("route-map", getColorTheme()),
-      domToImage(`stop-${idx}`, getColorTheme()),
+      domToImage("route-eta-header", colorMode),
+      domToImage("route-map", colorMode),
+      domToImage(`stop-${idx}`, colorMode),
     ])
       .then((rawBase64s) => {
         let baseH = 0;
