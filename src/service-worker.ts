@@ -19,7 +19,7 @@ import {
   StrategyHandler,
 } from "workbox-strategies";
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
-import { fetchEtaObj } from "hk-bus-eta";
+import { fetchEtaDb } from "hk-bus-eta";
 import { getTileListURL, isWarnUpMessageData } from "./utils";
 import type { StopListEntry } from "hk-bus-eta";
 
@@ -159,7 +159,7 @@ const warnUpCache = async (
   try {
     let stopList;
     if (stopListInput === undefined) {
-      const eta = await fetchEtaObj();
+      const eta = await fetchEtaDb();
       stopList = Object.values(eta.stopList);
     } else {
       stopList = stopListInput;

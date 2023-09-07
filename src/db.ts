@@ -1,8 +1,8 @@
-import { fetchEtaObj, fetchEtaObjMd5 } from "hk-bus-eta";
-import type { BusDb } from "hk-bus-eta";
+import { fetchEtaDb, fetchEtaDbMd5 } from "hk-bus-eta";
+import type { EtaDb } from "hk-bus-eta";
 import { decompress as decompressJson } from "lzutf8-light";
 
-const isBusDb = (input: unknown): input is BusDb => {
+const isEtaDb = (input: unknown): input is EtaDb => {
   return (
     typeof input === "object" &&
     "routeList" in input &&
@@ -17,7 +17,7 @@ const isBusDb = (input: unknown): input is BusDb => {
 // implant the DB Context logic into code to avoid loading error
 export const DB_CONTEXT_VERSION = "1.2.0";
 
-const decompressJsonString = (txt): BusDb => {
+const decompressJsonString = (txt): EtaDb => {
   try {
     const ret = JSON.parse(decompressJson(txt, { inputEncoding: "Base64" }));
     ret.routeList = Object.keys(ret.routeList)
@@ -34,7 +34,7 @@ const decompressJsonString = (txt): BusDb => {
   }
 };
 
-export interface DatabaseType extends BusDb {
+export interface DatabaseType extends EtaDb {
   schemaVersion: string;
   versionMd5: string;
   updateTime: number;
@@ -107,7 +107,7 @@ export const fetchDbFunc = async (
       fetch(process.env.PUBLIC_URL + "/schema-version.txt").then((res) =>
         res.text()
       ),
-      fetchEtaObjMd5(),
+      fetchEtaDbMd5(),
     ]);
     let needRenew = forceRenew;
     if (schemaVersion !== _schemaVersion) {
@@ -119,7 +119,7 @@ export const fetchDbFunc = async (
     try {
       if (!needRenew) {
         const db = await storedDb(raw);
-        if (isBusDb(db)) {
+        if (isEtaDb(db)) {
           return db;
         }
       }
@@ -130,12 +130,12 @@ export const fetchDbFunc = async (
       const timerId = setTimeout(() => {
         if (!forceRenew && raw !== null) {
           const _cachedDb = storedDb(raw);
-          if (isBusDb(_cachedDb)) {
+          if (isEtaDb(_cachedDb)) {
             resolve_1(_cachedDb);
           }
         }
       }, 1000);
-      fetchEtaObj()
+      fetchEtaDb()
         .then((db_1) => ({
           ...db_1,
           routeList: Object.keys(db_1.routeList)
