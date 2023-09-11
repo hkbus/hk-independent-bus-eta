@@ -1,6 +1,6 @@
 {
   "name": "hk-independent-bus-eta",
-  "version": "10.18.0",
+  "version": "10.18.1",
   "private": true,
   "dependencies": {
     "@emotion/cache": "^11.9.3",
@@ -16,7 +16,7 @@
     "dom-to-image": "^2.6.0",
     "dotenv": "^16.0.1",
     "gh-pages": "^4.0.0",
-    "hk-bus-eta": "^2.0.0",
+    "hk-bus-eta": "^2.1.1",
     "i18next": "^21.8.10",
     "immer": "^9.0.15",
     "leaflet": "^1.7.1",
