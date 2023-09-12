@@ -74,7 +74,8 @@ const registerValidSW = async (swUrl, config) => {
   };
   const controllingHandler = (event) => {
     if (event.isUpdate) {
-      window.location.reload();
+      // disable auto reload, wait for next round to give a stable UX
+      // window.location.reload();
     } else {
       if (config && config.onSuccess) {
         config.onSuccess(wb);
