@@ -295,11 +295,11 @@ const classes = {
 };
 
 const rootSx: SxProps<Theme> = {
-  height: "30vh",
+  height: "35vh",
   filter: (theme) =>
     theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
   [`& .${classes.mapContainer}`]: {
-    height: "30vh",
+    height: "35vh",
   },
   [`& .${classes.marker}`]: {
     marginLeft: "-12px",

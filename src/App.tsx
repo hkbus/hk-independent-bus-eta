@@ -25,14 +25,15 @@ import RedirectPage from "./pages/RedirectPage";
 
 const Home = loadable(() => import("./pages/Home"));
 const RouteEta = loadable(() => import("./pages/RouteEta"));
+const BookmarkedStop = loadable(() => import("./pages/BookmarkedStop"));
 const RouteBoard = loadable(() => import("./pages/RouteBoard"));
 const RouteSearch = loadable(() => import("./pages/RouteSearch"));
 const Settings = loadable(() => import("./pages/Settings"));
 const PrivacyPolicy = loadable(() => import("./pages/PrivacyPolicy"));
 const TermsAndConditions = loadable(() => import("./pages/TermsAndConditions"));
+const Support = loadable(() => import("./pages/Support"));
 const DataImport = loadable(() => import("./pages/DataImport"));
 const DataExport = loadable(() => import("./pages/DataExport"));
-const Support = loadable(() => import("./pages/Support"));
 
 const App = () => {
   const { analytics, colorMode } = useContext(AppContext);
@@ -64,6 +65,7 @@ const App = () => {
                   <Route path={`import/:data?`} element={<DataImport />} />
                   <Route path={`export`} element={<DataExport />} />
                   <Route path={`board`} element={<RouteBoard />} />
+                  <Route path={`stops`} element={<BookmarkedStop />} />
                   <Route path={`search`} element={<RouteSearch />} />
                   <Route path={`privacy`} element={<PrivacyPolicy />} />
                   <Route path={`terms`} element={<TermsAndConditions />} />

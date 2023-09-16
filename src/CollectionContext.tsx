@@ -8,6 +8,7 @@ import { isStrings } from "./utils";
 import { produce, current } from "immer";
 
 interface CollectionState {
+  savedStops: string[];
   savedEtas: string[];
   collections: RouteCollection[];
   collectionDrawerRoute: string | null;
@@ -15,6 +16,8 @@ interface CollectionState {
 }
 
 interface CollectionContextValue extends CollectionState {
+  updateSavedStops: (key: string) => void;
+  setSavedStops: (savedStops: string[]) => void;
   updateSavedEtas: (keys: string) => void;
   setSavedEtas: (savedEtas: string[]) => void;
   setCollectionDrawerRoute: (routeId: string | null) => void;
@@ -35,8 +38,11 @@ const CollectionContext = React.createContext<CollectionContextValue>(null);
 export const CollectionContextProvider = ({ children }) => {
   type State = CollectionState;
   const getInitialState = (): CollectionState => {
+    const savedStops: unknown = JSON.parse(localStorage.getItem("savedStops"));
     const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
     return {
+      savedStops:
+        Array.isArray(savedStops) && isStrings(savedStops) ? savedStops : [],
       savedEtas:
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
       collections: JSON.parse(localStorage.getItem("collections")) ?? [
@@ -72,6 +78,38 @@ export const CollectionContextProvider = ({ children }) => {
   };
 
   const [state, setStateRaw] = useState<CollectionState>(getInitialState());
+
+  const updateSavedStops = useCallback((key: string) => {
+    setStateRaw(
+      produce((state: State) => {
+        const prevSavedStops = state.savedStops;
+        if (prevSavedStops.includes(key)) {
+          prevSavedStops.splice(prevSavedStops.indexOf(key), 1);
+          localStorage.setItem(
+            "savedStops",
+            JSON.stringify(current(prevSavedStops))
+          );
+          state.savedStops = prevSavedStops;
+          return;
+        }
+        const newSavedStops = prevSavedStops
+          .concat(key)
+          .filter((v, i, s) => s.indexOf(v) === i);
+        localStorage.setItem("savedStops", JSON.stringify(newSavedStops));
+        state.savedStops = newSavedStops;
+      })
+    );
+  }, []);
+
+  // for re-ordering
+  const setSavedStops = useCallback((savedStops) => {
+    setStateRaw(
+      produce((state: State) => {
+        localStorage.setItem("savedStops", JSON.stringify(savedStops));
+        state.savedStops = savedStops;
+      })
+    );
+  }, []);
 
   const updateSavedEtas = useCallback((key: string) => {
     setStateRaw(
@@ -254,6 +292,8 @@ export const CollectionContextProvider = ({ children }) => {
     <CollectionContext.Provider
       value={{
         ...state,
+        updateSavedStops,
+        setSavedStops,
         updateSavedEtas,
         setSavedEtas,
         setCollectionDrawerRoute,

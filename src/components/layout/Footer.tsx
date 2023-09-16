@@ -8,8 +8,8 @@ import {
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import NearMeIcon from "@mui/icons-material/NearMe";
-import TimerIcon from "@mui/icons-material/Timer";
 import SettingsIcon from "@mui/icons-material/Settings";
+import FlagCircleIcon from "@mui/icons-material/FlagCircle";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
@@ -46,30 +46,20 @@ const Footer = () => {
           icon={<HomeIcon />}
         />
         <BottomNavigationAction
+          label={t("車站")}
+          component={Link}
+          to={`/${i18n.language}/stops`}
+          onClick={(e) => handleClick(`/${i18n.language}/stops`, e)}
+          value={`/${i18n.language}/stops`}
+          icon={<FlagCircleIcon />}
+        />
+        <BottomNavigationAction
           label={t("搜尋")}
           component={Link}
           to={`/${i18n.language}/board`}
           onClick={(e) => handleClick(`/${i18n.language}/board`, e)}
           value={`/${i18n.language}/board`}
           icon={<SearchIcon />}
-        />
-        <BottomNavigationAction
-          label={selectedRoute.split("-")[0]}
-          component={Link}
-          to={`/${i18n.language}/route/${selectedRoute
-            .replace(/(.*)\/.*$/, "$1")
-            .toLowerCase()}`}
-          onClick={(e) =>
-            handleClick(
-              `/${i18n.language}/route/${selectedRoute.toLowerCase()}`,
-              e
-            )
-          }
-          value={`/${i18n.language}/route/${selectedRoute
-            .replace(/(.*)\/.*$/, "$1")
-            .toLowerCase()}`}
-          icon={<TimerIcon />}
-          style={{ textTransform: "uppercase" }}
         />
         <BottomNavigationAction
           label={t("規劃")}

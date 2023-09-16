@@ -17,7 +17,7 @@ const DataExport = () => {
     t,
     i18n: { language },
   } = useTranslation();
-  const { savedEtas, collections } = useContext(AppContext);
+  const { savedStops, savedEtas, collections } = useContext(AppContext);
   const exportUrl = useMemo<string>(
     () =>
       `https://${window.location.hostname}/${language}/import/` +
@@ -25,8 +25,9 @@ const DataExport = () => {
         compressJson(
           JSON.stringify(
             {
-              savedEtas: savedEtas,
-              collections: collections,
+              savedStops,
+              savedEtas,
+              collections,
             },
             null,
             0
@@ -34,7 +35,7 @@ const DataExport = () => {
           { outputEncoding: "Base64" }
         )
       ),
-    [collections, language, savedEtas]
+    [collections, language, savedEtas, savedStops]
   );
   const [isCopied, setIsCopied] = useState<boolean>(false);
 

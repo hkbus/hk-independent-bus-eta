@@ -1,58 +1,47 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
-  List,
+  IconButton,
   SxProps,
   Theme,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
-import SuccinctTimeReport from "../home/SuccinctTimeReport";
-import { routeSortFunc } from "../../utils";
-import { TRANSPORT_ORDER } from "../../constants";
+import {
+  Bookmark as BookmarkIcon,
+  BookmarkBorder as BookmarkBorderIcon,
+} from "@mui/icons-material";
+import StopRouteList from "../bookmarked-stop/StopRouteList";
 
 const StopDialog = ({ open, stops, handleClose }) => {
   const {
-    db: { routeList, stopList },
-    busSortOrder,
+    db: { stopList },
+    savedStops,
+    updateSavedStops,
   } = useContext(AppContext);
   const { i18n } = useTranslation();
-  const [routes, setRoutes] = useState([]);
 
-  useEffect(() => {
-    if (stops === undefined) {
-      setRoutes([]);
-      return;
-    }
-    let _routes = [];
-    Object.entries(routeList)
-      .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]))
-      .forEach(([key, route]) => {
-        stops.some(([co, stopId]) => {
-          if (route.stops[co] && route.stops[co].includes(stopId)) {
-            _routes.push(key + "/" + route.stops[co].indexOf(stopId));
-            return true;
-          }
-          return false;
-        });
-      });
-    setRoutes(_routes);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stops]);
+  const bookmarked = useMemo<boolean>(
+    () =>
+      stops.reduce(
+        (acc, cur) => acc || savedStops.includes(cur.join("|")),
+        false
+      ),
+    [stops, savedStops]
+  );
 
   return (
     <Dialog open={open} onClose={handleClose} sx={rootSx}>
       <DialogTitle sx={titleSx}>
+        <IconButton onClick={() => updateSavedStops(stops[0].join("|"))}>
+          {bookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+        </IconButton>
         {stopList[stops[0][1]].name[i18n.language]}
       </DialogTitle>
       <DialogContent>
-        <List>
-          {routes.map((route) => (
-            <SuccinctTimeReport key={route} routeId={route} />
-          ))}
-        </List>
+        <StopRouteList stops={stops} />
       </DialogContent>
     </Dialog>
   );

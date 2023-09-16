@@ -136,7 +136,6 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
       });
       map?.setView(mapRef.current.center);
 
-      console.log("try invalidateSize");
       map?.invalidateSize();
 
       return () => {

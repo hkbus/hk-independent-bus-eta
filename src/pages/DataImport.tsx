@@ -12,11 +12,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { decompress } from "lzutf8-light";
 import { Check as CheckIcon } from "@mui/icons-material";
 import AppContext from "../AppContext";
+import { isStrings } from "../utils";
 
 const DataImport = () => {
   const { data } = useParams();
   const { t } = useTranslation();
-  const { setSavedEtas, setCollections } = useContext(AppContext);
+  const { setSavedStops, setSavedEtas, setCollections } =
+    useContext(AppContext);
   const navigate = useNavigate();
 
   const obj = useMemo(() => {
@@ -24,13 +26,11 @@ const DataImport = () => {
       let obj = JSON.parse(
         decompress(decodeURIComponent(data), { inputEncoding: "Base64" })
       );
-      if (!Array.isArray(obj.savedEtas)) {
-        throw new Error("Error in parsing savedEtas");
+      if (!Array.isArray(obj.savedStops) && isStrings(obj.savedStops)) {
+        throw new Error("Error in parsing savedStops");
       }
-      for (let i = 0; i < obj.savedEtas.length; ++i) {
-        if (typeof obj.savedEtas[i] !== "string") {
-          throw new Error("Error in parsing savedEtas");
-        }
+      if (!Array.isArray(obj.savedEtas) && isStrings(obj.savedEtas)) {
+        throw new Error("Error in parsing savedEtas");
       }
       if (!Array.isArray(obj.collections)) {
         throw new Error("Error in parsing collections");
@@ -76,10 +76,11 @@ const DataImport = () => {
 
   const confirm = useCallback(() => {
     if (objStrForm === "{}") return;
+    setSavedStops(obj.savedStops);
     setSavedEtas(obj.savedEtas);
     setCollections(obj.collections);
     navigate("/");
-  }, [obj, objStrForm, setCollections, setSavedEtas, navigate]);
+  }, [obj, objStrForm, setSavedStops, setCollections, setSavedEtas, navigate]);
 
   return (
     <Box sx={rootSx}>
