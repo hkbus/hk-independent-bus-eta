@@ -28,6 +28,7 @@ const RouteEta = loadable(() => import("./pages/RouteEta"));
 const BookmarkedStop = loadable(() => import("./pages/BookmarkedStop"));
 const RouteBoard = loadable(() => import("./pages/RouteBoard"));
 const RouteSearch = loadable(() => import("./pages/RouteSearch"));
+const Notice = loadable(() => import("./pages/Notice"));
 const Settings = loadable(() => import("./pages/Settings"));
 const PrivacyPolicy = loadable(() => import("./pages/PrivacyPolicy"));
 const TermsAndConditions = loadable(() => import("./pages/TermsAndConditions"));
@@ -62,6 +63,7 @@ const App = () => {
                   <Route path={`route/:id`} element={<RouteEta />} />
                   <Route path={`route/:id/:panel`} element={<RouteEta />} />
                   <Route path={`settings`} element={<Settings />} />
+                  <Route path={"notice"} element={<Notice />} />
                   <Route path={`import/:data?`} element={<DataImport />} />
                   <Route path={`export`} element={<DataExport />} />
                   <Route path={`board`} element={<RouteBoard />} />

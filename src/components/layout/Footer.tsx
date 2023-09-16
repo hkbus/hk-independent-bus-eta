@@ -8,8 +8,8 @@ import {
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import NearMeIcon from "@mui/icons-material/NearMe";
-import SettingsIcon from "@mui/icons-material/Settings";
 import FlagCircleIcon from "@mui/icons-material/FlagCircle";
+import NewspaperIcon from "@mui/icons-material/Newspaper";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
@@ -72,15 +72,14 @@ const Footer = () => {
           icon={<NearMeIcon />}
         />
         <BottomNavigationAction
-          label={t("設定")}
+          label={t("通告")}
           component={Link}
-          to={`/${i18n.language}/settings`}
-          rel="nofollow"
+          to={`/${i18n.language}/notice`}
           onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
-            handleClick(`/${i18n.language}/settings`, e)
+            handleClick(`/${i18n.language}/notice`, e)
           }
-          value={`/${i18n.language}/settings`}
-          icon={<SettingsIcon />}
+          value={`/${i18n.language}/notice`}
+          icon={<NewspaperIcon />}
         />
       </BottomNavigation>
     ),
