@@ -59,7 +59,7 @@ const RouteAlphabetPad = ({ possibleChar }) => {
       {possibleChar
         .filter((k) => isNaN(parseInt(k, 10)))
         .map((k) => (
-          <Grid item xs={12} key={"input-" + k}>
+          <Grid item xs={6} key={"input-" + k}>
             <KeyButton
               k={k}
               handleClick={updateSearchRouteByButton}
@@ -131,14 +131,14 @@ const alphabetSx: SxProps<Theme> = {
 };
 
 const alphabetPadContainerSx: SxProps<Theme> = {
-  width: "20%",
+  width: "35%",
   height: "246px",
   overflowX: "hidden",
   overflowY: "scroll",
 };
 
 const numPadContainerSx: SxProps<Theme> = {
-  width: "72%",
+  width: "62%",
 };
 
 const getPossibleChar = (
