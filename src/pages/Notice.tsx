@@ -84,7 +84,13 @@ const xmlToJson = (root: Document): NoticeType[] => {
     .map((msg) => Array.from(msg.querySelectorAll("*")))
     .map((nodes) =>
       nodes.reduce((acc, node) => {
-        acc[node.tagName] = node.textContent;
+        if (node.tagName === "ReferenceDate") {
+          acc[node.tagName] = node.textContent
+            .replace("下午", "PM")
+            .replace("上午", "AM");
+        } else {
+          acc[node.tagName] = node.textContent.replace(/\n/g, "\n\n");
+        }
         return acc;
       }, {} as NoticeType)
     );
