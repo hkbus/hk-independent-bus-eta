@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Tabs, Tab, SxProps, Theme } from "@mui/material";
 import {
-  Cloud as CloudIcon,
   Star as StarIcon,
   CompassCalibration as CompassCalibrationIcon,
   Bookmark as BookmarkIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import AppContext from "../../AppContext";
 
 interface HomeTabbarProps {
   homeTab: HomeTabType;
@@ -15,18 +15,21 @@ interface HomeTabbarProps {
 
 const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
   const { t } = useTranslation();
+  const { collections } = useContext(AppContext)
 
   return (
     <Tabs
       value={homeTab}
       onChange={(e, v) => onChangeTab(v, true)}
       sx={tabbarSx}
+      variant="scrollable"
+      scrollButtons
     >
       <Tab
         iconPosition="start"
-        icon={<CloudIcon />}
-        label={t("綜合")}
-        value="both"
+        icon={<CompassCalibrationIcon />}
+        label={t("附近")}
+        value="nearby"
         disableRipple
       />
       <Tab
@@ -38,33 +41,37 @@ const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
       />
       <Tab
         iconPosition="start"
-        icon={<CompassCalibrationIcon />}
-        label={t("附近")}
-        value="nearby"
-        disableRipple
-      />
-      <Tab
-        iconPosition="start"
         icon={<BookmarkIcon />}
         label={t("Collections")}
         value="collections"
         disableRipple
       />
+      {collections.map((collection, idx) => (
+        <Tab
+          key={`collection-${idx}`}
+          label={collection.name}
+          value={`collection-${idx}`}
+          disableRipple
+        />
+      ))}
     </Tabs>
   );
 };
 
 export default HomeTabbar;
 
-export type HomeTabType = "both" | "saved" | "nearby" | "collections";
+export type HomeTabType = "saved" | "nearby" | "collections";
 
-export const isHomeTab = (input: unknown): input is HomeTabType => {
-  return (
-    input === "both" ||
-    input === "saved" ||
-    input === "nearby" ||
-    input === "collections"
-  );
+export const isHomeTab = (input: unknown, collectionLength: number): input is HomeTabType => {
+  if ( input === "saved" || input === "nearby" || input === "collections" ) {
+    return true
+  }
+  for ( let i=0;i<collectionLength;++i ) {
+    if ( input === `collection-${i}` ) {
+      return true
+    }
+  }
+  return false
 };
 
 const tabbarSx: SxProps<Theme> = {
@@ -82,7 +89,7 @@ const tabbarSx: SxProps<Theme> = {
     },
   },
   [`& .MuiTabs-flexContainer`]: {
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
   [`& .MuiTabs-indicator`]: {
     backgroundColor: (theme) =>

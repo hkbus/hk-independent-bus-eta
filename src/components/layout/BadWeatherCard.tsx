@@ -1,14 +1,13 @@
 import React from "react";
 import {
-  Card,
-  CardActionArea,
-  CardContent,
+  Paper,
   SxProps,
   Theme,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useWeather } from "../Weather";
+import ErrorIcon from '@mui/icons-material/Error';
 
 const BadWeatherCard = () => {
   const { t } = useTranslation();
@@ -28,13 +27,16 @@ const BadWeatherCard = () => {
 
   if (navigator.userAgent !== "prerendering" && isAdverse()) {
     return (
-      <Card variant="outlined" sx={rootSx}>
-        <CardActionArea href={t("bad-weather-link")} target="_blank">
-          <CardContent>
-            <Typography>{t("bad-weather-text")}</Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      <Paper 
+        variant="outlined" 
+        sx={rootSx} 
+        onClick={() => window.open(t("bad-weather-link"), "_target")}
+      >
+        <ErrorIcon color="error" />
+        <Typography>
+          {t("bad-weather-text")}
+        </Typography>
+      </Paper>
     );
   } else {
     return null;
@@ -48,9 +50,11 @@ const adverseRCode = ["WARINR", "WRAINB"];
 
 const rootSx: SxProps<Theme> = {
   borderRadius: (theme) => theme.shape.borderRadius,
-  margin: 0.2,
-  height: "100%",
-  [`> a`]: {
-    height: "100%",
-  },
+  cursor: "pointer",
+  px: 2,
+  py: 1,
+  display: 'flex',
+  alignItems: 'center',
+  textAlign: 'left',
+  gap: 1
 };

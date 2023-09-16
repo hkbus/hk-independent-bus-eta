@@ -14,13 +14,13 @@ import SwipeableList from "../components/home/SwipeableList";
 import DbRenewReminder from "../components/layout/DbRenewReminder";
 
 const Home = () => {
-  const { AppTitle, geolocation } = useContext(AppContext);
+  const { AppTitle, geolocation, collections } = useContext(AppContext);
   const { t, i18n } = useTranslation();
 
   const swipeableList = useRef(null);
   const _homeTab = localStorage.getItem("homeTab");
   const [homeTab, setHomeTab] = useState<HomeTabType>(
-    isHomeTab(_homeTab) ? _homeTab : "both"
+    isHomeTab(_homeTab, collections.length) ? _homeTab : "nearby"
   );
 
   useEffect(() => {
@@ -47,7 +47,6 @@ const Home = () => {
 
   const handleTabChange = (v: HomeTabType, rerenderList = false) => {
     setHomeTab(v);
-    console.log(v);
     localStorage.setItem("homeTab", v);
     if (swipeableList.current && rerenderList) {
       swipeableList.current.changeTab(v);

@@ -5,6 +5,7 @@ import React, {
   useImperativeHandle,
   useState,
   useEffect,
+  useCallback,
 } from "react";
 import SwipeableViews from "react-swipeable-views";
 import { Box, List, Typography } from "@mui/material";
@@ -30,10 +31,10 @@ interface SwipeableListRef {
 }
 
 interface SelectedRoutes {
-  both: string;
   saved: string;
   nearby: string;
-  collections: Array<{ name: string; routes: string }>;
+  smartCollections: Array<{ name: string; routes: string }>;
+  collections: string[];
 }
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
@@ -77,28 +78,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [geolocation]);
 
-    const BothRouteList = useMemo(
-      () =>
-        selectedRoutes ? (
-          <List disablePadding>
-            {selectedRoutes["both"]
-              .split("|")
-              .map(
-                (selectedRoute, idx) =>
-                  Boolean(selectedRoute) && (
-                    <SuccinctTimeReport
-                      key={`route-shortcut-${idx}`}
-                      routeId={selectedRoute}
-                    />
-                  )
-              )}
-          </List>
-        ) : (
-          <CircularProgress sx={{ my: 10 }} />
-        ),
-      [selectedRoutes]
-    );
-
     const SavedRouteList = useMemo(() => {
       if (selectedRoutes === null) {
         return <CircularProgress sx={{ my: 10 }} />;
@@ -114,8 +93,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             </Typography>
           ) : (
             <List disablePadding>
-              {selectedRoutes["saved"]
-                .split("|")
+              {savedRoutes
                 .map(
                   (selectedRoute, idx) =>
                     Boolean(selectedRoute) && (
@@ -153,11 +131,11 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       [selectedRoutes]
     );
 
-    const CollectionRouteList = useMemo(
+    const SmartCollectionRouteList = useMemo(
       () =>
-        selectedRoutes?.collections.length > 0 ? (
+        selectedRoutes?.smartCollections.length > 0 ? (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {selectedRoutes.collections.map(({ name, routes }, idx) => (
+            {selectedRoutes.smartCollections.map(({ name, routes }, idx) => (
               <Box key={`collection-${idx}`}>
                 <Typography variant="body1" sx={{ textAlign: "left" }}>
                   <b>{name}</b>
@@ -191,27 +169,67 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       [t, selectedRoutes]
     );
 
+    const collectionRouteLists = useMemo(() => collections.map((_, idx) => {
+      const routes = selectedRoutes?.collections[idx].split("|") ?? [];
+      const noRoutes = routes.every((routeId) => !routeId);
+      
+      return (
+        <React.Fragment key={`collection-route-${idx}`}>
+          {noRoutes ? (
+            <Typography sx={{ marginTop: 5 }}>
+              <b>{t("收藏中未有路線")}</b>
+            </Typography>
+          ) : (
+            <List disablePadding>
+              {routes
+                .map(
+                  (selectedRoute, idx) =>
+                    Boolean(selectedRoute) && (
+                      <SuccinctTimeReport
+                        key={`route-shortcut-${idx}`}
+                        routeId={selectedRoute}
+                      />
+                    )
+                )}
+            </List>
+          )}
+        </React.Fragment>
+      )
+    }), [t, collections, selectedRoutes])
+
+    const getViewIdx = useCallback(() => {
+      let ret = HOME_TAB.indexOf(defaultHometab.current)
+      if ( ret !== -1 ) return ret;
+      for ( let i=0;i<collections.length;++i ) {
+        if ( `collection-${i}` === defaultHometab.current ) {
+          return i + HOME_TAB.length
+        }
+      }
+      return -1
+    }, [collections])
+
     return useMemo(
       () => (
         <SwipeableViews
-          index={HOME_TAB.indexOf(defaultHometab.current)}
+          index={getViewIdx()}
           onChangeIndex={(idx) => {
             console.log(idx);
             onChangeTab(HOME_TAB[idx]);
           }}
         >
-          {BothRouteList}
-          {SavedRouteList}
           {NearbyRouteList}
-          {CollectionRouteList}
+          {SavedRouteList}
+          {SmartCollectionRouteList}
+          {collectionRouteLists?.map((Collection) => (Collection))}
         </SwipeableViews>
       ),
       [
         onChangeTab,
-        BothRouteList,
+        getViewIdx,
         SavedRouteList,
         NearbyRouteList,
-        CollectionRouteList,
+        SmartCollectionRouteList,
+        collectionRouteLists,
       ]
     );
   }
@@ -219,7 +237,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
 
 export default SwipeableList;
 
-const HOME_TAB = ["both", "saved", "nearby", "collections"];
+const HOME_TAB = ["nearby", "saved", "collections"];
 
 const getSelectedRoutes = ({
   hotRoute,
@@ -344,19 +362,10 @@ const getSelectedRoutes = ({
         .slice(0, 40)
     ),
     nearby: formatHandling(nearbyRoutes),
-    both: formatHandling(
-      []
-        .concat(
-          selectedRoutes
-            .sort((a, b) => a[1] - b[1])
-            .map((v) => v[0])
-            .slice(0, 40)
-        )
-        .concat(nearbyRoutes)
-    ),
-    collections: collectionRoutes.map((v) => ({
+    smartCollections: collectionRoutes.map((v) => ({
       ...v,
       routes: formatHandling(v.routes),
     })),
+    collections: collections.map(colleciton => formatHandling(colleciton.list)),
   };
 };

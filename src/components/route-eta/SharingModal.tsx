@@ -49,8 +49,7 @@ const SharingModal = ({
       .then((b64) => {
         setImgBase64(b64);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [isOpen, colorMode, idx]);
 
   useEffect(() => {
     setIsOpen(true);
@@ -59,7 +58,7 @@ const SharingModal = ({
 
   const handleShareLink = useCallback(() => {
     triggerShare(
-      `https://${window.location.hostname}/${i18n.language}/route/${id}`,
+      `https://${window.location.hostname}/${i18n.language}/route/${id}/${idx}`,
       `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
         "往"
       )} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}`
@@ -70,8 +69,7 @@ const SharingModal = ({
       .finally(() => {
         setIsOpen(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerShare, i18n.language, id, idx, stop.name, route]);
+  }, [AppTitle, dest, t, setIsCopied, i18n.language, id, idx, stop.name, route]);
 
   const handleShareImg = useCallback(() => {
     triggerShareImg(

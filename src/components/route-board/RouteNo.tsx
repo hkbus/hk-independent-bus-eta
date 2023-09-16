@@ -31,11 +31,11 @@ export default RouteNo;
 const rootSx: SxProps<Theme> = {
   lineHeight: "normal",
   display: "inline",
-  "& > span:nth-child(1)": {
+  "& > span:nth-of-type(1)": {
     fontSize: "1.5rem",
     fontFamily: '"Oswald", sans-serif',
   },
-  "& > span:nth-child(2)": {
+  "& > span:nth-of-type(2)": {
     fontSize: "1.2rem",
     fontFamily: '"Oswald", sans-serif',
   },
