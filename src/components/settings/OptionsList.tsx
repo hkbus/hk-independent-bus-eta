@@ -78,6 +78,19 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
+          goToTab("stopOrder");
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <CodeIcon sx={{ transform: "rotate(90deg)" }} />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={t("路線排序")} />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration);
           goToTab("collectionOrder");
         }}
       >

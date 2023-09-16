@@ -459,7 +459,7 @@ const Settings = () => {
       />
       <PersonalizeDialog
         open={isPersonalizeDialog}
-        handleClose={() => setIsPersonalizeDialog(false)}
+        onClose={() => setIsPersonalizeDialog(false)}
       />
     </Paper>
   );
