@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import AppContext from "../AppContext";
 import { Paper, SxProps, Theme } from "@mui/material";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
@@ -10,6 +10,7 @@ const BookmarkedStop = () => {
   const {
     savedStops,
     db: { stopList, stopMap },
+    colorMode,
   } = useContext(AppContext);
   const defaultTab = useMemo(() => {
     for (let i = 0; i < savedStops.length; ++i) {
@@ -28,12 +29,25 @@ const BookmarkedStop = () => {
     return ret;
   }, [stopTab, stopMap]);
 
+  const bgColor = useCallback(
+    (theme: Theme) => {
+      if (stopTab === "") return "unset";
+      return theme.palette.mode === "dark"
+        ? theme.palette.background.default
+        : "white";
+    },
+    [stopTab]
+  );
+
   return (
     <Paper
       sx={{
         ...paperSx,
+        bgcolor: bgColor,
         backgroundImage:
-          stopTab === "" ? "url(/stop-bookmark-guide.png)" : "unset",
+          stopTab === ""
+            ? `url(/stop-bookmark-guide-${colorMode}.png)`
+            : "unset",
         opacity: stopTab === "" ? "0.8" : "unset",
       }}
       square
@@ -53,8 +67,6 @@ const BookmarkedStop = () => {
 export default BookmarkedStop;
 
 const paperSx: SxProps<Theme> = {
-  background: (theme) =>
-    theme.palette.mode === "dark" ? theme.palette.background.default : "white",
   textAlign: "center",
   display: "flex",
   flexDirection: "column",

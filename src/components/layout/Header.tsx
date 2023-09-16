@@ -12,7 +12,12 @@ import {
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import SettingsIcon from "@mui/icons-material/Settings";
+import {
+  Settings as SettingsIcon,
+  SettingsBrightness as SettingsBrightnessIcon,
+  WbSunny as WbSunnyIcon,
+  DarkMode as DarkModeIcon,
+} from "@mui/icons-material";
 import AppContext from "../../AppContext";
 import { vibrate, checkMobile } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -28,6 +33,8 @@ const Header = () => {
     geoPermission,
     updateGeolocation,
     changeLanguage,
+    _colorMode,
+    toggleColorMode,
   } = useContext(AppContext);
   const { t, i18n } = useTranslation();
   let location = useLocation();
@@ -158,6 +165,18 @@ const Header = () => {
           >
             {i18n.language !== "zh" ? "繁" : "En"}
           </Button>
+          <IconButton
+            onClick={() => {
+              vibrate(vibrateDuration);
+              toggleColorMode();
+            }}
+          >
+            {_colorMode === "system" && (
+              <SettingsBrightnessIcon fontSize="small" />
+            )}
+            {_colorMode === "light" && <WbSunnyIcon fontSize="small" />}
+            {_colorMode === "dark" && <DarkModeIcon fontSize="small" />}
+          </IconButton>
           <IconButton
             component={Link}
             to={`/${i18n.language}/settings`}

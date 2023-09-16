@@ -17,8 +17,8 @@ import {
   Delete as DeleteIcon,
   Timer as TimerIcon,
   DarkMode as DarkModeIcon,
-  Brightness7 as Brightness7Icon,
-  NightsStay as NightsStayIcon,
+  SettingsBrightness as SettingsBrightnessIcon,
+  WbSunny as WbSunnyIcon,
   AllInclusive as AllInclusiveIcon,
   FilterAlt as FilterAltIcon,
   Vibration as VibrationIcon,
@@ -163,8 +163,8 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
       >
         <ListItemAvatar>
           <Avatar>
-            {colorMode === "system" && <NightsStayIcon />}
-            {colorMode === "light" && <Brightness7Icon />}
+            {colorMode === "system" && <SettingsBrightnessIcon />}
+            {colorMode === "light" && <WbSunnyIcon />}
             {colorMode === "dark" && <DarkModeIcon />}
           </Avatar>
         </ListItemAvatar>
