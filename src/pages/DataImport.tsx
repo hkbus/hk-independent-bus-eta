@@ -1,85 +1,100 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import {
   Box,
+  Button,
   SxProps,
   TextField,
   Theme,
-  IconButton,
   Typography,
-  Snackbar,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { decompress } from "lzutf8-light";
+import { Check as CheckIcon } from "@mui/icons-material";
 import AppContext from "../AppContext";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const DataImport = () => {
+  const { data } = useParams();
   const { t } = useTranslation();
-  const { savedEtas, setSavedEtas, collections, setCollections } =
-    useContext(AppContext);
-  const [data, setData] = useState<string>(
-    JSON.stringify(
-      {
-        savedEtas: savedEtas,
-        collections: collections,
-      },
-      null,
-      2
-    )
-  );
-  const [isCopied, setIsCopied] = useState<boolean>(false);
+  const { setSavedEtas, setCollections } = useContext(AppContext);
+  const navigate = useNavigate();
 
-  const handleChange = ({ target: { value } }) => {
-    setData(value);
+  const obj = useMemo(() => {
     try {
-      const { savedEtas: _savedEtas, collections: _collections } =
-        JSON.parse(value);
-      if (Array.isArray(_savedEtas)) {
-        setSavedEtas(
-          _savedEtas.filter(
-            (routeId) =>
-              typeof routeId === "string" || routeId instanceof String
-          )
-        );
+      let obj = JSON.parse(
+        decompress(decodeURIComponent(data), { inputEncoding: "Base64" })
+      );
+      if (!Array.isArray(obj.savedEtas)) {
+        throw new Error("Error in parsing savedEtas");
       }
-      if (Array.isArray(_collections)) {
-        setCollections(_collections);
+      for (let i = 0; i < obj.savedEtas.length; ++i) {
+        if (typeof obj.savedEtas[i] !== "string") {
+          throw new Error("Error in parsing savedEtas");
+        }
       }
-    } catch {}
-  };
+      if (!Array.isArray(obj.collections)) {
+        throw new Error("Error in parsing collections");
+      }
+      for (let i = 0; i < obj.collections.length; ++i) {
+        if (typeof obj.collections[i].name !== "string") {
+          throw new Error("Error in parsing collections");
+        }
+        for (let j = 0; j < obj.collections[i].list.length; ++j) {
+          if (typeof obj.collections[i].list[j] !== "string") {
+            throw new Error("Error in parsing collections");
+          }
+        }
+        for (let j = 0; j < obj.collections[i].schedules.length; ++j) {
+          if (typeof obj.collections[i].schedules[j].day !== "number") {
+            throw new Error("Error in parsing collections");
+          }
+          if (typeof obj.collections[i].schedules[j].start.hour !== "number") {
+            throw new Error("Error in parsing collections");
+          }
+          if (
+            typeof obj.collections[i].schedules[j].start.minute !== "number"
+          ) {
+            throw new Error("Error in parsing collections");
+          }
+          if (typeof obj.collections[i].schedules[j].end.hour !== "number") {
+            throw new Error("Error in parsing collections");
+          }
+          if (typeof obj.collections[i].schedules[j].end.minute !== "number") {
+            throw new Error("Error in parsing collections");
+          }
+        }
+      }
+
+      return obj;
+    } catch (e) {
+      console.error(e);
+    }
+    return {};
+  }, [data]);
+
+  const objStrForm = useMemo(() => JSON.stringify(obj, null, 2), [obj]);
+
+  const confirm = useCallback(() => {
+    if (objStrForm === "{}") return;
+    setSavedEtas(obj.savedEtas);
+    setCollections(obj.collections);
+    navigate("/");
+  }, [obj, objStrForm, setCollections, setSavedEtas, navigate]);
 
   return (
     <Box sx={rootSx}>
       <Typography variant="h6" sx={{ textAlign: "center" }}>
-        {t("資料匯出匯入")}
+        {t("資料匯入")}
       </Typography>
-      <Box sx={{ display: "flex", flexDirection: "column", m: 1 }}>
-        <TextField
-          multiline
-          maxRows={10}
-          value={data}
-          onChange={handleChange}
-        />
-        <Box sx={{ m: 1 }}>
-          <IconButton
-            onClick={() => {
-              navigator.clipboard?.writeText(data).then(() => {
-                setIsCopied(true);
-              });
-            }}
-          >
-            <ContentCopyIcon />
-          </IconButton>
-        </Box>
-      </Box>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={isCopied}
-        autoHideDuration={1500}
-        onClose={() => {
-          setIsCopied(false);
-        }}
-        message={t("已複製到剪貼簿")}
-      />
+      <TextField multiline maxRows={15} value={objStrForm} disabled fullWidth />
+      <Button
+        startIcon={<CheckIcon />}
+        variant="outlined"
+        disabled={objStrForm === "{}"}
+        onClick={confirm}
+      >
+        {t("Accept")}
+      </Button>
     </Box>
   );
 };
@@ -87,6 +102,9 @@ const DataImport = () => {
 export default DataImport;
 
 const rootSx: SxProps<Theme> = {
-  justifyContent: "center",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "flex-start",
   flex: 1,
+  gap: 1,
 };

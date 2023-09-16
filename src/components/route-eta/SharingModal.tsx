@@ -69,7 +69,17 @@ const SharingModal = ({
       .finally(() => {
         setIsOpen(false);
       });
-  }, [AppTitle, dest, t, setIsCopied, i18n.language, id, idx, stop.name, route]);
+  }, [
+    AppTitle,
+    dest,
+    t,
+    setIsCopied,
+    i18n.language,
+    id,
+    idx,
+    stop.name,
+    route,
+  ]);
 
   const handleShareImg = useCallback(() => {
     triggerShareImg(

@@ -15,7 +15,7 @@ interface HomeTabbarProps {
 
 const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
   const { t } = useTranslation();
-  const { collections } = useContext(AppContext)
+  const { collections } = useContext(AppContext);
 
   return (
     <Tabs
@@ -62,16 +62,19 @@ export default HomeTabbar;
 
 export type HomeTabType = "saved" | "nearby" | "collections";
 
-export const isHomeTab = (input: unknown, collectionLength: number): input is HomeTabType => {
-  if ( input === "saved" || input === "nearby" || input === "collections" ) {
-    return true
+export const isHomeTab = (
+  input: unknown,
+  collectionLength: number
+): input is HomeTabType => {
+  if (input === "saved" || input === "nearby" || input === "collections") {
+    return true;
   }
-  for ( let i=0;i<collectionLength;++i ) {
-    if ( input === `collection-${i}` ) {
-      return true
+  for (let i = 0; i < collectionLength; ++i) {
+    if (input === `collection-${i}`) {
+      return true;
     }
   }
-  return false
+  return false;
 };
 
 const tabbarSx: SxProps<Theme> = {

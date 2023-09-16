@@ -18,20 +18,21 @@ import createCache from "@emotion/cache";
 import { PaletteMode } from "@mui/material";
 import AppContext from "./AppContext";
 import Main from "./components/layout/Main";
-import Home from "./pages/Home";
 import { SearchContextProvider } from "./SearchContext";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import { useTranslation } from "react-i18next";
-import DataImport from "./pages/DataImport";
-import Support from "./pages/Support";
 import RedirectPage from "./pages/RedirectPage";
 
+const Home = loadable(() => import("./pages/Home"));
 const RouteEta = loadable(() => import("./pages/RouteEta"));
 const RouteBoard = loadable(() => import("./pages/RouteBoard"));
 const RouteSearch = loadable(() => import("./pages/RouteSearch"));
 const Settings = loadable(() => import("./pages/Settings"));
 const PrivacyPolicy = loadable(() => import("./pages/PrivacyPolicy"));
 const TermsAndConditions = loadable(() => import("./pages/TermsAndConditions"));
+const DataImport = loadable(() => import("./pages/DataImport"));
+const DataExport = loadable(() => import("./pages/DataExport"));
+const Support = loadable(() => import("./pages/Support"));
 
 const App = () => {
   const { analytics, colorMode } = useContext(AppContext);
@@ -60,7 +61,8 @@ const App = () => {
                   <Route path={`route/:id`} element={<RouteEta />} />
                   <Route path={`route/:id/:panel`} element={<RouteEta />} />
                   <Route path={`settings`} element={<Settings />} />
-                  <Route path={`qr-code`} element={<DataImport />} />
+                  <Route path={`import/:data?`} element={<DataImport />} />
+                  <Route path={`export`} element={<DataExport />} />
                   <Route path={`board`} element={<RouteBoard />} />
                   <Route path={`search`} element={<RouteSearch />} />
                   <Route path={`privacy`} element={<PrivacyPolicy />} />

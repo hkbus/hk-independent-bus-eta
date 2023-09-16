@@ -235,7 +235,7 @@ const Settings = () => {
         <ListItemButton
           onClick={() => {
             vibrate(vibrateDuration);
-            navigate(`/${i18n.language}/qr-code`);
+            navigate(`/${i18n.language}/export`);
           }}
         >
           <ListItemAvatar>
@@ -243,7 +243,7 @@ const Settings = () => {
               <SendToMobileIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={t("資料匯出匯入")} />
+          <ListItemText primary={t("資料匯出")} />
         </ListItemButton>
         <Divider />
         <ListItemButton

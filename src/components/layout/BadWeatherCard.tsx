@@ -1,13 +1,8 @@
 import React from "react";
-import {
-  Paper,
-  SxProps,
-  Theme,
-  Typography,
-} from "@mui/material";
+import { Paper, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useWeather } from "../Weather";
-import ErrorIcon from '@mui/icons-material/Error';
+import ErrorIcon from "@mui/icons-material/Error";
 
 const BadWeatherCard = () => {
   const { t } = useTranslation();
@@ -27,15 +22,13 @@ const BadWeatherCard = () => {
 
   if (navigator.userAgent !== "prerendering" && isAdverse()) {
     return (
-      <Paper 
-        variant="outlined" 
-        sx={rootSx} 
+      <Paper
+        variant="outlined"
+        sx={rootSx}
         onClick={() => window.open(t("bad-weather-link"), "_target")}
       >
         <ErrorIcon color="error" />
-        <Typography>
-          {t("bad-weather-text")}
-        </Typography>
+        <Typography>{t("bad-weather-text")}</Typography>
       </Paper>
     );
   } else {
@@ -53,8 +46,8 @@ const rootSx: SxProps<Theme> = {
   cursor: "pointer",
   px: 2,
   py: 1,
-  display: 'flex',
-  alignItems: 'center',
-  textAlign: 'left',
-  gap: 1
+  display: "flex",
+  alignItems: "center",
+  textAlign: "left",
+  gap: 1,
 };

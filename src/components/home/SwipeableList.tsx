@@ -93,16 +93,15 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             </Typography>
           ) : (
             <List disablePadding>
-              {savedRoutes
-                .map(
-                  (selectedRoute, idx) =>
-                    Boolean(selectedRoute) && (
-                      <SuccinctTimeReport
-                        key={`route-shortcut-${idx}`}
-                        routeId={selectedRoute}
-                      />
-                    )
-                )}
+              {savedRoutes.map(
+                (selectedRoute, idx) =>
+                  Boolean(selectedRoute) && (
+                    <SuccinctTimeReport
+                      key={`route-shortcut-${idx}`}
+                      routeId={selectedRoute}
+                    />
+                  )
+              )}
             </List>
           )}
         </React.Fragment>
@@ -169,44 +168,47 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       [t, selectedRoutes]
     );
 
-    const collectionRouteLists = useMemo(() => collections.map((_, idx) => {
-      const routes = selectedRoutes?.collections[idx].split("|") ?? [];
-      const noRoutes = routes.every((routeId) => !routeId);
-      
-      return (
-        <React.Fragment key={`collection-route-${idx}`}>
-          {noRoutes ? (
-            <Typography sx={{ marginTop: 5 }}>
-              <b>{t("收藏中未有路線")}</b>
-            </Typography>
-          ) : (
-            <List disablePadding>
-              {routes
-                .map(
-                  (selectedRoute, idx) =>
-                    Boolean(selectedRoute) && (
-                      <SuccinctTimeReport
-                        key={`route-shortcut-${idx}`}
-                        routeId={selectedRoute}
-                      />
-                    )
-                )}
-            </List>
-          )}
-        </React.Fragment>
-      )
-    }), [t, collections, selectedRoutes])
+    const collectionRouteLists = useMemo(
+      () =>
+        collections.map((_, idx) => {
+          const routes = selectedRoutes?.collections[idx].split("|") ?? [];
+          const noRoutes = routes.every((routeId) => !routeId);
+
+          return (
+            <React.Fragment key={`collection-route-${idx}`}>
+              {noRoutes ? (
+                <Typography sx={{ marginTop: 5 }}>
+                  <b>{t("收藏中未有路線")}</b>
+                </Typography>
+              ) : (
+                <List disablePadding>
+                  {routes.map(
+                    (selectedRoute, idx) =>
+                      Boolean(selectedRoute) && (
+                        <SuccinctTimeReport
+                          key={`route-shortcut-${idx}`}
+                          routeId={selectedRoute}
+                        />
+                      )
+                  )}
+                </List>
+              )}
+            </React.Fragment>
+          );
+        }),
+      [t, collections, selectedRoutes]
+    );
 
     const getViewIdx = useCallback(() => {
-      let ret = HOME_TAB.indexOf(defaultHometab.current)
-      if ( ret !== -1 ) return ret;
-      for ( let i=0;i<collections.length;++i ) {
-        if ( `collection-${i}` === defaultHometab.current ) {
-          return i + HOME_TAB.length
+      let ret = HOME_TAB.indexOf(defaultHometab.current);
+      if (ret !== -1) return ret;
+      for (let i = 0; i < collections.length; ++i) {
+        if (`collection-${i}` === defaultHometab.current) {
+          return i + HOME_TAB.length;
         }
       }
-      return -1
-    }, [collections])
+      return -1;
+    }, [collections]);
 
     return useMemo(
       () => (
@@ -220,7 +222,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           {NearbyRouteList}
           {SavedRouteList}
           {SmartCollectionRouteList}
-          {collectionRouteLists?.map((Collection) => (Collection))}
+          {collectionRouteLists?.map((Collection) => Collection)}
         </SwipeableViews>
       ),
       [
@@ -366,6 +368,8 @@ const getSelectedRoutes = ({
       ...v,
       routes: formatHandling(v.routes),
     })),
-    collections: collections.map(colleciton => formatHandling(colleciton.list)),
+    collections: collections.map((colleciton) =>
+      formatHandling(colleciton.list)
+    ),
   };
 };
