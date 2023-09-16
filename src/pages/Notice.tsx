@@ -65,6 +65,7 @@ const paperSx: SxProps<Theme> = {
   textAlign: "left",
   p: 1,
   gap: 2,
+  bgcolor: "unset",
 };
 
 const noticeContainerSx: SxProps<Theme> = {
