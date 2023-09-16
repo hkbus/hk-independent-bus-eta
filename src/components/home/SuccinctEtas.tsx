@@ -22,19 +22,21 @@ const SuccinctEtas = ({ routeId }) => {
       }
 
       const { remark } = eta;
+      const isScheduled =
+        remark.zh.endsWith("班次") || remark.en.endsWith("Scheduled Bus");
       const exactTimeJsx = (
         <Box
           component="span"
-          sx={etaFormat !== "exact" ? { fontSize: "0.9em" } : {}}
+          sx={{
+            fontSize: etaFormat !== "exact" ? "0.9em" : "1rem",
+            opacity: isScheduled ? "0.6" : "1",
+          }}
         >
           {eta.eta.slice(11, 16)}
-          {remark.zh.endsWith("班次") || remark.en.endsWith("Scheduled Bus")
-            ? "*"
-            : ""}
         </Box>
       );
       const waitTimeJsx = (
-        <Box component="span">
+        <Box component="span" sx={{ opacity: isScheduled ? "0.6" : "1" }}>
           <Box
             component="span"
             sx={{

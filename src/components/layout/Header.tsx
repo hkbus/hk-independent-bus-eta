@@ -212,7 +212,6 @@ const rootSx: SxProps<Theme> = {
   },
   display: "flex",
   justifyContent: "space-between",
-  px: 1,
 };
 
 const appTitleSx: SxProps<Theme> = {

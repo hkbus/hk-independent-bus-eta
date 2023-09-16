@@ -30,7 +30,7 @@ const RouteRow = ({ route, handleClick, style, onRemove }) => {
         </CardActionArea>
         {onRemove !== null && (
           <IconButton onClick={onRemove}>
-            <CloseIcon onClick={onRemove} />
+            <CloseIcon />
           </IconButton>
         )}
       </Card>
