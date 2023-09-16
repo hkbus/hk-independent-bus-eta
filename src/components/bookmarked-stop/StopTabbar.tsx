@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Tabs, Tab, SxProps, Theme } from "@mui/material";
+import { Tabs, Tab, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 
@@ -10,6 +10,7 @@ interface HomeTabbarProps {
 
 const StopTabbar = ({ stopTab, onChangeTab }: HomeTabbarProps) => {
   const {
+    t,
     i18n: { language },
   } = useTranslation();
   const {
@@ -17,7 +18,14 @@ const StopTabbar = ({ stopTab, onChangeTab }: HomeTabbarProps) => {
     savedStops,
   } = useContext(AppContext);
 
-  if (savedStops.length === 0) return <></>;
+  if (savedStops.length === 0) {
+    return (
+      <>
+        <Typography variant="h6">{t("未有收藏車站")}</Typography>
+        <Typography variant="body1">{t("請按下圖指示增加")}</Typography>
+      </>
+    );
+  }
 
   return (
     <Tabs

@@ -29,7 +29,16 @@ const BookmarkedStop = () => {
   }, [stopTab, stopMap]);
 
   return (
-    <Paper sx={paperSx} square elevation={0}>
+    <Paper
+      sx={{
+        ...paperSx,
+        backgroundImage:
+          stopTab === "" ? "url(/stop-bookmark-guide.png)" : "unset",
+        opacity: stopTab === "" ? "0.8" : "unset",
+      }}
+      square
+      elevation={0}
+    >
       <StopTabbar
         stopTab={stopTab}
         onChangeTab={(v: string) => setStopTab(v)}
@@ -51,4 +60,8 @@ const paperSx: SxProps<Theme> = {
   flexDirection: "column",
   overflow: "auto",
   width: "100%",
+  flex: 1,
+  backgroundSize: "contain",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
 };

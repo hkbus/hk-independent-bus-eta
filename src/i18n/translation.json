@@ -143,7 +143,9 @@
       "color-system": "Same as System",
       "color-dark": "Dark theme",
       "color-light": "Light theme",
-      "複制匯出網址": "Copy URL with data implanted"
+      "複制匯出網址": "Copy URL with data implanted",
+      "未有收藏車站": "No Bookmarked Stops Yet",
+      "請按下圖指示增加": "Follow below steps to bookmark stops"
     }
   },
   "zh": {
