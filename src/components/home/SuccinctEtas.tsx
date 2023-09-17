@@ -32,10 +32,8 @@ const SuccinctEtas = ({ routeId }) => {
         >
           {isScheduled && annotateScheduled && (
             <>
-              <ScheduleIcon
-                sx={{ fontSize: etaFormat !== "exact" ? "0.9em" : "1rem" }}
-              />
-              &nbsp;&nbsp;
+              <ScheduleIcon sx={{ fontSize: "0.9em" }} />
+              &nbsp;
             </>
           )}
           {eta.eta.slice(11, 16)}
@@ -51,6 +49,12 @@ const SuccinctEtas = ({ routeId }) => {
                 highlight ? theme.palette.warning.main : "inherit",
             }}
           >
+            {isScheduled && annotateScheduled && etaFormat === "diff" && (
+              <>
+                <ScheduleIcon sx={{ fontSize: "0.9rem" }} />
+                &nbsp;
+              </>
+            )}
             {waitTime < 1 ? " - " : `${waitTime} `}
           </Box>
           <Box component="span" sx={{ fontSize: "0.8em" }}>
