@@ -76,6 +76,10 @@ interface AppState {
    * ETA refresh interval (millisecond)
    */
   refreshInterval: number;
+  /**
+   * Annotate scheduled bus
+   */
+  annotateScheduled: boolean;
 }
 
 interface AppContextValue
@@ -105,6 +109,7 @@ interface AppContextValue
   toggleVibrateDuration: () => void;
   toggleAnalytics: () => void; // not
   updateRefreshInterval: (interval: number) => void;
+  toggleAnnotateScheduled: () => void;
   changeLanguage: (lang: Language) => void;
   workbox?: Workbox;
 }
@@ -214,6 +219,8 @@ export const AppContextProvider = ({
           : JSON.parse(localStorage.getItem("analytics")) ?? true,
       refreshInterval:
         JSON.parse(localStorage.getItem("refreshInterval")) ?? 30000,
+      annotateScheduled:
+        JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
     };
   };
   const { i18n } = useTranslation();
@@ -414,6 +421,20 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const toggleAnnotateScheduled = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prev = state.annotateScheduled;
+        const annotateScheduled = !prev;
+        localStorage.setItem(
+          "annotateScheduled",
+          JSON.stringify(annotateScheduled)
+        );
+        state.annotateScheduled = annotateScheduled;
+      })
+    );
+  }, []);
+
   const toggleVibrateDuration = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
@@ -556,6 +577,7 @@ export const AppContextProvider = ({
       toggleVibrateDuration,
       toggleAnalytics,
       updateRefreshInterval,
+      toggleAnnotateScheduled,
       changeLanguage,
       workbox,
     };
@@ -581,6 +603,7 @@ export const AppContextProvider = ({
     toggleVibrateDuration,
     toggleAnalytics,
     updateRefreshInterval,
+    toggleAnnotateScheduled,
     changeLanguage,
     workbox,
   ]);

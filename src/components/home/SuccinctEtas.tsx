@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useEtas } from "../Etas";
 import AppContext from "../../AppContext";
 import { Eta } from "hk-bus-eta";
+import { Schedule as ScheduleIcon } from "@mui/icons-material";
 
 const SuccinctEtas = ({ routeId }) => {
   const { t, i18n } = useTranslation();
-  const { etaFormat } = useContext(AppContext);
+  const { etaFormat, annotateScheduled } = useContext(AppContext);
   const etas = useEtas(routeId);
 
   const getEtaString = (eta: Eta | null, highlight: boolean = false) => {
@@ -27,19 +28,21 @@ const SuccinctEtas = ({ routeId }) => {
       const exactTimeJsx = (
         <Box
           component="span"
-          sx={{
-            fontSize: etaFormat !== "exact" ? "0.9em" : "1rem",
-            fontStyle: !isScheduled ? "italic" : "inherit",
-          }}
+          sx={{ fontSize: etaFormat !== "exact" ? "0.9em" : "1rem" }}
         >
+          {isScheduled && annotateScheduled && (
+            <>
+              <ScheduleIcon
+                sx={{ fontSize: etaFormat !== "exact" ? "0.9em" : "1rem" }}
+              />
+              &nbsp;&nbsp;
+            </>
+          )}
           {eta.eta.slice(11, 16)}
         </Box>
       );
       const waitTimeJsx = (
-        <Box
-          component="span"
-          sx={{ fontStyle: !isScheduled ? "italic" : "inherit" }}
-        >
+        <Box component="span">
           <Box
             component="span"
             sx={{

@@ -28,6 +28,7 @@ import {
   SortByAlpha as SortByAlphaIcon,
   Sort as SortIcon,
   HourglassTop as HourglassTopIcon,
+  PushPin as PinIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../AppContext";
@@ -57,6 +58,8 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
     toggleVibrateDuration,
     refreshInterval,
     updateRefreshInterval,
+    annotateScheduled,
+    toggleAnnotateScheduled,
   } = useContext(AppContext);
   const { t } = useTranslation();
 
@@ -197,6 +200,22 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
         <ListItemText
           primary={t("報時格式")}
           secondary={t(ETA_FORMAT_STR[etaFormat])}
+        />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration);
+          toggleAnnotateScheduled();
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <PinIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={t("注釋預定班次")}
+          secondary={t(annotateScheduled ? "開啟" : "關閉")}
         />
       </ListItemButton>
       <ListItemButton
