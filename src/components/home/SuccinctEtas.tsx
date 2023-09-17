@@ -29,14 +29,17 @@ const SuccinctEtas = ({ routeId }) => {
           component="span"
           sx={{
             fontSize: etaFormat !== "exact" ? "0.9em" : "1rem",
-            opacity: isScheduled ? "0.6" : "1",
+            fontStyle: !isScheduled ? "italic" : "inherit",
           }}
         >
           {eta.eta.slice(11, 16)}
         </Box>
       );
       const waitTimeJsx = (
-        <Box component="span" sx={{ opacity: isScheduled ? "0.6" : "1" }}>
+        <Box
+          component="span"
+          sx={{ fontStyle: !isScheduled ? "italic" : "inherit" }}
+        >
           <Box
             component="span"
             sx={{
