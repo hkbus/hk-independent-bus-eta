@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Box, ListItemText, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useEtas } from "../Etas";
+import { useEtas } from "../../hooks/useEtas";
 import AppContext from "../../AppContext";
 import { Eta } from "hk-bus-eta";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
-import { useEtas } from "../Etas";
+import { useEtas } from "../../hooks/useEtas";
 import { LinearProgress } from "../Progress";
 
 interface TimeReportProps {
