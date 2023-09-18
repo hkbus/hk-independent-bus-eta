@@ -24,7 +24,7 @@ const SuccinctEtas = ({ routeId }) => {
 
       const { remark } = eta;
       const isScheduled =
-        remark.zh.endsWith("班次") || remark.en.endsWith("Scheduled Bus");
+        remark?.zh?.endsWith("班次") || remark?.en?.endsWith("Scheduled Bus");
       const exactTimeJsx = (
         <Box
           component="span"
