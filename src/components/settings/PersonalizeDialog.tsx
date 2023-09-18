@@ -46,12 +46,12 @@ const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
     >
       <DialogTitle sx={DialogTitleSx}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {["savedOrder", "collectionOrder"].includes(tab) && (
+          {["savedOrder", "collectionOrder", "stopOrder"].includes(tab) && (
             <IconButton onClick={() => setTab("options")}>
               <BackIcon />
             </IconButton>
           )}
-          {t(tab === "savedOrder" ? "常用報時排序" : "")}
+          {t(tab === "savedOrder" ? "常用路線排序" : "")}
           {t(tab === "options" ? "個性化設定" : "")}
           {t(tab === "collectionOrder" ? "收藏排序" : "")}
           {t(tab === "stopOrder" ? "車站排序" : "")}

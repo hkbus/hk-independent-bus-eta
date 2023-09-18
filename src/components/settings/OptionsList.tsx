@@ -76,7 +76,7 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
             <CodeIcon sx={{ transform: "rotate(90deg)" }} />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={t("常用報時排序")} />
+        <ListItemText primary={t("常用路線排序")} />
       </ListItemButton>
       <ListItemButton
         onClick={() => {
@@ -89,7 +89,7 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
             <CodeIcon sx={{ transform: "rotate(90deg)" }} />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={t("路線排序")} />
+        <ListItemText primary={t("車站排序")} />
       </ListItemButton>
       <ListItemButton
         onClick={() => {

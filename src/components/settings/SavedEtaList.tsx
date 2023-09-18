@@ -55,7 +55,7 @@ const SavedEtaList = () => {
               ))
             ) : (
               <Typography sx={{ textAlign: "center", marginTop: 5 }}>
-                <b>{t("未有收藏嘅路線。")}</b>
+                <b>{t("未有收藏路線")}</b>
               </Typography>
             )}
             {provided.placeholder}

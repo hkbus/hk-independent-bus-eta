@@ -55,7 +55,7 @@ const StopOrderList = () => {
               ))
             ) : (
               <Typography sx={{ textAlign: "center", marginTop: 5 }}>
-                <b>{t("未有收藏嘅路線。")}</b>
+                <b>{t("未有收藏車站")}</b>
               </Typography>
             )}
             {provided.placeholder}
