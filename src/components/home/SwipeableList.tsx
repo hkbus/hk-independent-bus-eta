@@ -215,8 +215,11 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
         <SwipeableViews
           index={getViewIdx()}
           onChangeIndex={(idx) => {
-            console.log(idx);
-            onChangeTab(HOME_TAB[idx]);
+            onChangeTab(
+              idx < HOME_TAB.length
+                ? HOME_TAB[idx]
+                : `collection-${idx - HOME_TAB.length}`
+            );
           }}
         >
           {NearbyRouteList}
