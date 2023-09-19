@@ -24,16 +24,19 @@ const BookmarkedStop = () => {
       }
       for (let i = 0; i < savedStops.length; ++i) {
         let stopId = savedStops[i].split("|")[1];
-        if (stopList[stopId]) return savedStops[i];
+        if (stopList[stopId]) {
+          return savedStops[i];
+        }
       }
-    } catch {
-      return "";
+    } catch (e) {
+      console.error(e);
     }
+    return "";
   }, [savedStops, stopList]);
   const [stopTab, setStopTab] = useState<string>(defaultTab);
 
   const stops = useMemo(() => {
-    if (stopTab === "") return undefined;
+    if (stopTab === "") return [];
     const ret = [stopTab.split("|")];
     stopMap[ret[0][1]]?.forEach((v) => ret.push(v));
     return ret;
