@@ -6,10 +6,16 @@ import AppContext from "../../AppContext";
 import { Eta } from "hk-bus-eta";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
 
-const SuccinctEtas = ({ routeId }) => {
+interface SuccinctEtasProps {
+  routeId?: string;
+  value?: Eta[];
+}
+
+const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
   const { t, i18n } = useTranslation();
   const { etaFormat, annotateScheduled } = useContext(AppContext);
-  const etas = useEtas(routeId);
+  const _etas = useEtas(routeId, Boolean(value));
+  const etas = value ?? _etas;
 
   const getEtaString = (eta: Eta | null, highlight: boolean = false) => {
     if (!eta || !eta.eta) {
@@ -25,6 +31,10 @@ const SuccinctEtas = ({ routeId }) => {
       const { remark } = eta;
       const isScheduled =
         remark?.zh?.endsWith("班次") || remark?.en?.endsWith("Scheduled Bus");
+      const platform = parseInt(
+        /Platform ([\d]+)/gm.exec(remark?.en ?? "")?.at(1) ?? "0",
+        10
+      );
       const exactTimeJsx = (
         <Box
           component="span"
@@ -36,11 +46,17 @@ const SuccinctEtas = ({ routeId }) => {
               &nbsp;
             </>
           )}
+          {PLATFORM[platform]}
           {eta.eta.slice(11, 16)}
         </Box>
       );
       const waitTimeJsx = (
         <Box component="span">
+          {etaFormat === "diff" && (
+            <Typography variant="caption" color="inherit">
+              {PLATFORM[platform]}&emsp;
+            </Typography>
+          )}
           <Box
             component="span"
             sx={{
@@ -51,7 +67,7 @@ const SuccinctEtas = ({ routeId }) => {
           >
             {isScheduled && annotateScheduled && etaFormat === "diff" && (
               <>
-                <ScheduleIcon sx={{ fontSize: "0.9rem" }} />
+                <ScheduleIcon color="inherit" sx={{ fontSize: "0.9rem" }} />
                 &nbsp;
               </>
             )}
@@ -95,6 +111,8 @@ const SuccinctEtas = ({ routeId }) => {
     />
   );
 };
+
+const PLATFORM = [" ", "①", "②", "③", "④", "⑤", "⑥", "⑦"];
 
 export default SuccinctEtas;
 

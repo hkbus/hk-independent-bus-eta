@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import AppContext from "../AppContext";
-import { Paper, SxProps, Theme } from "@mui/material";
+import { Box, Paper, SxProps, Theme } from "@mui/material";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
 import DbRenewReminder from "../components/layout/DbRenewReminder";
 import StopTabbar from "../components/bookmarked-stop/StopTabbar";
@@ -50,7 +50,6 @@ const BookmarkedStop = () => {
   );
 
   useEffect(() => {
-    console.log("hi");
     localStorage.setItem("stopTab", stopTab);
   }, [stopTab]);
 
@@ -74,7 +73,9 @@ const BookmarkedStop = () => {
       />
       <BadWeatherCard />
       <DbRenewReminder />
-      <StopRouteList stops={stops} />
+      <Box sx={{ flex: 1, overflow: "scroll" }}>
+        <StopRouteList stops={stops} />
+      </Box>
     </Paper>
   );
 };

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Eta, fetchEtas } from "hk-bus-eta";
 import AppContext from "../AppContext";
 
-export const useEtas = (routeId) => {
+export const useEtas = (routeId, disable = false) => {
   const {
     db: { routeList },
     isVisible,
@@ -34,6 +34,7 @@ export const useEtas = (routeId) => {
   }, [isVisible, language, routeObj, seq]);
 
   useEffect(() => {
+    if (disable) return;
     isMounted.current = true;
     const fetchEtaInterval = setInterval(() => {
       fetchData();
@@ -45,7 +46,7 @@ export const useEtas = (routeId) => {
       isMounted.current = false;
       clearInterval(fetchEtaInterval);
     };
-  }, [routeId, fetchData, refreshInterval]);
+  }, [routeId, fetchData, refreshInterval, disable]);
 
   return etas;
 };

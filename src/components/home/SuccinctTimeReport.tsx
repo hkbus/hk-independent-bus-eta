@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import SuccinctEtas from "./SuccinctEtas";
 import { getDistanceWithUnit, toProperCase } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
-import { Location } from "hk-bus-eta";
+import { Eta, Location } from "hk-bus-eta";
 
 interface DistAndFareProps {
   name: string;
@@ -64,11 +64,13 @@ const DistAndFare = ({
 
 interface SuccinctTimeReportProps {
   routeId: string;
+  etas?: Eta[];
   disabled?: boolean;
 }
 
 const SuccinctTimeReport = ({
   routeId,
+  etas = undefined,
   disabled = false,
 }: SuccinctTimeReportProps) => {
   const { t, i18n } = useTranslation();
@@ -128,7 +130,7 @@ const SuccinctTimeReport = ({
           sx={routeDestSx}
         />
         {!disabled ? (
-          <SuccinctEtas routeId={routeId} />
+          <SuccinctEtas routeId={routeId} value={etas} />
         ) : (
           <Box sx={iconContainerSx}>
             <ReorderIcon />
