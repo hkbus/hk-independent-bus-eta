@@ -49,13 +49,17 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
               &nbsp;
             </>
           )}
-          {`${trains} ${PLATFORM[platform]}`}
+          {trains && (
+            <Typography variant="caption" color="inherit">
+              {`${trains} ${PLATFORM[platform]}`}&emsp;
+            </Typography>
+          )}
           {eta.eta.slice(11, 16)}
         </Box>
       );
       const waitTimeJsx = (
         <Box component="span">
-          {etaFormat === "diff" && (
+          {etaFormat === "diff" && trains && (
             <Typography variant="caption" color="inherit">
               {`${trains} ${PLATFORM[platform]}`}&emsp;
             </Typography>
