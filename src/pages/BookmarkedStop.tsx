@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import AppContext from "../AppContext";
 import { Paper, SxProps, Theme } from "@mui/material";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
@@ -13,13 +13,23 @@ const BookmarkedStop = () => {
     colorMode,
   } = useContext(AppContext);
   const defaultTab = useMemo(() => {
-    for (let i = 0; i < savedStops.length; ++i) {
-      let stopId = savedStops[i].split("|")[1];
-      if (stopList[stopId]) return savedStops[i];
+    try {
+      const cached = localStorage.getItem("stopTab") ?? "|";
+      if (
+        cached &&
+        savedStops.includes(cached) &&
+        stopList[cached.split("|")[1]]
+      ) {
+        return cached;
+      }
+      for (let i = 0; i < savedStops.length; ++i) {
+        let stopId = savedStops[i].split("|")[1];
+        if (stopList[stopId]) return savedStops[i];
+      }
+    } catch {
+      return "";
     }
-    return "";
   }, [savedStops, stopList]);
-
   const [stopTab, setStopTab] = useState<string>(defaultTab);
 
   const stops = useMemo(() => {
@@ -38,6 +48,11 @@ const BookmarkedStop = () => {
     },
     [stopTab]
   );
+
+  useEffect(() => {
+    console.log("hi");
+    localStorage.setItem("stopTab", stopTab);
+  }, [stopTab]);
 
   return (
     <Paper
