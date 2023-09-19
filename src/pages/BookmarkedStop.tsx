@@ -5,6 +5,7 @@ import BadWeatherCard from "../components/layout/BadWeatherCard";
 import DbRenewReminder from "../components/layout/DbRenewReminder";
 import StopTabbar from "../components/bookmarked-stop/StopTabbar";
 import StopRouteList from "../components/bookmarked-stop/StopRouteList";
+import { useTranslation } from "react-i18next";
 
 const BookmarkedStop = () => {
   const {
@@ -12,6 +13,9 @@ const BookmarkedStop = () => {
     db: { stopList, stopMap },
     colorMode,
   } = useContext(AppContext);
+  const {
+    i18n: { language },
+  } = useTranslation();
   const defaultTab = useMemo(() => {
     try {
       const cached = localStorage.getItem("stopTab") ?? "|";
@@ -63,7 +67,7 @@ const BookmarkedStop = () => {
         bgcolor: bgColor,
         backgroundImage:
           stopTab === ""
-            ? `url(/stop-bookmark-guide-${colorMode}.png)`
+            ? `url(/stop-bookmark-guide-${colorMode}-${language}.png)`
             : "unset",
         opacity: stopTab === "" ? "0.8" : "unset",
       }}

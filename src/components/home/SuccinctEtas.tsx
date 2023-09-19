@@ -35,6 +35,9 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
         /Platform ([\d]+)/gm.exec(remark?.en ?? "")?.at(1) ?? "0",
         10
       );
+      const trains =
+        /Platform [\d+] - (▭+)/gm.exec(remark?.en ?? "")?.at(1) ?? "";
+
       const exactTimeJsx = (
         <Box
           component="span"
@@ -46,7 +49,7 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
               &nbsp;
             </>
           )}
-          {PLATFORM[platform]}
+          {`${trains} ${PLATFORM[platform]}`}
           {eta.eta.slice(11, 16)}
         </Box>
       );
@@ -54,7 +57,7 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
         <Box component="span">
           {etaFormat === "diff" && (
             <Typography variant="caption" color="inherit">
-              {PLATFORM[platform]}&emsp;
+              {`${trains} ${PLATFORM[platform]}`}&emsp;
             </Typography>
           )}
           <Box

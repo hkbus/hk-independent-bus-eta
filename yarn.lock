@@ -5490,10 +5490,10 @@ he@^1.2.0:
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
-hk-bus-eta@^2.1.4:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-2.1.4.tgz#12ae95dc09baf86dc4558dc1864a6693b2720cbc"
-  integrity sha512-3py6HzJymRNwDM+dPIRGcugLa/egg6gD5Rc0SJaU0kv/tt7VmZzzkv4Yg5gXU1AMcSOX/weewHET/b8bnGIDuQ==
+hk-bus-eta@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-2.1.5.tgz#6732d33322ae19ce8a40de4d8c8bb9bf809a463b"
+  integrity sha512-faRQnGWbmKb1L0CGQEtO9JDG7MSAZG6CsB6yvcxVq0jucNIz61n/hmNtUTA9sCt/QgYAPkvgvLWvszndXv0khA==
 
 hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
