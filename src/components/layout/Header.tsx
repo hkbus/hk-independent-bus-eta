@@ -101,7 +101,7 @@ const Header = () => {
           }}
           rel="nofollow"
         >
-          <Typography component="h1" variant="subtitle2" sx={appTitleSx}>
+          <Typography component="h1" variant="caption" sx={appTitleSx}>
             {t("巴士到站預報")}
           </Typography>
         </Link>
