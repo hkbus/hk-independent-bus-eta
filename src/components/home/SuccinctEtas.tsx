@@ -5,6 +5,7 @@ import { useEtas } from "../../hooks/useEtas";
 import AppContext from "../../AppContext";
 import { Eta } from "hk-bus-eta";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
+import LaptopIcon from "@mui/icons-material/Laptop";
 
 interface SuccinctEtasProps {
   routeId?: string;
@@ -31,10 +32,7 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
       const { remark } = eta;
       const isScheduled =
         remark?.zh?.endsWith("班次") || remark?.en?.endsWith("Scheduled Bus");
-      const platform = parseInt(
-        /Platform ([\d]+)/gm.exec(remark?.en ?? "")?.at(1) ?? "0",
-        10
-      );
+
       const trains =
         /Platform [\d+] - (▭+)/gm.exec(remark?.en ?? "")?.at(1) ?? "";
 
@@ -49,21 +47,14 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
               &nbsp;
             </>
           )}
-          {trains && (
-            <Typography variant="caption" color="inherit">
-              {`${trains} ${PLATFORM[platform]}`}&emsp;
-            </Typography>
-          )}
+          {trains.length === 1 && <SingleTrainIcon />}
           {eta.eta.slice(11, 16)}
         </Box>
       );
       const waitTimeJsx = (
         <Box component="span">
-          {etaFormat === "diff" && trains && (
-            <Typography variant="caption" color="inherit">
-              {`${trains} ${PLATFORM[platform]}`}&emsp;
-            </Typography>
-          )}
+          {etaFormat === "diff" && trains.length === 1 && <SingleTrainIcon />}
+          {etaFormat === "diff" && trains.length === 2 && <DoubleTrainIcon />}
           <Box
             component="span"
             sx={{
@@ -119,7 +110,36 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
   );
 };
 
-const PLATFORM = [" ", "①", "②", "③", "④", "⑤", "⑥", "⑦"];
+export const SingleTrainIcon = () => (
+  <LaptopIcon
+    sx={{
+      transform: "scaleY(-1)",
+      verticalAlign: "middle",
+      fontSize: "inherit",
+      mr: 1,
+    }}
+  />
+);
+
+export const DoubleTrainIcon = () => (
+  <>
+    <LaptopIcon
+      sx={{
+        transform: "scaleY(-1)",
+        verticalAlign: "middle",
+        fontSize: "inherit",
+      }}
+    />
+    <LaptopIcon
+      sx={{
+        transform: "scaleY(-1)",
+        verticalAlign: "middle",
+        fontSize: "inherit",
+        mr: 1,
+      }}
+    />
+  </>
+);
 
 export default SuccinctEtas;
 

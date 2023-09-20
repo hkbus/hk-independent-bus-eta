@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import {
   Box,
   Divider,
@@ -73,7 +73,10 @@ const SuccinctTimeReport = ({
   etas = undefined,
   disabled = false,
 }: SuccinctTimeReportProps) => {
-  const { t, i18n } = useTranslation();
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
   const {
     db: { routeList, stopList },
     vibrateDuration,
@@ -89,15 +92,32 @@ const SuccinctTimeReport = ({
     e.preventDefault();
     vibrate(vibrateDuration);
     setTimeout(() => {
-      navigate(`/${i18n.language}/route/${routeId.toLowerCase()}`);
+      navigate(`/${language}/route/${routeId.toLowerCase()}`);
     }, 0);
   };
+
+  const platform = useMemo(() => {
+    if (etas && etas.length > 0) {
+      const PLATFORM = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦"];
+      const no =
+        PLATFORM[
+          parseInt(
+            /Platform ([\d]+)/gm.exec(etas[0].remark?.en ?? "")?.at(1) ?? "0",
+            10
+          )
+        ];
+      if (!no) return "";
+      if (language === "zh") return `${no}月台 `;
+      else return `Platform ${no} `;
+    }
+    return "";
+  }, [etas, language]);
 
   return (
     <>
       <ListItem
         component={!disabled ? Link : undefined}
-        to={`/${i18n.language}/route/${routeKey.toLowerCase()}`}
+        to={`/${language}/route/${routeKey.toLowerCase()}`}
         onClick={!disabled ? handleClick : () => {}}
         sx={rootSx}
       >
@@ -110,13 +130,16 @@ const SuccinctTimeReport = ({
               color="textPrimary"
               sx={fromToWrapperSx}
             >
-              <span>{t("往")}</span>
-              <b>{toProperCase(dest[i18n.language])}</b>
+              <span>
+                {platform}
+                {t("往")}
+              </span>
+              <b>{toProperCase(dest[language])}</b>
             </Typography>
           }
           secondary={
             <DistAndFare
-              name={toProperCase(stop.name[i18n.language])}
+              name={toProperCase(stop.name[language])}
               location={stop.location}
               fares={fares}
               faresHoliday={faresHoliday}
