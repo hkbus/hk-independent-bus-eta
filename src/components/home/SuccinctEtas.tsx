@@ -48,6 +48,7 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
             </>
           )}
           {trains.length === 1 && <SingleTrainIcon />}
+          {trains.length === 2 && <DoubleTrainIcon />}
           {eta.eta.slice(11, 16)}
         </Box>
       );
