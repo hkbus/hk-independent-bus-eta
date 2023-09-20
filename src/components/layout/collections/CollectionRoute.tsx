@@ -74,7 +74,7 @@ const DraggableListItem = ({ item, index }) => (
         {...provided.draggableProps}
         {...provided.dragHandleProps}
       >
-        <SuccinctTimeReport routeId={item} disabled />
+        <SuccinctTimeReport routeId={item} mode="order" />
       </Box>
     )}
   </Draggable>

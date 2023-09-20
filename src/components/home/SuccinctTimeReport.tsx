@@ -2,13 +2,13 @@ import React, { useContext, useMemo } from "react";
 import {
   Box,
   Divider,
+  IconButton,
   ListItem,
   ListItemText,
   SxProps,
   Theme,
   Typography,
 } from "@mui/material";
-import ReorderIcon from "@mui/icons-material/Reorder";
 import { Link, useNavigate } from "react-router-dom";
 import { vibrate } from "../../utils";
 import AppContext from "../../AppContext";
@@ -17,6 +17,11 @@ import SuccinctEtas from "./SuccinctEtas";
 import { getDistanceWithUnit, toProperCase } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
 import { Eta, Location } from "hk-bus-eta";
+import { ManageMode } from "../../data";
+import {
+  DeleteOutline as DeleteIcon,
+  Reorder as ReorderIcon,
+} from "@mui/icons-material";
 
 interface DistAndFareProps {
   name: string;
@@ -65,13 +70,15 @@ const DistAndFare = ({
 interface SuccinctTimeReportProps {
   routeId: string;
   etas?: Eta[];
-  disabled?: boolean;
+  mode?: ManageMode | "time";
+  onDelete?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 const SuccinctTimeReport = ({
   routeId,
   etas = undefined,
-  disabled = false,
+  mode = "time",
+  onDelete = undefined,
 }: SuccinctTimeReportProps) => {
   const {
     t,
@@ -116,9 +123,9 @@ const SuccinctTimeReport = ({
   return (
     <>
       <ListItem
-        component={!disabled ? Link : undefined}
+        component={mode === "time" ? Link : undefined}
         to={`/${language}/route/${routeKey.toLowerCase()}`}
-        onClick={!disabled ? handleClick : () => {}}
+        onClick={mode === "time" ? handleClick : () => {}}
         sx={rootSx}
       >
         <ListItemText primary={<RouteNo routeNo={routeNo} />} />
@@ -152,11 +159,17 @@ const SuccinctTimeReport = ({
           }}
           sx={routeDestSx}
         />
-        {!disabled ? (
-          <SuccinctEtas routeId={routeId} value={etas} />
-        ) : (
+        {mode === "time" && <SuccinctEtas routeId={routeId} value={etas} />}
+        {mode === "order" && (
           <Box sx={iconContainerSx}>
             <ReorderIcon />
+          </Box>
+        )}
+        {mode === "delete" && (
+          <Box sx={iconContainerSx}>
+            <IconButton onClick={(e) => onDelete && onDelete(e)}>
+              <DeleteIcon />
+            </IconButton>
           </Box>
         )}
       </ListItem>

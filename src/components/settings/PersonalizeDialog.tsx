@@ -14,16 +14,14 @@ import {
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import OptionsList from "./OptionsList";
-import SavedEtaList from "./SavedEtaList";
-import CollectionOrderList from "./CollectionOrderList";
-import StopOrderList from "./StopOrderList";
+import UserContentManagement from "./UserContentManagement";
 
 interface PersonalizeModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-type TAB = "savedOrder" | "options" | "collectionOrder" | "stopOrder";
+type TAB = "options" | "manage";
 
 const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
   const [tab, setTab] = useState<TAB>("options");
@@ -46,15 +44,13 @@ const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
     >
       <DialogTitle sx={DialogTitleSx}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {["savedOrder", "collectionOrder", "stopOrder"].includes(tab) && (
+          {tab !== "options" && (
             <IconButton onClick={() => setTab("options")}>
               <BackIcon />
             </IconButton>
           )}
-          {t(tab === "savedOrder" ? "常用路線排序" : "")}
           {t(tab === "options" ? "個性化設定" : "")}
-          {t(tab === "collectionOrder" ? "收藏排序" : "")}
-          {t(tab === "stopOrder" ? "車站排序" : "")}
+          {t(tab === "manage" ? "管理收藏" : "")}
         </Box>
         <IconButton onClick={handleClose}>
           <CloseIcon />
@@ -62,9 +58,7 @@ const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
       </DialogTitle>
       <Divider />
       {tab === "options" && <OptionsList goToTab={(tab: TAB) => setTab(tab)} />}
-      {tab === "savedOrder" && <SavedEtaList />}
-      {tab === "collectionOrder" && <CollectionOrderList />}
-      {tab === "stopOrder" && <StopOrderList />}
+      {tab === "manage" && <UserContentManagement />}
     </Dialog>
   );
 };

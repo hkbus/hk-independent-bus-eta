@@ -10,12 +10,14 @@ import AppContext from "../../AppContext";
 import SuccinctTimeReport from "../home/SuccinctTimeReport";
 import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
+import { ManageMode } from "../../data";
 
-const SavedEtaList = () => {
+const SavedEtaList = ({ mode }: { mode: ManageMode }) => {
   const {
     db: { routeList },
     savedEtas,
     setSavedEtas,
+    updateSavedEtas,
   } = useContext(AppContext);
   const [items, setItems] = useState(
     // cannot use Array.reverse() as it is in-place reverse
@@ -33,7 +35,15 @@ const SavedEtaList = () => {
       setItems(newItems);
       setSavedEtas(Array.from(newItems).reverse());
     },
-    [items, setItems, setSavedEtas]
+    [items, setSavedEtas]
+  );
+
+  const handleDelete = useCallback(
+    (eta: string) => {
+      updateSavedEtas(eta);
+      setItems((prev) => prev.filter((v) => v !== eta));
+    },
+    [updateSavedEtas]
   );
 
   return (
@@ -47,11 +57,14 @@ const SavedEtaList = () => {
           >
             {items.length ? (
               items.map((eta, index) => (
-                <DraggableListItem
-                  item={eta}
-                  index={index}
-                  key={`savedEta-${eta}`}
-                />
+                <React.Fragment key={`savedEta-${eta}`}>
+                  <DraggableListItem
+                    item={eta}
+                    index={index}
+                    mode={mode}
+                    onDelete={(_) => handleDelete(eta)}
+                  />
+                </React.Fragment>
               ))
             ) : (
               <Typography sx={{ textAlign: "center", marginTop: 5 }}>
@@ -68,15 +81,16 @@ const SavedEtaList = () => {
 
 export default SavedEtaList;
 
-const DraggableListItem = ({ item, index }) => (
-  <Draggable draggableId={item} index={index} sx={entrySx}>
+const DraggableListItem = ({ item, index, mode, onDelete }) => (
+  <Draggable draggableId={item} index={index} isDragDisabled={mode === "order"}>
     {(provided) => (
       <Box
         ref={provided.innerRef}
         {...provided.draggableProps}
         {...provided.dragHandleProps}
+        sx={entrySx}
       >
-        <SuccinctTimeReport routeId={item} disabled />
+        <SuccinctTimeReport routeId={item} mode={mode} onDelete={onDelete} />
       </Box>
     )}
   </Draggable>
@@ -90,4 +104,5 @@ const entrySx: SxProps<Theme> = {
   px: 2,
   py: 1,
   boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.1)",
+  display: "flex",
 };

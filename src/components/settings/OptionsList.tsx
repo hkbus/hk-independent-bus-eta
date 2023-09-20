@@ -11,7 +11,7 @@ import {
   Slider,
 } from "@mui/material";
 import {
-  Code as CodeIcon,
+  SwipeUpOutlined as SwipeUpIcon,
   Battery20 as Battery20Icon,
   BatteryStd as BatteryStdIcon,
   Delete as DeleteIcon,
@@ -25,7 +25,6 @@ import {
   DoNotDisturbOn as DoNotDisturbOnIcon,
   Filter1 as Filter1Icon,
   Filter7 as Filter7Icon,
-  SortByAlpha as SortByAlphaIcon,
   Sort as SortIcon,
   HourglassTop as HourglassTopIcon,
   PushPin as PinIcon,
@@ -68,41 +67,15 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
-          goToTab("savedOrder");
+          goToTab("manage");
         }}
       >
         <ListItemAvatar>
           <Avatar>
-            <CodeIcon sx={{ transform: "rotate(90deg)" }} />
+            <SwipeUpIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={t("常用路線排序")} />
-      </ListItemButton>
-      <ListItemButton
-        onClick={() => {
-          vibrate(vibrateDuration);
-          goToTab("stopOrder");
-        }}
-      >
-        <ListItemAvatar>
-          <Avatar>
-            <CodeIcon sx={{ transform: "rotate(90deg)" }} />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary={t("車站排序")} />
-      </ListItemButton>
-      <ListItemButton
-        onClick={() => {
-          vibrate(vibrateDuration);
-          goToTab("collectionOrder");
-        }}
-      >
-        <ListItemAvatar>
-          <Avatar>
-            <SortByAlphaIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary={t("收藏排序")} />
+        <ListItemText primary={t("管理收藏")} />
       </ListItemButton>
       <ListItemButton
         onClick={() => {

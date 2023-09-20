@@ -5,17 +5,22 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { Box, SxProps, Theme, Typography } from "@mui/material";
+import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
 import AppContext from "../../AppContext";
 import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
-import { DragHandle as DragHandleIcon } from "@mui/icons-material";
+import {
+  DeleteOutline as DeleteIcon,
+  DragHandle as DragHandleIcon,
+} from "@mui/icons-material";
+import { ManageMode } from "../../data";
 
-const StopOrderList = () => {
+const StopOrderList = ({ mode }: { mode: ManageMode }) => {
   const {
     db: { stopList },
     savedStops,
     setSavedStops,
+    updateSavedStops,
   } = useContext(AppContext);
   const [items, setItems] = useState(
     // cannot use Array.reverse() as it is in-place reverse
@@ -36,6 +41,14 @@ const StopOrderList = () => {
     [items, setItems, setSavedStops]
   );
 
+  const handleDelete = useCallback(
+    (stop: string) => {
+      updateSavedStops(stop);
+      setItems((prev) => prev.filter((v) => v !== stop));
+    },
+    [updateSavedStops]
+  );
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId="saved-stop-list">
@@ -51,6 +64,8 @@ const StopOrderList = () => {
                   item={stop}
                   index={index}
                   key={`savedStop-${stop}`}
+                  mode={mode}
+                  onDelete={() => handleDelete(stop)}
                 />
               ))
             ) : (
@@ -68,7 +83,7 @@ const StopOrderList = () => {
 
 export default StopOrderList;
 
-const DraggableListItem = ({ item, index }) => {
+const DraggableListItem = ({ item, index, mode, onDelete }) => {
   const {
     db: { stopList },
   } = useContext(AppContext);
@@ -78,7 +93,11 @@ const DraggableListItem = ({ item, index }) => {
   } = useTranslation();
 
   return (
-    <Draggable draggableId={item} index={index}>
+    <Draggable
+      draggableId={item}
+      index={index}
+      isDragDisabled={mode !== "order"}
+    >
       {(provided) => (
         <Box
           ref={provided.innerRef}
@@ -91,7 +110,12 @@ const DraggableListItem = ({ item, index }) => {
               {stopList[stopId]?.name[language]}
             </Typography>
           </Box>
-          <DragHandleIcon />
+          {mode === "order" && <DragHandleIcon />}
+          {mode === "delete" && (
+            <IconButton onClick={onDelete}>
+              <DeleteIcon />
+            </IconButton>
+          )}
         </Box>
       )}
     </Draggable>

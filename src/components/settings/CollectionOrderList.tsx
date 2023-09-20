@@ -5,14 +5,19 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { DragHandle as DragHandleIcon } from "@mui/icons-material";
-import { Box, SxProps, Theme, Typography } from "@mui/material";
+import {
+  DragHandle as DragHandleIcon,
+  DeleteOutline as DeleteIcon,
+} from "@mui/icons-material";
+import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
 import AppContext from "../../AppContext";
 import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
+import { ManageMode } from "../../data";
 
-const CollectionOrderList = () => {
-  const { collections, setCollections } = useContext(AppContext);
+const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
+  const { collections, setCollections, removeCollection } =
+    useContext(AppContext);
   const [items, setItems] = useState(
     // cannot use Array.reverse() as it is in-place reverse
     collections
@@ -32,6 +37,14 @@ const CollectionOrderList = () => {
     [items, setItems, setCollections]
   );
 
+  const handleDelete = useCallback(
+    (idx: number) => {
+      removeCollection(idx);
+      setItems((prev) => prev.filter((_, _idx) => _idx !== idx));
+    },
+    [removeCollection]
+  );
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId="saved-eta-list">
@@ -48,6 +61,8 @@ const CollectionOrderList = () => {
                   index={index}
                   key={`collection-${item.name}`}
                   t={t}
+                  mode={mode}
+                  onDelete={() => handleDelete(index)}
                 />
               ))
             ) : (
@@ -65,8 +80,14 @@ const CollectionOrderList = () => {
 
 export default CollectionOrderList;
 
-const DraggableListItem = ({ item: { name, list }, index, t }) => (
-  <Draggable draggableId={name} index={index}>
+const DraggableListItem = ({
+  item: { name, list },
+  index,
+  t,
+  mode,
+  onDelete,
+}) => (
+  <Draggable draggableId={name} index={index} isDragDisabled={mode !== "order"}>
     {(provided) => (
       <Box
         ref={provided.innerRef}
@@ -81,7 +102,12 @@ const DraggableListItem = ({ item: { name, list }, index, t }) => (
             {list.length}
           </Typography>
         </Box>
-        <DragHandleIcon />
+        {mode === "order" && <DragHandleIcon />}
+        {mode === "delete" && (
+          <IconButton onClick={onDelete}>
+            <DeleteIcon />
+          </IconButton>
+        )}
       </Box>
     )}
   </Draggable>

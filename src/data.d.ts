@@ -7,3 +7,5 @@ export type BusSortOrder = "KMB first" | "CTB-NWFB first";
 export type EtaFormat = "exact" | "diff" | "mixed";
 
 export type Language = "zh" | "en";
+
+export type ManageMode = "order" | "delete";
