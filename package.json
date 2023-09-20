@@ -1,6 +1,6 @@
 {
   "name": "hk-independent-bus-eta",
-  "version": "11.0.1",
+  "version": "11.0.2",
   "private": true,
   "dependencies": {
     "@emotion/cache": "^11.9.3",

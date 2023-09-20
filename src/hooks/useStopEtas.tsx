@@ -9,14 +9,21 @@ import {
 import { useTranslation } from "react-i18next";
 import { Eta, fetchEtas } from "hk-bus-eta";
 import AppContext from "../AppContext";
+import { isHoliday, isRouteAvaliable } from "../timetable";
 
 // stopKey in format "<co>|<stopId>", e.g., "lightRail|LR140"
 export const useStopEtas = (stopKeys: string[][]) => {
   const {
-    db: { routeList },
+    db: { holidays, routeList },
     isVisible,
     refreshInterval,
+    isRouteFilter,
   } = useContext(AppContext);
+
+  const isTodayHoliday = useCallback(
+    (today: Date) => isHoliday(holidays, today),
+    [holidays]
+  );
 
   const isLightRail = useMemo(
     () => stopKeys.reduce((acc, [co]) => co === "lightRail", false),
@@ -24,17 +31,26 @@ export const useStopEtas = (stopKeys: string[][]) => {
   );
 
   const routeKeys = useMemo(() => {
-    return Object.entries(routeList).reduce((acc, [routeId, { stops }]) => {
-      stopKeys.forEach(([co, stopId]) => {
-        stops[co]?.forEach((_stopId, seq) => {
-          if (_stopId === stopId) {
-            acc.push([routeId, seq]);
-          }
+    return Object.entries(routeList).reduce(
+      (acc, [routeId, { stops, freq }]) => {
+        if (
+          isRouteFilter &&
+          !isRouteAvaliable(routeId, freq, isTodayHoliday(new Date()))
+        ) {
+          return acc;
+        }
+        stopKeys.forEach(([co, stopId]) => {
+          stops[co]?.forEach((_stopId, seq) => {
+            if (_stopId === stopId) {
+              acc.push([routeId, seq]);
+            }
+          });
         });
-      });
-      return acc;
-    }, []);
-  }, [stopKeys, routeList]);
+        return acc;
+      },
+      []
+    );
+  }, [stopKeys, routeList, isRouteFilter, isTodayHoliday]);
 
   const [stopEtas, setStopEtas] = useState<Array<[string, Eta[]]>>([]);
   const {
