@@ -14,7 +14,7 @@ import { isHoliday, isRouteAvaliable } from "../timetable";
 // stopKey in format "<co>|<stopId>", e.g., "lightRail|LR140"
 export const useStopEtas = (stopKeys: string[][]) => {
   const {
-    db: { holidays, routeList },
+    db: { holidays, routeList, stopList },
     isVisible,
     refreshInterval,
     isRouteFilter,
@@ -69,6 +69,7 @@ export const useStopEtas = (stopKeys: string[][]) => {
         fetchEtas({
           ...routeList[id],
           seq: parseInt(seq, 10),
+          stopList,
           // @ts-ignore
           language,
         })
@@ -77,7 +78,13 @@ export const useStopEtas = (stopKeys: string[][]) => {
       if (isMounted.current) {
         setStopEtas(
           _etas
-            .map((e, idx) => [routeKeys[idx].join("/"), e])
+            .map((e, idx) => [
+              routeKeys[idx].join("/"),
+              e.filter(({ co, remark }) => {
+                if (co !== "mtr") return true;
+                return remark.zh.endsWith(routeList[routeKeys[idx][0]].dest.zh);
+              }),
+            ])
             .sort(([keyA, a], [keyB, b]) => {
               if (a.length === 0) return 1;
               if (b.length === 0) return -1;
@@ -95,7 +102,7 @@ export const useStopEtas = (stopKeys: string[][]) => {
         );
       }
     });
-  }, [isVisible, language, routeList, routeKeys, isLightRail]);
+  }, [isVisible, language, routeList, stopList, routeKeys, isLightRail]);
 
   useEffect(() => {
     isMounted.current = true;

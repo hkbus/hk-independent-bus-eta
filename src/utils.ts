@@ -373,7 +373,10 @@ export const isStrings = (input: unknown[]): input is string[] => {
   return true;
 };
 
-export const ServiceDayMap = {
+export const ServiceDayMap: Record<
+  string,
+  [0 | 1, 0 | 1, 0 | 1, 0 | 1, 0 | 1, 0 | 1, 0 | 1]
+> = {
   "1": [0, 1, 0, 0, 0, 0, 0],
   "2": [0, 0, 1, 0, 0, 0, 0],
   "3": [0, 1, 1, 0, 0, 0, 0],

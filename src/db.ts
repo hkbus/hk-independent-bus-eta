@@ -1,6 +1,7 @@
 import { fetchEtaDb, fetchEtaDbMd5 } from "hk-bus-eta";
 import type { EtaDb } from "hk-bus-eta";
 import { decompress as decompressJson } from "lzutf8-light";
+import { ServiceDayMap } from "./utils";
 
 const isEtaDb = (input: unknown): input is EtaDb => {
   return (
@@ -9,6 +10,7 @@ const isEtaDb = (input: unknown): input is EtaDb => {
     "stopList" in input &&
     "stopMap" in input &&
     "holidays" in input &&
+    "serviceDayMap" in input &&
     Array.isArray(input["holidays"]) &&
     input["holidays"].length > 0
   );
@@ -83,6 +85,7 @@ export const fetchDbFunc = async (
             routeList: db.routeList,
             stopList: db.stopList,
             stopMap: db.stopMap,
+            serviceDayMap: db.serviceDayMap ?? ServiceDayMap,
           });
         }
       } catch (e) {
@@ -166,6 +169,7 @@ export const fetchDbFunc = async (
       routeList: {},
       stopList: {},
       stopMap: {},
+      serviceDayMap: {},
     };
   }
 };

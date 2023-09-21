@@ -5,7 +5,7 @@ import AppContext from "../AppContext";
 
 export const useEtas = (routeId, disable = false) => {
   const {
-    db: { routeList },
+    db: { routeList, stopList },
     isVisible,
     refreshInterval,
   } = useContext(AppContext);
@@ -26,12 +26,13 @@ export const useEtas = (routeId, disable = false) => {
     return fetchEtas({
       ...routeObj,
       seq: parseInt(seq, 10),
+      stopList,
       // @ts-ignore
       language,
     }).then((_etas) => {
       if (isMounted.current) setEtas(_etas);
     });
-  }, [isVisible, language, routeObj, seq]);
+  }, [isVisible, language, routeObj, seq, stopList]);
 
   useEffect(() => {
     if (disable) return;
