@@ -1,4 +1,5 @@
 import { Freq } from "hk-bus-eta";
+import { ServiceDayMap } from "./utils";
 
 export const ServiceIds = {
   "31": "星期一至五",
@@ -17,26 +18,6 @@ export const ServiceIds = {
   "448": "星期日及公眾假期",
   "511": "所有日子",
   "111": "除星期三外",
-};
-
-const ServiceDayMap = {
-  // from sunday to monday
-  "266": [0, 0, 1, 1, 1, 0, 0],
-  "271": [0, 1, 1, 1, 1, 0, 0],
-  "272": [0, 0, 0, 0, 0, 1, 0],
-  "287": [0, 1, 1, 1, 1, 1, 0],
-  "288": [0, 0, 0, 0, 0, 0, 1],
-  "319": [0, 1, 1, 1, 1, 1, 1],
-  "320": [1, 0, 0, 0, 0, 0, 0],
-  "415": [0, 1, 1, 1, 1, 1, 0],
-  "416": [1, 0, 0, 0, 0, 0, 1],
-  "447": [0, 1, 1, 1, 1, 1, 1],
-  "448": [1, 0, 0, 0, 0, 0, 0],
-  "480": [1, 0, 0, 0, 0, 0, 1],
-  "511": [1, 1, 1, 1, 1, 1, 1],
-  "31": [0, 1, 1, 1, 1, 1, 0],
-  "63": [0, 1, 1, 1, 1, 1, 1],
-  "111": [1, 1, 0, 1, 1, 1, 1],
 };
 
 // return minute offset start from sunday 00:00
@@ -98,6 +79,7 @@ export const isRouteAvaliable = (
       });
     } catch (e) {
       console.log(routeNo + " has unknown service ID");
+      isAvailable = true;
     }
   });
   return isAvailable;
