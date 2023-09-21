@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -31,11 +31,9 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
       if (!destination) return;
 
       const newItems = reorder(items, source.index, destination.index);
-
-      setItems(newItems);
       setCollections(newItems);
     },
-    [items, setItems, setCollections]
+    [items, setCollections]
   );
 
   const handleDelete = useCallback(
@@ -44,6 +42,10 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
     },
     [toggleCollectionDialog]
   );
+
+  useEffect(() => {
+    setItems(collections);
+  }, [collections]);
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>

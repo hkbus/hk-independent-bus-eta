@@ -217,11 +217,11 @@ const rootSx: SxProps<Theme> = {
 };
 
 const appTitleSx: SxProps<Theme> = {
-  backgroundImage: "url(/logo128.png)",
+  backgroundImage: (t) =>
+    t.palette.mode === "light" ? "url(/logo128.png)" : "url(/dark-32.jpg)",
   backgroundSize: "contain",
   width: 32,
   height: 32,
-  filter: (t) => (t.palette.mode === "dark" ? "grayscale(1)" : "none"),
 };
 
 const searchRouteInputSx: SxProps<Theme> = {
