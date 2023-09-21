@@ -163,7 +163,7 @@ const StopAccordions = ({
                   size="large"
                 >
                   {savedEtas.includes(`${id.toUpperCase()}/${idx}`) ? (
-                    <StarIcon />
+                    <StarIcon sx={starSx} />
                   ) : (
                     <StarBorderIcon />
                   )}
@@ -258,4 +258,9 @@ const accordionDetailsRootSx: SxProps<Theme> = {
 
 const accordionTimeReportSx: SxProps<Theme> = {
   flex: 1,
+};
+
+const starSx: SxProps<Theme> = {
+  color: (t) =>
+    t.palette.mode === "dark" ? t.palette.primary.main : "inherit",
 };
