@@ -40,7 +40,6 @@ interface SelectedRoutes {
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ geolocation, homeTab, onChangeTab }, ref) => {
     const {
-      hotRoute,
       savedEtas,
       db: { holidays, routeList, stopList },
       isRouteFilter,
@@ -66,7 +65,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       setSelectedRoutes(
         getSelectedRoutes({
           geolocation,
-          hotRoute,
           savedEtas,
           collections,
           routeList,
@@ -245,7 +243,6 @@ export default SwipeableList;
 const HOME_TAB = ["nearby", "saved", "collections"];
 
 const getSelectedRoutes = ({
-  hotRoute,
   savedEtas,
   collections,
   geolocation,
@@ -254,7 +251,6 @@ const getSelectedRoutes = ({
   isRouteFilter,
   isTodayHoliday,
 }: {
-  hotRoute: Record<string, number>;
   savedEtas: string[];
   collections: RouteCollection[];
   geolocation: Location;
@@ -264,12 +260,6 @@ const getSelectedRoutes = ({
   isTodayHoliday: boolean;
 }): SelectedRoutes => {
   const selectedRoutes = savedEtas
-    .concat(
-      Object.entries(hotRoute)
-        .filter(([route, count]) => count > 5)
-        .sort((a, b) => b[1] - a[1])
-        .map(([routeId]) => routeId)
-    )
     .filter((routeUrl, index, self) => {
       return (
         self.indexOf(routeUrl) === index && routeUrl.split("/")[0] in routeList

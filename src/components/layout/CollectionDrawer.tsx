@@ -11,7 +11,6 @@ import AppContext from "../../AppContext";
 import Collection from "./collections/Collection";
 import { useTranslation } from "react-i18next";
 import { Add as AddIcon, Maximize as MaximizeIcon } from "@mui/icons-material";
-import CollectionDialog from "./collections/CollectionDialog";
 
 const CollectionDrawer = () => {
   const { t } = useTranslation();
@@ -54,7 +53,6 @@ const CollectionDrawer = () => {
           ))}
         </Box>
       </Box>
-      <CollectionDialog />
     </Drawer>
   );
 };

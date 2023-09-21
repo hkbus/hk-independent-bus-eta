@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import GACookieConsent from "./GACookieConsent";
 import CollectionDrawer from "./CollectionDrawer";
+import CollectionDialog from "./collections/CollectionDialog";
 
 const Main = () => {
   return (
@@ -17,6 +18,7 @@ const Main = () => {
       </Box>
       <Footer />
       <CollectionDrawer />
+      <CollectionDialog />
     </Container>
   );
 };

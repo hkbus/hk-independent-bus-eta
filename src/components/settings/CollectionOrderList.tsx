@@ -7,7 +7,7 @@ import {
 } from "react-beautiful-dnd";
 import {
   DragHandle as DragHandleIcon,
-  DeleteOutline as DeleteIcon,
+  EditOutlined as EditOutlinedIcon,
 } from "@mui/icons-material";
 import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
 import AppContext from "../../AppContext";
@@ -15,8 +15,9 @@ import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
 import { ManageMode } from "../../data";
 
+// mode: delete is for edit here
 const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
-  const { collections, setCollections, removeCollection } =
+  const { collections, setCollections, toggleCollectionDialog } =
     useContext(AppContext);
   const [items, setItems] = useState(
     // cannot use Array.reverse() as it is in-place reverse
@@ -39,10 +40,9 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
 
   const handleDelete = useCallback(
     (idx: number) => {
-      removeCollection(idx);
-      setItems((prev) => prev.filter((_, _idx) => _idx !== idx));
+      toggleCollectionDialog(idx);
     },
-    [removeCollection]
+    [toggleCollectionDialog]
   );
 
   return (
@@ -105,7 +105,7 @@ const DraggableListItem = ({
         {mode === "order" && <DragHandleIcon />}
         {mode === "delete" && (
           <IconButton onClick={onDelete}>
-            <DeleteIcon />
+            <EditOutlinedIcon />
           </IconButton>
         )}
       </Box>

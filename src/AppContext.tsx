@@ -11,7 +11,7 @@ import { iOSRNWebView, iOSTracking, isStrings, vibrate } from "./utils";
 import DbContext from "./DbContext";
 import type { DatabaseContextValue } from "./DbContext";
 import { Workbox } from "workbox-window";
-import { produce, freeze, current } from "immer";
+import { produce, freeze } from "immer";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import { ETA_FORMAT_NEXT_TYPES } from "./constants";
 import { useTranslation } from "react-i18next";
@@ -31,10 +31,6 @@ interface AppState {
   selectedRoute: string;
   geoPermission: GeoPermission;
   geolocation: GeoLocation;
-  /**
-   * hot query count
-   */
-  hotRoute: Record<string, number>;
   /**
    * route search history
    */
@@ -155,17 +151,6 @@ const isColorMode = (input: unknown): input is ColorMode => {
   return input === "dark" || input === "light" || input === "system";
 };
 
-const isNumberRecord = (input: unknown): input is Record<string, number> => {
-  if (input instanceof Object && input !== null && input !== undefined) {
-    if (Object.entries(input).some((v) => typeof v !== "number")) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-  return false;
-};
-
 export const AppContextProvider = ({
   workbox,
   children,
@@ -188,7 +173,6 @@ export const AppContextProvider = ({
     const routeSearchHistory: unknown = JSON.parse(
       localStorage.getItem("routeSearchHistory")
     );
-    const hotRoute: unknown = JSON.parse(localStorage.getItem("hotRoute"));
 
     return {
       searchRoute: searchRoute,
@@ -197,7 +181,6 @@ export const AppContextProvider = ({
       geolocation: isGeoLocation(geoLocation)
         ? geoLocation
         : defaultGeolocation,
-      hotRoute: isNumberRecord(hotRoute) ? hotRoute : {},
       isRouteFilter:
         !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
       busSortOrder: isBusSortOrder(busSortOrder) ? busSortOrder : "KMB first",
@@ -479,18 +462,6 @@ export const AppContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         state.selectedRoute = `${route}/${seq}`;
-        if (seq) {
-          if (state.hotRoute[route + "/" + seq]) {
-            state.hotRoute[route + "/" + seq] =
-              state.hotRoute[route + "/" + seq] + 1;
-          } else {
-            state.hotRoute[route + "/" + seq] = 1;
-          }
-          localStorage.setItem(
-            "hotRoute",
-            JSON.stringify(current(state.hotRoute))
-          );
-        }
       })
     );
   }, []);
@@ -529,7 +500,6 @@ export const AppContextProvider = ({
     localStorage.clear();
     setStateRaw(
       produce((state: State) => {
-        state.hotRoute = {};
         state.geolocation = defaultGeolocation;
       })
     );

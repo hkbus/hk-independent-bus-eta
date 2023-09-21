@@ -8,7 +8,11 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
-import { Code as CodeIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import {
+  Code as CodeIcon,
+  DeleteOutline as DeleteIcon,
+  EditOutlined as EditOutlinedIcon,
+} from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import SavedEtaList from "./SavedEtaList";
 import CollectionOrderList from "./CollectionOrderList";
@@ -38,7 +42,7 @@ const UserContentManagement = () => {
         </Tabs>
         <ToggleButtonGroup
           value={mode}
-          onChange={(_, v) => setMode(v)}
+          onChange={(_, v) => v && setMode(v)}
           sx={{ alignSelf: "flex-end" }}
           size="small"
           exclusive
@@ -47,7 +51,8 @@ const UserContentManagement = () => {
             <CodeIcon sx={{ transform: "rotate(90deg)" }} fontSize="small" />
           </ToggleButton>
           <ToggleButton value="delete">
-            <DeleteIcon fontSize="small" />
+            {tab !== "collectionOrder" && <DeleteIcon fontSize="small" />}
+            {tab === "collectionOrder" && <EditOutlinedIcon fontSize="small" />}
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>

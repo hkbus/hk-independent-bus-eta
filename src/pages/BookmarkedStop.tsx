@@ -1,21 +1,31 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import AppContext from "../AppContext";
 import { Box, Paper, SxProps, Theme } from "@mui/material";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
 import DbRenewReminder from "../components/layout/DbRenewReminder";
 import StopTabbar from "../components/bookmarked-stop/StopTabbar";
-import StopRouteList from "../components/bookmarked-stop/StopRouteList";
 import { useTranslation } from "react-i18next";
+import SwipeableStopList, {
+  SwipeableStopListRef,
+} from "../components/bookmarked-stop/SwipeableStopList";
 
 const BookmarkedStop = () => {
   const {
     savedStops,
-    db: { stopList, stopMap },
+    db: { stopList },
     colorMode,
   } = useContext(AppContext);
   const {
     i18n: { language },
   } = useTranslation();
+  const swipeableList = useRef<SwipeableStopListRef>(null);
   const defaultTab = useMemo(() => {
     try {
       const cached = localStorage.getItem("stopTab") ?? "|";
@@ -39,13 +49,6 @@ const BookmarkedStop = () => {
   }, [savedStops, stopList]);
   const [stopTab, setStopTab] = useState<string>(defaultTab);
 
-  const stops = useMemo(() => {
-    if (stopTab === "") return [];
-    const ret = [stopTab.split("|")];
-    stopMap[ret[0][1]]?.forEach((v) => ret.push(v));
-    return ret;
-  }, [stopTab, stopMap]);
-
   const bgColor = useCallback(
     (theme: Theme) => {
       if (stopTab === "") return "unset";
@@ -59,6 +62,11 @@ const BookmarkedStop = () => {
   useEffect(() => {
     localStorage.setItem("stopTab", stopTab);
   }, [stopTab]);
+
+  const handleTabChange = useCallback((v: string) => {
+    setStopTab(v);
+    swipeableList.current?.changeTab(v);
+  }, []);
 
   return (
     <Paper
@@ -74,14 +82,15 @@ const BookmarkedStop = () => {
       square
       elevation={0}
     >
-      <StopTabbar
-        stopTab={stopTab}
-        onChangeTab={(v: string) => setStopTab(v)}
-      />
+      <StopTabbar stopTab={stopTab} onChangeTab={handleTabChange} />
       <BadWeatherCard />
       <DbRenewReminder />
       <Box sx={{ flex: 1, overflow: "scroll" }}>
-        <StopRouteList stops={stops} />
+        <SwipeableStopList
+          ref={swipeableList}
+          stopTab={stopTab}
+          onChangeTab={(v: string) => setStopTab(v)}
+        />
       </Box>
     </Paper>
   );
