@@ -18,6 +18,7 @@ import {
   WbSunny as WbSunnyIcon,
   DarkMode as DarkModeIcon,
 } from "@mui/icons-material";
+import { visuallyHidden } from "@mui/utils";
 import AppContext from "../../AppContext";
 import { vibrate, checkMobile } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -101,7 +102,8 @@ const Header = () => {
           }}
           rel="nofollow"
         >
-          <Typography component="h1" variant="caption" sx={appTitleSx}>
+          <Box sx={appTitleSx} />
+          <Typography component="h1" style={visuallyHidden}>
             {t("巴士到站預報")}
           </Typography>
         </Link>
@@ -215,10 +217,11 @@ const rootSx: SxProps<Theme> = {
 };
 
 const appTitleSx: SxProps<Theme> = {
-  color: (theme) =>
-    theme.palette.mode === "dark"
-      ? theme.palette.primary.main
-      : theme.palette.text.primary,
+  backgroundImage: "url(/logo128.png)",
+  backgroundSize: "contain",
+  width: 32,
+  height: 32,
+  filter: (t) => (t.palette.mode === "dark" ? "grayscale(1)" : "none"),
 };
 
 const searchRouteInputSx: SxProps<Theme> = {
