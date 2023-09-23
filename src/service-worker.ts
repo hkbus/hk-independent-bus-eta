@@ -209,7 +209,7 @@ self.addEventListener("message", (event) => {
         all.map((client) =>
           client.postMessage({
             type: "CURRENT_VERSION",
-            payload: `build ${process.env.REACT_APP_VERSION}`,
+            payload: `build ${process.env.REACT_APP_COMMIT_HASH}`,
           })
         )
       );
