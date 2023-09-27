@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { decompress } from "lzutf8-light";
 import { Check as CheckIcon } from "@mui/icons-material";
+import throttle from "lodash.throttle";
 import AppContext from "../AppContext";
 import { isStrings } from "../utils";
 
@@ -20,12 +21,25 @@ const DataImport = () => {
   const { setSavedStops, setSavedEtas, setCollections } =
     useContext(AppContext);
   const navigate = useNavigate();
+  const [state, setState] = useState<string>(data ?? "");
+
+  const unpack = useMemo(
+    () =>
+      throttle((str: string) => {
+        try {
+          return JSON.parse(
+            decompress(decodeURIComponent(str), { inputEncoding: "Base64" })
+          );
+        } catch (e) {
+          return {};
+        }
+      }, 500),
+    []
+  );
 
   const obj = useMemo(() => {
     try {
-      let obj = JSON.parse(
-        decompress(decodeURIComponent(data), { inputEncoding: "Base64" })
-      );
+      let obj = unpack(data ?? state.split("/").pop());
       if (!Array.isArray(obj.savedStops) && isStrings(obj.savedStops)) {
         throw new Error("Error in parsing savedStops");
       }
@@ -70,7 +84,7 @@ const DataImport = () => {
       console.error(e);
     }
     return {};
-  }, [data]);
+  }, [unpack, data, state]);
 
   const objStrForm = useMemo(() => JSON.stringify(obj, null, 2), [obj]);
 
@@ -87,6 +101,15 @@ const DataImport = () => {
       <Typography variant="h6" sx={{ textAlign: "center" }}>
         {t("資料匯入")}
       </Typography>
+      {!data && (
+        <TextField
+          variant="outlined"
+          value={state}
+          onChange={({ target: { value } }) => setState(value)}
+          fullWidth
+          label={t("匯出網址")}
+        />
+      )}
       <TextField multiline maxRows={15} value={objStrForm} disabled fullWidth />
       <Button
         startIcon={<CheckIcon />}

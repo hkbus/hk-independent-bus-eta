@@ -34,6 +34,7 @@ import {
   HelpOutline as HelpIcon,
   Sync as SyncIcon,
   SyncDisabled as SyncDisabledIcon,
+  SecurityUpdate as SecurityUpdateIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -244,6 +245,19 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={t("資料匯出")} />
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            vibrate(vibrateDuration);
+            navigate(`/${i18n.language}/import`);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <SecurityUpdateIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={t("資料匯入")} />
         </ListItemButton>
         <Divider />
         <ListItemButton
