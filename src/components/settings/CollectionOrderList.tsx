@@ -1,10 +1,6 @@
 import React, { useState, useContext, useCallback, useEffect } from "react";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
+import Droppable from "../StrictModeDroppable";
 import {
   DragHandle as DragHandleIcon,
   EditOutlined as EditOutlinedIcon,
@@ -117,6 +113,7 @@ const DraggableListItem = ({
 
 const containerSx: SxProps<Theme> = {
   p: 1,
+  overflowY: "scroll",
 };
 
 const entrySx: SxProps<Theme> = {

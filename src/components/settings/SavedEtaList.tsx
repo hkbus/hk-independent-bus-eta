@@ -1,10 +1,6 @@
 import React, { useState, useContext, useCallback } from "react";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
+import Droppable from "../StrictModeDroppable";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import AppContext from "../../AppContext";
 import SuccinctTimeReport from "../home/SuccinctTimeReport";
@@ -82,7 +78,7 @@ const SavedEtaList = ({ mode }: { mode: ManageMode }) => {
 export default SavedEtaList;
 
 const DraggableListItem = ({ item, index, mode, onDelete }) => (
-  <Draggable draggableId={item} index={index} isDragDisabled={mode === "order"}>
+  <Draggable draggableId={item} index={index} isDragDisabled={mode !== "order"}>
     {(provided) => (
       <Box
         ref={provided.innerRef}
@@ -98,6 +94,7 @@ const DraggableListItem = ({ item, index, mode, onDelete }) => (
 
 const containerSx: SxProps<Theme> = {
   p: 1,
+  overflowY: "scroll",
 };
 
 const entrySx: SxProps<Theme> = {

@@ -69,6 +69,7 @@ const rootSx: SxProps<Theme> = {
   display: "flex",
   flexDirection: "column",
   px: 1,
+  overflow: "hidden",
 };
 
 const headerSx: SxProps<Theme> = {

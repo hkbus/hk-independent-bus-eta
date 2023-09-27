@@ -1,10 +1,6 @@
 import React, { useState, useContext, useCallback } from "react";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
+import Droppable from "../StrictModeDroppable";
 import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
 import AppContext from "../../AppContext";
 import { reorder } from "../../utils";
@@ -124,6 +120,7 @@ const DraggableListItem = ({ item, index, mode, onDelete }) => {
 
 const containerSx: SxProps<Theme> = {
   p: 1,
+  overflowY: "scroll",
 };
 
 const entrySx: SxProps<Theme> = {

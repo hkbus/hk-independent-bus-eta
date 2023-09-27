@@ -125,7 +125,13 @@ const SuccinctTimeReport = ({
       <ListItem
         component={mode === "time" ? Link : undefined}
         to={`/${language}/route/${routeKey.toLowerCase()}`}
-        onClick={mode === "time" ? handleClick : () => {}}
+        onClick={
+          mode === "time"
+            ? handleClick
+            : (e) => {
+                e.preventDefault();
+              }
+        }
         sx={rootSx}
       >
         <ListItemText primary={<RouteNo routeNo={routeNo} />} />
