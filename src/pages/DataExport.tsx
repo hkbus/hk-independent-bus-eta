@@ -103,9 +103,13 @@ const DataExport = () => {
           <Button
             startIcon={<ContentCopyIcon />}
             onClick={() => {
-              navigator.clipboard?.writeText(exportUrl).then(() => {
-                setIsCopied(true);
-              });
+              if (navigator.share) {
+                navigator.share({ title: "Export hkbus.app", url: exportUrl });
+              } else {
+                navigator.clipboard?.writeText(exportUrl).then(() => {
+                  setIsCopied(true);
+                });
+              }
             }}
             size="large"
             sx={buttonSx}
