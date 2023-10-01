@@ -26,7 +26,7 @@ import {
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
-interface AppState {
+export interface AppState {
   searchRoute: string;
   selectedRoute: string;
   geoPermission: GeoPermission;
@@ -107,6 +107,7 @@ interface AppContextValue
   updateRefreshInterval: (interval: number) => void;
   toggleAnnotateScheduled: () => void;
   changeLanguage: (lang: Language) => void;
+  importAppState: (appState: AppState) => void;
   workbox?: Workbox;
 }
 
@@ -260,7 +261,6 @@ export const AppContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         state.geolocation = geolocation;
-        localStorage.setItem("geolocation", JSON.stringify(geolocation));
       })
     );
   }, []);
@@ -283,11 +283,9 @@ export const AppContextProvider = ({
           ({ coords: { latitude, longitude } }) => {
             updateGeolocation({ lat: latitude, lng: longitude });
             setGeoPermission("granted");
-            localStorage.setItem("geoPermission", "granted");
           },
           () => {
             setGeoPermission("denied");
-            localStorage.setItem("geoPermission", "denied");
             if (deniedCallback) deniedCallback();
           }
         );
@@ -296,7 +294,6 @@ export const AppContextProvider = ({
         navigator.geolocation.clearWatch(geoWatcherId.current);
         geoWatcherId.current = null;
         setGeoPermission(geoPermission);
-        localStorage.setItem("geoPermission", geoPermission);
       }
     },
     [setGeoPermission, updateGeolocation]
@@ -307,7 +304,6 @@ export const AppContextProvider = ({
       produce((state: State) => {
         const prev = state.isRouteFilter;
         const isRouteFilter = prev ? false : true;
-        localStorage.setItem("isRouteFilter", JSON.stringify(isRouteFilter));
         state.isRouteFilter = isRouteFilter;
       })
     );
@@ -319,7 +315,6 @@ export const AppContextProvider = ({
         const prevOrder = state.busSortOrder;
         const busSortOrder =
           prevOrder === "KMB first" ? "CTB-NWFB first" : "KMB first";
-        localStorage.setItem("busSortOrder", busSortOrder);
         state.busSortOrder = busSortOrder;
       })
     );
@@ -331,7 +326,6 @@ export const AppContextProvider = ({
         const prevOrder = state.numPadOrder;
         const numPadOrder =
           prevOrder === "123456789c0b" ? "789456123c0b" : "123456789c0b";
-        localStorage.setItem("numPadOrder", numPadOrder);
         state.numPadOrder = numPadOrder;
       })
     );
@@ -342,7 +336,6 @@ export const AppContextProvider = ({
       produce((state: State) => {
         const prev = state.etaFormat;
         const etaFormat = ETA_FORMAT_NEXT_TYPES[prev];
-        localStorage.setItem("etaFormat", etaFormat);
         state.etaFormat = etaFormat;
       })
     );
@@ -364,7 +357,6 @@ export const AppContextProvider = ({
             colorMode = "dark";
             break;
         }
-        localStorage.setItem("colorMode", colorMode);
         state._colorMode = colorMode;
       })
     );
@@ -375,7 +367,6 @@ export const AppContextProvider = ({
       produce((state: State) => {
         const prevEnergyMode = state.energyMode;
         const energyMode = !prevEnergyMode;
-        localStorage.setItem("energyMode", JSON.stringify(energyMode));
         state.energyMode = energyMode;
       })
     );
@@ -386,7 +377,6 @@ export const AppContextProvider = ({
       produce((state: State) => {
         const prev = state.analytics;
         const analytics = !prev;
-        localStorage.setItem("analytics", JSON.stringify(analytics));
         state.analytics = analytics;
       })
     );
@@ -395,10 +385,6 @@ export const AppContextProvider = ({
   const updateRefreshInterval = useCallback((refreshInterval: number) => {
     setStateRaw(
       produce((state: State) => {
-        localStorage.setItem(
-          "refreshInterval",
-          JSON.stringify(refreshInterval)
-        );
         state.refreshInterval = refreshInterval;
       })
     );
@@ -409,10 +395,6 @@ export const AppContextProvider = ({
       produce((state: State) => {
         const prev = state.annotateScheduled;
         const annotateScheduled = !prev;
-        localStorage.setItem(
-          "annotateScheduled",
-          JSON.stringify(annotateScheduled)
-        );
         state.annotateScheduled = annotateScheduled;
       })
     );
@@ -423,10 +405,6 @@ export const AppContextProvider = ({
       produce((state: State) => {
         const prevVibrateDuration = state.vibrateDuration;
         const vibrateDuration = prevVibrateDuration ? 0 : 1;
-        localStorage.setItem(
-          "vibrateDuration",
-          JSON.stringify(vibrateDuration)
-        );
         state.vibrateDuration = vibrateDuration;
       })
     );
@@ -472,10 +450,6 @@ export const AppContextProvider = ({
         const newSearchHistory = [route, ...state.routeSearchHistory]
           .filter((v, i, arr) => arr.indexOf(v) === i)
           .slice(0, 20);
-        localStorage.setItem(
-          "routeSearchHistory",
-          JSON.stringify(newSearchHistory)
-        );
         state.routeSearchHistory = newSearchHistory;
       })
     );
@@ -486,10 +460,6 @@ export const AppContextProvider = ({
       produce((state: State) => {
         const newSearchHistory = state.routeSearchHistory.filter(
           (item) => item !== routeId
-        );
-        localStorage.setItem(
-          "routeSearchHistory",
-          JSON.stringify(newSearchHistory)
         );
         state.routeSearchHistory = newSearchHistory;
       })
@@ -508,7 +478,6 @@ export const AppContextProvider = ({
   const changeLanguage = useCallback(
     (lang: Language) => {
       i18n.changeLanguage(lang);
-      localStorage.setItem("lang", lang);
     },
     [i18n]
   );
@@ -523,6 +492,84 @@ export const AppContextProvider = ({
         : "dark";
     }
   }, [state._colorMode]);
+
+  const importAppState = useCallback((appState: AppState) => {
+    setStateRaw(
+      produce((state: State) => {
+        Object.entries(appState).forEach(([key, value]) => {
+          state[key] = value;
+        });
+      })
+    );
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("geolocation", JSON.stringify(state.geolocation));
+  }, [state.geolocation]);
+
+  useEffect(() => {
+    localStorage.setItem("geoPermission", state.geoPermission);
+  }, [state.geoPermission]);
+
+  useEffect(() => {
+    localStorage.setItem("isRouteFilter", JSON.stringify(state.isRouteFilter));
+  }, [state.isRouteFilter]);
+
+  useEffect(() => {
+    localStorage.setItem("busSortOrder", state.busSortOrder);
+  }, [state.busSortOrder]);
+
+  useEffect(() => {
+    localStorage.setItem("numPadOrder", state.numPadOrder);
+  }, [state.numPadOrder]);
+
+  useEffect(() => {
+    localStorage.setItem("etaFormat", state.etaFormat);
+  }, [state.etaFormat]);
+
+  useEffect(() => {
+    localStorage.setItem("colorMode", state._colorMode);
+  }, [state._colorMode]);
+
+  useEffect(() => {
+    localStorage.setItem("energyMode", JSON.stringify(state.energyMode));
+  }, [state.energyMode]);
+
+  useEffect(() => {
+    localStorage.setItem("analytics", JSON.stringify(state.analytics));
+  }, [state.analytics]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "refreshInterval",
+      JSON.stringify(state.refreshInterval)
+    );
+  }, [state.refreshInterval]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "routeSearchHistory",
+      JSON.stringify(state.routeSearchHistory)
+    );
+  }, [state.routeSearchHistory]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "annotateScheduled",
+      JSON.stringify(state.annotateScheduled)
+    );
+  }, [state.annotateScheduled]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "vibrateDuration",
+      JSON.stringify(state.vibrateDuration)
+    );
+  }, [state.vibrateDuration]);
+
+  useEffect(() => {
+    localStorage.setItem("lang", i18n.language);
+  }, [i18n.language]);
 
   const contextValue = useMemo(() => {
     return {
@@ -549,6 +596,7 @@ export const AppContextProvider = ({
       updateRefreshInterval,
       toggleAnnotateScheduled,
       changeLanguage,
+      importAppState,
       workbox,
     };
   }, [
@@ -575,6 +623,7 @@ export const AppContextProvider = ({
     updateRefreshInterval,
     toggleAnnotateScheduled,
     changeLanguage,
+    importAppState,
     workbox,
   ]);
   return (

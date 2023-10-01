@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   DEFAULT_DAY_SCHEDULE,
   DEFAULT_ROUTE_COLLECTION,
   RouteCollection,
 } from "./typing";
 import { isStrings } from "./utils";
-import { produce, current } from "immer";
+import { produce } from "immer";
 
-interface CollectionState {
+export interface CollectionState {
   savedStops: string[];
   savedEtas: string[];
   collections: RouteCollection[];
@@ -31,6 +31,7 @@ interface CollectionContextValue extends CollectionState {
   toggleCollectionEta: (eta: string, idx: number | null) => void;
   setCollectionEtas: (etas: string[]) => void;
   setCollections: (collections: RouteCollection[]) => void;
+  importCollectionState: (collectionState: CollectionState) => void;
 }
 
 const CollectionContext = React.createContext<CollectionContextValue>(null);
@@ -85,17 +86,12 @@ export const CollectionContextProvider = ({ children }) => {
         const prevSavedStops = state.savedStops;
         if (prevSavedStops.includes(key)) {
           prevSavedStops.splice(prevSavedStops.indexOf(key), 1);
-          localStorage.setItem(
-            "savedStops",
-            JSON.stringify(current(prevSavedStops))
-          );
           state.savedStops = prevSavedStops;
           return;
         }
         const newSavedStops = prevSavedStops
           .concat(key)
           .filter((v, i, s) => s.indexOf(v) === i);
-        localStorage.setItem("savedStops", JSON.stringify(newSavedStops));
         state.savedStops = newSavedStops;
       })
     );
@@ -105,7 +101,6 @@ export const CollectionContextProvider = ({ children }) => {
   const setSavedStops = useCallback((savedStops) => {
     setStateRaw(
       produce((state: State) => {
-        localStorage.setItem("savedStops", JSON.stringify(savedStops));
         state.savedStops = savedStops;
       })
     );
@@ -117,17 +112,12 @@ export const CollectionContextProvider = ({ children }) => {
         const prevSavedEtas = state.savedEtas;
         if (prevSavedEtas.includes(key)) {
           prevSavedEtas.splice(prevSavedEtas.indexOf(key), 1);
-          localStorage.setItem(
-            "savedEtas",
-            JSON.stringify(current(prevSavedEtas))
-          );
           state.savedEtas = prevSavedEtas;
           return;
         }
         const newSavedEtas = prevSavedEtas
           .concat(key)
           .filter((v, i, s) => s.indexOf(v) === i);
-        localStorage.setItem("savedEtas", JSON.stringify(newSavedEtas));
         state.savedEtas = newSavedEtas;
       })
     );
@@ -137,7 +127,6 @@ export const CollectionContextProvider = ({ children }) => {
   const setSavedEtas = useCallback((savedEtas) => {
     setStateRaw(
       produce((state: State) => {
-        localStorage.setItem("savedEtas", JSON.stringify(savedEtas));
         state.savedEtas = savedEtas;
       })
     );
@@ -157,7 +146,6 @@ export const CollectionContextProvider = ({ children }) => {
         const newCollections = state.collections.concat(
           DEFAULT_ROUTE_COLLECTION
         );
-        localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
         state.collectionIdx = newCollections.length - 1;
       })
@@ -170,7 +158,6 @@ export const CollectionContextProvider = ({ children }) => {
         const newCollections = state.collections.filter(
           (v, _idx) => idx !== _idx
         );
-        localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
         state.collectionIdx = null;
       })
@@ -183,7 +170,6 @@ export const CollectionContextProvider = ({ children }) => {
         const idx = state.collectionIdx;
         const newCollections = state.collections;
         newCollections[idx].name = v;
-        localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
       })
     );
@@ -196,7 +182,6 @@ export const CollectionContextProvider = ({ children }) => {
           const collectionIdx = state.collectionIdx;
           const newCollections = state.collections;
           newCollections[collectionIdx].schedules[idx][field] = value;
-          localStorage.setItem("collections", JSON.stringify(newCollections));
           state.collections = newCollections;
         })
       );
@@ -211,7 +196,6 @@ export const CollectionContextProvider = ({ children }) => {
         const newCollections = state.collections;
         newCollections[collectionIdx].schedules =
           newCollections[collectionIdx].schedules.concat(DEFAULT_DAY_SCHEDULE);
-        localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
       })
     );
@@ -225,7 +209,6 @@ export const CollectionContextProvider = ({ children }) => {
         newCollections[collectionIdx].schedules = newCollections[
           collectionIdx
         ].schedules.filter((v, _idx) => idx !== _idx);
-        localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
       })
     );
@@ -247,7 +230,6 @@ export const CollectionContextProvider = ({ children }) => {
           } else {
             newCollections[idx].list = [eta].concat(newCollections[idx].list);
           }
-          localStorage.setItem("collections", JSON.stringify(newCollections));
           state.collections = newCollections;
         })
       );
@@ -262,7 +244,6 @@ export const CollectionContextProvider = ({ children }) => {
         const collectionIdx = state.collectionIdx;
         const newCollections = state.collections;
         newCollections[collectionIdx].list = etas;
-        localStorage.setItem("collections", JSON.stringify(newCollections));
         state.collections = newCollections;
       })
     );
@@ -282,11 +263,35 @@ export const CollectionContextProvider = ({ children }) => {
   const setCollections = useCallback((collections: RouteCollection[]) => {
     setStateRaw(
       produce((state: State) => {
-        localStorage.setItem("collections", JSON.stringify(collections));
         state.collections = collections;
       })
     );
   }, []);
+
+  const importCollectionState = useCallback(
+    (collectionState: CollectionState) => {
+      setStateRaw(
+        produce((state: State) => {
+          Object.entries(collectionState).forEach(([key, value]) => {
+            state[key] = value;
+          });
+        })
+      );
+    },
+    []
+  );
+
+  useEffect(() => {
+    localStorage.setItem("savedEtas", JSON.stringify(state.savedEtas));
+  }, [state.savedEtas]);
+
+  useEffect(() => {
+    localStorage.setItem("savedStops", JSON.stringify(state.savedStops));
+  }, [state.savedStops]);
+
+  useEffect(() => {
+    localStorage.setItem("collections", JSON.stringify(state.collections));
+  }, [state.collections]);
 
   return (
     <CollectionContext.Provider
@@ -307,6 +312,7 @@ export const CollectionContextProvider = ({ children }) => {
         toggleCollectionEta,
         setCollectionEtas,
         setCollections,
+        importCollectionState,
       }}
     >
       {children}

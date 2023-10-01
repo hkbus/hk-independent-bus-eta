@@ -6,6 +6,7 @@ import {
   Typography,
   Snackbar,
   Button,
+  TextField,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../AppContext";
@@ -17,7 +18,22 @@ const DataExport = () => {
     t,
     i18n: { language },
   } = useTranslation();
-  const { savedStops, savedEtas, collections } = useContext(AppContext);
+  const {
+    savedStops,
+    savedEtas,
+    collections,
+    _colorMode,
+    energyMode,
+    refreshInterval,
+    annotateScheduled,
+    vibrateDuration,
+    etaFormat,
+    numPadOrder,
+    isRouteFilter,
+    busSortOrder,
+    analytics,
+  } = useContext(AppContext);
+
   const exportUrl = useMemo<string>(
     () =>
       `https://${window.location.hostname}/${language}/import/` +
@@ -28,6 +44,16 @@ const DataExport = () => {
               savedStops,
               savedEtas,
               collections,
+              _colorMode,
+              energyMode,
+              refreshInterval,
+              annotateScheduled,
+              vibrateDuration,
+              etaFormat,
+              numPadOrder,
+              isRouteFilter,
+              busSortOrder,
+              analytics,
             },
             null,
             0
@@ -35,7 +61,22 @@ const DataExport = () => {
           { outputEncoding: "Base64" }
         )
       ),
-    [collections, language, savedEtas, savedStops]
+    [
+      collections,
+      savedEtas,
+      savedStops,
+      _colorMode,
+      energyMode,
+      refreshInterval,
+      annotateScheduled,
+      vibrateDuration,
+      etaFormat,
+      numPadOrder,
+      isRouteFilter,
+      busSortOrder,
+      language,
+      analytics,
+    ]
   );
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
@@ -52,6 +93,12 @@ const DataExport = () => {
           m: 1,
         }}
       >
+        <TextField
+          variant="outlined"
+          value={exportUrl}
+          fullWidth
+          spellCheck={false}
+        />
         <Box sx={{ m: 1 }}>
           <Button
             startIcon={<ContentCopyIcon />}

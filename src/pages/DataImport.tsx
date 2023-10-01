@@ -12,14 +12,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { decompress } from "lzutf8-light";
 import { Check as CheckIcon } from "@mui/icons-material";
 import throttle from "lodash.throttle";
-import AppContext from "../AppContext";
+import AppContext, { AppState } from "../AppContext";
 import { isStrings } from "../utils";
+import { CollectionState } from "../CollectionContext";
 
 const DataImport = () => {
   const { data } = useParams();
   const { t } = useTranslation();
-  const { setSavedStops, setSavedEtas, setCollections } =
-    useContext(AppContext);
+  const { importAppState, importCollectionState } = useContext(AppContext);
   const navigate = useNavigate();
   const [state, setState] = useState<string>(data ?? "");
 
@@ -37,13 +37,14 @@ const DataImport = () => {
     []
   );
 
-  const obj = useMemo(() => {
+  const obj = useMemo<AppState & CollectionState>(() => {
     try {
       let obj = unpack(data ?? state.split("/").pop());
-      if (!Array.isArray(obj.savedStops) && isStrings(obj.savedStops)) {
+
+      if (!Array.isArray(obj.savedStops) || !isStrings(obj.savedStops)) {
         throw new Error("Error in parsing savedStops");
       }
-      if (!Array.isArray(obj.savedEtas) && isStrings(obj.savedEtas)) {
+      if (!Array.isArray(obj.savedEtas) || !isStrings(obj.savedEtas)) {
         throw new Error("Error in parsing savedEtas");
       }
       if (!Array.isArray(obj.collections)) {
@@ -90,11 +91,34 @@ const DataImport = () => {
 
   const confirm = useCallback(() => {
     if (objStrForm === "{}") return;
-    setSavedStops(obj.savedStops);
-    setSavedEtas(obj.savedEtas);
-    setCollections(obj.collections);
+    importCollectionState({
+      savedStops: obj.savedStops ?? [],
+      savedEtas: obj.savedEtas ?? [],
+      collections: obj.collections ?? [],
+      collectionDrawerRoute: null,
+      collectionIdx: null,
+    });
+    importAppState({
+      geoPermission: null,
+      geolocation: { lat: 22.302711, lng: 114.177216 },
+      searchRoute: "",
+      selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
+      routeSearchHistory: obj.routeSearchHistory ?? [],
+      isRouteFilter: obj.isRouteFilter ?? true,
+      busSortOrder: obj.busSortOrder ?? "KMB first",
+      numPadOrder: obj.numPadOrder ?? "123456789c0b",
+      etaFormat: obj.etaFormat ?? "diff",
+      _colorMode: obj._colorMode ?? "system",
+      energyMode: obj.energyMode ?? false,
+      vibrateDuration: obj.vibrateDuration ?? 1,
+      isVisible: true,
+      analytics: obj.analytics ?? true,
+      refreshInterval: obj.refreshInterval ?? 30,
+      annotateScheduled: obj.annotateScheduled ?? true,
+    });
+
     navigate("/");
-  }, [obj, objStrForm, setSavedStops, setCollections, setSavedEtas, navigate]);
+  }, [obj, objStrForm, importAppState, importCollectionState, navigate]);
 
   return (
     <Box sx={rootSx}>
@@ -110,12 +134,20 @@ const DataImport = () => {
           label={t("匯出網址")}
         />
       )}
-      <TextField multiline maxRows={15} value={objStrForm} disabled fullWidth />
+      <TextField
+        multiline
+        maxRows={15}
+        value={objStrForm}
+        disabled
+        fullWidth
+        spellCheck={false}
+      />
       <Button
         startIcon={<CheckIcon />}
         variant="outlined"
         disabled={objStrForm === "{}"}
         onClick={confirm}
+        sx={buttonSx}
       >
         {t("Accept")}
       </Button>
@@ -131,4 +163,15 @@ const rootSx: SxProps<Theme> = {
   justifyContent: "flex-start",
   flex: 1,
   gap: 1,
+};
+
+const buttonSx: SxProps<Theme> = {
+  color: (t) =>
+    t.palette.mode === "light"
+      ? t.palette.text.primary
+      : t.palette.primary.main,
+  borderColor: (t) =>
+    t.palette.mode === "light"
+      ? t.palette.text.primary
+      : t.palette.primary.main,
 };
