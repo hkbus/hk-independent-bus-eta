@@ -20,6 +20,11 @@ class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Uncaught error:", errorInfo);
+    if (error?.name === "ChunkLoadError") {
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    }
   }
 
   public render() {
@@ -27,14 +32,7 @@ class ErrorBoundary extends Component<Props, State> {
       if (this.state.error.name === "ChunkLoadError") {
         return (
           <div style={{ color: "#fff", fontSize: 18 }}>
-            <p>Reloading the app a few times could solve this error.</p>
-            <span>
-              You may also seek support from{" "}
-              <a className="tg" href="https://t.me/hkbusapp">
-                Telegram group
-              </a>
-            </span>
-            <pre>{this.state.error?.stack ?? "Unknown error"}</pre>
+            <p>App Updated, reloading...</p>
           </div>
         );
       }
