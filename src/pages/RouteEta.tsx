@@ -8,6 +8,8 @@ import AppContext from "../AppContext";
 import { useTranslation } from "react-i18next";
 import { setSeoHeader, toProperCase, getDistance } from "../utils";
 import type { WarnUpMessageData } from "../typing";
+import StrSim from "string-similarity";
+import { RouteList } from "hk-bus-eta";
 const RouteMap = loadable(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
@@ -21,7 +23,8 @@ const RouteEta = () => {
     geoPermission,
     geolocation,
   } = useContext(AppContext);
-  const routeListEntry = routeList[id.toUpperCase()];
+  const routeId = getRouteEntry(id.toUpperCase(), routeList);
+  const routeListEntry = routeList[routeId];
   const { route, stops, co, orig, dest, fares } = routeListEntry;
   const stopsExtracted = useMemo(() => {
     return getStops(co, stops)
@@ -96,6 +99,12 @@ const RouteEta = () => {
   }, [id, updateSelectedRoute]);
 
   useEffect(() => {
+    if (id !== routeId) {
+      navigate(`/${i18n.language}/route/${routeId.toLowerCase()}`);
+    }
+  }, [id, routeId, i18n.language, navigate]);
+
+  useEffect(() => {
     const pageDesc = () => {
       const uniqueFares = fares
         ? fares
@@ -166,7 +175,7 @@ const RouteEta = () => {
   return (
     <>
       <input hidden id={id} />
-      <RouteHeader routeId={id.toUpperCase()} />
+      <RouteHeader routeId={routeId} />
       {!energyMode && navigator.userAgent !== "prerendering" && (
         <RouteMap
           stops={stopsExtracted}
@@ -175,7 +184,7 @@ const RouteEta = () => {
         />
       )}
       <StopAccordions
-        routeId={id}
+        routeId={routeId}
         stopIdx={stopIdx}
         routeListEntry={routeListEntry}
         stopListExtracted={stopsExtracted}
@@ -190,6 +199,15 @@ const RouteEta = () => {
       />
     </>
   );
+};
+
+const getRouteEntry = (id: string, routeList: RouteList) => {
+  if (routeList[id] !== undefined) return id;
+  const prefix = id.split("-")[0];
+  return StrSim.findBestMatch(
+    id.toUpperCase(),
+    Object.keys(routeList).filter((v) => v.startsWith(prefix))
+  ).bestMatch.target;
 };
 
 // TODO: better handling on buggy data in database
