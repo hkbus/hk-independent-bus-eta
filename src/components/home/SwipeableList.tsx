@@ -268,17 +268,30 @@ const getSelectedRoutes = ({
     .map((routeUrl, idx, self): [string, number, number] => {
       const [routeId, stopIdx] = routeUrl.split("/");
       // TODO: taking the longest stop array to avoid error, should be fixed in the database
-      const stop =
-        stopList[
-          Object.values(routeList[routeId].stops).sort(
-            (a, b) => b.length - a.length
-          )[0][stopIdx]
+      const _stops = Object.values(routeList[routeId].stops).sort(
+        (a, b) => b.length - a.length
+      )[0];
+      if (stopIdx !== undefined) {
+        // if specified which stop
+        return [
+          routeUrl,
+          getDistance(geolocation, stopList[_stops[stopIdx]].location),
+          self.length - idx,
         ];
-      return [
-        routeUrl,
-        getDistance(geolocation, stop.location),
-        self.length - idx,
-      ];
+      } else {
+        // else find the nearest stop
+        const stop = _stops
+          .map((stop) => [
+            stop,
+            getDistance(geolocation, stopList[stop].location),
+          ])
+          .sort(([, a], [, b]) => (a < b ? -1 : 1))[0][0];
+        return [
+          routeUrl,
+          getDistance(geolocation, stopList[stop].location),
+          self.length - idx,
+        ];
+      }
     });
 
   const nearbyRoutes = Object.entries(stopList)
@@ -343,6 +356,21 @@ const getSelectedRoutes = ({
           (!isRouteFilter ||
             isRouteAvaliable(routeId, routeList[routeId].freq, isTodayHoliday))
         );
+      })
+      .map((routeUrl) => {
+        // handling for saved route without specified stop, use the nearest one
+        const [routeId, stopIdx] = routeUrl.split("/");
+        if (stopIdx !== undefined) return routeUrl;
+        const _stops = Object.values(routeList[routeId].stops).sort(
+          (a, b) => b.length - a.length
+        )[0];
+        const stop = _stops
+          .map((stop) => [
+            stop,
+            getDistance(geolocation, stopList[stop].location),
+          ])
+          .sort(([, a], [, b]) => (a < b ? -1 : 1))[0][0];
+        return `${routeUrl}/${_stops.indexOf(stop as string)}`;
       })
       .concat(Array(40).fill("")) // padding
       .slice(0, 40)

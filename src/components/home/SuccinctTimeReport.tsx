@@ -91,8 +91,8 @@ const SuccinctTimeReport = ({
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
   const { co, stops, dest, fares, faresHoliday } =
-    routeList[routeKey] || DefaultRoute;
-  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DefaultStop;
+    routeList[routeKey] || DEFAULT_ROUTE;
+  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DEFAULT_STOP;
 
   const navigate = useNavigate();
   const handleClick = (e) => {
@@ -184,7 +184,7 @@ const SuccinctTimeReport = ({
   );
 };
 
-const DefaultRoute = {
+const DEFAULT_ROUTE = {
   co: [""],
   stops: { "": [""] },
   dest: { zh: "", en: "" },
@@ -193,7 +193,10 @@ const DefaultRoute = {
   fares: [],
   faresHoliday: [],
 };
-const DefaultStop = { location: { lat: 0, lng: 0 }, name: { zh: "", en: "" } };
+const DEFAULT_STOP = {
+  location: { lat: 0, lng: 0 },
+  name: { zh: "最近車站", en: "The nearest stop" },
+};
 
 export default SuccinctTimeReport;
 

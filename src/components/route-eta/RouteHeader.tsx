@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
-import { Paper, SxProps, Theme, Typography } from "@mui/material";
+import { Box, Paper, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "../route-board/RouteNo";
 import { toProperCase } from "../../utils";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import ReverseButton from "./ReverseButton";
 import TimetableButton from "./TimeTableButton";
+import RouteStarButton from "./RouteStarButton";
 
 const RouteHeader = ({ routeId }: { routeId: string }) => {
   const { t, i18n } = useTranslation();
@@ -22,7 +23,10 @@ const RouteHeader = ({ routeId }: { routeId: string }) => {
         {nlbId ? t("由") + " " + toProperCase(orig[i18n.language]) : ""}
       </Typography>
       <ReverseButton routeId={routeId} />
-      <TimetableButton routeId={routeId} />
+      <Box sx={rightBtnGroupSx}>
+        <RouteStarButton routeId={routeId} />
+        <TimetableButton routeId={routeId} />
+      </Box>
     </Paper>
   );
 };
@@ -33,4 +37,10 @@ const PaperSx: SxProps<Theme> = {
   textAlign: "center",
   background: "transparent",
   position: "relative",
+};
+
+const rightBtnGroupSx: SxProps<Theme> = {
+  position: "absolute",
+  top: "0",
+  right: "2%",
 };
