@@ -10,7 +10,7 @@ import { Box, SxProps, Theme, Typography } from "@mui/material";
 
 import AppContext from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
-import type { BoardTabType } from "./BoardTabbar";
+import type { BoardTabType } from "../../typing";
 import { TRANSPORT_SEARCH_OPTIONS, TRANSPORT_ORDER } from "../../constants";
 import RouteRowList from "./RouteRowList";
 import { routeSortFunc } from "../../utils";
@@ -31,6 +31,7 @@ const SwipeableRoutesBoard = ({
     busSortOrder,
     routeSearchHistory,
     vibrateDuration,
+    isRecentSearchShown,
   } = useContext(AppContext);
   const isTodayHoliday = useMemo(
     () => isHoliday(holidays, new Date()),
@@ -137,7 +138,9 @@ const SwipeableRoutesBoard = ({
           </Box>
         ) : (
           <VirtualizeSwipeableViews
-            index={BOARD_TAB.indexOf(boardTab)}
+            index={BOARD_TAB.filter(
+              (tab) => isRecentSearchShown || tab !== "recent"
+            ).indexOf(boardTab)}
             onChangeIndex={(idx) => {
               onChangeTab(BOARD_TAB[idx]);
             }}
@@ -152,7 +155,7 @@ const SwipeableRoutesBoard = ({
         )}
       </>
     ),
-    [ListRenderer, coItemDataList, onChangeTab, boardTab]
+    [ListRenderer, coItemDataList, onChangeTab, boardTab, isRecentSearchShown]
   );
 };
 

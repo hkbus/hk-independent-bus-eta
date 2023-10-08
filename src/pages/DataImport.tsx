@@ -115,6 +115,7 @@ const DataImport = () => {
       analytics: obj.analytics ?? true,
       refreshInterval: obj.refreshInterval ?? 30,
       annotateScheduled: obj.annotateScheduled ?? true,
+      isRecentSearchShown: obj.isRecentSearchShown ?? true,
     });
 
     navigate("/");

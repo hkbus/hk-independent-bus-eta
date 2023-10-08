@@ -28,6 +28,8 @@ import {
   Sort as SortIcon,
   HourglassTop as HourglassTopIcon,
   PushPin as PinIcon,
+  Update as UpdateIcon,
+  UpdateDisabled as UpdateDisabledIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../AppContext";
@@ -59,6 +61,8 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
     updateRefreshInterval,
     annotateScheduled,
     toggleAnnotateScheduled,
+    isRecentSearchShown,
+    toggleIsRecentSearchShown,
   } = useContext(AppContext);
   const { t } = useTranslation();
 
@@ -203,6 +207,22 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
         <ListItemText
           primary={t("省電模式")}
           secondary={t(!energyMode ? "開啟地圖功能" : "關閉地圖功能")}
+        />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration ^ 1); // tricky, vibrate when switch on and vice versa
+          toggleIsRecentSearchShown();
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            {isRecentSearchShown ? <UpdateIcon /> : <UpdateDisabledIcon />}
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={t("搜尋記錄")}
+          secondary={t(isRecentSearchShown ? "開啟" : "關閉")}
         />
       </ListItemButton>
       <ListItemButton

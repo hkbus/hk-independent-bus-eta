@@ -76,6 +76,10 @@ export interface AppState {
    * Annotate scheduled bus
    */
   annotateScheduled: boolean;
+  /**
+   * Show recently searched
+   */
+  isRecentSearchShown: boolean;
 }
 
 interface AppContextValue
@@ -106,6 +110,7 @@ interface AppContextValue
   toggleAnalytics: () => void; // not
   updateRefreshInterval: (interval: number) => void;
   toggleAnnotateScheduled: () => void;
+  toggleIsRecentSearchShown: () => void;
   changeLanguage: (lang: Language) => void;
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
@@ -196,6 +201,8 @@ export const AppContextProvider = ({
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
+      isRecentSearchShown:
+        JSON.parse(localStorage.getItem("isRecentSearchShown")) || true,
       isVisible: true,
       analytics:
         iOSRNWebView() && !iOSTracking()
@@ -475,6 +482,15 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const toggleIsRecentSearchShown = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prev = state.isRecentSearchShown;
+        state.isRecentSearchShown = !prev;
+      })
+    );
+  }, []);
+
   const changeLanguage = useCallback(
     (lang: Language) => {
       i18n.changeLanguage(lang);
@@ -536,6 +552,13 @@ export const AppContextProvider = ({
   }, [state.energyMode]);
 
   useEffect(() => {
+    localStorage.setItem(
+      "isRecentSearchShown",
+      JSON.stringify(state.isRecentSearchShown)
+    );
+  }, [state.isRecentSearchShown]);
+
+  useEffect(() => {
     localStorage.setItem("analytics", JSON.stringify(state.analytics));
   }, [state.analytics]);
 
@@ -595,6 +618,7 @@ export const AppContextProvider = ({
       toggleAnalytics,
       updateRefreshInterval,
       toggleAnnotateScheduled,
+      toggleIsRecentSearchShown,
       changeLanguage,
       importAppState,
       workbox,
@@ -622,6 +646,7 @@ export const AppContextProvider = ({
     toggleAnalytics,
     updateRefreshInterval,
     toggleAnnotateScheduled,
+    toggleIsRecentSearchShown,
     changeLanguage,
     importAppState,
     workbox,

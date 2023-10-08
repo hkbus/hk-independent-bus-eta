@@ -3,7 +3,7 @@ import { Box, Button, Grid, SxProps, Theme } from "@mui/material";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
 import AppContext from "../../AppContext";
-import { BoardTabType } from "./BoardTabbar";
+import { type BoardTabType } from "../../typing";
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 
 const KeyButton = ({ k, handleClick, disabled = false, sx }) => {

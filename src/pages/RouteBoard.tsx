@@ -4,11 +4,9 @@ import { Box } from "@mui/material";
 import RouteInputPad from "../components/route-board/RouteInputPad";
 import { useTranslation } from "react-i18next";
 import { setSeoHeader } from "../utils";
-import BoardTabbar, {
-  BoardTabType,
-  isBoardTab,
-} from "../components/route-board/BoardTabbar";
+import BoardTabbar, { isBoardTab } from "../components/route-board/BoardTabbar";
 import SwipeableRoutesBoard from "../components/route-board/SwipeableRoutesBoard";
+import { BoardTabType } from "../typing";
 
 interface RouteListProps {
   boardTab: BoardTabType;
@@ -46,9 +44,10 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
 };
 
 const RouteBoard = () => {
+  const { isRecentSearchShown } = useContext(AppContext);
   const _boardTab = localStorage.getItem("boardTab");
   const [boardTab, setBoardTab] = useState<BoardTabType>(
-    isBoardTab(_boardTab) ? _boardTab : "all"
+    isBoardTab(_boardTab, isRecentSearchShown) ? _boardTab : "all"
   );
 
   return (

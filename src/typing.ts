@@ -48,3 +48,11 @@ export const DEFAULT_ROUTE_COLLECTION: RouteCollection = {
       day: idx,
     })),
 };
+
+export type BoardTabType =
+  | "recent"
+  | "all"
+  | "bus"
+  | "minibus"
+  | "lightRail"
+  | "mtr";

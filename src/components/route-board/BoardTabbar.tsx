@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Tabs, Tab, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
+import AppContext from "../../AppContext";
+import { BoardTabType } from "../../typing";
 
 interface BoardTabbarProps {
   boardTab: BoardTabType;
@@ -11,6 +13,7 @@ interface BoardTabbarProps {
 
 const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
   const { t } = useTranslation();
+  const { isRecentSearchShown } = useContext(AppContext);
 
   return (
     <Box sx={rootSx}>
@@ -19,9 +22,11 @@ const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
         onChange={(e, v) => onChangeTab(v, true)}
         sx={tabbarSx}
       >
-        {Object.keys(TRANSPORT_SEARCH_OPTIONS).map((option) => (
-          <Tab key={option} label={t(option)} value={option} disableRipple />
-        ))}
+        {Object.keys(TRANSPORT_SEARCH_OPTIONS)
+          .filter((option) => isRecentSearchShown || option !== "recent")
+          .map((option) => (
+            <Tab key={option} label={t(option)} value={option} disableRipple />
+          ))}
       </Tabs>
     </Box>
   );
@@ -29,17 +34,12 @@ const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
 
 export default BoardTabbar;
 
-export type BoardTabType =
-  | "recent"
-  | "all"
-  | "bus"
-  | "minibus"
-  | "lightRail"
-  | "mtr";
-
-export const isBoardTab = (input: unknown): input is BoardTabType => {
+export const isBoardTab = (
+  input: unknown,
+  isRecentSearchShown: boolean
+): input is BoardTabType => {
   return (
-    input === "recent" ||
+    (isRecentSearchShown && input === "recent") ||
     input === "all" ||
     input === "bus" ||
     input === "minibus" ||
