@@ -27,4 +27,14 @@ export const TRANSPORT_SEARCH_OPTIONS: Record<BoardTabType, Company[]> = {
 export const TRANSPORT_ORDER = {
   "KMB first": ["kmb", "ctb", "lrtfeeder", "nlb", "gmb", "lightRail", "mtr"],
   "CTB first": ["ctb", "kmb", "lrtfeeder", "nlb", "gmb", "lightRail", "mtr"],
+  // backward compatability, could be deleted after 2023
+  "CTB-NWFB first": [
+    "ctb",
+    "kmb",
+    "lrtfeeder",
+    "nlb",
+    "gmb",
+    "lightRail",
+    "mtr",
+  ],
 };

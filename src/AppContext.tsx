@@ -141,8 +141,8 @@ const isGeoLocation = (input: unknown): input is GeoLocation => {
   return false;
 };
 
-const isBusSortOrder = (input: unknown): input is BusSortOrder => {
-  return input === "KMB first" || input === "CTB-NWFB first";
+export const isBusSortOrder = (input: unknown): input is BusSortOrder => {
+  return input === "KMB first" || input === "CTB first";
 };
 
 const isNumPadOrder = (input: unknown): input is NumPadOrder => {
@@ -321,7 +321,7 @@ export const AppContextProvider = ({
       produce((state: State) => {
         const prevOrder = state.busSortOrder;
         const busSortOrder =
-          prevOrder === "KMB first" ? "CTB-NWFB first" : "KMB first";
+          prevOrder === "KMB first" ? "CTB first" : "KMB first";
         state.busSortOrder = busSortOrder;
       })
     );
