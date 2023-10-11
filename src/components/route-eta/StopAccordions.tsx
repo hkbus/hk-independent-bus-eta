@@ -45,7 +45,7 @@ const StopAccordions = ({
   const { savedEtas, setCollectionDrawerRoute } = useContext(AppContext);
   const [isCopied, setIsCopied] = useState(false);
   const [sharingObj, setSharingObj] = useState<any | null>(null);
-  const { route, dest, fares, faresHoliday } = routeListEntry;
+  const { route, dest, fares, faresHoliday, stops } = routeListEntry;
   const { t, i18n } = useTranslation();
   const accordionRef = useRef<HTMLElement[]>([]);
 
@@ -74,6 +74,7 @@ const StopAccordions = ({
           route,
           dest,
           idx,
+          stopId: stops[Object.keys(stops).sort()[0]][idx],
           setIsCopied,
           stop,
           event: e,
@@ -187,6 +188,7 @@ const StopAccordions = ({
     setSharingObj,
     stopIdx,
     stopListExtracted,
+    stops,
     t,
     setCollectionDrawerRoute,
     onStopInfo,

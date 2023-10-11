@@ -36,6 +36,14 @@ const RouteEta = () => {
   let stopIdx = 0;
   if (panel !== undefined) {
     stopIdx = parseInt(panel, 10);
+    for (let stopCo in stops) {
+      let coStops = stops[stopCo];
+      let coStopsIdx = coStops.indexOf(panel);
+      if (coStopsIdx >= 0) {
+        stopIdx = coStopsIdx;
+        break;
+      }
+    }
   } else if (geoPermission === "granted") {
     const nearbyStop = stopsExtracted
       .map((stop, idx) => [idx, getDistance(geolocation, stop.location)])
@@ -60,15 +68,17 @@ const RouteEta = () => {
 
   const handleChange = useCallback(
     (newStopIdx: number, expanded: boolean) => {
-      if (expanded && stopIdx !== newStopIdx)
-        navigate(`/${i18n.language}/route/${id}/${newStopIdx}`, {
+      if (expanded && stopIdx !== newStopIdx) {
+        let newStopId = stops[Object.keys(stops).sort()[0]][newStopIdx];
+        navigate(`/${i18n.language}/route/${id}/${newStopId}`, {
           replace: true,
         });
+      }
 
       if (stopIdx === newStopIdx && !expanded) setIsDialogOpen(true);
       else setExpanded(expanded);
     },
-    [navigate, i18n.language, id, stopIdx]
+    [navigate, i18n.language, id, stopIdx, stops]
   );
 
   const onMarkerClick = useCallback(
