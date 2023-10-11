@@ -101,7 +101,7 @@ const emotionCache = createCache({
 
 const getThemeTokens = (mode: PaletteMode) => ({
   typography: {
-    fontFamily: "'Chiron Sans HK Pro WS', sans-serif",
+    fontFamily: "'Chiron Hei HK WS'",
     h6: {
       fontSize: "1.2rem",
       fontWeight: 700,
