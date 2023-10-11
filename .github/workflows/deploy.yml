@@ -5,7 +5,7 @@ name: Build & Deploy
 
 on:
   schedule:
-    - cron: "5 20 8,18,28 * *"
+    - cron: "5 20 * * *"
   workflow_dispatch:
 
 jobs:

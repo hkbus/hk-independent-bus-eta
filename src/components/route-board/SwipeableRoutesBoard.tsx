@@ -53,8 +53,9 @@ const SwipeableRoutesBoard = ({
           !isRouteFilter || isRouteAvaliable(routeNo, freq, isTodayHoliday)
       )
       .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]));
-    return Object.entries(TRANSPORT_SEARCH_OPTIONS).map(
-      ([tab, searchOptions], idx) => {
+    return Object.entries(TRANSPORT_SEARCH_OPTIONS)
+      .filter(([key]) => isRecentSearchShown || key !== "recent")
+      .map(([tab, searchOptions], idx) => {
         return createItemData(
           tab === "recent"
             ? routeSearchHistory
@@ -69,8 +70,7 @@ const SwipeableRoutesBoard = ({
           vibrateDuration,
           tab
         );
-      }
-    );
+      });
   }, [
     routeList,
     isTodayHoliday,
@@ -79,6 +79,7 @@ const SwipeableRoutesBoard = ({
     vibrateDuration,
     busSortOrder,
     routeSearchHistory,
+    isRecentSearchShown,
   ]);
 
   const ListRenderer = useCallback(
@@ -122,6 +123,11 @@ const SwipeableRoutesBoard = ({
     [coItemDataList, searchRoute, t]
   );
 
+  const availableBoardTab = useMemo(
+    () => BOARD_TAB.filter((tab) => isRecentSearchShown || tab !== "recent"),
+    [isRecentSearchShown]
+  );
+
   return useMemo(
     () => (
       <>
@@ -138,11 +144,9 @@ const SwipeableRoutesBoard = ({
           </Box>
         ) : (
           <VirtualizeSwipeableViews
-            index={BOARD_TAB.filter(
-              (tab) => isRecentSearchShown || tab !== "recent"
-            ).indexOf(boardTab)}
+            index={availableBoardTab.indexOf(boardTab)}
             onChangeIndex={(idx) => {
-              onChangeTab(BOARD_TAB[idx]);
+              onChangeTab(availableBoardTab[idx]);
             }}
             style={{ flex: 1, display: "flex" }}
             containerStyle={{ flex: 1 }}
@@ -155,7 +159,7 @@ const SwipeableRoutesBoard = ({
         )}
       </>
     ),
-    [ListRenderer, coItemDataList, onChangeTab, boardTab, isRecentSearchShown]
+    [ListRenderer, coItemDataList, onChangeTab, boardTab, availableBoardTab]
   );
 };
 
