@@ -58,9 +58,10 @@ export const isRouteAvaliable = (
   if (!freq) return true;
   let isAvailable = false;
   let now = new Date();
+  now.setTime(now.getTime() + 8 * 60 * 60 * 1000);
   let currentWts = getWeeklyTimestamp(
-    isHoliday ? 0 : now.getDay(),
-    ("0" + now.getHours()).slice(-2) + ("0" + now.getMinutes()).slice(-2)
+    isHoliday ? 0 : now.getUTCDay(),
+    ("0" + now.getUTCHours()).slice(-2) + ("0" + now.getUTCMinutes()).slice(-2)
   );
   Object.entries(freq).forEach(([serviceId, startTimes]) => {
     try {
