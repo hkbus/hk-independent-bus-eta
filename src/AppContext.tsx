@@ -201,8 +201,9 @@ export const AppContextProvider = ({
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
-      isRecentSearchShown:
-        JSON.parse(localStorage.getItem("isRecentSearchShown")) || true,
+      isRecentSearchShown: !!JSON.parse(
+        localStorage.getItem("isRecentSearchShown") ?? "true"
+      ),
       isVisible: true,
       analytics:
         iOSRNWebView() && !iOSTracking()
