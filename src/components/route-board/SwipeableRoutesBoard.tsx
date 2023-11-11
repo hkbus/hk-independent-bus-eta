@@ -82,6 +82,20 @@ const SwipeableRoutesBoard = ({
     isRecentSearchShown,
   ]);
 
+  const itemHeight = useMemo(() => {
+    const baseFontSize = parseInt(getComputedStyle(document.body).fontSize, 10);
+    if (baseFontSize <= 18) {
+      return 64;
+    } else if (baseFontSize <= 22) {
+      return 78;
+    } else if (baseFontSize <= 26) {
+      return 92;
+    } else if (baseFontSize <= 30) {
+      return 98;
+    }
+    return 110;
+  }, []);
+
   const ListRenderer = useCallback(
     ({ key, index }) => (
       <React.Fragment key={key}>
@@ -91,7 +105,7 @@ const SwipeableRoutesBoard = ({
               <FixedSizeList
                 height={height * 0.98}
                 itemCount={coItemDataList[index].routeList.length}
-                itemSize={64}
+                itemSize={itemHeight}
                 width={width}
                 itemData={coItemDataList[index]}
               >
@@ -120,7 +134,7 @@ const SwipeableRoutesBoard = ({
         )}
       </React.Fragment>
     ),
-    [coItemDataList, searchRoute, t]
+    [itemHeight, coItemDataList, searchRoute, t]
   );
 
   const availableBoardTab = useMemo(
@@ -187,7 +201,7 @@ const noResultSx: SxProps<Theme> = {
   alignItems: "center",
   justifyContent: "center",
   [`& .MuiSvgIcon-root`]: {
-    fontSize: "4rem",
+    fontSize: "4em",
     mr: 2,
   },
 };

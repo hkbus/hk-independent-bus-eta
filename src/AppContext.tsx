@@ -80,6 +80,10 @@ export interface AppState {
    * Show recently searched
    */
   isRecentSearchShown: boolean;
+  /**
+   * Font size
+   */
+  fontSize: number;
 }
 
 interface AppContextValue
@@ -112,6 +116,7 @@ interface AppContextValue
   toggleAnnotateScheduled: () => void;
   toggleIsRecentSearchShown: () => void;
   changeLanguage: (lang: Language) => void;
+  setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
 }
@@ -213,6 +218,7 @@ export const AppContextProvider = ({
         JSON.parse(localStorage.getItem("refreshInterval")) ?? 30000,
       annotateScheduled:
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
+      fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
     };
   };
   const { i18n } = useTranslation();
@@ -499,6 +505,14 @@ export const AppContextProvider = ({
     [i18n]
   );
 
+  const setFontSize = useCallback((fontSize: number) => {
+    setStateRaw(
+      produce((state: State) => {
+        state.fontSize = fontSize;
+      })
+    );
+  }, []);
+
   const colorMode = useMemo(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
       return state._colorMode;
@@ -595,6 +609,10 @@ export const AppContextProvider = ({
     localStorage.setItem("lang", i18n.language);
   }, [i18n.language]);
 
+  useEffect(() => {
+    localStorage.setItem("fontSize", JSON.stringify(state.fontSize));
+  }, [state.fontSize]);
+
   const contextValue = useMemo(() => {
     return {
       ...dbContext,
@@ -621,6 +639,7 @@ export const AppContextProvider = ({
       toggleAnnotateScheduled,
       toggleIsRecentSearchShown,
       changeLanguage,
+      setFontSize,
       importAppState,
       workbox,
     };
@@ -649,6 +668,7 @@ export const AppContextProvider = ({
     toggleAnnotateScheduled,
     toggleIsRecentSearchShown,
     changeLanguage,
+    setFontSize,
     importAppState,
     workbox,
   ]);

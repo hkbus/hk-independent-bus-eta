@@ -37,7 +37,7 @@ const DataImport = loadable(() => import("./pages/DataImport"));
 const DataExport = loadable(() => import("./pages/DataExport"));
 
 const App = () => {
-  const { analytics, colorMode } = useContext(AppContext);
+  const { analytics, colorMode, fontSize } = useContext(AppContext);
   const {
     i18n: { language },
   } = useTranslation();
@@ -48,8 +48,8 @@ const App = () => {
   analytics && reportWebVitals(sendToGoogleAnalytics);
 
   const theme = useMemo(() => {
-    return createTheme(getThemeTokens(colorMode), [colorMode]);
-  }, [colorMode]);
+    return createTheme(getThemeTokens(colorMode, fontSize), [colorMode]);
+  }, [colorMode, fontSize]);
 
   return (
     <StyledEngineProvider injectFirst>
@@ -99,13 +99,13 @@ const emotionCache = createCache({
   ),
 });
 
-const getThemeTokens = (mode: PaletteMode) => ({
+const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
   typography: {
     fontFamily: "'Chiron Hei HK WS'",
     h6: {
-      fontSize: "1.2rem",
       fontWeight: 700,
     },
+    fontSize,
   },
   palette: {
     mode,

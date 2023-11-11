@@ -9,6 +9,7 @@ import {
   SxProps,
   Theme,
   Slider,
+  ListItem,
 } from "@mui/material";
 import {
   SwipeUpOutlined as SwipeUpIcon,
@@ -30,11 +31,13 @@ import {
   PushPin as PinIcon,
   Update as UpdateIcon,
   UpdateDisabled as UpdateDisabledIcon,
+  FormatSize as FormatSizeIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../AppContext";
 import { vibrate } from "../../utils";
 import { useTranslation } from "react-i18next";
+import FontSizeSlider from "./FontSizeSlider";
 
 interface OptionsListProps {
   goToTab: (tab: string) => void;
@@ -150,6 +153,14 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
         </ListItemAvatar>
         <ListItemText primary={t("外觀")} secondary={t(`color-${colorMode}`)} />
       </ListItemButton>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+            <FormatSizeIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <FontSizeSlider />
+      </ListItem>
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
