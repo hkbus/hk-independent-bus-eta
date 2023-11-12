@@ -36,7 +36,9 @@ const SwipeableStopList = React.forwardRef<
 
   const availableTabs = useMemo(
     () =>
-      savedStops.filter((stopId) => stopList[stopId.split("|")?.at(1) ?? ""]),
+      savedStops.filter((stopId) => {
+        return stopId.split("|")[1] in stopList;
+      }),
     [savedStops, stopList]
   );
 

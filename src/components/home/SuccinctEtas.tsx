@@ -34,7 +34,7 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
         remark?.zh?.endsWith("班次") || remark?.en?.endsWith("Scheduled Bus");
 
       const trains =
-        /Platform [\d+] - (▭+)/gm.exec(remark?.en ?? "")?.at(1) ?? "";
+        (/Platform [\d+] - (▭+)/gm.exec(remark?.en ?? "") ?? [])[1] ?? "";
 
       const exactTimeJsx = (
         <Box

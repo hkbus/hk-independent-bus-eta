@@ -109,7 +109,8 @@ const SuccinctTimeReport = ({
       const no =
         PLATFORM[
           parseInt(
-            /Platform ([\d]+)/gm.exec(etas[0].remark?.en ?? "")?.at(1) ?? "0",
+            (/Platform ([\d]+)/gm.exec(etas[0].remark?.en ?? "") ?? [])[1] ??
+              "0",
             10
           )
         ];
