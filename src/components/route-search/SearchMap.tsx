@@ -4,7 +4,6 @@ import {
   Marker,
   TileLayer,
   Polyline,
-  Circle,
   useMap,
 } from "react-leaflet";
 import Leaflet from "leaflet";
@@ -14,6 +13,8 @@ import AppContext from "../../AppContext";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { checkPosition } from "../../utils";
 import { Location as GeoLocation } from "hk-bus-eta";
+import SelfCircle from "../map/SelfCircle";
+import CompassControl from "../map/CompassControl";
 
 const ChangeMapCenter = ({ center, start, end }) => {
   const map = useMap();
@@ -26,14 +27,6 @@ const ChangeMapCenter = ({ center, start, end }) => {
       )
     );
   return <></>;
-};
-
-const SelfCircle = () => {
-  const { geolocation, geoPermission } = useContext(AppContext);
-  if (geoPermission !== "granted") {
-    return null;
-  }
-  return <Circle center={checkPosition(geolocation)} radius={25} />;
 };
 
 const StartMarker = ({ start }) => {
@@ -259,6 +252,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
             }
           }}
         />
+        <CompassControl />
       </MapContainer>
     </Box>
   );
@@ -324,6 +318,14 @@ const rootSx: SxProps<Theme> = {
   },
   [`& .${classes.passed}`]: {
     filter: "grayscale(100%)",
+  },
+  [`& .self-center`]: {
+    backgroundImage: "url(/self.svg)",
+    backgroundSize: "contain",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    transition: "transform 0.1s ease-out",
+    transformOrigin: "center",
   },
 };
 

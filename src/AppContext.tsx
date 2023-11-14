@@ -23,6 +23,7 @@ import {
   Language,
   NumPadOrder,
 } from "./data";
+import { DeviceOrientationPermission } from "react-world-compass";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -31,6 +32,7 @@ export interface AppState {
   selectedRoute: string;
   geoPermission: GeoPermission;
   geolocation: GeoLocation;
+  compassPermission: DeviceOrientationPermission;
   /**
    * route search history
    */
@@ -95,6 +97,7 @@ interface AppContextValue
   updateSearchRouteByButton: (buttonValue: string) => void;
   updateSelectedRoute: (route: string, seq?: string) => void;
   // UX
+  setCompassPermission: (permission: DeviceOrientationPermission) => void;
   updateGeolocation: (geoLocation: GeoLocation) => void;
   addSearchHistory: (routeSearchHistory: string) => void;
   removeSearchHistoryByRouteId: (routeSearchHistoryId: string) => void;
@@ -146,6 +149,12 @@ const isGeoLocation = (input: unknown): input is GeoLocation => {
   return false;
 };
 
+const isCompassPermission = (
+  input: unknown
+): input is DeviceOrientationPermission => {
+  return input === "granted" || input === "denied" || input === "default";
+};
+
 export const isBusSortOrder = (input: unknown): input is BusSortOrder => {
   return input === "KMB first" || input === "CTB first";
 };
@@ -178,6 +187,8 @@ export const AppContextProvider = ({
     const geoLocation: unknown = JSON.parse(
       localStorage.getItem("geolocation")
     );
+    const compassPermission: unknown =
+      localStorage.getItem("compassPermission");
     const busSortOrder: unknown = localStorage.getItem("busSortOrder");
     const numPadOrder: unknown = localStorage.getItem("numPadOrder");
     const etaFormat: unknown = localStorage.getItem("etaFormat");
@@ -192,6 +203,9 @@ export const AppContextProvider = ({
       geolocation: isGeoLocation(geoLocation)
         ? geoLocation
         : defaultGeolocation,
+      compassPermission: isCompassPermission(compassPermission)
+        ? compassPermission
+        : "default",
       isRouteFilter:
         !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
       busSortOrder: isBusSortOrder(busSortOrder) ? busSortOrder : "KMB first",
@@ -311,6 +325,15 @@ export const AppContextProvider = ({
       }
     },
     [setGeoPermission, updateGeolocation]
+  );
+
+  const setCompassPermission = useCallback(
+    (compassPermission: AppState["compassPermission"]) => {
+      setState((state) => {
+        state.compassPermission = compassPermission;
+      });
+    },
+    [setState]
   );
 
   const toggleRouteFilter = useCallback(() => {
@@ -543,6 +566,10 @@ export const AppContextProvider = ({
   }, [state.geoPermission]);
 
   useEffect(() => {
+    localStorage.setItem("compassPermission", state.compassPermission);
+  }, [state.compassPermission]);
+
+  useEffect(() => {
     localStorage.setItem("isRouteFilter", JSON.stringify(state.isRouteFilter));
   }, [state.isRouteFilter]);
 
@@ -622,6 +649,7 @@ export const AppContextProvider = ({
       setSearchRoute,
       updateSearchRouteByButton,
       updateSelectedRoute,
+      setCompassPermission,
       updateGeolocation,
       addSearchHistory,
       removeSearchHistoryByRouteId,
@@ -651,6 +679,7 @@ export const AppContextProvider = ({
     setSearchRoute,
     updateSearchRouteByButton,
     updateSelectedRoute,
+    setCompassPermission,
     updateGeolocation,
     addSearchHistory,
     removeSearchHistoryByRouteId,
