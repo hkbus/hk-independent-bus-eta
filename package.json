@@ -64,7 +64,7 @@
     "render": "node scripts/pre-rendering.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    
+    "predeploy": "yarn build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
     "deploy": "gh-pages -d build -t",
     "alpha-deploy": "yarn build && gh-pages -d build --remote alpha -t -f",
     "docker": "cd docker && docker-compose up -d --build",
