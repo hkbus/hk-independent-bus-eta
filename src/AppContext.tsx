@@ -323,28 +323,12 @@ export const AppContextProvider = ({
             }
           );
           geoWatcherId.current = _geoWatcherId;
-        } else {
-          // react native web view
-          // @ts-ignore
-          window.ReactNativeWebView?.postMessage(
-            JSON.stringify({
-              type: "start-geolocation",
-            })
-          );
         }
       } else if (geoWatcherId.current) {
         navigator.geolocation.clearWatch(geoWatcherId.current);
         geoWatcherId.current = null;
         setGeoPermission(geoPermission);
-        // @ts-ignore
-      } else if (window.ReactNativeWebView !== undefined) {
-        // react native web view
-        // @ts-ignore
-        window.ReactNativeWebView?.postMessage(
-          JSON.stringify({
-            type: "stop-geolocation",
-          })
-        );
+      } else {
         setGeoPermission(geoPermission);
       }
     },

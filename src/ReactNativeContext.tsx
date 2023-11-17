@@ -8,11 +8,12 @@ interface ReactNativeContextValue {
 const ReactNativeContext = React.createContext<ReactNativeContextValue>(null);
 
 export const ReactNativeContextProvider = ({ children }) => {
-  const { setGeoPermission, updateGeolocation } = useContext(AppContext);
+  const { geoPermission, setGeoPermission, updateGeolocation } =
+    useContext(AppContext);
 
   const os = useMemo<ReactNativeContextValue["os"]>(
     // @ts-ignore
-    () => window?.RnOs.toLowerCase(),
+    () => window?.RnOs?.toLowerCase() ?? null,
     []
   );
 
@@ -44,6 +45,32 @@ export const ReactNativeContextProvider = ({ children }) => {
       obj.removeEventListener("message", handleMsg);
     };
   }, [handleMsg, os]);
+
+  useEffect(() => {
+    // @ts-ignore
+    if (window.ReactNativeWebView !== undefined) {
+      // react native web view
+      if (
+        geoPermission === null ||
+        geoPermission === "opening" ||
+        geoPermission === "granted"
+      ) {
+        // @ts-ignore
+        window.ReactNativeWebView?.postMessage(
+          JSON.stringify({
+            type: "start-geolocation",
+          })
+        );
+      } else if (geoPermission === "closed") {
+        // @ts-ignore
+        window.ReactNativeWebView?.postMessage(
+          JSON.stringify({
+            type: "stop-geolocation",
+          })
+        );
+      }
+    }
+  }, [geoPermission]);
 
   return (
     <ReactNativeContext.Provider
