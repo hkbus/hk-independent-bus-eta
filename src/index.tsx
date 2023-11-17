@@ -10,6 +10,7 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import type { WarnUpMessageData } from "./typing";
 import ErrorBoundary from "./ErrorBoundary";
 import { CollectionContextProvider } from "./CollectionContext";
+import { ReactNativeContextProvider } from "./ReactNativeContext";
 const App = loadable(() => import("./App"));
 
 const isHuman = () => {
@@ -77,7 +78,9 @@ if (isHuman()) {
         <DbProvider initialDb={state.db}>
           <CollectionContextProvider>
             <AppContextProvider workbox={state.workbox}>
-              <App />
+              <ReactNativeContextProvider>
+                <App />
+              </ReactNativeContextProvider>
             </AppContextProvider>
           </CollectionContextProvider>
         </DbProvider>

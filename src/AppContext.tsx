@@ -122,6 +122,9 @@ interface AppContextValue
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
+
+  // for React Native Context
+  setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
 }
 
 interface AppContextProviderProps {
@@ -307,20 +310,41 @@ export const AppContextProvider = ({
     (geoPermission: AppState["geoPermission"], deniedCallback?: () => void) => {
       if (geoPermission === "opening") {
         setGeoPermission("opening");
-        const _geoWatcherId = navigator.geolocation.watchPosition(
-          ({ coords: { latitude, longitude } }) => {
-            updateGeolocation({ lat: latitude, lng: longitude });
-            setGeoPermission("granted");
-          },
-          () => {
-            setGeoPermission("denied");
-            if (deniedCallback) deniedCallback();
-          }
-        );
-        geoWatcherId.current = _geoWatcherId;
+        // @ts-ignore
+        if (window.ReactNativeWebView === undefined) {
+          const _geoWatcherId = navigator.geolocation.watchPosition(
+            ({ coords: { latitude, longitude } }) => {
+              updateGeolocation({ lat: latitude, lng: longitude });
+              setGeoPermission("granted");
+            },
+            () => {
+              setGeoPermission("denied");
+              if (deniedCallback) deniedCallback();
+            }
+          );
+          geoWatcherId.current = _geoWatcherId;
+        } else {
+          // react native web view
+          // @ts-ignore
+          window.ReactNativeWebView?.postMessage(
+            JSON.stringify({
+              type: "start-geolocation",
+            })
+          );
+        }
       } else if (geoWatcherId.current) {
         navigator.geolocation.clearWatch(geoWatcherId.current);
         geoWatcherId.current = null;
+        setGeoPermission(geoPermission);
+        // @ts-ignore
+      } else if (window.ReactNativeWebView !== undefined) {
+        // react native web view
+        // @ts-ignore
+        window.ReactNativeWebView?.postMessage(
+          JSON.stringify({
+            type: "stop-geolocation",
+          })
+        );
         setGeoPermission(geoPermission);
       }
     },
@@ -670,6 +694,7 @@ export const AppContextProvider = ({
       setFontSize,
       importAppState,
       workbox,
+      setGeoPermission,
     };
   }, [
     dbContext,
@@ -700,6 +725,7 @@ export const AppContextProvider = ({
     setFontSize,
     importAppState,
     workbox,
+    setGeoPermission,
   ]);
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>

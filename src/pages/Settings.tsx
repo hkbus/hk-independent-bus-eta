@@ -198,8 +198,8 @@ const Settings = () => {
               geoPermission === "granted"
                 ? "開啟"
                 : geoPermission === "opening"
-                  ? "開啟中..."
-                  : "關閉"
+                ? "開啟中..."
+                : "關閉"
             )}
           />
         </ListItemButton>
