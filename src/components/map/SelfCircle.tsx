@@ -29,7 +29,10 @@ const RotatedMarker = forwardRef<RotatedMarkerType<any>, any>(
         try {
           const data = JSON.parse(nativeEvent.data);
           if (data?.type === "compass") {
-            setCompass(data.compass);
+            setCompass({
+              degree: data.degree,
+              accuracy: data.accuracy,
+            });
           }
         } catch (e) {
           console.log(e);
