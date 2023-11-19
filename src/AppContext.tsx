@@ -310,20 +310,17 @@ export const AppContextProvider = ({
     (geoPermission: AppState["geoPermission"], deniedCallback?: () => void) => {
       if (geoPermission === "opening") {
         setGeoPermission("opening");
-        // @ts-ignore
-        if (window.ReactNativeWebView === undefined) {
-          const _geoWatcherId = navigator.geolocation.watchPosition(
-            ({ coords: { latitude, longitude } }) => {
-              updateGeolocation({ lat: latitude, lng: longitude });
-              setGeoPermission("granted");
-            },
-            () => {
-              setGeoPermission("denied");
-              if (deniedCallback) deniedCallback();
-            }
-          );
-          geoWatcherId.current = _geoWatcherId;
-        }
+        const _geoWatcherId = navigator.geolocation.watchPosition(
+          ({ coords: { latitude, longitude } }) => {
+            updateGeolocation({ lat: latitude, lng: longitude });
+            setGeoPermission("granted");
+          },
+          () => {
+            setGeoPermission("denied");
+            if (deniedCallback) deniedCallback();
+          }
+        );
+        geoWatcherId.current = _geoWatcherId;
       } else if (geoWatcherId.current) {
         navigator.geolocation.clearWatch(geoWatcherId.current);
         geoWatcherId.current = null;
