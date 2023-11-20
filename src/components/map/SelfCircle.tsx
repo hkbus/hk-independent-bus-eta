@@ -89,6 +89,7 @@ const SelfCircle = () => {
     <>
       <Circle center={checkPosition(geolocation)} radius={25} />
       <RotatedMarker
+        key="rotated-marker"
         rotationOrigin="center"
         icon={icon}
         position={checkPosition(geolocation)}
