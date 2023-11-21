@@ -6,31 +6,19 @@ import {
   useMemo,
   useState,
 } from "react";
-import {
-  MapContainer,
-  Marker,
-  TileLayer,
-  Polyline,
-  Circle,
-} from "react-leaflet";
+import { MapContainer, Marker, TileLayer, Polyline } from "react-leaflet";
 import Leaflet from "leaflet";
 import markerIcon2X from "leaflet/dist/images/marker-icon-2x.png";
 import { Box, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import type { StopListEntry } from "hk-bus-eta";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
+import { MyLocation as MyLocationIcon } from "@mui/icons-material";
 import { checkPosition, locationEqual } from "../../utils";
 import type { Map as LeafletMap } from "leaflet";
 import type { Location as GeoLocation } from "hk-bus-eta";
-
-const SelfCircle = () => {
-  const { geolocation, geoPermission } = useContext(AppContext);
-  if (geoPermission !== "granted") {
-    return null;
-  }
-  return <Circle center={checkPosition(geolocation)} radius={25} />;
-};
+import SelfCircle from "../map/SelfCircle";
+import CompassControl from "../map/CompassControl";
 
 const CenterControl = ({ onClick }) => {
   return (
@@ -234,6 +222,7 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
         {lines}
         <SelfCircle />
         <CenterControl onClick={onClickJumpToMyLocation} />
+        <CompassControl />
       </MapContainer>
     </Box>
   );
@@ -285,6 +274,14 @@ const rootSx: SxProps<Theme> = {
   },
   [`& .${classes.passed}`]: {
     filter: "grayscale(100%)",
+  },
+  [`& .self-center`]: {
+    backgroundImage: "url(/self.svg)",
+    backgroundSize: "contain",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    transition: "transform 0.1s ease-out",
+    transformOrigin: "center",
   },
 };
 

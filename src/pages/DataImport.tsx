@@ -100,6 +100,7 @@ const DataImport = () => {
     });
     importAppState({
       geoPermission: null,
+      compassPermission: "default",
       geolocation: { lat: 22.302711, lng: 114.177216 },
       searchRoute: "",
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
@@ -116,6 +117,7 @@ const DataImport = () => {
       refreshInterval: obj.refreshInterval ?? 30,
       annotateScheduled: obj.annotateScheduled ?? true,
       isRecentSearchShown: obj.isRecentSearchShown ?? true,
+      fontSize: obj.fontSize ?? 16,
     });
 
     navigate("/");

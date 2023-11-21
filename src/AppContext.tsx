@@ -23,6 +23,7 @@ import {
   Language,
   NumPadOrder,
 } from "./data";
+import { DeviceOrientationPermission } from "react-world-compass";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -31,6 +32,7 @@ export interface AppState {
   selectedRoute: string;
   geoPermission: GeoPermission;
   geolocation: GeoLocation;
+  compassPermission: DeviceOrientationPermission;
   /**
    * route search history
    */
@@ -80,6 +82,10 @@ export interface AppState {
    * Show recently searched
    */
   isRecentSearchShown: boolean;
+  /**
+   * Font size
+   */
+  fontSize: number;
 }
 
 interface AppContextValue
@@ -91,6 +97,7 @@ interface AppContextValue
   updateSearchRouteByButton: (buttonValue: string) => void;
   updateSelectedRoute: (route: string, seq?: string) => void;
   // UX
+  setCompassPermission: (permission: DeviceOrientationPermission) => void;
   updateGeolocation: (geoLocation: GeoLocation) => void;
   addSearchHistory: (routeSearchHistory: string) => void;
   removeSearchHistoryByRouteId: (routeSearchHistoryId: string) => void;
@@ -112,8 +119,12 @@ interface AppContextValue
   toggleAnnotateScheduled: () => void;
   toggleIsRecentSearchShown: () => void;
   changeLanguage: (lang: Language) => void;
+  setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
+
+  // for React Native Context
+  setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
 }
 
 interface AppContextProviderProps {
@@ -139,6 +150,12 @@ const isGeoLocation = (input: unknown): input is GeoLocation => {
     }
   }
   return false;
+};
+
+const isCompassPermission = (
+  input: unknown
+): input is DeviceOrientationPermission => {
+  return input === "granted" || input === "denied" || input === "default";
 };
 
 export const isBusSortOrder = (input: unknown): input is BusSortOrder => {
@@ -173,6 +190,8 @@ export const AppContextProvider = ({
     const geoLocation: unknown = JSON.parse(
       localStorage.getItem("geolocation")
     );
+    const compassPermission: unknown =
+      localStorage.getItem("compassPermission");
     const busSortOrder: unknown = localStorage.getItem("busSortOrder");
     const numPadOrder: unknown = localStorage.getItem("numPadOrder");
     const etaFormat: unknown = localStorage.getItem("etaFormat");
@@ -187,6 +206,9 @@ export const AppContextProvider = ({
       geolocation: isGeoLocation(geoLocation)
         ? geoLocation
         : defaultGeolocation,
+      compassPermission: isCompassPermission(compassPermission)
+        ? compassPermission
+        : "default",
       isRouteFilter:
         !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
       busSortOrder: isBusSortOrder(busSortOrder) ? busSortOrder : "KMB first",
@@ -201,8 +223,9 @@ export const AppContextProvider = ({
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
       vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
-      isRecentSearchShown:
-        JSON.parse(localStorage.getItem("isRecentSearchShown")) || true,
+      isRecentSearchShown: !!JSON.parse(
+        localStorage.getItem("isRecentSearchShown") ?? "true"
+      ),
       isVisible: true,
       analytics:
         iOSRNWebView() && !iOSTracking()
@@ -212,6 +235,7 @@ export const AppContextProvider = ({
         JSON.parse(localStorage.getItem("refreshInterval")) ?? 30000,
       annotateScheduled:
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
+      fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
     };
   };
   const { i18n } = useTranslation();
@@ -286,24 +310,38 @@ export const AppContextProvider = ({
     (geoPermission: AppState["geoPermission"], deniedCallback?: () => void) => {
       if (geoPermission === "opening") {
         setGeoPermission("opening");
-        const _geoWatcherId = navigator.geolocation.watchPosition(
-          ({ coords: { latitude, longitude } }) => {
-            updateGeolocation({ lat: latitude, lng: longitude });
-            setGeoPermission("granted");
-          },
-          () => {
-            setGeoPermission("denied");
-            if (deniedCallback) deniedCallback();
-          }
-        );
-        geoWatcherId.current = _geoWatcherId;
+        // @ts-ignore
+        if (window.ReactNativeWebView === undefined) {
+          const _geoWatcherId = navigator.geolocation.watchPosition(
+            ({ coords: { latitude, longitude } }) => {
+              updateGeolocation({ lat: latitude, lng: longitude });
+              setGeoPermission("granted");
+            },
+            () => {
+              setGeoPermission("denied");
+              if (deniedCallback) deniedCallback();
+            }
+          );
+          geoWatcherId.current = _geoWatcherId;
+        }
       } else if (geoWatcherId.current) {
         navigator.geolocation.clearWatch(geoWatcherId.current);
         geoWatcherId.current = null;
         setGeoPermission(geoPermission);
+      } else {
+        setGeoPermission(geoPermission);
       }
     },
     [setGeoPermission, updateGeolocation]
+  );
+
+  const setCompassPermission = useCallback(
+    (compassPermission: AppState["compassPermission"]) => {
+      setState((state) => {
+        state.compassPermission = compassPermission;
+      });
+    },
+    [setState]
   );
 
   const toggleRouteFilter = useCallback(() => {
@@ -498,6 +536,14 @@ export const AppContextProvider = ({
     [i18n]
   );
 
+  const setFontSize = useCallback((fontSize: number) => {
+    setStateRaw(
+      produce((state: State) => {
+        state.fontSize = fontSize;
+      })
+    );
+  }, []);
+
   const colorMode = useMemo(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
       return state._colorMode;
@@ -526,6 +572,10 @@ export const AppContextProvider = ({
   useEffect(() => {
     localStorage.setItem("geoPermission", state.geoPermission);
   }, [state.geoPermission]);
+
+  useEffect(() => {
+    localStorage.setItem("compassPermission", state.compassPermission);
+  }, [state.compassPermission]);
 
   useEffect(() => {
     localStorage.setItem("isRouteFilter", JSON.stringify(state.isRouteFilter));
@@ -594,6 +644,10 @@ export const AppContextProvider = ({
     localStorage.setItem("lang", i18n.language);
   }, [i18n.language]);
 
+  useEffect(() => {
+    localStorage.setItem("fontSize", JSON.stringify(state.fontSize));
+  }, [state.fontSize]);
+
   const contextValue = useMemo(() => {
     return {
       ...dbContext,
@@ -603,6 +657,7 @@ export const AppContextProvider = ({
       setSearchRoute,
       updateSearchRouteByButton,
       updateSelectedRoute,
+      setCompassPermission,
       updateGeolocation,
       addSearchHistory,
       removeSearchHistoryByRouteId,
@@ -620,8 +675,10 @@ export const AppContextProvider = ({
       toggleAnnotateScheduled,
       toggleIsRecentSearchShown,
       changeLanguage,
+      setFontSize,
       importAppState,
       workbox,
+      setGeoPermission,
     };
   }, [
     dbContext,
@@ -631,6 +688,7 @@ export const AppContextProvider = ({
     setSearchRoute,
     updateSearchRouteByButton,
     updateSelectedRoute,
+    setCompassPermission,
     updateGeolocation,
     addSearchHistory,
     removeSearchHistoryByRouteId,
@@ -648,8 +706,10 @@ export const AppContextProvider = ({
     toggleAnnotateScheduled,
     toggleIsRecentSearchShown,
     changeLanguage,
+    setFontSize,
     importAppState,
     workbox,
+    setGeoPermission,
   ]);
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>

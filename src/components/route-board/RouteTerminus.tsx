@@ -35,7 +35,7 @@ const fromToWrapperSx: SxProps<Theme> = {
   whiteSpace: "nowrap",
   overflowX: "hidden",
   "& > span": {
-    fontSize: "0.95rem",
+    fontSize: "0.95em",
     mr: 0.5,
   },
 };

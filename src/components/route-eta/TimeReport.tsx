@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
-import { Box, SxProps, Theme, Typography } from "@mui/material";
+import { Box, SxProps, Theme, Tooltip, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { useEtas } from "../../hooks/useEtas";
 import { LinearProgress } from "../Progress";
+import { Eta, Terminal } from "hk-bus-eta";
+import CallSplitIcon from "@mui/icons-material/CallSplit";
 
 interface TimeReportProps {
   routeId: string;
@@ -24,9 +26,11 @@ const TimeReport = ({
   } = useTranslation();
   const {
     db: { routeList, stopList },
-    etaFormat,
   } = useContext(AppContext);
   const etas = useEtas(`${routeId}/${seq}`);
+
+  const stopId = Object.values(routeList[routeId].stops)[0][seq];
+  const routeDest = routeList[routeId].dest;
 
   if (etas == null) {
     return (
@@ -36,78 +40,103 @@ const TimeReport = ({
     );
   }
 
-  const DisplayMsg = (eta) => {
-    if (!eta) return "";
-    else {
-      const waitTime = Math.round(
-        (new Date(eta).getTime() - new Date().getTime()) / 60 / 1000
-      );
-
-      if (!Number.isInteger(waitTime)) {
-        return eta.remark[language];
-      }
-
-      const exactTimeJsx = (
-        <Box
-          component="span"
-          sx={etaFormat !== "exact" ? { fontSize: "0.9em" } : {}}
-        >
-          {eta.substr(11, 5)}
-        </Box>
-      );
-      const waitTimeJsx = (
-        <Box component="span">
-          <Box
-            component="span"
-            sx={{ ...waitTimeSx, color: (theme) => theme.palette.warning.main }}
-          >
-            {waitTime < 1 ? " - " : `${waitTime} `}
-          </Box>
-          <Box component="span" sx={{ fontSize: "0.8em" }}>
-            {t("分鐘")}
-          </Box>
-        </Box>
-      );
-
-      switch (etaFormat) {
-        case "exact":
-          return exactTimeJsx;
-        case "diff":
-          return waitTimeJsx;
-        default:
-          return (
-            <>
-              {exactTimeJsx}&emsp;{waitTimeJsx}
-            </>
-          );
-      }
-    }
-  };
-  const stopId = Object.values(routeList[routeId].stops)[0][seq];
-
   return (
     <Box sx={containerSx}>
-      {showStopName ? (
+      {showStopName && (
         <Typography variant="caption">
           {stopList[stopId].name[language]}
         </Typography>
-      ) : null}
-      {etas.length === 0
-        ? t("未有班次資料")
-        : etas.map((eta, idx) => (
-            <Typography variant="subtitle1" key={`route-${idx}`}>
-              {DisplayMsg(eta.eta)}&emsp;-&nbsp;
-              <Box component="span" sx={{ fontSize: "0.8em" }}>
-                {getRemark(
-                  eta.remark[language] ? eta.remark[language] : "",
-                  language
-                )}
-                &emsp;
-                {t(eta.co)}
-              </Box>
-            </Typography>
-          ))}
+      )}
+      {etas.length === 0 && t("未有班次資料")}
+      {etas.length > 0 &&
+        etas.map((eta, idx) => (
+          <EtaLine key={`route-${idx}`} eta={eta} routeDest={routeDest} />
+        ))}
     </Box>
+  );
+};
+
+interface EtaMsgProps {
+  eta: Eta;
+  routeDest: Terminal;
+}
+
+const EtaLine = ({
+  eta: { eta, remark, co, dest },
+  routeDest,
+}: EtaMsgProps) => {
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
+  const { etaFormat } = useContext(AppContext);
+
+  const branchRoute = !(
+    routeDest.en.toLowerCase() === dest.en.toLowerCase() ||
+    routeDest.zh === dest.zh
+  );
+
+  const waitTime = Math.round(
+    (new Date(eta).getTime() - new Date().getTime()) / 60 / 1000
+  );
+
+  const exactTimeJsx = (
+    <Box
+      component="span"
+      sx={etaFormat !== "exact" ? { fontSize: "0.9em" } : {}}
+    >
+      {eta.slice(11, 16)}
+    </Box>
+  );
+  const waitTimeJsx = (
+    <Box component="span">
+      <Box
+        component="span"
+        sx={{ ...waitTimeSx, color: (theme) => theme.palette.warning.main }}
+      >
+        {waitTime < 1 ? " - " : `${waitTime} `}
+      </Box>
+      <Box component="span" sx={{ fontSize: "0.8em" }}>
+        {t("分鐘")}
+      </Box>
+    </Box>
+  );
+
+  return (
+    <Typography variant="subtitle1">
+      {etaFormat === "diff" && waitTimeJsx}
+      {etaFormat === "exact" && exactTimeJsx}
+      {etaFormat === "mixed" && (
+        <>
+          {exactTimeJsx}&emsp;{waitTimeJsx}
+        </>
+      )}
+      &emsp;-&nbsp;
+      <Box
+        component="span"
+        sx={{ fontSize: "0.8em", textOverflow: "ellipsis" }}
+      >
+        {getRemark(remark[language] ? remark[language] : "", language)}
+        &emsp;
+        {t(co)}
+        {branchRoute && (
+          <>
+            &emsp;
+            <Tooltip
+              title={dest[language]}
+              placement="top"
+              arrow={true}
+              enterTouchDelay={200}
+              leaveTouchDelay={200}
+            >
+              <CallSplitIcon
+                sx={{ transform: "rotate(90deg)", fontSize: "1em" }}
+              />
+            </Tooltip>
+          </>
+        )}
+      </Box>
+    </Typography>
   );
 };
 

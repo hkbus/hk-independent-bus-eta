@@ -310,7 +310,7 @@ const getSelectedRoutes = ({
       // keep only the nearest 5 stops
       let routeIds = [];
       Object.entries(routeList).forEach(([key, route]) => {
-        ["kmb", "nwfb", "ctb", "nlb"].forEach((co) => {
+        ["kmb", "lrtfeeder", "lightRail", "gmb", "ctb", "nlb"].forEach((co) => {
           if (route.stops[co] && route.stops[co].includes(stopId)) {
             routeIds.push(key + "/" + route.stops[co].indexOf(stopId));
           }
