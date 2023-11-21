@@ -59,7 +59,7 @@ const SharingModal = ({
 
   const handleShareLink = useCallback(() => {
     triggerShare(
-      `https://${window.location.hostname}/${i18n.language}/route/${id}/${stopId}`,
+      `https://${window.location.hostname}/${i18n.language}/route/${id}/${stopId},${idx}`,
       `${idx + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
         "往"
       )} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}`

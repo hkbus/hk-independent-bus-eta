@@ -35,13 +35,29 @@ const RouteEta = () => {
   }, [co, stopList, stops]);
   let stopIdx = 0;
   if (panel !== undefined) {
-    stopIdx = parseInt(panel, 10);
-    for (let stopCo in stops) {
-      let coStops = stops[stopCo];
-      let coStopsIdx = coStops.indexOf(panel);
-      if (coStopsIdx >= 0) {
-        stopIdx = coStopsIdx;
-        break;
+    const [id, indexStr] = panel.split(",");
+    if (id === undefined || indexStr === undefined) {
+      stopIdx = parseInt(panel, 10);
+    } else {
+      const index = parseInt(indexStr, 10);
+      stopIdx = 0;
+      let currentDistance = 9999999;
+      for (let stopCo in stops) {
+        let coStopsIdxes = stops[stopCo].reduce((ind, el, i) => {
+          if (el === id) {
+            ind.push(i);
+          }
+          return ind;
+        }, []);
+        for (let coStopsIdx of coStopsIdxes) {
+          if (coStopsIdx >= 0) {
+            let distanceToId = Math.abs(coStopsIdx - index);
+            if (distanceToId < currentDistance) {
+              stopIdx = coStopsIdx;
+              currentDistance = distanceToId;
+            }
+          }
+        }
       }
     }
   } else if (geoPermission === "granted") {
@@ -70,7 +86,7 @@ const RouteEta = () => {
     (newStopIdx: number, expanded: boolean) => {
       if (expanded && stopIdx !== newStopIdx) {
         let newStopId = stops[Object.keys(stops).sort()[0]][newStopIdx];
-        navigate(`/${i18n.language}/route/${id}/${newStopId}`, {
+        navigate(`/${i18n.language}/route/${id}/${newStopId},${newStopIdx}`, {
           replace: true,
         });
       }
