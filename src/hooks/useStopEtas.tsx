@@ -84,9 +84,9 @@ export const useStopEtas = (stopKeys: string[][]) => {
           _etas
             .map((e, idx) => [
               routeKeys[idx].join("/"),
-              e.filter(({ co, remark }) => {
+              e.filter(({ co, dest }) => {
                 if (co !== "mtr") return true;
-                return remark.zh.endsWith(routeList[routeKeys[idx][0]].dest.zh);
+                return dest.zh === routeList[routeKeys[idx][0]].dest.zh;
               }),
             ])
             .sort(([keyA, a], [keyB, b]) => {
