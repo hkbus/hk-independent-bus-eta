@@ -618,6 +618,10 @@ export const AppContextProvider = ({
   }, [state.energyMode]);
 
   useEffect(() => {
+    localStorage.setItem("lowDataMode", JSON.stringify(state.lowDataMode));
+  }, [state.lowDataMode]);
+
+  useEffect(() => {
     localStorage.setItem(
       "isRecentSearchShown",
       JSON.stringify(state.isRecentSearchShown)
