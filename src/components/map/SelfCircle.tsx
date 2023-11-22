@@ -34,9 +34,7 @@ const RotatedMarker = forwardRef<RotatedMarkerType<any>, any>(
               accuracy: data.accuracy,
             });
           }
-        } catch (e) {
-          console.log(e);
-        }
+        } catch (e) {}
       };
       window.addEventListener("message", elf);
       return () => {
