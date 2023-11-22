@@ -59,6 +59,10 @@ export interface AppState {
    */
   energyMode: boolean;
   /**
+   * data saving mode
+   */
+  lowDataMode: boolean;
+  /**
    * vibrate duration
    */
   vibrateDuration: number;
@@ -113,6 +117,7 @@ interface AppContextValue
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
   toggleEnergyMode: () => void;
+  toggleLowDataMode: () => void;
   toggleVibrateDuration: () => void;
   toggleAnalytics: () => void; // not
   updateRefreshInterval: (interval: number) => void;
@@ -222,6 +227,7 @@ export const AppContextProvider = ({
         ? devicePreferColorScheme
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
+      lowDataMode: JSON.parse(localStorage.getItem("lowDataMode")) ?? true,
       vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
       isRecentSearchShown: !!JSON.parse(
         localStorage.getItem("isRecentSearchShown") ?? "true"
@@ -413,6 +419,16 @@ export const AppContextProvider = ({
         const prevEnergyMode = state.energyMode;
         const energyMode = !prevEnergyMode;
         state.energyMode = energyMode;
+      })
+    );
+  }, []);
+
+  const toggleLowDataMode = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prevLowDataMode = state.lowDataMode;
+        const lowDataMode = !prevLowDataMode;
+        state.lowDataMode = lowDataMode;
       })
     );
   }, []);
@@ -669,6 +685,7 @@ export const AppContextProvider = ({
       toggleEtaFormat,
       toggleColorMode,
       toggleEnergyMode,
+      toggleLowDataMode,
       toggleVibrateDuration,
       toggleAnalytics,
       updateRefreshInterval,
@@ -700,6 +717,7 @@ export const AppContextProvider = ({
     toggleEtaFormat,
     toggleColorMode,
     toggleEnergyMode,
+    toggleLowDataMode,
     toggleVibrateDuration,
     toggleAnalytics,
     updateRefreshInterval,

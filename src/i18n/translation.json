@@ -81,6 +81,8 @@
       "車程": "Trip duration",
       "開啟地圖功能": "Map function - ON",
       "關閉地圖功能": "Map function - OFF",
+      "開啟巴士地圖路線功能": "Bus Waypoints - ON",
+      "關閉巴士地圖路線功能": "Bus Waypoints - OFF",
       "圖標來源": "Logo source",
       "找不到合適的巴士路線": "No available routes found",
       "用 Safari 開": "Open this website with Safari",

@@ -6,7 +6,13 @@ import {
   useMemo,
   useState,
 } from "react";
-import { MapContainer, Marker, TileLayer, GeoJSON  } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  TileLayer,
+  Polyline,
+  GeoJSON,
+} from "react-leaflet";
 import Leaflet from "leaflet";
 import markerIcon2X from "leaflet/dist/images/marker-icon-2x.png";
 import { Box, SxProps, Theme } from "@mui/material";
@@ -19,6 +25,7 @@ import type { Map as LeafletMap } from "leaflet";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
+import { useRoutePath } from "../../hooks/useRoutePath";
 
 const CenterControl = ({ onClick }) => {
   return (
@@ -36,7 +43,7 @@ const CenterControl = ({ onClick }) => {
 
 interface RouteMapProps {
   gtfsId: string;
-  bound: number;
+  bound: "O" | "I" | "OI" | "IO";
   stops: Array<StopListEntry>;
   stopIdx: number;
   onMarkerClick: (idx: number, event: unknown) => void;
@@ -55,12 +62,18 @@ interface RouteMapRef {
   stopIdx: number;
 }
 
-const RouteMap = ({ gtfsId, bound, stops, stopIdx, onMarkerClick }: RouteMapProps) => {
+const RouteMap = ({
+  gtfsId,
+  bound,
+  stops,
+  stopIdx,
+  onMarkerClick,
+}: RouteMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } =
     useContext(AppContext);
   const { i18n } = useTranslation();
   const [map, setMap] = useState<Leaflet.Map>(null);
-  const [geoJson, setGeoJson] = useState<GeoJSON.GeoJsonObject>(null);
+  const routePath = useRoutePath(gtfsId, bound);
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
     currentStopCenter: stops[stopIdx]
@@ -176,22 +189,27 @@ const RouteMap = ({ gtfsId, bound, stops, stopIdx, onMarkerClick }: RouteMapProp
     ));
   }, [i18n.language, onMarkerClick, stopIdx, stops]);
 
-  const geoJsonStyle = function (feature: GeoJSON.Feature) {
-    return {
-      color: "#FF9090",
-      weight: 4,
-    };
-  };
-
-  useEffect(() => {
-    fetch(`https://api.csdi.gov.hk/apim/dataquery/api/?id=td_rcd_1638844988873_41214&layer=fb_route_line&limit=10&offset=0&ROUTE_ID=${gtfsId}&ROUTE_SEQ=${bound}`).then(response => {
-      if (response.ok) {
-        response.json().then(json => {
-          setGeoJson(json);
-        })
+  const lines = useMemo(() => {
+    const list: JSX.Element[] = [];
+    return stops.reduce((prev, stop, idx, stops) => {
+      if (idx === 0) {
+        return prev;
       }
-    })
-  }, [gtfsId, bound]);
+      const lastStop = stops[idx - 1];
+      if (lastStop === undefined) {
+        console.log("wat?", stops, idx);
+        return prev;
+      }
+      prev.push(
+        <Polyline
+          key={`${stop.location.lng}-${stop.location.lat}-line-${idx}`}
+          positions={[getPoint(lastStop.location), getPoint(stop.location)]}
+          color={"#FF9090"}
+        />
+      );
+      return prev;
+    }, list);
+  }, [stops]);
 
   return (
     <Box id="route-map" sx={rootSx}>
@@ -217,7 +235,18 @@ const RouteMap = ({ gtfsId, bound, stops, stopIdx, onMarkerClick }: RouteMapProp
           }
         />
         {stopMarkers}
-        <GeoJSON key={geoJson?.["timeStamp"]} data={geoJson} style={geoJsonStyle} />
+        {
+          // @ts-ignore
+          routePath?.features?.length ? (
+            <GeoJSON
+              key={routePath?.["timeStamp"]}
+              data={routePath}
+              style={geoJsonStyle}
+            />
+          ) : (
+            lines
+          )
+        }
         <SelfCircle />
         <CenterControl onClick={onClickJumpToMyLocation} />
         <CompassControl />
@@ -229,6 +258,13 @@ const RouteMap = ({ gtfsId, bound, stops, stopIdx, onMarkerClick }: RouteMapProp
 export default RouteMap;
 
 const getPoint = ({ lat, lng }) => [lat, lng];
+
+const geoJsonStyle = function (feature: GeoJSON.Feature) {
+  return {
+    color: "#FF9090",
+    weight: 4,
+  };
+};
 
 const BusStopMarker = ({ active, passed }) => {
   return Leaflet.divIcon({
