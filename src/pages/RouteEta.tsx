@@ -13,7 +13,7 @@ import { RouteList } from "hk-bus-eta";
 const RouteMap = loadable(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
-  const { id, panel } = useParams<{ id: string; panel: string }>();
+  const { id, panel } = useParams<{ id: string; panel?: string }>();
   const {
     AppTitle,
     db: { routeList, stopList, stopMap },
@@ -33,46 +33,48 @@ const RouteEta = () => {
       })
       .filter((stop) => stop !== null && stop !== undefined);
   }, [co, stopList, stops]);
-  let stopIdx = 0;
-  if (panel !== undefined) {
-    const [id, indexStr] = panel.split(",");
-    if (id === undefined || indexStr === undefined) {
-      stopIdx = parseInt(panel, 10);
-    } else {
-      const index = parseInt(indexStr, 10);
-      stopIdx = 0;
-      let currentDistance = 9999999;
-      for (let stopCo in stops) {
-        let coStopsIdxes = stops[stopCo].reduce((ind, el, i) => {
-          if (el === id) {
-            ind.push(i);
-          }
-          return ind;
-        }, []);
-        for (let coStopsIdx of coStopsIdxes) {
-          if (coStopsIdx >= 0) {
-            let distanceToId = Math.abs(coStopsIdx - index);
-            if (distanceToId < currentDistance) {
-              stopIdx = coStopsIdx;
-              currentDistance = distanceToId;
+
+  const stopIdx = useMemo(() => {
+    if (panel !== undefined) {
+      const [id, indexStr] = panel.split(",");
+      if (id === undefined || indexStr === undefined) {
+        return parseInt(panel, 10);
+      } else {
+        const index = parseInt(indexStr, 10);
+        let ret = 0;
+        let currentDistance = 9999999;
+        for (let stopCo in stops) {
+          let coStopsIdxes = stops[stopCo].reduce((ind, el, i) => {
+            if (el === id) {
+              ind.push(i);
+            }
+            return ind;
+          }, []);
+          for (let coStopsIdx of coStopsIdxes) {
+            if (coStopsIdx >= 0) {
+              let distanceToId = Math.abs(coStopsIdx - index);
+              if (distanceToId < currentDistance) {
+                ret = coStopsIdx;
+                currentDistance = distanceToId;
+              }
             }
           }
         }
+        return ret;
       }
     }
-  } else if (geoPermission === "granted") {
-    const nearbyStop = stopsExtracted
-      .map((stop, idx) => [idx, getDistance(geolocation, stop.location)])
-      .sort((a, b) => a[1] - b[1])[0];
+    if (geoPermission === "granted") {
+      const nearbyStop = stopsExtracted
+        .map((stop, idx) => [idx, getDistance(geolocation, stop.location)])
+        .sort((a, b) => a[1] - b[1])[0];
 
-    if (nearbyStop.length > 0) {
-      stopIdx = nearbyStop[0];
-    } else {
-      stopIdx = 0;
+      if (nearbyStop.length > 0) {
+        return nearbyStop[0];
+      }
     }
-  } else {
-    stopIdx = 0;
-  }
+    return 0;
+  }, [panel, geoPermission, stopsExtracted, geolocation, stops]);
+
   const [expanded, setExpanded] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dialogStop = useMemo(() => {
@@ -86,7 +88,7 @@ const RouteEta = () => {
     (newStopIdx: number, expanded: boolean) => {
       if (expanded && stopIdx !== newStopIdx) {
         let newStopId = stops[Object.keys(stops).sort()[0]][newStopIdx];
-        navigate(`/${i18n.language}/route/${id}/${newStopId},${newStopIdx}`, {
+        navigate(`/${i18n.language}/route/${id}/${newStopId}%2C${newStopIdx}`, {
           replace: true,
         });
       }

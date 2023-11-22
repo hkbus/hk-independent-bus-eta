@@ -74,7 +74,7 @@ const StopAccordions = ({
           route,
           dest,
           idx,
-          stopId: stops[Object.keys(stops).sort()[0]][idx],
+          stopId: stops[Object.keys(stops)[0]][idx],
           setIsCopied,
           stop,
           event: e,
