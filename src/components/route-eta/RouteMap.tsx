@@ -6,7 +6,13 @@ import {
   useMemo,
   useState,
 } from "react";
-import { MapContainer, Marker, TileLayer, Polyline } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  TileLayer,
+  Polyline,
+  GeoJSON,
+} from "react-leaflet";
 import Leaflet from "leaflet";
 import markerIcon2X from "leaflet/dist/images/marker-icon-2x.png";
 import { Box, SxProps, Theme } from "@mui/material";
@@ -19,6 +25,7 @@ import type { Map as LeafletMap } from "leaflet";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
+import { useRoutePath } from "../../hooks/useRoutePath";
 
 const CenterControl = ({ onClick }) => {
   return (
@@ -35,6 +42,8 @@ const CenterControl = ({ onClick }) => {
 };
 
 interface RouteMapProps {
+  gtfsId: string;
+  bound: "O" | "I" | "OI" | "IO";
   stops: Array<StopListEntry>;
   stopIdx: number;
   onMarkerClick: (idx: number, event: unknown) => void;
@@ -53,11 +62,18 @@ interface RouteMapRef {
   stopIdx: number;
 }
 
-const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
+const RouteMap = ({
+  gtfsId,
+  bound,
+  stops,
+  stopIdx,
+  onMarkerClick,
+}: RouteMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } =
     useContext(AppContext);
   const { i18n } = useTranslation();
   const [map, setMap] = useState<Leaflet.Map>(null);
+  const routePath = useRoutePath(gtfsId, bound);
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
     currentStopCenter: stops[stopIdx]
@@ -219,7 +235,18 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
           }
         />
         {stopMarkers}
-        {lines}
+        {
+          // @ts-ignore
+          routePath?.features?.length ? (
+            <GeoJSON
+              key={routePath?.["timeStamp"]}
+              data={routePath}
+              style={geoJsonStyle}
+            />
+          ) : (
+            lines
+          )
+        }
         <SelfCircle />
         <CenterControl onClick={onClickJumpToMyLocation} />
         <CompassControl />
@@ -231,6 +258,13 @@ const RouteMap = ({ stops, stopIdx, onMarkerClick }: RouteMapProps) => {
 export default RouteMap;
 
 const getPoint = ({ lat, lng }) => [lat, lng];
+
+const geoJsonStyle = function (feature: GeoJSON.Feature) {
+  return {
+    color: "#FF9090",
+    weight: 4,
+  };
+};
 
 const BusStopMarker = ({ active, passed }) => {
   return Leaflet.divIcon({

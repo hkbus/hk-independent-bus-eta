@@ -25,7 +25,7 @@ const RouteEta = () => {
   } = useContext(AppContext);
   const routeId = getRouteEntry(id.toUpperCase(), routeList);
   const routeListEntry = routeList[routeId];
-  const { route, stops, co, orig, dest, fares } = routeListEntry;
+  const { route, stops, co, orig, dest, fares, gtfsId, bound } = routeListEntry;
   const stopsExtracted = useMemo(() => {
     return getStops(co, stops)
       .map((id) => {
@@ -207,6 +207,8 @@ const RouteEta = () => {
       <RouteHeader routeId={routeId} />
       {!energyMode && navigator.userAgent !== "prerendering" && (
         <RouteMap
+          gtfsId={gtfsId}
+          bound={bound[co[0]]}
           stops={stopsExtracted}
           stopIdx={stopIdx}
           onMarkerClick={onMarkerClick}
