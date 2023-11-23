@@ -61,3 +61,5 @@ Project owner [chunlaw](https://github.com/chunlaw) is the initiator of the whol
 [sdip15fa](https://github.com/sdip15fa)
 [thomassth](https://github.com/thomassth)
 [skpracta](https://github.com/skpracta)
+[chakflying](https://github.com/chakflying)
+[LOOHP](https://github.com/LOOHP)
