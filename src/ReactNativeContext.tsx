@@ -1,8 +1,16 @@
-import React, { useCallback, useEffect, useContext, useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import AppContext from "./AppContext";
 
 interface ReactNativeContextValue {
   os: "ios" | "android" | null;
+  debug: boolean;
+  toggleDebug: () => void;
 }
 
 const ReactNativeContext = React.createContext<ReactNativeContextValue>(null);
@@ -10,12 +18,21 @@ const ReactNativeContext = React.createContext<ReactNativeContextValue>(null);
 export const ReactNativeContextProvider = ({ children }) => {
   const { geoPermission, setGeoPermission, updateGeolocation } =
     useContext(AppContext);
-
-  const os = useMemo<ReactNativeContextValue["os"]>(
-    // @ts-ignore
-    () => window?.RnOs?.toLowerCase() ?? null,
-    []
+  const [debug, setDebug] = useState<boolean>(
+    localStorage.getItem("debug") === "true"
   );
+
+  const toggleDebug = useCallback(() => {
+    setDebug((prev) => !prev);
+  }, []);
+
+  const os = useMemo<ReactNativeContextValue["os"]>(() => {
+    // @ts-ignore
+    if (window?.iOSRNWebView === true) return "ios";
+    // @ts-ignore
+    else if (window?.iOSRNWebView === false) return "android";
+    return null;
+  }, []);
 
   const handleMsg = useCallback(
     (msg) => {
@@ -42,9 +59,11 @@ export const ReactNativeContextProvider = ({ children }) => {
     }
     obj.addEventListener("message", handleMsg);
     return () => {
-      obj.removeEventListener("message", handleMsg);
+      if (obj !== null) {
+        obj.removeEventListener("message", handleMsg);
+      }
     };
-  }, [handleMsg, os]);
+  }, [handleMsg, os, debug]);
 
   useEffect(() => {
     // @ts-ignore
@@ -72,10 +91,16 @@ export const ReactNativeContextProvider = ({ children }) => {
     }
   }, [geoPermission]);
 
+  useEffect(() => {
+    localStorage.setItem("debug", JSON.stringify(debug));
+  }, [debug]);
+
   return (
     <ReactNativeContext.Provider
       value={{
         os,
+        debug,
+        toggleDebug,
       }}
     >
       {children}

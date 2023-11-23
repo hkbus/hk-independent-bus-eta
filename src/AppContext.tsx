@@ -317,7 +317,7 @@ export const AppContextProvider = ({
       if (geoPermission === "opening") {
         setGeoPermission("opening");
         // @ts-ignore
-        if (window.ReactNativeWebView === undefined) {
+        if (window.iOSRNWebView !== true) {
           const _geoWatcherId = navigator.geolocation.watchPosition(
             ({ coords: { latitude, longitude } }) => {
               updateGeolocation({ lat: latitude, lng: longitude });

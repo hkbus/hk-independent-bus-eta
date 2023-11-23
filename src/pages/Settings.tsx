@@ -49,6 +49,7 @@ import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
 import PersonalizeDialog from "../components/settings/PersonalizeDialog";
 import { useNavigate } from "react-router-dom";
+import ReactNativeContext from "../ReactNativeContext";
 
 const Settings = () => {
   const {
@@ -63,6 +64,7 @@ const Settings = () => {
     toggleAnalytics,
     analytics,
   } = useContext(AppContext);
+  const { debug, toggleDebug } = useContext(ReactNativeContext);
   const [updating, setUpdating] = useState(false);
   const [showGeoPermissionDenied, setShowGeoPermissionDenied] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -193,6 +195,7 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
+            // @ts-ignore
             primary={t("地理位置定位功能")}
             secondary={t(
               geoPermission === "granted"
@@ -432,14 +435,14 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText primary={t("條款")} />
         </ListItemButton>
-        <ListItem>
+        <ListItem onClick={toggleDebug}>
           <ListItemAvatar>
             <Avatar>
               <DataUsageIcon />
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={t("交通資料來源")}
+            primary={t("交通資料來源") + ` ${debug === true ? "DEBUG" : ""}`}
             secondary={t("資料一線通") + "  https://data.gov.hk"}
           />
         </ListItem>
