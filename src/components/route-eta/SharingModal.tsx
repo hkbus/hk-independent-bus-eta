@@ -23,33 +23,37 @@ const SharingModal = ({
   const [imgBase64, setImgBase64] = useState<string>("");
 
   useEffect(() => {
-    if (isOpen === false) return;
-    Promise.all([
-      domToImage("route-eta-header", colorMode),
-      domToImage("route-map", colorMode),
-      domToImage(`stop-${idx}`, colorMode),
-    ])
-      .then((rawBase64s) => {
-        let baseH = 0;
-        return mergeImages(
-          rawBase64s
-            .filter(([v]) => v)
-            .map(([rawBase64, h, w], idx) => {
-              baseH += h;
-              return {
-                src: rawBase64,
-                x: 0,
-                y: baseH - h,
-              };
-            }),
-          {
-            height: baseH,
-          }
-        );
-      })
-      .then((b64) => {
-        setImgBase64(b64);
-      });
+    if (isOpen) {
+      Promise.all([
+        domToImage("route-eta-header", colorMode),
+        domToImage("route-map", colorMode),
+        domToImage(`stop-${idx}`, colorMode),
+      ])
+        .then((rawBase64s) => {
+          let baseH = 0;
+          return mergeImages(
+            rawBase64s
+              .filter(([v]) => v)
+              .map(([rawBase64, h, w], idx) => {
+                baseH += h;
+                return {
+                  src: rawBase64,
+                  x: 0,
+                  y: baseH - h,
+                };
+              }),
+            {
+              height: baseH,
+            }
+          );
+        })
+        .then((b64) => {
+          setImgBase64(b64);
+        });
+    }
+    return () => {
+      setImgBase64("");
+    };
   }, [isOpen, colorMode, idx]);
 
   useEffect(() => {
@@ -102,21 +106,32 @@ const SharingModal = ({
 
   return (
     <Modal sx={rootSx} onClose={() => setIsOpen(false)} open={isOpen}>
-      <Container maxWidth="xs" sx={containerSx}>
-        {imgBase64 && (
-          <Box sx={boxContainerSx}>
-            <img src={imgBase64} style={{ width: "100%" }} alt="" />
-            <Box sx={buttonContainerSx}>
-              <Button sx={buttonSx} onClick={handleShareLink}>
-                {t("以鏈結分享")}
-              </Button>
-              <Button sx={buttonSx} onClick={handleShareImg}>
-                {t("以圖片分享")}
-              </Button>
-            </Box>
+      <Container maxWidth="xs" sx={containerSx} fixed>
+        <Box sx={boxContainerSx}>
+          <Box sx={imgContainerSx}>
+            {imgBase64 ? (
+              <img
+                src={imgBase64}
+                style={{ objectFit: "contain", width: 396, height: 400 }}
+                alt=""
+              />
+            ) : (
+              <CircularProgress color="inherit" />
+            )}
           </Box>
-        )}
-        {!imgBase64 && <CircularProgress color="inherit" />}
+          <Box sx={buttonContainerSx}>
+            <Button sx={buttonSx} onClick={handleShareLink}>
+              {t("以鏈結分享")}
+            </Button>
+            <Button
+              sx={buttonSx}
+              onClick={handleShareImg}
+              disabled={imgBase64 === ""}
+            >
+              {t("以圖片分享")}
+            </Button>
+          </Box>
+        </Box>
       </Container>
     </Modal>
   );
@@ -154,11 +169,26 @@ const containerSx: SxProps<Theme> = {
 const boxContainerSx: SxProps<Theme> = {
   display: "flex",
   flexDirection: "column",
+  alignItems: "center",
   justifyContent: "center",
+  flex: 1,
+  background: (theme) =>
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : "#fedb00",
+};
+
+const imgContainerSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: 400,
+  width: "100%",
 };
 
 const buttonContainerSx: SxProps<Theme> = {
   display: "flex",
+  width: "100%",
   backgroundColor: (theme) =>
     theme.palette.mode === "dark"
       ? theme.palette.background.default
