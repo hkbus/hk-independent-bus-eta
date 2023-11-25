@@ -46,7 +46,7 @@ COPY ./tsconfig.json ./
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
-RUN if [ "$PRERENDER" = "true" ] || [ "$env" = "dev" ]; then yarn install; else yarn install --production --ignore-optional; fi;
+RUN yarn install
 
 COPY ./src ./src
 COPY ./public ./public
