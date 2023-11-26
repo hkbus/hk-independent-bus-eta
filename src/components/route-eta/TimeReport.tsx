@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { Box, SxProps, Theme, Tooltip, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
@@ -71,10 +71,15 @@ const EtaLine = ({
   } = useTranslation();
   const { etaFormat } = useContext(AppContext);
 
-  const branchRoute = !(
-    routeDest.en.toLowerCase() === dest.en.toLowerCase() ||
-    routeDest.zh === dest.zh
-  );
+  const branchRoute = useMemo(() => {
+    if (routeDest.en.toLowerCase() === dest.en.toLowerCase()) {
+      return false;
+    }
+    if (routeDest.zh === dest.zh) {
+      return false;
+    }
+    return true;
+  }, [routeDest, dest]);
 
   const waitTime = Math.round(
     (new Date(eta).getTime() - new Date().getTime()) / 60 / 1000
@@ -119,7 +124,7 @@ const EtaLine = ({
         {getRemark(remark[language] ? remark[language] : "", language)}
         &emsp;
         {t(co)}
-        {branchRoute && (
+        {branchRoute && dest[language] && (
           <>
             &emsp;
             <Tooltip

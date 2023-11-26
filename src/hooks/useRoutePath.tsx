@@ -11,18 +11,13 @@ export const useRoutePath = (
   useEffect(() => {
     if (lowDataMode) return;
     fetch(
-      "https://api.csdi.gov.hk/apim/dataquery/api/?" +
-        new URLSearchParams({
-          id: "td_rcd_1638844988873_41214",
-          layer: "fb_route_line",
-          limit: "10",
-          offset: "0",
-          ROUTE_ID: gtfsId,
-          ROUTE_SEQ: bound === "O" ? "1" : "2",
-        })
+      `https://hkbus.github.io/hk-bus-crawling/waypoints/${gtfsId}-${
+        bound === "O" ? "1" : "2"
+      }.json`
     ).then((response) => {
       if (response.ok) {
         return response.json().then((json) => {
+          // @ts-ignore
           setGeoJson(json);
         });
       }
