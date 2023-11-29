@@ -32,8 +32,6 @@ import {
   Update as UpdateIcon,
   UpdateDisabled as UpdateDisabledIcon,
   FormatSize as FormatSizeIcon,
-  SignalCellular1Bar as SignalCellular1BarIcon,
-  SignalCellular4Bar as SignalCellular4BarIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../AppContext";
@@ -60,8 +58,6 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
     toggleColorMode,
     energyMode,
     toggleEnergyMode,
-    lowDataMode,
-    toggleLowDataMode,
     vibrateDuration,
     toggleVibrateDuration,
     refreshInterval,
@@ -208,28 +204,6 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
         <ListItemText
           primary={t("注釋預定班次")}
           secondary={t(annotateScheduled ? "開啟" : "關閉")}
-        />
-      </ListItemButton>
-      <ListItemButton
-        onClick={() => {
-          vibrate(vibrateDuration);
-          toggleLowDataMode();
-        }}
-      >
-        <ListItemAvatar>
-          <Avatar>
-            {lowDataMode ? (
-              <SignalCellular1BarIcon />
-            ) : (
-              <SignalCellular4BarIcon />
-            )}
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText
-          primary={t("低數據模式")}
-          secondary={t(
-            !lowDataMode ? "開啟巴士地圖路線功能" : "關閉巴士地圖路線功能"
-          )}
         />
       </ListItemButton>
       <ListItemButton
