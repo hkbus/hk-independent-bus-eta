@@ -6,13 +6,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import {
-  MapContainer,
-  Marker,
-  TileLayer,
-  Polyline,
-  GeoJSON,
-} from "react-leaflet";
+import { MapContainer, Marker, TileLayer, GeoJSON } from "react-leaflet";
 import Leaflet from "leaflet";
 import markerIcon2X from "leaflet/dist/images/marker-icon-2x.png";
 import { Box, SxProps, Theme } from "@mui/material";
@@ -73,7 +67,7 @@ const RouteMap = ({
     useContext(AppContext);
   const { i18n } = useTranslation();
   const [map, setMap] = useState<Leaflet.Map>(null);
-  const routePath = useRoutePath(gtfsId, bound);
+  const routePath = useRoutePath(gtfsId, bound, stops);
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
     currentStopCenter: stops[stopIdx]
@@ -189,28 +183,6 @@ const RouteMap = ({
     ));
   }, [i18n.language, onMarkerClick, stopIdx, stops]);
 
-  const lines = useMemo(() => {
-    const list: JSX.Element[] = [];
-    return stops.reduce((prev, stop, idx, stops) => {
-      if (idx === 0) {
-        return prev;
-      }
-      const lastStop = stops[idx - 1];
-      if (lastStop === undefined) {
-        console.log("wat?", stops, idx);
-        return prev;
-      }
-      prev.push(
-        <Polyline
-          key={`${stop.location.lng}-${stop.location.lat}-line-${idx}`}
-          positions={[getPoint(lastStop.location), getPoint(stop.location)]}
-          color={"#FF9090"}
-        />
-      );
-      return prev;
-    }, list);
-  }, [stops]);
-
   return (
     <Box id="route-map" sx={rootSx}>
       <MapContainer
@@ -237,14 +209,12 @@ const RouteMap = ({
         {stopMarkers}
         {
           // @ts-ignore
-          routePath?.features?.length ? (
+          routePath?.features?.length && (
             <GeoJSON
               key={routePath?.["timeStamp"]}
               data={routePath}
               style={geoJsonStyle}
             />
-          ) : (
-            lines
           )
         }
         <SelfCircle />
@@ -256,8 +226,6 @@ const RouteMap = ({
 };
 
 export default RouteMap;
-
-const getPoint = ({ lat, lng }) => [lat, lng];
 
 const geoJsonStyle = function (feature: GeoJSON.Feature) {
   return {

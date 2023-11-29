@@ -1,8 +1,11 @@
+// @ts-nocheck
+import { StopListEntry } from "hk-bus-eta";
 import { useEffect, useState } from "react";
 
 export const useRoutePath = (
   gtfsId: string,
-  bound: "I" | "O" | "IO" | "OI"
+  bound: "I" | "O" | "IO" | "OI",
+  stops: StopListEntry[]
 ) => {
   const [geoJson, setGeoJson] = useState<GeoJSON.GeoJsonObject>(null);
 
@@ -11,15 +14,29 @@ export const useRoutePath = (
       `https://hkbus.github.io/route-waypoints/${gtfsId}-${
         bound === "I" ? "I" : "O" // handling for pseudo circular route
       }.json`
-    ).then((response) => {
-      if (response.ok) {
-        return response.json().then((json) => {
-          // @ts-ignore
-          setGeoJson(json);
+    )
+      .then((r) => r.json())
+      .then((json) => {
+        setGeoJson(json);
+      })
+      .catch(() => {
+        setGeoJson({
+          features: [
+            {
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: stops.reduce((acc, { location: { lat, lng } }) => {
+                  acc.push([lng, lat]);
+                  return acc;
+                }, []),
+              },
+            },
+          ],
+          type: "FeatureCollection",
         });
-      }
-    });
-  }, [gtfsId, bound]);
+      });
+  }, [gtfsId, bound, stops]);
 
   return geoJson;
 };
