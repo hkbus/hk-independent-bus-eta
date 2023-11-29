@@ -8,7 +8,9 @@ export const useRoutePath = (
 
   useEffect(() => {
     fetch(
-      `https://hkbus.github.io/route-waypoints/${gtfsId}-${bound}.json`
+      `https://hkbus.github.io/route-waypoints/${gtfsId}-${
+        bound === "I" ? "I" : "O" // handling for pseudo circular route
+      }.json`
     ).then((response) => {
       if (response.ok) {
         return response.json().then((json) => {
