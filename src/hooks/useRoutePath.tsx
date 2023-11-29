@@ -1,19 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import AppContext from "../AppContext";
+import { useEffect, useState } from "react";
 
 export const useRoutePath = (
   gtfsId: string,
   bound: "I" | "O" | "IO" | "OI"
 ) => {
   const [geoJson, setGeoJson] = useState<GeoJSON.GeoJsonObject>(null);
-  const { lowDataMode } = useContext(AppContext);
 
   useEffect(() => {
-    if (lowDataMode) return;
     fetch(
-      `https://hkbus.github.io/hk-bus-crawling/waypoints/${gtfsId}-${
-        bound === "O" ? "1" : "2"
-      }.json`
+      `https://hkbus.github.io/route-waypoints/${gtfsId}-${bound}.json`
     ).then((response) => {
       if (response.ok) {
         return response.json().then((json) => {
@@ -22,7 +17,7 @@ export const useRoutePath = (
         });
       }
     });
-  }, [lowDataMode, gtfsId, bound]);
+  }, [gtfsId, bound]);
 
   return geoJson;
 };
