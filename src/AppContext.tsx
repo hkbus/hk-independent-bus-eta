@@ -261,6 +261,8 @@ export const AppContextProvider = ({
   useEffect(() => {
     if (geoPermission === "granted") {
       try {
+        // @ts-ignore don't use geolocation navigator for Webview
+        if (window.iOSRNWebView === true) return;
         const _geoWatcherId = navigator.geolocation.watchPosition(
           ({ coords: { latitude, longitude } }) => {
             updateGeolocation({ lat: latitude, lng: longitude });
