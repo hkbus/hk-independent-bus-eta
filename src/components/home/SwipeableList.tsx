@@ -129,33 +129,32 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     );
 
     const SmartCollectionRouteList = useMemo(
-      () =>
-        selectedRoutes?.smartCollections.length > 0 ? (
+      () => 
+        selectedRoutes?.smartCollections?.filter(
+          ({ routes }) => !!routes.replaceAll("|", "")
+        ).length > 0 ? (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {selectedRoutes.smartCollections.map(({ name, routes }, idx) => (
-              <Box key={`collection-${idx}`}>
-                <Typography variant="body1" sx={{ textAlign: "left" }}>
-                  <b>{name}</b>
-                </Typography>
-                <List disablePadding>
-                  {routes
-                    .split("|")
-                    .map(
-                      (selectedRoute, idx) =>
-                        Boolean(selectedRoute) && (
-                          <SuccinctTimeReport
-                            key={`route-shortcut-${idx}`}
-                            routeId={selectedRoute}
-                          />
-                        )
-                    )}
-                </List>
-                {routes.split("|").filter((v) => Boolean(v)).length === 0 && (
-                  <Typography sx={{ marginTop: 1 }}>
-                    {t("未有收藏路線")}
+            {selectedRoutes.smartCollections
+              .filter(({ routes }) => !!routes.replaceAll("|", ""))
+              .map(({ name, routes }, idx) => (
+                <Box key={`collection-${idx}`}>
+                  <Typography variant="body1" sx={{ textAlign: "left" }}>
+                    <b>{name}</b>
                   </Typography>
-                )}
-              </Box>
+                  <List disablePadding>
+                    {routes
+                      .split("|")
+                      .map(
+                        (selectedRoute, idx) =>
+                          Boolean(selectedRoute) && (
+                            <SuccinctTimeReport
+                              key={`route-shortcut-${idx}`}
+                              routeId={selectedRoute}
+                            />
+                          )
+                      )}
+                  </List>
+                </Box>
             ))}
           </Box>
         ) : (
