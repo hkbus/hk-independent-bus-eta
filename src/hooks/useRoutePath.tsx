@@ -36,6 +36,9 @@ export const useRoutePath = (
           type: "FeatureCollection",
         });
       });
+    return () => {
+      setGeoJson(null);
+    };
   }, [gtfsId, bound, stops]);
 
   return geoJson;
