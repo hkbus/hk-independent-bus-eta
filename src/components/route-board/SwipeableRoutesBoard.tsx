@@ -26,7 +26,7 @@ const SwipeableRoutesBoard = ({
 }: SwipeableRouteBoardProps) => {
   const {
     searchRoute,
-    db: { holidays, routeList },
+    db: { holidays, routeList, serviceDayMap },
     isRouteFilter,
     busSortOrder,
     routeSearchHistory,
@@ -50,7 +50,8 @@ const SwipeableRoutesBoard = ({
       // filter non available route
       .filter(
         ([routeNo, { freq }]) =>
-          !isRouteFilter || isRouteAvaliable(routeNo, freq, isTodayHoliday)
+          !isRouteFilter ||
+          isRouteAvaliable(routeNo, freq, isTodayHoliday, serviceDayMap)
       )
       .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]));
     return Object.entries(TRANSPORT_SEARCH_OPTIONS)
@@ -80,6 +81,7 @@ const SwipeableRoutesBoard = ({
     busSortOrder,
     routeSearchHistory,
     isRecentSearchShown,
+    serviceDayMap,
   ]);
 
   const itemHeight = useMemo(() => {

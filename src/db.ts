@@ -1,7 +1,6 @@
 import { fetchEtaDb, fetchEtaDbMd5 } from "hk-bus-eta";
 import type { EtaDb } from "hk-bus-eta";
 import { decompress as decompressJson } from "lzutf8-light";
-import { ServiceDayMap } from "./utils";
 
 const isEtaDb = (input: unknown): input is EtaDb => {
   return (
@@ -85,7 +84,7 @@ export const fetchDbFunc = async (
             routeList: db.routeList,
             stopList: db.stopList,
             stopMap: db.stopMap,
-            serviceDayMap: db.serviceDayMap ?? ServiceDayMap,
+            serviceDayMap: db.serviceDayMap,
           });
         }
       } catch (e) {

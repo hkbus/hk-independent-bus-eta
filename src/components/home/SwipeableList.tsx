@@ -9,16 +9,23 @@ import React, {
 } from "react";
 import SwipeableViews from "react-swipeable-views";
 import { Box, List, Typography } from "@mui/material";
-import { Location, RouteList, StopListEntry, StopList } from "hk-bus-eta";
+import {
+  Location,
+  RouteList,
+  StopListEntry,
+  StopList,
+  EtaDb,
+} from "hk-bus-eta";
 
 import AppContext from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
-import { getDistance } from "../../utils";
+import { coToType, getDistance } from "../../utils";
 import SuccinctTimeReport from "./SuccinctTimeReport";
 import type { HomeTabType } from "./HomeTabbar";
 import { useTranslation } from "react-i18next";
 import { CircularProgress } from "../Progress";
-import { RouteCollection } from "../../typing";
+import { RouteCollection, TransportType } from "../../typing";
+import HomeRouteListDropDown from "./HomeRouteList";
 
 interface SwipeableListProps {
   geolocation: Location;
@@ -32,7 +39,7 @@ interface SwipeableListRef {
 
 interface SelectedRoutes {
   saved: string;
-  nearby: string;
+  nearby: Partial<Record<TransportType, string>>;
   smartCollections: Array<{ name: string; routes: string }>;
   collections: string[];
 }
@@ -41,7 +48,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ geolocation, homeTab, onChangeTab }, ref) => {
     const {
       savedEtas,
-      db: { holidays, routeList, stopList },
+      db: { holidays, routeList, stopList, serviceDayMap },
       isRouteFilter,
       collections,
     } = useContext(AppContext);
@@ -71,6 +78,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           stopList,
           isRouteFilter,
           isTodayHoliday,
+          serviceDayMap,
         })
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,24 +116,22 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
 
     const NearbyRouteList = useMemo(
       () =>
-        selectedRoutes ? (
-          <List disablePadding>
-            {selectedRoutes["nearby"]
-              .split("|")
-              .map(
-                (selectedRoute, idx) =>
-                  Boolean(selectedRoute) && (
-                    <SuccinctTimeReport
-                      key={`route-shortcut-${idx}`}
-                      routeId={selectedRoute}
-                    />
-                  )
-              )}
-          </List>
+        selectedRoutes?.nearby ? (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {Object.entries(selectedRoutes.nearby).map(
+              ([type, nearbyRoutes]) => (
+                <HomeRouteListDropDown
+                  key={`nearby-${type}`}
+                  name={t(type)}
+                  routeStrings={nearbyRoutes}
+                />
+              )
+            )}
+          </Box>
         ) : (
           <CircularProgress sx={{ my: 10 }} />
         ),
-      [selectedRoutes]
+      [selectedRoutes, t]
     );
 
     const SmartCollectionRouteList = useMemo(
@@ -133,34 +139,25 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
         selectedRoutes?.smartCollections.length > 0 ? (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {selectedRoutes.smartCollections.map(({ name, routes }, idx) => (
-              <Box key={`collection-${idx}`}>
-                <Typography variant="body1" sx={{ textAlign: "left" }}>
-                  <b>{name}</b>
-                </Typography>
-                <List disablePadding>
-                  {routes
-                    .split("|")
-                    .map(
-                      (selectedRoute, idx) =>
-                        Boolean(selectedRoute) && (
-                          <SuccinctTimeReport
-                            key={`route-shortcut-${idx}`}
-                            routeId={selectedRoute}
-                          />
-                        )
-                    )}
-                </List>
-                {routes.split("|").filter((v) => Boolean(v)).length === 0 && (
-                  <Typography sx={{ marginTop: 1 }}>
-                    {t("未有收藏路線")}
-                  </Typography>
-                )}
-              </Box>
+              <HomeRouteListDropDown
+                key={`collection-${idx}`}
+                name={name}
+                routeStrings={routes}
+              />
             ))}
+            {!selectedRoutes.smartCollections.reduce(
+              (acc, { routes }) =>
+                acc || routes.split("|").filter((v) => Boolean(v)).length > 0,
+              false
+            ) && (
+              <Typography sx={{ marginTop: 5 }} fontWeight={700}>
+                {t("未有收藏路線")}
+              </Typography>
+            )}
           </Box>
         ) : (
-          <Typography sx={{ marginTop: 5 }}>
-            <b>{t("未有收藏路線")}</b>
+          <Typography sx={{ marginTop: 5 }} fontWeight={700}>
+            {t("未有收藏路線")}
           </Typography>
         ),
       [t, selectedRoutes]
@@ -250,6 +247,7 @@ const getSelectedRoutes = ({
   routeList,
   isRouteFilter,
   isTodayHoliday,
+  serviceDayMap,
 }: {
   savedEtas: string[];
   collections: RouteCollection[];
@@ -258,6 +256,7 @@ const getSelectedRoutes = ({
   routeList: RouteList;
   isRouteFilter: boolean;
   isTodayHoliday: boolean;
+  serviceDayMap: EtaDb["serviceDayMap"];
 }): SelectedRoutes => {
   const selectedRoutes = savedEtas
     .filter((routeUrl, index, self) => {
@@ -306,18 +305,24 @@ const getSelectedRoutes = ({
     )
     .sort((a, b) => a[2] - b[2])
     .slice(0, 20)
-    .reduce((acc, [stopId]) => {
-      // keep only the nearest 5 stops
-      let routeIds = [];
-      Object.entries(routeList).forEach(([key, route]) => {
-        ["kmb", "lrtfeeder", "lightRail", "gmb", "ctb", "nlb"].forEach((co) => {
-          if (route.stops[co] && route.stops[co].includes(stopId)) {
-            routeIds.push(key + "/" + route.stops[co].indexOf(stopId));
-          }
+    .reduce(
+      (acc, [stopId]) => {
+        Object.entries(routeList).forEach(([key, route]) => {
+          ["kmb", "lrtfeeder", "lightRail", "gmb", "ctb", "nlb"].forEach(
+            (co) => {
+              if (route.stops[co] && route.stops[co].includes(stopId)) {
+                if (acc[coToType[co]] === undefined) acc[coToType[co]] = [];
+                acc[coToType[co]].push(
+                  key + "/" + route.stops[co].indexOf(stopId)
+                );
+              }
+            }
+          );
         });
-      });
-      return acc.concat(routeIds);
-    }, []);
+        return acc;
+      },
+      { bus: [], mtr: [], lightRail: [], minibus: [] }
+    );
 
   const collectionRoutes = collections
     // check if collection should be shown at the moment
@@ -354,7 +359,12 @@ const getSelectedRoutes = ({
         return (
           routeList[routeId] &&
           (!isRouteFilter ||
-            isRouteAvaliable(routeId, routeList[routeId].freq, isTodayHoliday))
+            isRouteAvaliable(
+              routeId,
+              routeList[routeId].freq,
+              isTodayHoliday,
+              serviceDayMap
+            ))
         );
       })
       .map((routeUrl) => {
@@ -384,7 +394,10 @@ const getSelectedRoutes = ({
         .map((v) => v[0])
         .slice(0, 40)
     ),
-    nearby: formatHandling(nearbyRoutes),
+    nearby: Object.entries(nearbyRoutes).reduce((acc, [type, nearbyRoutes]) => {
+      acc[type] = formatHandling(nearbyRoutes);
+      return acc;
+    }, {}),
     smartCollections: collectionRoutes.map((v) => ({
       ...v,
       routes: formatHandling(v.routes),

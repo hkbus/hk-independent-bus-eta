@@ -11,7 +11,7 @@ import { isHoliday, isRouteAvaliable } from "../../timetable";
 const ReverseButton = ({ routeId }: { routeId: string }) => {
   const { t, i18n } = useTranslation();
   const {
-    db: { routeList, holidays, stopList },
+    db: { routeList, holidays, stopList, serviceDayMap },
     vibrateDuration,
   } = useContext(AppContext);
   const { route, stops, co } = routeList[routeId];
@@ -40,8 +40,18 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
           []
         )
         .sort(([, a], [, b]) => {
-          const aAval = isRouteAvaliable(a.route, a.freq, isTodayHoliday);
-          const bAval = isRouteAvaliable(b.route, b.freq, isTodayHoliday);
+          const aAval = isRouteAvaliable(
+            a.route,
+            a.freq,
+            isTodayHoliday,
+            serviceDayMap
+          );
+          const bAval = isRouteAvaliable(
+            b.route,
+            b.freq,
+            isTodayHoliday,
+            serviceDayMap
+          );
           if (aAval === bAval) {
             const refOrig = stopList[Object.values(stops)[0][0]];
             const refDest = stopList[Object.values(stops)[0].slice(-1)[0]];
@@ -65,7 +75,16 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
         })
         .map(([_routeId]) => _routeId)
         .filter((_routeId) => _routeId.toLowerCase() !== routeId),
-    [route, co, routeList, stopList, isTodayHoliday, routeId, stops]
+    [
+      route,
+      co,
+      routeList,
+      stopList,
+      isTodayHoliday,
+      routeId,
+      stops,
+      serviceDayMap,
+    ]
   );
 
   const handleRevserClick = useCallback(

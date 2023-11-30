@@ -49,10 +49,6 @@ export const DEFAULT_ROUTE_COLLECTION: RouteCollection = {
     })),
 };
 
-export type BoardTabType =
-  | "recent"
-  | "all"
-  | "bus"
-  | "minibus"
-  | "lightRail"
-  | "mtr";
+export type TransportType = "bus" | "minibus" | "lightRail" | "mtr";
+
+export type BoardTabType = "recent" | "all" | TransportType;

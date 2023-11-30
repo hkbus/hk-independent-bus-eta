@@ -14,7 +14,7 @@ import { isHoliday, isRouteAvaliable } from "../timetable";
 // stopKey in format "<co>|<stopId>", e.g., "lightRail|LR140"
 export const useStopEtas = (stopKeys: string[][]) => {
   const {
-    db: { holidays, routeList, stopList },
+    db: { holidays, routeList, stopList, serviceDayMap },
     isVisible,
     refreshInterval,
     isRouteFilter,
@@ -36,7 +36,12 @@ export const useStopEtas = (stopKeys: string[][]) => {
         .reduce((acc, [routeId, { stops, freq }]) => {
           if (
             isRouteFilter &&
-            !isRouteAvaliable(routeId, freq, isTodayHoliday(new Date()))
+            !isRouteAvaliable(
+              routeId,
+              freq,
+              isTodayHoliday(new Date()),
+              serviceDayMap
+            )
           ) {
             return acc;
           }
@@ -54,7 +59,7 @@ export const useStopEtas = (stopKeys: string[][]) => {
         .filter((value, idx, self) => self.indexOf(value) === idx)
         .map((v) => v.split("|"))
     );
-  }, [stopKeys, routeList, isRouteFilter, isTodayHoliday]);
+  }, [stopKeys, routeList, isRouteFilter, isTodayHoliday, serviceDayMap]);
 
   const [stopEtas, setStopEtas] = useState<Array<[string, Eta[]]>>([]);
   const {

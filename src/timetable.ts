@@ -1,5 +1,4 @@
-import { Freq } from "hk-bus-eta";
-import { ServiceDayMap } from "./utils";
+import { EtaDb, Freq } from "hk-bus-eta";
 
 export const ServiceIds = {
   "31": "星期一至五",
@@ -53,7 +52,8 @@ export const isHoliday = (holidays: string[], date: Date): boolean => {
 export const isRouteAvaliable = (
   routeNo: string,
   freq: Freq | null,
-  isHoliday: boolean
+  isHoliday: boolean,
+  serviceDayMap: EtaDb["serviceDayMap"]
 ): boolean => {
   if (!freq) return true;
   let isAvailable = false;
@@ -65,7 +65,7 @@ export const isRouteAvaliable = (
   );
   Object.entries(freq).forEach(([serviceId, startTimes]) => {
     try {
-      ServiceDayMap[serviceId].forEach((validDay, idx: number) => {
+      serviceDayMap[serviceId].forEach((validDay, idx: number) => {
         if (validDay) {
           Object.entries(startTimes).forEach(([startTime, endTime]) => {
             let time_a = getWeeklyTimestamp(idx, startTime);
