@@ -1,3 +1,9 @@
+html,
+body {
+  overscroll-behavior-y: none;
+  background-color: #000;
+}
+
 .App {
   text-align: center;
 }
