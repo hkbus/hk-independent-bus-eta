@@ -9,13 +9,15 @@ import {
 interface HomeRouteListDropDownProps {
   name: string;
   routeStrings: string;
+  defaultExpanded?: boolean;
 }
 
 const HomeRouteListDropDown = ({
   name,
   routeStrings,
+  defaultExpanded = true,
 }: HomeRouteListDropDownProps) => {
-  const [expaned, setExpanded] = useState<boolean>(true);
+  const [expaned, setExpanded] = useState<boolean>(defaultExpanded);
   const routes = useMemo(
     () => routeStrings.split("|").filter((v) => v) ?? [],
     [routeStrings]
@@ -57,4 +59,5 @@ const headerSx: SxProps<Theme> = {
   alignItems: "center",
   justifyContent: "space-between",
   mx: 1,
+  cursor: "pointer",
 };

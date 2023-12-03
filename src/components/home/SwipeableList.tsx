@@ -40,7 +40,11 @@ interface SwipeableListRef {
 interface SelectedRoutes {
   saved: string;
   nearby: Partial<Record<TransportType, string>>;
-  smartCollections: Array<{ name: string; routes: string }>;
+  smartCollections: Array<{
+    name: string;
+    routes: string;
+    defaultExpanded: boolean;
+  }>;
   collections: string[];
 }
 
@@ -138,13 +142,16 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       () =>
         selectedRoutes?.smartCollections.length > 0 ? (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {selectedRoutes.smartCollections.map(({ name, routes }, idx) => (
-              <HomeRouteListDropDown
-                key={`collection-${idx}`}
-                name={name}
-                routeStrings={routes}
-              />
-            ))}
+            {selectedRoutes.smartCollections.map(
+              ({ name, routes, defaultExpanded }, idx) => (
+                <HomeRouteListDropDown
+                  key={`collection-${idx}`}
+                  name={name}
+                  routeStrings={routes}
+                  defaultExpanded={defaultExpanded}
+                />
+              )
+            )}
             {!selectedRoutes.smartCollections.reduce(
               (acc, { routes }) =>
                 acc || routes.split("|").filter((v) => Boolean(v)).length > 0,
@@ -324,32 +331,31 @@ const getSelectedRoutes = ({
       { bus: [], mtr: [], lightRail: [], minibus: [] }
     );
 
-  const collectionRoutes = collections
-    // check if collection should be shown at the moment
-    .filter(({ schedules }) =>
-      schedules.reduce((acc, { day, start, end }) => {
-        if (acc) return acc;
-        const curDate = new Date();
-        curDate.setUTCHours(curDate.getUTCHours() + 8);
-        const _day = curDate.getUTCDay();
-        // skip handling timezone here
-        if ((isTodayHoliday && day === 0) || day === _day) {
-          let sTs = start.hour * 60 + start.minute;
-          let eTs = end.hour * 60 + end.minute;
-          let curTs =
-            (curDate.getUTCHours() * 60 + curDate.getUTCMinutes()) % 1440;
-          return sTs <= curTs && curTs <= eTs;
-        }
-        return false;
-      }, false)
-    )
-    .reduce((acc, cur) => {
+  const collectionRoutes = collections.reduce(
+    (acc, { name, list, schedules }) => {
       acc.push({
-        name: cur.name,
-        routes: cur.list,
+        name: name,
+        routes: list,
+        defaultExpanded: schedules.reduce((acc, { day, start, end }) => {
+          if (acc) return acc;
+          const curDate = new Date();
+          curDate.setUTCHours(curDate.getUTCHours() + 8);
+          const _day = curDate.getUTCDay();
+          // skip handling timezone here
+          if ((isTodayHoliday && day === 0) || day === _day) {
+            let sTs = start.hour * 60 + start.minute;
+            let eTs = end.hour * 60 + end.minute;
+            let curTs =
+              (curDate.getUTCHours() * 60 + curDate.getUTCMinutes()) % 1440;
+            return sTs <= curTs && curTs <= eTs;
+          }
+          return false;
+        }, false),
       });
       return acc;
-    }, []);
+    },
+    []
+  );
 
   const formatHandling = (routes) => {
     return routes
