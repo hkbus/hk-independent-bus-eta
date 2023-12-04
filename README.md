@@ -52,15 +52,30 @@ Build the app with SEO optimized pages.
 
 ## Contributors
 
-Project owner [chunlaw](https://github.com/chunlaw) is the initiator of the whole project. Everyone is welcome to contribute. Other contributors are:
+Project owner [chunlaw](https://github.com/chunlaw) is the initiator of the whole project. Everyone is welcome to contribute. Other contributors are listed below (ordered by alphabetical order):
+
+[LOOHP](https://github.com/LOOHP)
+
+[chakflying](https://github.com/chakflying)
+
+[chengkeith](https://github.com/chengkeith)
+
+[cswbrian](https://github.com/cswbrian)
+
+[evnchn](https://github.com/evnchn)
+
+[hk-ng](https://github.com/hk-ng)
+
+[kkoyung](https://github.com/kkoyung)
+
+[lifehome](https://github.com/lifehome)
+
+[louiscklaw](https://github.com/louiscklaw)
 
 [lzwn128](https://github.com/lzwn128 )
-[cswbrian](https://github.com/cswbrian)
-[thomassth](https://github.com/thomassth)
-[hk-ng](https://github.com/hk-ng)
+
 [sdip15fa](https://github.com/sdip15fa)
-[thomassth](https://github.com/thomassth)
+
 [skpracta](https://github.com/skpracta)
-[chakflying](https://github.com/chakflying)
-[LOOHP](https://github.com/LOOHP)
-[kkoyung](https://github.com/kkoyung)
+
+[thomassth](https://github.com/thomassth)
