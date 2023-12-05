@@ -9,17 +9,17 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo128_full.png",
+      "src": "logo128.png",
       "type": "image/png",
       "sizes": "128x128"
     },
     {
-      "src": "logo192_full.png",
+      "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512_full.png",
+      "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
