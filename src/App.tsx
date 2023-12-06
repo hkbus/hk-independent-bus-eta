@@ -60,6 +60,10 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Navigate to={`/${language}`} />} />
                 <Route path="/:lang" element={<Main />}>
+                  <Route
+                    path={`collections/:collectionName`}
+                    element={<Home />}
+                  />
                   <Route path={`route/:id`} element={<RouteEta />} />
                   <Route path={`route/:id/:panel`} element={<RouteEta />} />
                   <Route path={`settings`} element={<Settings />} />

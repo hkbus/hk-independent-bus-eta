@@ -12,15 +12,17 @@ import type { HomeTabType } from "../components/home/HomeTabbar";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
 import SwipeableList from "../components/home/SwipeableList";
 import DbRenewReminder from "../components/layout/DbRenewReminder";
+import { useParams } from "react-router-dom";
 
 const Home = () => {
   const { AppTitle, geolocation, collections } = useContext(AppContext);
   const { t, i18n } = useTranslation();
+  const { collectionName } = useParams();
 
   const swipeableList = useRef(null);
-  const _homeTab = localStorage.getItem("homeTab");
+  const _homeTab = collectionName ?? localStorage.getItem("homeTab");
   const [homeTab, setHomeTab] = useState<HomeTabType>(
-    isHomeTab(_homeTab, collections.length) ? _homeTab : "nearby"
+    isHomeTab(_homeTab, collections) ? _homeTab : "nearby"
   );
 
   useEffect(() => {

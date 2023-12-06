@@ -7,6 +7,7 @@ import {
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
+import { RouteCollection } from "../../typing";
 
 interface HomeTabbarProps {
   homeTab: HomeTabType;
@@ -50,7 +51,7 @@ const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
         <Tab
           key={`collection-${idx}`}
           label={collection.name}
-          value={`collection-${idx}`}
+          value={collection.name}
           disableRipple
         />
       ))}
@@ -64,13 +65,13 @@ export type HomeTabType = "saved" | "nearby" | "collections";
 
 export const isHomeTab = (
   input: unknown,
-  collectionLength: number
+  collections: RouteCollection[]
 ): input is HomeTabType => {
   if (input === "saved" || input === "nearby" || input === "collections") {
     return true;
   }
-  for (let i = 0; i < collectionLength; ++i) {
-    if (input === `collection-${i}`) {
+  for (let i = 0; i < collections.length; ++i) {
+    if (input === collections[i].name) {
       return true;
     }
   }
@@ -81,6 +82,7 @@ const tabbarSx: SxProps<Theme> = {
   background: (theme) => theme.palette.background.default,
   minHeight: "36px",
   [`& .MuiTab-root`]: {
+    textTransform: "none",
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 0,

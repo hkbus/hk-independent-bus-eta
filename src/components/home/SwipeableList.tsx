@@ -205,7 +205,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       let ret = HOME_TAB.indexOf(defaultHometab.current);
       if (ret !== -1) return ret;
       for (let i = 0; i < collections.length; ++i) {
-        if (`collection-${i}` === defaultHometab.current) {
+        if (collections[i].name === defaultHometab.current) {
           return i + HOME_TAB.length;
         }
       }
@@ -220,7 +220,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             onChangeTab(
               idx < HOME_TAB.length
                 ? HOME_TAB[idx]
-                : `collection-${idx - HOME_TAB.length}`
+                : collections[idx - HOME_TAB.length].name
             );
           }}
         >
@@ -233,6 +233,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       [
         onChangeTab,
         getViewIdx,
+        collections,
         SavedRouteList,
         NearbyRouteList,
         SmartCollectionRouteList,
