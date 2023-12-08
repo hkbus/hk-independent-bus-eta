@@ -85,8 +85,16 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           serviceDayMap,
         })
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [geolocation]);
+    }, [
+      geolocation,
+      savedEtas,
+      collections,
+      routeList,
+      stopList,
+      isRouteFilter,
+      isTodayHoliday,
+      serviceDayMap,
+    ]);
 
     const SavedRouteList = useMemo(() => {
       if (selectedRoutes === null) {

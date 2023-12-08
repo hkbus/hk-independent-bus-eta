@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import AppContext from "../AppContext";
 import { setSeoHeader } from "../utils";
-import debounce from "lodash.debounce";
+import throttle from "lodash.throttle";
 import { Location } from "hk-bus-eta";
 import HomeTabbar, { isHomeTab } from "../components/home/HomeTabbar";
 import type { HomeTabType } from "../components/home/HomeTabbar";
@@ -37,7 +37,7 @@ const Home = () => {
   // debounce to avoid rapidly UI changes due to geolocation changes
   const [_geolocation, set_geolocation] = useState<Location>(geolocation);
   const debouncedUpdateGeolocation = useRef(
-    debounce(() => {
+    throttle(() => {
       set_geolocation(geolocation);
     }, 1000)
   ).current;
