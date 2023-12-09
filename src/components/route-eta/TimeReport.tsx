@@ -145,7 +145,7 @@ const EtaLine = ({
 
 const getRemark = (remark: string = "", language: string) => {
   // retrieve single digit numerical string from remark as a circle text
-  const numbers = remark.match(/\d+/g);
+  const numbers = remark.match(/\d+/g) || [];
   // replace only when single occurrence of single digit numerical string
   // if the remark has more than one occurrence of numerical string
   // or if the only numerical string occurrence are more than one digit, use original remark
