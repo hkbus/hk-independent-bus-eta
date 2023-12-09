@@ -234,6 +234,7 @@ const searchRouteInputSx: SxProps<Theme> = {
   },
   ".Mui-focused& .MuiSvgIcon-root": {
     color: "#fedb00",
+    // TODO: this doesn't work
     // color: (theme) => theme.palette.text.primary,
   },
   "& input::before": {
