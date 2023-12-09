@@ -127,7 +127,7 @@ const EtaLine = ({
         &emsp;
         {branchRoute && dest[language] && (
           <Tooltip
-            title={dest[language]}
+            title={t('支線')}
             placement="top"
             arrow={true}
             enterTouchDelay={200}
