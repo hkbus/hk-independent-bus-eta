@@ -232,7 +232,7 @@ const searchRouteInputSx: SxProps<Theme> = {
   "& input::placeholder": {
     textAlign: "center",
   },
-  ".Mui-focused& .MuiSvgIcon-root": {
+  "&.Mui-focused& .MuiSvgIcon-root": {
     color: (theme) =>
       theme.palette.mode === "dark"
         ? theme.palette.primary.main
