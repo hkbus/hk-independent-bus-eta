@@ -28,7 +28,7 @@ const TimeReport = ({
     db: { routeList, stopList },
   } = useContext(AppContext);
   const etas = useEtas(`${routeId}/${seq}`);
-
+  console.log(etas);
   const stopId = Object.values(routeList[routeId].stops)[0][seq];
   const routeDest = routeList[routeId].dest;
 
@@ -148,6 +148,16 @@ const EtaLine = ({
 };
 
 const getRemark = (remark: string = "", language: string) => {
+  // replace only when single occurrence of single digit numerical string
+  // if the remark has more than one occurrence of numerical string
+  // or if the only numerical string occurrence are more than one digit, use original remark
+  const numbers = remark.match(/\d+/g);
+  if (numbers.length === 1 && numbers[0].length === 1) {
+    // only support single digit number
+    const PLATFORM = ["", "❶", "❷", "❸", "❹", "❺", "❻", "❼", "❽", "❾"];
+    remark = PLATFORM[numbers[0]];
+  }
+
   if (language === "zh") {
     return remark.replace(/▭▭/g, "雙卡").replace(/▭/g, "單卡");
   } else {
