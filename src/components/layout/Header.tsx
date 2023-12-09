@@ -232,8 +232,26 @@ const searchRouteInputSx: SxProps<Theme> = {
   "& input::placeholder": {
     textAlign: "center",
   },
-  "&.Mui-focused& .MuiSvgIcon-root": {
+  // "&.Mui-focused& .MuiSvgIcon-root": {
+  //   color: (theme) =>
+  //     theme.palette.mode === "dark"
+  //       ? theme.palette.primary.main
+  //       : theme.palette.text.primary,
+  // },
+  // "&.Mui-focused::after": {
+  //   borderBottomColor: (theme) =>
+  //     theme.palette.mode === "dark"
+  //       ? theme.palette.primary.main
+  //       : theme.palette.text.primary,
+  // },
+  "&.Mui-focused .MuiSvgIcon-root": {
     color: (theme) =>
+      theme.palette.mode === "dark"
+        ? theme.palette.primary.main
+        : theme.palette.text.primary,
+  },
+  "&.Mui-focused::after": {
+    borderBottomColor: (theme) =>
       theme.palette.mode === "dark"
         ? theme.palette.primary.main
         : theme.palette.text.primary,
