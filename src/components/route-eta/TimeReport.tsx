@@ -121,26 +121,22 @@ const EtaLine = ({
         component="span"
         sx={{ fontSize: "0.8em", textOverflow: "ellipsis" }}
       >
-        {t(co)}
-        &nbsp;
         {getRemark(remark[language], language)}
+        &nbsp;
+        {dest[language]}
+        &emsp;
         {branchRoute && dest[language] && (
-          <>
-            &emsp;
-            <Tooltip
-              title={dest[language]}
-              placement="top"
-              arrow={true}
-              enterTouchDelay={200}
-              leaveTouchDelay={200}
-            >
-              <CallSplitIcon
-                sx={{ transform: "rotate(90deg)", fontSize: "1em" }}
-              />
-            </Tooltip>
-            &emsp;
-            {dest[language]}
-          </>
+          <Tooltip
+            title={dest[language]}
+            placement="top"
+            arrow={true}
+            enterTouchDelay={200}
+            leaveTouchDelay={200}
+          >
+            <CallSplitIcon
+              sx={{ transform: "rotate(90deg)", fontSize: "1em" }}
+            />
+          </Tooltip>
         )}
       </Box>
     </Typography>
