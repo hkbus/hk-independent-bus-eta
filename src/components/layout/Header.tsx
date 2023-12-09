@@ -116,7 +116,15 @@ const Header = () => {
           type="text"
           value={searchRoute}
           placeholder={t("巴士 / 小巴 / 輕鐵線")}
-          startAdornment={<SearchIcon />}
+          startAdornment={
+            <SearchIcon
+            // sx={{
+            //   "& input": {
+            //     "& svg": { color: "yellow" },
+            //   },
+            // }}
+            />
+          }
           onChange={(e) => {
             if (
               e.target.value.toUpperCase() in routeList ||
@@ -231,6 +239,9 @@ const appTitleSx: SxProps<Theme> = {
 const searchRouteInputSx: SxProps<Theme> = {
   "& input::placeholder": {
     textAlign: "center",
+  },
+  ".Mui-focused& .MuiSvgIcon-root": {
+    color: '#fedb00',
   },
   "& input::before": {
     borderBottom: (theme) => `1px ${theme.palette.text.primary} solid`,
