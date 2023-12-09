@@ -116,7 +116,7 @@ const Header = () => {
           type="text"
           value={searchRoute}
           placeholder={t("巴士 / 小巴 / 輕鐵線")}
-          endAdornment={<SearchIcon />}
+          startAdornment={<SearchIcon />}
           onChange={(e) => {
             if (
               e.target.value.toUpperCase() in routeList ||
@@ -230,7 +230,7 @@ const appTitleSx: SxProps<Theme> = {
 
 const searchRouteInputSx: SxProps<Theme> = {
   "& input": {
-    textAlign: "left",
+    textAlign: "center",
   },
   "& input::before": {
     borderBottom: (theme) => `1px ${theme.palette.text.primary} solid`,
