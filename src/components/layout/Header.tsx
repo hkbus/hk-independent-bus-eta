@@ -227,9 +227,8 @@ const appTitleSx: SxProps<Theme> = {
 };
 
 const searchRouteInputSx: SxProps<Theme> = {
-  maxWidth: "100px",
   "& input": {
-    textAlign: "center",
+    textAlign: "left",
   },
   "& input::before": {
     borderBottom: (theme) => `1px ${theme.palette.text.primary} solid`,
