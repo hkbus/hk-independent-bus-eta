@@ -241,7 +241,8 @@ const searchRouteInputSx: SxProps<Theme> = {
     textAlign: "center",
   },
   ".Mui-focused& .MuiSvgIcon-root": {
-    color: '#fedb00',
+    color: "#fedb00",
+    // color: (theme) => theme.palette.text.primary,
   },
   "& input::before": {
     borderBottom: (theme) => `1px ${theme.palette.text.primary} solid`,
