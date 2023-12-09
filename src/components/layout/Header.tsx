@@ -116,15 +116,7 @@ const Header = () => {
           type="text"
           value={searchRoute}
           placeholder={t("巴士 / 小巴 / 輕鐵線")}
-          startAdornment={
-            <SearchIcon
-            // sx={{
-            //   "& input": {
-            //     "& svg": { color: "yellow" },
-            //   },
-            // }}
-            />
-          }
+          startAdornment={<SearchIcon />}
           onChange={(e) => {
             if (
               e.target.value.toUpperCase() in routeList ||
