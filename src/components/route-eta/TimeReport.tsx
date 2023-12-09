@@ -28,7 +28,7 @@ const TimeReport = ({
     db: { routeList, stopList },
   } = useContext(AppContext);
   const etas = useEtas(`${routeId}/${seq}`);
-  console.log(etas);
+
   const stopId = Object.values(routeList[routeId].stops)[0][seq];
   const routeDest = routeList[routeId].dest;
 
