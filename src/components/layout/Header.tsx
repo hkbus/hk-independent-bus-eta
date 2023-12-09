@@ -230,6 +230,9 @@ const appTitleSx: SxProps<Theme> = {
 
 const searchRouteInputSx: SxProps<Theme> = {
   "& input": {
+    textAlign: "left",
+  },
+  "& input::placeholder": {
     textAlign: "center",
   },
   "& input::before": {
