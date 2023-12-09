@@ -23,6 +23,7 @@ import AppContext from "../../AppContext";
 import { vibrate, checkMobile } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useWeatherCode, WeatherIcons } from "../Weather";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Header = () => {
   const {
@@ -115,6 +116,7 @@ const Header = () => {
           type="text"
           value={searchRoute}
           placeholder={t("巴士 / 小巴 / 輕鐵線")}
+          endAdornment={<SearchIcon />}
           onChange={(e) => {
             if (
               e.target.value.toUpperCase() in routeList ||
