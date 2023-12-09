@@ -148,10 +148,11 @@ const EtaLine = ({
 };
 
 const getRemark = (remark: string = "", language: string) => {
+  // retrieve single digit numerical string from remark as a circle text
+  const numbers = remark.match(/\d+/g);
   // replace only when single occurrence of single digit numerical string
   // if the remark has more than one occurrence of numerical string
   // or if the only numerical string occurrence are more than one digit, use original remark
-  const numbers = remark.match(/\d+/g);
   if (numbers.length === 1 && numbers[0].length === 1) {
     // only support single digit number
     const PLATFORM = ["", "❶", "❷", "❸", "❹", "❺", "❻", "❼", "❽", "❾"];
