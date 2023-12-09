@@ -116,14 +116,14 @@ const EtaLine = ({
           {exactTimeJsx}&emsp;{waitTimeJsx}
         </>
       )}
-      &emsp;-&nbsp;
+      &emsp;
       <Box
         component="span"
         sx={{ fontSize: "0.8em", textOverflow: "ellipsis" }}
       >
-        {getRemark(remark[language], language)}
-        &emsp;
         {t(co)}
+        &nbsp;
+        {getRemark(remark[language], language)}
         {branchRoute && dest[language] && (
           <>
             &emsp;
