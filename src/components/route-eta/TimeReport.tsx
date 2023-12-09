@@ -121,7 +121,7 @@ const EtaLine = ({
         component="span"
         sx={{ fontSize: "0.8em", textOverflow: "ellipsis" }}
       >
-        {getRemark(remark[language] ? remark[language] : "", language)}
+        {getRemark(remark[language], language)}
         &emsp;
         {t(co)}
         {branchRoute && dest[language] && (
@@ -147,7 +147,7 @@ const EtaLine = ({
   );
 };
 
-const getRemark = (remark: string, language: string) => {
+const getRemark = (remark: string = "", language: string) => {
   if (language === "zh") {
     return remark.replace(/▭▭/g, "雙卡").replace(/▭/g, "單卡");
   } else {
