@@ -1,11 +1,10 @@
 import React, { useContext, useMemo } from "react";
-import { Box, SxProps, Theme, Tooltip, Typography } from "@mui/material";
+import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { useEtas } from "../../hooks/useEtas";
 import { LinearProgress } from "../Progress";
 import { Eta, Terminal } from "hk-bus-eta";
-import CallSplitIcon from "@mui/icons-material/CallSplit";
 
 interface TimeReportProps {
   routeId: string;
@@ -30,7 +29,13 @@ const TimeReport = ({
   const etas = useEtas(`${routeId}/${seq}`);
 
   const stopId = Object.values(routeList[routeId].stops)[0][seq];
-  const routeDest = routeList[routeId].dest;
+  const routeDests = useMemo(
+    () =>
+      Object.values(routeList[routeId].stops)
+        .map((ids) => stopList[ids[ids.length - 1]].name)
+        .concat(routeList[routeId].dest),
+    [routeList, routeId, stopList]
+  );
 
   if (etas == null) {
     return (
@@ -50,7 +55,12 @@ const TimeReport = ({
       {etas.length === 0 && t("未有班次資料")}
       {etas.length > 0 &&
         etas.map((eta, idx) => (
-          <EtaLine key={`route-${idx}`} eta={eta} routeDest={routeDest} />
+          <EtaLine
+            key={`route-${idx}`}
+            eta={eta}
+            routeDests={routeDests}
+            showCompany={routeList[routeId].co.length > 1}
+          />
         ))}
     </Box>
   );
@@ -58,12 +68,14 @@ const TimeReport = ({
 
 interface EtaMsgProps {
   eta: Eta;
-  routeDest: Terminal;
+  routeDests: Terminal[];
+  showCompany: boolean;
 }
 
 const EtaLine = ({
   eta: { eta, remark, co, dest },
-  routeDest,
+  routeDests,
+  showCompany,
 }: EtaMsgProps) => {
   const {
     t,
@@ -72,14 +84,16 @@ const EtaLine = ({
   const { etaFormat } = useContext(AppContext);
 
   const branchRoute = useMemo(() => {
-    if (routeDest.en.toLowerCase() === dest.en.toLowerCase()) {
-      return false;
-    }
-    if (routeDest.zh === dest.zh) {
-      return false;
+    for (const routeDest of routeDests) {
+      if (routeDest.en.toLowerCase() === dest.en.toLowerCase()) {
+        return false;
+      }
+      if (routeDest.zh === dest.zh) {
+        return false;
+      }
     }
     return true;
-  }, [routeDest, dest]);
+  }, [routeDests, dest]);
 
   const waitTime = Math.round(
     (new Date(eta).getTime() - new Date().getTime()) / 60 / 1000
@@ -116,43 +130,38 @@ const EtaLine = ({
           {exactTimeJsx}&emsp;{waitTimeJsx}
         </>
       )}
-      &emsp;
+      &emsp;-&nbsp;
       <Box
         component="span"
         sx={{ fontSize: "0.8em", textOverflow: "ellipsis" }}
       >
-        {getRemark(remark[language], language)}
-        &nbsp;
-        {dest[language]}
+        {showCompany && <>&emsp;{t(co)}</>}
         &emsp;
-        {branchRoute && dest[language] && (
-          <Tooltip
-            title={t('支線')}
-            placement="top"
-            arrow={true}
-            enterTouchDelay={200}
-            leaveTouchDelay={200}
-          >
-            <CallSplitIcon
-              sx={{ transform: "rotate(90deg)", fontSize: "1em" }}
-            />
-          </Tooltip>
-        )}
+        {getRemark(remark[language], language)}
+        &emsp;
+        {branchRoute && dest[language]}
       </Box>
     </Typography>
   );
 };
 
+const PLATFORM = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
+
 const getRemark = (remark: string = "", language: string) => {
   // retrieve single digit numerical string from remark as a circle text
-  const numbers = remark.match(/\d+/g) || [];
+  const platform =
+    [
+      ...remark.matchAll(
+        language === "zh" ? /(\d+)號月台/g : /Platform (\d+)/g
+      ),
+    ][0] || [];
+
   // replace only when single occurrence of single digit numerical string
   // if the remark has more than one occurrence of numerical string
   // or if the only numerical string occurrence are more than one digit, use original remark
-  if (numbers.length === 1 && numbers[0].length === 1) {
+  if (platform.length === 2 && platform[1].length) {
     // only support single digit number
-    const PLATFORM = ["", "❶", "❷", "❸", "❹", "❺", "❻", "❼", "❽", "❾"];
-    remark = PLATFORM[numbers[0]];
+    remark = PLATFORM[platform[1]];
   }
 
   if (language === "zh") {
