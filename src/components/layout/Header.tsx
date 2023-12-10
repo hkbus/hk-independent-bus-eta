@@ -114,7 +114,7 @@ const Header = () => {
           sx={searchRouteInputSx}
           type="text"
           value={searchRoute}
-          placeholder={t("路線")}
+          placeholder={t("巴士線")}
           onChange={(e) => {
             if (
               e.target.value.toUpperCase() in routeList ||
