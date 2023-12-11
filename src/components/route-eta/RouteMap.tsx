@@ -194,7 +194,6 @@ const RouteMap = ({
       >
         <TileLayer
           crossOrigin="anonymous"
-          detectRetina
           maxZoom={Leaflet.Browser.retina ? 20 : 19}
           maxNativeZoom={18}
           keepBuffer={10}
