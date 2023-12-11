@@ -147,7 +147,8 @@ const EtaLine = ({
 
 const PLATFORM = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
 
-const getRemark = (remark: string = "", language: string) => {
+const getRemark = (remark: string | null, language: string) => {
+  if (remark === null) return "";
   // retrieve single digit numerical string from remark as a circle text
   const platform =
     [
