@@ -379,6 +379,9 @@ export const coToType: Record<Company, TransportType> = {
   ctb: "bus",
   lrtfeeder: "bus",
   gmb: "minibus",
+  gmbHki: "minibus",
+  gmbKln: "minibus",
+  gmbNt: "minibus",
   lightRail: "lightRail",
   mtr: "mtr",
 };
