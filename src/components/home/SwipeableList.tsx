@@ -142,6 +142,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               onClick={() => {
                 setSearchRange(range);
               }}
+              variant={searchRange === range ? "outlined" : "filled"}
             ></Chip>
           ))}
 
@@ -160,7 +161,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       ) : (
         <CircularProgress sx={{ my: 10 }} />
       );
-    }, [selectedRoutes, setSearchRange, t]);
+    }, [searchRange, selectedRoutes.nearby, setSearchRange, t]);
 
     const SmartCollectionRouteList = useMemo(
       () =>
