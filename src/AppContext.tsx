@@ -91,6 +91,10 @@ export interface AppState {
    * Range for geolocation search
    */
   lastSearchRange: number;
+  /**
+   * Custom Range for geolocation search
+   */
+  customSearchRange: number;
 }
 
 interface AppContextValue
@@ -129,6 +133,8 @@ interface AppContextValue
   workbox?: Workbox;
   lastSearchRange: number;
   setLastSearchRange: (lastSearchRange: number) => void;
+  customSearchRange: number;
+  setCustomSearchRange: (customSearchRange: number) => void;
 
   // for React Native Context
   setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
@@ -248,7 +254,10 @@ export const AppContextProvider = ({
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
       fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
       lastSearchRange:
-        JSON.parse(localStorage.getItem("lastSearchRange")) ?? defaultSearchRange,
+        JSON.parse(localStorage.getItem("lastSearchRange")) ??
+        defaultSearchRange,
+      customSearchRange:
+        JSON.parse(localStorage.getItem("customSearchRange")) ?? "",
     };
   };
   const { i18n } = useTranslation();
@@ -567,6 +576,14 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const setCustomSearchRange = useCallback((customSearchRange: number) => {
+    setStateRaw(
+      produce((state: State) => {
+        state.customSearchRange = customSearchRange;
+      })
+    );
+  }, []);
+
   const colorMode = useMemo(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
       return state._colorMode;
@@ -672,8 +689,18 @@ export const AppContextProvider = ({
   }, [state.fontSize]);
 
   useEffect(() => {
-    localStorage.setItem("lastSearchRange", JSON.stringify(state.lastSearchRange));
+    localStorage.setItem(
+      "lastSearchRange",
+      JSON.stringify(state.lastSearchRange)
+    );
   }, [state.lastSearchRange]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "customSearchRange",
+      JSON.stringify(state.customSearchRange)
+    );
+  }, [state.customSearchRange]);
 
   const contextValue = useMemo(() => {
     return {
@@ -707,6 +734,7 @@ export const AppContextProvider = ({
       workbox,
       setGeoPermission,
       setLastSearchRange,
+      setCustomSearchRange,
     };
   }, [
     dbContext,
@@ -739,6 +767,7 @@ export const AppContextProvider = ({
     workbox,
     setGeoPermission,
     setLastSearchRange,
+    setCustomSearchRange,
   ]);
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
