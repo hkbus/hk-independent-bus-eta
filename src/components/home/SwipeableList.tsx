@@ -8,7 +8,7 @@ import React, {
   useCallback,
 } from "react";
 import SwipeableViews from "react-swipeable-views";
-import { Box, List, Typography } from "@mui/material";
+import { Box, Chip, List, Typography } from "@mui/material";
 import {
   Location,
   RouteList,
@@ -130,9 +130,14 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       );
     }, [selectedRoutes, t]);
 
-    const NearbyRouteList = useMemo(
-      () =>
-        selectedRoutes?.nearby ? (
+    const NearbyRouteList = useMemo(() => {
+      const rangeOptions: SearchRange[] = [100, 200, 500, 1000];
+      return selectedRoutes?.nearby ? (
+        <>
+          {rangeOptions.map((range) => (
+            <Chip label={range} onClick={() => {}}></Chip>
+          ))}
+
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {Object.entries(selectedRoutes.nearby).map(
               ([type, nearbyRoutes]) => (
@@ -144,11 +149,11 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               )
             )}
           </Box>
-        ) : (
-          <CircularProgress sx={{ my: 10 }} />
-        ),
-      [selectedRoutes, t]
-    );
+        </>
+      ) : (
+        <CircularProgress sx={{ my: 10 }} />
+      );
+    }, [selectedRoutes, t]);
 
     const SmartCollectionRouteList = useMemo(
       () =>
