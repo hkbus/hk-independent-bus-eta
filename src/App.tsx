@@ -135,6 +135,7 @@ const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
           },
           primary: {
             main: "#fedb00", // yellow
+            contrastText: "#000",
           },
           warning: {
             main: "#fedb00",

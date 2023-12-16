@@ -24,6 +24,7 @@ import {
   NumPadOrder,
 } from "./data";
 import { DeviceOrientationPermission } from "react-world-compass";
+import { searchRangeOptions } from "./components/home/SwipeableList";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -86,6 +87,14 @@ export interface AppState {
    * Font size
    */
   fontSize: number;
+  /**
+   * Range for geolocation search
+   */
+  lastSearchRange: number;
+  /**
+   * Custom Range for geolocation search
+   */
+  customSearchRange: number;
 }
 
 interface AppContextValue
@@ -122,6 +131,10 @@ interface AppContextValue
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
+  lastSearchRange: number;
+  setLastSearchRange: (lastSearchRange: number) => void;
+  customSearchRange: number;
+  setCustomSearchRange: (customSearchRange: number) => void;
 
   // for React Native Context
   setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
@@ -173,6 +186,10 @@ const isEtaFormat = (input: unknown): input is EtaFormat => {
 const isColorMode = (input: unknown): input is ColorMode => {
   return input === "dark" || input === "light" || input === "system";
 };
+
+// use the largest search range option as default
+export const defaultSearchRange =
+  searchRangeOptions[searchRangeOptions.length - 1];
 
 export const AppContextProvider = ({
   workbox,
@@ -236,6 +253,11 @@ export const AppContextProvider = ({
       annotateScheduled:
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
       fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
+      lastSearchRange:
+        JSON.parse(localStorage.getItem("lastSearchRange")) ??
+        defaultSearchRange,
+      customSearchRange:
+        JSON.parse(localStorage.getItem("customSearchRange")) ?? "",
     };
   };
   const { i18n } = useTranslation();
@@ -546,6 +568,22 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const setLastSearchRange = useCallback((lastSearchRange: number) => {
+    setStateRaw(
+      produce((state: State) => {
+        state.lastSearchRange = lastSearchRange;
+      })
+    );
+  }, []);
+
+  const setCustomSearchRange = useCallback((customSearchRange: number) => {
+    setStateRaw(
+      produce((state: State) => {
+        state.customSearchRange = customSearchRange;
+      })
+    );
+  }, []);
+
   const colorMode = useMemo(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
       return state._colorMode;
@@ -650,6 +688,20 @@ export const AppContextProvider = ({
     localStorage.setItem("fontSize", JSON.stringify(state.fontSize));
   }, [state.fontSize]);
 
+  useEffect(() => {
+    localStorage.setItem(
+      "lastSearchRange",
+      JSON.stringify(state.lastSearchRange)
+    );
+  }, [state.lastSearchRange]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "customSearchRange",
+      JSON.stringify(state.customSearchRange)
+    );
+  }, [state.customSearchRange]);
+
   const contextValue = useMemo(() => {
     return {
       ...dbContext,
@@ -681,6 +733,8 @@ export const AppContextProvider = ({
       importAppState,
       workbox,
       setGeoPermission,
+      setLastSearchRange,
+      setCustomSearchRange,
     };
   }, [
     dbContext,
@@ -712,6 +766,8 @@ export const AppContextProvider = ({
     importAppState,
     workbox,
     setGeoPermission,
+    setLastSearchRange,
+    setCustomSearchRange,
   ]);
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
