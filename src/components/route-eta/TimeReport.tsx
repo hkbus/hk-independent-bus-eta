@@ -5,6 +5,7 @@ import AppContext from "../../AppContext";
 import { useEtas } from "../../hooks/useEtas";
 import { LinearProgress } from "../Progress";
 import { Eta, Terminal } from "hk-bus-eta";
+import { PLATFORM } from "../../utils";
 
 interface TimeReportProps {
   routeId: string;
@@ -144,8 +145,6 @@ const EtaLine = ({
     </Typography>
   );
 };
-
-const PLATFORM = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
 
 const getRemark = (remark: string | null, language: string) => {
   if (remark === null) return "";
