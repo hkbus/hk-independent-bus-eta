@@ -61,7 +61,7 @@ interface SelectedRoutes {
   collections: string[];
 }
 
-export const searchRangeOptions = ['100', '200', '500'] as const;
+export const searchRangeOptions = ["100", "200", "500"];
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ geolocation, homeTab, onChangeTab }, ref) => {
@@ -83,6 +83,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       null
     );
     const [open, setOpen] = useState(false);
+    const [selectedRange, setSelectedRange] = useState(defaultSearchRange);
 
     useImperativeHandle(ref, () => ({
       changeTab: (v) => {
@@ -152,15 +153,18 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           <Paper sx={paperSx} component="ul">
             <ListItem key={`range-tag`}>{t("搜尋範圍")}:</ListItem>
             <ToggleButtonGroup
-              defaultValue={defaultSearchRange}
-              value={searchRange}
+              defaultValue={selectedRange}
+              value={selectedRange}
               exclusive
-              onChange={(_, value) => setSearchRange(value)}
+              onChange={(_, value: string) => {
+                setSelectedRange(value);
+                setSearchRange(parseInt(value));
+              }}
               aria-label="search range"
               sx={toggleButtonGroupSx}
             >
               {searchRangeOptions.map((range) => {
-                const { distance, unit } = getDistanceWithUnit(range);
+                const { distance, unit } = getDistanceWithUnit(parseInt(range));
                 return (
                   <ToggleButton
                     key={`range-${range}`}
@@ -177,7 +181,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 key={`range-custom`}
                 sx={toggleButtonSx}
                 disableRipple
-                value={0}
+                value={"custom"}
                 aria-label={searchRange.toString()}
                 onClick={(e) => {
                   e.preventDefault();
@@ -202,10 +206,22 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           </Box>
           <Dialog open={open}>
             <DialogTitle>Set Custom Range</DialogTitle>
-            <input type="number" />
+            <input
+              type="number"
+              value={selectedRange}
+              onChange={(e) => {
+                const range = e.target.value;
+                setSelectedRange(range);
+                if (!searchRangeOptions.includes(range)) {
+                  setSelectedRange("custom");
+                }
+              }}
+            />
             <button
               onClick={() => {
-                setSearchRange(3000);
+                setSearchRange(parseInt(selectedRange));
+                setSelectedRange("custom");
+                setOpen(false);
               }}
             >
               Confirm
@@ -215,7 +231,14 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       ) : (
         <CircularProgress sx={{ my: 10 }} />
       );
-    }, [open, searchRange, selectedRoutes?.nearby, setSearchRange, t]);
+    }, [
+      open,
+      searchRange,
+      selectedRange,
+      selectedRoutes?.nearby,
+      setSearchRange,
+      t,
+    ]);
 
     const SmartCollectionRouteList = useMemo(
       () =>
