@@ -83,7 +83,10 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       null
     );
     const [open, setOpen] = useState(false);
-    const [selectedRange, setSelectedRange] = useState(defaultSearchRange);
+    const [selectedRange, setSelectedRange] = useState<number | "custom">(
+      defaultSearchRange
+    );
+    const [inputValue, setInputValue] = useState(selectedRange.toString());
 
     useImperativeHandle(ref, () => ({
       changeTab: (v) => {
@@ -206,22 +209,19 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           </Box>
           <Dialog open={open}>
             <DialogTitle>Set Custom Range</DialogTitle>
-          <input
+            <input
               type="number"
-              defaultValue={selectedRange}
-              // value={selectedRange}
+              defaultValue={inputValue}
+              value={inputValue}
               onChange={(e) => {
-                const range = parseInt(e.target.value);
-                setSelectedRange(range);
-                if (!searchRangeOptions.includes(range)) {
-                  setSelectedRange(null);
-                }
+                setInputValue(e.target.value);
               }}
             />
             <button
               onClick={() => {
-                setSearchRange(selectedRange);
-                setSelectedRange(null);
+                setSelectedRange("custom");
+                const range = parseInt(inputValue);
+                setSearchRange(range);
                 setOpen(false);
               }}
             >
@@ -234,6 +234,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       );
     }, [
       open,
+      inputValue,
       searchRange,
       selectedRange,
       selectedRoutes?.nearby,
