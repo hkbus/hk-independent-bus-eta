@@ -24,9 +24,10 @@ import {
   NumPadOrder,
 } from "./data";
 import { DeviceOrientationPermission } from "react-world-compass";
-import { SearchRange } from "./components/home/SwipeableList";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
+
+export type SearchRange = 100 | 200 | 500 | 1000;
 
 export interface AppState {
   searchRoute: string;
