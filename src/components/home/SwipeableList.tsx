@@ -57,6 +57,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       isRouteFilter,
       collections,
       searchRange,
+      setSearchRange,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -138,7 +139,9 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             <Chip
               key={`range-${range}`}
               label={range}
-              onClick={() => {}}
+              onClick={() => {
+                setSearchRange(range);
+              }}
             ></Chip>
           ))}
 
@@ -157,7 +160,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       ) : (
         <CircularProgress sx={{ my: 10 }} />
       );
-    }, [selectedRoutes, t]);
+    }, [selectedRoutes, setSearchRange, t]);
 
     const SmartCollectionRouteList = useMemo(
       () =>
