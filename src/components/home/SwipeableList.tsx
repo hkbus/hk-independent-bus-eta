@@ -56,6 +56,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       db: { holidays, routeList, stopList, serviceDayMap },
       isRouteFilter,
       collections,
+      searchRange,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -84,6 +85,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           isRouteFilter,
           isTodayHoliday,
           serviceDayMap,
+          searchRange,
         })
       );
     }, [
@@ -95,6 +97,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       isRouteFilter,
       isTodayHoliday,
       serviceDayMap,
+      searchRange,
     ]);
 
     const SavedRouteList = useMemo(() => {
