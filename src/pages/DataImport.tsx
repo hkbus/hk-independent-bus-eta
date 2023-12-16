@@ -118,6 +118,7 @@ const DataImport = () => {
       annotateScheduled: obj.annotateScheduled ?? true,
       isRecentSearchShown: obj.isRecentSearchShown ?? true,
       fontSize: obj.fontSize ?? 16,
+      searchRange: 1000,
     });
 
     navigate("/");
