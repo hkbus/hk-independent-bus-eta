@@ -144,6 +144,8 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               listStyle: "none",
               p: 0.5,
               m: 0,
+              borderRadius: 0,
+              // TODO: make sticky
             }}
             component="ul"
           >
@@ -156,7 +158,14 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                     onClick={() => {
                       setSearchRange(range);
                     }}
-                    variant={searchRange === range ? "outlined" : "filled"}
+                    // color={searchRange === range ? "default" : "default"}
+                    variant={searchRange === range ? "filled" : "outlined"}
+                    sx={{
+                      // TODO: remove ripple
+                      "&.MuiChip-filled": {
+                        backgroundColor: ({ palette }) => palette.primary.main,
+                      },
+                    }}
                   ></Chip>
                 </ListItem>
               );
@@ -459,6 +468,6 @@ const getSelectedRoutes = ({
   };
 };
 
-const ListItem = styled('li')(({ theme }) => ({
+const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
