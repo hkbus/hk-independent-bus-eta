@@ -156,44 +156,15 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     }, [selectedRoutes, t]);
 
     const NearbyRouteList = useMemo(() => {
-      // console.log(selectedRoutes?.nearby);
-      // const hasNoNearbyRoutes = Object.values(selectedRoutes?.nearby).map(
-      //   (nearbyRoutes) => console.log(nearbyRoutes)
-      // );
-      // const hasNoNearbyRoutes = () => {
-      //   return Object.values(selectedRoutes?.nearby || {}).map(
-      //     (nearbyRoutes) => {
-      //       return nearbyRoutes.split("|").every((item) => item === "");
-      //     }
-      //   );
-      // };
-
       if (selectedRoutes?.nearby) {
         setHasNoNearbyRoutes(() => {
-          console.log(
-            Object.values(selectedRoutes.nearby).map((nearbyRoutes) => {
-              // console.log(nearbyRoutes.split("|"));
-              return nearbyRoutes.split("|").every((item) => item === "");
-            })
-          );
-          console.log(
-            Object.values(selectedRoutes.nearby)
-              .map((nearbyRoutes) => {
-                // console.log(nearbyRoutes.split("|"));
-                return nearbyRoutes.split("|").every((item) => item === "");
-              })
-              .every((bool) => bool === true)
-          );
           return Object.values(selectedRoutes.nearby)
             .map((nearbyRoutes) => {
-              // console.log(nearbyRoutes.split("|"));
               return nearbyRoutes.split("|").every((item) => item === "");
             })
             .every((bool) => bool === true);
         });
       }
-      // console.log(hasNoNearbyRoutes);
-      // console.log(selectedRoutes?.nearby);
       return selectedRoutes?.nearby ? (
         <>
           <Paper sx={paperSx} component="ul">
