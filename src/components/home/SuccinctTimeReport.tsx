@@ -10,11 +10,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { vibrate } from "../../utils";
+import { getDistance, getDistanceWithUnit, vibrate } from "../../utils";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import SuccinctEtas from "./SuccinctEtas";
-import { getDistanceWithUnit, toProperCase } from "../../utils";
+import { toProperCase } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
 import { Eta, Location } from "hk-bus-eta";
 import { ManageMode } from "../../data";
@@ -48,9 +48,9 @@ const DistAndFare = ({
     .join(", ");
 
   const { distance, unit, decimalPlace } = getDistanceWithUnit(
-    location,
-    geolocation
+    getDistance(location, geolocation)
   );
+  
   if (geoPermission !== "granted" || location.lat === 0) {
     return <>{name + "　" + (fareString ? "(" + fareString + ")" : "")}</>;
   }
