@@ -142,7 +142,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               alignItems: "center",
               flexWrap: "wrap",
               listStyle: "none",
-              p: 0.5,
+              p: 0,
               m: 0,
               borderRadius: 0,
               // TODO: make sticky
