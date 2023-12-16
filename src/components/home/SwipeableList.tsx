@@ -87,7 +87,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     const [selectedRange, setSelectedRange] = useState<number | "custom">(
       defaultSearchRange
     );
-    const [inputValue, setInputValue] = useState(selectedRange.toString());
+    const [inputValue, setInputValue] = useState("");
 
     useImperativeHandle(ref, () => ({
       changeTab: (v) => {
@@ -192,7 +192,8 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   setOpen(true);
                 }}
               >
-                {t("自訂")}({inputValue})
+                {t("自訂")}
+                {selectedRange === "custom" ? `(${inputValue})` : null}
               </ToggleButton>
             </ToggleButtonGroup>
             <ListItem key="unit">{t("米")}</ListItem>
