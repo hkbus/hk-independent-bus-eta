@@ -146,21 +146,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     const NearbyRouteList = useMemo(() => {
       return selectedRoutes?.nearby ? (
         <>
-          <Paper
-            sx={{
-              display: "flex",
-              justifyContent: "space-around",
-              alignItems: "center",
-              flexWrap: "wrap",
-              listStyle: "none",
-              px: 0,
-              py: 1,
-              m: 0,
-              borderRadius: 0,
-              // TODO: make sticky
-            }}
-            component="ul"
-          >
+          <Paper sx={paperSx} component="ul">
             <ListItem key={`range-tag`} sx={{ fontSize: 12 }}>
               {t("搜尋範圍")}:
             </ListItem>
@@ -169,24 +155,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               exclusive
               onChange={(_, value) => setSearchRange(value)}
               aria-label="search range"
-              sx={({ palette }) => {
-                return {
-                  height: 24,
-                  "& .MuiToggleButtonGroup-grouped": {
-                    // margin: 2.5,
-                    border: `1 solid ${palette.primary.main}`,
-                    "&.Mui-disabled": {
-                      // border: `1 solid ${palette.primary.main}`,
-                    },
-                    // "&:not(:first-of-type)": {
-                    //   borderRadius: theme.shape.borderRadius,
-                    // },
-                    // "&:first-of-type": {
-                    //   borderRadius: theme.shape.borderRadius,
-                    // },
-                  },
-                };
-              }}
+              sx={toggleButtonGroupSx}
             >
               {searchRangeOptions.map((range) => {
                 const { distance, unit } = getDistanceWithUnit(range);
@@ -514,11 +483,43 @@ const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
 
+const paperSx: SxProps<Theme> = {
+  display: "flex",
+  justifyContent: "space-around",
+  alignItems: "center",
+  flexWrap: "wrap",
+  listStyle: "none",
+  px: 0,
+  py: 1,
+  m: 0,
+  borderRadius: 0,
+  // TODO: make sticky
+};
+
+const toggleButtonGroupSx: SxProps<Theme> = ({ palette }) => {
+  return {
+    "& .MuiToggleButtonGroup-grouped": {
+      // margin: 2.5,
+      border: `1 solid ${palette.primary.main}`,
+      "&.Mui-disabled": {
+        // border: `1 solid ${palette.primary.main}`,
+      },
+      // "&:not(:first-of-type)": {
+      //   borderRadius: theme.shape.borderRadius,
+      // },
+      // "&:first-of-type": {
+      //   borderRadius: theme.shape.borderRadius,
+      // },
+    },
+  };
+};
+
 const toggleButtonSx: SxProps<Theme> = (theme) => {
   return {
-    fontSize: 10,
-    borderRadius: 12,
-    height: 24,
+    fontSize: 12,
+    height: 30,
+    borderRadius: 15,
+    px: 2,
     "&.MuiButtonBase-root&.Mui-selected": {
       backgroundColor: ({ palette }) => palette.primary.main,
       color: "black",
