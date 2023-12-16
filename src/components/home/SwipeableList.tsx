@@ -207,7 +207,12 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               )
             )}
           </Box>
-          <Dialog open={open}>
+          <Dialog
+            open={open}
+            onClose={() => {
+              setOpen(false);
+            }}
+          >
             <DialogTitle>Set Custom Range</DialogTitle>
             <input
               type="number"
