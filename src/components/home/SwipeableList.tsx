@@ -149,6 +149,9 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             }}
             component="ul"
           >
+            <ListItem key={`range-tag`} sx={{ fontSize: 12 }}>
+              {t("搜尋範圍")}:
+            </ListItem>
             {rangeOptions.map((range) => {
               const { distance, unit } = getDistanceWithUnit(range);
               return (
