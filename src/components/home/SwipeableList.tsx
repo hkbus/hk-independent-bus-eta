@@ -188,8 +188,18 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 value={"custom"}
                 aria-label={searchRange.toString()}
                 onClick={(e) => {
+                  const hasInput = inputValue !== "";
+                  const isCustom = selectedRange === "custom";
                   e.preventDefault();
-                  setOpen(true);
+                  if (hasInput) {
+                    setSelectedRange("custom");
+                    setSearchRange(parseInt(inputValue));
+                    if (isCustom) {
+                      setOpen(true);
+                    }
+                  } else if (!isCustom && hasInput) {
+                    setSelectedRange("custom");
+                  } else setOpen(true);
                 }}
               >
                 {t("自訂")}
