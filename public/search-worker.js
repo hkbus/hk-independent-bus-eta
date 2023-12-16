@@ -97,7 +97,7 @@ const dfs = (routeList, stopList, curLocation, targetLocation, curDepth, maxDept
       if ( stopIdx === -1 ) continue // skip if no take up stop is found
       // take off the bus
       for (var idx = stopIdx + 1; idx < stops.length; ++idx ) {
-        if ( dfs(routeList, stopList, stopList[stops[idx]].location, targetLocation, curDepth - 1, maxDepth, routeId, tmpRoute + '|' + `${routeId}/${stopIdx}-${idx}` ) ) {
+        if ( dfs(routeList, stopList, stopList[stops[idx]].location, targetLocation, curDepth - 1, maxDepth, routeId, `${tmpRoute}|${routeId}/${stopIdx}-${idx}` ) ) {
           routeLv[routeFrom] = maxDepth - curDepth
           found = true
         }
