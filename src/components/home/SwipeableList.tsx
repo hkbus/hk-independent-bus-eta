@@ -553,6 +553,7 @@ const paperSx: SxProps<Theme> = (theme) => {
     py: 1,
     m: 0,
     borderRadius: 0,
+    fontSize: 14,
     // TODO: make sticky
   };
 };
