@@ -198,13 +198,24 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               onChange={(_, value) => setSearchRange(value)}
               aria-label="text alignment"
             >
-              <ToggleButton disableRipple value="100" aria-label="left aligned">
+              <ToggleButton
+                sx={toggleButtonSx}
+                disableRipple
+                value="100"
+                aria-label="left aligned"
+              >
                 100
               </ToggleButton>
-              <ToggleButton disableRipple value="500" aria-label="centered">
+              <ToggleButton
+                sx={toggleButtonSx}
+                disableRipple
+                value="500"
+                aria-label="centered"
+              >
                 500
               </ToggleButton>
               <ToggleButton
+                sx={toggleButtonSx}
                 disableRipple
                 value="1000"
                 aria-label="right aligned"
@@ -515,6 +526,15 @@ const ListItem = styled("li")(({ theme }) => ({
 }));
 
 const chipSx: SxProps<Theme> = {
+  fontSize: 10,
+  height: 24,
+  // TODO: remove ripple
+  "&.MuiChip-root&.MuiChip-filled": {
+    backgroundColor: ({ palette }) => palette.primary.main,
+    color: ({ palette }) => palette.primary.contrastText,
+  },
+};
+const toggleButtonSx: SxProps<Theme> = {
   fontSize: 10,
   height: 24,
   // TODO: remove ripple
