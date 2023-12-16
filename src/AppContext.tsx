@@ -182,7 +182,7 @@ const isColorMode = (input: unknown): input is ColorMode => {
   return input === "dark" || input === "light" || input === "system";
 };
 
-export const defaultSearchRange: SearchRange = 100;
+export const defaultSearchRange: SearchRange = 500;
 
 export const AppContextProvider = ({
   workbox,

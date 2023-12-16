@@ -170,6 +170,22 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 </ListItem>
               );
             })}
+            <ListItem key={`range-custom`}>
+              <Chip
+                label={t("自訂")}
+                onClick={() => {
+                  // setSearchRange(range);
+                }}
+                // color={searchRange === range ? "default" : "default"}
+                variant={!rangeOptions.includes(searchRange) ? "filled" : "outlined"}
+                sx={{
+                  // TODO: remove ripple
+                  "&.MuiChip-filled": {
+                    backgroundColor: ({ palette }) => palette.primary.main,
+                  },
+                }}
+              ></Chip>
+            </ListItem>
           </Paper>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
