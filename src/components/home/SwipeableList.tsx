@@ -8,7 +8,7 @@ import React, {
   useCallback,
 } from "react";
 import SwipeableViews from "react-swipeable-views";
-import { Box, Chip, List, Typography } from "@mui/material";
+import { Box, Chip, List, Paper, Typography, styled } from "@mui/material";
 import {
   Location,
   RouteList,
@@ -135,19 +135,33 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       const rangeOptions: SearchRange[] = [100, 200, 500, 1000, 2000];
       return selectedRoutes?.nearby ? (
         <>
-          {rangeOptions.map((range) => {
-            const { distance, unit } = getDistanceWithUnit(range);
-            return (
-              <Chip
-                key={`range-${range}`}
-                label={distance + t(unit)}
-                onClick={() => {
-                  setSearchRange(range);
-                }}
-                variant={searchRange === range ? "outlined" : "filled"}
-              ></Chip>
-            );
-          })}
+          <Paper
+            sx={{
+              display: "flex",
+              flexDirection: "",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              listStyle: "none",
+              p: 0.5,
+              m: 0,
+            }}
+            component="ul"
+          >
+            {rangeOptions.map((range) => {
+              const { distance, unit } = getDistanceWithUnit(range);
+              return (
+                <ListItem key={`range-${range}`}>
+                  <Chip
+                    label={distance + t(unit)}
+                    onClick={() => {
+                      setSearchRange(range);
+                    }}
+                    variant={searchRange === range ? "outlined" : "filled"}
+                  ></Chip>
+                </ListItem>
+              );
+            })}
+          </Paper>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {Object.entries(selectedRoutes.nearby).map(
@@ -444,3 +458,7 @@ const getSelectedRoutes = ({
     ),
   };
 };
+
+const ListItem = styled('li')(({ theme }) => ({
+  margin: theme.spacing(0.5),
+}));
