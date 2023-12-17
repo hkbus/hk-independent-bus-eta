@@ -175,7 +175,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 key={`range-custom`}
                 sx={toggleButtonSx}
                 disableRipple
-                value={1000}
+                value={'custom'}
                 aria-label={searchRange.toString()}
               >
                 {t("自訂")}
