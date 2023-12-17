@@ -61,7 +61,7 @@ interface SelectedRoutes {
   collections: string[];
 }
 
-export const searchRangeOptions = [100, 200, 500] as const;
+export const searchRangeOptions = ['100', '200', '500'] as const;
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ geolocation, homeTab, onChangeTab }, ref) => {
