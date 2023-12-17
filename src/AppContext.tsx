@@ -182,6 +182,8 @@ const isColorMode = (input: unknown): input is ColorMode => {
   return input === "dark" || input === "light" || input === "system";
 };
 
+export const defaultSearchRange: SearchRange = 100;
+
 export const AppContextProvider = ({
   workbox,
   children,
@@ -244,7 +246,7 @@ export const AppContextProvider = ({
       annotateScheduled:
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
       fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
-      searchRange: JSON.parse(localStorage.getItem("searchRange")) ?? 1000,
+      searchRange: JSON.parse(localStorage.getItem("searchRange")) ?? defaultSearchRange,
     };
   };
   const { i18n } = useTranslation();
