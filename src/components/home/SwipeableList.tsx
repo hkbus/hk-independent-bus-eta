@@ -9,7 +9,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Typography,
-  styled
+  styled,
 } from "@mui/material";
 import {
   EtaDb,
@@ -254,36 +254,45 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             onClose={() => {
               setOpen(false);
             }}
+            sx={{
+              "& .MuiPaper-root": {
+                padding: 2,
+              },
+            }}
           >
             <DialogTitle>{t("自訂搜尋範圍（米）")}</DialogTitle>
-            <input
-              type="number"
-              defaultValue={customSearchRange}
-              value={inputValue}
-              min="0"
-              max="9999"
-              onChange={(e) => {
-                const value = e.target.value;
-                const numericalValue = parseInt(value);
-                const [min, max] = [0, 9999];
-                if (numericalValue <= min) {
-                  setInputValue(min.toString());
-                } else if (numericalValue >= max) {
-                  setInputValue(max.toString());
-                } else setInputValue(value);
-              }}
-            />
-            <button
-              onClick={() => {
-                setSelectedRange("custom");
-                const range = parseInt(inputValue);
-                setLastSearchRange(range);
-                setCustomSearchRange(range);
-                setOpen(false);
-              }}
-            >
-              Confirm
-            </button>
+            <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+              <input
+                style={{ flex: 1 }}
+                type="number"
+                defaultValue={customSearchRange}
+                value={inputValue}
+                min="0"
+                max="9999"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const numericalValue = parseInt(value);
+                  const [min, max] = [0, 9999];
+                  if (numericalValue <= min) {
+                    setInputValue(min.toString());
+                  } else if (numericalValue >= max) {
+                    setInputValue(max.toString());
+                  } else setInputValue(value);
+                }}
+              />
+              <button
+                style={{ flex: 1 }}
+                onClick={() => {
+                  setSelectedRange("custom");
+                  const range = parseInt(inputValue);
+                  setLastSearchRange(range);
+                  setCustomSearchRange(range);
+                  setOpen(false);
+                }}
+              >
+                Confirm
+              </button>
+            </Box>
           </Dialog>
         </>
       ) : (
