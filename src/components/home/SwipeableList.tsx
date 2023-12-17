@@ -481,17 +481,19 @@ const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
 
-const paperSx: SxProps<Theme> = {
-  display: "flex",
-  justifyContent: "space-around",
-  alignItems: "center",
-  flexWrap: "wrap",
-  listStyle: "none",
-  px: 0,
-  py: 1,
-  m: 0,
-  borderRadius: 0,
-  // TODO: make sticky
+const paperSx: SxProps<Theme> = (theme) => {
+  return {
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    flexWrap: "wrap",
+    listStyle: "none",
+    px: 0,
+    py: 1,
+    m: 0,
+    borderRadius: 0,
+    // TODO: make sticky
+  };
 };
 
 const toggleButtonGroupSx: SxProps<Theme> = ({ palette }) => {
