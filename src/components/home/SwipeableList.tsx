@@ -18,6 +18,7 @@ import {
 } from "hk-bus-eta";
 
 import AppContext from "../../AppContext";
+import type { SearchRange } from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 import { coToType, getDistance } from "../../utils";
 import SuccinctTimeReport from "./SuccinctTimeReport";
@@ -47,8 +48,6 @@ interface SelectedRoutes {
   }>;
   collections: string[];
 }
-
-export type SearchRange = 100 | 200 | 500 | 1000;
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ geolocation, homeTab, onChangeTab }, ref) => {
