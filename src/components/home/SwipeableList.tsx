@@ -216,29 +216,28 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 };
               }}
             >
+              {rangeOptions.map((range) => {
+                const { distance, unit } = getDistanceWithUnit(range);
+                return (
+                  <ToggleButton
+                    key={`range-${range}`}
+                    sx={toggleButtonSx}
+                    disableRipple
+                    value={range}
+                    aria-label={range.toString()}
+                  >
+                    {distance + t(unit)}
+                  </ToggleButton>
+                );
+              })}
               <ToggleButton
+                key={`range-custom`}
                 sx={toggleButtonSx}
                 disableRipple
-                value="100"
-                aria-label="100"
+                value={1000}
+                aria-label={searchRange.toString()}
               >
-                100
-              </ToggleButton>
-              <ToggleButton
-                sx={toggleButtonSx}
-                disableRipple
-                value="500"
-                aria-label="500"
-              >
-                500
-              </ToggleButton>
-              <ToggleButton
-                sx={toggleButtonSx}
-                disableRipple
-                value="1000"
-                aria-label="1000"
-              >
-                1000
+                {t("自訂")}
               </ToggleButton>
             </ToggleButtonGroup>
           </Paper>
