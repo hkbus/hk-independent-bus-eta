@@ -39,6 +39,7 @@ import { useTranslation } from "react-i18next";
 import { CircularProgress } from "../Progress";
 import { RouteCollection, TransportType } from "../../typing";
 import HomeRouteListDropDown from "./HomeRouteList";
+import { SocialDistanceOutlined } from "@mui/icons-material";
 
 interface SwipeableListProps {
   geolocation: Location;
@@ -167,7 +168,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               sx={toggleButtonGroupSx}
             >
               {searchRangeOptions.map((range) => {
-                const { distance, unit } = getDistanceWithUnit(range);
+                const { distance } = getDistanceWithUnit(range);
                 return (
                   <ToggleButton
                     key={`range-${range}`}
@@ -176,7 +177,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                     value={range}
                     aria-label={range.toString()}
                   >
-                    {distance + t(unit)}
+                    {distance}
                   </ToggleButton>
                 );
               })}
