@@ -556,7 +556,7 @@ const toggleButtonSx: SxProps<Theme> = (theme) => {
   return {
     height: 30,
     borderRadius: 15,
-    px: 2,
+    px: 1.5,
     "&.MuiButtonBase-root&.Mui-selected": {
       backgroundColor: ({ palette }) => palette.primary.main,
       color: "black",
