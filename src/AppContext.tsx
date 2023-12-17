@@ -559,16 +559,13 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const setSearchRange = useCallback(
-    (searchRange: number) => {
-      setStateRaw(
-        produce((state: State) => {
-          state.searchRange = searchRange;
-        })
-      );
-    },
-    []
-  );
+  const setSearchRange = useCallback((searchRange: number) => {
+    setStateRaw(
+      produce((state: State) => {
+        state.searchRange = searchRange;
+      })
+    );
+  }, []);
 
   const colorMode = useMemo(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
