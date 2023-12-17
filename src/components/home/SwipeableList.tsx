@@ -154,7 +154,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       return selectedRoutes?.nearby ? (
         <>
           <Paper sx={paperSx} component="ul">
-            <ListItem key={`range-tag`}>{t("搜尋範圍")}:</ListItem>
+            <ListItem key="range-tag">{t("搜尋範圍")}:</ListItem>
             <ToggleButtonGroup
               defaultValue={selectedRange}
               value={selectedRange}
@@ -194,6 +194,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 {t("自訂")}({inputValue})
               </ToggleButton>
             </ToggleButtonGroup>
+            <ListItem key="unit">{t("米")}</ListItem>
           </Paper>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
