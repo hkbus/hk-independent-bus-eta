@@ -135,7 +135,11 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       return selectedRoutes?.nearby ? (
         <>
           {rangeOptions.map((range) => (
-            <Chip label={range} onClick={() => {}}></Chip>
+            <Chip
+              key={`range-${range}`}
+              label={range}
+              onClick={() => {}}
+            ></Chip>
           ))}
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
