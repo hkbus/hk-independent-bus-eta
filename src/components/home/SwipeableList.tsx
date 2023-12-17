@@ -61,7 +61,7 @@ interface SelectedRoutes {
   collections: string[];
 }
 
-export const searchRangeOptions = ["100", "200", "500"];
+export const searchRangeOptions = [100, 200, 500];
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ geolocation, homeTab, onChangeTab }, ref) => {
@@ -156,15 +156,15 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               defaultValue={selectedRange}
               value={selectedRange}
               exclusive
-              onChange={(_, value: string) => {
+              onChange={(_, value) => {
                 setSelectedRange(value);
-                setSearchRange(parseInt(value));
+                setSearchRange(value);
               }}
               aria-label="search range"
               sx={toggleButtonGroupSx}
             >
               {searchRangeOptions.map((range) => {
-                const { distance, unit } = getDistanceWithUnit(parseInt(range));
+                const { distance, unit } = getDistanceWithUnit(range);
                 return (
                   <ToggleButton
                     key={`range-${range}`}
@@ -206,21 +206,22 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           </Box>
           <Dialog open={open}>
             <DialogTitle>Set Custom Range</DialogTitle>
-            <input
+          <input
               type="number"
-              value={selectedRange}
+              defaultValue={selectedRange}
+              // value={selectedRange}
               onChange={(e) => {
-                const range = e.target.value;
+                const range = parseInt(e.target.value);
                 setSelectedRange(range);
                 if (!searchRangeOptions.includes(range)) {
-                  setSelectedRange("custom");
+                  setSelectedRange(null);
                 }
               }}
             />
             <button
               onClick={() => {
-                setSearchRange(parseInt(selectedRange));
-                setSelectedRange("custom");
+                setSearchRange(selectedRange);
+                setSelectedRange(null);
                 setOpen(false);
               }}
             >

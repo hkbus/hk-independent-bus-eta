@@ -182,7 +182,7 @@ const isColorMode = (input: unknown): input is ColorMode => {
 };
 
 // use the largest search range option as default
-export const defaultSearchRange: string =
+export const defaultSearchRange =
   searchRangeOptions[searchRangeOptions.length - 1];
 
 export const AppContextProvider = ({
