@@ -48,6 +48,8 @@ interface SelectedRoutes {
   collections: string[];
 }
 
+export type SearchRange = 100 | 200 | 500 | 1000;
+
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ geolocation, homeTab, onChangeTab }, ref) => {
     const {
