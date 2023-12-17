@@ -1,6 +1,7 @@
 import {
   Box,
   Dialog,
+  DialogContent,
   DialogTitle,
   List,
   Paper,
@@ -260,6 +261,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             <DialogTitle sx={dialogTitleSx}>
               {t("自訂搜尋範圍（米）")}
             </DialogTitle>
+            <DialogContent>Map</DialogContent>
             <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
               <input
                 style={{ flex: 1 }}
