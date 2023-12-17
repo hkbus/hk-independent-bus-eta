@@ -556,10 +556,9 @@ const toggleButtonSx: SxProps<Theme> = (theme) => {
     fontSize: 10,
     borderRadius: 12,
     height: 24,
-    // TODO: remove ripple
-    "&.MuiChip-root&.MuiChip-filled": {
+    "&.MuiButtonBase-root&.Mui-selected": {
       backgroundColor: ({ palette }) => palette.primary.main,
-      color: ({ palette }) => palette.primary.contrastText,
+      color: "black",
     },
   };
 };
