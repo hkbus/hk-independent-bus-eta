@@ -29,7 +29,6 @@ import {
 } from "hk-bus-eta";
 
 import AppContext from "../../AppContext";
-import type { SearchRange } from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 import { coToType, getDistance, getDistanceWithUnit } from "../../utils";
 import SuccinctTimeReport from "./SuccinctTimeReport";
@@ -59,6 +58,8 @@ interface SelectedRoutes {
   }>;
   collections: string[];
 }
+
+export const searchRangeOptions = [100, 200, 500, 1000] as const;
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ geolocation, homeTab, onChangeTab }, ref) => {
@@ -143,7 +144,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     }, [selectedRoutes, t]);
 
     const NearbyRouteList = useMemo(() => {
-      const rangeOptions: SearchRange[] = [100, 500];
       return selectedRoutes?.nearby ? (
         <>
           <Paper
@@ -153,7 +153,8 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               alignItems: "center",
               flexWrap: "wrap",
               listStyle: "none",
-              p: 0,
+              px: 0,
+              py: 1,
               m: 0,
               borderRadius: 0,
               // TODO: make sticky
@@ -187,7 +188,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 };
               }}
             >
-              {rangeOptions.map((range) => {
+              {searchRangeOptions.map((range) => {
                 const { distance, unit } = getDistanceWithUnit(range);
                 return (
                   <ToggleButton
@@ -358,7 +359,7 @@ const getSelectedRoutes = ({
   isRouteFilter: boolean;
   isTodayHoliday: boolean;
   serviceDayMap: EtaDb["serviceDayMap"];
-  searchRange: SearchRange;
+  searchRange: number;
 }): SelectedRoutes => {
   const selectedRoutes = savedEtas
     .filter((routeUrl, index, self) => {
