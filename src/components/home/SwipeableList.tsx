@@ -290,7 +290,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
         <CircularProgress sx={{ my: 10 }} />
       );
     }, [
-      selectedRoutes.nearby,
+      selectedRoutes?.nearby,
       t,
       customSearchRange,
       hasNoNearbyRoutes,
