@@ -191,7 +191,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   setOpen(true);
                 }}
               >
-                {t("自訂")}
+                {t("自訂")}({inputValue})
               </ToggleButton>
             </ToggleButtonGroup>
           </Paper>
