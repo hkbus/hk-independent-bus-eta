@@ -24,6 +24,7 @@ import {
   NumPadOrder,
 } from "./data";
 import { DeviceOrientationPermission } from "react-world-compass";
+import { SearchRange } from "./components/home/SwipeableList";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -86,6 +87,10 @@ export interface AppState {
    * Font size
    */
   fontSize: number;
+  /**
+   * Range for geolocation search
+   */
+  searchRange: SearchRange;
 }
 
 interface AppContextValue
@@ -122,6 +127,7 @@ interface AppContextValue
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
+  searchRange: SearchRange;
 
   // for React Native Context
   setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
@@ -236,6 +242,7 @@ export const AppContextProvider = ({
       annotateScheduled:
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
       fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
+      searchRange: 1000,
     };
   };
   const { i18n } = useTranslation();
