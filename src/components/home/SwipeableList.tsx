@@ -252,7 +252,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           </Paper>
           {hasNoNearbyRoutes ? (
             <Typography sx={{ marginTop: 5 }}>
-              <b>{t("未有收藏路線")}</b>
+              <b>{t("附近未有任何路線")}</b>
             </Typography>
           ) : (
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
