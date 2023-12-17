@@ -24,10 +24,9 @@ import {
   NumPadOrder,
 } from "./data";
 import { DeviceOrientationPermission } from "react-world-compass";
+import { searchRangeOptions } from "./components/home/SwipeableList";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
-
-export type SearchRange = 100 | 500;
 
 export interface AppState {
   searchRoute: string;
@@ -91,7 +90,7 @@ export interface AppState {
   /**
    * Range for geolocation search
    */
-  searchRange: SearchRange;
+  searchRange: number;
 }
 
 interface AppContextValue
@@ -128,7 +127,7 @@ interface AppContextValue
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
-  searchRange: SearchRange;
+  searchRange: number;
   setSearchRange: (searchRange: number) => void;
 
   // for React Native Context
@@ -182,7 +181,7 @@ const isColorMode = (input: unknown): input is ColorMode => {
   return input === "dark" || input === "light" || input === "system";
 };
 
-export const defaultSearchRange: SearchRange = 500;
+export const defaultSearchRange = searchRangeOptions[0];
 
 export const AppContextProvider = ({
   workbox,
@@ -558,13 +557,16 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const setSearchRange = useCallback((searchRange: SearchRange) => {
-    setStateRaw(
-      produce((state: State) => {
-        state.searchRange = searchRange;
-      })
-    );
-  }, []);
+  const setSearchRange = useCallback(
+    (searchRange: number) => {
+      setStateRaw(
+        produce((state: State) => {
+          state.searchRange = searchRange;
+        })
+      );
+    },
+    []
+  );
 
   const colorMode = useMemo(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
