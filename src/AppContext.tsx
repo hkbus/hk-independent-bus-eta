@@ -27,7 +27,7 @@ import { DeviceOrientationPermission } from "react-world-compass";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
-export type SearchRange = 100 | 200 | 500 | 1000 | 2000;
+export type SearchRange = 100 | 500;
 
 export interface AppState {
   searchRoute: string;
