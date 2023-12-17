@@ -91,6 +91,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     const [inputValue, setInputValue] = useState<string>(
       isCustomRange ? customSearchRange.toString() : ""
     );
+    const [hasNoNearbyRoutes, setHasNoNearbyRoutes] = useState(true);
 
     useImperativeHandle(ref, () => ({
       changeTab: (v) => {
@@ -155,6 +156,44 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     }, [selectedRoutes, t]);
 
     const NearbyRouteList = useMemo(() => {
+      // console.log(selectedRoutes?.nearby);
+      // const hasNoNearbyRoutes = Object.values(selectedRoutes?.nearby).map(
+      //   (nearbyRoutes) => console.log(nearbyRoutes)
+      // );
+      // const hasNoNearbyRoutes = () => {
+      //   return Object.values(selectedRoutes?.nearby || {}).map(
+      //     (nearbyRoutes) => {
+      //       return nearbyRoutes.split("|").every((item) => item === "");
+      //     }
+      //   );
+      // };
+
+      if (selectedRoutes?.nearby) {
+        setHasNoNearbyRoutes(() => {
+          console.log(
+            Object.values(selectedRoutes.nearby).map((nearbyRoutes) => {
+              // console.log(nearbyRoutes.split("|"));
+              return nearbyRoutes.split("|").every((item) => item === "");
+            })
+          );
+          console.log(
+            Object.values(selectedRoutes.nearby)
+              .map((nearbyRoutes) => {
+                // console.log(nearbyRoutes.split("|"));
+                return nearbyRoutes.split("|").every((item) => item === "");
+              })
+              .every((bool) => bool === true)
+          );
+          return Object.values(selectedRoutes.nearby)
+            .map((nearbyRoutes) => {
+              // console.log(nearbyRoutes.split("|"));
+              return nearbyRoutes.split("|").every((item) => item === "");
+            })
+            .every((bool) => bool === true);
+        });
+      }
+      // console.log(hasNoNearbyRoutes);
+      // console.log(selectedRoutes?.nearby);
       return selectedRoutes?.nearby ? (
         <>
           <Paper sx={paperSx} component="ul">
@@ -211,18 +250,23 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               <ListItem key="unit">{t("米")}</ListItem>
             </ToggleButtonGroup>
           </Paper>
-
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {Object.entries(selectedRoutes.nearby).map(
-              ([type, nearbyRoutes]) => (
-                <HomeRouteListDropDown
-                  key={`nearby-${type}`}
-                  name={t(type)}
-                  routeStrings={nearbyRoutes}
-                />
-              )
-            )}
-          </Box>
+          {hasNoNearbyRoutes ? (
+            <Typography sx={{ marginTop: 5 }}>
+              <b>{t("未有收藏路線")}</b>
+            </Typography>
+          ) : (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {Object.entries(selectedRoutes.nearby).map(
+                ([type, nearbyRoutes]) => (
+                  <HomeRouteListDropDown
+                    key={`nearby-${type}`}
+                    name={t(type)}
+                    routeStrings={nearbyRoutes}
+                  />
+                )
+              )}
+            </Box>
+          )}
           <Dialog
             open={open}
             onClose={() => {
@@ -269,8 +313,9 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       selectedRange,
       lastSearchRange,
       customSearchRange,
-      inputValue,
+      hasNoNearbyRoutes,
       open,
+      inputValue,
       setLastSearchRange,
       setCustomSearchRange,
     ]);
