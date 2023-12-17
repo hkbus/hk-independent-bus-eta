@@ -8,7 +8,16 @@ import React, {
   useCallback,
 } from "react";
 import SwipeableViews from "react-swipeable-views";
-import { Box, Chip, List, Paper, SxProps, Theme, Typography, styled } from "@mui/material";
+import {
+  Box,
+  Chip,
+  List,
+  Paper,
+  SxProps,
+  Theme,
+  Typography,
+  styled,
+} from "@mui/material";
 import {
   Location,
   RouteList,
@@ -487,7 +496,8 @@ const chipSx: SxProps<Theme> = {
   fontSize: 10,
   height: 24,
   // TODO: remove ripple
-  "&.MuiChip-filled": {
+  "&.MuiChip-root&.MuiChip-filled": {
     backgroundColor: ({ palette }) => palette.primary.main,
+    color: ({ palette }) => palette.primary.contrastText,
   },
 };
