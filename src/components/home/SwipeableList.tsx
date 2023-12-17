@@ -221,8 +221,17 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               type="number"
               defaultValue={inputValue}
               value={inputValue}
+              min="0"
+              max="9999"
               onChange={(e) => {
-                setInputValue(e.target.value);
+                const value = e.target.value;
+                const numericalValue = parseInt(value);
+                const [min, max] = [0, 9999];
+                if (numericalValue <= min) {
+                  setInputValue(min.toString());
+                } else if (numericalValue >= max) {
+                  setInputValue(max.toString());
+                } else setInputValue(value);
               }}
             />
             <button
