@@ -38,6 +38,7 @@ import { CircularProgress } from "../Progress";
 import HomeRouteListDropDown from "./HomeRouteList";
 import type { HomeTabType } from "./HomeTabbar";
 import SuccinctTimeReport from "./SuccinctTimeReport";
+import { dialogRootSx, dialogTitleSx } from "../ui/dialog";
 
 interface SwipeableListProps {
   geolocation: Location;
@@ -254,13 +255,11 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             onClose={() => {
               setOpen(false);
             }}
-            sx={{
-              "& .MuiPaper-root": {
-                padding: 2,
-              },
-            }}
+            sx={dialogRootSx}
           >
-            <DialogTitle>{t("自訂搜尋範圍（米）")}</DialogTitle>
+            <DialogTitle sx={dialogTitleSx}>
+              {t("自訂搜尋範圍（米）")}
+            </DialogTitle>
             <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
               <input
                 style={{ flex: 1 }}
