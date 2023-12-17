@@ -378,7 +378,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       () => (
         <>
           {/* SwipeableViews has overflow attribute child div and this preventing <SearchRangeControl/> fixed on top using `position: sticky` */}
-          {homeTab === "nearby" && <SearchRangeControl />}
+          {homeTab === "nearby" ? <SearchRangeControl /> : null}
           <SwipeableViews
             index={getViewIdx()}
             onChangeIndex={(idx) => {
