@@ -147,9 +147,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       return selectedRoutes?.nearby ? (
         <>
           <Paper sx={paperSx} component="ul">
-            <ListItem key={`range-tag`} sx={{ fontSize: 12 }}>
-              {t("搜尋範圍")}:
-            </ListItem>
+            <ListItem key={`range-tag`}>{t("搜尋範圍")}:</ListItem>
             <ToggleButtonGroup
               value={searchRange}
               exclusive
@@ -502,7 +500,6 @@ const toggleButtonGroupSx: SxProps<Theme> = ({ palette }) => {
 
 const toggleButtonSx: SxProps<Theme> = (theme) => {
   return {
-    fontSize: 12,
     height: 30,
     borderRadius: 15,
     px: 2,
