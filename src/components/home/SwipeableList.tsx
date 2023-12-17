@@ -244,7 +244,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               setOpen(false);
             }}
           >
-            <DialogTitle>Set Custom Range</DialogTitle>
+            <DialogTitle>{t("自訂搜尋範圍（米）")}</DialogTitle>
             <input
               type="number"
               defaultValue={customSearchRange}
