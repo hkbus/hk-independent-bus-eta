@@ -90,7 +90,7 @@ export interface AppState {
   /**
    * Range for geolocation search
    */
-  searchRange: number;
+  lastSearchRange: number;
 }
 
 interface AppContextValue
@@ -127,8 +127,8 @@ interface AppContextValue
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
-  searchRange: number;
-  setSearchRange: (searchRange: number) => void;
+  lastSearchRange: number;
+  setLastSearchRange: (lastSearchRange: number) => void;
 
   // for React Native Context
   setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
@@ -247,8 +247,8 @@ export const AppContextProvider = ({
       annotateScheduled:
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
       fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
-      searchRange:
-        JSON.parse(localStorage.getItem("searchRange")) ?? defaultSearchRange,
+      lastSearchRange:
+        JSON.parse(localStorage.getItem("lastSearchRange")) ?? defaultSearchRange,
     };
   };
   const { i18n } = useTranslation();
@@ -559,10 +559,10 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const setSearchRange = useCallback((searchRange: number) => {
+  const setLastSearchRange = useCallback((lastSearchRange: number) => {
     setStateRaw(
       produce((state: State) => {
-        state.searchRange = searchRange;
+        state.lastSearchRange = lastSearchRange;
       })
     );
   }, []);
@@ -672,8 +672,8 @@ export const AppContextProvider = ({
   }, [state.fontSize]);
 
   useEffect(() => {
-    localStorage.setItem("searchRange", JSON.stringify(state.searchRange));
-  }, [state.searchRange]);
+    localStorage.setItem("lastSearchRange", JSON.stringify(state.lastSearchRange));
+  }, [state.lastSearchRange]);
 
   const contextValue = useMemo(() => {
     return {
@@ -706,7 +706,7 @@ export const AppContextProvider = ({
       importAppState,
       workbox,
       setGeoPermission,
-      setSearchRange,
+      setLastSearchRange,
     };
   }, [
     dbContext,
@@ -738,7 +738,7 @@ export const AppContextProvider = ({
     importAppState,
     workbox,
     setGeoPermission,
-    setSearchRange,
+    setLastSearchRange,
   ]);
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>

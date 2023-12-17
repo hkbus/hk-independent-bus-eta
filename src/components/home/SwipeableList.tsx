@@ -10,7 +10,6 @@ import React, {
 import SwipeableViews from "react-swipeable-views";
 import {
   Box,
-  Chip,
   Dialog,
   DialogTitle,
   List,
@@ -30,7 +29,7 @@ import {
   EtaDb,
 } from "hk-bus-eta";
 
-import AppContext, { defaultSearchRange } from "../../AppContext";
+import AppContext from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 import { coToType, getDistance, getDistanceWithUnit } from "../../utils";
 import SuccinctTimeReport from "./SuccinctTimeReport";
@@ -39,7 +38,6 @@ import { useTranslation } from "react-i18next";
 import { CircularProgress } from "../Progress";
 import { RouteCollection, TransportType } from "../../typing";
 import HomeRouteListDropDown from "./HomeRouteList";
-import { SocialDistanceOutlined } from "@mui/icons-material";
 
 interface SwipeableListProps {
   geolocation: Location;
@@ -71,8 +69,8 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       db: { holidays, routeList, stopList, serviceDayMap },
       isRouteFilter,
       collections,
-      searchRange,
-      setSearchRange,
+      lastSearchRange,
+      setLastSearchRange,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -84,12 +82,12 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       null
     );
     const [open, setOpen] = useState(false);
-    const isCustomRange = !searchRangeOptions.includes(searchRange);
+    const isCustomRange = !searchRangeOptions.includes(lastSearchRange);
     const [selectedRange, setSelectedRange] = useState<number | "custom">(
-      isCustomRange ? "custom" : searchRange
+      isCustomRange ? "custom" : lastSearchRange
     );
     const [inputValue, setInputValue] = useState(
-      isCustomRange ? searchRange?.toString() : ""
+      isCustomRange ? lastSearchRange?.toString() : ""
     );
 
     useImperativeHandle(ref, () => ({
@@ -109,7 +107,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           isRouteFilter,
           isTodayHoliday,
           serviceDayMap,
-          searchRange,
+          lastSearchRange,
         })
       );
     }, [
@@ -121,7 +119,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       isRouteFilter,
       isTodayHoliday,
       serviceDayMap,
-      searchRange,
+      lastSearchRange,
     ]);
 
     const SavedRouteList = useMemo(() => {
@@ -165,7 +163,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               exclusive
               onChange={(_, value) => {
                 setSelectedRange(value);
-                setSearchRange(value);
+                setLastSearchRange(value);
               }}
               aria-label="search range"
               sx={toggleButtonGroupSx}
@@ -189,14 +187,14 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 sx={toggleButtonSx}
                 disableRipple
                 value={"custom"}
-                aria-label={searchRange.toString()}
+                aria-label={lastSearchRange.toString()}
                 onClick={(e) => {
                   const hasInput = inputValue !== "";
                   const isCustom = selectedRange === "custom";
                   e.preventDefault();
                   if (hasInput) {
                     setSelectedRange("custom");
-                    setSearchRange(parseInt(inputValue));
+                    setLastSearchRange(parseInt(inputValue));
                     if (isCustom) {
                       setOpen(true);
                     }
@@ -251,7 +249,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               onClick={() => {
                 setSelectedRange("custom");
                 const range = parseInt(inputValue);
-                setSearchRange(range);
+                setLastSearchRange(range);
                 setOpen(false);
               }}
             >
@@ -265,10 +263,10 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     }, [
       open,
       inputValue,
-      searchRange,
+      lastSearchRange,
       selectedRange,
       selectedRoutes?.nearby,
-      setSearchRange,
+      setLastSearchRange,
       t,
     ]);
 
@@ -390,7 +388,7 @@ const getSelectedRoutes = ({
   isRouteFilter,
   isTodayHoliday,
   serviceDayMap,
-  searchRange,
+  lastSearchRange,
 }: {
   savedEtas: string[];
   collections: RouteCollection[];
@@ -400,7 +398,7 @@ const getSelectedRoutes = ({
   isRouteFilter: boolean;
   isTodayHoliday: boolean;
   serviceDayMap: EtaDb["serviceDayMap"];
-  searchRange: number;
+  lastSearchRange: number;
 }): SelectedRoutes => {
   const selectedRoutes = savedEtas
     .filter((routeUrl, index, self) => {
@@ -445,7 +443,7 @@ const getSelectedRoutes = ({
     .filter(
       (stop) =>
         // keep only nearby 1000m stops
-        stop[2] < searchRange
+        stop[2] < lastSearchRange
     )
     .sort((a, b) => a[2] - b[2])
     .slice(0, 20)
