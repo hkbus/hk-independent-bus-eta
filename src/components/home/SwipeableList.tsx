@@ -196,13 +196,13 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               value={100}
               exclusive
               onChange={(_, value) => setSearchRange(value)}
-              aria-label="text alignment"
+              aria-label="search range"
             >
               <ToggleButton
                 sx={toggleButtonSx}
                 disableRipple
                 value="100"
-                aria-label="left aligned"
+                aria-label="100"
               >
                 100
               </ToggleButton>
@@ -210,7 +210,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 sx={toggleButtonSx}
                 disableRipple
                 value="500"
-                aria-label="centered"
+                aria-label="500"
               >
                 500
               </ToggleButton>
@@ -218,7 +218,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 sx={toggleButtonSx}
                 disableRipple
                 value="1000"
-                aria-label="right aligned"
+                aria-label="1000"
               >
                 1000
               </ToggleButton>
