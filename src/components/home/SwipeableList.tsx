@@ -126,6 +126,71 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       lastSearchRange,
     ]);
 
+    const SearchRangeControl = useCallback(() => {
+      return (
+        <Paper sx={paperSx} component="ul">
+          <ListItem key="range-tag">{t("搜尋範圍")}:</ListItem>
+          <ToggleButtonGroup
+            defaultValue={selectedRange}
+            value={selectedRange}
+            exclusive
+            onChange={(_, value) => {
+              setSelectedRange(value);
+              setLastSearchRange(value);
+            }}
+            aria-label="search range"
+            sx={toggleButtonGroupSx}
+          >
+            {searchRangeOptions.map((range) => {
+              const { distance } = getDistanceWithUnit(range);
+              return (
+                <ToggleButton
+                  key={`range-${range}`}
+                  sx={toggleButtonSx}
+                  disableRipple
+                  value={range}
+                  aria-label={range.toString()}
+                >
+                  {distance}
+                </ToggleButton>
+              );
+            })}
+            <ToggleButton
+              key={`range-custom`}
+              sx={toggleButtonSx}
+              disableRipple
+              value={"custom"}
+              aria-label={lastSearchRange.toString()}
+              onClick={(e) => {
+                const hasCustomSearchRange = customSearchRange > 0;
+                const isCustom = selectedRange === "custom";
+                e.preventDefault();
+                if (hasCustomSearchRange) {
+                  setSelectedRange("custom");
+                  setLastSearchRange(customSearchRange);
+                  if (isCustom) {
+                    setOpen(true);
+                  }
+                } else if (!isCustom && hasCustomSearchRange) {
+                  setSelectedRange("custom");
+                } else setOpen(true);
+              }}
+            >
+              {t("自訂")}
+              {customSearchRange > 0 ? `(${customSearchRange})` : null}
+            </ToggleButton>
+            <ListItem key="unit">{t("米")}</ListItem>
+          </ToggleButtonGroup>
+        </Paper>
+      );
+    }, [
+      customSearchRange,
+      lastSearchRange,
+      selectedRange,
+      setLastSearchRange,
+      t,
+    ]);
+
     const SavedRouteList = useMemo(() => {
       if (selectedRoutes === null) {
         return <CircularProgress sx={{ my: 10 }} />;
@@ -168,60 +233,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       }
       return selectedRoutes?.nearby ? (
         <>
-          <Paper sx={paperSx} component="ul">
-            <ListItem key="range-tag">{t("搜尋範圍")}:</ListItem>
-            <ToggleButtonGroup
-              defaultValue={selectedRange}
-              value={selectedRange}
-              exclusive
-              onChange={(_, value) => {
-                setSelectedRange(value);
-                setLastSearchRange(value);
-              }}
-              aria-label="search range"
-              sx={toggleButtonGroupSx}
-            >
-              {searchRangeOptions.map((range) => {
-                const { distance } = getDistanceWithUnit(range);
-                return (
-                  <ToggleButton
-                    key={`range-${range}`}
-                    sx={toggleButtonSx}
-                    disableRipple
-                    value={range}
-                    aria-label={range.toString()}
-                  >
-                    {distance}
-                  </ToggleButton>
-                );
-              })}
-              <ToggleButton
-                key={`range-custom`}
-                sx={toggleButtonSx}
-                disableRipple
-                value={"custom"}
-                aria-label={lastSearchRange.toString()}
-                onClick={(e) => {
-                  const hasCustomSearchRange = customSearchRange > 0;
-                  const isCustom = selectedRange === "custom";
-                  e.preventDefault();
-                  if (hasCustomSearchRange) {
-                    setSelectedRange("custom");
-                    setLastSearchRange(customSearchRange);
-                    if (isCustom) {
-                      setOpen(true);
-                    }
-                  } else if (!isCustom && hasCustomSearchRange) {
-                    setSelectedRange("custom");
-                  } else setOpen(true);
-                }}
-              >
-                {t("自訂")}
-                {customSearchRange > 0 ? `(${customSearchRange})` : null}
-              </ToggleButton>
-              <ListItem key="unit">{t("米")}</ListItem>
-            </ToggleButtonGroup>
-          </Paper>
           {hasNoNearbyRoutes ? (
             <Typography sx={{ marginTop: 5 }}>
               <b>{t("附近未有任何路線")}</b>
@@ -368,30 +379,36 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
 
     return useMemo(
       () => (
-        <SwipeableViews
-          index={getViewIdx()}
-          onChangeIndex={(idx) => {
-            onChangeTab(
-              idx < HOME_TAB.length
-                ? HOME_TAB[idx]
-                : collections[idx - HOME_TAB.length].name
-            );
-          }}
-        >
-          {NearbyRouteList}
-          {SavedRouteList}
-          {SmartCollectionRouteList}
-          {collectionRouteLists?.map((Collection) => Collection)}
-        </SwipeableViews>
+        <>
+          {/* SwipeableViews has overflow attribute child div and this preventing <SearchRangeControl/> fixed on top using `position: sticky` */}
+          {homeTab === "nearby" && <SearchRangeControl />}
+          <SwipeableViews
+            index={getViewIdx()}
+            onChangeIndex={(idx) => {
+              onChangeTab(
+                idx < HOME_TAB.length
+                  ? HOME_TAB[idx]
+                  : collections[idx - HOME_TAB.length].name
+              );
+            }}
+          >
+            {NearbyRouteList}
+            {SavedRouteList}
+            {SmartCollectionRouteList}
+            {collectionRouteLists?.map((Collection) => Collection)}
+          </SwipeableViews>
+        </>
       ),
       [
-        onChangeTab,
+        homeTab,
+        SearchRangeControl,
         getViewIdx,
-        collections,
-        SavedRouteList,
         NearbyRouteList,
+        SavedRouteList,
         SmartCollectionRouteList,
         collectionRouteLists,
+        onChangeTab,
+        collections,
       ]
     );
   }
@@ -577,6 +594,8 @@ const ListItem = styled("li")(({ theme }) => ({
 
 const paperSx: SxProps<Theme> = (theme) => {
   return {
+    position: "sticky",
+    top: 0,
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
