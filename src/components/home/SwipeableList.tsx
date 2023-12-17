@@ -84,10 +84,13 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       null
     );
     const [open, setOpen] = useState(false);
+    const isCustomRange = !searchRangeOptions.includes(searchRange);
     const [selectedRange, setSelectedRange] = useState<number | "custom">(
-      defaultSearchRange
+      isCustomRange ? "custom" : searchRange
     );
-    const [inputValue, setInputValue] = useState("");
+    const [inputValue, setInputValue] = useState(
+      isCustomRange ? searchRange?.toString() : ""
+    );
 
     useImperativeHandle(ref, () => ({
       changeTab: (v) => {
