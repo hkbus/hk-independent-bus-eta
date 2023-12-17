@@ -149,6 +149,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           <Paper sx={paperSx} component="ul">
             <ListItem key={`range-tag`}>{t("搜尋範圍")}:</ListItem>
             <ToggleButtonGroup
+              defaultValue={defaultSearchRange}
               value={searchRange}
               exclusive
               onChange={(_, value) => setSearchRange(value)}
