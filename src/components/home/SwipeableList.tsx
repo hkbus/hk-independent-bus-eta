@@ -163,35 +163,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             <ListItem key={`range-tag`} sx={{ fontSize: 12 }}>
               {t("搜尋範圍")}:
             </ListItem>
-            {rangeOptions.map((range) => {
-              const { distance, unit } = getDistanceWithUnit(range);
-              return (
-                <ListItem key={`range-${range}`}>
-                  <Chip
-                    label={distance + t(unit)}
-                    onClick={() => {
-                      setSearchRange(range);
-                    }}
-                    // color={searchRange === range ? "default" : "default"}
-                    variant={searchRange === range ? "filled" : "outlined"}
-                    sx={chipSx}
-                  ></Chip>
-                </ListItem>
-              );
-            })}
-            <ListItem key={`range-custom`}>
-              <Chip
-                label={t("自訂")}
-                onClick={() => {
-                  // setSearchRange(range);
-                }}
-                // color={searchRange === range ? "default" : "default"}
-                variant={
-                  !rangeOptions.includes(searchRange) ? "filled" : "outlined"
-                }
-                sx={chipSx}
-              ></Chip>
-            </ListItem>
             <ToggleButtonGroup
               value={searchRange}
               exclusive
@@ -199,8 +170,8 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               aria-label="search range"
               sx={({ palette }) => {
                 return {
+                  height: 24,
                   "& .MuiToggleButtonGroup-grouped": {
-                    height: 24,
                     // margin: 2.5,
                     border: `1 solid ${palette.primary.main}`,
                     "&.Mui-disabled": {
@@ -542,15 +513,6 @@ const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
 
-const chipSx: SxProps<Theme> = {
-  fontSize: 10,
-  height: 24,
-  // TODO: remove ripple
-  "&.MuiChip-root&.MuiChip-filled": {
-    backgroundColor: ({ palette }) => palette.primary.main,
-    color: ({ palette }) => palette.primary.contrastText,
-  },
-};
 const toggleButtonSx: SxProps<Theme> = (theme) => {
   return {
     fontSize: 10,
