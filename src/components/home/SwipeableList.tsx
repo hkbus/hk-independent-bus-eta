@@ -290,7 +290,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   setOpen(false);
                 }}
               >
-                Confirm
+                {t("確定")}
               </button>
             </Box>
           </Dialog>
