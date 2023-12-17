@@ -193,7 +193,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               ></Chip>
             </ListItem>
             <ToggleButtonGroup
-              value={100}
+              value={searchRange}
               exclusive
               onChange={(_, value) => setSearchRange(value)}
               aria-label="search range"
