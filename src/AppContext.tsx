@@ -129,7 +129,7 @@ interface AppContextValue
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
   searchRange: SearchRange;
-  setSearchRange: (searchRange: SearchRange) => void;
+  setSearchRange: (searchRange: number) => void;
 
   // for React Native Context
   setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
@@ -246,7 +246,8 @@ export const AppContextProvider = ({
       annotateScheduled:
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
       fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
-      searchRange: JSON.parse(localStorage.getItem("searchRange")) ?? defaultSearchRange,
+      searchRange:
+        JSON.parse(localStorage.getItem("searchRange")) ?? defaultSearchRange,
     };
   };
   const { i18n } = useTranslation();

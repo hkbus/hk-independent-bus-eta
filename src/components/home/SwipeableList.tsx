@@ -15,6 +15,8 @@ import {
   Paper,
   SxProps,
   Theme,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
   styled,
 } from "@mui/material";
@@ -190,6 +192,26 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 sx={chipSx}
               ></Chip>
             </ListItem>
+            <ToggleButtonGroup
+              value={100}
+              exclusive
+              onChange={(_, value) => setSearchRange(value)}
+              aria-label="text alignment"
+            >
+              <ToggleButton disableRipple value="100" aria-label="left aligned">
+                100
+              </ToggleButton>
+              <ToggleButton disableRipple value="500" aria-label="centered">
+                500
+              </ToggleButton>
+              <ToggleButton
+                disableRipple
+                value="1000"
+                aria-label="right aligned"
+              >
+                1000
+              </ToggleButton>
+            </ToggleButtonGroup>
           </Paper>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
