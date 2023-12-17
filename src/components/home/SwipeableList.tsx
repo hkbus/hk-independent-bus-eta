@@ -266,6 +266,7 @@ const getSelectedRoutes = ({
   isRouteFilter,
   isTodayHoliday,
   serviceDayMap,
+  searchRange = 1000,
 }: {
   savedEtas: string[];
   collections: RouteCollection[];
@@ -275,6 +276,7 @@ const getSelectedRoutes = ({
   isRouteFilter: boolean;
   isTodayHoliday: boolean;
   serviceDayMap: EtaDb["serviceDayMap"];
+  searchRange?: SearchRange;
 }): SelectedRoutes => {
   const selectedRoutes = savedEtas
     .filter((routeUrl, index, self) => {
@@ -319,7 +321,7 @@ const getSelectedRoutes = ({
     .filter(
       (stop) =>
         // keep only nearby 1000m stops
-        stop[2] < 1000
+        stop[2] < searchRange
     )
     .sort((a, b) => a[2] - b[2])
     .slice(0, 20)
