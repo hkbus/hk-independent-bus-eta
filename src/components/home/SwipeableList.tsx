@@ -138,8 +138,8 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           <Paper
             sx={{
               display: "flex",
-              flexDirection: "",
               justifyContent: "space-around",
+              alignItems: "center",
               flexWrap: "wrap",
               listStyle: "none",
               p: 0.5,
