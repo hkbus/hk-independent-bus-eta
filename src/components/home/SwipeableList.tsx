@@ -175,7 +175,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 key={`range-custom`}
                 sx={toggleButtonSx}
                 disableRipple
-                value={'custom'}
+                value={"custom"}
                 aria-label={searchRange.toString()}
               >
                 {t("自訂")}
@@ -497,21 +497,7 @@ const paperSx: SxProps<Theme> = {
 };
 
 const toggleButtonGroupSx: SxProps<Theme> = ({ palette }) => {
-  return {
-    "& .MuiToggleButtonGroup-grouped": {
-      // margin: 2.5,
-      border: `1 solid ${palette.primary.main}`,
-      "&.Mui-disabled": {
-        // border: `1 solid ${palette.primary.main}`,
-      },
-      // "&:not(:first-of-type)": {
-      //   borderRadius: theme.shape.borderRadius,
-      // },
-      // "&:first-of-type": {
-      //   borderRadius: theme.shape.borderRadius,
-      // },
-    },
-  };
+  return {};
 };
 
 const toggleButtonSx: SxProps<Theme> = (theme) => {
