@@ -139,7 +139,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             sx={{
               display: "flex",
               flexDirection: "",
-              justifyContent: "center",
+              justifyContent: "space-around",
               flexWrap: "wrap",
               listStyle: "none",
               p: 0.5,
