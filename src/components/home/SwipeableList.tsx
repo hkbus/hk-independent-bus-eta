@@ -8,7 +8,7 @@ import React, {
   useCallback,
 } from "react";
 import SwipeableViews from "react-swipeable-views";
-import { Box, Chip, List, Paper, Typography, styled } from "@mui/material";
+import { Box, Chip, List, Paper, SxProps, Theme, Typography, styled } from "@mui/material";
 import {
   Location,
   RouteList,
@@ -163,12 +163,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                     }}
                     // color={searchRange === range ? "default" : "default"}
                     variant={searchRange === range ? "filled" : "outlined"}
-                    sx={{
-                      // TODO: remove ripple
-                      "&.MuiChip-filled": {
-                        backgroundColor: ({ palette }) => palette.primary.main,
-                      },
-                    }}
+                    sx={chipSx}
                   ></Chip>
                 </ListItem>
               );
@@ -180,13 +175,10 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   // setSearchRange(range);
                 }}
                 // color={searchRange === range ? "default" : "default"}
-                variant={!rangeOptions.includes(searchRange) ? "filled" : "outlined"}
-                sx={{
-                  // TODO: remove ripple
-                  "&.MuiChip-filled": {
-                    backgroundColor: ({ palette }) => palette.primary.main,
-                  },
-                }}
+                variant={
+                  !rangeOptions.includes(searchRange) ? "filled" : "outlined"
+                }
+                sx={chipSx}
               ></Chip>
             </ListItem>
           </Paper>
@@ -490,3 +482,12 @@ const getSelectedRoutes = ({
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
+
+const chipSx: SxProps<Theme> = {
+  fontSize: 10,
+  height: 24,
+  // TODO: remove ripple
+  "&.MuiChip-filled": {
+    backgroundColor: ({ palette }) => palette.primary.main,
+  },
+};
