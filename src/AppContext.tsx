@@ -243,7 +243,7 @@ export const AppContextProvider = ({
       annotateScheduled:
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
       fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
-      searchRange: 1000,
+      searchRange: JSON.parse(localStorage.getItem("searchRange")) ?? 1000,
     };
   };
   const { i18n } = useTranslation();
@@ -554,6 +554,14 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const setSearchRange = useCallback((searchRange: SearchRange) => {
+    setStateRaw(
+      produce((state: State) => {
+        state.searchRange = searchRange;
+      })
+    );
+  }, []);
+
   const colorMode = useMemo(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
       return state._colorMode;
@@ -658,6 +666,10 @@ export const AppContextProvider = ({
     localStorage.setItem("fontSize", JSON.stringify(state.fontSize));
   }, [state.fontSize]);
 
+  useEffect(() => {
+    localStorage.setItem("searchRange", JSON.stringify(state.searchRange));
+  }, [state.searchRange]);
+
   const contextValue = useMemo(() => {
     return {
       ...dbContext,
@@ -689,6 +701,7 @@ export const AppContextProvider = ({
       importAppState,
       workbox,
       setGeoPermission,
+      setSearchRange,
     };
   }, [
     dbContext,
@@ -720,6 +733,7 @@ export const AppContextProvider = ({
     importAppState,
     workbox,
     setGeoPermission,
+    setSearchRange,
   ]);
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
