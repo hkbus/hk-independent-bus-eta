@@ -197,6 +197,24 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               exclusive
               onChange={(_, value) => setSearchRange(value)}
               aria-label="search range"
+              sx={({ palette }) => {
+                return {
+                  "& .MuiToggleButtonGroup-grouped": {
+                    height: 24,
+                    // margin: 2.5,
+                    border: `1 solid ${palette.primary.main}`,
+                    "&.Mui-disabled": {
+                      // border: `1 solid ${palette.primary.main}`,
+                    },
+                    // "&:not(:first-of-type)": {
+                    //   borderRadius: theme.shape.borderRadius,
+                    // },
+                    // "&:first-of-type": {
+                    //   borderRadius: theme.shape.borderRadius,
+                    // },
+                  },
+                };
+              }}
             >
               <ToggleButton
                 sx={toggleButtonSx}
@@ -534,12 +552,15 @@ const chipSx: SxProps<Theme> = {
     color: ({ palette }) => palette.primary.contrastText,
   },
 };
-const toggleButtonSx: SxProps<Theme> = {
-  fontSize: 10,
-  height: 24,
-  // TODO: remove ripple
-  "&.MuiChip-root&.MuiChip-filled": {
-    backgroundColor: ({ palette }) => palette.primary.main,
-    color: ({ palette }) => palette.primary.contrastText,
-  },
+const toggleButtonSx: SxProps<Theme> = (theme) => {
+  return {
+    fontSize: 10,
+    borderRadius: 12,
+    height: 24,
+    // TODO: remove ripple
+    "&.MuiChip-root&.MuiChip-filled": {
+      backgroundColor: ({ palette }) => palette.primary.main,
+      color: ({ palette }) => palette.primary.contrastText,
+    },
+  };
 };
