@@ -159,10 +159,10 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       if (selectedRoutes?.nearby) {
         setHasNoNearbyRoutes(() => {
           return Object.values(selectedRoutes.nearby)
-            .map((nearbyRoutes) => {
-              return nearbyRoutes.split("|").every((item) => item === "");
-            })
-            .every((bool) => bool === true);
+            .map((nearbyRoutes) =>
+              nearbyRoutes.split("|").every((item) => item === "")
+            )
+            .every(Boolean);
         });
       }
       return selectedRoutes?.nearby ? (
