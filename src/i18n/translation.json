@@ -122,6 +122,7 @@
       "route-search-no-result": "No Result",
       "no-recent-search": "No Record",
       "對頭線": "REV",
+      "附近未有任何路線": "No available routes nearby",
       "未有收藏路線": "No starred routes.",
       "未有收藏車站": "No bookmarked stops.",
       "收藏中未有路線": "No routes in this collection",
@@ -146,7 +147,10 @@
       "請按下圖指示增加": "Follow below steps to bookmark stops",
       "通告": "Notice",
       "注釋預定班次": "Annotate Scheduled Bus",
-      "搜尋記錄": "Search history"
+      "搜尋記錄": "Search history",
+      "自訂": "Custom",
+      "搜尋範圍": "Search Range",
+      "自訂搜尋範圍（米）": "Custom Search Range (m)"
     }
   },
   "zh": {
