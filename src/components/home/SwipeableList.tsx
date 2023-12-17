@@ -132,7 +132,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     }, [selectedRoutes, t]);
 
     const NearbyRouteList = useMemo(() => {
-      const rangeOptions: SearchRange[] = [100, 200, 500, 1000, 2000];
+      const rangeOptions: SearchRange[] = [100, 500];
       return selectedRoutes?.nearby ? (
         <>
           <Paper
