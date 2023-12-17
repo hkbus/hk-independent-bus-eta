@@ -11,6 +11,8 @@ import SwipeableViews from "react-swipeable-views";
 import {
   Box,
   Chip,
+  Dialog,
+  DialogTitle,
   List,
   Paper,
   SxProps,
@@ -28,7 +30,7 @@ import {
   EtaDb,
 } from "hk-bus-eta";
 
-import AppContext from "../../AppContext";
+import AppContext, { defaultSearchRange } from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 import { coToType, getDistance, getDistanceWithUnit } from "../../utils";
 import SuccinctTimeReport from "./SuccinctTimeReport";
@@ -80,6 +82,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     const [selectedRoutes, setSelectedRoutes] = useState<SelectedRoutes | null>(
       null
     );
+    const [open, setOpen] = useState(false);
 
     useImperativeHandle(ref, () => ({
       changeTab: (v) => {
@@ -174,9 +177,12 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 key={`range-custom`}
                 sx={toggleButtonSx}
                 disableRipple
-                value={"custom"}
+                value={0}
                 aria-label={searchRange.toString()}
-                onClick={(e) => {e.preventDefault()}}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpen(true);
+                }}
               >
                 {t("自訂")}
               </ToggleButton>
@@ -194,11 +200,22 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               )
             )}
           </Box>
+          <Dialog open={open}>
+            <DialogTitle>Set Custom Range</DialogTitle>
+            <input type="number" />
+            <button
+              onClick={() => {
+                setSearchRange(3000);
+              }}
+            >
+              Confirm
+            </button>
+          </Dialog>
         </>
       ) : (
         <CircularProgress sx={{ my: 10 }} />
       );
-    }, [searchRange, selectedRoutes?.nearby, setSearchRange, t]);
+    }, [open, searchRange, selectedRoutes?.nearby, setSearchRange, t]);
 
     const SmartCollectionRouteList = useMemo(
       () =>
