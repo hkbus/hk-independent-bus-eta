@@ -175,6 +175,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 disableRipple
                 value={"custom"}
                 aria-label={searchRange.toString()}
+                onClick={(e) => {e.preventDefault()}}
               >
                 {t("自訂")}
               </ToggleButton>
