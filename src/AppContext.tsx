@@ -129,6 +129,7 @@ interface AppContextValue
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
   searchRange: SearchRange;
+  setSearchRange: (searchRange: SearchRange) => void;
 
   // for React Native Context
   setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
