@@ -1,19 +1,18 @@
-import React, { useContext, useMemo } from "react";
+import {
+  BookmarkBorder as BookmarkBorderIcon,
+  Bookmark as BookmarkIcon,
+} from "@mui/icons-material";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
-  IconButton,
-  SxProps,
-  Theme,
+  IconButton
 } from "@mui/material";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
-import {
-  Bookmark as BookmarkIcon,
-  BookmarkBorder as BookmarkBorderIcon,
-} from "@mui/icons-material";
 import StopRouteList from "../bookmarked-stop/StopRouteList";
+import { dialogRootSx, dialogTitleSx } from "../ui/dialog";
 
 const StopDialog = ({ open, stops, handleClose }) => {
   const {
@@ -33,8 +32,8 @@ const StopDialog = ({ open, stops, handleClose }) => {
   );
 
   return (
-    <Dialog open={open} onClose={handleClose} sx={rootSx}>
-      <DialogTitle sx={titleSx}>
+    <Dialog open={open} onClose={handleClose} sx={dialogRootSx}>
+      <DialogTitle sx={dialogTitleSx}>
         <IconButton onClick={() => updateSavedStops(stops[0].join("|"))}>
           {bookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
         </IconButton>
@@ -45,28 +44,6 @@ const StopDialog = ({ open, stops, handleClose }) => {
       </DialogContent>
     </Dialog>
   );
-};
-
-const rootSx: SxProps<Theme> = {
-  "& .MuiPaper-root": {
-    width: "100%",
-    marginTop: "90px",
-    height: "calc(100vh - 100px)",
-  },
-  "& .MuiDialogContent-root": {
-    padding: 0,
-  },
-};
-
-const titleSx: SxProps<Theme> = {
-  backgroundColor: (theme) =>
-    theme.palette.mode === "dark"
-      ? theme.palette.background.default
-      : theme.palette.primary.main,
-  color: (theme) =>
-    theme.palette.mode === "dark"
-      ? theme.palette.primary.main
-      : theme.palette.text.primary,
 };
 
 export default StopDialog;
