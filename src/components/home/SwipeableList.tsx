@@ -15,6 +15,7 @@ import {
   List,
   Paper,
   SxProps,
+  TextField,
   Theme,
   ToggleButton,
   ToggleButtonGroup,
@@ -245,12 +246,12 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             }}
           >
             <DialogTitle>{t("自訂搜尋範圍（米）")}</DialogTitle>
-            <input
+            <TextField
               type="number"
               defaultValue={customSearchRange}
               value={inputValue}
-              min="0"
-              max="9999"
+              // min="0"
+              // max="9999"
               onChange={(e) => {
                 const value = e.target.value;
                 const numericalValue = parseInt(value);
