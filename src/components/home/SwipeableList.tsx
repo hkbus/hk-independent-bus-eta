@@ -20,7 +20,7 @@ import {
 import AppContext from "../../AppContext";
 import type { SearchRange } from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
-import { coToType, getDistance } from "../../utils";
+import { coToType, getDistance, getDistanceWithUnit } from "../../utils";
 import SuccinctTimeReport from "./SuccinctTimeReport";
 import type { HomeTabType } from "./HomeTabbar";
 import { useTranslation } from "react-i18next";
@@ -135,16 +135,19 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       const rangeOptions: SearchRange[] = [100, 200, 500, 1000];
       return selectedRoutes?.nearby ? (
         <>
-          {rangeOptions.map((range) => (
-            <Chip
-              key={`range-${range}`}
-              label={range}
-              onClick={() => {
-                setSearchRange(range);
-              }}
-              variant={searchRange === range ? "outlined" : "filled"}
-            ></Chip>
-          ))}
+          {rangeOptions.map((range) => {
+            const { distance, unit } = getDistanceWithUnit(range);
+            return (
+              <Chip
+                key={`range-${range}`}
+                label={distance + t(unit)}
+                onClick={() => {
+                  setSearchRange(range);
+                }}
+                variant={searchRange === range ? "outlined" : "filled"}
+              ></Chip>
+            );
+          })}
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {Object.entries(selectedRoutes.nearby).map(
