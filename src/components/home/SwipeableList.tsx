@@ -193,7 +193,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 }}
               >
                 {t("自訂")}
-                {selectedRange === "custom" ? `(${inputValue})` : null}
+                {inputValue ? `(${inputValue})` : null}
               </ToggleButton>
               <ListItem key="unit">{t("米")}</ListItem>
             </ToggleButtonGroup>
