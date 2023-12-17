@@ -89,7 +89,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       isCustomRange ? "custom" : lastSearchRange
     );
     const [inputValue, setInputValue] = useState<string>(
-      isCustomRange ? customSearchRange.toString() : ""
+      isCustomRange ? customSearchRange?.toString() : ""
     );
     const [hasNoNearbyRoutes, setHasNoNearbyRoutes] = useState(true);
 
