@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Dialog,
-  DialogContent,
   DialogTitle,
   List,
   Paper,
@@ -11,7 +10,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Typography,
-  styled,
+  styled
 } from "@mui/material";
 import {
   EtaDb,
@@ -37,10 +36,10 @@ import { isHoliday, isRouteAvaliable } from "../../timetable";
 import { RouteCollection, TransportType } from "../../typing";
 import { coToType, getDistance, getDistanceWithUnit } from "../../utils";
 import { CircularProgress } from "../Progress";
+import { dialogTitleSx } from "../ui/dialog";
 import HomeRouteListDropDown from "./HomeRouteList";
 import type { HomeTabType } from "./HomeTabbar";
 import SuccinctTimeReport from "./SuccinctTimeReport";
-import { dialogRootSx, dialogTitleSx } from "../ui/dialog";
 
 interface SwipeableListProps {
   geolocation: Location;
