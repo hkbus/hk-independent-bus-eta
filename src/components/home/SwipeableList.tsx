@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -75,6 +76,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       setLastSearchRange,
       customSearchRange,
       setCustomSearchRange,
+      colorMode,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -256,13 +258,29 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             onClose={() => {
               setOpen(false);
             }}
-            sx={dialogRootSx}
+            sx={{
+              "& .MuiPaper-root": {
+                inset: "0px",
+                margin: "auto",
+                border: ({ palette }) =>
+                  colorMode === "dark" &&
+                  `1px solid ${palette.background.contrast}`,
+              },
+            }}
           >
             <DialogTitle sx={dialogTitleSx}>
               {t("自訂搜尋範圍（米）")}
             </DialogTitle>
-            <DialogContent>Map</DialogContent>
-            <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+            {/* TODO The map will be added later */}
+            {/* <DialogContent>Map</DialogContent> */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 2,
+                padding: 2,
+              }}
+            >
               <input
                 style={{ flex: 1 }}
                 type="number"
@@ -281,8 +299,13 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   } else setInputValue(value);
                 }}
               />
-              <button
-                style={{ flex: 1 }}
+              <Button
+                disableRipple
+                variant="contained"
+                sx={{
+                  flex: 1,
+                  color: "black",
+                }}
                 onClick={() => {
                   setSelectedRange("custom");
                   const range = parseInt(inputValue);
@@ -292,7 +315,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 }}
               >
                 {t("確定")}
-              </button>
+              </Button>
             </Box>
           </Dialog>
         </>
@@ -301,11 +324,12 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       );
     }, [
       selectedRoutes?.nearby,
-      t,
-      customSearchRange,
       hasNoNearbyRoutes,
+      t,
       open,
+      customSearchRange,
       inputValue,
+      colorMode,
       setLastSearchRange,
       setCustomSearchRange,
     ]);

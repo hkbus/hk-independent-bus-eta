@@ -1,27 +1,27 @@
-import React, { useContext, useMemo } from "react";
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 import loadable from "@loadable/component";
-import "./App.css";
-import "leaflet/dist/leaflet.css";
+import { PaletteMode } from "@mui/material";
 import {
-  ThemeProvider,
   StyledEngineProvider,
+  ThemeProvider,
   createTheme,
 } from "@mui/material/styles";
-import {
-  BrowserRouter as Router,
-  Navigate,
-  Routes,
-  Route,
-} from "react-router-dom";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
-import { PaletteMode } from "@mui/material";
-import AppContext from "./AppContext";
-import Main from "./components/layout/Main";
-import { SearchContextProvider } from "./SearchContext";
-import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
+import "leaflet/dist/leaflet.css";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
+import "./App.css";
+import AppContext from "./AppContext";
+import { SearchContextProvider } from "./SearchContext";
+import Main from "./components/layout/Main";
 import RedirectPage from "./pages/RedirectPage";
+import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 
 const Home = loadable(() => import("./pages/Home"));
 const RouteEta = loadable(() => import("./pages/RouteEta"));
@@ -103,6 +103,12 @@ const emotionCache = createCache({
   ),
 });
 
+declare module "@mui/material/styles" {
+  interface TypeBackground {
+    contrast: string;
+  }
+}
+
 const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
   typography: {
     fontFamily: "'Chiron Hei HK WS'",
@@ -118,6 +124,7 @@ const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
           // light mode
           background: {
             default: "#fedb00",
+            contrast: "rgba(255, 255, 255, 0.12)",
           },
           primary: {
             main: "#fedb00", // yellow
