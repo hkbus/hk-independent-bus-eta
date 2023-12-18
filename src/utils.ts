@@ -385,3 +385,16 @@ export const coToType: Record<Company, TransportType> = {
   lightRail: "lightRail",
   mtr: "mtr",
 };
+
+export const PLATFORM = [
+  "",
+  "①",
+  "②",
+  "③",
+  "④",
+  "⑤",
+  "⑥",
+  "⑦",
+  "⑧",
+  "⑨",
+] as const;

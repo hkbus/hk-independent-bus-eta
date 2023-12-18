@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { vibrate } from "../../utils";
+import { PLATFORM, vibrate } from "../../utils";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import SuccinctEtas from "./SuccinctEtas";
@@ -105,7 +105,6 @@ const SuccinctTimeReport = ({
 
   const platform = useMemo(() => {
     if (etas && etas.length > 0) {
-      const PLATFORM = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦"];
       const no =
         PLATFORM[
           parseInt(
