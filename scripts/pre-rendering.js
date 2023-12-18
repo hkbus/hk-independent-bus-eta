@@ -93,6 +93,7 @@ function ensureDirExists(dir) {
  * @returns {string|number}
  */
 async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
+  // eslint-disable-next-line no-unused-vars
   const url = new URL(pageUrl);
   try {
     if (!pageUrl.includes("/route/")) {
