@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -281,8 +282,9 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   } else setInputValue(value);
                 }}
               />
-              <button
-                style={{ flex: 1 }}
+              <Button
+                variant="outlined"
+                sx={{ flex: 1 }}
                 onClick={() => {
                   setSelectedRange("custom");
                   const range = parseInt(inputValue);
@@ -292,7 +294,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 }}
               >
                 {t("確定")}
-              </button>
+              </Button>
             </Box>
           </Dialog>
         </>
