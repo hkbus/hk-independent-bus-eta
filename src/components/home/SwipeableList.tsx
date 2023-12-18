@@ -76,6 +76,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       setLastSearchRange,
       customSearchRange,
       setCustomSearchRange,
+      colorMode,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -299,8 +300,12 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 }}
               />
               <Button
-                variant="outlined"
-                sx={{ flex: 1 }}
+                disableRipple
+                variant="contained"
+                sx={{
+                  flex: 1,
+                  color: "black",
+                }}
                 onClick={() => {
                   setSelectedRange("custom");
                   const range = parseInt(inputValue);
