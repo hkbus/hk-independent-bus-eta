@@ -311,11 +311,12 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       );
     }, [
       selectedRoutes?.nearby,
-      t,
-      customSearchRange,
       hasNoNearbyRoutes,
+      t,
       open,
+      customSearchRange,
       inputValue,
+      colorMode,
       setLastSearchRange,
       setCustomSearchRange,
     ]);
