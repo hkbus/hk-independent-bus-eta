@@ -257,7 +257,15 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             onClose={() => {
               setOpen(false);
             }}
-            sx={dialogRootSx}
+            sx={{
+              "& .MuiPaper-root": {
+                inset: "0px",
+                margin: "auto",
+                border: ({ palette }) =>
+                  colorMode === "dark" &&
+                  `1px solid ${palette.background.contrast}`,
+              },
+            }}
           >
             <DialogTitle sx={dialogTitleSx}>
               {t("自訂搜尋範圍（米）")}

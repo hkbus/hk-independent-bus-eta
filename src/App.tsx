@@ -103,6 +103,12 @@ const emotionCache = createCache({
   ),
 });
 
+declare module "@mui/material/styles" {
+  interface TypeBackground {
+    contrast: string;
+  }
+}
+
 const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
   typography: {
     fontFamily: "'Chiron Hei HK WS'",
