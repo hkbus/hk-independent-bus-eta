@@ -24,7 +24,7 @@ export const getDistanceWithUnit = (distanceInMetre: number) => {
   };
 };
 
-const defaultLocation = { lat: 22.302711, lng: 114.177216 };
+export const defaultLocation = { lat: 22.302711, lng: 114.177216 };
 // HK location if no valid value
 export const checkPosition = (position?: GeoLocation): GeoLocation => {
   if (
