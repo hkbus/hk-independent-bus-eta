@@ -1,14 +1,20 @@
 import { SxProps, Theme } from "@mui/material";
 
-export const dialogRootSx: SxProps<Theme> = {
-  "& .MuiPaper-root": {
-    width: "100%",
-    marginTop: "90px",
-    height: "calc(100vh - 100px)",
-  },
-  "& .MuiDialogContent-root": {
-    padding: 0,
-  },
+type CustomSxProps<T> = (theme: T, colorMode: string) => void;
+
+export const dialogRootSx: CustomSxProps<Theme> = ({ palette }, colorMode) => {
+  return {
+    "& .MuiPaper-root": {
+      width: "100%",
+      marginTop: "90px",
+      height: "calc(100vh - 100px)",
+      border:
+        colorMode === "dark" && `1px solid ${palette.background.contrast}`,
+    },
+    "& .MuiDialogContent-root": {
+      padding: 0,
+    },
+  };
 };
 
 export const dialogTitleSx: SxProps<Theme> = {

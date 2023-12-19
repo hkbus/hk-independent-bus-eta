@@ -258,7 +258,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             onClose={() => {
               setOpen(false);
             }}
-            sx={dialogRootSx}
+            sx={(theme) => dialogRootSx(theme, colorMode)}
             // sx={{
             //   width: "min(1000px, 90vw)",
             //   "& .MuiPaper-root": {
