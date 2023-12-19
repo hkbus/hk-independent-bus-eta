@@ -76,7 +76,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       setLastSearchRange,
       customSearchRange,
       setCustomSearchRange,
-      colorMode,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -322,7 +321,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       open,
       customSearchRange,
       inputValue,
-      colorMode,
       setLastSearchRange,
       setCustomSearchRange,
     ]);
