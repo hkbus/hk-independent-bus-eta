@@ -5,20 +5,21 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { defaultLocation } from "../../utils";
 
-const defaultCenter = [defaultLocation.lat, defaultLocation.lng] as LatLngExpression;
+// const defaultCenter = [
+//   defaultLocation.lat,
+//   defaultLocation.lng,
+// ] as LatLngExpression;
 
 const zoom = 13;
 
-function DisplayPosition({ map }) {
-  const [position, setPosition] = useState(() => map.getCenter());
+function DisplayPosition({ map, onMove }) {
+  // const onClick = useCallback(() => {
+  //   map.setView(defaultCenter, zoom);
+  // }, [map]);
 
-  const onClick = useCallback(() => {
-    map.setView(defaultCenter, zoom);
-  }, [map]);
-
-  const onMove = useCallback(() => {
-    setPosition(map.getCenter());
-  }, [map]);
+  // const onMove = useCallback(() => {
+  //   setPosition(map.getCenter());
+  // }, [map]);
 
   useEffect(() => {
     map.on("move", onMove);
@@ -29,24 +30,28 @@ function DisplayPosition({ map }) {
 
   return (
     <p>
-      latitude: {position.lat.toFixed(4)}, longitude: {position.lng.toFixed(4)}{" "}
-      <button onClick={onClick}>reset</button>
+      {/* latitude: {position.lat.toFixed(4)}, longitude: {position.lng.toFixed(4)}{" "}
+      <button onClick={onClick}>reset</button> */}
     </p>
   );
 }
 
 export const BasicMap = () => {
   const [map, setMap] = useState(null);
-  const [center, setCenter] = useState<LatLngExpression>([
-    defaultLocation.lat,
-    defaultLocation.lng,
-  ]);
+  const [position, setPosition] = useState<LatLngExpression>({
+    lat: defaultLocation.lat,
+    lng: defaultLocation.lng,
+  });
+
+  const handleMove = useCallback(() => {
+    setPosition(map.getCenter());
+  }, [map]);
 
   const displayMap = useMemo(
     () => (
       <MapContainer
         style={{ height: "100%" }}
-        center={center}
+        center={position}
         zoom={zoom}
         scrollWheelZoom={false}
         ref={setMap}
@@ -55,19 +60,19 @@ export const BasicMap = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={center}>
+        <Marker position={position}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
         </Marker>
       </MapContainer>
     ),
-    [center]
+    [position]
   );
 
   return (
     <>
-      {map ? <DisplayPosition map={map} /> : null}
+      {map ? <DisplayPosition map={map} onMove={handleMove} /> : null}
       {displayMap}
     </>
   );
