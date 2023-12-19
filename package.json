@@ -20,6 +20,7 @@
     "i18next": "^21.8.10",
     "immer": "^9.0.15",
     "leaflet": "^1.7.1",
+    "leaflet-defaulticon-compatibility": "^0.1.2",
     "leaflet-rotatedmarker": "^0.2.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
