@@ -36,11 +36,11 @@ import { isHoliday, isRouteAvaliable } from "../../timetable";
 import { RouteCollection, TransportType } from "../../typing";
 import { coToType, getDistance, getDistanceWithUnit } from "../../utils";
 import { CircularProgress } from "../Progress";
+import { BasicMap } from "../map/BasicMap";
 import { dialogRootSx, dialogTitleSx } from "../ui/dialog";
 import HomeRouteListDropDown from "./HomeRouteList";
 import type { HomeTabType } from "./HomeTabbar";
 import SuccinctTimeReport from "./SuccinctTimeReport";
-import { BasicMap } from "../map/BasicMap";
 
 interface SwipeableListProps {
   geolocation: Location;
@@ -258,17 +258,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             onClose={() => {
               setOpen(false);
             }}
-            sx={(theme) => dialogRootSx(theme, colorMode)}
-            // sx={{
-            //   width: "min(1000px, 90vw)",
-            //   "& .MuiPaper-root": {
-            //     inset: "0px",
-            //     margin: "auto",
-            //     border: ({ palette }) =>
-            //       colorMode === "dark" &&
-            //       `1px solid ${palette.background.contrast}`,
-            //   },
-            // }}
+            sx={dialogRootSx}
           >
             <DialogTitle sx={dialogTitleSx}>
               {t("自訂搜尋範圍（米）")}
