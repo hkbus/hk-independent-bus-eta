@@ -36,7 +36,7 @@ function DisplayPosition({ map, onMove }) {
   );
 }
 
-export const BasicMap = () => {
+export const BasicMap = ({ range }) => {
   const [map, setMap] = useState(null);
   const [position, setPosition] = useState<LatLngExpression>({
     lat: defaultLocation.lat,
@@ -65,10 +65,10 @@ export const BasicMap = () => {
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
         </Marker>
-        <Circle center={position} radius={1000} />
+        <Circle center={position} radius={range} />
       </MapContainer>
     ),
-    [position]
+    [position, range]
   );
 
   return (

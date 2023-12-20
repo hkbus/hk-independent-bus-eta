@@ -263,7 +263,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               {t("自訂搜尋範圍（米）")}
             </DialogTitle>
             {/* TODO The map will be added later */}
-            <BasicMap></BasicMap>
+            <BasicMap range={parseInt(inputValue) || 0}></BasicMap>
             {/* <DialogContent>Map</DialogContent> */}
             <Box
               sx={{
@@ -280,6 +280,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 value={inputValue}
                 min="0"
                 max="9999"
+                step={100}
                 onChange={(e) => {
                   const value = e.target.value;
                   const numericalValue = parseInt(value);
