@@ -17,7 +17,7 @@ const defaultCenter = [
   defaultLocation.lng,
 ] as LatLngExpression;
 
-const zoom = 13;
+const zoom = 14;
 
 function DisplayPosition({ map, onMove }) {
   const onClick = useCallback(() => {
@@ -43,8 +43,8 @@ function DisplayPosition({ map, onMove }) {
   );
 }
 
-function SetViewOnClick({ animateRef }) {
-  const map = useMapEvent("click", (e) => {
+function SetViewOnClick({ map, animateRef }) {
+  useMapEvent("click", (e) => {
     map.setView(e.latlng, map.getZoom(), {
       animate: animateRef.current,
     });
@@ -79,16 +79,12 @@ export const BasicMap = ({ range }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+        <Marker position={position}></Marker>
         <Circle center={position} radius={range} />
-        <SetViewOnClick animateRef={animateRef} />
+        <SetViewOnClick map={map} animateRef={animateRef} />
       </MapContainer>
     ),
-    [position, range]
+    [map, position, range]
   );
 
   return (
