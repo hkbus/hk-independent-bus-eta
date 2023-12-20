@@ -262,9 +262,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             <DialogTitle sx={dialogTitleSx}>
               {t("自訂搜尋範圍（米）")}
             </DialogTitle>
-            {/* TODO The map will be added later */}
             <BasicMap range={parseInt(inputValue) || 0}></BasicMap>
-            {/* <DialogContent>Map</DialogContent> */}
             <Box
               sx={{
                 display: "flex",

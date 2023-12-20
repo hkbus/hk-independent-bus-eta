@@ -1,8 +1,15 @@
 import { LatLngExpression } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Circle, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Circle,
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMapEvent,
+} from "react-leaflet";
 import { defaultLocation } from "../../utils";
 
 const defaultCenter = [
@@ -36,7 +43,19 @@ function DisplayPosition({ map, onMove }) {
   );
 }
 
+function SetViewOnClick({ animateRef }) {
+  const map = useMapEvent("click", (e) => {
+    map.setView(e.latlng, map.getZoom(), {
+      animate: animateRef.current,
+    });
+  });
+
+  return null;
+}
+
 export const BasicMap = ({ range }) => {
+  const animateRef = useRef(true);
+
   const [map, setMap] = useState(null);
   const [position, setPosition] = useState<LatLngExpression>({
     lat: defaultLocation.lat,
@@ -66,6 +85,7 @@ export const BasicMap = ({ range }) => {
           </Popup>
         </Marker>
         <Circle center={position} radius={range} />
+        <SetViewOnClick animateRef={animateRef} />
       </MapContainer>
     ),
     [position, range]
@@ -73,6 +93,17 @@ export const BasicMap = ({ range }) => {
 
   return (
     <>
+      <p>
+        <label>
+          <input
+            type="checkbox"
+            onChange={() => {
+              animateRef.current = !animateRef.current;
+            }}
+          />
+          減少動態效果
+        </label>
+      </p>
       {map ? <DisplayPosition map={map} onMove={handleMove} /> : null}
       {displayMap}
     </>
