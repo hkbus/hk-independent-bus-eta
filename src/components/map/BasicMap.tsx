@@ -11,6 +11,7 @@ import {
   useMapEvent,
 } from "react-leaflet";
 import { defaultLocation } from "../../utils";
+import { Box, Button } from "@mui/material";
 
 const defaultCenter = [
   defaultLocation.lat,
@@ -36,10 +37,9 @@ function DisplayPosition({ map, onMove }) {
   }, [map, onMove]);
 
   return (
-    <p>
-      {/* latitude: {position.lat.toFixed(4)}, longitude: {position.lng.toFixed(4)}{" "} */}
-      <button onClick={onClick}>reset</button>
-    </p>
+    <Button style={{ flex: 1 }} variant="outlined" onClick={onClick}>
+      返回原有位置
+    </Button>
   );
 }
 
@@ -89,19 +89,28 @@ export const BasicMap = ({ range }) => {
 
   return (
     <>
-      <p>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => {
-              animateRef.current = !animateRef.current;
-            }}
-          />
-          減少動態效果
-        </label>
-      </p>
-      {map ? <DisplayPosition map={map} onMove={handleMove} /> : null}
       {displayMap}
+      {map ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+            padding: 2,
+          }}
+        >
+          <label style={{ flex: 1 }}>
+            <input
+              type="checkbox"
+              onChange={() => {
+                animateRef.current = !animateRef.current;
+              }}
+            />
+            減少動態效果
+          </label>
+          <DisplayPosition map={map} onMove={handleMove} />
+        </Box>
+      ) : null}
     </>
   );
 };
