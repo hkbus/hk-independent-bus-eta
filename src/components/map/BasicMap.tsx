@@ -2,7 +2,7 @@ import { LatLngExpression } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { Circle, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { defaultLocation } from "../../utils";
 
 // const defaultCenter = [
@@ -50,7 +50,7 @@ export const BasicMap = () => {
   const displayMap = useMemo(
     () => (
       <MapContainer
-        style={{ height: "100%" }}
+        style={{ height: "100%", position: "relative" }}
         center={position}
         zoom={zoom}
         scrollWheelZoom={false}
@@ -65,6 +65,7 @@ export const BasicMap = () => {
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
         </Marker>
+        <Circle center={position} radius={1000} />
       </MapContainer>
     ),
     [position]
