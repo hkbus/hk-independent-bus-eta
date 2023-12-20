@@ -5,17 +5,17 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Circle, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { defaultLocation } from "../../utils";
 
-// const defaultCenter = [
-//   defaultLocation.lat,
-//   defaultLocation.lng,
-// ] as LatLngExpression;
+const defaultCenter = [
+  defaultLocation.lat,
+  defaultLocation.lng,
+] as LatLngExpression;
 
 const zoom = 13;
 
 function DisplayPosition({ map, onMove }) {
-  // const onClick = useCallback(() => {
-  //   map.setView(defaultCenter, zoom);
-  // }, [map]);
+  const onClick = useCallback(() => {
+    map.setView(defaultCenter, zoom);
+  }, [map]);
 
   // const onMove = useCallback(() => {
   //   setPosition(map.getCenter());
@@ -30,8 +30,8 @@ function DisplayPosition({ map, onMove }) {
 
   return (
     <p>
-      {/* latitude: {position.lat.toFixed(4)}, longitude: {position.lng.toFixed(4)}{" "}
-      <button onClick={onClick}>reset</button> */}
+      {/* latitude: {position.lat.toFixed(4)}, longitude: {position.lng.toFixed(4)}{" "} */}
+      <button onClick={onClick}>reset</button>
     </p>
   );
 }
