@@ -1,3 +1,4 @@
+import { Box, Button } from "@mui/material";
 import { LatLngExpression } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
@@ -6,12 +7,10 @@ import {
   Circle,
   MapContainer,
   Marker,
-  Popup,
   TileLayer,
-  useMapEvent,
+  useMapEvent
 } from "react-leaflet";
 import { defaultLocation } from "../../utils";
-import { Box, Button } from "@mui/material";
 
 const defaultCenter = [
   defaultLocation.lat,
