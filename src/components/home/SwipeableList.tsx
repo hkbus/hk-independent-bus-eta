@@ -5,6 +5,7 @@ import {
   DialogTitle,
   List,
   Paper,
+  Slider,
   SxProps,
   Theme,
   ToggleButton,
@@ -271,6 +272,23 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 padding: 2,
               }}
             >
+              <Slider
+                aria-label="Range"
+                defaultValue={1000}
+                value={parseInt(inputValue)}
+                valueLabelDisplay="auto"
+                marks={[
+                  { label: "0", value: 0 },
+                  { label: "1000", value: 1000 },
+                  { label: "2000", value: 2000 },
+                  { label: "5000", value: 5000 },
+                  { label: "10000", value: 10000 },
+                ]}
+                min={0}
+                max={10000}
+                step={500}
+                onChange={(e, value) => setInputValue(value.toString())}
+              />{" "}
               <input
                 style={{ flex: 1 }}
                 type="number"
