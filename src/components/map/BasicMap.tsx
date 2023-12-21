@@ -52,18 +52,14 @@ function SetViewOnClick({ map, animateRef }) {
   return null;
 }
 
-export const BasicMap = ({ range }) => {
+export const BasicMap = ({ range, position, setPosition }) => {
   const animateRef = useRef(true);
 
   const [map, setMap] = useState(null);
-  const [position, setPosition] = useState<LatLngExpression>({
-    lat: defaultLocation.lat,
-    lng: defaultLocation.lng,
-  });
 
   const handleMove = useCallback(() => {
     setPosition(map.getCenter());
-  }, [map]);
+  }, [map, setPosition]);
 
   const displayMap = useMemo(
     () => (

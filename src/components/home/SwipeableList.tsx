@@ -97,6 +97,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     const [inputValue, setInputValue] = useState<string>(
       isCustomRange ? customSearchRange?.toString() : ""
     );
+    const [position, setPosition] = useState(geolocation);
     const [hasNoNearbyRoutes, setHasNoNearbyRoutes] = useState(true);
 
     useImperativeHandle(ref, () => ({
@@ -265,7 +266,11 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
             <DialogTitle sx={dialogTitleSx}>
               {t("自訂搜尋範圍（米）")}
             </DialogTitle>
-            <BasicMap range={parseInt(inputValue) || 0}></BasicMap>
+            <BasicMap
+              range={parseInt(inputValue) || 0}
+              position={position}
+              setPosition={setPosition}
+            ></BasicMap>
             <Grid container sx={{ px: 4, py: 1, mt: 2 }} spacing={1}>
               <Grid item xs={12}>
                 <Slider
@@ -346,6 +351,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       t,
       open,
       inputValue,
+      position,
       customSearchRange,
       setLastSearchRange,
       setCustomSearchRange,
