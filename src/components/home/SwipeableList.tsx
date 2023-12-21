@@ -78,6 +78,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       setLastSearchRange,
       customSearchRange,
       setCustomSearchRange,
+      updateGeolocation,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -326,6 +327,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                     const range = parseInt(inputValue);
                     setLastSearchRange(range);
                     setCustomSearchRange(range);
+                    updateGeolocation({ lat: 22.33971, lng: 114.20154 });
                     setOpen(false);
                   }}
                 >
@@ -343,10 +345,11 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       hasNoNearbyRoutes,
       t,
       open,
-      customSearchRange,
       inputValue,
+      customSearchRange,
       setLastSearchRange,
       setCustomSearchRange,
+      updateGeolocation,
     ]);
 
     const SmartCollectionRouteList = useMemo(
