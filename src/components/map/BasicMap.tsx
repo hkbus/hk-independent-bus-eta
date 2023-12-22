@@ -36,7 +36,22 @@ function DisplayPosition({ map, onMove }) {
   }, [map, onMove]);
 
   return (
-    <Button style={{ width: "100%" }} variant="outlined" onClick={onClick}>
+    <Button
+      disableRipple
+      style={{ width: "100%" }}
+      variant="outlined"
+      sx={({ palette }) => {
+        return {
+          color: palette.secondary.main,
+          borderColor: palette.secondary.main,
+          "&.MuiButton-outlined:hover": {
+            color: palette.secondary.main,
+            borderColor: palette.secondary.main,
+          },
+        };
+      }}
+      onClick={onClick}
+    >
       當前位置
     </Button>
   );
@@ -92,8 +107,14 @@ export const BasicMap = ({ range, position, setPosition }) => {
           <Grid item xs={6}>
             <DisplayPosition map={map} onMove={handleMove} />
           </Grid>
-          <Grid item xs={6}>
-            <label>
+          <Grid
+            item
+            xs={6}
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            <label style={{ display: "block" }}>
               <input
                 type="checkbox"
                 onChange={() => {
