@@ -46,6 +46,7 @@ import SuccinctTimeReport from "./SuccinctTimeReport";
 
 interface SwipeableListProps {
   geolocation: Location;
+  setGeolocation: React.Dispatch<React.SetStateAction<Location>>;
   homeTab: HomeTabType;
   onChangeTab: (v: string) => void;
 }
@@ -68,7 +69,7 @@ interface SelectedRoutes {
 export const searchRangeOptions = [100, 200, 500];
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
-  ({ geolocation, homeTab, onChangeTab }, ref) => {
+  ({ geolocation, setGeolocation, homeTab, onChangeTab }, ref) => {
     const {
       savedEtas,
       db: { holidays, routeList, stopList, serviceDayMap },
@@ -78,7 +79,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       setLastSearchRange,
       customSearchRange,
       setCustomSearchRange,
-      updateGeolocation,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -332,7 +332,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                     const range = parseInt(inputValue);
                     setLastSearchRange(range);
                     setCustomSearchRange(range);
-                    updateGeolocation({ lat: 22.33971, lng: 114.20154 });
+                    setGeolocation(position);
                     setOpen(false);
                   }}
                 >
@@ -355,7 +355,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       customSearchRange,
       setLastSearchRange,
       setCustomSearchRange,
-      updateGeolocation,
+      setGeolocation,
     ]);
 
     const SmartCollectionRouteList = useMemo(

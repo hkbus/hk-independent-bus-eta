@@ -70,6 +70,7 @@ const Home = () => {
         ref={swipeableList}
         homeTab={homeTab}
         geolocation={_geolocation}
+        setGeolocation={set_geolocation}
         onChangeTab={handleTabChange}
       />
     </Paper>
