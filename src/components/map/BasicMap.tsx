@@ -3,6 +3,7 @@ import { LatLngExpression } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Circle,
   MapContainer,
@@ -20,6 +21,8 @@ const defaultCenter = [
 const zoom = 14;
 
 function DisplayPosition({ map, onMove }) {
+  const { t } = useTranslation();
+
   const onClick = useCallback(() => {
     map.setView(defaultCenter, zoom);
   }, [map]);
@@ -52,7 +55,7 @@ function DisplayPosition({ map, onMove }) {
       }}
       onClick={onClick}
     >
-      當前位置
+      {t("當前位置")}
     </Button>
   );
 }
@@ -68,6 +71,8 @@ function SetViewOnClick({ map, animateRef }) {
 }
 
 export const BasicMap = ({ range, position, setPosition }) => {
+  const { t } = useTranslation();
+
   const animateRef = useRef(true);
 
   const [map, setMap] = useState(null);
@@ -121,7 +126,7 @@ export const BasicMap = ({ range, position, setPosition }) => {
                   animateRef.current = !animateRef.current;
                 }}
               />
-              減少動態效果
+              {t("減少動態效果")}
             </label>
           </Grid>
         </Grid>
