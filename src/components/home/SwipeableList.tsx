@@ -271,8 +271,17 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               position={position}
               setPosition={setPosition}
             ></BasicMap>
-            <Grid container sx={{ px: 4, py: 1, mt: 2 }} spacing={1}>
-              <Grid item xs={12}>
+            <Grid
+              container
+              sx={{
+                px: { xs: 2, md: 4 },
+                py: 1,
+                mt: 2,
+                justifyContent: "center",
+              }}
+              spacing={1}
+            >
+              <Grid item xs={10}>
                 <Slider
                   sx={{
                     "& .MuiSlider-mark": {
@@ -298,7 +307,15 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   onChange={(e, value) => setInputValue(value.toString())}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  px: { xs: 2, md: 4 },
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <input
                   style={{ fontSize: "16px", width: "100%", height: "100%" }}
                   type="number"

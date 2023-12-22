@@ -107,7 +107,12 @@ export const BasicMap = ({ range, position, setPosition }) => {
       {map ? (
         <Grid
           container
-          sx={{ px: 4, py: 1, justifyContent: "center", alignItems: "center" }}
+          sx={{
+            px: { xs: 2, md: 4 },
+            py: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
           <Grid item xs={6}>
             <DisplayPosition map={map} onMove={handleMove} />
