@@ -33,6 +33,10 @@ export interface AppState {
   selectedRoute: string;
   geoPermission: GeoPermission;
   geolocation: GeoLocation;
+  /**
+   * location set by user
+   */
+  manualGeolocation: GeoLocation;
   compassPermission: DeviceOrientationPermission;
   /**
    * route search history
@@ -108,6 +112,7 @@ interface AppContextValue
   // UX
   setCompassPermission: (permission: DeviceOrientationPermission) => void;
   updateGeolocation: (geoLocation: GeoLocation) => void;
+  setManualGeolocation: (geoLocation: GeoLocation) => void;
   addSearchHistory: (routeSearchHistory: string) => void;
   removeSearchHistoryByRouteId: (routeSearchHistoryId: string) => void;
   resetUsageRecord: () => void;
@@ -223,6 +228,9 @@ export const AppContextProvider = ({
       geolocation: isGeoLocation(geoLocation)
         ? geoLocation
         : defaultGeolocation,
+      manualGeolocation:
+        JSON.parse(localStorage.getItem("manualGeolocation")) ||
+        defaultGeolocation,
       compassPermission: isCompassPermission(compassPermission)
         ? compassPermission
         : "default",
@@ -316,6 +324,14 @@ export const AppContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         state.geolocation = geolocation;
+      })
+    );
+  }, []);
+
+  const setManualGeolocation = useCallback((manualGeolocation: GeoLocation) => {
+    setStateRaw(
+      produce((state: State) => {
+        state.manualGeolocation = manualGeolocation;
       })
     );
   }, []);
@@ -610,6 +626,13 @@ export const AppContextProvider = ({
   }, [state.geolocation]);
 
   useEffect(() => {
+    localStorage.setItem(
+      "manualGeolocation",
+      JSON.stringify(state.manualGeolocation)
+    );
+  }, [state.manualGeolocation]);
+
+  useEffect(() => {
     localStorage.setItem("geoPermission", state.geoPermission);
   }, [state.geoPermission]);
 
@@ -713,6 +736,7 @@ export const AppContextProvider = ({
       updateSelectedRoute,
       setCompassPermission,
       updateGeolocation,
+      setManualGeolocation,
       addSearchHistory,
       removeSearchHistoryByRouteId,
       resetUsageRecord,
@@ -746,6 +770,7 @@ export const AppContextProvider = ({
     updateSelectedRoute,
     setCompassPermission,
     updateGeolocation,
+    setManualGeolocation,
     addSearchHistory,
     removeSearchHistoryByRouteId,
     resetUsageRecord,
