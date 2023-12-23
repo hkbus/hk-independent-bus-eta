@@ -1,4 +1,7 @@
-import React, { useContext, useMemo } from "react";
+import {
+  DeleteOutline as DeleteIcon,
+  Reorder as ReorderIcon,
+} from "@mui/icons-material";
 import {
   Box,
   Divider,
@@ -9,19 +12,21 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { getDistance, getDistanceWithUnit, vibrate } from "../../utils";
-import AppContext from "../../AppContext";
-import { useTranslation } from "react-i18next";
-import SuccinctEtas from "./SuccinctEtas";
-import { toProperCase } from "../../utils";
-import RouteNo from "../route-board/RouteNo";
 import { Eta, Location } from "hk-bus-eta";
+import React, { useContext, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
+import AppContext from "../../AppContext";
 import { ManageMode } from "../../data";
 import {
-  DeleteOutline as DeleteIcon,
-  Reorder as ReorderIcon,
-} from "@mui/icons-material";
+  PLATFORM,
+  getDistance,
+  getDistanceWithUnit,
+  toProperCase,
+  vibrate,
+} from "../../utils";
+import RouteNo from "../route-board/RouteNo";
+import SuccinctEtas from "./SuccinctEtas";
 
 interface DistAndFareProps {
   name: string;
@@ -50,7 +55,7 @@ const DistAndFare = ({
   const { distance, unit, decimalPlace } = getDistanceWithUnit(
     getDistance(location, geolocation)
   );
-  
+
   if (geoPermission !== "granted" || location.lat === 0) {
     return <>{name + "　" + (fareString ? "(" + fareString + ")" : "")}</>;
   }
@@ -105,7 +110,6 @@ const SuccinctTimeReport = ({
 
   const platform = useMemo(() => {
     if (etas && etas.length > 0) {
-      const PLATFORM = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦"];
       const no =
         PLATFORM[
           parseInt(
