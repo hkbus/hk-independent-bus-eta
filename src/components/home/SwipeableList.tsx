@@ -325,7 +325,14 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 }}
               >
                 <input
-                  style={{ fontSize: "16px", width: "100%", height: "100%" }}
+                  style={{
+                    fontSize: "16px",
+                    width: "100%",
+                    height: "100%",
+                    textAlign: "end",
+                    padding: "0 10px",
+                    borderRadius: "4px",
+                  }}
                   type="number"
                   defaultValue={customSearchRange}
                   value={inputValue}
