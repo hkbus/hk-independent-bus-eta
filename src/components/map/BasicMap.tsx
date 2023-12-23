@@ -54,29 +54,19 @@ function DisplayPosition({
   }, [map, onMove]);
 
   return (
-    <>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={!isCurrentGeolocation}
-            onChange={(_, checked) => {
-              if (checked) {
-                map.setView(customGeolocation, zoom);
-                setIsCurrentGeolocation(false);
-                console.log("on", geolocation, position);
-              } else {
-                // save custom location when turning off
-                setCustomGeolocation(position);
-                map.setView(geolocation || defaultCenter, zoom);
-                console.log("off", geolocation, position);
-              }
-            }}
-            defaultChecked
-          />
-        }
-        label={!isCurrentGeolocation ? t("自訂位置") : t("現在位置")}
-      />
-    </>
+    <Button
+      disableRipple
+      style={{ width: "100%" }}
+      variant="contained"
+      disabled={isCurrentGeolocation}
+      onClick={() => {
+        setCustomGeolocation(position);
+        map.setView(geolocation || defaultCenter, zoom);
+        console.log("off", geolocation, position);
+      }}
+    >
+      {t("現在位置")}
+    </Button>
   );
 }
 
