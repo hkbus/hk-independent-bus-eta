@@ -52,19 +52,19 @@ function DisplayPosition({
   return (
     <>
       <Switch
-        checked={isCurrentGeolocation}
+        checked={!isCurrentGeolocation}
         onChange={(_, checked) => {
           if (checked) {
-            map.setView(geolocation || defaultCenter, zoom);
-            setCustomGeolocation(position);
-          } else {
             map.setView(customGeolocation, zoom);
             setIsCurrentGeolocation(false);
+          } else {
+            map.setView(geolocation || defaultCenter, zoom);
+            setCustomGeolocation(position);
           }
         }}
         defaultChecked
       />
-      {isCurrentGeolocation ? t("現在位置") : t("自訂位置")}
+      {!isCurrentGeolocation ? t("自訂位置") : t("現在位置")}
     </>
   );
 }
