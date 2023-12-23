@@ -5,7 +5,6 @@ import {
   DialogTitle,
   Grid,
   Input,
-  InputLabel,
   List,
   Paper,
   Slider,
