@@ -53,6 +53,9 @@ function DisplayPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
       onClick={() => {
         map.setView(geolocation || defaultCenter, zoom);
       }}
+      sx={{
+        color: "black",
+      }}
     >
       {t("現在 / 預設位置")}
     </Button>
