@@ -103,6 +103,7 @@ const DataImport = () => {
       compassPermission: "default",
       geolocation: defaultLocation,
       manualGeolocation: defaultLocation,
+      isManualGeolocation: false,
       searchRoute: "",
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
       routeSearchHistory: obj.routeSearchHistory ?? [],
