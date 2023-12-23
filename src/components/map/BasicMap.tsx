@@ -49,6 +49,16 @@ function DisplayPosition({
     };
   }, [map, onMove]);
 
+  useEffect(() => {
+    console.log(
+      "change",
+      isCurrentGeolocation,
+      geolocation.lat,
+      position.lat,
+      customGeolocation.lat
+    );
+  }, [customGeolocation, geolocation, isCurrentGeolocation, position]);
+
   return (
     <>
       <FormControlLabel
@@ -58,10 +68,22 @@ function DisplayPosition({
             onChange={(_, checked) => {
               if (checked) {
                 map.setView(customGeolocation, zoom);
+                console.log(
+                  "turn on",
+                  geolocation.lat,
+                  position.lat,
+                  customGeolocation.lat
+                );
                 setIsCurrentGeolocation(false);
               } else {
                 map.setView(geolocation || defaultCenter, zoom);
-                setCustomGeolocation(position);
+                console.log(
+                  "turn off",
+                  geolocation.lat,
+                  position.lat,
+                  customGeolocation.lat
+                );
+                setCustomGeolocation(geolocation);
               }
             }}
             defaultChecked
