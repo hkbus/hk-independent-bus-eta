@@ -1,4 +1,4 @@
-import { Grid, Switch } from "@mui/material";
+import { FormControlLabel, Grid, Switch } from "@mui/material";
 import { LatLngExpression } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
@@ -40,7 +40,7 @@ function DisplayPosition({
 }) {
   const { t } = useTranslation();
 
-  const [customGeolocation, setCustomGeolocation] = useState(geolocation);
+  const [customGeolocation, setCustomGeolocation] = useState(defaultLocation);
 
   useEffect(() => {
     map.on("move", onMove);
@@ -51,20 +51,24 @@ function DisplayPosition({
 
   return (
     <>
-      <Switch
-        checked={!isCurrentGeolocation}
-        onChange={(_, checked) => {
-          if (checked) {
-            map.setView(customGeolocation, zoom);
-            setIsCurrentGeolocation(false);
-          } else {
-            map.setView(geolocation || defaultCenter, zoom);
-            setCustomGeolocation(position);
-          }
-        }}
-        defaultChecked
+      <FormControlLabel
+        control={
+          <Switch
+            checked={!isCurrentGeolocation}
+            onChange={(_, checked) => {
+              if (checked) {
+                map.setView(customGeolocation, zoom);
+                setIsCurrentGeolocation(false);
+              } else {
+                map.setView(geolocation || defaultCenter, zoom);
+                setCustomGeolocation(position);
+              }
+            }}
+            defaultChecked
+          />
+        }
+        label={!isCurrentGeolocation ? t("自訂位置") : t("現在位置")}
       />
-      {!isCurrentGeolocation ? t("自訂位置") : t("現在位置")}
     </>
   );
 }
