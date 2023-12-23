@@ -2,6 +2,8 @@ import { Button, Grid } from "@mui/material";
 import { LatLngExpression } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
+import debounce from "lodash.debounce";
+import isEqual from "lodash.isequal";
 import {
   useCallback,
   useContext,
@@ -18,8 +20,8 @@ import {
   TileLayer,
   useMapEvent,
 } from "react-leaflet";
-import { defaultLocation } from "../../utils";
 import AppContext from "../../AppContext";
+import { defaultLocation } from "../../utils";
 
 const defaultCenter = [
   defaultLocation.lat,
@@ -28,10 +30,8 @@ const defaultCenter = [
 
 const zoom = 14;
 
-function DisplayPosition({ map, onMove }) {
+function DisplayPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
   const { t } = useTranslation();
-
-  const { geolocation } = useContext(AppContext);
 
   const onClick = useCallback(() => {
     map.setView(geolocation || defaultCenter, zoom);
@@ -65,7 +65,7 @@ function DisplayPosition({ map, onMove }) {
       }}
       onClick={onClick}
     >
-      {t("當前位置")}
+      {isCurrentGeolocation ? t("自訂位置") : t("當前位置")}
     </Button>
   );
 }
@@ -85,11 +85,21 @@ export const BasicMap = ({ range, position, setPosition }) => {
 
   const animateRef = useRef(true);
 
+  const { geolocation } = useContext(AppContext);
+
   const [map, setMap] = useState(null);
+  const [isCurrentGeolocation, setIsCurrentGeolocation] = useState(
+    position === geolocation
+  );
 
   const handleMove = useCallback(() => {
     setPosition(map.getCenter());
-  }, [map, setPosition]);
+    setIsCurrentGeolocation(isEqual(position, geolocation));
+  }, [geolocation, map, position, setPosition]);
+
+  useEffect(() => {
+    setIsCurrentGeolocation(isEqual(position, geolocation));
+  }, [geolocation, position]);
 
   const displayMap = useMemo(
     () => (
@@ -125,7 +135,14 @@ export const BasicMap = ({ range, position, setPosition }) => {
           }}
         >
           <Grid item xs={6}>
-            <DisplayPosition map={map} onMove={handleMove} />
+            <DisplayPosition
+              map={map}
+              geolocation={geolocation}
+              isCurrentGeolocation={isCurrentGeolocation}
+              onMove={debounce(() => {
+                handleMove();
+              }, 100)}
+            />
           </Grid>
           <Grid
             item
