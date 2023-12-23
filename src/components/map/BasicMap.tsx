@@ -1,4 +1,4 @@
-import { FormControlLabel, Grid, Switch } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import Leaflet, { LatLngExpression } from "leaflet";
 import "leaflet-defaulticon-compatibility";
@@ -34,17 +34,8 @@ const zoom = 14;
 // the higher the number, the harder to get real and custom location the same
 const coordinateDecimal = 3;
 
-function DisplayPosition({
-  map,
-  geolocation,
-  isCurrentGeolocation,
-  position,
-  setIsCurrentGeolocation,
-  onMove,
-}) {
+function DisplayPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
   const { t } = useTranslation();
-
-  const [customGeolocation, setCustomGeolocation] = useState(defaultLocation);
 
   useEffect(() => {
     map.on("move", onMove);
@@ -60,9 +51,7 @@ function DisplayPosition({
       variant="contained"
       disabled={isCurrentGeolocation}
       onClick={() => {
-        setCustomGeolocation(position);
         map.setView(geolocation || defaultCenter, zoom);
-        console.log("off", geolocation, position);
       }}
     >
       {t("現在位置")}
@@ -164,8 +153,6 @@ export const BasicMap = ({ range, position, setPosition }) => {
               map={map}
               geolocation={geolocation}
               isCurrentGeolocation={isCurrentGeolocation}
-              setIsCurrentGeolocation={setIsCurrentGeolocation}
-              position={position}
               onMove={debounce(() => {
                 handleMove();
               }, 100)}
