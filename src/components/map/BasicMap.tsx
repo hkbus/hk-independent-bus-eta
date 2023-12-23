@@ -2,7 +2,14 @@ import { Button, Grid } from "@mui/material";
 import { LatLngExpression } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import {
   Circle,
@@ -12,6 +19,7 @@ import {
   useMapEvent,
 } from "react-leaflet";
 import { defaultLocation } from "../../utils";
+import AppContext from "../../AppContext";
 
 const defaultCenter = [
   defaultLocation.lat,
@@ -23,9 +31,11 @@ const zoom = 14;
 function DisplayPosition({ map, onMove }) {
   const { t } = useTranslation();
 
+  const { geolocation } = useContext(AppContext);
+
   const onClick = useCallback(() => {
-    map.setView(defaultCenter, zoom);
-  }, [map]);
+    map.setView(geolocation || defaultCenter, zoom);
+  }, [geolocation, map]);
 
   // const onMove = useCallback(() => {
   //   setPosition(map.getCenter());
