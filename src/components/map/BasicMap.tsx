@@ -35,15 +35,8 @@ const zoom = 14;
 // the higher the number, the harder to get real and custom location the same
 const coordinateDecimal = 3;
 
-function ResetPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
+function ResetPosition({ map, geolocation, isCurrentGeolocation }) {
   const { t } = useTranslation();
-
-  useEffect(() => {
-    map.on("move", onMove);
-    return () => {
-      map.off("move", onMove);
-    };
-  }, [map, onMove]);
 
   return (
     <Button
@@ -111,6 +104,23 @@ export const BasicMap = ({ range, position, setPosition }) => {
     );
   }, [geolocation, position]);
 
+  useEffect(() => {
+    map?.on(
+      "move",
+      debounce(() => {
+        handleMove();
+      }, 100)
+    );
+    return () => {
+      map?.off(
+        "move",
+        debounce(() => {
+          handleMove();
+        }, 100)
+      );
+    };
+  }, [handleMove, map]);
+
   const displayMap = useMemo(
     () => (
       <MapContainer
@@ -158,9 +168,6 @@ export const BasicMap = ({ range, position, setPosition }) => {
               map={map}
               geolocation={geolocation}
               isCurrentGeolocation={isCurrentGeolocation}
-              onMove={debounce(() => {
-                handleMove();
-              }, 100)}
             />
           </Grid>
         </Grid>
