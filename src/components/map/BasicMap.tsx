@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material";
+import { Grid, Switch } from "@mui/material";
 import { LatLngExpression } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
@@ -37,10 +37,6 @@ function DisplayPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
     map.setView(geolocation || defaultCenter, zoom);
   }, [geolocation, map]);
 
-  // const onMove = useCallback(() => {
-  //   setPosition(map.getCenter());
-  // }, [map]);
-
   useEffect(() => {
     map.on("move", onMove);
     return () => {
@@ -49,24 +45,17 @@ function DisplayPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
   }, [map, onMove]);
 
   return (
-    <Button
-      disableRipple
-      style={{ width: "100%" }}
-      variant="outlined"
-      sx={({ palette }) => {
-        return {
-          color: palette.secondary.main,
-          borderColor: palette.secondary.main,
-          "&.MuiButton-outlined:hover": {
-            color: palette.secondary.main,
-            borderColor: palette.secondary.main,
-          },
-        };
-      }}
-      onClick={onClick}
-    >
-      {isCurrentGeolocation ? t("自訂位置") : t("當前位置")}
-    </Button>
+    <>
+      <Switch
+        checked={isCurrentGeolocation}
+        onChange={(_, checked) => {
+          console.log(checked);
+          if (checked) onClick();
+        }}
+        defaultChecked
+      />
+      {isCurrentGeolocation ? t("當前位置") : t("自訂位置")}
+    </>
   );
 }
 
@@ -92,13 +81,9 @@ export const BasicMap = ({ range, position, setPosition }) => {
     position === geolocation
   );
 
-  const returnToCurrentGeolocation = useCallback(() => {
+  const handleMove = useCallback(() => {
     setPosition(map.getCenter());
   }, [map, setPosition]);
-
-  const handleMove = useCallback(() => {
-    returnToCurrentGeolocation();
-  }, [returnToCurrentGeolocation]);
 
   useEffect(() => {
     setIsCurrentGeolocation(isEqual(position, geolocation));
