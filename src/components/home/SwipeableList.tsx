@@ -289,7 +289,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              // spacing={1}
             >
               <Grid item xs={10}>
                 <Slider
@@ -365,11 +364,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   </Grid>
                 </Grid>
               </Grid>
-
-              {/* <InputLabel htmlFor="search-range" sx={{ fontSize: "10px" }}>
-                  {t("搜尋範圍")}
-                </InputLabel> */}
-
               <Grid item xs={6} sx={{ mb: -1 }}>
                 <Button
                   disableRipple
