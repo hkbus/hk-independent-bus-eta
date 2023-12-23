@@ -30,12 +30,17 @@ const defaultCenter = [
 
 const zoom = 14;
 
-function DisplayPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
+function DisplayPosition({
+  map,
+  geolocation,
+  isCurrentGeolocation,
+  position,
+  setIsCurrentGeolocation,
+  onMove,
+}) {
   const { t } = useTranslation();
 
-  const onClick = useCallback(() => {
-    map.setView(geolocation || defaultCenter, zoom);
-  }, [geolocation, map]);
+  const [customGeolocation, setCustomGeolocation] = useState(geolocation);
 
   useEffect(() => {
     map.on("move", onMove);
@@ -49,8 +54,13 @@ function DisplayPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
       <Switch
         checked={isCurrentGeolocation}
         onChange={(_, checked) => {
-          console.log(checked);
-          if (checked) onClick();
+          if (checked) {
+            map.setView(geolocation || defaultCenter, zoom);
+            setCustomGeolocation(position);
+          } else {
+            map.setView(customGeolocation, zoom);
+            setIsCurrentGeolocation(false);
+          }
         }}
         defaultChecked
       />
@@ -78,7 +88,7 @@ export const BasicMap = ({ range, position, setPosition }) => {
 
   const [map, setMap] = useState(null);
   const [isCurrentGeolocation, setIsCurrentGeolocation] = useState(
-    position === geolocation
+    isEqual(position, geolocation)
   );
 
   const handleMove = useCallback(() => {
@@ -127,6 +137,8 @@ export const BasicMap = ({ range, position, setPosition }) => {
               map={map}
               geolocation={geolocation}
               isCurrentGeolocation={isCurrentGeolocation}
+              setIsCurrentGeolocation={setIsCurrentGeolocation}
+              position={position}
               onMove={debounce(() => {
                 handleMove();
               }, 100)}
