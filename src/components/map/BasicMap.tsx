@@ -64,7 +64,7 @@ function DisplayPosition({
         }}
         defaultChecked
       />
-      {isCurrentGeolocation ? t("當前位置") : t("自訂位置")}
+      {isCurrentGeolocation ? t("現在位置") : t("自訂位置")}
     </>
   );
 }
