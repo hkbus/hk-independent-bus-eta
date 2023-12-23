@@ -54,7 +54,7 @@ function DisplayPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
         map.setView(geolocation || defaultCenter, zoom);
       }}
     >
-      {t("現在位置")}
+      {t("現在 / 預設位置")}
     </Button>
   );
 }
