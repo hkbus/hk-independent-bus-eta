@@ -105,8 +105,6 @@ function roundDownLocationCoordinates(
 }
 
 export const BasicMap = ({ range, position, setPosition }) => {
-  const { t } = useTranslation();
-
   const animateRef = useRef(true);
 
   const { geolocation, colorMode } = useContext(AppContext);
@@ -171,7 +169,7 @@ export const BasicMap = ({ range, position, setPosition }) => {
             alignItems: "center",
           }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <DisplayPosition
               map={map}
               geolocation={geolocation}
@@ -182,23 +180,6 @@ export const BasicMap = ({ range, position, setPosition }) => {
                 handleMove();
               }, 100)}
             />
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            sx={{
-              textAlign: "center",
-            }}
-          >
-            <label style={{ display: "block" }}>
-              <input
-                type="checkbox"
-                onChange={() => {
-                  animateRef.current = !animateRef.current;
-                }}
-              />
-              {t("減少動態效果")}
-            </label>
           </Grid>
         </Grid>
       ) : null}
