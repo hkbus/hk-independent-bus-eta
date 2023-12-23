@@ -49,15 +49,9 @@ function DisplayPosition({
     };
   }, [map, onMove]);
 
-  useEffect(() => {
-    console.log(
-      "change",
-      isCurrentGeolocation,
-      geolocation.lat,
-      position.lat,
-      customGeolocation.lat
-    );
-  }, [customGeolocation, geolocation, isCurrentGeolocation, position]);
+  // useEffect(() => {
+  //   console.log("effect", isCurrentGeolocation, geolocation, position);
+  // }, [customGeolocation, geolocation, isCurrentGeolocation, position]);
 
   return (
     <>
@@ -68,22 +62,14 @@ function DisplayPosition({
             onChange={(_, checked) => {
               if (checked) {
                 map.setView(customGeolocation, zoom);
-                console.log(
-                  "turn on",
-                  geolocation.lat,
-                  position.lat,
-                  customGeolocation.lat
-                );
                 setIsCurrentGeolocation(false);
+                console.log("on", geolocation, position);
               } else {
+                // save custom location when turning off
+                setCustomGeolocation(position);
                 map.setView(geolocation || defaultCenter, zoom);
-                console.log(
-                  "turn off",
-                  geolocation.lat,
-                  position.lat,
-                  customGeolocation.lat
-                );
-                setCustomGeolocation(geolocation);
+                setIsCurrentGeolocation(true);
+                console.log("off", geolocation, position);
               }
             }}
             defaultChecked
