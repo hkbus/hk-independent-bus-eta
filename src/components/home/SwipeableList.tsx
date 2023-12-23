@@ -325,7 +325,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 px: { xs: 2, md: 4 },
                 pb: 2,
                 justifyContent: "center",
-                alignItems: "center",
+                alignItems: "start",
               }}
               spacing={2}
             >
@@ -334,7 +334,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   container
                   sx={{
                     justifyContent: "center",
-                    alignItems: "end",
+                    alignItems: "center",
                   }}
                 >
                   <Grid item xs={7}>
