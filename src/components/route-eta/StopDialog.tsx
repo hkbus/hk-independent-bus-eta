@@ -2,12 +2,7 @@ import {
   BookmarkBorder as BookmarkBorderIcon,
   Bookmark as BookmarkIcon,
 } from "@mui/icons-material";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton
-} from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
