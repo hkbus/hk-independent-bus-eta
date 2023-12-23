@@ -35,7 +35,7 @@ const zoom = 14;
 // the higher the number, the harder to get real and custom location the same
 const coordinateDecimal = 3;
 
-function DisplayPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
+function ResetPosition({ map, geolocation, isCurrentGeolocation, onMove }) {
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -154,7 +154,7 @@ export const BasicMap = ({ range, position, setPosition }) => {
           }}
         >
           <Grid item xs={12}>
-            <DisplayPosition
+            <ResetPosition
               map={map}
               geolocation={geolocation}
               isCurrentGeolocation={isCurrentGeolocation}
