@@ -4,6 +4,7 @@ import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import debounce from "lodash.debounce";
 import isEqual from "lodash.isequal";
+import type { Location as GeoLocation } from "hk-bus-eta";
 import {
   useCallback,
   useContext,
@@ -30,6 +31,9 @@ const defaultCenter = [
 
 const zoom = 14;
 
+// the higher the number, the harder to get real and custom location the same
+const coordinateDecimal = 3;
+
 function DisplayPosition({
   map,
   geolocation,
@@ -49,10 +53,6 @@ function DisplayPosition({
     };
   }, [map, onMove]);
 
-  // useEffect(() => {
-  //   console.log("effect", isCurrentGeolocation, geolocation, position);
-  // }, [customGeolocation, geolocation, isCurrentGeolocation, position]);
-
   return (
     <>
       <FormControlLabel
@@ -68,7 +68,6 @@ function DisplayPosition({
                 // save custom location when turning off
                 setCustomGeolocation(position);
                 map.setView(geolocation || defaultCenter, zoom);
-                setIsCurrentGeolocation(true);
                 console.log("off", geolocation, position);
               }
             }}
@@ -91,6 +90,20 @@ function SetViewOnClick({ map, animateRef }) {
   return null;
 }
 
+function roundDownLocationCoordinates(
+  location: GeoLocation,
+  fixed: number
+): GeoLocation {
+  const getDecimalWithoutRounding = (num, fixed) => {
+    const factor = 10 ** fixed;
+    return Math.trunc(num * factor) / factor;
+  };
+  const lat = getDecimalWithoutRounding(location.lat, fixed);
+  const lng = getDecimalWithoutRounding(location.lng, fixed);
+
+  return { lat, lng };
+}
+
 export const BasicMap = ({ range, position, setPosition }) => {
   const { t } = useTranslation();
 
@@ -108,7 +121,12 @@ export const BasicMap = ({ range, position, setPosition }) => {
   }, [map, setPosition]);
 
   useEffect(() => {
-    setIsCurrentGeolocation(isEqual(position, geolocation));
+    setIsCurrentGeolocation(
+      isEqual(
+        roundDownLocationCoordinates(position, coordinateDecimal),
+        roundDownLocationCoordinates(geolocation, coordinateDecimal)
+      )
+    );
   }, [geolocation, position]);
 
   const displayMap = useMemo(
