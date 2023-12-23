@@ -169,7 +169,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               sx={toggleButtonSx}
               disableRipple
               value={"custom"}
-              aria-label={lastSearchRange.toString()}
+              aria-label={"custom"}
               onClick={(e) => {
                 const hasCustomSearchRange = customSearchRange > 0;
                 const isCustom = selectedRange === "custom";
@@ -196,7 +196,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       );
     }, [
       customSearchRange,
-      lastSearchRange,
       selectedRange,
       setIsManualGeolocation,
       setLastSearchRange,
