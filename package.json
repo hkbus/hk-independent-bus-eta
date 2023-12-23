@@ -23,6 +23,7 @@
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "leaflet-rotatedmarker": "^0.2.0",
     "lodash.debounce": "^4.0.8",
+    "lodash.isequal": "^4.5.0",
     "lodash.throttle": "^4.1.1",
     "lzutf8-light": "^0.6.2",
     "merge-images": "^2.0.0",
