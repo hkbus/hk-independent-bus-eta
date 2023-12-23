@@ -51,7 +51,11 @@ const DistAndFare = ({
   const { distance, unit, decimalPlace } = getDistanceWithUnit(
     getDistance(location, manualGeolocation || geolocation)
   );
-  if (isManualGeolocation) {
+  if (
+    isManualGeolocation ||
+    geoPermission === "granted" ||
+    location.lat !== 0
+  ) {
     return (
       <>
         {name +
@@ -63,20 +67,7 @@ const DistAndFare = ({
       </>
     );
   }
-  if (geoPermission !== "granted" || location.lat === 0) {
-    return <>{name + "　" + (fareString ? "(" + fareString + ")" : "")}</>;
-  }
-
-  return (
-    <>
-      {name +
-        " - " +
-        distance.toFixed(decimalPlace) +
-        t(unit) +
-        "　" +
-        (fareString ? "(" + fareString + ")" : "")}
-    </>
-  );
+  return <>{name + "　" + (fareString ? "(" + fareString + ")" : "")}</>;
 };
 
 interface SuccinctTimeReportProps {
