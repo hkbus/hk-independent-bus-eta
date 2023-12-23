@@ -8,6 +8,7 @@ import {
   Paper,
   Slider,
   SxProps,
+  TextField,
   Theme,
   ToggleButton,
   ToggleButtonGroup,
@@ -286,6 +287,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 py: 1,
                 mt: 2,
                 justifyContent: "center",
+                alignItems: "center",
               }}
               spacing={1}
             >
@@ -315,30 +317,17 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   onChange={(e, value) => setInputValue(value.toString())}
                 />
               </Grid>
-              <Grid
-                item
-                xs={6}
-                sx={{
-                  px: { xs: 2, md: 4 },
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <input
-                  style={{
-                    fontSize: "16px",
-                    width: "100%",
-                    height: "100%",
-                    textAlign: "end",
-                    padding: "0 10px",
-                    borderRadius: "4px",
-                  }}
+              <Grid item xs={6}>
+                <TextField
                   type="number"
                   defaultValue={customSearchRange}
                   value={inputValue}
-                  min="0"
-                  max="9999"
-                  step={100}
+                  label="Custom Range"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  sx={{ textAlign: "end" }}
+                  variant="standard"
                   onChange={(e) => {
                     const value = e.target.value;
                     const numericalValue = parseInt(value);
@@ -351,7 +340,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                   }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={6} sx={{ mb: -1 }}>
                 <Button
                   disableRipple
                   variant="contained"
