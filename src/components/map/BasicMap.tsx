@@ -92,10 +92,13 @@ export const BasicMap = ({ range, position, setPosition }) => {
     position === geolocation
   );
 
-  const handleMove = useCallback(() => {
+  const returnToCurrentGeolocation = useCallback(() => {
     setPosition(map.getCenter());
-    setIsCurrentGeolocation(isEqual(position, geolocation));
-  }, [geolocation, map, position, setPosition]);
+  }, [map, setPosition]);
+
+  const handleMove = useCallback(() => {
+    returnToCurrentGeolocation();
+  }, [returnToCurrentGeolocation]);
 
   useEffect(() => {
     setIsCurrentGeolocation(isEqual(position, geolocation));
