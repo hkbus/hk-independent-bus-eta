@@ -39,7 +39,7 @@ const DistAndFare = ({
   seq,
 }: DistAndFareProps) => {
   const { t } = useTranslation();
-  const { geoPermission, geolocation, manualGeolocation } =
+  const { geoPermission, geolocation, manualGeolocation, isManualGeolocation } =
     useContext(AppContext);
   const _fareString = fares && fares[seq] ? "$" + fares[seq] : "";
   const _fareHolidayString =
@@ -51,7 +51,18 @@ const DistAndFare = ({
   const { distance, unit, decimalPlace } = getDistanceWithUnit(
     getDistance(location, manualGeolocation || geolocation)
   );
-
+  if (isManualGeolocation) {
+    return (
+      <>
+        {name +
+          " - " +
+          distance.toFixed(decimalPlace) +
+          t(unit) +
+          "　" +
+          (fareString ? "(" + fareString + ")" : "")}
+      </>
+    );
+  }
   if (geoPermission !== "granted" || location.lat === 0) {
     return <>{name + "　" + (fareString ? "(" + fareString + ")" : "")}</>;
   }
