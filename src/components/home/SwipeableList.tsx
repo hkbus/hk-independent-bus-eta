@@ -33,7 +33,7 @@ import React, {
 import SwipeableViews from "react-swipeable-views";
 
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
+import AppContext, { defaultGeolocation } from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 import { RouteCollection, TransportType } from "../../typing";
 import { coToType, getDistance, getDistanceWithUnit } from "../../utils";
@@ -81,6 +81,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       setCustomSearchRange,
       setManualGeolocation,
       setIsManualGeolocation,
+      geoPermission,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -99,7 +100,9 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     const [inputValue, setInputValue] = useState<string>(
       isCustomRange ? customSearchRange?.toString() : "750"
     );
-    const [position, setPosition] = useState(geolocation);
+    const [position, setPosition] = useState(
+      geoPermission === "granted" ? geolocation : defaultGeolocation
+    );
     const [hasNoNearbyRoutes, setHasNoNearbyRoutes] = useState(true);
 
     useImperativeHandle(ref, () => ({

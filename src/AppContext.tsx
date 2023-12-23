@@ -156,7 +156,10 @@ interface AppContextProviderProps {
 }
 
 const AppContext = React.createContext<AppContextValue>(null);
-const defaultGeolocation: GeoLocation = { lat: 22.302711, lng: 114.177216 };
+export const defaultGeolocation: GeoLocation = {
+  lat: 22.302711,
+  lng: 114.177216,
+};
 const isGeoPremission = (input: unknown): input is GeoPermission => {
   return (
     input === "opening" ||
