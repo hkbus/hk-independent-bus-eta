@@ -4,11 +4,12 @@ import {
   Dialog,
   DialogTitle,
   Grid,
+  Input,
+  InputLabel,
   List,
   Paper,
   Slider,
   SxProps,
-  TextField,
   Theme,
   ToggleButton,
   ToggleButtonGroup,
@@ -41,6 +42,7 @@ import { coToType, getDistance, getDistanceWithUnit } from "../../utils";
 import { CircularProgress } from "../Progress";
 import { BasicMap } from "../map/BasicMap";
 import { dialogRootSx, dialogTitleSx } from "../ui/dialog";
+import { inputSx } from "../ui/input";
 import HomeRouteListDropDown from "./HomeRouteList";
 import type { HomeTabType } from "./HomeTabbar";
 import SuccinctTimeReport from "./SuccinctTimeReport";
@@ -318,16 +320,19 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
                 />
               </Grid>
               <Grid item xs={6}>
-                <TextField
+                <InputLabel htmlFor="search-range">{t("搜尋範圍")}</InputLabel>
+                <Input
                   type="number"
                   defaultValue={customSearchRange}
                   value={inputValue}
-                  label="Custom Range"
-                  InputLabelProps={{
-                    shrink: true,
+                  placeholder={"750"}
+                  sx={{
+                    ...inputSx,
+                    "& input": {
+                      px: 2,
+                      textAlign: "end",
+                    },
                   }}
-                  sx={{ textAlign: "end" }}
-                  variant="standard"
                   onChange={(e) => {
                     const value = e.target.value;
                     const numericalValue = parseInt(value);

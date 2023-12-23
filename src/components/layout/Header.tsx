@@ -112,7 +112,13 @@ const Header = () => {
         </Link>
         <Input
           id="searchInput"
-          sx={inputSx}
+          sx={{
+            ...inputSx,
+            maxWidth: "100px",
+            "& input": {
+              textAlign: "center",
+            },
+          }}
           type="text"
           value={searchRoute}
           placeholder={t("路線")}
