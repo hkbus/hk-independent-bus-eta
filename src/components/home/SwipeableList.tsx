@@ -97,7 +97,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       isCustomRange ? "custom" : lastSearchRange
     );
     const [inputValue, setInputValue] = useState<string>(
-      isCustomRange ? customSearchRange?.toString() : ""
+      isCustomRange ? customSearchRange?.toString() : "750"
     );
     const [position, setPosition] = useState(geolocation);
     const [hasNoNearbyRoutes, setHasNoNearbyRoutes] = useState(true);
