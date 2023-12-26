@@ -71,7 +71,8 @@
     "alpha-deploy": "yarn build && gh-pages -d build --remote alpha -t -f",
     "docker": "cd docker && docker-compose up -d --build",
     "docker:build": "docker build . --pull --build-arg $(sed 's:#.*$::g' docker/.env | sed '/^\\s*$/d' | sed ':a;N;$!ba;s/\\n/ --build-arg /g')",
-    "docker:build-noenv": "docker build . --pull --build-arg $(sed 's:#.*$::g' .env | sed '/^\\s*$/d' | sed ':a;N;$!ba;s/\\n/ --build-arg /g')"
+    "docker:build-noenv": "docker build . --pull --build-arg $(sed 's:#.*$::g' .env | sed '/^\\s*$/d' | sed ':a;N;$!ba;s/\\n/ --build-arg /g')",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "eslintConfig": {
     "extends": [
