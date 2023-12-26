@@ -10,7 +10,12 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { PLATFORM, getDistance, getDistanceWithUnit, vibrate } from "../../utils";
+import {
+  PLATFORM,
+  getDistance,
+  getDistanceWithUnit,
+  vibrate,
+} from "../../utils";
 import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import SuccinctEtas from "./SuccinctEtas";
