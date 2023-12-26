@@ -58,12 +58,12 @@ const buildStopRoute = (routeList) => {
 
 const dfs = (routeList, stopList, curLocation, targetLocation, curDepth, maxDepth, routeFrom = '', tmpRoute = '') => {
   if ( getDistance(curLocation, targetLocation) < 500 ) {
-    if ( curDepth == 0 ) {
+    if ( curDepth === 0 ) {
       dfsRoutes.push(tmpRoute)
       routeLv[routeFrom] = maxDepth - curDepth
     }
     return true
-  } else if ( curDepth == 0 ) {
+  } else if ( curDepth === 0 ) {
     return false
   }
   
@@ -97,7 +97,7 @@ const dfs = (routeList, stopList, curLocation, targetLocation, curDepth, maxDept
       if ( stopIdx === -1 ) continue // skip if no take up stop is found
       // take off the bus
       for (var idx = stopIdx + 1; idx < stops.length; ++idx ) {
-        if ( dfs(routeList, stopList, stopList[stops[idx]].location, targetLocation, curDepth - 1, maxDepth, routeId, tmpRoute + '|' + `${routeId}/${stopIdx}-${idx}` ) ) {
+        if ( dfs(routeList, stopList, stopList[stops[idx]].location, targetLocation, curDepth - 1, maxDepth, routeId, `${tmpRoute}|${routeId}/${stopIdx}-${idx}` ) ) {
           routeLv[routeFrom] = maxDepth - curDepth
           found = true
         }

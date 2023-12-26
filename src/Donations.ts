@@ -89,6 +89,46 @@ const Donations = [
       en: "Channel C HK",
     },
   },
+  {
+    url: {
+      zh: "https://photonmedia.net/subscribe",
+      en: "https://photonmedia.net/subscribe",
+    },
+    description: {
+      zh: "請訂閱《光傳媒》",
+      en: "Please subscribe the Photon Media",
+    },
+  },
+  {
+    url: {
+      zh: "https://wavezinehk.com/%e8%a8%82%e9%96%b1%e6%94%af%e6%8c%81",
+      en: "https://wavezinehk.com/%e8%a8%82%e9%96%b1%e6%94%af%e6%8c%81",
+    },
+    description: {
+      zh: "請訂閱《Wave. 流行文化誌》",
+      en: "Please subscribe the Wave.",
+    },
+  },
+  {
+    url: {
+      zh: "https://thecollectivehk.com/subscribe",
+      en: "https://thecollectivehk.com/subscribe",
+    },
+    description: {
+      zh: "請訂閱《集誌社》",
+      en: "Please subscribe The Collective",
+    },
+  },
+  {
+    url: {
+      zh: "https://linktr.ee/hkcourtnews",
+      en: "https://linktr.ee/hkcourtnews",
+    },
+    description: {
+      zh: "請訂閱《庭刊》",
+      en: "Please subscribe The HK Court News",
+    },
+  },
 ];
 
 export default Donations;
