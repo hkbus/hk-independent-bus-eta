@@ -1,10 +1,16 @@
-import { Box, Divider, List, SxProps, Theme, Typography } from "@mui/material";
-import SuccinctTimeReport from "./SuccinctTimeReport";
-import { useMemo, useState } from "react";
 import {
-  ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon,
-} from "@mui/icons-material";
+  Accordion,
+  Divider,
+  List,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import SuccinctTimeReport from "./SuccinctTimeReport";
+import { useMemo } from "react";
+import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 
 interface HomeRouteListDropDownProps {
   name: string;
@@ -17,8 +23,7 @@ const HomeRouteListDropDown = ({
   routeStrings,
   defaultExpanded = true,
 }: HomeRouteListDropDownProps) => {
-  const [expaned, setExpanded] = useState<boolean>(defaultExpanded);
-  const routes = useMemo(
+   const routes = useMemo(
     () => routeStrings.split("|").filter((v) => v) ?? [],
     [routeStrings]
   );
@@ -26,15 +31,19 @@ const HomeRouteListDropDown = ({
     return <></>;
   }
   return (
-    <Box>
-      <Box sx={headerSx} onClick={() => setExpanded((prev) => !prev)}>
+    <Accordion
+      defaultExpanded={defaultExpanded}
+      disableGutters
+      elevation={0}
+      sx={AccordionSx}
+    >
+      <AccordionSummary sx={headerSx} expandIcon={<ExpandMoreIcon />}>
         <Typography variant="body1" m={1} fontWeight={700}>
           {name}
         </Typography>
-        <Box>{!expaned ? <ExpandMoreIcon /> : <ExpandLessIcon />}</Box>
-      </Box>
+      </AccordionSummary>
       <Divider />
-      {expaned && (
+      <AccordionDetails>
         <List disablePadding>
           {routes.map(
             (selectedRoute, idx) =>
@@ -46,13 +55,16 @@ const HomeRouteListDropDown = ({
               )
           )}
         </List>
-      )}
-      <Divider />
-    </Box>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 
 export default HomeRouteListDropDown;
+
+const AccordionSx: SxProps<Theme> = {
+  backgroundColor: "transparent",
+};
 
 const headerSx: SxProps<Theme> = {
   display: "flex",

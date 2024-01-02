@@ -129,7 +129,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     const NearbyRouteList = useMemo(
       () =>
         selectedRoutes?.nearby ? (
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 0 }}>
             {Object.entries(selectedRoutes.nearby).map(
               ([type, nearbyRoutes]) => (
                 <HomeRouteListDropDown
