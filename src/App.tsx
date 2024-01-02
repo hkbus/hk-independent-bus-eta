@@ -84,6 +84,46 @@ const App = () => {
                   />
                   <Route path={``} element={<Home />} />
                 </Route>
+                <Route
+                  path="/android"
+                  element={
+                    <RedirectPage url="https://play.google.com/store/apps/details?id=app.hkbus" />
+                  }
+                />
+                <Route
+                  path="/ios"
+                  element={
+                    <RedirectPage url="https://apps.apple.com/hk/app/hkbus-app-%E5%B7%B4%E5%A3%AB%E5%88%B0%E7%AB%99%E9%A0%90%E5%A0%B1/id1612184906" />
+                  }
+                />
+                <Route
+                  path="/wear"
+                  element={
+                    <RedirectPage url="https://play.google.com/store/apps/details?id=com.loohp.hkbuseta" />
+                  }
+                />
+                <Route
+                  path="/watch"
+                  element={
+                    <RedirectPage url="https://testflight.apple.com/join/bbvMcNmM" />
+                  }
+                />
+                <Route
+                  path="/telegram"
+                  element={<RedirectPage url="https://t.me/hkbusapp" />}
+                />
+                <Route
+                  path="/instagram"
+                  element={
+                    <RedirectPage url="https://instagram.com/hkbus.app" />
+                  }
+                />
+                <Route
+                  path="/faq"
+                  element={
+                    <RedirectPage url="https://github.com/hkbus/hk-independent-bus-eta/wiki/%E5%B8%B8%E8%A6%8B%E5%95%8F%E9%A1%8C-FAQ" />
+                  }
+                />
               </Routes>
             </SearchContextProvider>
           </Router>
