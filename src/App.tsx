@@ -119,6 +119,12 @@ const App = () => {
                   }
                 />
                 <Route
+                  path="/source-code"
+                  element={
+                    <RedirectPage url="https://github.com/hkbus/hk-independent-bus-eta/" />
+                  }
+                />
+                <Route
                   path="/faq"
                   element={
                     <RedirectPage url="https://github.com/hkbus/hk-independent-bus-eta/wiki/%E5%B8%B8%E8%A6%8B%E5%95%8F%E9%A1%8C-FAQ" />
