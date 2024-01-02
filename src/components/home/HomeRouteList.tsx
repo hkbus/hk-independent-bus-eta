@@ -23,7 +23,7 @@ const HomeRouteListDropDown = ({
   routeStrings,
   defaultExpanded = true,
 }: HomeRouteListDropDownProps) => {
-   const routes = useMemo(
+  const routes = useMemo(
     () => routeStrings.split("|").filter((v) => v) ?? [],
     [routeStrings]
   );
