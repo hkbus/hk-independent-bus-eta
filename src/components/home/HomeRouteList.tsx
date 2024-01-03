@@ -1,16 +1,10 @@
-import {
-  Accordion,
-  Divider,
-  List,
-  SxProps,
-  Theme,
-  Typography,
-} from "@mui/material";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
+import { Box, Divider, List, SxProps, Theme, Typography } from "@mui/material";
 import SuccinctTimeReport from "./SuccinctTimeReport";
-import { useMemo } from "react";
-import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
+import { useMemo, useState } from "react";
+import {
+  ExpandMore as ExpandMoreIcon,
+  ExpandLess as ExpandLessIcon,
+} from "@mui/icons-material";
 
 interface HomeRouteListDropDownProps {
   name: string;
@@ -23,6 +17,7 @@ const HomeRouteListDropDown = ({
   routeStrings,
   defaultExpanded = true,
 }: HomeRouteListDropDownProps) => {
+  const [expaned, setExpanded] = useState<boolean>(defaultExpanded);
   const routes = useMemo(
     () => routeStrings.split("|").filter((v) => v) ?? [],
     [routeStrings]
@@ -31,19 +26,15 @@ const HomeRouteListDropDown = ({
     return <></>;
   }
   return (
-    <Accordion
-      defaultExpanded={defaultExpanded}
-      disableGutters
-      elevation={0}
-      sx={AccordionSx}
-    >
-      <AccordionSummary sx={headerSx} expandIcon={<ExpandMoreIcon />}>
+    <Box>
+      <Box sx={headerSx} onClick={() => setExpanded((prev) => !prev)}>
         <Typography variant="body1" m={1} fontWeight={700}>
           {name}
         </Typography>
-      </AccordionSummary>
+        <Box>{!expaned ? <ExpandMoreIcon /> : <ExpandLessIcon />}</Box>
+      </Box>
       <Divider />
-      <AccordionDetails>
+      {expaned && (
         <List disablePadding>
           {routes.map(
             (selectedRoute, idx) =>
@@ -55,16 +46,13 @@ const HomeRouteListDropDown = ({
               )
           )}
         </List>
-      </AccordionDetails>
-    </Accordion>
+      )}
+      <Divider />
+    </Box>
   );
 };
 
 export default HomeRouteListDropDown;
-
-const AccordionSx: SxProps<Theme> = {
-  backgroundColor: "transparent",
-};
 
 const headerSx: SxProps<Theme> = {
   display: "flex",
