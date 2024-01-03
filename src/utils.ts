@@ -31,7 +31,10 @@ export const getDistanceWithUnit = (a: GeoLocation, b: GeoLocation) => {
   };
 };
 
-const defaultLocation = { lat: 22.302711, lng: 114.177216 };
+export const DEFAULT_GEOLOCATION: GeoLocation = {
+  lat: 22.302711,
+  lng: 114.177216,
+};
 // HK location if no valid value
 export const checkPosition = (position?: GeoLocation): GeoLocation => {
   if (
@@ -43,7 +46,7 @@ export const checkPosition = (position?: GeoLocation): GeoLocation => {
   ) {
     return position;
   } else {
-    return defaultLocation;
+    return DEFAULT_GEOLOCATION;
   }
 };
 

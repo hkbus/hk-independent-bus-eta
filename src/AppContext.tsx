@@ -7,7 +7,13 @@ import React, {
   useMemo,
 } from "react";
 import type { ReactNode } from "react";
-import { iOSRNWebView, iOSTracking, isStrings, vibrate } from "./utils";
+import {
+  DEFAULT_GEOLOCATION,
+  iOSRNWebView,
+  iOSTracking,
+  isStrings,
+  vibrate,
+} from "./utils";
 import DbContext from "./DbContext";
 import type { DatabaseContextValue } from "./DbContext";
 import { Workbox } from "workbox-window";
@@ -133,7 +139,7 @@ interface AppContextProviderProps {
 }
 
 const AppContext = React.createContext<AppContextValue>(null);
-const defaultGeolocation: GeoLocation = { lat: 22.302711, lng: 114.177216 };
+const defaultGeolocation: GeoLocation = DEFAULT_GEOLOCATION;
 const isGeoPremission = (input: unknown): input is GeoPermission => {
   return (
     input === "opening" ||
@@ -205,7 +211,7 @@ export const AppContextProvider = ({
       geoPermission: isGeoPremission(geoPermission) ? geoPermission : null,
       geolocation: isGeoLocation(geoLocation)
         ? geoLocation
-        : defaultGeolocation,
+        : DEFAULT_GEOLOCATION,
       compassPermission: isCompassPermission(compassPermission)
         ? compassPermission
         : "default",
