@@ -73,7 +73,7 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
           <Slider
             sx={sliderSx}
             aria-label="Range"
-            value={searchRange}
+            value={state.searchRange}
             valueLabelDisplay="on"
             marks={[
               { label: "0", value: 0 },
