@@ -1,20 +1,4 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogTitle,
-  Grid,
-  Input,
-  List,
-  Paper,
-  Slider,
-  SxProps,
-  Theme,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-  styled,
-} from "@mui/material";
+import { Box, List, Typography } from "@mui/material";
 import {
   EtaDb,
   Location,
@@ -31,19 +15,16 @@ import React, {
   useRef,
   useState,
 } from "react";
-import SwipeableViews from "react-swipeable-views";
-
 import { useTranslation } from "react-i18next";
-import AppContext, { defaultGeolocation } from "../../AppContext";
+import SwipeableViews from "react-swipeable-views";
+import AppContext from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 import { RouteCollection, TransportType } from "../../typing";
-import { coToType, getDistance, getDistanceWithUnit } from "../../utils";
+import { coToType, getDistance } from "../../utils";
 import { CircularProgress } from "../Progress";
-import { BasicMap } from "../map/BasicMap";
-import { dialogRootSx, dialogTitleSx } from "../ui/dialog";
-import { inputSx } from "../ui/input";
 import HomeRouteListDropDown from "./HomeRouteList";
 import type { HomeTabType } from "./HomeTabbar";
+import SearchRangeController from "./SearchRangeController";
 import SuccinctTimeReport from "./SuccinctTimeReport";
 
 interface SwipeableListProps {
@@ -68,22 +49,14 @@ interface SelectedRoutes {
   collections: string[];
 }
 
-export const searchRangeOptions = [100, 200, 500];
-
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
-  ({ geolocation, setGeolocation, homeTab, onChangeTab }, ref) => {
+  ({ geolocation, homeTab, onChangeTab }, ref) => {
     const {
       savedEtas,
       db: { holidays, routeList, stopList, serviceDayMap },
       isRouteFilter,
       collections,
-      lastSearchRange,
-      setLastSearchRange,
-      customSearchRange,
-      setCustomSearchRange,
-      setManualGeolocation,
-      setIsManualGeolocation,
-      geoPermission,
+      searchRange,
     } = useContext(AppContext);
     const isTodayHoliday = useMemo(
       () => isHoliday(holidays, new Date()),
@@ -94,17 +67,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
     const [selectedRoutes, setSelectedRoutes] = useState<SelectedRoutes | null>(
       null
     );
-    const [open, setOpen] = useState(false);
-    const isCustomRange = !searchRangeOptions.includes(lastSearchRange);
-    const [selectedRange, setSelectedRange] = useState<number | "custom">(
-      isCustomRange ? "custom" : lastSearchRange
-    );
-    const [inputValue, setInputValue] = useState<string>(
-      isCustomRange ? customSearchRange?.toString() : "750"
-    );
-    const [position, setPosition] = useState(
-      geoPermission === "granted" ? geolocation : defaultGeolocation
-    );
+
     const [hasNoNearbyRoutes, setHasNoNearbyRoutes] = useState(true);
 
     useImperativeHandle(ref, () => ({
@@ -124,7 +87,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
           isRouteFilter,
           isTodayHoliday,
           serviceDayMap,
-          lastSearchRange,
+          searchRange,
         })
       );
     }, [
@@ -136,75 +99,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       isRouteFilter,
       isTodayHoliday,
       serviceDayMap,
-      lastSearchRange,
-    ]);
-
-    const SearchRangeControl = useCallback(() => {
-      return (
-        <Paper sx={paperSx} component="ul">
-          <ListItem key="range-tag">{t("搜尋範圍")}:</ListItem>
-          <ToggleButtonGroup
-            defaultValue={selectedRange}
-            value={selectedRange}
-            exclusive
-            onChange={(_, value) => {
-              setSelectedRange(value);
-              setLastSearchRange(value);
-            }}
-            aria-label="search range"
-            sx={toggleButtonGroupSx}
-          >
-            {searchRangeOptions.map((range) => {
-              const { distance } = getDistanceWithUnit(range);
-              return (
-                <ToggleButton
-                  key={`range-${range}`}
-                  sx={toggleButtonSx}
-                  disableRipple
-                  value={range}
-                  aria-label={range.toString()}
-                  onClick={() => setIsManualGeolocation(false)}
-                >
-                  {distance}
-                </ToggleButton>
-              );
-            })}
-            <ToggleButton
-              key={`range-custom`}
-              sx={toggleButtonSx}
-              disableRipple
-              value={"custom"}
-              aria-label={"custom"}
-              onClick={(e) => {
-                const hasCustomSearchRange = customSearchRange > 0;
-                const isCustom = selectedRange === "custom";
-                e.preventDefault();
-                if (hasCustomSearchRange) {
-                  setSelectedRange("custom");
-                  setLastSearchRange(customSearchRange);
-                  setIsManualGeolocation(true);
-                  if (isCustom) {
-                    setOpen(true);
-                  }
-                } else if (!isCustom && hasCustomSearchRange) {
-                  setSelectedRange("custom");
-                  setIsManualGeolocation(true);
-                } else setOpen(true);
-              }}
-            >
-              {t("自訂")}
-              {customSearchRange > 0 ? `(${customSearchRange})` : null}
-            </ToggleButton>
-            <ListItem key="unit">{t("米")}</ListItem>
-          </ToggleButtonGroup>
-        </Paper>
-      );
-    }, [
-      customSearchRange,
-      selectedRange,
-      setIsManualGeolocation,
-      setLastSearchRange,
-      t,
+      searchRange,
     ]);
 
     const SavedRouteList = useMemo(() => {
@@ -266,147 +161,11 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
               )}
             </Box>
           )}
-          <Dialog
-            open={open}
-            onClose={() => {
-              setOpen(false);
-            }}
-            sx={dialogRootSx}
-          >
-            <DialogTitle sx={dialogTitleSx}>
-              {t("自訂搜尋範圍（米）")}
-            </DialogTitle>
-            <BasicMap
-              range={parseInt(inputValue) || 0}
-              position={position}
-              setPosition={setPosition}
-            ></BasicMap>
-            <Grid
-              container
-              sx={{
-                px: { xs: 2, md: 4 },
-                mt: 4,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Grid item xs={10}>
-                <Slider
-                  sx={{
-                    "& .MuiSlider-mark": {
-                      backgroundColor: "#bfbfbf",
-                      height: 8,
-                    },
-                  }}
-                  aria-label="Range"
-                  defaultValue={750}
-                  value={parseInt(inputValue)}
-                  valueLabelDisplay="auto"
-                  marks={[
-                    { label: "0", value: 0 },
-                    { label: "1km", value: 1000 },
-                    { label: "2km", value: 2000 },
-                    { label: "3km", value: 3000 },
-                    { label: "4km", value: 4000 },
-                    { label: "5km", value: 5000 },
-                  ]}
-                  min={0}
-                  max={5000}
-                  step={250}
-                  onChange={(e, value) => setInputValue(value.toString())}
-                />
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              sx={{
-                px: { xs: 2, md: 4 },
-                pb: 2,
-                justifyContent: "center",
-                alignItems: "start",
-              }}
-              spacing={2}
-            >
-              <Grid item xs={6}>
-                <Grid
-                  container
-                  sx={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Grid item xs={7}>
-                    {t("搜尋範圍")}:
-                  </Grid>
-                  <Grid item xs={5}>
-                    <Input
-                      type="number"
-                      defaultValue={customSearchRange}
-                      value={inputValue}
-                      placeholder={"750"}
-                      sx={{
-                        ...inputSx,
-                        "& input": {
-                          textAlign: "end",
-                        },
-                      }}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        const numericalValue = parseInt(value);
-                        const [min, max] = [0, 9999];
-                        if (numericalValue <= min) {
-                          setInputValue(min.toString());
-                        } else if (numericalValue >= max) {
-                          setInputValue(max.toString());
-                        } else setInputValue(value);
-                      }}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={6} sx={{ mb: -1 }}>
-                <Button
-                  disableRipple
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    color: "black",
-                    width: "100%",
-                  }}
-                  onClick={() => {
-                    setSelectedRange("custom");
-                    const range = parseInt(inputValue);
-                    setLastSearchRange(range);
-                    setCustomSearchRange(range);
-                    setGeolocation(position);
-                    setManualGeolocation(position);
-                    setIsManualGeolocation(true);
-                    setOpen(false);
-                  }}
-                >
-                  {t("確定")}
-                </Button>
-              </Grid>
-            </Grid>
-          </Dialog>
         </>
       ) : (
         <CircularProgress sx={{ my: 10 }} />
       );
-    }, [
-      selectedRoutes?.nearby,
-      hasNoNearbyRoutes,
-      t,
-      open,
-      inputValue,
-      position,
-      customSearchRange,
-      setLastSearchRange,
-      setCustomSearchRange,
-      setGeolocation,
-      setManualGeolocation,
-      setIsManualGeolocation,
-    ]);
+    }, [selectedRoutes?.nearby, hasNoNearbyRoutes, t]);
 
     const SmartCollectionRouteList = useMemo(
       () =>
@@ -486,7 +245,7 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       () => (
         <>
           {/* SwipeableViews has overflow attribute child div and this preventing <SearchRangeControl/> fixed on top using `position: sticky` */}
-          {homeTab === "nearby" ? <SearchRangeControl /> : null}
+          {homeTab === "nearby" ? <SearchRangeController /> : null}
           <SwipeableViews
             index={getViewIdx()}
             onChangeIndex={(idx) => {
@@ -506,7 +265,6 @@ const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
       ),
       [
         homeTab,
-        SearchRangeControl,
         getViewIdx,
         NearbyRouteList,
         SavedRouteList,
@@ -532,7 +290,7 @@ const getSelectedRoutes = ({
   isRouteFilter,
   isTodayHoliday,
   serviceDayMap,
-  lastSearchRange,
+  searchRange,
 }: {
   savedEtas: string[];
   collections: RouteCollection[];
@@ -542,7 +300,7 @@ const getSelectedRoutes = ({
   isRouteFilter: boolean;
   isTodayHoliday: boolean;
   serviceDayMap: EtaDb["serviceDayMap"];
-  lastSearchRange: number;
+  searchRange: number;
 }): SelectedRoutes => {
   const selectedRoutes = savedEtas
     .filter((routeUrl, index, self) => {
@@ -587,7 +345,7 @@ const getSelectedRoutes = ({
     .filter(
       (stop) =>
         // keep only nearby 1000m stops
-        stop[2] < lastSearchRange
+        stop[2] < searchRange
     )
     .sort((a, b) => a[2] - b[2])
     .slice(0, 20)
@@ -690,43 +448,5 @@ const getSelectedRoutes = ({
     collections: collections.map((colleciton) =>
       formatHandling(colleciton.list)
     ),
-  };
-};
-
-const ListItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.5),
-}));
-
-const paperSx: SxProps<Theme> = (theme) => {
-  return {
-    position: "sticky",
-    top: 0,
-    display: "flex",
-    justifyContent: "space-around",
-    alignItems: "center",
-    flexWrap: "wrap",
-    listStyle: "none",
-    px: 0,
-    py: 1,
-    m: 0,
-    borderRadius: 0,
-    fontSize: 14,
-    // TODO: make sticky
-  };
-};
-
-const toggleButtonGroupSx: SxProps<Theme> = ({ palette }) => {
-  return {};
-};
-
-const toggleButtonSx: SxProps<Theme> = (theme) => {
-  return {
-    height: 30,
-    borderRadius: 15,
-    px: 1.5,
-    "&.MuiButtonBase-root&.Mui-selected": {
-      backgroundColor: ({ palette }) => palette.primary.main,
-      color: "black",
-    },
   };
 };

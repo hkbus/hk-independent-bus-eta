@@ -12,8 +12,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { decompress } from "lzutf8-light";
 import { Check as CheckIcon } from "@mui/icons-material";
 import throttle from "lodash.throttle";
-import AppContext, { AppState, defaultSearchRange } from "../AppContext";
-import { defaultLocation, isStrings } from "../utils";
+import AppContext, { AppState } from "../AppContext";
+import {
+  DEFAULT_GEOLOCATION,
+  DEFAULT_SEARCH_RANGE_OPTIONS,
+  isStrings,
+} from "../utils";
 import { CollectionState } from "../CollectionContext";
 
 const DataImport = () => {
@@ -101,9 +105,8 @@ const DataImport = () => {
     importAppState({
       geoPermission: null,
       compassPermission: "default",
-      geolocation: defaultLocation,
-      manualGeolocation: defaultLocation,
-      isManualGeolocation: false,
+      geolocation: DEFAULT_GEOLOCATION,
+      manualGeolocation: null,
       searchRoute: "",
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
       routeSearchHistory: obj.routeSearchHistory ?? [],
@@ -120,8 +123,8 @@ const DataImport = () => {
       annotateScheduled: obj.annotateScheduled ?? true,
       isRecentSearchShown: obj.isRecentSearchShown ?? true,
       fontSize: obj.fontSize ?? 16,
-      lastSearchRange: obj.lastSearchRange ?? defaultSearchRange,
-      customSearchRange: obj.customSearchRange ?? 0,
+      searchRange: obj.searchRange ?? DEFAULT_SEARCH_RANGE_OPTIONS.slice(-1)[0],
+      isRangeController: false,
     });
 
     navigate("/");

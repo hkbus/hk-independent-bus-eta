@@ -36,8 +36,7 @@ const CenterControl = ({ onClick }) => {
 };
 
 interface RouteMapProps {
-  gtfsId: string;
-  bound: "O" | "I" | "OI" | "IO";
+  routeId: string;
   stops: Array<StopListEntry>;
   stopIdx: number;
   onMarkerClick: (idx: number, event: unknown) => void;
@@ -57,8 +56,7 @@ interface RouteMapRef {
 }
 
 const RouteMap = ({
-  gtfsId,
-  bound,
+  routeId,
   stops,
   stopIdx,
   onMarkerClick,
@@ -67,7 +65,7 @@ const RouteMap = ({
     useContext(AppContext);
   const { i18n } = useTranslation();
   const [map, setMap] = useState<Leaflet.Map>(null);
-  const routePath = useRoutePath(gtfsId, bound, stops);
+  const routePath = useRoutePath(routeId, stops);
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
     currentStopCenter: stops[stopIdx]

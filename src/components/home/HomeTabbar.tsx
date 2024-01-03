@@ -16,12 +16,12 @@ interface HomeTabbarProps {
 
 const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
   const { t } = useTranslation();
-  const { collections } = useContext(AppContext);
+  const { collections, toggleIsRangeController } = useContext(AppContext);
 
   return (
     <Tabs
       value={homeTab}
-      onChange={(e, v) => onChangeTab(v, true)}
+      onChange={(_, v) => onChangeTab(v, true)}
       sx={tabbarSx}
       variant="scrollable"
       scrollButtons
@@ -32,6 +32,11 @@ const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
         label={t("附近")}
         value="nearby"
         disableRipple
+        onClick={() => {
+          if (homeTab === "nearby") {
+            toggleIsRangeController();
+          }
+        }}
       />
       <Tab
         iconPosition="start"

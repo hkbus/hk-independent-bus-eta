@@ -1,20 +1,25 @@
 // @ts-nocheck
 import { StopListEntry } from "hk-bus-eta";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import AppContext from "../AppContext";
 
-export const useRoutePath = (
-  gtfsId: string,
-  bound: "I" | "O" | "IO" | "OI",
-  stops: StopListEntry[]
-) => {
+export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
   const [geoJson, setGeoJson] = useState<GeoJSON.GeoJsonObject>(null);
+  const {
+    db: { routeList },
+  } = useContext(AppContext);
+  const { gtfsId, bound, co } = routeList[routeId];
 
   useEffect(() => {
-    fetch(
-      `https://hkbus.github.io/route-waypoints/${gtfsId}-${
-        bound === "I" ? "I" : "O" // handling for pseudo circular route
-      }.json`
-    )
+    let waypointsFile = "";
+    if (gtfsId) {
+      waypointsFile = `${gtfsId}-${
+        bound[co[0]] === "I" ? "I" : "O" // handling for pseudo circular route
+      }.json`;
+    } else if (co.includes("mtr")) {
+      waypointsFile = `${routeId.split("-")[0].toLowerCase()}.json`;
+    }
+    fetch(`https://hkbus.github.io/route-waypoints/${waypointsFile}`)
       .then((r) => r.json())
       .then((json) => {
         setGeoJson(json);
@@ -39,7 +44,7 @@ export const useRoutePath = (
     return () => {
       setGeoJson(null);
     };
-  }, [gtfsId, bound, stops]);
+  }, [routeId, gtfsId, bound, co, stops]);
 
   return geoJson;
 };

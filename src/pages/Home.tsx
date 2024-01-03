@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Paper, SxProps, Theme, Typography } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -15,7 +15,8 @@ import DbRenewReminder from "../components/layout/DbRenewReminder";
 import { useParams } from "react-router-dom";
 
 const Home = () => {
-  const { AppTitle, geolocation, collections } = useContext(AppContext);
+  const { AppTitle, manualGeolocation, geolocation, collections } =
+    useContext(AppContext);
   const { t, i18n } = useTranslation();
   const { collectionName } = useParams();
 
@@ -34,18 +35,19 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language]);
 
-  // debounce to avoid rapidly UI changes due to geolocation changes
+  // throttle to avoid rapidly UI changes due to geolocation changes
   const [_geolocation, set_geolocation] = useState<Location>(geolocation);
-  const debouncedUpdateGeolocation = useRef(
-    throttle(() => {
-      set_geolocation(geolocation);
-    }, 1000)
-  ).current;
+  const throttleUpdateGeolocation = useMemo(
+    () =>
+      throttle((geolocation: Location) => {
+        set_geolocation(geolocation);
+      }, 1000),
+    []
+  );
 
   useEffect(() => {
-    debouncedUpdateGeolocation(geolocation);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geolocation]);
+    throttleUpdateGeolocation(manualGeolocation ?? geolocation);
+  }, [manualGeolocation, geolocation, throttleUpdateGeolocation]);
 
   const handleTabChange = (v: HomeTabType, rerenderList = false) => {
     setHomeTab(v);

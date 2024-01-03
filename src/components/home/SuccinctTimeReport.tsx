@@ -1,4 +1,7 @@
-import React, { useContext, useMemo } from "react";
+import {
+  DeleteOutline as DeleteIcon,
+  Reorder as ReorderIcon,
+} from "@mui/icons-material";
 import {
   Box,
   Divider,
@@ -9,24 +12,21 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
+import { Eta, Location } from "hk-bus-eta";
+import React, { useContext, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
+import AppContext from "../../AppContext";
+import { ManageMode } from "../../data";
 import {
   PLATFORM,
   getDistance,
   getDistanceWithUnit,
+  toProperCase,
   vibrate,
 } from "../../utils";
-import AppContext from "../../AppContext";
-import { useTranslation } from "react-i18next";
-import SuccinctEtas from "./SuccinctEtas";
-import { toProperCase } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
-import { Eta, Location } from "hk-bus-eta";
-import { ManageMode } from "../../data";
-import {
-  DeleteOutline as DeleteIcon,
-  Reorder as ReorderIcon,
-} from "@mui/icons-material";
+import SuccinctEtas from "./SuccinctEtas";
 
 interface DistAndFareProps {
   name: string;
@@ -44,7 +44,7 @@ const DistAndFare = ({
   seq,
 }: DistAndFareProps) => {
   const { t } = useTranslation();
-  const { geoPermission, geolocation, manualGeolocation, isManualGeolocation } =
+  const { geoPermission, geolocation, manualGeolocation } =
     useContext(AppContext);
   const _fareString = fares && fares[seq] ? "$" + fares[seq] : "";
   const _fareHolidayString =
@@ -56,23 +56,21 @@ const DistAndFare = ({
   const { distance, unit, decimalPlace } = getDistanceWithUnit(
     getDistance(location, manualGeolocation || geolocation)
   );
-  if (
-    isManualGeolocation ||
-    geoPermission === "granted" ||
-    location.lat !== 0
-  ) {
-    return (
-      <>
-        {name +
-          " - " +
-          distance.toFixed(decimalPlace) +
-          t(unit) +
-          "　" +
-          (fareString ? "(" + fareString + ")" : "")}
-      </>
-    );
+
+  if (geoPermission !== "granted" || location.lat === 0) {
+    return <>{name + "　" + (fareString ? "(" + fareString + ")" : "")}</>;
   }
-  return <>{name + "　" + (fareString ? "(" + fareString + ")" : "")}</>;
+
+  return (
+    <>
+      {name +
+        " - " +
+        distance.toFixed(decimalPlace) +
+        t(unit) +
+        "　" +
+        (fareString ? "(" + fareString + ")" : "")}
+    </>
+  );
 };
 
 interface SuccinctTimeReportProps {

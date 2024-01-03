@@ -7,7 +7,14 @@ import React, {
   useMemo,
 } from "react";
 import type { ReactNode } from "react";
-import { iOSRNWebView, iOSTracking, isStrings, vibrate } from "./utils";
+import {
+  DEFAULT_GEOLOCATION,
+  DEFAULT_SEARCH_RANGE_OPTIONS,
+  iOSRNWebView,
+  iOSTracking,
+  isStrings,
+  vibrate,
+} from "./utils";
 import DbContext from "./DbContext";
 import type { DatabaseContextValue } from "./DbContext";
 import { Workbox } from "workbox-window";
@@ -24,7 +31,6 @@ import {
   NumPadOrder,
 } from "./data";
 import { DeviceOrientationPermission } from "react-world-compass";
-import { searchRangeOptions } from "./components/home/SwipeableList";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -34,13 +40,9 @@ export interface AppState {
   geoPermission: GeoPermission;
   geolocation: GeoLocation;
   /**
-   * location set by user
+   * location set by user for home page nearby routes
    */
-  manualGeolocation: GeoLocation;
-  /**
-   * manual location mode on by user
-   */
-  isManualGeolocation: boolean;
+  manualGeolocation: GeoLocation | null;
   compassPermission: DeviceOrientationPermission;
   /**
    * route search history
@@ -96,13 +98,13 @@ export interface AppState {
    */
   fontSize: number;
   /**
-   * Range for geolocation search
+   * Range for home page nearby search
    */
-  lastSearchRange: number;
+  searchRange: number;
   /**
-   * Custom Range for geolocation search
+   * Show Range Controller in Home tab
    */
-  customSearchRange: number;
+  isRangeController: boolean;
 }
 
 interface AppContextValue
@@ -116,8 +118,7 @@ interface AppContextValue
   // UX
   setCompassPermission: (permission: DeviceOrientationPermission) => void;
   updateGeolocation: (geoLocation: GeoLocation) => void;
-  setManualGeolocation: (geoLocation: GeoLocation) => void;
-  setIsManualGeolocation: (isManualGeolocation: boolean) => void;
+  setManualGeolocation: (manualGeoLocation: GeoLocation | null) => void;
   addSearchHistory: (routeSearchHistory: string) => void;
   removeSearchHistoryByRouteId: (routeSearchHistoryId: string) => void;
   resetUsageRecord: () => void;
@@ -137,14 +138,12 @@ interface AppContextValue
   updateRefreshInterval: (interval: number) => void;
   toggleAnnotateScheduled: () => void;
   toggleIsRecentSearchShown: () => void;
+  toggleIsRangeController: () => void;
   changeLanguage: (lang: Language) => void;
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
   workbox?: Workbox;
-  lastSearchRange: number;
-  setLastSearchRange: (lastSearchRange: number) => void;
-  customSearchRange: number;
-  setCustomSearchRange: (customSearchRange: number) => void;
+  setSearchRange: (searchRange: number) => void;
 
   // for React Native Context
   setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
@@ -156,10 +155,7 @@ interface AppContextProviderProps {
 }
 
 const AppContext = React.createContext<AppContextValue>(null);
-export const defaultGeolocation: GeoLocation = {
-  lat: 22.302711,
-  lng: 114.177216,
-};
+
 const isGeoPremission = (input: unknown): input is GeoPermission => {
   return (
     input === "opening" ||
@@ -200,10 +196,6 @@ const isColorMode = (input: unknown): input is ColorMode => {
   return input === "dark" || input === "light" || input === "system";
 };
 
-// use the largest search range option as default
-export const defaultSearchRange =
-  searchRangeOptions[searchRangeOptions.length - 1];
-
 export const AppContextProvider = ({
   workbox,
   children,
@@ -235,14 +227,8 @@ export const AppContextProvider = ({
       geoPermission: isGeoPremission(geoPermission) ? geoPermission : null,
       geolocation: isGeoLocation(geoLocation)
         ? geoLocation
-        : defaultGeolocation,
-      manualGeolocation:
-        JSON.parse(localStorage.getItem("manualGeolocation")) ||
-        isGeoLocation(geoLocation)
-          ? (geoLocation as GeoLocation)
-          : defaultGeolocation,
-      isManualGeolocation:
-        JSON.parse(localStorage.getItem("isManualGeolocation")) || false,
+        : DEFAULT_GEOLOCATION,
+      manualGeolocation: null, // never save manual location
       compassPermission: isCompassPermission(compassPermission)
         ? compassPermission
         : "default",
@@ -273,11 +259,10 @@ export const AppContextProvider = ({
       annotateScheduled:
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
       fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
-      lastSearchRange:
-        JSON.parse(localStorage.getItem("lastSearchRange")) ??
-        defaultSearchRange,
-      customSearchRange:
-        JSON.parse(localStorage.getItem("customSearchRange")) ?? "",
+      searchRange:
+        JSON.parse(localStorage.getItem("searchRange")) ??
+        DEFAULT_SEARCH_RANGE_OPTIONS.slice(-1)[0],
+      isRangeController: false, // always hide the controller by default
     };
   };
   const { i18n } = useTranslation();
@@ -340,13 +325,16 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const setManualGeolocation = useCallback((manualGeolocation: GeoLocation) => {
-    setStateRaw(
-      produce((state: State) => {
-        state.manualGeolocation = manualGeolocation;
-      })
-    );
-  }, []);
+  const setManualGeolocation = useCallback(
+    (manualGeolocation: GeoLocation | null) => {
+      setStateRaw(
+        produce((state: State) => {
+          state.manualGeolocation = manualGeolocation;
+        })
+      );
+    },
+    []
+  );
 
   const setGeoPermission = useCallback(
     (geoPermission: AppState["geoPermission"]) => {
@@ -386,14 +374,6 @@ export const AppContextProvider = ({
     },
     [setGeoPermission, updateGeolocation]
   );
-
-  const setIsManualGeolocation = useCallback((isManualGeolocation: boolean) => {
-    setStateRaw(
-      produce((state: State) => {
-        state.isManualGeolocation = isManualGeolocation;
-      })
-    );
-  }, []);
 
   const setCompassPermission = useCallback(
     (compassPermission: AppState["compassPermission"]) => {
@@ -575,7 +555,7 @@ export const AppContextProvider = ({
     localStorage.clear();
     setStateRaw(
       produce((state: State) => {
-        state.geolocation = defaultGeolocation;
+        state.geolocation = DEFAULT_GEOLOCATION;
       })
     );
   }, []);
@@ -585,6 +565,15 @@ export const AppContextProvider = ({
       produce((state: State) => {
         const prev = state.isRecentSearchShown;
         state.isRecentSearchShown = !prev;
+      })
+    );
+  }, []);
+
+  const toggleIsRangeController = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prev = state.isRangeController;
+        state.isRangeController = !prev;
       })
     );
   }, []);
@@ -604,18 +593,10 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const setLastSearchRange = useCallback((lastSearchRange: number) => {
+  const setSearchRange = useCallback((searchRange: number) => {
     setStateRaw(
       produce((state: State) => {
-        state.lastSearchRange = lastSearchRange;
-      })
-    );
-  }, []);
-
-  const setCustomSearchRange = useCallback((customSearchRange: number) => {
-    setStateRaw(
-      produce((state: State) => {
-        state.customSearchRange = customSearchRange;
+        state.searchRange = searchRange;
       })
     );
   }, []);
@@ -644,20 +625,6 @@ export const AppContextProvider = ({
   useEffect(() => {
     localStorage.setItem("geolocation", JSON.stringify(state.geolocation));
   }, [state.geolocation]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "manualGeolocation",
-      JSON.stringify(state.manualGeolocation)
-    );
-  }, [state.manualGeolocation]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "isManualGeolocation",
-      JSON.stringify(state.isManualGeolocation)
-    );
-  }, [state.isManualGeolocation]);
 
   useEffect(() => {
     localStorage.setItem("geoPermission", state.geoPermission);
@@ -739,18 +706,8 @@ export const AppContextProvider = ({
   }, [state.fontSize]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "lastSearchRange",
-      JSON.stringify(state.lastSearchRange)
-    );
-  }, [state.lastSearchRange]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "customSearchRange",
-      JSON.stringify(state.customSearchRange)
-    );
-  }, [state.customSearchRange]);
+    localStorage.setItem("searchRange", JSON.stringify(state.searchRange));
+  }, [state.searchRange]);
 
   const contextValue = useMemo(() => {
     return {
@@ -764,7 +721,6 @@ export const AppContextProvider = ({
       setCompassPermission,
       updateGeolocation,
       setManualGeolocation,
-      setIsManualGeolocation,
       addSearchHistory,
       removeSearchHistoryByRouteId,
       resetUsageRecord,
@@ -780,13 +736,13 @@ export const AppContextProvider = ({
       updateRefreshInterval,
       toggleAnnotateScheduled,
       toggleIsRecentSearchShown,
+      toggleIsRangeController,
       changeLanguage,
       setFontSize,
       importAppState,
       workbox,
       setGeoPermission,
-      setLastSearchRange,
-      setCustomSearchRange,
+      setSearchRange,
     };
   }, [
     dbContext,
@@ -798,7 +754,6 @@ export const AppContextProvider = ({
     updateSelectedRoute,
     setCompassPermission,
     updateGeolocation,
-    setIsManualGeolocation,
     setManualGeolocation,
     addSearchHistory,
     removeSearchHistoryByRouteId,
@@ -815,13 +770,13 @@ export const AppContextProvider = ({
     updateRefreshInterval,
     toggleAnnotateScheduled,
     toggleIsRecentSearchShown,
+    toggleIsRangeController,
     changeLanguage,
     setFontSize,
     importAppState,
     workbox,
     setGeoPermission,
-    setLastSearchRange,
-    setCustomSearchRange,
+    setSearchRange,
   ]);
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>

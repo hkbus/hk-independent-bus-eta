@@ -24,7 +24,13 @@ export const getDistanceWithUnit = (distanceInMetre: number) => {
   };
 };
 
-export const defaultLocation = { lat: 22.302711, lng: 114.177216 };
+export const DEFAULT_GEOLOCATION: GeoLocation = {
+  lat: 22.302711,
+  lng: 114.177216,
+};
+
+export const DEFAULT_SEARCH_RANGE_OPTIONS: number[] = [100, 200, 500];
+
 // HK location if no valid value
 export const checkPosition = (position?: GeoLocation): GeoLocation => {
   if (
@@ -36,7 +42,7 @@ export const checkPosition = (position?: GeoLocation): GeoLocation => {
   ) {
     return position;
   } else {
-    return defaultLocation;
+    return DEFAULT_GEOLOCATION;
   }
 };
 
