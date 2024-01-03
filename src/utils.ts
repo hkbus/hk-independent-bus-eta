@@ -15,19 +15,12 @@ export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   return R * c; // in metres
 };
 
-export const getDistanceWithUnit = (a: GeoLocation, b: GeoLocation) => {
-  const distanceInMetre = getDistance(a, b);
-  if (distanceInMetre >= 1000) {
-    return {
-      distance: distanceInMetre / 1000,
-      unit: "公里",
-      decimalPlace: 1,
-    };
-  }
+export const getDistanceWithUnit = (distanceInMetre: number) => {
+  const isKm = distanceInMetre >= 1000;
   return {
-    distance: distanceInMetre,
-    unit: "米",
-    decimalPlace: 0,
+    distance: isKm ? distanceInMetre / 1000 : distanceInMetre,
+    unit: isKm ? "公里" : "米",
+    decimalPlace: isKm ? 1 : 0,
   };
 };
 
