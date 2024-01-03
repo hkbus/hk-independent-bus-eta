@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useContext, useMemo } from "react";
+import React, { useEffect, useCallback, useContext } from "react";
 import {
   Avatar,
   Box,
@@ -17,19 +17,20 @@ import {
   SettingsBrightness as SettingsBrightnessIcon,
   WbSunny as WbSunnyIcon,
   DarkMode as DarkModeIcon,
+  WifiOff as WifiOffIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import AppContext from "../../AppContext";
 import { vibrate, checkMobile } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useWeatherCode, WeatherIcons } from "../Weather";
+import useOnline from "../../hooks/useOnline";
 
 const Header = () => {
   const {
     searchRoute,
     setSearchRoute,
     db: { routeList },
-    colorMode,
     vibrateDuration,
     geoPermission,
     updateGeolocation,
@@ -41,6 +42,7 @@ const Header = () => {
   let location = useLocation();
   const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
+  const onlineStatus = useOnline();
 
   const handleLanguageChange = (lang: "zh" | "en") => {
     vibrate(vibrateDuration);
@@ -92,115 +94,109 @@ const Header = () => {
     };
   }, [handleKeydown]);
 
-  return useMemo(
-    () => (
-      <Toolbar sx={rootSx}>
-        <Link
-          to={`/${i18n.language}`}
-          onClick={(e) => {
-            e.preventDefault();
+  return (
+    <Toolbar sx={rootSx}>
+      <Link
+        to={`/${i18n.language}`}
+        onClick={(e) => {
+          e.preventDefault();
+          vibrate(vibrateDuration);
+          navigate(`/${i18n.language}`);
+        }}
+        rel="nofollow"
+      >
+        {(true || onlineStatus === "online") && <Box sx={appTitleSx} />}
+        {false && onlineStatus === "offline" && (
+          <IconButton>
+            <WifiOffIcon />
+          </IconButton>
+        )}
+        <Typography component="h1" style={visuallyHidden}>
+          {t("巴士到站預報")}
+        </Typography>
+      </Link>
+      <Input
+        id="searchInput"
+        sx={searchRouteInputSx}
+        type="text"
+        value={searchRoute}
+        placeholder={t("路線")}
+        onChange={(e) => {
+          if (
+            e.target.value.toUpperCase() in routeList ||
+            e.target.value in routeList
+          ) {
+            (document.activeElement as HTMLElement).blur();
+            navigate(`/${i18n.language}/route/${e.target.value}`);
+          }
+          setSearchRoute(e.target.value);
+        }}
+        onFocus={() => {
+          vibrate(vibrateDuration);
+          if (navigator.userAgent !== "prerendering" && checkMobile()) {
+            (document.activeElement as HTMLElement).blur();
+          }
+          navigate(`/${i18n.language}/board`, { replace: true });
+        }}
+      />
+      <Box sx={funcPanelSx}>
+        {weatherCodes.slice(0, 2).map((code) => (
+          <Avatar
+            onClick={() =>
+              window.open(
+                `https://www.hko.gov.hk/${
+                  i18n.language === "zh" ? "tc" : "en"
+                }/detail.htm`
+              )
+            }
+            key={code}
+            variant="square"
+            src={WeatherIcons[code]}
+            sx={weatherImg}
+          />
+        ))}
+        {geoPermission === "granted" && (
+          <IconButton
+            aria-label="relocate"
+            onClick={() => relocateGeolocation()}
+            size="small"
+          >
+            <LocationOnIcon />
+          </IconButton>
+        )}
+        <Button
+          sx={languageSx}
+          onClick={() =>
+            handleLanguageChange(i18n.language === "zh" ? "en" : "zh")
+          }
+          id="lang-selector"
+          variant="text"
+          disableElevation
+          disableRipple
+        >
+          {i18n.language !== "zh" ? "繁" : "En"}
+        </Button>
+        <IconButton
+          onClick={() => {
             vibrate(vibrateDuration);
-            navigate(`/${i18n.language}`);
+            toggleColorMode();
           }}
+        >
+          {_colorMode === "system" && (
+            <SettingsBrightnessIcon fontSize="small" />
+          )}
+          {_colorMode === "light" && <WbSunnyIcon fontSize="small" />}
+          {_colorMode === "dark" && <DarkModeIcon fontSize="small" />}
+        </IconButton>
+        <IconButton
+          component={Link}
+          to={`/${i18n.language}/settings`}
           rel="nofollow"
         >
-          <Box sx={appTitleSx} />
-          <Typography component="h1" style={visuallyHidden}>
-            {t("巴士到站預報")}
-          </Typography>
-        </Link>
-        <Input
-          id="searchInput"
-          sx={searchRouteInputSx}
-          type="text"
-          value={searchRoute}
-          placeholder={t("路線")}
-          onChange={(e) => {
-            if (
-              e.target.value.toUpperCase() in routeList ||
-              e.target.value in routeList
-            ) {
-              (document.activeElement as HTMLElement).blur();
-              navigate(`/${i18n.language}/route/${e.target.value}`);
-            }
-            setSearchRoute(e.target.value);
-          }}
-          onFocus={() => {
-            vibrate(vibrateDuration);
-            if (navigator.userAgent !== "prerendering" && checkMobile()) {
-              (document.activeElement as HTMLElement).blur();
-            }
-            navigate(`/${i18n.language}/board`, { replace: true });
-          }}
-        />
-        <Box sx={funcPanelSx}>
-          {weatherCodes.slice(0, 2).map((code) => (
-            <Avatar
-              onClick={() =>
-                window.open(
-                  `https://www.hko.gov.hk/${
-                    i18n.language === "zh" ? "tc" : "en"
-                  }/detail.htm`
-                )
-              }
-              key={code}
-              variant="square"
-              src={WeatherIcons[code]}
-              sx={weatherImg}
-            />
-          ))}
-          {geoPermission === "granted" && (
-            <IconButton
-              aria-label="relocate"
-              onClick={() => relocateGeolocation()}
-            >
-              <LocationOnIcon />
-            </IconButton>
-          )}
-          <Button
-            sx={languageSx}
-            onClick={() =>
-              handleLanguageChange(i18n.language === "zh" ? "en" : "zh")
-            }
-            id="lang-selector"
-            variant="text"
-            disableElevation
-            disableRipple
-          >
-            {i18n.language !== "zh" ? "繁" : "En"}
-          </Button>
-          <IconButton
-            onClick={() => {
-              vibrate(vibrateDuration);
-              toggleColorMode();
-            }}
-          >
-            {_colorMode === "system" && (
-              <SettingsBrightnessIcon fontSize="small" />
-            )}
-            {_colorMode === "light" && <WbSunnyIcon fontSize="small" />}
-            {_colorMode === "dark" && <DarkModeIcon fontSize="small" />}
-          </IconButton>
-          <IconButton
-            component={Link}
-            to={`/${i18n.language}/settings`}
-            rel="nofollow"
-          >
-            <SettingsIcon fontSize="small" />
-          </IconButton>
-        </Box>
-      </Toolbar>
-    ),
-    // eslint-disable-next-line
-    [
-      searchRoute,
-      i18n.language,
-      location.pathname,
-      colorMode,
-      geoPermission,
-      vibrateDuration,
-      weatherCodes,
-    ]
+          <SettingsIcon fontSize="small" />
+        </IconButton>
+      </Box>
+    </Toolbar>
   );
 };
 
