@@ -13,7 +13,7 @@ import { decompress } from "lzutf8-light";
 import { Check as CheckIcon } from "@mui/icons-material";
 import throttle from "lodash.throttle";
 import AppContext, { AppState } from "../AppContext";
-import { defaultGeoLocation, isStrings } from "../utils";
+import { DEFAULT_GEOLOCATION, isStrings } from "../utils";
 import { CollectionState } from "../CollectionContext";
 
 const DataImport = () => {
@@ -101,7 +101,7 @@ const DataImport = () => {
     importAppState({
       geoPermission: null,
       compassPermission: "default",
-      geolocation: defaultGeoLocation,
+      geolocation: DEFAULT_GEOLOCATION,
       searchRoute: "",
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
       routeSearchHistory: obj.routeSearchHistory ?? [],
