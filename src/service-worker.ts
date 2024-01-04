@@ -14,7 +14,6 @@ import { registerRoute } from "workbox-routing";
 import {
   StaleWhileRevalidate,
   CacheFirst,
-  NetworkFirst,
   Strategy,
   StrategyHandler,
 } from "workbox-strategies";
@@ -121,9 +120,10 @@ registerRoute(({ url }) => url.origin.includes(maphost), mapCacheStrategy);
 
 registerRoute(
   ({ url }) =>
-    url.origin.includes("fonts.gstatic.com") ||
-    url.origin.includes("unpkg.com") ||
-    url.origin.includes("fonts.googleapis.com"),
+    url.origin === self.location.origin && ( 
+      url.pathname.endsWith("woff2") || 
+      url.pathname.endsWith("css")
+    ),
   new CacheFirst({
     cacheName: "fonts-and-asset",
     plugins: [
@@ -131,21 +131,6 @@ registerRoute(
         statuses: [0, 200],
       }),
       new ExpirationPlugin({ maxAgeSeconds: 60 * 24 * 365 }),
-    ],
-  })
-);
-
-registerRoute(
-  ({ url }) =>
-    url.origin.includes("rt.data.gov.hk") ||
-    url.origin.includes("data.etabus.gov.hk"),
-  new NetworkFirst({
-    cacheName: "bus-route-and-eta",
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [200],
-      }),
-      new ExpirationPlugin({ maxAgeSeconds: 60 * 24 * 30 }),
     ],
   })
 );
