@@ -106,7 +106,7 @@ const App = () => {
                 <Route
                   path="/watch"
                   element={
-                    <RedirectPage url="https://testflight.apple.com/join/bbvMcNmM" />
+                    <RedirectPage url="https://apps.apple.com/us/app/hk-bus-eta-watchos/id6475241017" />
                   }
                 />
                 <Route
