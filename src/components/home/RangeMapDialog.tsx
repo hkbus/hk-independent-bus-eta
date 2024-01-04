@@ -3,16 +3,17 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  IconButton,
   Slider,
   SxProps,
   Theme,
 } from "@mui/material";
-
 import RangeMap from "./RangeMap";
 import { useTranslation } from "react-i18next";
 import { useCallback, useContext, useState } from "react";
 import AppContext from "../../AppContext";
 import { Location } from "hk-bus-eta";
+import { Close as CloseIcon } from "@mui/icons-material";
 
 interface RangeMapDialogProps {
   open: boolean;
@@ -62,7 +63,12 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
 
   return (
     <Dialog open={open} onClose={handleClose} sx={rootSx}>
-      <DialogTitle sx={titleSx}>{t("自訂搜尋範圍（米）")}</DialogTitle>
+      <DialogTitle sx={titleSx}>
+        {t("自訂搜尋範圍（米）")}
+        <IconButton onClick={handleClose}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         <RangeMap
           range={state.searchRange}
@@ -117,6 +123,8 @@ const titleSx: SxProps<Theme> = {
     theme.palette.mode === "dark"
       ? theme.palette.primary.main
       : theme.palette.text.primary,
+  display: "flex",
+  justifyContent: "space-between",
 };
 
 const sliderSx: SxProps<Theme> = {

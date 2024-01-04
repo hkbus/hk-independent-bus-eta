@@ -1,12 +1,10 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Paper, SxProps, Theme, Typography } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
 
 import AppContext from "../AppContext";
 import { setSeoHeader } from "../utils";
-import throttle from "lodash.throttle";
-import { Location } from "hk-bus-eta";
 import HomeTabbar, { isHomeTab } from "../components/home/HomeTabbar";
 import type { HomeTabType } from "../components/home/HomeTabbar";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
@@ -15,8 +13,7 @@ import DbRenewReminder from "../components/layout/DbRenewReminder";
 import { useParams } from "react-router-dom";
 
 const Home = () => {
-  const { AppTitle, manualGeolocation, geolocation, collections } =
-    useContext(AppContext);
+  const { AppTitle, collections } = useContext(AppContext);
   const { t, i18n } = useTranslation();
   const { collectionName } = useParams();
 
@@ -34,20 +31,6 @@ const Home = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language]);
-
-  // throttle to avoid rapidly UI changes due to geolocation changes
-  const [_geolocation, set_geolocation] = useState<Location>(geolocation);
-  const throttleUpdateGeolocation = useMemo(
-    () =>
-      throttle((geolocation: Location) => {
-        set_geolocation(geolocation);
-      }, 1000),
-    []
-  );
-
-  useEffect(() => {
-    throttleUpdateGeolocation(manualGeolocation ?? geolocation);
-  }, [manualGeolocation, geolocation, throttleUpdateGeolocation]);
 
   const handleTabChange = (v: HomeTabType, rerenderList = false) => {
     setHomeTab(v);
@@ -71,8 +54,6 @@ const Home = () => {
       <SwipeableList
         ref={swipeableList}
         homeTab={homeTab}
-        geolocation={_geolocation}
-        setGeolocation={set_geolocation}
         onChangeTab={handleTabChange}
       />
     </Paper>

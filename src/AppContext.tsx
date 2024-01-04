@@ -9,7 +9,7 @@ import React, {
 import type { ReactNode } from "react";
 import {
   DEFAULT_GEOLOCATION,
-  DEFAULT_SEARCH_RANGE_OPTIONS,
+  DEFAULT_SEARCH_RANGE,
   iOSRNWebView,
   iOSTracking,
   isStrings,
@@ -260,8 +260,7 @@ export const AppContextProvider = ({
         JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
       fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
       searchRange:
-        JSON.parse(localStorage.getItem("searchRange")) ??
-        DEFAULT_SEARCH_RANGE_OPTIONS.slice(-1)[0],
+        JSON.parse(localStorage.getItem("searchRange")) ?? DEFAULT_SEARCH_RANGE,
       isRangeController: false, // always hide the controller by default
     };
   };

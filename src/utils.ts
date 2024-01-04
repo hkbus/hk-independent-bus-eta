@@ -1,6 +1,14 @@
-import type { Company, StopListEntry } from "hk-bus-eta";
+import type {
+  Company,
+  EtaDb,
+  Location,
+  RouteList,
+  StopList,
+  StopListEntry,
+} from "hk-bus-eta";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import type { TransportType, WarnUpMessageData } from "./typing";
+import { isRouteAvaliable } from "./timetable";
 export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   const R = 6371e3; // metres
   const φ1 = (a.lat * Math.PI) / 180; // φ, λ in radians
@@ -28,6 +36,8 @@ export const DEFAULT_GEOLOCATION: GeoLocation = {
   lat: 22.302711,
   lng: 114.177216,
 };
+
+export const DEFAULT_SEARCH_RANGE = 100;
 
 export const DEFAULT_SEARCH_RANGE_OPTIONS: number[] = [100, 200, 500];
 
@@ -397,3 +407,47 @@ export const PLATFORM = [
   "⑧",
   "⑨",
 ] as const;
+
+export const formatHandling = (
+  routes: string[],
+  isTodayHoliday: boolean,
+  isRouteFilter: boolean,
+  routeList: RouteList,
+  stopList: StopList,
+  serviceDayMap: EtaDb["serviceDayMap"],
+  geolocation: Location
+) => {
+  return routes
+    .filter((v, i, s) => s.indexOf(v) === i) // uniqify
+    .filter((routeUrl) => {
+      const [routeId] = routeUrl.split("/");
+      return (
+        routeList[routeId] &&
+        (!isRouteFilter ||
+          isRouteAvaliable(
+            routeId,
+            routeList[routeId].freq,
+            isTodayHoliday,
+            serviceDayMap
+          ))
+      );
+    })
+    .map((routeUrl) => {
+      // handling for saved route without specified stop, use the nearest one
+      const [routeId, stopIdx] = routeUrl.split("/");
+      if (stopIdx !== undefined) return routeUrl;
+      const _stops = Object.values(routeList[routeId].stops).sort(
+        (a, b) => b.length - a.length
+      )[0];
+      const stop = _stops
+        .map((stop) => [
+          stop,
+          getDistance(geolocation, stopList[stop].location),
+        ])
+        .sort(([, a], [, b]) => (a < b ? -1 : 1))[0][0];
+      return `${routeUrl}/${_stops.indexOf(stop as string)}`;
+    })
+    .concat(Array(40).fill("")) // padding
+    .slice(0, 40)
+    .join("|");
+};

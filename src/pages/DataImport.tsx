@@ -13,11 +13,7 @@ import { decompress } from "lzutf8-light";
 import { Check as CheckIcon } from "@mui/icons-material";
 import throttle from "lodash.throttle";
 import AppContext, { AppState } from "../AppContext";
-import {
-  DEFAULT_GEOLOCATION,
-  DEFAULT_SEARCH_RANGE_OPTIONS,
-  isStrings,
-} from "../utils";
+import { DEFAULT_GEOLOCATION, DEFAULT_SEARCH_RANGE, isStrings } from "../utils";
 import { CollectionState } from "../CollectionContext";
 
 const DataImport = () => {
@@ -123,7 +119,7 @@ const DataImport = () => {
       annotateScheduled: obj.annotateScheduled ?? true,
       isRecentSearchShown: obj.isRecentSearchShown ?? true,
       fontSize: obj.fontSize ?? 16,
-      searchRange: obj.searchRange ?? DEFAULT_SEARCH_RANGE_OPTIONS.slice(-1)[0],
+      searchRange: obj.searchRange ?? DEFAULT_SEARCH_RANGE,
       isRangeController: false,
     });
 

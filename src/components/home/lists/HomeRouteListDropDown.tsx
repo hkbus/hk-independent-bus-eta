@@ -1,5 +1,5 @@
 import { Box, Divider, List, SxProps, Theme, Typography } from "@mui/material";
-import SuccinctTimeReport from "./SuccinctTimeReport";
+import SuccinctTimeReport from "../SuccinctTimeReport";
 import { useMemo, useState } from "react";
 import {
   ExpandMore as ExpandMoreIcon,

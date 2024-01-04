@@ -4,6 +4,7 @@ import { isEmptyObj } from "./utils";
 import { fetchDbFunc } from "./db";
 import { compress as compressJson } from "lzutf8-light";
 import type { DatabaseType } from "./db";
+import { isHoliday } from "./timetable";
 
 interface DatabaseContextState {
   db: DatabaseType;
@@ -12,6 +13,7 @@ interface DatabaseContextState {
 
 interface DatabaseContextValue extends DatabaseContextState {
   AppTitle: string;
+  isTodayHoliday: boolean;
   renewDb: () => Promise<void>;
   toggleAutoDbRenew: () => void;
 }
@@ -72,13 +74,24 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
     }
   }, [db]);
 
-  const contextValue = useMemo(
-    () => ({ AppTitle, db, autoRenew, renewDb, toggleAutoDbRenew }),
-    [db, autoRenew, renewDb, toggleAutoDbRenew]
+  const isTodayHoliday = useMemo(
+    () => isHoliday(db.holidays, new Date()),
+    [db.holidays]
   );
 
   return (
-    <DbContext.Provider value={contextValue}>{children}</DbContext.Provider>
+    <DbContext.Provider
+      value={{
+        AppTitle,
+        db,
+        autoRenew,
+        isTodayHoliday,
+        renewDb,
+        toggleAutoDbRenew,
+      }}
+    >
+      {children}
+    </DbContext.Provider>
   );
 };
 
