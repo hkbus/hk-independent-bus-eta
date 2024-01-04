@@ -68,7 +68,11 @@ const SwipeableStopList = React.forwardRef<
         }}
       >
         {tabStops.map((stops, idx) => (
-          <StopRouteList key={`savedStops-${idx}`} stops={stops} />
+          <StopRouteList
+            key={`savedStops-${idx}`}
+            stops={stops}
+            isFocus={getViewIdx() === idx}
+          />
         ))}
       </SwipeableViews>
     ),

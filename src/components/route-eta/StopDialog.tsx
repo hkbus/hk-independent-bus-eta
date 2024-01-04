@@ -41,7 +41,7 @@ const StopDialog = ({ open, stops, handleClose }) => {
         {stopList[stops[0][1]].name[i18n.language]}
       </DialogTitle>
       <DialogContent>
-        <StopRouteList stops={stops} />
+        <StopRouteList stops={stops} isFocus={true} />
       </DialogContent>
     </Dialog>
   );

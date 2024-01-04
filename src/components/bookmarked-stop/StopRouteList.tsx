@@ -4,10 +4,11 @@ import { useStopEtas } from "../../hooks/useStopEtas";
 
 interface StopRouteListProps {
   stops: string[][]; // [[co, stopId]]
+  isFocus: boolean;
 }
 
-const StopRouteList = ({ stops }: StopRouteListProps) => {
-  const stopEtas = useStopEtas(stops);
+const StopRouteList = ({ stops, isFocus }: StopRouteListProps) => {
+  const stopEtas = useStopEtas({ stopKeys: stops, disabled: !isFocus });
 
   return (
     <List>

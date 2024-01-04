@@ -9,21 +9,25 @@ import {
 import { useTranslation } from "react-i18next";
 import { Eta, fetchEtas } from "hk-bus-eta";
 import AppContext from "../AppContext";
-import { isHoliday, isRouteAvaliable } from "../timetable";
+import { isRouteAvaliable } from "../timetable";
+
+interface useStopEtasProps {
+  stopKeys: string[][];
+  disabled?: boolean;
+}
 
 // stopKey in format "<co>|<stopId>", e.g., "lightRail|LR140"
-export const useStopEtas = (stopKeys: string[][]) => {
+export const useStopEtas = ({
+  stopKeys,
+  disabled = false,
+}: useStopEtasProps) => {
   const {
-    db: { holidays, routeList, stopList, serviceDayMap },
+    db: { routeList, stopList, serviceDayMap },
     isVisible,
     refreshInterval,
     isRouteFilter,
+    isTodayHoliday,
   } = useContext(AppContext);
-
-  const isTodayHoliday = useCallback(
-    (today: Date) => isHoliday(holidays, today),
-    [holidays]
-  );
 
   const isLightRail = useMemo(
     () => stopKeys.reduce((acc, [co]) => co === "lightRail", false),
@@ -36,12 +40,7 @@ export const useStopEtas = (stopKeys: string[][]) => {
         .reduce((acc, [routeId, { stops, freq }]) => {
           if (
             isRouteFilter &&
-            !isRouteAvaliable(
-              routeId,
-              freq,
-              isTodayHoliday(new Date()),
-              serviceDayMap
-            )
+            !isRouteAvaliable(routeId, freq, isTodayHoliday, serviceDayMap)
           ) {
             return acc;
           }
@@ -68,7 +67,7 @@ export const useStopEtas = (stopKeys: string[][]) => {
   const isMounted = useRef<boolean>(false);
 
   const fetchData = useCallback(() => {
-    if (!isVisible || navigator.userAgent === "prerendering") {
+    if (!isVisible || disabled || navigator.userAgent === "prerendering") {
       // skip if prerendering
       setStopEtas([]);
       return new Promise((resolve) => resolve([]));
@@ -111,7 +110,15 @@ export const useStopEtas = (stopKeys: string[][]) => {
         );
       }
     });
-  }, [isVisible, language, routeList, stopList, routeKeys, isLightRail]);
+  }, [
+    isVisible,
+    disabled,
+    language,
+    routeList,
+    stopList,
+    routeKeys,
+    isLightRail,
+  ]);
 
   useEffect(() => {
     isMounted.current = true;
