@@ -57,7 +57,14 @@ a.tg {
 }
 
 @keyframes blinker {
+  0% {
+    opacity: 0.5;
+  }
   50% {
-    opacity: 0.3;
+    opacity: 1;
+    margin-top: -55px;
+  }
+  100% {
+    opacity: 0.5;
   }
 }

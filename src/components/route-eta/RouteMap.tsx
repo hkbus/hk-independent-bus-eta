@@ -8,7 +8,7 @@ import {
 } from "react";
 import { MapContainer, Marker, TileLayer, GeoJSON } from "react-leaflet";
 import Leaflet from "leaflet";
-import markerIcon2X from "leaflet/dist/images/marker-icon-2x.png";
+import busStopIcon from "../map/bus.svg";
 import { Box, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
@@ -233,8 +233,8 @@ const geoJsonStyle = function (feature: GeoJSON.Feature) {
 
 const BusStopMarker = ({ active, passed }) => {
   return Leaflet.divIcon({
-    iconSize: [25, 41],
-    iconAnchor: [12.5, 41],
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
     className: `${classes.marker} ${active ? classes.active : ""} ${
       passed ? classes.passed : ""
     }`,
@@ -260,16 +260,15 @@ const rootSx: SxProps<Theme> = {
     height: "35vh",
   },
   [`& .${classes.marker}`]: {
-    width: "25px",
-    height: "41px",
+    width: "40px",
+    height: "40px",
     zIndex: 618,
     outline: "none",
-    filter: "hue-rotate(130deg)",
-    backgroundImage: `url(${markerIcon2X})`,
+    backgroundImage: `url(${busStopIcon})`,
     backgroundSize: "cover",
   },
   [`& .${classes.active}`]: {
-    animation: "blinker 2s linear infinite",
+    animation: "blinker 2s cubic-bezier(0,1.5,1,1.5) infinite",
   },
   [`& .${classes.passed}`]: {
     filter: "grayscale(100%)",

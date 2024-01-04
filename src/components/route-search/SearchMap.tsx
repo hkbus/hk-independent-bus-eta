@@ -296,13 +296,10 @@ const rootSx: SxProps<Theme> = {
     height: "35vh",
   },
   [`& .${classes.marker}`]: {
-    marginLeft: "-12px",
-    marginTop: "-41px",
-    width: "25px",
-    height: "41px",
+    width: "40px",
+    height: "40px",
     zIndex: 618,
     outline: "none",
-    filter: "hue-rotate(130deg)",
     "&.lv-1": {
       filter: "hue-rotate(210deg) brightness(1.5)",
     },
@@ -314,7 +311,7 @@ const rootSx: SxProps<Theme> = {
     },
   },
   [`& .${classes.active}`]: {
-    animation: "blinker 2s linear infinite",
+    animation: "blinker 2s cubic-bezier(0,1.5,1,1.5) infinite",
   },
   [`& .${classes.passed}`]: {
     filter: "grayscale(100%)",
