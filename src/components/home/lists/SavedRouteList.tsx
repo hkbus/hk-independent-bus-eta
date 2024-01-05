@@ -111,7 +111,7 @@ const getRoutes = ({
         const _stops = Object.values(routeList[routeId].stops).sort(
           (a, b) => b.length - a.length
         )[0];
-        if (stopIdx !== undefined) {
+        if (stopIdx !== undefined && parseInt(stopIdx, 10) < _stops.length) {
           // if specified which stop
           return [
             routeUrl,

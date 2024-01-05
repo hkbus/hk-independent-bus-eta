@@ -35,6 +35,7 @@ import {
   Sync as SyncIcon,
   SyncDisabled as SyncDisabledIcon,
   SecurityUpdate as SecurityUpdateIcon,
+  Watch as WatchIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -50,6 +51,7 @@ import Donations from "../Donations";
 import PersonalizeDialog from "../components/settings/PersonalizeDialog";
 import { useNavigate } from "react-router-dom";
 import ReactNativeContext from "../ReactNativeContext";
+import { isSafari } from "react-world-compass";
 
 const Settings = () => {
   const {
@@ -283,6 +285,25 @@ const Settings = () => {
             primary={t("複製應用程式鏈結")}
             secondary={t("經不同媒介分享給親友")}
           />
+        </ListItemButton>
+        <ListItemButton
+          component={"a"}
+          href={
+            isSafari
+              ? `https://hkbus.app/watch.html`
+              : `https://hkbus.app/wear.html`
+          }
+          target="_blank"
+          onClick={() => {
+            vibrate(vibrateDuration);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <WatchIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={t("智能手錶應用程式")} />
         </ListItemButton>
         {!iOSRNWebView() ? (
           <ListItemButton
