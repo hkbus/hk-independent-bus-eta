@@ -24,7 +24,7 @@ const SearchRangeController = () => {
 
   return (
     <Paper sx={paperSx}>
-      <Typography variant="body2">{t("搜尋範圍（米）")}:</Typography>
+      <Typography variant="caption">{t("搜尋範圍（米）")}:</Typography>
       <ToggleButtonGroup
         value={
           DEFAULT_SEARCH_RANGE_OPTIONS.includes(searchRange)
@@ -39,6 +39,7 @@ const SearchRangeController = () => {
           }
         }}
         aria-label="search range"
+        size="small"
         exclusive
       >
         {DEFAULT_SEARCH_RANGE_OPTIONS.map((range) => {
