@@ -75,7 +75,7 @@ const BookmarkedStop = () => {
         bgcolor: bgColor,
         backgroundImage:
           stopTab === ""
-            ? `url(/stop-bookmark-guide-${colorMode}-${language}.png)`
+            ? `url(/img/stop-bookmark-guide-${colorMode}-${language}.png)`
             : "unset",
         opacity: stopTab === "" ? "0.8" : "unset",
       }}

@@ -216,7 +216,9 @@ const rootSx: SxProps<Theme> = {
 
 const appTitleSx: SxProps<Theme> = {
   backgroundImage: (t) =>
-    t.palette.mode === "light" ? "url(/logo128.png)" : "url(/dark-32.jpg)",
+    t.palette.mode === "light"
+      ? "url(/img/logo128.png)"
+      : "url(/img/dark-32.jpg)",
   backgroundSize: "contain",
   width: 32,
   height: 32,

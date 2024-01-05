@@ -1,16 +1,9 @@
-import {
-  useContext,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { useContext, useEffect, useRef, useCallback, useState } from "react";
 import { MapContainer, Marker, TileLayer, GeoJSON } from "react-leaflet";
 import Leaflet from "leaflet";
-import busStopIcon from "../map/bus.svg";
 import { Box, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { type Company } from "hk-bus-eta";
 import AppContext from "../../AppContext";
 import type { StopListEntry } from "hk-bus-eta";
 import { MyLocation as MyLocationIcon } from "@mui/icons-material";
@@ -39,6 +32,7 @@ interface RouteMapProps {
   routeId: string;
   stops: Array<StopListEntry>;
   stopIdx: number;
+  co: Company;
   onMarkerClick: (idx: number, event: unknown) => void;
 }
 
@@ -59,6 +53,7 @@ const RouteMap = ({
   routeId,
   stops,
   stopIdx,
+  co,
   onMarkerClick,
 }: RouteMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } =
@@ -161,26 +156,6 @@ const RouteMap = ({
     }
   }, [geoPermission, geolocation, updateGeoPermission]);
 
-  const stopMarkers = useMemo(() => {
-    // plot stops
-    return stops.map((stop, idx) => (
-      <Marker
-        key={`${stop.location.lng}-${stop.location.lat}-${idx}`}
-        position={stop.location}
-        icon={BusStopMarker({
-          active: idx === stopIdx,
-          passed: idx < stopIdx,
-        })}
-        alt={`${idx}. ${stop.name[i18n.language]}`}
-        eventHandlers={{
-          click: (e) => {
-            onMarkerClick(idx, e);
-          },
-        }}
-      />
-    ));
-  }, [i18n.language, onMarkerClick, stopIdx, stops]);
-
   return (
     <Box id="route-map" sx={rootSx}>
       <MapContainer
@@ -203,7 +178,23 @@ const RouteMap = ({
               : process.env.REACT_APP_OSM_PROVIDER_URL_DARK
           }
         />
-        {stopMarkers}
+        {stops.map((stop, idx) => (
+          <Marker
+            key={`${stop.location.lng}-${stop.location.lat}-${idx}`}
+            position={stop.location}
+            icon={StopMarker({
+              active: idx === stopIdx,
+              passed: idx < stopIdx,
+              co,
+            })}
+            alt={`${idx}. ${stop.name[i18n.language]}`}
+            eventHandlers={{
+              click: (e) => {
+                onMarkerClick(idx, e);
+              },
+            }}
+          />
+        ))}
         {
           // @ts-ignore
           routePath?.features?.length && (
@@ -231,7 +222,25 @@ const geoJsonStyle = function (feature: GeoJSON.Feature) {
   };
 };
 
-const BusStopMarker = ({ active, passed }) => {
+const StopMarker = ({ active, passed, co }) => {
+  if (co === "mtr") {
+    return Leaflet.divIcon({
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      className: `${classes.mtrMarker} ${active ? classes.active : ""} ${
+        passed ? classes.passed : ""
+      }`,
+    });
+  }
+  if (co.startsWith("gmb")) {
+    return Leaflet.divIcon({
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+      className: `${classes.gmbMarker} ${active ? classes.active : ""} ${
+        passed ? classes.passed : ""
+      }`,
+    });
+  }
   return Leaflet.divIcon({
     iconSize: [40, 40],
     iconAnchor: [20, 40],
@@ -248,6 +257,8 @@ const classes = {
   mapContainer: `${PREFIX}-mapContainer`,
   centerControl: `${PREFIX}-centerControl`,
   marker: `${PREFIX}-marker`,
+  mtrMarker: `${PREFIX}-mtrMarker`,
+  gmbMarker: `${PREFIX}-gmbMarker`,
   active: `${PREFIX}-active`,
   passed: `${PREFIX}-passed`,
 };
@@ -260,21 +271,31 @@ const rootSx: SxProps<Theme> = {
     height: "35vh",
   },
   [`& .${classes.marker}`]: {
-    width: "40px",
-    height: "40px",
     zIndex: 618,
     outline: "none",
-    backgroundImage: `url(${busStopIcon})`,
+    backgroundImage: `url(/img/bus.svg)`,
+    backgroundSize: "cover",
+  },
+  [`& .${classes.mtrMarker}`]: {
+    zIndex: 618,
+    outline: "none",
+    backgroundImage: `url(/img/mtr.svg)`,
+    backgroundSize: "cover",
+  },
+  [`& .${classes.gmbMarker}`]: {
+    zIndex: 618,
+    outline: "none",
+    backgroundImage: `url(/img/minibus.svg)`,
     backgroundSize: "cover",
   },
   [`& .${classes.active}`]: {
-    animation: "blinker 2s cubic-bezier(0,1.5,1,1.5) infinite",
+    animation: "blinker 1.5s infinite",
   },
   [`& .${classes.passed}`]: {
     filter: "grayscale(100%)",
   },
   [`& .self-center`]: {
-    backgroundImage: "url(/self.svg)",
+    backgroundImage: "url(/img/self.svg)",
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",

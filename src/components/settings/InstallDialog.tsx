@@ -35,7 +35,10 @@ const InstallDialog = ({ open, handleClose }) => {
                 )
               }
             >
-              <img src="/google-play-badge.png" alt="Install via Google Play" />
+              <img
+                src="/img/google-play-badge.png"
+                alt="Install via Google Play"
+              />
             </Box>
             <Box
               onClick={() =>
@@ -45,7 +48,7 @@ const InstallDialog = ({ open, handleClose }) => {
               }
             >
               <img
-                src="/app-store.svg"
+                src="/img/app-store.svg"
                 style={{ margin: "6%", width: "88%" }}
                 alt="Install via App Store"
               />

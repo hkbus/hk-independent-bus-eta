@@ -59,24 +59,21 @@ const SwipeableStopList = React.forwardRef<
     [availableTabs, stopMap]
   );
 
-  return useMemo(
-    () => (
-      <SwipeableViews
-        index={getViewIdx()}
-        onChangeIndex={(idx) => {
-          onChangeTab(availableTabs[idx]);
-        }}
-      >
-        {tabStops.map((stops, idx) => (
-          <StopRouteList
-            key={`savedStops-${idx}`}
-            stops={stops}
-            isFocus={getViewIdx() === idx}
-          />
-        ))}
-      </SwipeableViews>
-    ),
-    [onChangeTab, getViewIdx, tabStops, availableTabs]
+  return (
+    <SwipeableViews
+      index={getViewIdx()}
+      onChangeIndex={(idx) => {
+        onChangeTab(availableTabs[idx]);
+      }}
+    >
+      {tabStops.map((stops, idx) => (
+        <StopRouteList
+          key={`savedStops-${idx}`}
+          stops={stops}
+          isFocus={getViewIdx() === idx}
+        />
+      ))}
+    </SwipeableViews>
   );
 });
 

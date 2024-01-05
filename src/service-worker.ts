@@ -121,7 +121,7 @@ registerRoute(({ url }) => url.origin.includes(maphost), mapCacheStrategy);
 registerRoute(
   ({ url }) =>
     url.origin === self.location.origin &&
-    (url.pathname.endsWith("woff2") || url.pathname.endsWith("css")),
+    (url.pathname.startsWith("/fonts/") || url.pathname.startsWith("/img/")),
   new CacheFirst({
     cacheName: "fonts-and-asset",
     plugins: [
