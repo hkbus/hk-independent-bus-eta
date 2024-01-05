@@ -14,7 +14,7 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
     db: { routeList, holidays, stopList, serviceDayMap },
     vibrateDuration,
   } = useContext(AppContext);
-  const { route, stops, co } = routeList[routeId];
+  const { route, stops, co, gtfsId } = routeList[routeId];
   const navigate = useNavigate();
 
   const isTodayHoliday = useMemo(
@@ -28,7 +28,10 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
         .reduce<Array<[string, RouteListEntry]>>(
           (acc, [key, _routeListEntry]) => {
             if (key === routeId) return acc;
-            const { co: _co, route: _route } = _routeListEntry;
+            const { co: _co, route: _route, gtfsId: _gtfsId } = _routeListEntry;
+            if (co[0] === "gmb" && gtfsId && gtfsId !== _gtfsId) {
+              return acc;
+            }
             if (
               _route === route &&
               JSON.stringify(co) === JSON.stringify(_co)
@@ -78,6 +81,7 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
     [
       route,
       co,
+      gtfsId,
       routeList,
       stopList,
       isTodayHoliday,
