@@ -32,7 +32,7 @@ interface RouteMapProps {
   routeId: string;
   stops: Array<StopListEntry>;
   stopIdx: number;
-  co: Company;
+  companies: Company[];
   onMarkerClick: (idx: number, event: unknown) => void;
 }
 
@@ -53,7 +53,7 @@ const RouteMap = ({
   routeId,
   stops,
   stopIdx,
-  co,
+  companies,
   onMarkerClick,
 }: RouteMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } =
@@ -185,7 +185,7 @@ const RouteMap = ({
             icon={StopMarker({
               active: idx === stopIdx,
               passed: idx < stopIdx,
-              co,
+              companies,
             })}
             alt={`${idx}. ${stop.name[i18n.language]}`}
             eventHandlers={{
@@ -222,31 +222,68 @@ const geoJsonStyle = function (feature: GeoJSON.Feature) {
   };
 };
 
-const StopMarker = ({ active, passed, co }) => {
-  if (co === "mtr") {
+interface StopMarkerProps {
+  active: boolean;
+  passed: boolean;
+  companies: Company[];
+}
+
+const StopMarker = ({ active, passed, companies }: StopMarkerProps) => {
+  if (companies[0] === "mtr") {
     return Leaflet.divIcon({
       iconSize: [20, 20],
       iconAnchor: [10, 10],
-      className: `${classes.mtrMarker} ${active ? classes.active : ""} ${
-        passed ? classes.passed : ""
-      }`,
+      className: `${classes.mtrMarker} ${classes.marker} ${
+        active ? classes.active : ""
+      } ${passed ? classes.passed : ""}`,
     });
-  }
-  if (co.startsWith("gmb")) {
+  } else if (companies[0].startsWith("gmb")) {
     return Leaflet.divIcon({
       iconSize: [40, 40],
       iconAnchor: [20, 40],
-      className: `${classes.gmbMarker} ${active ? classes.active : ""} ${
-        passed ? classes.passed : ""
-      }`,
+      className: `${classes.gmbMarker} ${classes.marker} ${
+        active ? classes.active : ""
+      } ${passed ? classes.passed : ""}`,
+    });
+  } else if (companies.includes("lrtfeeder")) {
+    return Leaflet.divIcon({
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+      className: `${classes.lrtfeederMarker} ${classes.marker} ${
+        active ? classes.active : ""
+      } ${passed ? classes.passed : ""}`,
+    });
+  } else if (companies.includes("nlb")) {
+    return Leaflet.divIcon({
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+      className: `${classes.nlbMarker} ${classes.marker} ${
+        active ? classes.active : ""
+      } ${passed ? classes.passed : ""}`,
+    });
+  } else if (companies.includes("ctb") && companies.includes("kmb")) {
+    return Leaflet.divIcon({
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+      className: `${classes.jointlyMarker} ${classes.marker} ${
+        active ? classes.active : ""
+      } ${passed ? classes.passed : ""}`,
+    });
+  } else if (companies.includes("ctb")) {
+    return Leaflet.divIcon({
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+      className: `${classes.ctbMarker} ${classes.marker} ${
+        active ? classes.active : ""
+      } ${passed ? classes.passed : ""}`,
     });
   }
   return Leaflet.divIcon({
     iconSize: [40, 40],
     iconAnchor: [20, 40],
-    className: `${classes.marker} ${active ? classes.active : ""} ${
-      passed ? classes.passed : ""
-    }`,
+    className: `${classes.kmbMarker} ${classes.marker} ${
+      active ? classes.active : ""
+    } ${passed ? classes.passed : ""}`,
   });
 };
 
@@ -259,6 +296,11 @@ const classes = {
   marker: `${PREFIX}-marker`,
   mtrMarker: `${PREFIX}-mtrMarker`,
   gmbMarker: `${PREFIX}-gmbMarker`,
+  ctbMarker: `${PREFIX}-ctbMarker`,
+  jointlyMarker: `${PREFIX}-jointlyMarker`,
+  lrtfeederMarker: `${PREFIX}-lrtfeederMarker`,
+  nlbMarker: `${PREFIX}-nlbMarker`,
+  kmbMarker: `${PREFIX}-kmbMarker`,
   active: `${PREFIX}-active`,
   passed: `${PREFIX}-passed`,
 };
@@ -270,23 +312,26 @@ const rootSx: SxProps<Theme> = {
   [`& .${classes.mapContainer}`]: {
     height: "35vh",
   },
-  [`& .${classes.marker}`]: {
-    zIndex: 618,
-    outline: "none",
-    backgroundImage: `url(/img/bus.svg)`,
-    backgroundSize: "cover",
-  },
   [`& .${classes.mtrMarker}`]: {
-    zIndex: 618,
-    outline: "none",
     backgroundImage: `url(/img/mtr.svg)`,
-    backgroundSize: "cover",
   },
   [`& .${classes.gmbMarker}`]: {
-    zIndex: 618,
-    outline: "none",
     backgroundImage: `url(/img/minibus.svg)`,
-    backgroundSize: "cover",
+  },
+  [`& .${classes.ctbMarker}`]: {
+    backgroundImage: `url(/img/bus_ctb.svg)`,
+  },
+  [`& .${classes.jointlyMarker}`]: {
+    backgroundImage: `url(/img/bus_jointly.svg)`,
+  },
+  [`& .${classes.lrtfeederMarker}`]: {
+    backgroundImage: `url(/img/bus_lrtfeeder.svg)`,
+  },
+  [`& .${classes.nlbMarker}`]: {
+    backgroundImage: `url(/img/bus_nlb.svg)`,
+  },
+  [`& .${classes.kmbMarker}`]: {
+    backgroundImage: `url(/img/bus_kmb.svg)`,
   },
   [`& .${classes.active}`]: {
     animation: "blinker 1.5s infinite",
