@@ -120,7 +120,6 @@ const DataImport = () => {
       isRecentSearchShown: obj.isRecentSearchShown ?? true,
       fontSize: obj.fontSize ?? 16,
       searchRange: obj.searchRange ?? DEFAULT_SEARCH_RANGE,
-      isRangeController: false,
     });
 
     navigate("/");

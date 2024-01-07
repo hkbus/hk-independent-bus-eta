@@ -101,10 +101,6 @@ export interface AppState {
    * Range for home page nearby search
    */
   searchRange: number;
-  /**
-   * Show Range Controller in Home tab
-   */
-  isRangeController: boolean;
 }
 
 interface AppContextValue
@@ -138,7 +134,6 @@ interface AppContextValue
   updateRefreshInterval: (interval: number) => void;
   toggleAnnotateScheduled: () => void;
   toggleIsRecentSearchShown: () => void;
-  toggleIsRangeController: () => void;
   changeLanguage: (lang: Language) => void;
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
@@ -261,7 +256,6 @@ export const AppContextProvider = ({
       fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
       searchRange:
         JSON.parse(localStorage.getItem("searchRange")) ?? DEFAULT_SEARCH_RANGE,
-      isRangeController: false, // always hide the controller by default
     };
   };
   const { i18n } = useTranslation();
@@ -568,15 +562,6 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const toggleIsRangeController = useCallback(() => {
-    setStateRaw(
-      produce((state: State) => {
-        const prev = state.isRangeController;
-        state.isRangeController = !prev;
-      })
-    );
-  }, []);
-
   const changeLanguage = useCallback(
     (lang: Language) => {
       i18n.changeLanguage(lang);
@@ -708,77 +693,44 @@ export const AppContextProvider = ({
     localStorage.setItem("searchRange", JSON.stringify(state.searchRange));
   }, [state.searchRange]);
 
-  const contextValue = useMemo(() => {
-    return {
-      ...dbContext,
-      ...collectionContext,
-      ...state,
-      colorMode,
-      setSearchRoute,
-      updateSearchRouteByButton,
-      updateSelectedRoute,
-      setCompassPermission,
-      updateGeolocation,
-      setManualGeolocation,
-      addSearchHistory,
-      removeSearchHistoryByRouteId,
-      resetUsageRecord,
-      updateGeoPermission,
-      toggleRouteFilter,
-      toggleBusSortOrder,
-      toggleNumPadOrder,
-      toggleEtaFormat,
-      toggleColorMode,
-      toggleEnergyMode,
-      toggleVibrateDuration,
-      toggleAnalytics,
-      updateRefreshInterval,
-      toggleAnnotateScheduled,
-      toggleIsRecentSearchShown,
-      toggleIsRangeController,
-      changeLanguage,
-      setFontSize,
-      importAppState,
-      workbox,
-      setGeoPermission,
-      setSearchRange,
-    };
-  }, [
-    dbContext,
-    collectionContext,
-    state,
-    colorMode,
-    setSearchRoute,
-    updateSearchRouteByButton,
-    updateSelectedRoute,
-    setCompassPermission,
-    updateGeolocation,
-    setManualGeolocation,
-    addSearchHistory,
-    removeSearchHistoryByRouteId,
-    resetUsageRecord,
-    updateGeoPermission,
-    toggleRouteFilter,
-    toggleBusSortOrder,
-    toggleNumPadOrder,
-    toggleEtaFormat,
-    toggleColorMode,
-    toggleEnergyMode,
-    toggleVibrateDuration,
-    toggleAnalytics,
-    updateRefreshInterval,
-    toggleAnnotateScheduled,
-    toggleIsRecentSearchShown,
-    toggleIsRangeController,
-    changeLanguage,
-    setFontSize,
-    importAppState,
-    workbox,
-    setGeoPermission,
-    setSearchRange,
-  ]);
   return (
-    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+    <AppContext.Provider
+      value={{
+        ...dbContext,
+        ...collectionContext,
+        ...state,
+        colorMode,
+        setSearchRoute,
+        updateSearchRouteByButton,
+        updateSelectedRoute,
+        setCompassPermission,
+        updateGeolocation,
+        setManualGeolocation,
+        addSearchHistory,
+        removeSearchHistoryByRouteId,
+        resetUsageRecord,
+        updateGeoPermission,
+        toggleRouteFilter,
+        toggleBusSortOrder,
+        toggleNumPadOrder,
+        toggleEtaFormat,
+        toggleColorMode,
+        toggleEnergyMode,
+        toggleVibrateDuration,
+        toggleAnalytics,
+        updateRefreshInterval,
+        toggleAnnotateScheduled,
+        toggleIsRecentSearchShown,
+        changeLanguage,
+        setFontSize,
+        importAppState,
+        workbox,
+        setGeoPermission,
+        setSearchRange,
+      }}
+    >
+      {children}
+    </AppContext.Provider>
   );
 };
 

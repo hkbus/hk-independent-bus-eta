@@ -16,7 +16,7 @@ interface HomeTabbarProps {
 
 const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
   const { t } = useTranslation();
-  const { collections, toggleIsRangeController } = useContext(AppContext);
+  const { collections } = useContext(AppContext);
 
   return (
     <Tabs
@@ -32,11 +32,6 @@ const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
         label={t("附近")}
         value="nearby"
         disableRipple
-        onClick={() => {
-          if (homeTab === "nearby") {
-            toggleIsRangeController();
-          }
-        }}
       />
       <Tab
         iconPosition="start"

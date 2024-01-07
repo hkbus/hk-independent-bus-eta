@@ -1,5 +1,5 @@
 import {
-  Paper,
+  Box,
   SxProps,
   Theme,
   ToggleButton,
@@ -11,19 +11,15 @@ import { DEFAULT_SEARCH_RANGE_OPTIONS, getDistanceWithUnit } from "../../utils";
 import { useContext, useState } from "react";
 import AppContext from "../../AppContext";
 import RangeMapDialog from "./RangeMapDialog";
+import { grey } from "@mui/material/colors";
 
 const SearchRangeController = () => {
   const { t } = useTranslation();
-  const { isRangeController, searchRange, setSearchRange } =
-    useContext(AppContext);
+  const { searchRange, setSearchRange } = useContext(AppContext);
   const [open, setOpen] = useState<boolean>(false);
 
-  if (isRangeController === false) {
-    return null;
-  }
-
   return (
-    <Paper sx={paperSx}>
+    <Box sx={rootSx}>
       <Typography variant="caption">{t("搜尋範圍（米）")}:</Typography>
       <ToggleButtonGroup
         value={
@@ -69,13 +65,13 @@ const SearchRangeController = () => {
         </ToggleButton>
       </ToggleButtonGroup>
       <RangeMapDialog open={open} onClose={() => setOpen(false)} />
-    </Paper>
+    </Box>
   );
 };
 
 export default SearchRangeController;
 
-const paperSx: SxProps<Theme> = {
+const rootSx: SxProps<Theme> = {
   position: "sticky",
   top: 0,
   display: "flex",
@@ -88,14 +84,12 @@ const paperSx: SxProps<Theme> = {
   m: 0,
   borderRadius: 0,
   fontSize: 14,
+  borderBottomWidth: 1,
+  borderBottomColor: grey[900],
+  borderBottomStyle: "solid",
 };
 
 const toggleButtonSx: SxProps<Theme> = {
   height: 30,
-  borderRadius: 15,
-  px: 1.5,
-  "&.MuiButtonBase-root&.Mui-selected": {
-    backgroundColor: ({ palette }) => palette.primary.main,
-    color: "black",
-  },
+  px: 2,
 };
