@@ -239,48 +239,48 @@ const StopMarker = ({ active, passed, companies }: StopMarkerProps) => {
     });
   } else if (companies[0].startsWith("gmb")) {
     return Leaflet.divIcon({
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
       className: `${classes.gmbMarker} ${classes.marker} ${
         active ? classes.active : ""
       } ${passed ? classes.passed : ""}`,
     });
   } else if (companies.includes("lrtfeeder")) {
     return Leaflet.divIcon({
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
       className: `${classes.lrtfeederMarker} ${classes.marker} ${
         active ? classes.active : ""
       } ${passed ? classes.passed : ""}`,
     });
   } else if (companies.includes("nlb")) {
     return Leaflet.divIcon({
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
       className: `${classes.nlbMarker} ${classes.marker} ${
         active ? classes.active : ""
       } ${passed ? classes.passed : ""}`,
     });
   } else if (companies.includes("ctb") && companies.includes("kmb")) {
     return Leaflet.divIcon({
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
       className: `${classes.jointlyMarker} ${classes.marker} ${
         active ? classes.active : ""
       } ${passed ? classes.passed : ""}`,
     });
   } else if (companies.includes("ctb")) {
     return Leaflet.divIcon({
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
       className: `${classes.ctbMarker} ${classes.marker} ${
         active ? classes.active : ""
       } ${passed ? classes.passed : ""}`,
     });
   }
   return Leaflet.divIcon({
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: [30, 30],
+    iconAnchor: [15, 30],
     className: `${classes.kmbMarker} ${classes.marker} ${
       active ? classes.active : ""
     } ${passed ? classes.passed : ""}`,
