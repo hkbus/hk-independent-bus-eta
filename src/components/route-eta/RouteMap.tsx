@@ -245,7 +245,7 @@ const StopMarker = ({ active, passed, companies }: StopMarkerProps) => {
         active ? classes.active : ""
       } ${passed ? classes.passed : ""}`,
     });
-  } else if (companies.includes("lrtfeeder") || companies.includes("lightrail")) {
+  } else if (companies.includes("lrtfeeder")) {
     return Leaflet.divIcon({
       iconSize: [30, 30],
       iconAnchor: [15, 30],
