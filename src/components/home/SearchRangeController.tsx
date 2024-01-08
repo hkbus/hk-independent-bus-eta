@@ -85,7 +85,7 @@ const rootSx: SxProps<Theme> = {
   borderRadius: 0,
   fontSize: 14,
   borderBottomWidth: 1,
-  borderBottomColor: grey[900],
+  borderBottomColor: (t) => (t.palette.mode === "dark" ? grey[900] : grey[200]),
   borderBottomStyle: "solid",
 };
 
