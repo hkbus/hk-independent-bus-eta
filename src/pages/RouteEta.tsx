@@ -2,14 +2,14 @@ import { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import loadable from "@loadable/component";
 import RouteHeader from "../components/route-eta/RouteHeader";
-import StopAccordions from "../components/route-eta/StopAccordions";
+import StopAccordionList from "../components/route-eta/StopAccordionList";
 import StopDialog from "../components/route-eta/StopDialog";
 import AppContext from "../AppContext";
 import { useTranslation } from "react-i18next";
 import { setSeoHeader, toProperCase, getDistance } from "../utils";
 import type { WarnUpMessageData } from "../typing";
 import StrSim from "string-similarity";
-import { RouteList } from "hk-bus-eta";
+import { RouteList, StopListEntry } from "hk-bus-eta";
 const RouteMap = loadable(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
@@ -26,12 +26,13 @@ const RouteEta = () => {
   const routeId = getRouteEntry(id.toUpperCase(), routeList);
   const routeListEntry = routeList[routeId];
   const { route, stops, co, orig, dest, fares } = routeListEntry;
-  const stopsExtracted = useMemo(() => {
+  const stopIds = useMemo(() => {
     return getStops(co, stops)
       .map((id) => {
-        return stopList[id];
+        return [id, stopList[id]] as [string, StopListEntry];
       })
-      .filter((stop) => stop !== null && stop !== undefined);
+      .filter(([, stop]) => stop !== null && stop !== undefined)
+      .map(([id]) => id);
   }, [co, stopList, stops]);
 
   const stopIdx = useMemo(() => {
@@ -64,8 +65,11 @@ const RouteEta = () => {
       }
     }
     if (geoPermission === "granted") {
-      const nearbyStop = stopsExtracted
-        .map((stop, idx) => [idx, getDistance(geolocation, stop.location)])
+      const nearbyStop = stopIds
+        .map((stopId, idx) => [
+          idx,
+          getDistance(geolocation, stopList[stopId].location),
+        ])
         .sort((a, b) => a[1] - b[1])[0];
 
       if (nearbyStop.length > 0) {
@@ -73,9 +77,8 @@ const RouteEta = () => {
       }
     }
     return 0;
-  }, [panel, geoPermission, stopsExtracted, geolocation, stops]);
+  }, [panel, geoPermission, stopList, stopIds, geolocation, stops]);
 
-  const [expanded, setExpanded] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dialogStop = useMemo(() => {
     return getDialogStops(co, stops, stopMap, String(stopIdx));
@@ -94,7 +97,6 @@ const RouteEta = () => {
       }
 
       if (stopIdx === newStopIdx && !expanded) setIsDialogOpen(true);
-      else setExpanded(expanded);
     },
     [navigate, i18n.language, id, stopIdx, stops]
   );
@@ -145,7 +147,9 @@ const RouteEta = () => {
           `路線${route}` +
           `由${orig.zh}出發，以${dest.zh}為終點，` +
           (uniqueFares.length ? `分段車費為${uniqueFares.join("、")}，` : "") +
-          `途經${stopsExtracted.map((stop) => stop.name.zh).join("、")}。`
+          `途經${stopIds
+            .map((stopId) => stopList[stopId].name.zh)
+            .join("、")}。`
         );
       } else {
         return (
@@ -155,7 +159,9 @@ const RouteEta = () => {
             ? `, section fees are ${uniqueFares.join(", ")}. `
             : ". ") +
           "Stops: " +
-          toProperCase(stopsExtracted.map((stop) => stop.name.en).join(", ")) +
+          toProperCase(
+            stopIds.map((stopId) => stopList[stopId].name.en).join(", ")
+          ) +
           ". "
         );
       }
@@ -180,7 +186,8 @@ const RouteEta = () => {
     orig.en,
     orig.zh,
     route,
-    stopsExtracted,
+    stopList,
+    stopIds,
     t,
   ]);
 
@@ -208,18 +215,17 @@ const RouteEta = () => {
       {!energyMode && navigator.userAgent !== "prerendering" && (
         <RouteMap
           routeId={routeId}
-          stops={stopsExtracted}
+          stopIds={stopIds}
           stopIdx={stopIdx}
           companies={co}
           onMarkerClick={onMarkerClick}
         />
       )}
-      <StopAccordions
+      <StopAccordionList
         routeId={routeId}
         stopIdx={stopIdx}
         routeListEntry={routeListEntry}
-        stopListExtracted={stopsExtracted}
-        expanded={expanded && navigator.userAgent !== "prerendering"}
+        stopIds={stopIds}
         handleChange={handleChange}
         onStopInfo={handleStopInfo}
       />

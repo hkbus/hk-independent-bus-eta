@@ -1,4 +1,11 @@
-import { useContext, useEffect, useRef, useCallback, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useCallback,
+  useState,
+  useMemo,
+} from "react";
 import { MapContainer, Marker, TileLayer, GeoJSON } from "react-leaflet";
 import Leaflet from "leaflet";
 import { Box, SxProps, Theme } from "@mui/material";
@@ -30,7 +37,7 @@ const CenterControl = ({ onClick }) => {
 
 interface RouteMapProps {
   routeId: string;
-  stops: Array<StopListEntry>;
+  stopIds: string[];
   stopIdx: number;
   companies: Company[];
   onMarkerClick: (idx: number, event: unknown) => void;
@@ -51,15 +58,24 @@ interface RouteMapRef {
 
 const RouteMap = ({
   routeId,
-  stops,
+  stopIds,
   stopIdx,
   companies,
   onMarkerClick,
 }: RouteMapProps) => {
-  const { geolocation, geoPermission, updateGeoPermission, colorMode } =
-    useContext(AppContext);
+  const {
+    geolocation,
+    geoPermission,
+    updateGeoPermission,
+    colorMode,
+    db: { stopList },
+  } = useContext(AppContext);
   const { i18n } = useTranslation();
   const [map, setMap] = useState<Leaflet.Map>(null);
+  const stops = useMemo(
+    () => stopIds.map((stopId) => stopList[stopId]),
+    [stopList, stopIds]
+  );
   const routePath = useRoutePath(routeId, stops);
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),

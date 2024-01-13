@@ -6,24 +6,36 @@ import React, {
   useState,
 } from "react";
 import AppContext from "./AppContext";
+import { useTranslation } from "react-i18next";
 
-interface ReactNativeContextValue {
-  os: "ios" | "android" | null;
+interface ReactNativeContextState {
+  alarmStopId: string;
   debug: boolean;
+}
+
+interface ReactNativeContextValue extends ReactNativeContextState {
+  os: "ios" | "android" | null;
   toggleDebug: () => void;
+  toggleStopAlarm: (stopId: string) => void;
 }
 
 const ReactNativeContext = React.createContext<ReactNativeContextValue>(null);
 
 export const ReactNativeContextProvider = ({ children }) => {
-  const { geoPermission, setGeoPermission, updateGeolocation } =
-    useContext(AppContext);
-  const [debug, setDebug] = useState<boolean>(
-    localStorage.getItem("debug") === "true"
-  );
+  const {
+    geoPermission,
+    setGeoPermission,
+    updateGeolocation,
+    db: { stopList },
+  } = useContext(AppContext);
+  const { t, i18n } = useTranslation();
+  const [state, setState] = useState<ReactNativeContextState>(DEFAULT_STATE);
 
   const toggleDebug = useCallback(() => {
-    setDebug((prev) => !prev);
+    setState((prev) => ({
+      ...prev,
+      debug: !prev,
+    }));
   }, []);
 
   const os = useMemo<ReactNativeContextValue["os"]>(() => {
@@ -42,6 +54,11 @@ export const ReactNativeContextProvider = ({ children }) => {
           setGeoPermission(data.value);
         } else if (data.type === "location") {
           updateGeolocation({ lat: data.lat, lng: data.lng });
+        } else if (data.type === "stop-alarm-stop-id") {
+          setState((prev) => ({
+            ...prev,
+            alarmStopId: data.value,
+          }));
         }
       } catch (e) {}
     },
@@ -63,7 +80,27 @@ export const ReactNativeContextProvider = ({ children }) => {
         obj.removeEventListener("message", handleMsg);
       }
     };
-  }, [handleMsg, os, debug]);
+  }, [handleMsg, os]);
+
+  const toggleStopAlarm = useCallback(
+    (stopId: string) => {
+      const stop = stopList[stopId];
+      if (!stop) return;
+      // @ts-ignore
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({
+          type: "stop-alarm",
+          value: {
+            ...stop.location,
+            body: t("到站了"),
+            title: stop.name[i18n.language],
+            stopId,
+          },
+        })
+      );
+    },
+    [stopList, t, i18n]
+  );
 
   useEffect(() => {
     // @ts-ignore
@@ -92,15 +129,16 @@ export const ReactNativeContextProvider = ({ children }) => {
   }, [geoPermission]);
 
   useEffect(() => {
-    localStorage.setItem("debug", JSON.stringify(debug));
-  }, [debug]);
+    localStorage.setItem("debug", JSON.stringify(state.debug));
+  }, [state.debug]);
 
   return (
     <ReactNativeContext.Provider
       value={{
         os,
-        debug,
+        ...state,
         toggleDebug,
+        toggleStopAlarm,
       }}
     >
       {children}
@@ -109,3 +147,8 @@ export const ReactNativeContextProvider = ({ children }) => {
 };
 
 export default ReactNativeContext;
+
+const DEFAULT_STATE: ReactNativeContextState = {
+  alarmStopId: "",
+  debug: localStorage.getItem("debug") === "true",
+};
