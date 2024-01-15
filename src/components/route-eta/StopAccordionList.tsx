@@ -21,7 +21,7 @@ const StopAccordions = ({
   onStopInfo,
 }: StopAccordionsProps) => {
   const [sharingObj, setSharingObj] = useState<any | null>(null);
-  const accordionRef = useRef<HTMLElement[]>([]);
+  const accordionRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
     // scroll to specific bus stop
@@ -52,17 +52,7 @@ const StopAccordions = ({
           onSummaryClick={handleChange}
           onStopInfoClick={onStopInfo}
           key={"stop-" + idx}
-          ref={(el) => {
-            if (el instanceof HTMLElement) {
-              accordionRef.current[idx] = el;
-              if (stopIdx === idx) {
-                el.scrollIntoView({
-                  behavior: "smooth",
-                  block: "nearest",
-                });
-              }
-            }
-          }}
+          ref={(el) => (accordionRef.current[idx] = el)}
         />
       ))}
       {sharingObj && <SharingModal {...sharingObj} />}

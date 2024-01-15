@@ -35,6 +35,22 @@ const RouteEta = () => {
       .map(([id]) => id);
   }, [co, stopList, stops]);
 
+  const [defaultStopIdx] = useState(() => {
+    if (geoPermission === "granted") {
+      const nearbyStop = stopIds
+        .map((stopId, idx) => [
+          idx,
+          getDistance(geolocation, stopList[stopId].location),
+        ])
+        .sort((a, b) => a[1] - b[1])[0];
+
+      if (nearbyStop.length > 0) {
+        return nearbyStop[0];
+      }
+    }
+    return 0;
+  });
+
   const stopIdx = useMemo(() => {
     if (panel !== undefined) {
       const [id, indexStr] = panel.split(",");
@@ -64,20 +80,8 @@ const RouteEta = () => {
         return ret;
       }
     }
-    if (geoPermission === "granted") {
-      const nearbyStop = stopIds
-        .map((stopId, idx) => [
-          idx,
-          getDistance(geolocation, stopList[stopId].location),
-        ])
-        .sort((a, b) => a[1] - b[1])[0];
-
-      if (nearbyStop.length > 0) {
-        return nearbyStop[0];
-      }
-    }
-    return 0;
-  }, [panel, geoPermission, stopList, stopIds, geolocation, stops]);
+    return defaultStopIdx;
+  }, [panel, stops, defaultStopIdx]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dialogStop = useMemo(() => {
