@@ -14,8 +14,15 @@ import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import StopRouteList from "../bookmarked-stop/StopRouteList";
+import { Company } from "hk-bus-eta";
 
-const StopDialog = ({ open, stops, handleClose }) => {
+interface StopDialogProps {
+  open: boolean;
+  stops: Array<[Company, string]>;
+  onClose: () => void;
+}
+
+const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
   const {
     db: { stopList },
     savedStops,
@@ -33,12 +40,12 @@ const StopDialog = ({ open, stops, handleClose }) => {
   );
 
   return (
-    <Dialog open={open} onClose={handleClose} sx={rootSx}>
+    <Dialog open={open} onClose={onClose} sx={rootSx}>
       <DialogTitle sx={titleSx}>
         <IconButton onClick={() => updateSavedStops(stops[0].join("|"))}>
           {bookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
         </IconButton>
-        {stopList[stops[0][1]].name[i18n.language]}
+        {stopList[stops[0][1]]?.name[i18n.language]}
       </DialogTitle>
       <DialogContent>
         <StopRouteList stops={stops} isFocus={true} />

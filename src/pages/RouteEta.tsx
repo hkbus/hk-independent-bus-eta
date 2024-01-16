@@ -9,7 +9,13 @@ import { useTranslation } from "react-i18next";
 import { setSeoHeader, toProperCase, getDistance } from "../utils";
 import type { WarnUpMessageData } from "../typing";
 import StrSim from "string-similarity";
-import { RouteList, StopListEntry } from "hk-bus-eta";
+import {
+  Company,
+  RouteList,
+  RouteListEntry,
+  StopListEntry,
+  StopMap,
+} from "hk-bus-eta";
 const RouteMap = loadable(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
@@ -85,7 +91,8 @@ const RouteEta = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dialogStop = useMemo(() => {
-    return getDialogStops(co, stops, stopMap, String(stopIdx));
+    console.log(getDialogStops(co, stops, stopMap, stopIdx));
+    return getDialogStops(co, stops, stopMap, stopIdx);
   }, [co, stopIdx, stopMap, stops]);
 
   const { t, i18n } = useTranslation();
@@ -236,7 +243,7 @@ const RouteEta = () => {
       <StopDialog
         open={isDialogOpen}
         stops={dialogStop}
-        handleClose={handleCloseDialog}
+        onClose={handleCloseDialog}
       />
     </>
   );
@@ -262,13 +269,19 @@ const getStops = (co: string[], stops: Record<string, string[]>): string[] => {
 };
 
 // TODO: better handling on buggy data in database
-const getDialogStops = (co, stops, stopMap, panel) => {
+const getDialogStops = (
+  co: Company[],
+  stops: RouteListEntry["stops"],
+  stopMap: StopMap,
+  idx: number
+): Array<[Company, string]> => {
   for (let i = 0; i < co.length; ++i) {
     if (co[i] in stops)
-      return [[co[i], stops[co[i]][panel]]].concat(
-        stopMap[stops[co[i]][panel]] || []
-      );
+      return [[co[i], stops[co[i]][idx]]].concat(
+        stopMap[stops[co[i]][idx]] ?? []
+      ) as Array<[Company, string]>;
   }
+  return [];
 };
 
 export default RouteEta;
