@@ -253,7 +253,7 @@ const StopMarker = ({ active, passed, companies }: StopMarkerProps) => {
         active ? classes.active : ""
       } ${passed ? classes.passed : ""}`,
     });
-	else if (companies.includes("lightRail")) {
+  } else if (companies.includes("lightRail")) {
     return Leaflet.divIcon({
       iconSize: [20, 20],
       iconAnchor: [10, 10],
