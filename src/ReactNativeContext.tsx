@@ -15,6 +15,7 @@ interface ReactNativeContextState {
 
 interface ReactNativeContextValue extends ReactNativeContextState {
   os: "ios" | "android" | null;
+  isStopAlarm: boolean;
   toggleDebug: () => void;
   toggleStopAlarm: (stopId: string) => void;
 }
@@ -44,6 +45,11 @@ export const ReactNativeContextProvider = ({ children }) => {
     // @ts-ignore
     else if (window?.iOSRNWebView === false) return "android";
     return null;
+  }, []);
+
+  const isStopAlarm = useMemo<boolean>(() => {
+    // @ts-ignore
+    return window?.stopAlarm === true;
   }, []);
 
   const handleMsg = useCallback(
@@ -136,6 +142,7 @@ export const ReactNativeContextProvider = ({ children }) => {
     <ReactNativeContext.Provider
       value={{
         os,
+        isStopAlarm,
         ...state,
         toggleDebug,
         toggleStopAlarm,

@@ -53,7 +53,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
       collections,
     } = useContext(AppContext);
     const { alarmStopId, toggleStopAlarm } = useContext(ReactNativeContext);
-    const { os } = useContext(ReactNativeContext);
+    const { isStopAlarm } = useContext(ReactNativeContext);
     const { t, i18n } = useTranslation();
     const { fares, faresHoliday } = routeList[routeId];
     const stop = stopList[stopId];
@@ -122,7 +122,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
           />
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Box>
-              {os && (
+              {isStopAlarm && (
                 <IconButton
                   aria-label="alert"
                   onClick={() => toggleStopAlarm(stopId)}
