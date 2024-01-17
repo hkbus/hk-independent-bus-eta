@@ -103,16 +103,17 @@ const PrivacyPolicy = () => {
         <strong>Location</strong>
       </p>{" "}
       <p>
-        Location are being used to serve the app functionality. Foreground location is 
-        for suggesting bus stops/stations nearby, and background location is for providing
-        notification when you are being around your destination within 500m. The app will 
-        use your background location data only for this functionality and the app will not 
-        transfer the location data to any parties, including the app owner and any third parties.
+        Location are being used to serve the app functionality. Foreground
+        location is for suggesting bus stops/stations nearby, and background
+        location is for providing notification when you are being around your
+        destination within 500m. The app will use your background location data
+        only for this functionality and the app will not transfer the location
+        data to any parties, including the app owner and any third parties.
       </p>{" "}
       <p>
-        You have the option to either accept or refuse to provide the location data for the app.
-        If you choose to refuse providing the location data, you may not be able to
-        use some portions of this Service.
+        You have the option to either accept or refuse to provide the location
+        data for the app. If you choose to refuse providing the location data,
+        you may not be able to use some portions of this Service.
       </p>{" "}
       <p>
         <strong>Service Providers</strong>
