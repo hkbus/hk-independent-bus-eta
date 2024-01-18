@@ -51,7 +51,6 @@ import Donations from "../Donations";
 import PersonalizeDialog from "../components/settings/PersonalizeDialog";
 import { useNavigate } from "react-router-dom";
 import ReactNativeContext from "../ReactNativeContext";
-import { isSafari } from "react-world-compass";
 
 const Settings = () => {
   const {
@@ -67,6 +66,7 @@ const Settings = () => {
     analytics,
   } = useContext(AppContext);
   const { debug, toggleDebug } = useContext(ReactNativeContext);
+  const { os } = useContext(ReactNativeContext);
   const [updating, setUpdating] = useState(false);
   const [showGeoPermissionDenied, setShowGeoPermissionDenied] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -78,6 +78,7 @@ const Settings = () => {
     () => Math.floor(Math.random() * Donations.length),
     []
   );
+  const isApple = os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
 
   const navigate = useNavigate();
 
@@ -289,9 +290,9 @@ const Settings = () => {
         <ListItemButton
           component={"a"}
           href={
-            isSafari
-              ? `https://hkbus.app/watch.html`
-              : `https://hkbus.app/wear.html`
+            isApple
+              ? `https://watch.hkbus.app/`
+              : `https://wear.hkbus.app/`
           }
           target="_blank"
           onClick={() => {
