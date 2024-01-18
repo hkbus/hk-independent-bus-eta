@@ -1,12 +1,3 @@
-import type { StopListEntry } from "hk-bus-eta";
-
-export interface WarnUpMessageData {
-  type: "WARN_UP_MAP_CACHE";
-  retinaDisplay: boolean;
-  zoomLevels: number[];
-  stopList?: StopListEntry[];
-}
-
 export interface DaySchedule {
   day: number;
   // use start, end only if allDay is false

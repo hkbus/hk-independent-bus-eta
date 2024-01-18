@@ -7,7 +7,6 @@ import { AppContextProvider } from "./AppContext";
 import "./i18n";
 import { fetchDbFunc } from "./db";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import type { WarnUpMessageData } from "./typing";
 import ErrorBoundary from "./ErrorBoundary";
 import { CollectionContextProvider } from "./CollectionContext";
 import { ReactNativeContextProvider } from "./ReactNativeContext";
@@ -37,17 +36,8 @@ if (isHuman()) {
   // Target: render only if development or prerendering or in registered app or lazy loading page
   const prerenderStyle = document.querySelector("style[prerender]");
   const workboxPromise = serviceWorkerRegistration.register({
-    onUpdate: (workbox, skipWaiting) => {
+    onUpdate: (_, skipWaiting) => {
       skipWaiting();
-      const message: WarnUpMessageData = {
-        type: "WARN_UP_MAP_CACHE",
-        retinaDisplay:
-          (window.devicePixelRatio ||
-            // @ts-ignore: Property does not exist on type 'Screen'.
-            window.screen.deviceXDPI / window.screen.logicalXDPI) > 1,
-        zoomLevels: [14, 15],
-      };
-      workbox.messageSW(message);
     },
   });
   const fetchDb = fetchDbFunc();

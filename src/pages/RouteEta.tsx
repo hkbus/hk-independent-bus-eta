@@ -7,7 +7,6 @@ import StopDialog from "../components/route-eta/StopDialog";
 import AppContext from "../AppContext";
 import { useTranslation } from "react-i18next";
 import { setSeoHeader, toProperCase, getDistance } from "../utils";
-import type { WarnUpMessageData } from "../typing";
 import StrSim from "string-similarity";
 import {
   Company,
@@ -25,7 +24,6 @@ const RouteEta = () => {
     db: { routeList, stopList, stopMap },
     updateSelectedRoute,
     energyMode,
-    workbox,
     geoPermission,
     geolocation,
   } = useContext(AppContext);
@@ -90,10 +88,10 @@ const RouteEta = () => {
   }, [panel, stops, defaultStopIdx]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const dialogStop = useMemo(() => {
-    console.log(getDialogStops(co, stops, stopMap, stopIdx));
-    return getDialogStops(co, stops, stopMap, stopIdx);
-  }, [co, stopIdx, stopMap, stops]);
+  const dialogStop = useMemo(
+    () => getDialogStops(co, stops, stopMap, stopIdx),
+    [co, stopIdx, stopMap, stops]
+  );
 
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -201,23 +199,6 @@ const RouteEta = () => {
     stopIds,
     t,
   ]);
-
-  useEffect(() => {
-    if (!energyMode && navigator.userAgent !== "prerendering") {
-      const message: WarnUpMessageData = {
-        type: "WARN_UP_MAP_CACHE",
-        retinaDisplay:
-          (window.devicePixelRatio ||
-            // @ts-ignore: Property does not exist on type 'Screen'.
-            window.screen.deviceXDPI / window.screen.logicalXDPI) > 1,
-        zoomLevels: [14, 15, 16, 17, 18],
-        stopList: getStops(co, stops)
-          .map((id) => stopList[id])
-          .filter((stop) => stop !== null && stop !== undefined),
-      };
-      workbox?.messageSW(message);
-    }
-  }, [co, energyMode, stopList, stops, workbox]);
 
   return (
     <>

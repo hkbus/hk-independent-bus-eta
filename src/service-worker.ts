@@ -18,9 +18,6 @@ import {
   StrategyHandler,
 } from "workbox-strategies";
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
-import { fetchEtaDb } from "hk-bus-eta";
-import { getTileListURL, isWarnUpMessageData } from "./utils";
-import type { StopListEntry } from "hk-bus-eta";
 
 declare var self: ServiceWorkerGlobalScope & typeof globalThis;
 clientsClaim();
@@ -133,52 +130,6 @@ registerRoute(
   })
 );
 
-const warnUpCache = async (
-  zoomLevels: Array<number>,
-  event: ExtendableEvent,
-  retina: boolean,
-  stopListInput?: Array<StopListEntry>
-) => {
-  try {
-    let stopList;
-    if (stopListInput === undefined) {
-      const eta = await fetchEtaDb();
-      stopList = Object.values(eta.stopList);
-    } else {
-      stopList = stopListInput;
-    }
-    await Promise.all(
-      zoomLevels.map(async (i) => {
-        const generate = function* () {
-          const list = getTileListURL(i, stopList, retina);
-          for (let k = 0; k < list.length; k = k + 1) {
-            yield mapCacheStrategy.handleAll({
-              event,
-              request: new Request(list[k], {}),
-            })[1];
-          }
-        };
-        const a = generate();
-        let result = a.next();
-        const pendingPromise: Set<Promise<void>> = new Set();
-        while (result.done !== true) {
-          const value = result.value;
-          pendingPromise.add(value);
-          value.then(() => pendingPromise.delete(value));
-          // limit pending fetch to 10
-          if (pendingPromise.size >= 10) {
-            await Promise.any(pendingPromise);
-          }
-          result = a.next();
-        }
-        return;
-      })
-    );
-  } catch (e) {
-    console.error("error on warn cache", e);
-  }
-};
-
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener("message", (event) => {
@@ -196,22 +147,5 @@ self.addEventListener("message", (event) => {
           })
         )
       );
-  }
-  const data: unknown = event.data;
-  if (isWarnUpMessageData(data)) {
-    console.log("warm up map cache", data);
-    const warnCache = async () => {
-      try {
-        await warnUpCache(
-          data.zoomLevels,
-          event,
-          data.retinaDisplay,
-          data.stopList
-        );
-      } catch (e) {
-        console.error("error on warn cache", e);
-      }
-    };
-    event.waitUntil(warnCache());
   }
 });

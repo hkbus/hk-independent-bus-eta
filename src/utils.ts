@@ -1,13 +1,6 @@
-import type {
-  Company,
-  EtaDb,
-  Location,
-  RouteList,
-  StopList,
-  StopListEntry,
-} from "hk-bus-eta";
+import type { Company, EtaDb, Location, RouteList, StopList } from "hk-bus-eta";
 import type { Location as GeoLocation } from "hk-bus-eta";
-import type { TransportType, WarnUpMessageData } from "./typing";
+import type { TransportType } from "./typing";
 import { isRouteAvaliable } from "./timetable";
 export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   const R = 6371e3; // metres
@@ -227,56 +220,6 @@ export const binarySearch = <T>(
     }
   }
   return -m - 1;
-};
-
-interface TempEntry {
-  key: number;
-  x: number;
-  y: number;
-}
-
-export const getTileListURL = (
-  zoomLevel: number,
-  stopLists: Array<StopListEntry>,
-  retinaDisplay: boolean
-) => {
-  const high = 255 * (zoomLevel + 5) * (zoomLevel + 5);
-  const compare = (a: TempEntry, b: TempEntry) => b.key - a.key;
-  return stopLists
-    .map((stop) => {
-      const x = lon2tile(stop.location.lng, zoomLevel);
-      const y = lat2tile(stop.location.lat, zoomLevel);
-      return {
-        key: x * high + y,
-        x: x,
-        y: y,
-      };
-    })
-    .sort(compare)
-    .reduce((prev: TempEntry[], curr) => {
-      if (binarySearch(prev, curr, compare) < 0) {
-        prev.push(curr);
-      }
-      return prev;
-    }, [])
-    .flatMap((entry) => [
-      process.env.REACT_APP_OSM_PROVIDER_URL.replace(/\{s\}/g, "a")
-        .replace(/\{x\}/g, String(entry.x))
-        .replace(/\{y\}/g, String(entry.y))
-        .replace(/\{z\}/g, String(zoomLevel))
-        .replace(/\{r\}/g, retinaDisplay ? "@2x" : ""),
-      process.env.REACT_APP_OSM_PROVIDER_URL_DARK.replace(/\{s\}/g, "a")
-        .replace(/\{x\}/g, String(entry.x))
-        .replace(/\{y\}/g, String(entry.y))
-        .replace(/\{z\}/g, String(zoomLevel))
-        .replace(/\{r\}/g, retinaDisplay ? "@2x" : ""),
-    ]);
-};
-
-export const isWarnUpMessageData = (
-  value: unknown
-): value is WarnUpMessageData => {
-  return typeof value === "object" && value["type"] === "WARN_UP_MAP_CACHE";
 };
 
 export const checkAppInstalled = () => {
