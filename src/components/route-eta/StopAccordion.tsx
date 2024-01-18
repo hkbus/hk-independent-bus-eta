@@ -55,6 +55,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
     } = useContext(AppContext);
     const { alarmStopId, toggleStopAlarm } = useContext(ReactNativeContext);
     const { isStopAlarm } = useContext(ReactNativeContext);
+    const { os } = useContext(ReactNativeContext);
     const { t, i18n } = useTranslation();
     const { fares, faresHoliday } = routeList[routeId];
     const stop = stopList[stopId];
@@ -83,10 +84,12 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
 
     const handleWatchClick = useCallback(
       (e) => {
-        const url = `https://loohpjames.com/hkbuseta/route/${routeId.toLowerCase()}/${stopId}%2C${idx}`;
+        const isApple = os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
+        const subdomain = isApple ? "watch" : "wear";
+        const url = `https://${subdomain}.hkbus.app/route/${routeId.toLowerCase()}/${stopId}%2C${idx}`;
         window.open(url, "_blank");
       },
-      [routeId, idx, stopId]
+      [routeId, idx, stopId, os]
     );
 
     const handleChangeInner = useCallback(
