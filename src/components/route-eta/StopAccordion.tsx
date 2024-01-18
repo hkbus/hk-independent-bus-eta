@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import { toProperCase } from "../../utils";
 import TimeReport from "./TimeReport";
 import ShareIcon from "@mui/icons-material/Share";
+import WatchIcon from "@mui/icons-material/Watch";
 import { SharingModalProps } from "./SharingModal";
 import ReactNativeContext from "../../ReactNativeContext";
 
@@ -54,6 +55,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
     } = useContext(AppContext);
     const { alarmStopId, toggleStopAlarm } = useContext(ReactNativeContext);
     const { isStopAlarm } = useContext(ReactNativeContext);
+    const { os } = useContext(ReactNativeContext);
     const { t, i18n } = useTranslation();
     const { fares, faresHoliday } = routeList[routeId];
     const stop = stopList[stopId];
@@ -78,6 +80,16 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
         });
       },
       [onShareClick, routeId, idx, stopId]
+    );
+
+    const handleWatchClick = useCallback(
+      (e) => {
+        const isApple = os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
+        const subdomain = isApple ? "watch" : "wear";
+        const url = `https://${subdomain}.hkbus.app/route/${routeId.toLowerCase()}/${stopId}%2C${idx}`;
+        window.open(url, "_blank");
+      },
+      [routeId, idx, stopId, os]
     );
 
     const handleChangeInner = useCallback(
@@ -154,6 +166,14 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
               </IconButton>
             </Box>
             <Box>
+              <IconButton
+                aria-label="open-on-watch"
+                onClick={handleWatchClick}
+                style={{ backgroundColor: "transparent" }}
+                size="large"
+              >
+                <WatchIcon />
+              </IconButton>
               <IconButton
                 aria-label="share"
                 onClick={handleShareClick}
