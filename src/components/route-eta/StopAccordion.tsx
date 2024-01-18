@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import { toProperCase } from "../../utils";
 import TimeReport from "./TimeReport";
 import ShareIcon from "@mui/icons-material/Share";
+import WatchIcon from "@mui/icons-material/Watch";
 import { SharingModalProps } from "./SharingModal";
 import ReactNativeContext from "../../ReactNativeContext";
 
@@ -78,6 +79,14 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
         });
       },
       [onShareClick, routeId, idx, stopId]
+    );
+
+    const handleWatchClick = useCallback(
+      (e) => {
+        const url = `https://loohpjames.com/hkbuseta/route/${routeId.toLowerCase()}/${stopId}%2C${idx}`;
+        window.open(url, "_blank");
+      },
+      [routeId, idx, stopId]
     );
 
     const handleChangeInner = useCallback(
@@ -154,6 +163,14 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
               </IconButton>
             </Box>
             <Box>
+              <IconButton
+                aria-label="open-on-watch"
+                onClick={handleWatchClick}
+                style={{ backgroundColor: "transparent" }}
+                size="large"
+              >
+                <WatchIcon />
+              </IconButton>
               <IconButton
                 aria-label="share"
                 onClick={handleShareClick}
