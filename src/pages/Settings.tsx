@@ -78,7 +78,8 @@ const Settings = () => {
     () => Math.floor(Math.random() * Donations.length),
     []
   );
-  const isApple = os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
+  const isApple =
+    os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
 
   const navigate = useNavigate();
 
@@ -290,9 +291,7 @@ const Settings = () => {
         <ListItemButton
           component={"a"}
           href={
-            isApple
-              ? `https://watch.hkbus.app/`
-              : `https://wear.hkbus.app/`
+            isApple ? `https://watch.hkbus.app/` : `https://wear.hkbus.app/`
           }
           target="_blank"
           onClick={() => {

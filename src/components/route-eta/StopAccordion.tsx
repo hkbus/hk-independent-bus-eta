@@ -84,7 +84,8 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
 
     const handleWatchClick = useCallback(
       (e) => {
-        const isApple = os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
+        const isApple =
+          os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
         const subdomain = isApple ? "watch" : "wear";
         const url = `https://${subdomain}.hkbus.app/route/${routeId.toLowerCase()}/${stopId}%2C${idx}`;
         window.open(url, "_blank");
