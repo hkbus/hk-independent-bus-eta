@@ -12,7 +12,7 @@ const RouteWatchButton = ({ routeId }) => {
       size="small"
       onClick={() => {
         const isApple =
-        os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
+          os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
         const subdomain = isApple ? "watch" : "wear";
         const url = `https://${subdomain}.hkbus.app/route/${routeId.toLowerCase()}`;
         window.open(url, "_blank");
