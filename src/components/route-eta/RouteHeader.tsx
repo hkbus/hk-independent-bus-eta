@@ -61,7 +61,7 @@ const leftInfoGroupSx: SxProps<Theme> = {
   position: "relative",
   height: "50px",
   gap: "5px",
-  transform: "translateY(-8%)",
+  transform: "translateY(-10%)",
   left: "2%",
   maxWidth: "calc(100% - 220px)",
 };
