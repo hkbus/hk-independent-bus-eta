@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Divider, SxProps, Theme } from "@mui/material";
+import { Button, SxProps, Theme } from "@mui/material";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
 import TimetableDrawer from "./TimetableDrawer";
 import { useTranslation } from "react-i18next";
@@ -38,12 +38,6 @@ const TimeTableButton = ({ routeId }: { routeId: string }) => {
 };
 
 export default TimeTableButton;
-
-const buttonDividerSx: SxProps<Theme> = {
-  position: "absolute",
-  top: "0",
-  right: "calc(64px + 2%)",
-};
 
 const buttonSx: SxProps<Theme> = {
   color: (theme) =>
