@@ -16,13 +16,15 @@ const RouteHeader = ({ routeId }: { routeId: string }) => {
   } = useContext(AppContext);
   const { route, orig, dest, nlbId } = routeList[routeId];
 
+  const space = i18n.language === "zh" ? "" : " ";
+
   return (
     <Paper id="route-eta-header" sx={PaperSx} elevation={0}>
       <Box sx={leftInfoGroupSx}>
         <RouteNo routeNo={route} component="h1" align="left" />
         <Typography component="h1" fontSize="min(1em, calc(100vw / 29))" align="left" lineHeight="1.25em">
-          {t("往")} {toProperCase(dest[i18n.language])}{" "}
-          {nlbId ? t("由") + " " + toProperCase(orig[i18n.language]) : ""}
+          {t("往")}{space}{toProperCase(dest[i18n.language])}{" "}
+          {nlbId ? t("由") + space + toProperCase(orig[i18n.language]) : ""}
         </Typography>
       </Box>
       <Box sx={rightBtnGroupSx}>
