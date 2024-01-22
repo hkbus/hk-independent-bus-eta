@@ -17,9 +17,7 @@ const RouteTerminus = ({ terminus }) => {
   };
 
   var remark = terminus.serviceType >= 2 ? (t("從") + orig[i18n.language] + t("開出")) : "";
-  if (terminus.nlbId) {
-    remark = t("從") + toProperCase(terminus.orig[i18n.language]) + t("開出");
-  } else if (terminus.serviceType >= 2) {
+  if (terminus.serviceType >= 2) {
     for (let [, data] of Object.entries(routeList)) {
       if (Number(data.serviceType) === 1 && 
         route === data.route && 
@@ -59,6 +57,9 @@ const RouteTerminus = ({ terminus }) => {
         break;
       }
     } 
+  }
+  if (terminus.nlbId) {
+    remark = t("從") + toProperCase(terminus.orig[i18n.language]) + t("開出") + " " + remark;
   }
 
   return (
