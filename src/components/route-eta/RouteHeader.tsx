@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Box, Paper, SxProps, Theme, Typography } from "@mui/material";
+import { Box, Divider, Paper, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "../route-board/RouteNo";
 import { toProperCase } from "../../utils";
 import { useTranslation } from "react-i18next";
@@ -18,16 +18,23 @@ const RouteHeader = ({ routeId }: { routeId: string }) => {
 
   return (
     <Paper id="route-eta-header" sx={PaperSx} elevation={0}>
-      <RouteNo routeNo={route} component="h1" align="center" />
-      <Typography component="h2" variant="caption" align="center">
-        {t("往")} {toProperCase(dest[i18n.language])}{" "}
-        {nlbId ? t("由") + " " + toProperCase(orig[i18n.language]) : ""}
-      </Typography>
-      <ReverseButton routeId={routeId} />
+      <Box sx={leftInfoGroupSx}>
+        <RouteNo routeNo={route} component="h1" align="center" />
+        <Typography component="h2" variant="caption" align="center">
+          {t("往")} {toProperCase(dest[i18n.language])}{" "}
+          {nlbId ? t("由") + " " + toProperCase(orig[i18n.language]) : ""}
+        </Typography>
+      </Box>
       <Box sx={rightBtnGroupSx}>
-        <RouteWatchButton routeId={routeId} />
-        <RouteStarButton routeId={routeId} />
-        <TimetableButton routeId={routeId} />
+        <Box sx={rightButtonContainerSx}>
+          <RouteWatchButton routeId={routeId} />
+          <Divider orientation="vertical" sx={buttonDividerSx} />
+          <RouteStarButton routeId={routeId} />
+          <Divider orientation="vertical" sx={buttonDividerSx} />
+          <ReverseButton routeId={routeId} />
+          <Divider orientation="vertical" sx={buttonDividerSx} />
+          <TimetableButton routeId={routeId} />
+        </Box>
       </Box>
     </Paper>
   );
@@ -41,8 +48,34 @@ const PaperSx: SxProps<Theme> = {
   position: "relative",
 };
 
+const buttonDividerSx: SxProps<Theme> = {
+  top: "0",
+  left: "calc(64px + 2%)",
+};
+
+const leftInfoGroupSx: SxProps<Theme> = {
+  display: 'flex',
+  alignItems: 'baseline',
+  textAlign: "left",
+  background: "transparent",
+  position: "relative",
+  height: "50px",
+  gap: "5px",
+  transform: "translateY(8%)",
+  left: "2%",
+};
+
 const rightBtnGroupSx: SxProps<Theme> = {
   position: "absolute",
   top: "0",
-  right: "2%",
+  right: "0%",
+};
+
+const rightButtonContainerSx: SxProps<Theme> = {
+  display: 'flex',
+  alignItems: 'center',
+  textAlign: "right",
+  background: "transparent",
+  position: "relative",
+  height: "50px",
 };

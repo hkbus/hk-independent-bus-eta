@@ -16,7 +16,6 @@ const TimeTableButton = ({ routeId }: { routeId: string }) => {
   return (
     freq && (
       <>
-        <Divider orientation="vertical" sx={buttonDividerSx} />
         <Button
           variant="text"
           aria-label="open-timetable"
