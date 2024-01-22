@@ -20,7 +20,7 @@ const RouteHeader = ({ routeId }: { routeId: string }) => {
     <Paper id="route-eta-header" sx={PaperSx} elevation={0}>
       <Box sx={leftInfoGroupSx}>
         <RouteNo routeNo={route} component="h1" align="left" />
-        <Typography component="h3"  align="left" lineHeight="1.25em">
+        <Typography component="h1" fontSize="0.85em" align="left" lineHeight="1.25em">
           {t("往")} {toProperCase(dest[i18n.language])}{" "}
           {nlbId ? t("由") + " " + toProperCase(orig[i18n.language]) : ""}
         </Typography>
