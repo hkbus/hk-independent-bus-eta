@@ -19,8 +19,8 @@ const RouteHeader = ({ routeId }: { routeId: string }) => {
   return (
     <Paper id="route-eta-header" sx={PaperSx} elevation={0}>
       <Box sx={leftInfoGroupSx}>
-        <RouteNo routeNo={route} component="h1" align="center" />
-        <Typography component="h2" variant="caption" align="center">
+        <RouteNo routeNo={route} component="h1" align="left" />
+        <Typography component="h3"  align="left" lineHeight="1.25em">
           {t("往")} {toProperCase(dest[i18n.language])}{" "}
           {nlbId ? t("由") + " " + toProperCase(orig[i18n.language]) : ""}
         </Typography>
@@ -55,14 +55,15 @@ const buttonDividerSx: SxProps<Theme> = {
 
 const leftInfoGroupSx: SxProps<Theme> = {
   display: 'flex',
-  alignItems: 'baseline',
+  alignItems: 'last baseline',
   textAlign: "left",
   background: "transparent",
   position: "relative",
   height: "50px",
   gap: "5px",
-  transform: "translateY(8%)",
+  transform: "translateY(-8%)",
   left: "2%",
+  maxWidth: "calc(100% - 220px)",
 };
 
 const rightBtnGroupSx: SxProps<Theme> = {
