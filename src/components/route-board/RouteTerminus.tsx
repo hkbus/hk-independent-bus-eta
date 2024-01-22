@@ -60,7 +60,7 @@ const RouteTerminus = ({ terminus }) => {
     <Box sx={rootSx}>
       <Box sx={fromToWrapperSx}>
         <span>{`${t("往")} `}</span>
-        <Typography component="h3" variant="h6" sx={destinationSx}>
+        <Typography component="h3" variant="h6" sx={destinationSx} textOverflow="ellipsis" overflow="hidden">
           {toProperCase(terminus.dest[i18n.language])}
         </Typography>
       </Box>
