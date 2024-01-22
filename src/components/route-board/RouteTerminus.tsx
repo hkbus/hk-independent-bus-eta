@@ -15,6 +15,20 @@ const RouteTerminus = ({ terminus }) => {
     if (arr.length < 2) return arr;
     return [arr[0], arr[arr.length - 1]];
   };
+  const diffConsecutive = (array, sequence) => {
+    for (let i = 0; i <= array.length - sequence.length; i++) { 
+        let j;
+        for (j = 0; j < sequence.length; j++) { 
+            if (array[i + j] !== sequence[j]) {
+                break;
+            }
+        }
+        if (j === sequence.length) { 
+            return true;
+        }
+    }
+    return false;
+  };
 
   var remark = terminus.serviceType >= 2 ? (t("從") + orig[i18n.language] + t("開出")) : "";
   if (terminus.serviceType >= 2) {
@@ -40,16 +54,18 @@ const RouteTerminus = ({ terminus }) => {
             remark = t("從") + routeFirstStop[i18n.language] + t("開出");
           } else {
             let difference = stops[co]
-              .filter(x => !data.stops[co].includes(x))
+              .filter(x => !data.stops[co].includes(x));
+            let diffName = difference
               .map(x => stopList[x].name[i18n.language]);
             if (difference.length > 0) {
-              remark = t("經") + firstLastDiff(difference).join(t("至"));
+              remark = t("經") + firstLastDiff(diffName).join(t(diffConsecutive(data.stops[co], difference) ? "至" : "及"));
             } else {
-              difference = data.stops[co]
-                .filter(x => !stops[co].includes(x))
+              let difference = data.stops[co]
+                .filter(x => !stops[co].includes(x));
+              let diffName = difference
                 .map(x => stopList[x].name[i18n.language]);
               if (difference.length > 0) {
-                remark = t("不經") + firstLastDiff(difference).join(t("至"));
+                remark = t("不經") + firstLastDiff(diffName).join(t(diffConsecutive(data.stops[co], difference) ? "至" : "及"));
               }
             }
           }
