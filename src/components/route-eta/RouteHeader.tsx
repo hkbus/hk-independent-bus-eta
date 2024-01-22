@@ -63,7 +63,7 @@ const leftInfoGroupSx: SxProps<Theme> = {
   gap: "5px",
   transform: "translateY(-10%)",
   left: "2%",
-  maxWidth: "calc(100% - 220px)",
+  maxWidth: "calc(100% - 202px)",
 };
 
 const rightBtnGroupSx: SxProps<Theme> = {
