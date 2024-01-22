@@ -11,6 +11,11 @@ const RouteTerminus = ({ terminus }) => {
   } = useContext(AppContext);
   const { bound, route, stops, co, gtfsId, dest, orig } = terminus;
 
+  const firstLastDiff = (arr) => {
+    if (arr.length < 2) return arr;
+    return [arr[0], arr[arr.length - 1]];
+  };
+
   var remark = terminus.serviceType >= 2 ? (t("從") + orig[i18n.language] + t("開出")) : "";
   if (terminus.nlbId) {
     remark = t("從") + toProperCase(terminus.orig[i18n.language]) + t("開出");
@@ -40,13 +45,13 @@ const RouteTerminus = ({ terminus }) => {
               .filter(x => !data.stops[co].includes(x))
               .map(x => stopList[x].name[i18n.language]);
             if (difference.length > 0) {
-              remark = t("經") + difference.join(", ");
+              remark = t("經") + firstLastDiff(difference).join(t("至"));
             } else {
               difference = data.stops[co]
                 .filter(x => !stops[co].includes(x))
                 .map(x => stopList[x].name[i18n.language]);
               if (difference.length > 0) {
-                remark = t("不經") + difference.join(", ");
+                remark = t("不經") + firstLastDiff(difference).join(t("至"));
               }
             }
           }
