@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
 import { Box, Paper, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "../route-board/RouteNo";
-import { toProperCase } from "../../utils";
+import { toProperCase, langSpace } from "../../utils";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import ReverseButton from "./ReverseButton";
 import TimetableButton from "./TimeTableButton";
 import RouteStarButton from "./RouteStarButton";
-import { langSpace } from "../../utils";
 
 const RouteHeader = ({ routeId }: { routeId: string }) => {
   const { t, i18n } = useTranslation();
