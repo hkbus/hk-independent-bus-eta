@@ -30,7 +30,7 @@ const RouteTerminus = ({ terminus }) => {
     return false;
   };
 
-  let remark = terminus.serviceType >= 2 ? (t("從") + orig[i18n.language] + t("開出")) : "";
+  let remark = "";
   if (terminus.serviceType >= 2) {
     for (let [, data] of Object.entries(routeList)) {
       if (Number(data.serviceType) === 1 && 
@@ -51,7 +51,9 @@ const RouteTerminus = ({ terminus }) => {
           if (mainRouteLastStop.zh !== routeLastStop.zh) {
             remark = t("開往") + routeLastStop[i18n.language];
           } else if (mainRouteFirstStop.zh !== routeFirstStop.zh) {
-            remark = t("從") + routeFirstStop[i18n.language] + t("開出");
+            if (!terminus.nlbId) {
+              remark = t("從") + routeFirstStop[i18n.language] + t("開出");
+            }
           } else {
             let difference = stops[co]
               .filter(x => !data.stops[co].includes(x));
