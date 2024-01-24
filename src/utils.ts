@@ -339,7 +339,7 @@ export const coToType: Record<Company, TransportType> = {
 };
 
 export const PLATFORM = [
-  "⓿",
+  "🄌",
   "➊",
   "➋",
   "➌",
