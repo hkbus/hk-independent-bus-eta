@@ -88,6 +88,9 @@ const EtaLine = ({
   const { etaFormat } = useContext(AppContext);
 
   const branchRoute = useMemo(() => {
+    if (co === "mtr") {
+      return true;
+    }
     for (const routeDest of routeDests) {
       if (routeDest.en.toLowerCase() === dest.en.toLowerCase()) {
         return false;
@@ -134,7 +137,7 @@ const EtaLine = ({
           {exactTimeJsx}&emsp;{waitTimeJsx}
         </>
       )}
-      &emsp;-&nbsp;
+      {co !== "mtr" && co !== "lightRail" && "&emsp;-&nbsp;"}
       <Box
         component="span"
         sx={{ fontSize: "0.8em", textOverflow: "ellipsis" }}
@@ -144,7 +147,7 @@ const EtaLine = ({
         {co === "mtr" || co === "lightRail" ?
         <Box component="span" color={getLineColor([co], route, true)}>{getRemark(remark[language], language)}</Box> : 
         getRemark(remark[language], language)}
-        &emsp;
+        {co === "mtr" || co === "lightRail" ? " " : "&emsp;"}
         {branchRoute && dest[language]}
       </Box>
     </Typography>
