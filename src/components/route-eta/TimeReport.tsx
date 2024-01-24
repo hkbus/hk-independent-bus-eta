@@ -5,7 +5,7 @@ import AppContext from "../../AppContext";
 import { useEtas } from "../../hooks/useEtas";
 import { LinearProgress } from "../Progress";
 import { Eta, Terminal } from "hk-bus-eta";
-import { PLATFORM } from "../../utils";
+import { PLATFORM, getLineColor } from "../../utils";
 
 interface TimeReportProps {
   routeId: string;
@@ -61,6 +61,7 @@ const TimeReport = ({
             eta={eta}
             routeDests={routeDests}
             showCompany={routeList[routeId].co.length > 1}
+            route={routeList[routeId].route}
           />
         ))}
     </Box>
@@ -71,12 +72,14 @@ interface EtaMsgProps {
   eta: Eta;
   routeDests: Terminal[];
   showCompany: boolean;
+  route: string;
 }
 
 const EtaLine = ({
   eta: { eta, remark, co, dest },
   routeDests,
   showCompany,
+  route,
 }: EtaMsgProps) => {
   const {
     t,
@@ -138,7 +141,9 @@ const EtaLine = ({
       >
         {showCompany && <>&emsp;{t(co)}</>}
         &emsp;
-        {getRemark(remark[language], language)}
+        {co === "mtr" || co === "lightRail" ?
+        <Box component="span" color={getLineColor([co], route, true)}>{getRemark(remark[language], language)}</Box> : 
+        getRemark(remark[language], language)}
         &emsp;
         {branchRoute && dest[language]}
       </Box>

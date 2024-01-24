@@ -1,3 +1,4 @@
+import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "./RouteNo";
@@ -9,7 +10,7 @@ const RouteNoCompany = ({ route }) => {
   return (
     <Box>
       <div>
-        <RouteNo routeNo={routeNo} />
+        <RouteNo routeNo={i18n.language === "zh" ? t(routeNo) : routeNo} />
         {parseInt(serviceType, 10) >= 2 && (
           <Typography variant="caption" sx={specialTripSx}>
             {t("特別班")}

@@ -20,6 +20,7 @@ import type { Location as GeoLocation } from "hk-bus-eta";
 import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
 import { useRoutePath } from "../../hooks/useRoutePath";
+import { getLineColor } from "../../utils";
 
 const CenterControl = ({ onClick }) => {
   return (
@@ -39,6 +40,7 @@ interface RouteMapProps {
   routeId: string;
   stopIds: string[];
   stopIdx: number;
+  route: string;
   companies: Company[];
   onMarkerClick: (idx: number, event: unknown) => void;
 }
@@ -60,6 +62,7 @@ const RouteMap = ({
   routeId,
   stopIds,
   stopIdx,
+  route,
   companies,
   onMarkerClick,
 }: RouteMapProps) => {
@@ -217,7 +220,7 @@ const RouteMap = ({
             <GeoJSON
               key={routePath?.["timeStamp"]}
               data={routePath}
-              style={geoJsonStyle}
+              style={geoJsonStyle(companies, route)}
             />
           )
         }
@@ -231,10 +234,12 @@ const RouteMap = ({
 
 export default RouteMap;
 
-const geoJsonStyle = function (feature: GeoJSON.Feature) {
-  return {
-    color: "#FF9090",
-    weight: 4,
+const geoJsonStyle = (companies, route) => {
+  return function (feature: GeoJSON.Feature) {
+    return {
+      color: getLineColor(companies, route),
+      weight: 4,
+    };
   };
 };
 

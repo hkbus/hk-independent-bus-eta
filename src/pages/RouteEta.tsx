@@ -209,6 +209,7 @@ const RouteEta = () => {
           routeId={routeId}
           stopIds={stopIds}
           stopIdx={stopIdx}
+          route={route}
           companies={co}
           onMarkerClick={onMarkerClick}
         />

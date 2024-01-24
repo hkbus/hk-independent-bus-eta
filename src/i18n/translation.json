@@ -155,7 +155,17 @@
       "確定": "Confirm",
       "現在 / 預設位置": "Current / Default Location",
       "智能手錶應用程式": "Smart Watch App",
-      "到站了": "Arrived!"
+      "到站了": "Arrived!",
+      "AEL": "Airport Express",
+      "TCL": "Tung Chung Line",
+      "TML": "Tuen Ma Line",
+      "TKL": "Tseung Kwan O Line",
+      "EAL": "East Rail Line",
+      "SIL": "South Island Line",
+      "TWL": "Tsuen Wan Line",
+      "ISL": "Island Line",
+      "KTL": "Kwun Tong Line",
+      "DRL": "Disneyland Resort Line"
     }
   },
   "zh": {
@@ -204,7 +214,17 @@
       "weekday-6": "周六",
       "color-system": "跟隨系統",
       "color-dark": "黑夜模式",
-      "color-light": "日照模式"
+      "color-light": "日照模式",
+      "AEL": "機場快綫",
+      "TCL": "東涌綫",
+      "TML": "屯馬綫",
+      "TKL": "將軍澳綫",
+      "EAL": "東鐵綫",
+      "SIL": "南港島綫",
+      "TWL": "荃灣綫",
+      "ISL": "港島綫",
+      "KTL": "觀塘綫",
+      "DRL": "迪士尼綫"
     }
   }
 }
