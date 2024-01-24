@@ -29,7 +29,7 @@ const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
 
 export default RouteNo;
 
-const rootSx = (fontSize) => {
+const rootSx = (fontSize): SxProps<Theme> => {
   return {
     lineHeight: "normal",
     display: "inline",
