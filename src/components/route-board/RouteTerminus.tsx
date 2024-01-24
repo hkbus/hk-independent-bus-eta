@@ -30,7 +30,7 @@ const RouteTerminus = ({ terminus }) => {
     return false;
   };
 
-  var remark = terminus.serviceType >= 2 ? (t("從") + orig[i18n.language] + t("開出")) : "";
+  let remark = terminus.serviceType >= 2 ? (t("從") + orig[i18n.language] + t("開出")) : "";
   if (terminus.serviceType >= 2) {
     for (let [, data] of Object.entries(routeList)) {
       if (Number(data.serviceType) === 1 && 
