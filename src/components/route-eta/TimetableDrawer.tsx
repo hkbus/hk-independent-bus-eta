@@ -114,10 +114,7 @@ const drawerSx: SxProps<Theme> = {
   maxWidth: "320px",
   paddingTop: "56px",
   paddingLeft: "20px",
-  backgroundColor: (theme) =>
-    theme.palette.mode === "dark"
-      ? theme.palette.background.default
-      : theme.palette.primary.main,
+  backgroundColor: (theme) => theme.palette.background.default,
   backgroundImage: "none",
 };
 

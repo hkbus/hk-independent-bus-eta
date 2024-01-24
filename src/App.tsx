@@ -22,7 +22,6 @@ import { SearchContextProvider } from "./SearchContext";
 import Main from "./components/layout/Main";
 import RedirectPage from "./pages/RedirectPage";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
-import { light } from "@mui/material/styles/createPalette";
 
 const Home = loadable(() => import("./pages/Home"));
 const RouteEta = loadable(() => import("./pages/RouteEta"));
@@ -164,17 +163,22 @@ const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
     },
     fontSize,
   },
+  avatar: {
+    default: {
+      color: mode === "light" ? "#000" : "white",
+    },
+  },
   palette: {
     mode,
     ...(mode === "light"
       ? {
           // light mode
           background: {
-            default: "#fedb00",
+            default: "#fedb00", // yellow
             contrast: "rgba(255, 255, 255, 0.12)",
           },
           primary: {
-            main: "#fedb00", // yellow
+            main: "#444",
             contrastText: "rgba(0, 0, 0, 0.12)",
           },
           warning: {
@@ -183,7 +187,6 @@ const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
           secondary: {
             main: "#000",
           },
-          light,
         }
       : {
           //dark mode

@@ -16,7 +16,7 @@ const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
   const { isRecentSearchShown } = useContext(AppContext);
 
   return (
-    <Box sx={rootSx}>
+    <Box>
       <Tabs
         value={boardTab}
         onChange={(e, v) => onChangeTab(v, true)}
@@ -57,24 +57,11 @@ const tabbarSx: SxProps<Theme> = {
     py: 0,
     minWidth: "85px",
     minHeight: "32px",
-    [`&.Mui-selected`]: {
-      color: (theme) =>
-        theme.palette.mode === "dark" ? theme.palette.primary.main : "black",
-    },
     [`&.MuiButtonBase-root`]: {
       textTransform: "none",
     },
   },
-  [`& .MuiTabs-indicator`]: {
-    backgroundColor: (theme) =>
-      theme.palette.mode === "dark" ? theme.palette.primary.main : "black",
-  },
   [`& .MuiTabs-scroller`]: {
     overflow: "auto !important",
   },
-};
-
-const rootSx: SxProps<Theme> = {
-  background: (theme) =>
-    theme.palette.mode === "dark" ? theme.palette.background.default : "white",
 };

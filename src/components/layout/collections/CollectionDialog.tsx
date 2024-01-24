@@ -111,16 +111,8 @@ const tabbarSx: SxProps<Theme> = {
     paddingTop: 0,
     paddingBottom: 0,
     minHeight: "32px",
-    [`&.Mui-selected`]: {
-      color: (theme) =>
-        theme.palette.mode === "dark" ? theme.palette.primary.main : "black",
-    },
   },
   [`& .MuiTabs-flexContainer`]: {
     justifyContent: "center",
-  },
-  [`& .MuiTabs-indicator`]: {
-    backgroundColor: (theme) =>
-      theme.palette.mode === "dark" ? theme.palette.primary.main : "black",
   },
 };
