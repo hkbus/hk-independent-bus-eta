@@ -89,7 +89,7 @@ const BookmarkedStop = () => {
         <SwipeableStopList
           ref={swipeableList}
           stopTab={stopTab}
-          onChangeTab={(v: string) => setStopTab(v)}
+          onChangeTab={handleTabChange}
         />
       </Box>
     </Paper>

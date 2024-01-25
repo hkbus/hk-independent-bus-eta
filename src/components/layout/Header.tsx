@@ -203,10 +203,6 @@ const Header = () => {
 export default Header;
 
 const rootSx: SxProps<Theme> = {
-  backgroundColor: (theme) =>
-    theme.palette.mode === "dark"
-      ? theme.palette.background.default
-      : theme.palette.primary.main,
   "& a": {
     textDecoration: "none",
   },
