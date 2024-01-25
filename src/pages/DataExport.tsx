@@ -115,7 +115,6 @@ const DataExport = () => {
               }
             }}
             size="large"
-            sx={buttonSx}
             variant="outlined"
           >
             {t("複制匯出網址")}
@@ -140,15 +139,4 @@ export default DataExport;
 const rootSx: SxProps<Theme> = {
   justifyContent: "center",
   flex: 1,
-};
-
-const buttonSx: SxProps<Theme> = {
-  color: (theme) =>
-    theme.palette.mode === "dark"
-      ? theme.palette.primary.main
-      : theme.palette.text.primary,
-  borderColor: (theme) =>
-    theme.palette.mode === "dark"
-      ? theme.palette.primary.main
-      : theme.palette.text.primary,
 };
