@@ -129,7 +129,7 @@ const EtaLine = ({
   let waitTimeText;
   let trainTextUsed;
   if (isTrain && waitTime <= 1) {
-    waitTimeText = waitTime == 1 ? `${t("即將抵達")} ` : `${t("正在離開")} `;
+    waitTimeText = waitTime === 1 ? `${t("即將抵達")} ` : `${t("正在離開")} `;
     trainTextUsed = true;
   } else {
     waitTimeText = waitTime < 1 ? " - " : `${waitTime} `;
