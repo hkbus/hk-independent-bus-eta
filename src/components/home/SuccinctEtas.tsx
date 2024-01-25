@@ -20,7 +20,6 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
 
   const getEtaString = (eta: Eta | null, highlight: boolean = false) => {
     if (!eta || !eta.eta) {
-      if (eta && eta.remark[i18n.language]) return eta.remark[i18n.language];
       return "";
     } else {
       const waitTime = Math.round(
@@ -93,12 +92,19 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
     }
   };
 
+  let primary = etas ? getEtaString(etas[0], true) : "";
+  if (primary === "" && etas) {
+    primary = null;
+  }
+
   return (
     <ListItemText
       primary={
+        primary != null ? 
         <Typography component="h5" color="textPrimary" sx={primarySx}>
-          {etas ? getEtaString(etas[0], true) : ""}
-        </Typography>
+          {primary}
+        </Typography> :
+        <ScheduleIcon />
       }
       secondary={
         <Typography variant="h6" color="textSecondary" sx={secondarySx}>
