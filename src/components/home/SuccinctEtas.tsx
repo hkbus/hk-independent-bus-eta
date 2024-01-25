@@ -20,6 +20,7 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
 
   const getEtaString = (eta: Eta | null, highlight: boolean = false) => {
     if (!eta || !eta.eta) {
+      if (eta && eta.remark[i18n.language]) return eta.remark[i18n.language];
       return "";
     } else {
       const waitTime = Math.round(

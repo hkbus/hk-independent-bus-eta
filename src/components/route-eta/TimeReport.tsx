@@ -46,6 +46,15 @@ const TimeReport = ({
     );
   }
 
+  let noScheduleRemark;
+  if (etas.length > 0 && etas.every((e) => !e.eta) && etas[0].remark[language]) {
+    noScheduleRemark = etas[0].remark[language];
+  } else if (etas.length === 0 || etas.every((e) => !e.eta)) {
+    noScheduleRemark = t("未有班次資料");
+  } else {
+    noScheduleRemark = null;
+  }
+
   return (
     <Box sx={containerSx}>
       {showStopName && (
@@ -53,8 +62,8 @@ const TimeReport = ({
           {stopList[stopId].name[language]}
         </Typography>
       )}
-      {etas.length === 0 && t("未有班次資料")}
-      {etas.length > 0 &&
+      {noScheduleRemark && noScheduleRemark}
+      {etas.length > 0 && etas.every((e) => e.eta) &&
         etas.map((eta, idx) => (
           <EtaLine
             key={`route-${idx}`}
