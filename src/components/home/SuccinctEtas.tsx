@@ -54,6 +54,8 @@ const SuccinctEtas = ({ routeId, value = undefined, isEndOfTrainLine = false }: 
           {eta.eta.slice(11, 16)}
         </Box>
       );
+
+      const isTrain = eta.co === "mtr" || eta.co === "lightRail";
       const waitTimeJsx = (
         <Box component="span">
           {etaFormat === "diff" && trains.length === 1 && <SingleTrainIcon />}
@@ -72,7 +74,7 @@ const SuccinctEtas = ({ routeId, value = undefined, isEndOfTrainLine = false }: 
                 &nbsp;
               </>
             )}
-            {waitTime < 1 ? " - " : `${waitTime} `}
+            {waitTime < (isTrain ? 2 : 1) ? " - " : `${waitTime} `}
           </Box>
           <Box component="span" sx={{ fontSize: "0.8em" }}>
             {t("分鐘")}

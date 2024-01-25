@@ -123,17 +123,32 @@ const EtaLine = ({
       {eta.slice(11, 16)}
     </Box>
   );
+
+  const isTrain = co === "mtr" || co === "lightRail";
+
+  let waitTimeText;
+  let trainTextUsed;
+  if (isTrain && waitTime <= 1) {
+    waitTimeText = waitTime == 1 ? `${t("即將抵達")} ` : `${t("正在離開")} `;
+    trainTextUsed = true;
+  } else {
+    waitTimeText = waitTime < 1 ? " - " : `${waitTime} `;
+    trainTextUsed = false;
+  }
+
   const waitTimeJsx = (
     <Box component="span">
       <Box
         component="span"
         sx={{ ...waitTimeSx, color: (theme) => theme.palette.warning.main }}
+        fontSize={trainTextUsed && "0.9em"}
       >
-        {waitTime < 1 ? " - " : `${waitTime} `}
+        {waitTimeText}
       </Box>
+      {!trainTextUsed &&
       <Box component="span" sx={{ fontSize: "0.8em" }}>
         {t("分鐘")}
-      </Box>
+      </Box>}
     </Box>
   );
 
@@ -146,17 +161,18 @@ const EtaLine = ({
           {exactTimeJsx}&emsp;{waitTimeJsx}
         </>
       )}
-      {co !== "mtr" && co !== "lightRail" && "&emsp;-&nbsp;"}
+      {!isTrain && <>&emsp;-&nbsp;</>}
       <Box
         component="span"
         sx={{ fontSize: "0.8em", textOverflow: "ellipsis" }}
       >
         {showCompany && <>&emsp;{t(co)}</>}
         &emsp;
-        {co === "mtr" || co === "lightRail" ?
+        {isTrain ?
         <Box component="span" color={getLineColor([co], route, true)}>{getRemark(remark[language], language)}</Box> : 
         getRemark(remark[language], language)}
-        {co === "mtr" || co === "lightRail" ? " " : "&emsp;"}
+        {isTrain && " "}
+        {!isTrain && <>&emsp;</>}
         {branchRoute && dest[language]}
       </Box>
     </Typography>
