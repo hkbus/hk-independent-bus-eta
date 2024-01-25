@@ -97,10 +97,7 @@ const Footer = () => {
 export default Footer;
 
 const rootSx: SxProps<Theme> = {
-  background: (theme) =>
-    theme.palette.mode === "dark"
-      ? theme.palette.background.default
-      : theme.palette.primary.main,
+  background: (theme) => theme.palette.background.default,
   bottom: "0",
   height: "initial",
   "& .MuiBottomNavigationAction-root": {

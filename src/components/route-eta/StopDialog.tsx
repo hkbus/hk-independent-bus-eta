@@ -68,12 +68,6 @@ const rootSx: SxProps<Theme> = {
 };
 
 const titleSx: SxProps<Theme> = {
-  backgroundColor: (theme) =>
-    theme.palette.mode === "dark"
-      ? theme.palette.background.default
-      : theme.palette.primary.main,
-  color: (theme) =>
-    theme.palette.mode === "dark"
-      ? theme.palette.primary.main
-      : theme.palette.text.primary,
+  backgroundColor: (theme) => theme.palette.background.default,
+  color: (theme) => theme.palette.primary.main,
 };
