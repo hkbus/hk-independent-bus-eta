@@ -339,7 +339,7 @@ export const coToType: Record<Company, TransportType> = {
 };
 
 export const PLATFORM = [
-  "🄌",
+  "",
   "➊",
   "➋",
   "➌",
@@ -483,3 +483,7 @@ export const getLineColor = (companies, route, forPlatform=false) => {
   }
   return color;
 };
+
+export const distinctFilter = (value, index, array) => {
+  return array.indexOf(value) === index;
+}

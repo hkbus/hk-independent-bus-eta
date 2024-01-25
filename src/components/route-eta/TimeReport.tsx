@@ -29,7 +29,8 @@ const TimeReport = ({
   } = useContext(AppContext);
   const etas = useEtas(`${routeId}/${seq}`);
 
-  const stopId = Object.values(routeList[routeId].stops)[0][seq];
+  const { route, co, stops } = routeList[routeId];
+  const stopId = Object.values(stops)[0][seq];
   const routeDests = useMemo(
     () =>
       Object.values(routeList[routeId].stops)
@@ -37,6 +38,13 @@ const TimeReport = ({
         .concat(routeList[routeId].dest),
     [routeList, routeId, stopList]
   );
+
+  let isEndOfTrainLine = false;
+  if (co[0] === "mtr") {
+    isEndOfTrainLine = stops["mtr"].indexOf(stopId) + 1 >= stops["mtr"].length;
+  } else if (co.includes("lightRail")) {
+    isEndOfTrainLine = stops["lightRail"].indexOf(stopId) + 1 >= stops["lightRail"].length;
+  }
 
   if (etas == null) {
     return (
@@ -53,15 +61,16 @@ const TimeReport = ({
           {stopList[stopId].name[language]}
         </Typography>
       )}
-      {etas.length === 0 && t("未有班次資料")}
+      {isEndOfTrainLine && etas.length === 0 && t("終點站")}
+      {!isEndOfTrainLine && etas.length === 0 && t("未有班次資料")}
       {etas.length > 0 &&
         etas.map((eta, idx) => (
           <EtaLine
             key={`route-${idx}`}
             eta={eta}
             routeDests={routeDests}
-            showCompany={routeList[routeId].co.length > 1}
-            route={routeList[routeId].route}
+            showCompany={co.length > 1}
+            route={route}
           />
         ))}
     </Box>
@@ -100,7 +109,7 @@ const EtaLine = ({
       }
     }
     return true;
-  }, [routeDests, dest]);
+  }, [routeDests, dest, co]);
 
   const waitTime = Math.round(
     (new Date(eta).getTime() - new Date().getTime()) / 60 / 1000

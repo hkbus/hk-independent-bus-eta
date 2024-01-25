@@ -19,11 +19,13 @@ import { Link, useNavigate } from "react-router-dom";
 import AppContext from "../../AppContext";
 import { ManageMode } from "../../data";
 import {
+  getLineColor,
   PLATFORM,
   getDistance,
   getDistanceWithUnit,
   toProperCase,
   vibrate,
+  distinctFilter,
 } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
 import SuccinctEtas from "./SuccinctEtas";
@@ -96,9 +98,10 @@ const SuccinctTimeReport = ({
   } = useContext(AppContext);
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
-  const { co, stops, dest, fares, faresHoliday } =
+  const { co, stops, dest, fares, faresHoliday, route } =
     routeList[routeKey] || DEFAULT_ROUTE;
-  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DEFAULT_STOP;
+  const stopId = getStops(co, stops)[parseInt(seq, 10)];
+  const stop = stopList[stopId] || DEFAULT_STOP;
 
   const navigate = useNavigate();
   const handleClick = (e) => {
@@ -112,19 +115,31 @@ const SuccinctTimeReport = ({
   const platform = useMemo(() => {
     if (etas && etas.length > 0) {
       const no =
-        PLATFORM[
-          parseInt(
-            (/Platform ([\d]+)/gm.exec(etas[0].remark?.en ?? "") ?? [])[1] ??
-              "0",
-            10
-          )
-        ];
+        etas.map((p) => 
+          PLATFORM[
+            parseInt(
+              (/Platform ([\d]+)/gm.exec(p.remark?.en ?? "") ?? [])[1] ??
+                "0",
+              10
+            )
+          ]
+        )
+        .filter((p) => p)
+        .filter(distinctFilter)
+        .sort()
+        .join("");
       if (!no) return "";
-      if (language === "zh") return `${no}月台 `;
-      else return `Platform ${no} `;
+      return `${no} `;
     }
     return "";
-  }, [etas, language]);
+  }, [etas]);
+
+  let isEndOfTrainLine = false;
+  if (co[0] === "mtr") {
+    isEndOfTrainLine = stops["mtr"].indexOf(stopId) + 1 >= stops["mtr"].length;
+  } else if (co.includes("lightRail")) {
+    isEndOfTrainLine = stops["lightRail"].indexOf(stopId) + 1 >= stops["lightRail"].length;
+  }
 
   return (
     <>
@@ -150,7 +165,7 @@ const SuccinctTimeReport = ({
               sx={fromToWrapperSx}
             >
               <span>
-                {platform}
+                <Box component="span" color={getLineColor(co, route, true)}>{platform}</Box>
                 {t("往")}
               </span>
               <b>{toProperCase(dest[language])}</b>
@@ -171,7 +186,7 @@ const SuccinctTimeReport = ({
           }}
           sx={routeDestSx}
         />
-        {mode === "time" && <SuccinctEtas routeId={routeId} value={etas} />}
+        {mode === "time" && <SuccinctEtas routeId={routeId} value={etas} isEndOfTrainLine={isEndOfTrainLine} />}
         {mode === "order" && (
           <Box sx={iconContainerSx}>
             <ReorderIcon />
@@ -198,6 +213,7 @@ const DEFAULT_ROUTE = {
   nlbId: 0,
   fares: [],
   faresHoliday: [],
+  route: ""
 };
 const DEFAULT_STOP = {
   location: { lat: 0, lng: 0 },
