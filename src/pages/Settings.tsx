@@ -303,7 +303,10 @@ const Settings = () => {
               <WatchIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={t("智能手錶應用程式")} />
+          <ListItemText 
+            primary={t("智能手錶應用程式")}
+            secondary={t("支援 WearOS 及 WatchOS 平台")}
+          />
         </ListItemButton>
         {!iOSRNWebView() ? (
           <ListItemButton
