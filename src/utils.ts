@@ -476,8 +476,8 @@ export const getLineColor = (companies, route, forPlatform=false) => {
     color = "#AAD4FF";
   } else if (companies.includes("nlb")) {
     color = "#9BFFC6";
-  } else if (companies.includes("ctb") && companies.includes("kmb")) {
-    color = "#FF962E";
+  } else if (companies.includes("kmb")) {
+    color = "#FF4747";
   } else if (companies.includes("ctb")) {
     color = "#FFE15E";
   }
