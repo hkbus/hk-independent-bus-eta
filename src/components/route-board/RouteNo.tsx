@@ -8,8 +8,11 @@ interface RouteNoProps {
 }
 
 const RouteNo = ({ routeNo, component, align }: RouteNoProps) => {
-  const [prefix, suffix] = routeNo.match(/[0-9][A-Z]+$/)
-    ? [routeNo.slice(0, -1), routeNo.slice(-1)]
+  // Suffix Examples: 962X=> X, 44A1 => A1, 25MS => MS, AEL => "", NA29 => ""
+  const suffixMatch = routeNo.match(/(?<=[0-9])[A-Z]+[0-9]*$/);
+  const suffixLength = (suffixMatch !== null && suffixMatch[0].length);
+  const [prefix, suffix] = (suffixMatch !== null)
+    ? [routeNo.slice(0, -suffixLength), routeNo.slice(-suffixLength)]
     : [routeNo, ""];
   return (
     <Typography
