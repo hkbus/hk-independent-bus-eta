@@ -23,8 +23,10 @@ const RouteHeader = ({ routeId }: { routeId: string }) => {
         {t("往")} {toProperCase(dest[i18n.language])}{" "}
         {nlbId ? t("由") + " " + toProperCase(orig[i18n.language]) : ""}
       </Typography>
-      <ReverseButton routeId={routeId} />
-      <RouteWatchButton routeId={routeId} />
+      <Box sx={leftBtnGroupSx}>
+        <ReverseButton routeId={routeId} />
+        <RouteWatchButton routeId={routeId} />
+      </Box>
       <Box sx={rightBtnGroupSx}>
         <RouteStarButton routeId={routeId} />
         <TimetableButton routeId={routeId} />
@@ -41,8 +43,18 @@ const PaperSx: SxProps<Theme> = {
   position: "relative",
 };
 
+const leftBtnGroupSx: SxProps<Theme> = {
+  position: "absolute",
+  top: "0",
+  height: "100%",
+  left: "1px",
+  display: "flex",
+};
+
 const rightBtnGroupSx: SxProps<Theme> = {
   position: "absolute",
   top: "0",
-  right: "2%",
+  height: "100%",
+  right: "1px",
+  display: "flex",
 };

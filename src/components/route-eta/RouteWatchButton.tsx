@@ -28,9 +28,6 @@ export default RouteWatchButton;
 const buttonSx: SxProps<Theme> = {
   color: (theme) =>
     theme.palette.getContrastText(theme.palette.background.default),
-  position: "absolute",
-  top: "10px",
-  left: "17%",
   flexDirection: "column",
   justifyContent: "center",
   "& > .MuiButton-label": {
