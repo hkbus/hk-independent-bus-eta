@@ -5,7 +5,7 @@ import AppContext from "../../AppContext";
 import { useEtas } from "../../hooks/useEtas";
 import { LinearProgress } from "../Progress";
 import { Eta, Terminal } from "hk-bus-eta";
-import { PLATFORM, getLineColor } from "../../utils";
+import { getPlatformSymbol, getLineColor } from "../../utils";
 
 interface TimeReportProps {
   routeId: string;
@@ -94,7 +94,7 @@ const EtaLine = ({
     t,
     i18n: { language },
   } = useTranslation();
-  const { etaFormat } = useContext(AppContext);
+  const { etaFormat, platformMode } = useContext(AppContext);
 
   const branchRoute = useMemo(() => {
     if (co === "mtr") {
@@ -169,8 +169,8 @@ const EtaLine = ({
         {showCompany && <>&emsp;{t(co)}</>}
         &emsp;
         {isTrain ?
-        <Box component="span" color={getLineColor([co], route, true)}>{getRemark(remark[language], language)}</Box> : 
-        getRemark(remark[language], language)}
+        <Box component="span" color={getLineColor([co], route, true)}>{getRemark(remark[language], language, platformMode)}</Box> : 
+        getRemark(remark[language], language, platformMode)}
         {isTrain && " "}
         {!isTrain && <>&emsp;</>}
         {branchRoute && dest[language]}
@@ -179,7 +179,7 @@ const EtaLine = ({
   );
 };
 
-const getRemark = (remark: string | null, language: string) => {
+const getRemark = (remark: string | null, language: string, platformMode: boolean) => {
   if (remark === null) return "";
   // retrieve single digit numerical string from remark as a circle text
   const platform =
@@ -194,7 +194,7 @@ const getRemark = (remark: string | null, language: string) => {
   // or if the only numerical string occurrence are more than one digit, use original remark
   if (platform.length === 2 && platform[1].length) {
     // only support single digit number
-    remark = PLATFORM[platform[1]];
+    remark = getPlatformSymbol(platform[1], platformMode);
   }
 
   if (language === "zh") {

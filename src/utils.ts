@@ -338,7 +338,20 @@ export const coToType: Record<Company, TransportType> = {
   mtr: "mtr",
 };
 
-export const PLATFORM = [
+const PLATFORM = [
+  "",
+  "①",
+  "②",
+  "③",
+  "④",
+  "⑤",
+  "⑥",
+  "⑦",
+  "⑧",
+  "⑨",
+] as const;
+
+const PLATFORM_SOLID = [
   "",
   "➊",
   "➋",
@@ -350,6 +363,10 @@ export const PLATFORM = [
   "➑",
   "➒",
 ] as const;
+
+export const getPlatformSymbol = (number, platformMode) => {
+  return platformMode ? PLATFORM_SOLID[number] : PLATFORM[number];
+};
 
 export const formatHandling = (
   routes: string[],

@@ -112,6 +112,7 @@ const DataImport = () => {
       etaFormat: obj.etaFormat ?? "diff",
       _colorMode: obj._colorMode ?? "system",
       energyMode: obj.energyMode ?? false,
+      platformMode: obj.platformMode ?? false,
       vibrateDuration: obj.vibrateDuration ?? 1,
       isVisible: true,
       analytics: obj.analytics ?? true,

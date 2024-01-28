@@ -70,6 +70,10 @@ export interface AppState {
    */
   energyMode: boolean;
   /**
+   * platform display mode 
+   */
+  platformMode: boolean;
+  /**
    * vibrate duration
    */
   vibrateDuration: number;
@@ -129,6 +133,7 @@ interface AppContextValue
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
   toggleEnergyMode: () => void;
+  togglePlatformMode: () => void;
   toggleVibrateDuration: () => void;
   toggleAnalytics: () => void; // not
   updateRefreshInterval: (interval: number) => void;
@@ -240,6 +245,7 @@ export const AppContextProvider = ({
         ? devicePreferColorScheme
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
+      platformMode: !!JSON.parse(localStorage.getItem("platformMode")) || false,
       vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
       isRecentSearchShown: !!JSON.parse(
         localStorage.getItem("isRecentSearchShown") ?? "true"
@@ -450,6 +456,16 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const togglePlatformMode = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prevPlatformMode = state.platformMode;
+        const platformMode = !prevPlatformMode;
+        state.platformMode = platformMode;
+      })
+    );
+  }, []);
+
   const toggleAnalytics = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
@@ -643,6 +659,10 @@ export const AppContextProvider = ({
   }, [state.energyMode]);
 
   useEffect(() => {
+    localStorage.setItem("platformMode", JSON.stringify(state.platformMode));
+  }, [state.platformMode]);
+
+  useEffect(() => {
     localStorage.setItem(
       "isRecentSearchShown",
       JSON.stringify(state.isRecentSearchShown)
@@ -716,6 +736,7 @@ export const AppContextProvider = ({
         toggleEtaFormat,
         toggleColorMode,
         toggleEnergyMode,
+        togglePlatformMode,
         toggleVibrateDuration,
         toggleAnalytics,
         updateRefreshInterval,

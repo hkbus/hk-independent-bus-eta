@@ -20,7 +20,7 @@ import AppContext from "../../AppContext";
 import { ManageMode } from "../../data";
 import {
   getLineColor,
-  PLATFORM,
+  getPlatformSymbol,
   getDistance,
   getDistanceWithUnit,
   toProperCase,
@@ -95,6 +95,7 @@ const SuccinctTimeReport = ({
   const {
     db: { routeList, stopList },
     vibrateDuration,
+    platformMode,
   } = useContext(AppContext);
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
@@ -116,13 +117,13 @@ const SuccinctTimeReport = ({
     if (etas && etas.length > 0) {
       const no =
         etas.map((p) => 
-          PLATFORM[
+          getPlatformSymbol(
             parseInt(
               (/Platform ([\d]+)/gm.exec(p.remark?.en ?? "") ?? [])[1] ??
                 "0",
               10
-            )
-          ]
+            ), platformMode
+          )
         )
         .filter((p) => p)
         .filter(distinctFilter)
@@ -132,7 +133,7 @@ const SuccinctTimeReport = ({
       return `${no} `;
     }
     return "";
-  }, [etas]);
+  }, [etas, platformMode]);
 
   let isEndOfTrainLine = false;
   if (co[0] === "mtr") {
