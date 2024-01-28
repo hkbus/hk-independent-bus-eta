@@ -70,4 +70,5 @@ const paperSx: SxProps<Theme> = {
   flexDirection: "column",
   overflow: "auto",
   width: "100%",
+  height: "100%",
 };
