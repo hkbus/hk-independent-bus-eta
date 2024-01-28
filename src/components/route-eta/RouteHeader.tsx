@@ -7,6 +7,7 @@ import AppContext from "../../AppContext";
 import ReverseButton from "./ReverseButton";
 import TimetableButton from "./TimeTableButton";
 import RouteStarButton from "./RouteStarButton";
+import RouteWatchButton from "./RouteWatchButton";
 
 const RouteHeader = ({ routeId }: { routeId: string }) => {
   const { t, i18n } = useTranslation();
@@ -23,6 +24,7 @@ const RouteHeader = ({ routeId }: { routeId: string }) => {
         {nlbId ? t("由") + " " + toProperCase(orig[i18n.language]) : ""}
       </Typography>
       <ReverseButton routeId={routeId} />
+      <RouteWatchButton routeId={routeId} />
       <Box sx={rightBtnGroupSx}>
         <RouteStarButton routeId={routeId} />
         <TimetableButton routeId={routeId} />
