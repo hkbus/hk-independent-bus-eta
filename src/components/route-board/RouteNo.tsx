@@ -7,6 +7,7 @@ interface RouteNoProps {
   align?: "right" | "left" | "inherit" | "center" | "justify";
   fontSize?: string;
 }
+
   const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
   // Suffix Examples: 962X=> X, 44A1 => A1, 25MS => MS, AEL => "", NA29 => ""
   const suffixMatch = routeNo.match(/(?<=[0-9])[A-Z]+[0-9]*$/);
