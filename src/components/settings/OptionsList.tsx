@@ -275,7 +275,9 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
-          resetUsageRecord();
+          if (window.confirm(t("確定清空？"))) {
+            resetUsageRecord();
+          }
         }}
       >
         <ListItemAvatar>
