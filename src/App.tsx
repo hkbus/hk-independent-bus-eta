@@ -170,11 +170,11 @@ const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
       ? {
           // light mode
           background: {
-            default: "#fedb00",
+            default: "#c1d7db",
             contrast: "rgba(255, 255, 255, 0.12)",
           },
           primary: {
-            main: "#fedb00", // yellow
+            main: "#c1d7db", // yellow
             contrastText: "rgba(0, 0, 0, 0.12)",
           },
           warning: {

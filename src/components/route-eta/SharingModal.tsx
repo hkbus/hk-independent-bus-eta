@@ -187,7 +187,7 @@ const domToImage = (domId: string, colorMode: "dark" | "light") => {
   if (document.getElementById(domId)) {
     return domtoimage
       .toPng(document.getElementById(domId), {
-        bgcolor: colorMode === "light" ? "#fedb00" : "#000",
+        bgcolor: colorMode === "light" ? "#FFFFFF" : "#000",
       })
       .then((base64) => [
         base64,
@@ -226,7 +226,7 @@ const boxContainerSx: SxProps<Theme> = {
   background: (theme) =>
     theme.palette.mode === "dark"
       ? theme.palette.background.default
-      : "#fedb00",
+      : "#FFFFFF",
 };
 
 const imgContainerSx: SxProps<Theme> = {
@@ -243,7 +243,7 @@ const buttonContainerSx: SxProps<Theme> = {
   backgroundColor: (theme) =>
     theme.palette.mode === "dark"
       ? theme.palette.background.default
-      : "#fedb00",
+      : "#FFFFFF",
 };
 
 const buttonSx: SxProps<Theme> = {

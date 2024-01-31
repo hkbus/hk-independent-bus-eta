@@ -426,7 +426,7 @@ const Settings = () => {
           <ListItemAvatar>
             <Avatar sx={iconSx} src="/img/logo128.png" alt="App Logo"></Avatar>
           </ListItemAvatar>
-          <ListItemText primary={t("圖標來源")} secondary={"陳瓜 Chan Gua"} />
+          <ListItemText primary={t("圖標來源")} secondary={"Mavis 雞蛋妹"} />
         </ListItemButton>
         <ListItemButton
           component={"a"}
