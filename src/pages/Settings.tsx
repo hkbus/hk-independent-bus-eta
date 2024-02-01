@@ -32,6 +32,7 @@ import {
   Info as InfoIcon,
   SendToMobile as SendToMobileIcon,
   HelpOutline as HelpIcon,
+  QuestionAnswerOutlined as FaqIcon,
   Sync as SyncIcon,
   SyncDisabled as SyncDisabledIcon,
   SecurityUpdate as SecurityUpdateIcon,
@@ -413,6 +414,24 @@ const Settings = () => {
           <ListItemText
             primary={t("Source code")}
             secondary={"GPL-3.0 License"}
+          />
+        </ListItemButton>
+        <ListItemButton
+          component={"a"}
+          href={`/faq`}
+          target="_blank"
+          onClick={() => {
+            vibrate(vibrateDuration);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <FaqIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={t("FAQ")}
+            secondary="Eng Version is currently not available"
           />
         </ListItemButton>
         <ListItemButton
