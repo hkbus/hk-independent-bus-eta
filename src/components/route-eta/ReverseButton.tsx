@@ -1,5 +1,5 @@
-import React, { useContext, useMemo, useCallback } from "react";
-import { Button, Divider, SxProps, Theme } from "@mui/material";
+import { useContext, useMemo, useCallback } from "react";
+import { Button, SxProps, Theme } from "@mui/material";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { RouteListEntry } from "hk-bus-eta";
 import { useNavigate } from "react-router-dom";
@@ -105,10 +105,9 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
   return (
     reverseRoute.length > 0 && (
       <>
-        <Divider orientation="vertical" sx={buttonDividerSx} />
         <Button
           variant="text"
-          aria-label="open-timetable"
+          aria-label="reverse"
           sx={buttonSx}
           size="small"
           startIcon={<SyncAltIcon />}
@@ -123,20 +122,12 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
 
 export default ReverseButton;
 
-const buttonDividerSx: SxProps<Theme> = {
-  position: "absolute",
-  top: "0",
-  left: "calc(64px + 2%)",
-};
-
 const buttonSx: SxProps<Theme> = {
   color: (theme) =>
     theme.palette.getContrastText(theme.palette.background.default),
-  position: "absolute",
-  top: "0",
-  left: "2%",
   flexDirection: "column",
   justifyContent: "center",
+  minWidth: "50px",
   "& > .MuiButton-label": {
     flexDirection: "column",
     justifyContent: "center",

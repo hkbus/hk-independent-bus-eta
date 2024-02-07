@@ -1,4 +1,3 @@
-import React from "react";
 import { SxProps, Theme, Typography } from "@mui/material";
 
 interface RouteNoProps {
@@ -43,7 +42,6 @@ export default RouteNo;
 
 const rootSx: SxProps<Theme> = {
   lineHeight: "normal",
-  display: "inline",
   "& > span:nth-of-type(1)": {
     fontSize: "1.5rem",
     fontFamily: '"Oswald", sans-serif',

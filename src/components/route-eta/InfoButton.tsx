@@ -1,43 +1,35 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Button, SxProps, Theme } from "@mui/material";
-import { Schedule as ScheduleIcon } from "@mui/icons-material";
-import TimetableDrawer from "./TimetableDrawer";
+import { Public as PublicIcon } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 
-const TimeTableButton = ({ routeId }: { routeId: string }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const InfoButton = ({ routeId }: { routeId: string }) => {
   const { t } = useTranslation();
   const {
     db: { routeList },
   } = useContext(AppContext);
-  const { freq, jt } = routeList[routeId];
+  const { url } = routeList[routeId];
 
   return (
-    freq && (
+    url && (
       <>
         <Button
           variant="text"
-          aria-label="open-timetable"
+          aria-label="open-information"
           sx={buttonSx}
           size="small"
-          startIcon={<ScheduleIcon />}
-          onClick={() => setIsOpen(true)}
+          startIcon={<PublicIcon />}
+          onClick={() => window.open(url, "_blank")}
         >
-          {t("時間表")}
+          {t("資訊")}
         </Button>
-        <TimetableDrawer
-          freq={freq}
-          jt={jt}
-          open={isOpen}
-          onClose={() => setIsOpen(false)}
-        />
       </>
     )
   );
 };
 
-export default TimeTableButton;
+export default InfoButton;
 
 const buttonSx: SxProps<Theme> = {
   color: (theme) =>
