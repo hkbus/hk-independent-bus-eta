@@ -12,7 +12,7 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { Eta, Location } from "hk-bus-eta";
+import { Company, Eta, Location } from "hk-bus-eta";
 import React, { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
@@ -115,14 +115,14 @@ const SuccinctTimeReport = ({
 
   const platform = useMemo(() => {
     if (etas && etas.length > 0) {
-      const no =
-        etas.map((p) => 
+      const no = etas
+        .map((p) =>
           getPlatformSymbol(
             parseInt(
-              (/Platform ([\d]+)/gm.exec(p.remark?.en ?? "") ?? [])[1] ??
-                "0",
+              (/Platform ([\d]+)/gm.exec(p.remark?.en ?? "") ?? [])[1] ?? "0",
               10
-            ), platformMode
+            ),
+            platformMode
           )
         )
         .filter((p) => p)
@@ -139,7 +139,8 @@ const SuccinctTimeReport = ({
   if (co[0] === "mtr") {
     isEndOfTrainLine = stops["mtr"].indexOf(stopId) + 1 >= stops["mtr"].length;
   } else if (co.includes("lightRail")) {
-    isEndOfTrainLine = stops["lightRail"].indexOf(stopId) + 1 >= stops["lightRail"].length;
+    isEndOfTrainLine =
+      stops["lightRail"].indexOf(stopId) + 1 >= stops["lightRail"].length;
   }
 
   return (
@@ -156,9 +157,13 @@ const SuccinctTimeReport = ({
         }
         sx={rootSx}
       >
-        <ListItemText 
-          primary={<RouteNo routeNo={language === "zh" ? t(routeNo) : routeNo} 
-          fontSize={co[0] === "mtr" ? "1.1rem" : null}/>} 
+        <ListItemText
+          primary={
+            <RouteNo
+              routeNo={language === "zh" ? t(routeNo) : routeNo}
+              fontSize={co[0] === "mtr" ? "1.1rem" : null}
+            />
+          }
         />
         <ListItemText
           primary={
@@ -169,7 +174,9 @@ const SuccinctTimeReport = ({
               sx={fromToWrapperSx}
             >
               <span>
-                <Box component="span" color={getLineColor(co, route, true)}>{platform}</Box>
+                <Box component="span" color={getLineColor(co, route, true)}>
+                  {platform}
+                </Box>
                 {t("往")}
               </span>
               <b>{toProperCase(dest[language])}</b>
@@ -190,7 +197,13 @@ const SuccinctTimeReport = ({
           }}
           sx={routeDestSx}
         />
-        {mode === "time" && <SuccinctEtas routeId={routeId} value={etas} isEndOfTrainLine={isEndOfTrainLine} />}
+        {mode === "time" && (
+          <SuccinctEtas
+            routeId={routeId}
+            value={etas}
+            isEndOfTrainLine={isEndOfTrainLine}
+          />
+        )}
         {mode === "order" && (
           <Box sx={iconContainerSx}>
             <ReorderIcon />
@@ -210,14 +223,14 @@ const SuccinctTimeReport = ({
 };
 
 const DEFAULT_ROUTE = {
-  co: [""],
+  co: ["kmb"] as Company[],
   stops: { "": [""] },
   dest: { zh: "", en: "" },
   bound: "",
   nlbId: 0,
   fares: [],
   faresHoliday: [],
-  route: ""
+  route: "",
 };
 const DEFAULT_STOP = {
   location: { lat: 0, lng: 0 },

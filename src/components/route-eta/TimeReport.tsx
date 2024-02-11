@@ -43,7 +43,8 @@ const TimeReport = ({
   if (co[0] === "mtr") {
     isEndOfTrainLine = stops["mtr"].indexOf(stopId) + 1 >= stops["mtr"].length;
   } else if (co.includes("lightRail")) {
-    isEndOfTrainLine = stops["lightRail"].indexOf(stopId) + 1 >= stops["lightRail"].length;
+    isEndOfTrainLine =
+      stops["lightRail"].indexOf(stopId) + 1 >= stops["lightRail"].length;
   }
 
   if (etas == null) {
@@ -145,10 +146,11 @@ const EtaLine = ({
       >
         {waitTimeText}
       </Box>
-      {!trainTextUsed &&
-      <Box component="span" sx={{ fontSize: "0.8em" }}>
-        {t("分鐘")}
-      </Box>}
+      {!trainTextUsed && (
+        <Box component="span" sx={{ fontSize: "0.8em" }}>
+          {t("分鐘")}
+        </Box>
+      )}
     </Box>
   );
 
@@ -168,9 +170,13 @@ const EtaLine = ({
       >
         {showCompany && <>&emsp;{t(co)}</>}
         &emsp;
-        {isTrain ?
-        <Box component="span" color={getLineColor([co], route, true)}>{getRemark(remark[language], language, platformMode)}</Box> : 
-        getRemark(remark[language], language, platformMode)}
+        {isTrain ? (
+          <Box component="span" color={getLineColor([co], route, true)}>
+            {getRemark(remark[language], language, platformMode)}
+          </Box>
+        ) : (
+          getRemark(remark[language], language, platformMode)
+        )}
         {isTrain && " "}
         {!isTrain && <>&emsp;</>}
         {branchRoute && dest[language]}
@@ -179,7 +185,11 @@ const EtaLine = ({
   );
 };
 
-const getRemark = (remark: string | null, language: string, platformMode: boolean) => {
+const getRemark = (
+  remark: string | null,
+  language: string,
+  platformMode: boolean
+) => {
   if (remark === null) return "";
   // retrieve single digit numerical string from remark as a circle text
   const platform =

@@ -13,7 +13,11 @@ interface SuccinctEtasProps {
   isEndOfTrainLine?: boolean;
 }
 
-const SuccinctEtas = ({ routeId, value = undefined, isEndOfTrainLine = false }: SuccinctEtasProps) => {
+const SuccinctEtas = ({
+  routeId,
+  value = undefined,
+  isEndOfTrainLine = false,
+}: SuccinctEtasProps) => {
   const { t, i18n } = useTranslation();
   const { etaFormat, annotateScheduled } = useContext(AppContext);
   const _etas = useEtas(routeId, Boolean(value));

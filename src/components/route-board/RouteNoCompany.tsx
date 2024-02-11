@@ -10,7 +10,10 @@ const RouteNoCompany = ({ route }) => {
   return (
     <Box>
       <div>
-        <RouteNo routeNo={i18n.language === "zh" ? t(routeNo) : routeNo} fontSize={route[1].co[0] === "mtr" ? "1.2rem" : null}/>
+        <RouteNo
+          routeNo={i18n.language === "zh" ? t(routeNo) : routeNo}
+          fontSize={route[1].co[0] === "mtr" ? "1.2rem" : null}
+        />
         {parseInt(serviceType, 10) >= 2 && (
           <Typography variant="caption" sx={specialTripSx}>
             {t("特別班")}

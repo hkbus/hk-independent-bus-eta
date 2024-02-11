@@ -11,7 +11,11 @@ const StopRouteList = ({ stops, isFocus }: StopRouteListProps) => {
   const stopEtas = useStopEtas({ stopKeys: stops, disabled: !isFocus });
 
   if (stopEtas.length === 0) {
-    return <Box textAlign="center"><CircularProgress sx={{ my: 5 }} /></Box>
+    return (
+      <Box textAlign="center">
+        <CircularProgress sx={{ my: 5 }} />
+      </Box>
+    );
   }
 
   return (

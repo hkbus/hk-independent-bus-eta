@@ -70,7 +70,7 @@ export interface AppState {
    */
   energyMode: boolean;
   /**
-   * platform display mode 
+   * platform display mode
    */
   platformMode: boolean;
   /**

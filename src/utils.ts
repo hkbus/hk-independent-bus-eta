@@ -338,18 +338,7 @@ export const coToType: Record<Company, TransportType> = {
   mtr: "mtr",
 };
 
-const PLATFORM = [
-  "",
-  "①",
-  "②",
-  "③",
-  "④",
-  "⑤",
-  "⑥",
-  "⑦",
-  "⑧",
-  "⑨",
-] as const;
+const PLATFORM = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"] as const;
 
 const PLATFORM_SOLID = [
   "",
@@ -412,7 +401,11 @@ export const formatHandling = (
     .join("|");
 };
 
-export const getLineColor = (companies, route, forPlatform=false) => {
+export const getLineColor = (
+  companies: Company[],
+  route: string,
+  forPlatform: boolean = false
+) => {
   let color = "#FF4747";
   if (companies[0] === "mtr") {
     switch (route) {
@@ -420,31 +413,31 @@ export const getLineColor = (companies, route, forPlatform=false) => {
         color = "#00888E";
         break;
       case "TCL":
-        color = "#F3982D"
+        color = "#F3982D";
         break;
       case "TML":
-        color = "#9C2E00"
+        color = "#9C2E00";
         break;
       case "TKL":
-        color = "#7E3C93"
+        color = "#7E3C93";
         break;
       case "EAL":
-        color = "#5EB7E8"
+        color = "#5EB7E8";
         break;
       case "SIL":
-        color = "#CBD300"
+        color = "#CBD300";
         break;
       case "TWL":
-        color = "#E60012"
+        color = "#E60012";
         break;
       case "ISL":
-        color = "#0075C2"
+        color = "#0075C2";
         break;
       case "KTL":
-        color = "#00A040"
+        color = "#00A040";
         break;
       case "DRL":
-        color = "#EB6EA5"
+        color = "#EB6EA5";
         break;
     }
   } else if (companies.includes("lightRail")) {
@@ -456,34 +449,34 @@ export const getLineColor = (companies, route, forPlatform=false) => {
           color = "#DA2127";
           break;
         case "507":
-          color = "#00A652"
+          color = "#00A652";
           break;
         case "610":
-          color = "#551C15"
+          color = "#551C15";
           break;
         case "614":
-          color = "#00BFF3"
+          color = "#00BFF3";
           break;
         case "614P":
-          color = "#F4858E"
+          color = "#F4858E";
           break;
         case "615":
-          color = "#FFDD00"
+          color = "#FFDD00";
           break;
         case "615P":
-          color = "#016682"
+          color = "#016682";
           break;
         case "705":
-          color = "#73BF43"
+          color = "#73BF43";
           break;
         case "706":
-          color = "#B47AB5"
+          color = "#B47AB5";
           break;
         case "751":
-          color = "#F48221"
+          color = "#F48221";
           break;
         case "761P":
-          color = "#6F2D91"
+          color = "#6F2D91";
           break;
       }
     }
@@ -503,4 +496,4 @@ export const getLineColor = (companies, route, forPlatform=false) => {
 
 export const distinctFilter = (value, index, array) => {
   return array.indexOf(value) === index;
-}
+};

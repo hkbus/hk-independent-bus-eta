@@ -239,7 +239,10 @@ const geoJsonStyle = (companies, route) => {
     return {
       color: getLineColor(companies, route),
       weight: 4,
-      className: companies.includes("ctb") && companies.includes("kmb") ? classes.jointlyLine : null,
+      className:
+        companies.includes("ctb") && companies.includes("kmb")
+          ? classes.jointlyLine
+          : null,
     };
   };
 };
@@ -369,10 +372,10 @@ const rootSx: SxProps<Theme> = {
     animation: `${classes.jointlyLine}-color 10s infinite linear 1.5s`,
   },
   [`@keyframes ${classes.jointlyLine}-color`]: {
-    '50%': {
+    "50%": {
       stroke: getLineColor(["ctb"], ""),
     },
-    '100%': {
+    "100%": {
       stroke: getLineColor(["kmb"], ""),
     },
   },

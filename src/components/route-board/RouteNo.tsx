@@ -8,7 +8,7 @@ interface RouteNoProps {
   fontSize?: string;
 }
 
-  const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
+const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
   // Suffix Examples: 962X=> X, 44A1 => A1, 25MS => MS, AEL => "", NA29 => ""
   let splitIdx = routeNo.length;
   for (let i = 1; i < routeNo.length; ++i) {
