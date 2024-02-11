@@ -5,7 +5,7 @@ import AppContext from "../../AppContext";
 import { useEtas } from "../../hooks/useEtas";
 import { LinearProgress } from "../Progress";
 import { Eta, Terminal } from "hk-bus-eta";
-import { PLATFORM } from "../../utils";
+import { getPlatformSymbol, getLineColor } from "../../utils";
 
 interface TimeReportProps {
   routeId: string;
@@ -29,7 +29,8 @@ const TimeReport = ({
   } = useContext(AppContext);
   const etas = useEtas(`${routeId}/${seq}`);
 
-  const stopId = Object.values(routeList[routeId].stops)[0][seq];
+  const { route, co, stops } = routeList[routeId];
+  const stopId = Object.values(stops)[0][seq];
   const routeDests = useMemo(
     () =>
       Object.values(routeList[routeId].stops)
@@ -37,6 +38,14 @@ const TimeReport = ({
         .concat(routeList[routeId].dest),
     [routeList, routeId, stopList]
   );
+
+  let isEndOfTrainLine = false;
+  if (co[0] === "mtr") {
+    isEndOfTrainLine = stops["mtr"].indexOf(stopId) + 1 >= stops["mtr"].length;
+  } else if (co.includes("lightRail")) {
+    isEndOfTrainLine =
+      stops["lightRail"].indexOf(stopId) + 1 >= stops["lightRail"].length;
+  }
 
   if (etas == null) {
     return (
@@ -53,14 +62,16 @@ const TimeReport = ({
           {stopList[stopId].name[language]}
         </Typography>
       )}
-      {etas.length === 0 && t("未有班次資料")}
+      {isEndOfTrainLine && etas.length === 0 && t("終點站")}
+      {!isEndOfTrainLine && etas.length === 0 && t("未有班次資料")}
       {etas.length > 0 &&
         etas.map((eta, idx) => (
           <EtaLine
             key={`route-${idx}`}
             eta={eta}
             routeDests={routeDests}
-            showCompany={routeList[routeId].co.length > 1}
+            showCompany={co.length > 1}
+            route={route}
           />
         ))}
     </Box>
@@ -71,20 +82,25 @@ interface EtaMsgProps {
   eta: Eta;
   routeDests: Terminal[];
   showCompany: boolean;
+  route: string;
 }
 
 const EtaLine = ({
   eta: { eta, remark, co, dest },
   routeDests,
   showCompany,
+  route,
 }: EtaMsgProps) => {
   const {
     t,
     i18n: { language },
   } = useTranslation();
-  const { etaFormat } = useContext(AppContext);
+  const { etaFormat, platformMode } = useContext(AppContext);
 
   const branchRoute = useMemo(() => {
+    if (co === "mtr") {
+      return true;
+    }
     for (const routeDest of routeDests) {
       if (routeDest.en.toLowerCase() === dest.en.toLowerCase()) {
         return false;
@@ -94,7 +110,7 @@ const EtaLine = ({
       }
     }
     return true;
-  }, [routeDests, dest]);
+  }, [routeDests, dest, co]);
 
   const waitTime = Math.round(
     (new Date(eta).getTime() - new Date().getTime()) / 60 / 1000
@@ -108,17 +124,33 @@ const EtaLine = ({
       {eta.slice(11, 16)}
     </Box>
   );
+
+  const isTrain = co === "mtr" || co === "lightRail";
+
+  let waitTimeText;
+  let trainTextUsed;
+  if (isTrain && waitTime <= 1) {
+    waitTimeText = waitTime === 1 ? `${t("即將抵達")} ` : `${t("正在離開")} `;
+    trainTextUsed = true;
+  } else {
+    waitTimeText = waitTime < 1 ? " - " : `${waitTime} `;
+    trainTextUsed = false;
+  }
+
   const waitTimeJsx = (
     <Box component="span">
       <Box
         component="span"
         sx={{ ...waitTimeSx, color: (theme) => theme.palette.warning.main }}
+        fontSize={trainTextUsed && "0.9em"}
       >
-        {waitTime < 1 ? " - " : `${waitTime} `}
+        {waitTimeText}
       </Box>
-      <Box component="span" sx={{ fontSize: "0.8em" }}>
-        {t("分鐘")}
-      </Box>
+      {!trainTextUsed && (
+        <Box component="span" sx={{ fontSize: "0.8em" }}>
+          {t("分鐘")}
+        </Box>
+      )}
     </Box>
   );
 
@@ -131,22 +163,33 @@ const EtaLine = ({
           {exactTimeJsx}&emsp;{waitTimeJsx}
         </>
       )}
-      &emsp;-&nbsp;
+      {!isTrain && <>&emsp;-&nbsp;</>}
       <Box
         component="span"
         sx={{ fontSize: "0.8em", textOverflow: "ellipsis" }}
       >
         {showCompany && <>&emsp;{t(co)}</>}
         &emsp;
-        {getRemark(remark[language], language)}
-        &emsp;
+        {isTrain ? (
+          <Box component="span" color={getLineColor([co], route, true)}>
+            {getRemark(remark[language], language, platformMode)}
+          </Box>
+        ) : (
+          getRemark(remark[language], language, platformMode)
+        )}
+        {isTrain && " "}
+        {!isTrain && <>&emsp;</>}
         {branchRoute && dest[language]}
       </Box>
     </Typography>
   );
 };
 
-const getRemark = (remark: string | null, language: string) => {
+const getRemark = (
+  remark: string | null,
+  language: string,
+  platformMode: boolean
+) => {
   if (remark === null) return "";
   // retrieve single digit numerical string from remark as a circle text
   const platform =
@@ -161,7 +204,7 @@ const getRemark = (remark: string | null, language: string) => {
   // or if the only numerical string occurrence are more than one digit, use original remark
   if (platform.length === 2 && platform[1].length) {
     // only support single digit number
-    remark = PLATFORM[platform[1]];
+    remark = getPlatformSymbol(platform[1], platformMode);
   }
 
   if (language === "zh") {

@@ -32,6 +32,7 @@ import {
   Update as UpdateIcon,
   UpdateDisabled as UpdateDisabledIcon,
   FormatSize as FormatSizeIcon,
+  LooksOneRounded as LooksOneRoundedIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../AppContext";
@@ -58,6 +59,8 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
     toggleColorMode,
     energyMode,
     toggleEnergyMode,
+    platformMode,
+    togglePlatformMode,
     vibrateDuration,
     toggleVibrateDuration,
     refreshInterval,
@@ -204,6 +207,22 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
         <ListItemText
           primary={t("注釋預定班次")}
           secondary={t(annotateScheduled ? "開啟" : "關閉")}
+        />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration);
+          togglePlatformMode();
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <LooksOneRoundedIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={t("月台顯示格式")}
+          secondary={t(platformMode ? "➊" : "①")}
         />
       </ListItemButton>
       <ListItemButton

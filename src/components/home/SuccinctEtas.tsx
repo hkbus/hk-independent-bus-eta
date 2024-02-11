@@ -10,16 +10,22 @@ import LaptopIcon from "@mui/icons-material/Laptop";
 interface SuccinctEtasProps {
   routeId?: string;
   value?: Eta[];
+  isEndOfTrainLine?: boolean;
 }
 
-const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
+const SuccinctEtas = ({
+  routeId,
+  value = undefined,
+  isEndOfTrainLine = false,
+}: SuccinctEtasProps) => {
   const { t, i18n } = useTranslation();
   const { etaFormat, annotateScheduled } = useContext(AppContext);
   const _etas = useEtas(routeId, Boolean(value));
   const etas = value ?? _etas;
 
-  const getEtaString = (eta: Eta | null, highlight: boolean = false) => {
+  const getEtaString = (eta: Eta | null, seq, highlight: boolean = false) => {
     if (!eta || !eta.eta) {
+      if (isEndOfTrainLine && seq === 0) return t("終點站");
       return "";
     } else {
       const waitTime = Math.round(
@@ -52,6 +58,8 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
           {eta.eta.slice(11, 16)}
         </Box>
       );
+
+      const isTrain = eta.co === "mtr" || eta.co === "lightRail";
       const waitTimeJsx = (
         <Box component="span">
           {etaFormat === "diff" && trains.length === 1 && <SingleTrainIcon />}
@@ -70,7 +78,7 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
                 &nbsp;
               </>
             )}
-            {waitTime < 1 ? " - " : `${waitTime} `}
+            {waitTime < (isTrain ? 2 : 1) ? " - " : `${waitTime} `}
           </Box>
           <Box component="span" sx={{ fontSize: "0.8em" }}>
             {t("分鐘")}
@@ -96,14 +104,14 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
     <ListItemText
       primary={
         <Typography component="h5" color="textPrimary" sx={primarySx}>
-          {etas ? getEtaString(etas[0], true) : ""}
+          {etas ? getEtaString(etas[0], 0, true) : ""}
         </Typography>
       }
       secondary={
         <Typography variant="h6" color="textSecondary" sx={secondarySx}>
-          {etas ? getEtaString(etas[1]) : ""}
+          {etas ? getEtaString(etas[1], 1) : ""}
           <br />
-          {etas ? getEtaString(etas[2]) : ""}
+          {etas ? getEtaString(etas[2], 2) : ""}
         </Typography>
       }
       sx={rootSx}
