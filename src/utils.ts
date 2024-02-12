@@ -483,9 +483,9 @@ export const getLineColor = (
   } else if (companies[0].startsWith("gmb")) {
     color = "#36FF42";
   } else if (companies.includes("lrtfeeder")) {
-    color = "#AAD4FF";
+    color = "#8AC4FF";
   } else if (companies.includes("nlb")) {
-    color = "#9BFFC6";
+    color = "#26A69A";
   } else if (companies.includes("kmb")) {
     color = "#FF4747";
   } else if (companies.includes("ctb")) {
