@@ -8,36 +8,18 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import AppContext from "../../AppContext";
+import RouteOffiicalUrlBtn from "./timetableDrawer/RouteOfficialUrlBtn";
 
-const TimetableDrawer = ({ freq, jt, open, onClose }) => {
+const TimetableDrawer = ({ routeId, open, onClose }) => {
   const { t } = useTranslation();
+  const {
+    db: { routeList },
+  } = useContext(AppContext);
+  const { freq, jt } = routeList[routeId];
 
-  const list = useMemo(() => {
-    return Object.entries(freq).map(([serviceId, dayFreq]) => (
-      <ListItem key={`${serviceId}`} sx={entriesSx}>
-        <Typography variant="subtitle1">{t(ServiceIds[serviceId])}</Typography>
-        {Object.entries(dayFreq)
-          .sort((a, b) => (a[0] < b[0] ? -1 : 1))
-          .map(([start, details]) => (
-            <Box key={`${serviceId}-${start}`} sx={freqContainerSx}>
-              <Typography variant="body1">
-                {start} {details ? `- ${details[0]}` : ""}
-              </Typography>
-              {details ? (
-                <Typography variant="body1">
-                  {parseInt(details[1], 10) / 60}
-                  {t("分鐘")}
-                </Typography>
-              ) : (
-                <></>
-              )}
-            </Box>
-          ))}
-      </ListItem>
-    ));
-  }, [freq, t]);
   const modalProps = useMemo(() => {
     return {
       onClose: () => {
@@ -56,21 +38,49 @@ const TimetableDrawer = ({ freq, jt, open, onClose }) => {
       PaperProps={paperProps}
       anchor="right"
     >
-      {jt ? (
+      {jt && (
         <>
           <ListItem sx={entriesSx}>
             <Box sx={jtContainerSx}>
               <Typography variant="subtitle1">{t("車程")}</Typography>
               <Typography variant="subtitle1">
-                {Math.round(jt)}
+                {Math.round(parseFloat(jt))}
                 {t("分鐘")}
               </Typography>
             </Box>
           </ListItem>
           <Divider sx={{ width: "80%" }} />
         </>
-      ) : null}
-      <List>{list}</List>
+      )}
+      <List>
+        {freq &&
+          Object.entries(freq).map(([serviceId, dayFreq]) => (
+            <ListItem key={`${serviceId}`} sx={entriesSx}>
+              <Typography variant="subtitle1">
+                {t(ServiceIds[serviceId])}
+              </Typography>
+              {Object.entries(dayFreq)
+                .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+                .map(([start, details]) => (
+                  <Box key={`${serviceId}-${start}`} sx={freqContainerSx}>
+                    <Typography variant="body1">
+                      {start} {details ? `- ${details[0]}` : ""}
+                    </Typography>
+                    {details ? (
+                      <Typography variant="body1">
+                        {parseInt(details[1], 10) / 60}
+                        {t("分鐘")}
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
+                  </Box>
+                ))}
+            </ListItem>
+          ))}
+      </List>
+      <Divider sx={{ width: "80%", my: 2 }} />
+      <RouteOffiicalUrlBtn routeId={routeId} />
     </Drawer>
   );
 };
