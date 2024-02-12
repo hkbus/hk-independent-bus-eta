@@ -92,19 +92,12 @@ const SuccinctEtas = ({ routeId, value = undefined }: SuccinctEtasProps) => {
     }
   };
 
-  let primary = etas ? getEtaString(etas[0], true) : "";
-  if (primary === "" && etas) {
-    primary = null;
-  }
-
   return (
     <ListItemText
       primary={
-        primary != null ? 
         <Typography component="h5" color="textPrimary" sx={primarySx}>
-          {primary}
-        </Typography> :
-        <ScheduleIcon />
+          {etas ? getEtaString(etas[0], true) : ""}
+        </Typography>
       }
       secondary={
         <Typography variant="h6" color="textSecondary" sx={secondarySx}>
