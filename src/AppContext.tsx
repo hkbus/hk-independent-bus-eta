@@ -601,16 +601,18 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const colorMode = useMemo(() => {
+  const [colorMode, setColorMode] = useState<"light" | "dark">("light");
+  useEffect(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
-      return state._colorMode;
+      setColorMode(state._colorMode);
     } else {
-      return window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: light)").matches
-        ? "light"
-        : "dark";
+      const mql = window.matchMedia("(prefers-color-scheme: light)")
+      setColorMode(mql.matches ? "light" : "dark");
+      const themeListener = (e) => setColorMode(e.matches ? "light" : "dark");
+      mql?.addEventListener("change", themeListener);
+      return () => mql?.removeEventListener("change", themeListener);
     }
-  }, [state._colorMode]);
+  }, [state._colorMode, setColorMode]);
 
   const importAppState = useCallback((appState: AppState) => {
     setStateRaw(
