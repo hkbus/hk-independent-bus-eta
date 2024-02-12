@@ -1,12 +1,5 @@
 import React, { useContext, useMemo } from "react";
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  SxProps,
-  Theme,
-  Typography,
-} from "@mui/material";
+import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 
@@ -25,13 +18,9 @@ const DbRenewReminder = () => {
 
   if (navigator.userAgent !== "prerendering" && isOutdated) {
     return (
-      <Card variant="outlined" sx={rootSx} onClick={renewDb}>
-        <CardActionArea>
-          <CardContent>
-            <Typography>{t("db-renew-text")}</Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      <Box sx={rootSx} onClick={renewDb}>
+        <Typography>{t("db-renew-text")}</Typography>
+      </Box>
     );
   } else {
     return null;
@@ -41,8 +30,13 @@ const DbRenewReminder = () => {
 export default DbRenewReminder;
 
 const rootSx: SxProps<Theme> = {
-  borderRadius: (theme) => theme.shape.borderRadius,
-  margin: 0.2,
-  height: "100%",
   display: "flex",
+  justifyContent: "center",
+  flex: 1,
+  width: "100%",
+  p: 2,
+  borderStyle: "solid",
+  borderWidth: 1,
+  borderRadius: (theme) => theme.shape.borderRadius / 2,
+  cursor: "pointer",
 };

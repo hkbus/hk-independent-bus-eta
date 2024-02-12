@@ -1,4 +1,4 @@
-import { CircularProgress, List, Box } from "@mui/material";
+import { Box, CircularProgress, List, SxProps, Theme } from "@mui/material";
 import SuccinctTimeReport from "../home/SuccinctTimeReport";
 import { useStopEtas } from "../../hooks/useStopEtas";
 
@@ -12,7 +12,7 @@ const StopRouteList = ({ stops, isFocus }: StopRouteListProps) => {
 
   if (stopEtas.length === 0) {
     return (
-      <Box textAlign="center">
+      <Box sx={loadingContainerSx}>
         <CircularProgress sx={{ my: 5 }} />
       </Box>
     );
@@ -28,3 +28,9 @@ const StopRouteList = ({ stops, isFocus }: StopRouteListProps) => {
 };
 
 export default StopRouteList;
+
+const loadingContainerSx: SxProps<Theme> = {
+  display: "flex",
+  flex: 1,
+  justifyContent: "center",
+};

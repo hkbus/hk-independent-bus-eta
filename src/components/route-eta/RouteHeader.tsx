@@ -41,6 +41,6 @@ const PaperSx: SxProps<Theme> = {
 
 const rightBtnGroupSx: SxProps<Theme> = {
   position: "absolute",
-  top: "0",
+  top: 0,
   right: "2%",
 };
