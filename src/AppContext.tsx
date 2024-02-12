@@ -606,7 +606,7 @@ export const AppContextProvider = ({
     if (state._colorMode === "light" || state._colorMode === "dark") {
       setColorMode(state._colorMode);
     } else {
-      const mql = window.matchMedia("(prefers-color-scheme: light)")
+      const mql = window.matchMedia("(prefers-color-scheme: light)");
       setColorMode(mql.matches ? "light" : "dark");
       const themeListener = (e) => setColorMode(e.matches ? "light" : "dark");
       mql?.addEventListener("change", themeListener);
