@@ -11,6 +11,7 @@ import AppContext from "../../AppContext";
 import Collection from "./collections/Collection";
 import { useTranslation } from "react-i18next";
 import { Add as AddIcon, Maximize as MaximizeIcon } from "@mui/icons-material";
+import WatchEntry from "./collections/WatchEntry";
 
 const CollectionDrawer = () => {
   const { t } = useTranslation();
@@ -33,6 +34,9 @@ const CollectionDrawer = () => {
     >
       <Box sx={rootSx}>
         <MaximizeIcon sx={dividerSx} />
+        <Box sx={savedContainerSx}>
+          <WatchEntry />
+        </Box>
         <Box sx={savedContainerSx}>
           <Collection name={t("常用")} list={savedEtas} />
         </Box>

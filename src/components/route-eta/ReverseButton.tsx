@@ -132,6 +132,9 @@ const buttonDividerSx: SxProps<Theme> = {
 const buttonSx: SxProps<Theme> = {
   color: (theme) =>
     theme.palette.getContrastText(theme.palette.background.default),
+  position: "absolute",
+  top: 0,
+  left: "2%",
   flexDirection: "column",
   justifyContent: "center",
   "& > .MuiButton-label": {
