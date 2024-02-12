@@ -47,7 +47,6 @@ const rootSx: SxProps<Theme> = {
 };
 
 const cardContentSx: SxProps<Theme> = {
-  height: "63px",
   display: "grid",
   gridTemplateColumns: "25% 65%",
   py: 0.5,
