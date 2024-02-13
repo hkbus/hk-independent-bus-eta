@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, SxProps, Theme, Typography } from "@mui/material";
 import HomeRouteListDropDown from "./HomeRouteListDropDown";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -83,14 +83,16 @@ const NearbyRouteList = ({ isFocus }: NearbyRouteListProps) => {
 
   if (noNearbyRoutes) {
     return (
-      <Typography sx={{ marginTop: 5 }}>
-        <b>{t("附近未有任何路線")}</b>
-      </Typography>
+      <Box sx={rootSx}>
+        <Typography sx={{ marginTop: 5 }} fontWeight="700">
+          {t("附近未有任何路線")}
+        </Typography>
+      </Box>
     );
   }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+    <Box sx={rootSx}>
       {Object.entries(routes).map(([type, nearbyRoutes]) => (
         <HomeRouteListDropDown
           key={`nearby-${type}`}
@@ -164,4 +166,12 @@ const getRoutes = ({
     );
     return acc;
   }, {});
+};
+
+const rootSx: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
+  flex: 1,
+  minHeight: "100dvh",
 };

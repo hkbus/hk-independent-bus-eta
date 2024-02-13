@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import HomeRouteListDropDown from "./HomeRouteListDropDown";
 import { EtaDb, Location, RouteList, StopList } from "hk-bus-eta";
@@ -52,14 +52,16 @@ const SmartCollectionRouteList = ({
 
   if (collections.length === 0) {
     return (
-      <Typography sx={{ marginTop: 5 }} fontWeight={700}>
-        {t("未有收藏路線")}
-      </Typography>
+      <Box sx={rootSx}>
+        <Typography sx={{ marginTop: 5 }} fontWeight={700}>
+          {t("未有收藏路線")}
+        </Typography>
+      </Box>
     );
   }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+    <Box sx={rootSx}>
       {collections.map(({ name, routes, defaultExpanded }, idx) => (
         <HomeRouteListDropDown
           key={`collection-${idx}`}
@@ -139,4 +141,11 @@ const getCollections = ({
         geolocation
       ),
     }));
+};
+
+const rootSx: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
+  minHeight: "100dvh",
 };
