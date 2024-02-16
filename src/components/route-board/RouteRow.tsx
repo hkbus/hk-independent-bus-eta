@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import RouteTerminus from "./RouteTerminus";
 import RouteNoCompany from "./RouteNoCompany";
 import { Close as CloseIcon } from "@mui/icons-material";
+import { grey } from "@mui/material/colors";
 
 const RouteRow = ({ route, handleClick, style, onRemove }) => {
   const { i18n } = useTranslation();
@@ -44,6 +45,10 @@ const rootSx: SxProps<Theme> = {
   border: "none",
   display: "flex",
   alignItems: "center",
+  height: "100%",
+  borderBottomWidth: "1px",
+  borderBottomStyle: "solid",
+  borderBlockColor: (t) => (t.palette.mode === "dark" ? grey[900] : grey[200]),
 };
 
 const cardContentSx: SxProps<Theme> = {

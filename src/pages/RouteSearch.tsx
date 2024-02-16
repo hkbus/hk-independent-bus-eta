@@ -72,7 +72,7 @@ const RouteSearch = () => {
               co: Object.keys(routeList[routeId].stops),
               // @ts-ignore
               language: i18n.language,
-            });
+            }).then((p) => p.filter((e) => e.eta));
       })
     )
       .then((etas) =>

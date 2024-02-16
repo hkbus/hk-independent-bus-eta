@@ -20,6 +20,7 @@ import type { Location as GeoLocation } from "hk-bus-eta";
 import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
 import { useRoutePath } from "../../hooks/useRoutePath";
+import { getLineColor } from "../../utils";
 
 const CenterControl = ({ onClick }) => {
   return (
@@ -39,6 +40,7 @@ interface RouteMapProps {
   routeId: string;
   stopIds: string[];
   stopIdx: number;
+  route: string;
   companies: Company[];
   onMarkerClick: (idx: number, event: unknown) => void;
 }
@@ -60,6 +62,7 @@ const RouteMap = ({
   routeId,
   stopIds,
   stopIdx,
+  route,
   companies,
   onMarkerClick,
 }: RouteMapProps) => {
@@ -217,7 +220,7 @@ const RouteMap = ({
             <GeoJSON
               key={routePath?.["timeStamp"]}
               data={routePath}
-              style={geoJsonStyle}
+              style={geoJsonStyle(companies, route)}
             />
           )
         }
@@ -231,10 +234,16 @@ const RouteMap = ({
 
 export default RouteMap;
 
-const geoJsonStyle = function (feature: GeoJSON.Feature) {
-  return {
-    color: "#FF9090",
-    weight: 4,
+const geoJsonStyle = (companies, route) => {
+  return function (feature: GeoJSON.Feature) {
+    return {
+      color: getLineColor(companies, route),
+      weight: 4,
+      className:
+        companies.includes("ctb") && companies.includes("kmb")
+          ? classes.jointlyLine
+          : null,
+    };
   };
 };
 
@@ -325,6 +334,7 @@ const classes = {
   lrtfeederMarker: `${PREFIX}-lrtfeederMarker`,
   nlbMarker: `${PREFIX}-nlbMarker`,
   kmbMarker: `${PREFIX}-kmbMarker`,
+  jointlyLine: `${PREFIX}-jointlyLine`,
   active: `${PREFIX}-active`,
   passed: `${PREFIX}-passed`,
 };
@@ -356,6 +366,18 @@ const rootSx: SxProps<Theme> = {
   },
   [`& .${classes.kmbMarker}`]: {
     backgroundImage: `url(/img/bus_kmb.svg)`,
+  },
+  [`& .${classes.jointlyLine}`]: {
+    stroke: getLineColor(["kmb"], ""),
+    animation: `${classes.jointlyLine}-color 10s infinite linear 1.5s`,
+  },
+  [`@keyframes ${classes.jointlyLine}-color`]: {
+    "50%": {
+      stroke: getLineColor(["ctb"], ""),
+    },
+    "100%": {
+      stroke: getLineColor(["kmb"], ""),
+    },
   },
   [`& .${classes.active}`]: {
     animation: "blinker 1.5s infinite",

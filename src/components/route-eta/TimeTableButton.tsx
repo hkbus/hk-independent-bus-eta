@@ -1,40 +1,32 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Button, Divider, SxProps, Theme } from "@mui/material";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
 import TimetableDrawer from "./TimetableDrawer";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
 
 const TimeTableButton = ({ routeId }: { routeId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
-  const {
-    db: { routeList },
-  } = useContext(AppContext);
-  const { freq, jt } = routeList[routeId];
 
   return (
-    freq && (
-      <>
-        <Divider orientation="vertical" sx={buttonDividerSx} />
-        <Button
-          variant="text"
-          aria-label="open-timetable"
-          sx={buttonSx}
-          size="small"
-          startIcon={<ScheduleIcon />}
-          onClick={() => setIsOpen(true)}
-        >
-          {t("時間表")}
-        </Button>
-        <TimetableDrawer
-          freq={freq}
-          jt={jt}
-          open={isOpen}
-          onClose={() => setIsOpen(false)}
-        />
-      </>
-    )
+    <>
+      <Divider orientation="vertical" sx={buttonDividerSx} />
+      <Button
+        variant="text"
+        aria-label="open-timetable"
+        sx={buttonSx}
+        size="small"
+        startIcon={<ScheduleIcon />}
+        onClick={() => setIsOpen(true)}
+      >
+        {t("時間表")}
+      </Button>
+      <TimetableDrawer
+        routeId={routeId}
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
+    </>
   );
 };
 

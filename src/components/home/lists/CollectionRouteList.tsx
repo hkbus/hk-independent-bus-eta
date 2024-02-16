@@ -1,4 +1,4 @@
-import { List, Typography } from "@mui/material";
+import { Box, List, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import SuccinctTimeReport from "../SuccinctTimeReport";
 import { EtaDb, Location, RouteList, StopList } from "hk-bus-eta";
@@ -54,14 +54,16 @@ const CollectionRouteList = ({
 
   if (noRoutes) {
     return (
-      <Typography sx={{ marginTop: 5 }}>
-        <b>{t("收藏中未有路線")}</b>
-      </Typography>
+      <Box sx={rootSx}>
+        <Typography sx={{ marginTop: 5 }} fontWeight={700}>
+          <b>{t("收藏中未有路線")}</b>
+        </Typography>
+      </Box>
     );
   }
 
   return (
-    <List disablePadding>
+    <List disablePadding sx={{ minHeight: "100dvh" }}>
       {routes.map(
         (selectedRoute, idx) =>
           Boolean(selectedRoute) && (
@@ -103,3 +105,11 @@ const getRoutes = ({
     serviceDayMap,
     geolocation
   ).split("|");
+
+const rootSx: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
+  flex: 1,
+  minHeight: "100dvh",
+};

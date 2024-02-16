@@ -4,7 +4,6 @@ import React, {
   useState,
   useRef,
   useCallback,
-  useMemo,
 } from "react";
 import type { ReactNode } from "react";
 import {
@@ -70,6 +69,10 @@ export interface AppState {
    */
   energyMode: boolean;
   /**
+   * platform display mode
+   */
+  platformMode: boolean;
+  /**
    * vibrate duration
    */
   vibrateDuration: number;
@@ -129,6 +132,7 @@ interface AppContextValue
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
   toggleEnergyMode: () => void;
+  togglePlatformMode: () => void;
   toggleVibrateDuration: () => void;
   toggleAnalytics: () => void; // not
   updateRefreshInterval: (interval: number) => void;
@@ -240,6 +244,7 @@ export const AppContextProvider = ({
         ? devicePreferColorScheme
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
+      platformMode: !!JSON.parse(localStorage.getItem("platformMode")) || false,
       vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
       isRecentSearchShown: !!JSON.parse(
         localStorage.getItem("isRecentSearchShown") ?? "true"
@@ -450,6 +455,16 @@ export const AppContextProvider = ({
     );
   }, []);
 
+  const togglePlatformMode = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const prevPlatformMode = state.platformMode;
+        const platformMode = !prevPlatformMode;
+        state.platformMode = platformMode;
+      })
+    );
+  }, []);
+
   const toggleAnalytics = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
@@ -585,16 +600,18 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const colorMode = useMemo(() => {
+  const [colorMode, setColorMode] = useState<"light" | "dark">("light");
+  useEffect(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
-      return state._colorMode;
+      setColorMode(state._colorMode);
     } else {
-      return window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: light)").matches
-        ? "light"
-        : "dark";
+      const mql = window.matchMedia("(prefers-color-scheme: light)");
+      setColorMode(mql.matches ? "light" : "dark");
+      const themeListener = (e) => setColorMode(e.matches ? "light" : "dark");
+      mql?.addEventListener("change", themeListener);
+      return () => mql?.removeEventListener("change", themeListener);
     }
-  }, [state._colorMode]);
+  }, [state._colorMode, setColorMode]);
 
   const importAppState = useCallback((appState: AppState) => {
     setStateRaw(
@@ -641,6 +658,10 @@ export const AppContextProvider = ({
   useEffect(() => {
     localStorage.setItem("energyMode", JSON.stringify(state.energyMode));
   }, [state.energyMode]);
+
+  useEffect(() => {
+    localStorage.setItem("platformMode", JSON.stringify(state.platformMode));
+  }, [state.platformMode]);
 
   useEffect(() => {
     localStorage.setItem(
@@ -716,6 +737,7 @@ export const AppContextProvider = ({
         toggleEtaFormat,
         toggleColorMode,
         toggleEnergyMode,
+        togglePlatformMode,
         toggleVibrateDuration,
         toggleAnalytics,
         updateRefreshInterval,

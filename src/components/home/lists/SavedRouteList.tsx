@@ -1,4 +1,4 @@
-import { List, Typography } from "@mui/material";
+import { Box, List, SxProps, Theme, Typography } from "@mui/material";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import SuccinctTimeReport from "../SuccinctTimeReport";
@@ -57,14 +57,16 @@ const SavedRouteList = ({ isFocus }: SavedRouteListProps) => {
 
   if (noRoutes) {
     return (
-      <Typography sx={{ marginTop: 5 }}>
-        <b>{t("未有收藏路線")}</b>
-      </Typography>
+      <Box sx={rootSx}>
+        <Typography sx={{ marginTop: 5 }} fontWeight="700">
+          {t("未有收藏路線")}
+        </Typography>
+      </Box>
     );
   }
 
   return (
-    <List disablePadding>
+    <List disablePadding sx={{ minHeight: "100dvh" }}>
       {savedRoutes.map(
         (selectedRoute, idx) =>
           Boolean(selectedRoute) && (
@@ -143,3 +145,11 @@ const getRoutes = ({
     serviceDayMap,
     geolocation
   ).split("|");
+
+const rootSx: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
+  flex: 1,
+  minHeight: "100dvh",
+};

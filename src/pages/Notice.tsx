@@ -73,6 +73,7 @@ const noticeContainerSx: SxProps<Theme> = {
   display: "flex",
   flexDirection: "column",
   gap: 2,
+  wordBreak: "break-word",
 };
 
 const linkSx: SxProps<Theme> = {

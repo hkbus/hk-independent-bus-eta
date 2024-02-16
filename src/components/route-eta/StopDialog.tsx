@@ -1,8 +1,11 @@
 import {
   BookmarkBorder as BookmarkBorderIcon,
   Bookmark as BookmarkIcon,
+  Close as CloseIcon,
+  Directions as DirectionsIcon,
 } from "@mui/icons-material";
 import {
+  Box,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -10,7 +13,7 @@ import {
   SxProps,
   Theme,
 } from "@mui/material";
-import { useContext, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import StopRouteList from "../bookmarked-stop/StopRouteList";
@@ -39,13 +42,36 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
     [stops, savedStops]
   );
 
+  const handleClickDirection = useCallback(() => {
+    try {
+      const { lat, lng } = stopList[stops[0][1]]?.location;
+      window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
+        "_blank"
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }, [stopList, stops]);
+
   return (
     <Dialog open={open} onClose={onClose} sx={rootSx}>
       <DialogTitle sx={titleSx}>
-        <IconButton onClick={() => updateSavedStops(stops[0].join("|"))}>
-          {bookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-        </IconButton>
-        {stopList[stops[0][1]]?.name[i18n.language]}
+        <Box>
+          <IconButton onClick={() => updateSavedStops(stops[0].join("|"))}>
+            {bookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+          </IconButton>
+          {stopList[stops[0][1]]?.name[i18n.language]}
+          &nbsp;&nbsp;
+          <IconButton onClick={handleClickDirection}>
+            <DirectionsIcon />
+          </IconButton>
+        </Box>
+        <Box>
+          <IconButton onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
       </DialogTitle>
       <DialogContent>
         <StopRouteList stops={stops} isFocus={true} />
@@ -70,4 +96,6 @@ const rootSx: SxProps<Theme> = {
 const titleSx: SxProps<Theme> = {
   backgroundColor: (theme) => theme.palette.background.default,
   color: (theme) => theme.palette.primary.main,
+  display: "flex",
+  justifyContent: "space-between",
 };

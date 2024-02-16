@@ -12,18 +12,20 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { Eta, Location } from "hk-bus-eta";
+import { Company, Eta, Location } from "hk-bus-eta";
 import React, { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import AppContext from "../../AppContext";
 import { ManageMode } from "../../data";
 import {
-  PLATFORM,
+  getLineColor,
+  getPlatformSymbol,
   getDistance,
   getDistanceWithUnit,
   toProperCase,
   vibrate,
+  distinctFilter,
 } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
 import SuccinctEtas from "./SuccinctEtas";
@@ -93,12 +95,14 @@ const SuccinctTimeReport = ({
   const {
     db: { routeList, stopList },
     vibrateDuration,
+    platformMode,
   } = useContext(AppContext);
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
-  const { co, stops, dest, fares, faresHoliday } =
+  const { co, stops, dest, fares, faresHoliday, route } =
     routeList[routeKey] || DEFAULT_ROUTE;
-  const stop = stopList[getStops(co, stops)[parseInt(seq, 10)]] || DEFAULT_STOP;
+  const stopId = getStops(co, stops)[parseInt(seq, 10)];
+  const stop = stopList[stopId] || DEFAULT_STOP;
 
   const navigate = useNavigate();
   const handleClick = (e) => {
@@ -111,20 +115,33 @@ const SuccinctTimeReport = ({
 
   const platform = useMemo(() => {
     if (etas && etas.length > 0) {
-      const no =
-        PLATFORM[
-          parseInt(
-            (/Platform ([\d]+)/gm.exec(etas[0].remark?.en ?? "") ?? [])[1] ??
-              "0",
-            10
+      const no = etas
+        .map((p) =>
+          getPlatformSymbol(
+            parseInt(
+              (/Platform ([\d]+)/gm.exec(p.remark?.en ?? "") ?? [])[1] ?? "0",
+              10
+            ),
+            platformMode
           )
-        ];
+        )
+        .filter((p) => p)
+        .filter(distinctFilter)
+        .sort()
+        .join("");
       if (!no) return "";
-      if (language === "zh") return `${no}月台 `;
-      else return `Platform ${no} `;
+      return `${no} `;
     }
     return "";
-  }, [etas, language]);
+  }, [etas, platformMode]);
+
+  let isEndOfTrainLine = false;
+  if (co[0] === "mtr") {
+    isEndOfTrainLine = stops["mtr"].indexOf(stopId) + 1 >= stops["mtr"].length;
+  } else if (co.includes("lightRail")) {
+    isEndOfTrainLine =
+      stops["lightRail"].indexOf(stopId) + 1 >= stops["lightRail"].length;
+  }
 
   return (
     <>
@@ -140,7 +157,14 @@ const SuccinctTimeReport = ({
         }
         sx={rootSx}
       >
-        <ListItemText primary={<RouteNo routeNo={routeNo} />} />
+        <ListItemText
+          primary={
+            <RouteNo
+              routeNo={language === "zh" ? t(routeNo) : routeNo}
+              fontSize={co[0] === "mtr" ? "1.1rem" : null}
+            />
+          }
+        />
         <ListItemText
           primary={
             <Typography
@@ -150,7 +174,9 @@ const SuccinctTimeReport = ({
               sx={fromToWrapperSx}
             >
               <span>
-                {platform}
+                <Box component="span" color={getLineColor(co, route, true)}>
+                  {platform}
+                </Box>
                 {t("往")}
               </span>
               <b>{toProperCase(dest[language])}</b>
@@ -171,7 +197,13 @@ const SuccinctTimeReport = ({
           }}
           sx={routeDestSx}
         />
-        {mode === "time" && <SuccinctEtas routeId={routeId} value={etas} />}
+        {mode === "time" && (
+          <SuccinctEtas
+            routeId={routeId}
+            value={etas}
+            isEndOfTrainLine={isEndOfTrainLine}
+          />
+        )}
         {mode === "order" && (
           <Box sx={iconContainerSx}>
             <ReorderIcon />
@@ -191,13 +223,14 @@ const SuccinctTimeReport = ({
 };
 
 const DEFAULT_ROUTE = {
-  co: [""],
+  co: ["kmb"] as Company[],
   stops: { "": [""] },
   dest: { zh: "", en: "" },
   bound: "",
   nlbId: 0,
   fares: [],
   faresHoliday: [],
+  route: "",
 };
 const DEFAULT_STOP = {
   location: { lat: 0, lng: 0 },

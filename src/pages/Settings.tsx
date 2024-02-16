@@ -32,6 +32,7 @@ import {
   Info as InfoIcon,
   SendToMobile as SendToMobileIcon,
   HelpOutline as HelpIcon,
+  QuestionAnswerOutlined as FaqIcon,
   Sync as SyncIcon,
   SyncDisabled as SyncDisabledIcon,
   SecurityUpdate as SecurityUpdateIcon,
@@ -303,7 +304,10 @@ const Settings = () => {
               <WatchIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={t("智能手錶應用程式")} />
+          <ListItemText
+            primary={t("智能手錶應用程式")}
+            secondary={t("支援 WearOS 及 WatchOS 平台")}
+          />
         </ListItemButton>
         {!iOSRNWebView() ? (
           <ListItemButton
@@ -413,6 +417,24 @@ const Settings = () => {
           <ListItemText
             primary={t("Source code")}
             secondary={"GPL-3.0 License"}
+          />
+        </ListItemButton>
+        <ListItemButton
+          component={"a"}
+          href={`/faq`}
+          target="_blank"
+          onClick={() => {
+            vibrate(vibrateDuration);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <FaqIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={t("FAQ")}
+            secondary="Eng Version is currently not available"
           />
         </ListItemButton>
         <ListItemButton
