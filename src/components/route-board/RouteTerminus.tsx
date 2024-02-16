@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { toProperCase } from "../../utils";
@@ -30,55 +30,63 @@ const RouteTerminus = ({ terminus }) => {
     return false;
   };
 
-  let remark = "";
-  if (terminus.serviceType >= 2) {
-    for (let [, data] of Object.entries(routeList)) {
-      if (Number(data.serviceType) === 1 && 
-        route === data.route && 
-        JSON.stringify(bound) === JSON.stringify(data.bound) && 
-        (co[0] === "gmb" ? gtfsId === data.gtfsId : JSON.stringify(co) === JSON.stringify(data.co))) 
-      {
-        if (data.dest.zh !== dest.zh) {
-          remark = t("開往") + dest[i18n.language];
-        } else if (data.orig.zh !== orig.zh) {
-          remark = t("從") + orig[i18n.language] + t("開出");
-        } else {
-          let mainRouteFirstStop = stopList[data.stops[co][0]].name;
-          let mainRouteLastStop = stopList[data.stops[co][data.stops[co].length - 1]].name;
-          let routeFirstStop = stopList[stops[co][0]].name;
-          let routeLastStop = stopList[stops[co][stops[co].length - 1]].name;
-
-          if (mainRouteLastStop.zh !== routeLastStop.zh) {
-            remark = t("開往") + routeLastStop[i18n.language];
-          } else if (mainRouteFirstStop.zh !== routeFirstStop.zh) {
-            if (!terminus.nlbId) {
-              remark = t("從") + routeFirstStop[i18n.language] + t("開出");
-            }
-          } else {
-            let difference = stops[co]
-              .filter(x => !data.stops[co].includes(x));
-            let diffName = difference
-              .map(x => stopList[x].name[i18n.language]);
-            if (difference.length > 0) {
-              remark = t("經") + firstLastDiff(diffName).join(t(diffConsecutive(data.stops[co], difference) ? "至" : "及"));
+  let routeRemark = useMemo(
+    () => {
+      let remark = "";
+      if (terminus.serviceType >= 2) {
+        for (let [, data] of Object.entries(routeList)) {
+          if (Number(data.serviceType) === 1 && 
+            route === data.route && 
+            JSON.stringify(bound) === JSON.stringify(data.bound) && 
+            (co[0] === "gmb" ? gtfsId === data.gtfsId : JSON.stringify(co) === JSON.stringify(data.co))) 
+          {
+            if (data.dest.zh !== dest.zh) {
+              remark = t("開往") + dest[i18n.language];
+            } else if (data.orig.zh !== orig.zh) {
+              if (!terminus.nlbId) {
+                remark = t("從") + orig[i18n.language] + t("開出");
+              }
             } else {
-              let difference = data.stops[co]
-                .filter(x => !stops[co].includes(x));
-              let diffName = difference
-                .map(x => stopList[x].name[i18n.language]);
-              if (difference.length > 0) {
-                remark = t("不經") + firstLastDiff(diffName).join(t(diffConsecutive(data.stops[co], difference) ? "至" : "及"));
+              let mainRouteFirstStop = stopList[data.stops[co][0]].name;
+              let mainRouteLastStop = stopList[data.stops[co][data.stops[co].length - 1]].name;
+              let routeFirstStop = stopList[stops[co][0]].name;
+              let routeLastStop = stopList[stops[co][stops[co].length - 1]].name;
+
+              if (mainRouteLastStop.zh !== routeLastStop.zh) {
+                remark = t("開往") + routeLastStop[i18n.language];
+              } else if (mainRouteFirstStop.zh !== routeFirstStop.zh) {
+                if (!terminus.nlbId) {
+                  remark = t("從") + routeFirstStop[i18n.language] + t("開出");
+                }
+              } else {
+                let difference = stops[co]
+                  .filter(x => !data.stops[co].includes(x));
+                let diffName = difference
+                  .map(x => stopList[x].name[i18n.language]);
+                if (difference.length > 0) {
+                  remark = t("經") + firstLastDiff(diffName).join(t(diffConsecutive(data.stops[co], difference) ? "至" : "及"));
+                } else {
+                  let difference = data.stops[co]
+                    .filter(x => !stops[co].includes(x));
+                  let diffName = difference
+                    .map(x => stopList[x].name[i18n.language]);
+                  if (difference.length > 0) {
+                    remark = t("不經") + firstLastDiff(diffName).join(t(diffConsecutive(data.stops[co], difference) ? "至" : "及"));
+                  }
+                }
               }
             }
+            break;
           }
-        }
-        break;
+        } 
       }
-    } 
-  }
-  if (terminus.nlbId) {
-    remark = t("從") + toProperCase(terminus.orig[i18n.language]) + t("開出") + " " + remark;
-  }
+      if (terminus.nlbId) {
+        remark = t("從") + toProperCase(terminus.orig[i18n.language]) + t("開出") + " " + remark;
+      }
+      return remark;
+    },
+    [terminus, routeList, i18n.language, bound, co, dest, gtfsId, orig, route, stopList, stops, t]
+  );
 
   return (
     <Box sx={rootSx}>
@@ -90,7 +98,7 @@ const RouteTerminus = ({ terminus }) => {
       </Box>
       <Box sx={fromWrapperSx}>
         <Typography variant="body2" textOverflow="ellipsis" overflow="hidden">
-          {remark}
+          {routeRemark}
         </Typography>
       </Box>
     </Box>
