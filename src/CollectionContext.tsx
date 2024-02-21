@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import {
   DEFAULT_DAY_SCHEDULE,
   DEFAULT_ROUTE_COLLECTION,
+  DaySchedule,
   RouteCollection,
 } from "./typing";
 import { isStrings } from "./utils";
@@ -24,10 +25,10 @@ interface CollectionContextValue extends CollectionState {
   addNewCollection: () => void;
   removeCollection: (idx: number) => void;
   toggleCollectionDialog: (idx: number | null) => void;
-  updateCollectionName: (v: any) => void;
+  updateCollectionName: (v: string) => void;
   addCollectionSchedule: () => void;
   removeCollectionSchedule: (idx: number) => void;
-  updateCollectionSchedule: (idx: number, field: string, value: any) => void;
+  updateCollectionSchedule: <T extends keyof DaySchedule>(idx: number, field: T, value: DaySchedule[T]) => void;
   toggleCollectionEta: (eta: string, idx: number | null) => void;
   setCollectionEtas: (etas: string[]) => void;
   setCollections: (collections: RouteCollection[]) => void;
@@ -164,7 +165,7 @@ export const CollectionContextProvider = ({ children }) => {
     );
   }, []);
 
-  const updateCollectionName = useCallback((v: any) => {
+  const updateCollectionName = useCallback((v: string) => {
     setStateRaw(
       produce((state: State) => {
         const idx = state.collectionIdx;
@@ -175,8 +176,8 @@ export const CollectionContextProvider = ({ children }) => {
     );
   }, []);
 
-  const updateCollectionSchedule = useCallback(
-    (idx: number, field: string, value: any) => {
+  const updateCollectionSchedule = useCallback<CollectionContextValue['updateCollectionSchedule']>(
+    (idx, field, value) => {
       setStateRaw(
         produce((state: State) => {
           const collectionIdx = state.collectionIdx;

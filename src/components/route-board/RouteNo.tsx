@@ -1,14 +1,17 @@
 import React from "react";
 import { SxProps, Theme, Typography } from "@mui/material";
+import { RouteListEntry } from 'hk-bus-eta';
+import { getLineColor } from '../../utils';
 
 interface RouteNoProps {
   routeNo: string;
-  component?: any;
+  entry?: RouteListEntry;
+  component?: React.ElementType;
   align?: "right" | "left" | "inherit" | "center" | "justify";
   fontSize?: string;
 }
 
-const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
+const RouteNo = ({ routeNo, component, align, fontSize, entry }: RouteNoProps) => {
   // Suffix Examples: 962X=> X, 44A1 => A1, 25MS => MS, AEL => "", NA29 => ""
   let splitIdx = routeNo.length;
   for (let i = 1; i < routeNo.length; ++i) {
@@ -27,12 +30,16 @@ const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
 
   return (
     <Typography
-      // @ts-ignore
       component={component || "h2"}
       align={align}
       variant="caption"
       color="textPrimary"
-      sx={rootSx(fontSize)}
+      sx={{
+        ...rootSx(fontSize),
+        borderBottom: entry?.co?.[0] === 'mtr' || entry?.co?.includes('lightRail') ?
+          `3px ${getLineColor(entry.co, entry.route)} solid` :
+          undefined
+      }}
     >
       <span>{prefix}</span>
       <span>{suffix}</span>

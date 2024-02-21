@@ -1,32 +1,26 @@
-import React, { useState } from "react";
-import { Location as GeoLocation } from "hk-bus-eta";
+import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { Locations, SearchResultIdx, SearchResultType, StatusType } from './typing';
 
 interface SearchContextProps {
-  locations: {
-    start: { location: GeoLocation } | null;
-    end: { location: GeoLocation } | null;
-  };
+  locations: Locations;
   status: "ready" | "rendering" | "waiting";
-  result: any[];
-  resultIdx: {
-    resultIdx: number;
-    stopIdx: number[];
-  };
-  setLocations: any;
-  setStatus: any;
-  setResult: any;
-  setResultIdx: any;
+  result: SearchResultType[];
+  resultIdx: SearchResultIdx;
+  setLocations: (loctions: Locations) => void;
+  setStatus: (status: StatusType) => void;
+  setResult: Dispatch<SetStateAction<SearchResultType[]>>;
+  setResultIdx: Dispatch<SetStateAction<SearchResultIdx>>;
 }
 
 const SearchContext = React.createContext({} as SearchContextProps);
 
-export const SearchContextProvider = (props) => {
-  const [locations, setLocations] = useState({ start: null, end: null });
-  const [status, setStatus] = useState<"ready" | "rendering" | "waiting">(
+export const SearchContextProvider = (props: { children: ReactNode }) => {
+  const [locations, setLocations] = useState<Locations>({ start: null, end: null });
+  const [status, setStatus] = useState<StatusType>(
     "ready"
   );
-  const [result, setResult] = useState([]);
-  const [resultIdx, setResultIdx] = useState({ resultIdx: 0, stopIdx: [0, 0] });
+  const [result, setResult] = useState<SearchResultType[]>([]);
+  const [resultIdx, setResultIdx] = useState<SearchResultIdx>({ resultIdx: 0, stopIdx: [0, 0] });
 
   return (
     <SearchContext.Provider

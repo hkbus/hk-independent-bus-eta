@@ -1,16 +1,18 @@
 import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import debounce from "lodash.debounce";
+import { Props as ReactSelectProps } from 'react-select';
 import AsyncSelect from "react-select/async";
 import { styled } from "@mui/material/styles";
 import proj4 from "proj4";
 import { StopList } from "hk-bus-eta";
+import { CustomLocation } from '../../typing';
 
 interface AddressInputProps {
   placeholder?: string;
-  onChange: any;
+  onChange: ReactSelectProps<CustomLocation>['onChange'];
   stopList: StopList;
-  value: any;
+  value: CustomLocation;
 }
 
 const AddressInput = ({
@@ -114,70 +116,59 @@ export default AddressInput;
 
 const AddressAsyncSelect = styled(AsyncSelect)(({ theme }) => ({
   ".react-select__control": {
-    background: `${
-      theme.palette.mode === "dark" ? theme.palette.background.default : "white"
-    } !important`,
+    background: `${theme.palette.mode === "dark" ? theme.palette.background.default : "white"
+      } !important`,
     border: "none !important",
     borderRadius: "unset !important",
     borderBottom: "1px hsl(0, 0%, 80%) solid !important",
   },
   ".react-select__input": {
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
+    color: `${theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : theme.palette.text.primary
+      } !important`,
   },
   ".react-select__valueContainer": {
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
+    color: `${theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : theme.palette.text.primary
+      } !important`,
   },
   ".react-select__single-value": {
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
+    color: `${theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : theme.palette.text.primary
+      } !important`,
   },
   ".react-select__option:hover": {
     filter: "grayscale(1) !important",
   },
   ".react-select__option--is-focused": {
-    background: `${
-      theme.palette.mode === "dark" ? theme.palette.background.default : "white"
-    } !important`,
+    background: `${theme.palette.mode === "dark" ? theme.palette.background.default : "white"
+      } !important`,
   },
   ".react-select__option--is-selected": {
-    background: `${
-      theme.palette.mode === "dark" ? theme.palette.background.default : "white"
-    } !important`,
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
+    background: `${theme.palette.mode === "dark" ? theme.palette.background.default : "white"
+      } !important`,
+    color: `${theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : theme.palette.text.primary
+      } !important`,
   },
   ".react-select__menu": {
-    background: `${
-      theme.palette.mode === "dark" ? theme.palette.background.default : "white"
-    } !important`,
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
+    background: `${theme.palette.mode === "dark" ? theme.palette.background.default : "white"
+      } !important`,
+    color: `${theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : theme.palette.text.primary
+      } !important`,
   },
   ".react-select__meauList": {
-    background: `${
-      theme.palette.mode === "dark" ? theme.palette.background.default : "white"
-    } !important`,
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
+    background: `${theme.palette.mode === "dark" ? theme.palette.background.default : "white"
+      } !important`,
+    color: `${theme.palette.mode === "dark"
+      ? theme.palette.primary.main
+      : theme.palette.text.primary
+      } !important`,
   },
 }));

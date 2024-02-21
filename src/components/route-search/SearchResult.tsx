@@ -56,7 +56,7 @@ const SearchResult = ({ routes, idx, handleRouteClick, expanded, stopIdx }) => {
 
             return (
               <span key={`search-${idx}-${routeIdx}`}>
-                <RouteNo routeNo={route} />
+                <RouteNo entry={routes[routeIdx]} routeNo={route} />
                 {parseInt(serviceType, 10) >= 2 && (
                   <Typography variant="caption">{t("特別班")}</Typography>
                 )}

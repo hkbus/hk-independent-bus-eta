@@ -195,9 +195,9 @@ export function lat2tile(lat: number, zoom: number) {
       Math.log(
         Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)
       ) /
-        Math.PI) /
+      Math.PI) /
       2) *
-      Math.pow(2, zoom)
+    Math.pow(2, zoom)
   );
 }
 
@@ -353,7 +353,7 @@ const PLATFORM_SOLID = [
   "➒",
 ] as const;
 
-export const getPlatformSymbol = (number, platformMode) => {
+export const getPlatformSymbol = (number: number | string, platformMode: boolean) => {
   return platformMode ? PLATFORM_SOLID[number] : PLATFORM[number];
 };
 

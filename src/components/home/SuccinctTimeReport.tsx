@@ -160,6 +160,7 @@ const SuccinctTimeReport = ({
         <ListItemText
           primary={
             <RouteNo
+              entry={routeList[routeKey]}
               routeNo={language === "zh" ? t(routeNo) : routeNo}
               fontSize={co[0] === "mtr" ? "1.1rem" : null}
             />
