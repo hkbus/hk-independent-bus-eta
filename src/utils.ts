@@ -489,7 +489,7 @@ export const getLineColor = (
   } else if (companies.includes("kmb")) {
     color = "#FF4747";
   } else if (companies.includes("ctb")) {
-    color = "#FF4747";
+    color = "#0055B8";
   }
   return color;
 };
