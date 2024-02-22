@@ -1,0 +1,11 @@
+version: "3.2"
+
+services:
+  dev:
+    build: ./docker
+    restart: unless-stopped
+    ports:
+      - ${DEV_PORT:-3000}:3000
+    volumes:
+      - ./:/app
+    command: 'bash ./docker/run.sh'
