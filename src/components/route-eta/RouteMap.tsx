@@ -217,11 +217,18 @@ const RouteMap = ({
         {
           // @ts-ignore
           routePath?.features?.length && (
-            <GeoJSON
-              key={routePath?.["timeStamp"]}
-              data={routePath}
-              style={geoJsonStyle(companies, route)}
-            />
+            <>
+              <GeoJSON
+                key={routePath?.["timeStamp"]}
+                data={routePath}
+                style={geoJsonStyle(companies, route, true)}
+              />
+              <GeoJSON
+                key={routePath?.["timeStamp"]}
+                data={routePath}
+                style={geoJsonStyle(companies, route, false)}
+              />
+            </>
           )
         }
         <SelfCircle />
@@ -234,11 +241,11 @@ const RouteMap = ({
 
 export default RouteMap;
 
-const geoJsonStyle = (companies, route) => {
+const geoJsonStyle = (companies, route, isBorder) => {
   return function (feature: GeoJSON.Feature) {
     return {
-      color: getLineColor(companies, route),
-      weight: 4,
+      color: isBorder ? '#000000' : getLineColor(companies, route),
+      weight: isBorder ? 6 : 4,
       className:
         companies.includes("ctb") && companies.includes("kmb")
           ? classes.jointlyLine
