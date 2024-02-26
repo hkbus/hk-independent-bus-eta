@@ -9,7 +9,7 @@ import {
   Theme,
 } from "@mui/material";
 import RangeMap from "./RangeMap";
-import { useTranslation } from "react-i18next";
+import { TFunction, useTranslation } from "react-i18next";
 import { useCallback, useContext, useState } from "react";
 import AppContext from "../../AppContext";
 import { Location } from "hk-bus-eta";
@@ -55,25 +55,6 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
     }));
   }, []);
 
-  const sliderScale      = [ 0, 1000, 2000, 3000, 4000, 5000];
-  const searchRangeScale = [20,  100,  200,  400, 2000, 4000];
-  const convertScale = (value, srcScale, destScale) => {
-    if(value <= srcScale[0]) {
-      return destScale[0];
-    }
-    for(let i = 1; i < srcScale.length; ++i) {
-      if(value <= srcScale[i]) {
-        return destScale[i - 1] + (value - srcScale[i - 1]) * (destScale[i] - destScale[i - 1]) / (srcScale[i] - srcScale[i - 1]);
-      }
-    }
-    return destScale[destScale.length - 1];
-  }
-
-  const formatDistanceWithUnit = (val) => {
-    const { distance, unit } = getDistanceWithUnit(val);
-    return `${distance}${t(unit)}`;
-  }
-
   const updateRange = useCallback((searchRange: number) => {
     setState((prev) => ({
       ...prev,
@@ -99,17 +80,34 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
           <Slider
             sx={sliderSx}
             aria-label="Range"
-            value={convertScale(state.searchRange, searchRangeScale, sliderScale)}
+            value={convertScale(
+              state.searchRange,
+              searchRangeScale,
+              sliderScale
+            )}
             valueLabelDisplay="on"
             marks={sliderScale.map((val, index) => {
-              return { label: formatDistanceWithUnit(searchRangeScale[index]), value: val };
+              return {
+                label: formatDistanceWithUnit(searchRangeScale[index], t),
+                value: val,
+              };
             })}
             min={sliderScale[0]}
             max={sliderScale[sliderScale.length - 1]}
             step={250}
-            scale={(value) => convertScale(value, sliderScale, searchRangeScale)}
-            valueLabelFormat={formatDistanceWithUnit}
-            onChange={(_, value) => updateRange(convertScale(value, sliderScale, searchRangeScale) as number)}
+            scale={(value) =>
+              convertScale(value, sliderScale, searchRangeScale)
+            }
+            valueLabelFormat={(v) => formatDistanceWithUnit(v, t)}
+            onChange={(_, value) =>
+              updateRange(
+                convertScale(
+                  value as number,
+                  sliderScale,
+                  searchRangeScale
+                ) as number
+              )
+            }
           />
         </Box>
       </DialogContent>
@@ -143,4 +141,35 @@ const sliderSx: SxProps<Theme> = {
     backgroundColor: "#bfbfbf",
     height: 8,
   },
+};
+
+const sliderScale = [0, 1000, 2000, 3000, 4000, 5000];
+const searchRangeScale = [20, 100, 200, 400, 2000, 4000];
+
+const convertScale = (
+  value: number,
+  srcScale: number[],
+  destScale: number[]
+): number => {
+  if (value <= srcScale[0]) {
+    return destScale[0];
+  }
+  for (let i = 1; i < srcScale.length; ++i) {
+    if (value <= srcScale[i]) {
+      return (
+        destScale[i - 1] +
+        ((value - srcScale[i - 1]) * (destScale[i] - destScale[i - 1])) /
+          (srcScale[i] - srcScale[i - 1])
+      );
+    }
+  }
+  return destScale[destScale.length - 1];
+};
+
+const formatDistanceWithUnit = (
+  val: number,
+  t: TFunction<"translation", undefined>
+) => {
+  const { distance, unit } = getDistanceWithUnit(val);
+  return `${distance}${t(unit)}`;
 };
