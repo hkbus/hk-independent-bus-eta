@@ -1,12 +1,8 @@
 import React, {
   useCallback,
-  useEffect,
-  useContext,
   useMemo,
   useState,
 } from "react";
-import AppContext from "./AppContext";
-import { useTranslation } from "react-i18next";
 
 interface EmotionContextState {
   checkIns: EmotionCheckIn[];
