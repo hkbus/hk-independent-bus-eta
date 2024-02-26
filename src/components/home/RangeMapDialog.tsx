@@ -69,7 +69,7 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
     return destScale[destScale.length - 1];
   }
 
-  const formatNumber = (val) => {
+  const formatDistanceWithUnit = (val) => {
     const { distance, unit } = getDistanceWithUnit(val);
     return `${distance}${t(unit)}`;
   }
@@ -102,13 +102,13 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
             value={convertScale(state.searchRange, searchRangeScale, sliderScale)}
             valueLabelDisplay="on"
             marks={sliderScale.map((val, index) => {
-              return { label: formatNumber(searchRangeScale[index]), value: val };
+              return { label: formatDistanceWithUnit(searchRangeScale[index]), value: val };
             })}
             min={sliderScale[0]}
             max={sliderScale[sliderScale.length - 1]}
             step={250}
             scale={(value) => convertScale(value, sliderScale, searchRangeScale)}
-            valueLabelFormat={formatNumber}
+            valueLabelFormat={formatDistanceWithUnit}
             onChange={(_, value) => updateRange(convertScale(value, sliderScale, searchRangeScale) as number)}
           />
         </Box>
