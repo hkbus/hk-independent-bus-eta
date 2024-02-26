@@ -32,7 +32,7 @@ export const DEFAULT_GEOLOCATION: GeoLocation = {
 
 export const DEFAULT_SEARCH_RANGE = 100;
 
-export const DEFAULT_SEARCH_RANGE_OPTIONS: number[] = [100, 200, 500];
+export const DEFAULT_SEARCH_RANGE_OPTIONS: number[] = [100, 200, 400];
 
 // HK location if no valid value
 export const checkPosition = (position?: GeoLocation): GeoLocation => {
