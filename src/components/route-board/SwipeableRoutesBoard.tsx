@@ -116,10 +116,11 @@ const SwipeableRoutesBoard = ({
             )}
           </AutoSizer>
         ) : (
+          <>
           <Box sx={noResultSx}>
             <SentimentVeryDissatisfiedIcon fontSize="small" />
             <Box>
-              {index > 0 ? (
+              {availableBoardTab[index] !== "recent" ? (
                 <>
                   <Typography variant="h6">"{searchRoute}"</Typography>
                   <Typography variant="h6">
@@ -128,16 +129,39 @@ const SwipeableRoutesBoard = ({
                 </>
               ) : (
                 <>
+                  {searchRoute.length > 0 ?
+                    (<Typography variant="h6">"{searchRoute}"</Typography>) :
+                    (<></>)
+                  }
                   <Typography variant="h6">{t("no-recent-search")}</Typography>
                 </>
               )}
             </Box>
           </Box>
+          {availableBoardTab[index] !== "all" ? (
+            <Box sx={noResultSx}>
+              <Typography variant="h6">
+                <Typography
+                  variant="h6"
+                  sx={clickableLinkSx}
+                  onClick={handleClick}
+                >{t("click-here")}</Typography>
+                {t("to-search-all-routes")}
+              </Typography>
+            </Box>
+          ) : (
+            <></>
+          )}
+          </>
         )}
       </React.Fragment>
     ),
     [itemHeight, coItemDataList, searchRoute, t]
   );
+
+  const handleClick = (e) => {
+    onChangeTab("all")
+  }
 
   const availableBoardTab = useMemo(
     () => BOARD_TAB.filter((tab) => isRecentSearchShown || tab !== "recent"),
@@ -206,4 +230,10 @@ const noResultSx: SxProps<Theme> = {
     fontSize: "4em",
     mr: 2,
   },
+};
+
+const clickableLinkSx: SxProps<Theme> = {
+  textDecoration: "underline",
+  display: "inline",
+  cursor: "pointer"
 };
