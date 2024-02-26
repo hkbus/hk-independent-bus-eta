@@ -64,7 +64,11 @@ const SearchRangeController = () => {
             `(${searchRange})`}
         </ToggleButton>
       </ToggleButtonGroup>
-      <RangeMapDialog open={open} onClose={() => setOpen(false)} />
+      {open ? (
+        <RangeMapDialog open={open} onClose={() => setOpen(false)} />
+      ) : (
+        <></>
+      )}
     </Box>
   );
 };

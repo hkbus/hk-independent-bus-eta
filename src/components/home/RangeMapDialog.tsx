@@ -14,6 +14,7 @@ import { useCallback, useContext, useState } from "react";
 import AppContext from "../../AppContext";
 import { Location } from "hk-bus-eta";
 import { Close as CloseIcon } from "@mui/icons-material";
+import { getDistanceWithUnit } from "../../utils";
 
 interface RangeMapDialogProps {
   open: boolean;
@@ -54,6 +55,25 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
     }));
   }, []);
 
+  const sliderScale      = [ 0, 1000, 2000, 3000, 4000, 5000];
+  const searchRangeScale = [20,  100,  200,  400, 2000, 4000];
+  const convertScale = (value, srcScale, destScale) => {
+    if(value <= srcScale[0]) {
+      return destScale[0];
+    }
+    for(let i = 1; i < srcScale.length; ++i) {
+      if(value <= srcScale[i]) {
+        return destScale[i - 1] + (value - srcScale[i - 1]) * (destScale[i] - destScale[i - 1]) / (srcScale[i] - srcScale[i - 1]);
+      }
+    }
+    return destScale[destScale.length - 1];
+  }
+
+  const formatNumber = (val) => {
+    const { distance, unit } = getDistanceWithUnit(val);
+    return `${distance}${t(unit)}`;
+  }
+
   const updateRange = useCallback((searchRange: number) => {
     setState((prev) => ({
       ...prev,
@@ -64,7 +84,7 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
   return (
     <Dialog open={open} onClose={handleClose} sx={rootSx}>
       <DialogTitle sx={titleSx}>
-        {t("自訂搜尋範圍（米）")}
+        {t("自訂搜尋範圍")}
         <IconButton onClick={handleClose}>
           <CloseIcon />
         </IconButton>
@@ -79,20 +99,17 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
           <Slider
             sx={sliderSx}
             aria-label="Range"
-            value={state.searchRange}
+            value={convertScale(state.searchRange, searchRangeScale, sliderScale)}
             valueLabelDisplay="on"
-            marks={[
-              { label: "0", value: 0 },
-              { label: "1km", value: 1000 },
-              { label: "2km", value: 2000 },
-              { label: "3km", value: 3000 },
-              { label: "4km", value: 4000 },
-              { label: "5km", value: 5000 },
-            ]}
-            min={0}
-            max={5000}
+            marks={sliderScale.map((val, index) => {
+              return { label: formatNumber(searchRangeScale[index]), value: val };
+            })}
+            min={sliderScale[0]}
+            max={sliderScale[sliderScale.length - 1]}
             step={250}
-            onChange={(_, value) => updateRange(value as number)}
+            scale={(value) => convertScale(value, sliderScale, searchRangeScale)}
+            valueLabelFormat={formatNumber}
+            onChange={(_, value) => updateRange(convertScale(value, sliderScale, searchRangeScale) as number)}
           />
         </Box>
       </DialogContent>
