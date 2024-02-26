@@ -98,6 +98,11 @@ const SwipeableRoutesBoard = ({
     return 110;
   }, []);
 
+  const availableBoardTab = useMemo(
+    () => BOARD_TAB.filter((tab) => isRecentSearchShown || tab !== "recent"),
+    [isRecentSearchShown]
+  );
+
   const ListRenderer = useCallback(
     ({ key, index }) => (
       <React.Fragment key={key}>
@@ -144,7 +149,7 @@ const SwipeableRoutesBoard = ({
                 <Typography
                   variant="h6"
                   sx={clickableLinkSx}
-                  onClick={handleClick}
+                  onClick={() => onChangeTab("all")}
                 >{t("click-here")}</Typography>
                 {t("to-search-all-routes")}
               </Typography>
@@ -156,16 +161,7 @@ const SwipeableRoutesBoard = ({
         )}
       </React.Fragment>
     ),
-    [itemHeight, coItemDataList, searchRoute, t]
-  );
-
-  const handleClick = (e) => {
-    onChangeTab("all")
-  }
-
-  const availableBoardTab = useMemo(
-    () => BOARD_TAB.filter((tab) => isRecentSearchShown || tab !== "recent"),
-    [isRecentSearchShown]
+    [itemHeight, coItemDataList, searchRoute, t, availableBoardTab, onChangeTab]
   );
 
   return useMemo(
