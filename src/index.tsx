@@ -10,6 +10,7 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import ErrorBoundary from "./ErrorBoundary";
 import { CollectionContextProvider } from "./CollectionContext";
 import { ReactNativeContextProvider } from "./ReactNativeContext";
+import { EmotionContextProvider } from "./EmotionContext";
 const App = loadable(() => import("./App"));
 
 const isHuman = () => {
@@ -68,9 +69,11 @@ if (isHuman()) {
         <DbProvider initialDb={state.db}>
           <CollectionContextProvider>
             <AppContextProvider workbox={state.workbox}>
-              <ReactNativeContextProvider>
-                <App />
-              </ReactNativeContextProvider>
+              <EmotionContextProvider>
+                <ReactNativeContextProvider>
+                  <App />
+                </ReactNativeContextProvider>
+              </EmotionContextProvider>
             </AppContextProvider>
           </CollectionContextProvider>
         </DbProvider>

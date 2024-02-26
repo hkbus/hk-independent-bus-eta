@@ -30,6 +30,7 @@ const RouteBoard = loadable(() => import("./pages/RouteBoard"));
 const RouteSearch = loadable(() => import("./pages/RouteSearch"));
 const Notice = loadable(() => import("./pages/Notice"));
 const Settings = loadable(() => import("./pages/Settings"));
+const Emotion = loadable(() => import("./pages/Emotion"));
 const PrivacyPolicy = loadable(() => import("./pages/PrivacyPolicy"));
 const TermsAndConditions = loadable(() => import("./pages/TermsAndConditions"));
 const Support = loadable(() => import("./pages/Support"));
@@ -73,6 +74,7 @@ const App = () => {
                   <Route path={`board`} element={<RouteBoard />} />
                   <Route path={`stops`} element={<BookmarkedStop />} />
                   <Route path={`search`} element={<RouteSearch />} />
+                  <Route path="emotion" element={<Emotion />} />
                   <Route path={`privacy`} element={<PrivacyPolicy />} />
                   <Route path={`terms`} element={<TermsAndConditions />} />
                   <Route path={`support`} element={<Support />} />
