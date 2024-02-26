@@ -230,7 +230,26 @@
       "TWL": "荃灣綫",
       "ISL": "港島綫",
       "KTL": "觀塘綫",
-      "DRL": "迪士尼綫"
+      "DRL": "迪士尼綫",
+      "Heart": "心情車站",
+      "Check in": "心情報到",
+      "Emotion Chart": "心電圖",
+      "How happy were you in the past 24 hours?": "在過去 24 小時，你的開心指數﹖",
+      "What environment made you feel most profound in the past 24 hours?": "在過去 24 小時，令你感受最深的環境﹖",
+      "Work": "工作",
+      "Gathering": "聚會",
+      "Exercise": "運動",
+      "Leisure": "消閑",
+      "Dining": "用餐",
+      "Rest": "休息",
+      "What are you most grateful for in the past 24 hours?": "在過去 24 小時，你最感恩的對象是﹖",
+      "Friend": "朋友",
+      "Partner": "伴侶",
+      "Family": "家人",
+      "Fellow": "伙伴",
+      "Self": "自己",
+      "Stranger": "陌生人",
+      "Already checked in, let's come back later": "已記錄了，稍後再來吧"
     }
   }
 }

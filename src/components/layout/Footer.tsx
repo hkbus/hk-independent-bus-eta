@@ -86,7 +86,7 @@ const Footer = () => {
           icon={<NewspaperIcon />}
         />
         <BottomNavigationAction
-          label={t("心情車站")}
+          label={t("Heart")}
           component={Link}
           to={`/${i18n.language}/emotion`}
           onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>

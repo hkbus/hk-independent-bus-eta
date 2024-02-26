@@ -1,8 +1,4 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 interface EmotionContextState {
   checkIns: EmotionCheckIn[];
@@ -32,6 +28,10 @@ export const EmotionContextProvider = ({ children }) => {
     }));
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("emotion-checkins", JSON.stringify(state.checkIns));
+  }, [state.checkIns]);
+
   return (
     <EmotionContext.Provider
       value={{
@@ -47,13 +47,26 @@ export const EmotionContextProvider = ({ children }) => {
 
 export default EmotionContext;
 
+const DEFAULT_STATE: EmotionContextState = {
+  checkIns: JSON.parse(localStorage.getItem("emotion-checkins") ?? "[]"),
+};
+
 export interface EmotionCheckIn {
-  happiness?: 0 | 1 | 2 | 3 | 4 | 5;
+  happiness?: "😄" | "😊" | "🙂" | "😟" | "😫" | "😭";
   moodScene?: "Work" | "Gathering" | "Exercise" | "Leisure" | "Dining" | "Rest";
-  gratitudeObj?: "Self" | "Friend" | "Partner" | "Fellow" | "Stranger";
+  gratitudeObj?:
+    | "Self"
+    | "Friend"
+    | "Family"
+    | "Partner"
+    | "Fellow"
+    | "Stranger"
+    | "";
   ts: number;
 }
 
-const DEFAULT_STATE: EmotionContextState = {
-  checkIns: JSON.parse(localStorage.getItem("emotion-checkins") ?? "[]"),
+export const CheckInOptions: Partial<Record<keyof EmotionCheckIn, string[]>> = {
+  happiness: ["😄", "😊", "🙂", "😟", "😫", "😭"],
+  moodScene: ["Work", "Gathering", "Exercise", "Leisure", "Dining", "Rest"],
+  gratitudeObj: ["Friend", "Partner", "Family", "Fellow", "Self", "Stranger"],
 };
