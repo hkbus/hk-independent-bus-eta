@@ -244,7 +244,7 @@ export default RouteMap;
 const geoJsonStyle = (companies, route, isBorder) => {
   return function (feature: GeoJSON.Feature) {
     return {
-      color: isBorder ? '#000000' : getLineColor(companies, route),
+      color: isBorder ? "#000000" : getLineColor(companies, route),
       weight: isBorder ? 6 : 4,
       className:
         companies.includes("ctb") && companies.includes("kmb")
