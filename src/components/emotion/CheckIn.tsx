@@ -48,7 +48,7 @@ const CheckIn = ({ onFinish }: CheckInProps) => {
   return (
     <Box sx={rootSx}>
       <Box sx={questionContainerSx}>
-        <Typography variant="h6" alignSelf="flex-start" textAlign="start">
+        <Typography variant="body1" alignSelf="flex-start" textAlign="start">
           1. {t("How happy were you in the past 24 hours?")}
         </Typography>
         <ToggleButtonGroup
@@ -59,13 +59,13 @@ const CheckIn = ({ onFinish }: CheckInProps) => {
         >
           {CheckInOptions.happiness.map((v, idx) => (
             <ToggleButton value={v} key={`happiness-${idx}`}>
-              <Typography variant="h4">{v}</Typography>
+              <Typography variant="h6">{v}</Typography>
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
       </Box>
       <Box sx={questionContainerSx}>
-        <Typography variant="h6" alignSelf="flex-start" textAlign="start">
+        <Typography variant="body1" alignSelf="flex-start" textAlign="start">
           2.{" "}
           {t(
             "What environment made you feel most profound in the past 24 hours?"
@@ -90,7 +90,7 @@ const CheckIn = ({ onFinish }: CheckInProps) => {
         </ToggleButtonGroup>
       </Box>
       <Box sx={questionContainerSx}>
-        <Typography variant="h6" alignSelf="flex-start" textAlign="start">
+        <Typography variant="body1" alignSelf="flex-start" textAlign="start">
           3. {t("What are you most grateful for in the past 24 hours?")}
         </Typography>
         <ToggleButtonGroup
@@ -132,7 +132,7 @@ const rootSx: SxProps<Theme> = {
   alignItems: "center",
   flex: 1,
   gap: 4,
-  pt: 2,
+  p: 2,
 };
 
 const questionContainerSx: SxProps<Theme> = {

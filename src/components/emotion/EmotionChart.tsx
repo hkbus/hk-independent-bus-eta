@@ -30,7 +30,7 @@ const EmotionChart = () => {
 
   return (
     <Box sx={rootSx}>
-      <Typography variant="h5">{t("In the past 4 weeks, ...")}</Typography>
+      <Typography variant="body1">{t("In the past 4 weeks, ...")}</Typography>
       <Plot
         data={[
           {
@@ -45,7 +45,7 @@ const EmotionChart = () => {
           },
         ]}
         layout={{
-          width: 440,
+          width: 380,
           height: 340,
           title: t("How happy were you?"),
           annotations: [
@@ -62,6 +62,7 @@ const EmotionChart = () => {
             },
           ],
         }}
+        config={{ displayModeBar: false }}
       />
       <Plot
         data={[
@@ -77,7 +78,7 @@ const EmotionChart = () => {
           },
         ]}
         layout={{
-          width: 440,
+          width: 380,
           height: 340,
           title: t("What environment made you feel most profound?"),
           annotations: [
@@ -96,6 +97,7 @@ const EmotionChart = () => {
             },
           ],
         }}
+        config={{ displayModeBar: false }}
       />
       <Plot
         data={[
@@ -111,7 +113,7 @@ const EmotionChart = () => {
           },
         ]}
         layout={{
-          width: 440,
+          width: 380,
           height: 340,
           title: t("What are you most grateful for?"),
           annotations: [
@@ -132,6 +134,7 @@ const EmotionChart = () => {
             },
           ],
         }}
+        config={{ displayModeBar: false }}
       />
     </Box>
   );
@@ -145,5 +148,5 @@ const rootSx: SxProps<Theme> = {
   alignItems: "start",
   flex: 1,
   gap: 4,
-  pt: 2,
+  p: 2,
 };
