@@ -98,6 +98,11 @@ const SwipeableRoutesBoard = ({
     return 110;
   }, []);
 
+  const availableBoardTab = useMemo(
+    () => BOARD_TAB.filter((tab) => isRecentSearchShown || tab !== "recent"),
+    [isRecentSearchShown]
+  );
+
   const ListRenderer = useCallback(
     ({ key, index }) => (
       <React.Fragment key={key}>
@@ -116,32 +121,48 @@ const SwipeableRoutesBoard = ({
             )}
           </AutoSizer>
         ) : (
-          <Box sx={noResultSx}>
-            <SentimentVeryDissatisfiedIcon fontSize="small" />
-            <Box>
-              {index > 0 ? (
-                <>
-                  <Typography variant="h6">"{searchRoute}"</Typography>
-                  <Typography variant="h6">
-                    {t("route-search-no-result")}
-                  </Typography>
-                </>
-              ) : (
-                <>
-                  <Typography variant="h6">{t("no-recent-search")}</Typography>
-                </>
-              )}
+          <>
+            <Box sx={noResultSx}>
+              <SentimentVeryDissatisfiedIcon fontSize="small" />
+              <Box>
+                {availableBoardTab[index] !== "recent" ? (
+                  <>
+                    <Typography variant="h6">"{searchRoute}"</Typography>
+                    <Typography variant="h6">
+                      {t("route-search-no-result")}
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    {searchRoute.length > 0 && (
+                      <Typography variant="h6">"{searchRoute}"</Typography>
+                    )}
+                    <Typography variant="h6">
+                      {t("no-recent-search")}
+                    </Typography>
+                  </>
+                )}
+              </Box>
             </Box>
-          </Box>
+            {availableBoardTab[index] !== "all" && (
+              <Box sx={noResultSx}>
+                <Typography variant="h6">
+                  <Typography
+                    variant="h6"
+                    sx={clickableLinkSx}
+                    onClick={() => onChangeTab("all")}
+                  >
+                    {t("click-here")}
+                  </Typography>
+                  {t("to-search-all-routes")}
+                </Typography>
+              </Box>
+            )}
+          </>
         )}
       </React.Fragment>
     ),
-    [itemHeight, coItemDataList, searchRoute, t]
-  );
-
-  const availableBoardTab = useMemo(
-    () => BOARD_TAB.filter((tab) => isRecentSearchShown || tab !== "recent"),
-    [isRecentSearchShown]
+    [itemHeight, coItemDataList, searchRoute, t, availableBoardTab, onChangeTab]
   );
 
   return useMemo(
@@ -206,4 +227,10 @@ const noResultSx: SxProps<Theme> = {
     fontSize: "4em",
     mr: 2,
   },
+};
+
+const clickableLinkSx: SxProps<Theme> = {
+  textDecoration: "underline",
+  display: "inline",
+  cursor: "pointer",
 };
