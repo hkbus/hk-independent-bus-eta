@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   SxProps,
   Theme,
   ToggleButton,
@@ -7,13 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import EmotionContext, {
   CheckInOptions,
   EmotionCheckIn,
 } from "../../EmotionContext";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 interface CheckInProps {
   onFinish: () => void;
@@ -23,14 +23,16 @@ const CheckIn = ({ onFinish }: CheckInProps) => {
   const [state, setState] = useState<EmotionCheckIn>(DEFAULT_STATE);
   const { t } = useTranslation();
   const { isRemind, addCheckin } = useContext(EmotionContext);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (state.happiness && state.moodScene && state.gratitudeObj) {
-      addCheckin({ ...state, ts: Date.now() });
-      onFinish();
-    }
-  }, [state, addCheckin, onFinish, navigate]);
+  const isDone = useMemo(
+    () => state.happiness && state.moodScene && state.gratitudeObj,
+    [state]
+  );
+
+  const handleSubmit = useCallback(() => {
+    addCheckin({ ...state, ts: Date.now() });
+    onFinish();
+  }, [state, addCheckin, onFinish]);
 
   if (!isRemind) {
     return (
@@ -111,6 +113,9 @@ const CheckIn = ({ onFinish }: CheckInProps) => {
           ))}
         </ToggleButtonGroup>
       </Box>
+      <Button variant="outlined" disabled={!isDone} onClick={handleSubmit}>
+        OK
+      </Button>
     </Box>
   );
 };

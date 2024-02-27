@@ -249,7 +249,11 @@
       "Fellow": "伙伴",
       "Self": "自己",
       "Stranger": "陌生人",
-      "Already checked in, let's come back later": "已記錄了，稍後再來吧"
+      "Already checked in, let's come back later": "已記錄了，稍後再來吧",
+      "In the past 4 weeks, ...": "過去 4 星期，⋯⋯",
+      "How happy were you?": "你有多快樂？",
+      "What environment made you feel most profound?": "令你感受最深的環境是哪裡？",
+      "What are you most grateful for?": "你最感恩的對象是？"
     }
   }
 }

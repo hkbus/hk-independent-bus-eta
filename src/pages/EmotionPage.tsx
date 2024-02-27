@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import EmotionContext from "../EmotionContext";
-import { Paper, SxProps, Theme } from "@mui/material";
+import { Box, Paper, SxProps, Theme } from "@mui/material";
 import EmotionTabbar, {
   EmotionTabType,
 } from "../components/emotion/EmotionTabbar";
@@ -20,8 +20,10 @@ const EmotionPage = () => {
   return (
     <Paper sx={paperSx}>
       <EmotionTabbar value={tab} onChange={(v) => setTab(v)} />
-      {tab === "check in" && <CheckIn onFinish={onCheckInDone} />}
-      {tab === "chart" && <EmotionChart />}
+      <Box overflow="auto">
+        {tab === "check in" && <CheckIn onFinish={onCheckInDone} />}
+        {tab === "chart" && <EmotionChart />}
+      </Box>
     </Paper>
   );
 };
@@ -34,7 +36,7 @@ const paperSx: SxProps<Theme> = {
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
-  overflow: "auto",
+  overflow: "none",
   width: "100%",
   height: "100%",
 };

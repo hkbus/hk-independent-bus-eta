@@ -67,6 +67,6 @@ export interface EmotionCheckIn {
 
 export const CheckInOptions: Partial<Record<keyof EmotionCheckIn, string[]>> = {
   happiness: ["😄", "😊", "🙂", "😟", "😫", "😭"],
-  moodScene: ["Work", "Gathering", "Exercise", "Leisure", "Dining", "Rest"],
+  moodScene: ["Gathering", "Exercise", "Work", "Leisure", "Dining", "Rest"],
   gratitudeObj: ["Friend", "Partner", "Family", "Fellow", "Self", "Stranger"],
 };

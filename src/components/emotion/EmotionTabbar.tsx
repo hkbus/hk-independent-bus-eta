@@ -1,5 +1,9 @@
 import { SxProps, Tab, Tabs, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import {
+  TaskAlt as TaskAltIcon,
+  MonitorHeartOutlined as MonitorHeartOutlinedIcon,
+} from "@mui/icons-material";
 
 interface EmotionTabbarProps {
   value: EmotionTabType;
@@ -10,8 +14,18 @@ const EmotionTabbar = ({ value, onChange }: EmotionTabbarProps) => {
   const { t } = useTranslation();
   return (
     <Tabs value={value} onChange={(_, v) => onChange(v)} sx={tabbarSx} centered>
-      <Tab label={t("Check in")} value="check in" />
-      <Tab label={t("Emotion Chart")} value="chart" />
+      <Tab
+        label={t("Check in")}
+        value="check in"
+        icon={<TaskAltIcon />}
+        iconPosition="start"
+      />
+      <Tab
+        label={t("Emotion Chart")}
+        value="chart"
+        icon={<MonitorHeartOutlinedIcon />}
+        iconPosition="start"
+      />
     </Tabs>
   );
 };

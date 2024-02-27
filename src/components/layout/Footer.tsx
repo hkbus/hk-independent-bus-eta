@@ -95,9 +95,9 @@ const Footer = () => {
           value={`/${i18n.language}/emotion`}
           icon={
             <Badge
-              badgeContent={1}
               invisible={!isRemind || location.pathname.endsWith("/emotion")}
               color="error"
+              variant="dot"
             >
               <FavoriteIcon />
             </Badge>
