@@ -19,8 +19,7 @@ const StopOrderList = ({ mode }: { mode: ManageMode }) => {
     updateSavedStops,
   } = useContext(AppContext);
   const [items, setItems] = useState(
-    // cannot use Array.reverse() as it is in-place reverse
-    savedStops.filter((id) => id.split("|")[1] in stopList).reverse()
+    savedStops.filter((id) => id.split("|")[1] in stopList)
   );
   const { t } = useTranslation();
 
@@ -32,7 +31,7 @@ const StopOrderList = ({ mode }: { mode: ManageMode }) => {
       const newItems = reorder(items, source.index, destination.index);
 
       setItems(newItems);
-      setSavedStops(Array.from(newItems).reverse());
+      setSavedStops(Array.from(newItems));
     },
     [items, setItems, setSavedStops]
   );
