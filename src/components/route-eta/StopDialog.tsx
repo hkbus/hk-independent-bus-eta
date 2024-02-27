@@ -3,6 +3,7 @@ import {
   Bookmark as BookmarkIcon,
   Close as CloseIcon,
   Directions as DirectionsIcon,
+  MapOutlined as MapIcon,
 } from "@mui/icons-material";
 import {
   Box,
@@ -54,6 +55,15 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
     }
   }, [stopList, stops]);
 
+  const handleClickLocation = useCallback(() => {
+    try {
+      const { lat, lng } = stopList[stops[0][1]]?.location;
+      window.open(`https://www.google.com/maps/?q=${lat},${lng}`, "_blank");
+    } catch (err) {
+      console.error(err);
+    }
+  }, [stopList, stops]);
+
   return (
     <Dialog open={open} onClose={onClose} sx={rootSx}>
       <DialogTitle sx={titleSx}>
@@ -65,6 +75,9 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
           &nbsp;&nbsp;
           <IconButton onClick={handleClickDirection}>
             <DirectionsIcon />
+          </IconButton>
+          <IconButton onClick={handleClickLocation}>
+            <MapIcon />
           </IconButton>
         </Box>
         <Box>
