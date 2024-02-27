@@ -122,41 +122,42 @@ const SwipeableRoutesBoard = ({
           </AutoSizer>
         ) : (
           <>
-          <Box sx={noResultSx}>
-            <SentimentVeryDissatisfiedIcon fontSize="small" />
-            <Box>
-              {availableBoardTab[index] !== "recent" ? (
-                <>
-                  <Typography variant="h6">"{searchRoute}"</Typography>
-                  <Typography variant="h6">
-                    {t("route-search-no-result")}
-                  </Typography>
-                </>
-              ) : (
-                <>
-                  {searchRoute.length > 0 ?
-                    (<Typography variant="h6">"{searchRoute}"</Typography>) :
-                    (<></>)
-                  }
-                  <Typography variant="h6">{t("no-recent-search")}</Typography>
-                </>
-              )}
-            </Box>
-          </Box>
-          {availableBoardTab[index] !== "all" ? (
             <Box sx={noResultSx}>
-              <Typography variant="h6">
-                <Typography
-                  variant="h6"
-                  sx={clickableLinkSx}
-                  onClick={() => onChangeTab("all")}
-                >{t("click-here")}</Typography>
-                {t("to-search-all-routes")}
-              </Typography>
+              <SentimentVeryDissatisfiedIcon fontSize="small" />
+              <Box>
+                {availableBoardTab[index] !== "recent" ? (
+                  <>
+                    <Typography variant="h6">"{searchRoute}"</Typography>
+                    <Typography variant="h6">
+                      {t("route-search-no-result")}
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    {searchRoute.length > 0 && (
+                      <Typography variant="h6">"{searchRoute}"</Typography>
+                    )}
+                    <Typography variant="h6">
+                      {t("no-recent-search")}
+                    </Typography>
+                  </>
+                )}
+              </Box>
             </Box>
-          ) : (
-            <></>
-          )}
+            {availableBoardTab[index] !== "all" && (
+              <Box sx={noResultSx}>
+                <Typography variant="h6">
+                  <Typography
+                    variant="h6"
+                    sx={clickableLinkSx}
+                    onClick={() => onChangeTab("all")}
+                  >
+                    {t("click-here")}
+                  </Typography>
+                  {t("to-search-all-routes")}
+                </Typography>
+              </Box>
+            )}
           </>
         )}
       </React.Fragment>
@@ -231,5 +232,5 @@ const noResultSx: SxProps<Theme> = {
 const clickableLinkSx: SxProps<Theme> = {
   textDecoration: "underline",
   display: "inline",
-  cursor: "pointer"
+  cursor: "pointer",
 };
