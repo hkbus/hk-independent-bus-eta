@@ -1,3 +1,5 @@
+import { Location as GeoLocation } from "hk-bus-eta";
+
 export interface DaySchedule {
   day: number;
   // use start, end only if allDay is false
@@ -43,3 +45,23 @@ export const DEFAULT_ROUTE_COLLECTION: RouteCollection = {
 export type TransportType = "bus" | "minibus" | "lightRail" | "mtr";
 
 export type BoardTabType = "recent" | "all" | TransportType;
+
+export type StatusType = "ready" | "rendering" | "waiting";
+
+export type CustomLocation = { location: GeoLocation } | null
+
+export interface Locations {
+  start: CustomLocation;
+  end: CustomLocation;
+}
+
+export interface SearchResultIdx {
+  resultIdx: number;
+  stopIdx: number[];
+}
+
+export type SearchResultType = Array<{
+  routeId: string;
+  on: number;
+  off: number;
+}>;

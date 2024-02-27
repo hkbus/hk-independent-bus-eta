@@ -2,8 +2,13 @@ import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "./RouteNo";
+import { RouteListEntry } from 'hk-bus-eta';
 
-const RouteNoCompany = ({ route }) => {
+interface RouteNoCompanyProps {
+  route: [string, RouteListEntry];
+}
+
+const RouteNoCompany = ({ route }: RouteNoCompanyProps) => {
   const { t } = useTranslation();
   const [routeNo, serviceType] = route[0].split("-").slice(0, 2);
 
@@ -11,6 +16,7 @@ const RouteNoCompany = ({ route }) => {
     <Box>
       <div>
         <RouteNo
+          entry={route[1]}
           routeNo={i18n.language === "zh" ? t(routeNo) : routeNo}
           fontSize={route[1].co[0] === "mtr" ? "1.2rem" : null}
         />

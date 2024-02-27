@@ -6,15 +6,10 @@ import { useTranslation } from "react-i18next";
 import AddressInput from "../components/route-search/AddressInput";
 import SearchResult from "../components/route-search/SearchResult";
 import SearchMap from "../components/route-search/SearchMap";
-import { fetchEtas, Eta } from "hk-bus-eta";
+import { fetchEtas, Eta, Company } from "hk-bus-eta";
 import { setSeoHeader, getDistance, vibrate } from "../utils";
 import { LinearProgress } from "../components/Progress";
-
-export type SearchResultType = Array<{
-  routeId: string;
-  on: number;
-  off: number;
-}>;
+import { CustomLocation, SearchResultType } from '../typing';
 
 const RouteSearch = () => {
   const { t, i18n } = useTranslation();
@@ -65,14 +60,13 @@ const RouteSearch = () => {
         return !navigator.onLine
           ? new Promise((resolve) => resolve([]))
           : fetchEtas({
-              ...routeList[routeId],
-              seq: parseInt(seq, 10),
-              routeStops: routeList[routeId].stops,
-              // @ts-ignore
-              co: Object.keys(routeList[routeId].stops),
-              // @ts-ignore
-              language: i18n.language,
-            }).then((p) => p.filter((e) => e.eta));
+            ...routeList[routeId],
+            seq: parseInt(seq, 10),
+            routeStops: routeList[routeId].stops,
+            co: Object.keys(routeList[routeId].stops) as Company[],
+            // @ts-ignore
+            language: i18n.language,
+          }).then((p) => p.filter((e) => e.eta));
       })
     )
       .then((etas) =>
@@ -98,7 +92,7 @@ const RouteSearch = () => {
                   (availableRoutes.indexOf(`${route.routeId}/${route.on}`) !==
                     -1 ||
                     availableRoutes.indexOf(`${route.routeId}/${route.off}`) !==
-                      -1)
+                    -1)
                 );
               }, true)
             )
@@ -185,7 +179,7 @@ const RouteSearch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, locations]);
 
-  const handleStartChange = (value) => {
+  const handleStartChange = (value: CustomLocation) => {
     setLocations({
       ...locations,
       start: value,
@@ -196,7 +190,7 @@ const RouteSearch = () => {
     setResult([]);
   };
 
-  const handleEndChange = (value) => {
+  const handleEndChange = (value: CustomLocation) => {
     setLocations({
       ...locations,
       end: value,

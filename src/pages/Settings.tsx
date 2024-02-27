@@ -200,7 +200,6 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            // @ts-ignore
             primary={t("地理位置定位功能")}
             secondary={t(
               geoPermission === "granted"

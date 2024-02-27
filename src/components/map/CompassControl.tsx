@@ -8,7 +8,6 @@ const CompassControl = () => {
   const { compassPermission, setCompassPermission } = useContext(AppContext);
   const handleClick = useCallback(() => {
     requestPermission().then((r) => {
-      // @ts-ignore
       setCompassPermission(r);
     });
   }, [setCompassPermission]);

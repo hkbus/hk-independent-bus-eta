@@ -17,7 +17,7 @@ import {
   AddCircle as AddIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 const CollectionSchedule = () => {
   const { t } = useTranslation();
@@ -68,10 +68,10 @@ const CollectionSchedule = () => {
               value={dayjs(
                 `1991-12-02${daySchedule.start.hour}:${daySchedule.start.minute}`
               )}
-              onChange={(v: any) =>
+              onChange={(v: Dayjs) =>
                 updateCollectionSchedule(idx, "start", {
-                  hour: v.$H,
-                  minute: v.$m,
+                  hour: v.hour(),
+                  minute: v.minute(),
                 })
               }
             />
@@ -87,10 +87,10 @@ const CollectionSchedule = () => {
               value={dayjs(
                 `1991-12-02T${daySchedule.end.hour}:${daySchedule.end.minute}`
               )}
-              onChange={(v: any) =>
+              onChange={(v: Dayjs) =>
                 updateCollectionSchedule(idx, "end", {
-                  hour: v.$H,
-                  minute: v.$m,
+                  hour: v.hour(),
+                  minute: v.minute(),
                 })
               }
             />
