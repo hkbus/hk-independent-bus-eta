@@ -247,7 +247,7 @@ const geoJsonStyle = (companies, route, isBorder) => {
       color: isBorder ? "#000000" : getLineColor(companies, route),
       weight: isBorder ? 6 : 4,
       className:
-        companies.includes("ctb") && companies.includes("kmb")
+        companies.includes("ctb") && companies.includes("kmb") && !isBorder
           ? classes.jointlyLine
           : null,
     };
