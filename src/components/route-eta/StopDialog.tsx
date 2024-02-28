@@ -2,8 +2,8 @@ import {
   BookmarkBorder as BookmarkBorderIcon,
   Bookmark as BookmarkIcon,
   Close as CloseIcon,
-  Directions as DirectionsIcon,
-  MapOutlined as MapIcon,
+  NavigationOutlined as DirectionsIcon,
+  PinDropOutlined as MapIcon,
 } from "@mui/icons-material";
 import {
   Box,

@@ -54,5 +54,6 @@ const rootSx = (fontSize): SxProps<Theme> => {
       fontSize: "1.2rem",
       fontFamily: '"Oswald", sans-serif',
     },
+    whiteSpace: "nowrap",
   };
 };
