@@ -16,9 +16,7 @@ export const EmotionContextProvider = ({ children }) => {
 
   const isRemind = useMemo(() => {
     if (state.checkIns.length === 0) return true;
-    return (
-      state.checkIns.slice(-1)[0].ts <= Date.now() - 20 * 24 * 60 * 60 * 1000
-    );
+    return state.checkIns.slice(-1)[0].ts <= Date.now() - 20 * 60 * 60 * 1000;
   }, [state.checkIns]);
 
   const addCheckin = useCallback((checkIn: EmotionCheckIn) => {
