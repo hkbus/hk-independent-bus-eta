@@ -1,27 +1,17 @@
-import React, { useCallback, useContext, useState } from "react";
-import EmotionContext from "../EmotionContext";
 import { Box, Paper, SxProps, Theme } from "@mui/material";
-import EmotionTabbar, {
-  EmotionTabType,
-} from "../components/emotion/EmotionTabbar";
 import CheckIn from "../components/emotion/CheckIn";
 import EmotionChart from "../components/emotion/EmotionChart";
+import { useParams } from "react-router-dom";
+import EmotionTabbar from "../components/emotion/EmotionTabbar";
 
 const EmotionPage = () => {
-  const { isRemind } = useContext(EmotionContext);
-  const [tab, setTab] = useState<EmotionTabType>(
-    isRemind ? "check in" : "chart"
-  );
-
-  const onCheckInDone = useCallback(() => {
-    setTab("chart");
-  }, []);
+  const { tab } = useParams();
 
   return (
     <Paper sx={paperSx}>
-      <EmotionTabbar value={tab} onChange={(v) => setTab(v)} />
+      <EmotionTabbar />
       <Box overflow="auto">
-        {tab === "check in" && <CheckIn onFinish={onCheckInDone} />}
+        {(!tab || tab === "check-in") && <CheckIn />}
         {tab === "chart" && <EmotionChart />}
       </Box>
     </Paper>

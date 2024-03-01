@@ -25,6 +25,17 @@ const EmotionChart = () => {
           0
         )
       ),
+      gratitudeCnt: checkIns
+        .reduce(
+          (acc, { gratitudeCnt: v }) => {
+            console.log(v);
+            if (!v) return acc;
+            if (v === "5+") return [acc[0] + 5, "+"];
+            return [acc[0] + parseInt(v), acc[1]];
+          },
+          [0, ""] as [number, string]
+        )
+        .join(""),
     };
   }, [checkIns]);
 
@@ -136,6 +147,11 @@ const EmotionChart = () => {
         }}
         config={{ displayModeBar: false }}
       />
+      <Typography variant="h6">
+        {t("There are also ")}
+        {countData.gratitudeCnt}
+        {t(" things worth being grateful")}
+      </Typography>
     </Box>
   );
 };

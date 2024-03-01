@@ -7,22 +7,24 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import {
+  AccessTime as AccessTimeIcon,
+  QueryStats as QueryStatsIcon,
+} from "@mui/icons-material";
 import { useCallback, useContext, useMemo, useState } from "react";
 import EmotionContext, {
   CheckInOptions,
   EmotionCheckIn,
 } from "../../EmotionContext";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-interface CheckInProps {
-  onFinish: () => void;
-}
-
-const CheckIn = ({ onFinish }: CheckInProps) => {
+const CheckIn = () => {
   const [state, setState] = useState<EmotionCheckIn>(DEFAULT_STATE);
-  const { t } = useTranslation();
-  const { isRemind, addCheckin } = useContext(EmotionContext);
+  const { i18n, t } = useTranslation();
+  const navigate = useNavigate();
+  const { isRemind, addCheckin, lastCheckIn, updateLastCheckIn } =
+    useContext(EmotionContext);
 
   const isDone = useMemo(
     () => state.happiness && state.moodScene && state.gratitudeObj,
@@ -31,16 +33,56 @@ const CheckIn = ({ onFinish }: CheckInProps) => {
 
   const handleSubmit = useCallback(() => {
     addCheckin({ ...state, ts: Date.now() });
-    onFinish();
-  }, [state, addCheckin, onFinish]);
+  }, [state, addCheckin]);
+
+  const handleUpdate = useCallback(
+    (v: EmotionCheckIn["gratitudeCnt"] | null) => {
+      updateLastCheckIn({ ...lastCheckIn, gratitudeCnt: v });
+    },
+    [updateLastCheckIn, lastCheckIn]
+  );
 
   if (!isRemind) {
     return (
       <Box sx={rootSx}>
         <AccessTimeIcon fontSize="large" />
         <Typography variant="h6">
-          {t("Already checked in, let's come back later")}
+          {t("I have recorded your mood ")}
+          {lastCheckIn.happiness}
+          {t(" recently")}
         </Typography>
+        <Typography variant="h6">
+          {t("The place most profound you is ")}
+          <u>{t(lastCheckIn.moodScene)}</u>
+        </Typography>
+        <Typography variant="h6">
+          {t("And, what makes you most grateful is ")}
+          <u>{t(lastCheckIn.gratitudeObj)}</u>
+        </Typography>
+        <Box sx={questionContainerSx}>
+          <Typography variant="body1" alignSelf="flex-start" textAlign="start">
+            {t("How many things are there to be grateful?")}
+          </Typography>
+          <ToggleButtonGroup
+            size="large"
+            value={lastCheckIn.gratitudeCnt}
+            onChange={(_, v) => handleUpdate(v)}
+            exclusive
+          >
+            {CheckInOptions.gratitudeCnt.map((v, idx) => (
+              <ToggleButton value={v} key={`gratitudeCnt-${idx}`}>
+                <Typography variant="h6">{v}</Typography>
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </Box>
+        <Button
+          variant="outlined"
+          onClick={() => navigate(`/${i18n.language}/emotion/chart`)}
+          endIcon={<QueryStatsIcon />}
+        >
+          {t("Review")}
+        </Button>
       </Box>
     );
   }
@@ -109,6 +151,26 @@ const CheckIn = ({ onFinish }: CheckInProps) => {
               sx={{ flexBasis: "33.3333%" }}
             >
               <Typography variant="h6">{t(v)}</Typography>
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+      </Box>
+      <Box sx={questionContainerSx}>
+        <Typography variant="body1" alignSelf="flex-start" textAlign="start">
+          3. {t("What are you most grateful for in the past 24 hours?")}
+        </Typography>
+        <ToggleButtonGroup
+          size="large"
+          value={state.gratitudeObj}
+          onChange={(_, v) =>
+            setState((prev) => ({ ...prev, gratitudeObj: v }))
+          }
+          exclusive
+          sx={{ flexWrap: "wrap", mx: 1 }}
+        >
+          {CheckInOptions.gratitudeCnt.map((v, idx) => (
+            <ToggleButton value={v} key={`gratituteCnt-${idx}`}>
+              <Typography variant="h6">{v}</Typography>
             </ToggleButton>
           ))}
         </ToggleButtonGroup>

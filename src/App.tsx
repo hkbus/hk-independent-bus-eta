@@ -74,7 +74,7 @@ const App = () => {
                   <Route path={`board`} element={<RouteBoard />} />
                   <Route path={`stops`} element={<BookmarkedStop />} />
                   <Route path={`search`} element={<RouteSearch />} />
-                  <Route path="emotion" element={<EmotionPage />} />
+                  <Route path="emotion/:tab?" element={<EmotionPage />} />
                   <Route path={`privacy`} element={<PrivacyPolicy />} />
                   <Route path={`terms`} element={<TermsAndConditions />} />
                   <Route path={`support`} element={<Support />} />

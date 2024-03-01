@@ -4,19 +4,23 @@ import {
   TaskAlt as TaskAltIcon,
   MonitorHeartOutlined as MonitorHeartOutlinedIcon,
 } from "@mui/icons-material";
+import { useNavigate, useParams } from "react-router-dom";
 
-interface EmotionTabbarProps {
-  value: EmotionTabType;
-  onChange: (tab: EmotionTabType) => void;
-}
+const EmotionTabbar = () => {
+  const { i18n, t } = useTranslation();
+  const { tab } = useParams();
+  const navigate = useNavigate();
 
-const EmotionTabbar = ({ value, onChange }: EmotionTabbarProps) => {
-  const { t } = useTranslation();
   return (
-    <Tabs value={value} onChange={(_, v) => onChange(v)} sx={tabbarSx} centered>
+    <Tabs
+      value={tab ?? "check-in"}
+      onChange={(_, v) => navigate(`/${i18n.language}/emotion/${v}`)}
+      sx={tabbarSx}
+      centered
+    >
       <Tab
         label={t("Check in")}
-        value="check in"
+        value="check-in"
         icon={<TaskAltIcon />}
         iconPosition="start"
       />

@@ -5,8 +5,10 @@ interface EmotionContextState {
 }
 
 interface EmotionContextValue extends EmotionContextState {
+  lastCheckIn: EmotionCheckIn;
   isRemind: boolean;
   addCheckin: (checkin: EmotionCheckIn) => void;
+  updateLastCheckIn: (checkin: EmotionCheckIn) => void;
 }
 
 const EmotionContext = React.createContext<EmotionContextValue>(null);
@@ -26,6 +28,18 @@ export const EmotionContextProvider = ({ children }) => {
     }));
   }, []);
 
+  const lastCheckIn = useMemo(
+    () => state.checkIns.slice(-1)[0],
+    [state.checkIns]
+  );
+
+  const updateLastCheckIn = useCallback((checkIn: EmotionCheckIn) => {
+    setState((prev) => ({
+      ...prev,
+      checkIns: [...prev.checkIns.slice(0, -1), checkIn],
+    }));
+  }, []);
+
   useEffect(() => {
     localStorage.setItem("emotion-checkins", JSON.stringify(state.checkIns));
   }, [state.checkIns]);
@@ -34,8 +48,10 @@ export const EmotionContextProvider = ({ children }) => {
     <EmotionContext.Provider
       value={{
         ...state,
+        lastCheckIn,
         isRemind,
         addCheckin,
+        updateLastCheckIn,
       }}
     >
       {children}
@@ -50,7 +66,7 @@ const DEFAULT_STATE: EmotionContextState = {
 };
 
 export interface EmotionCheckIn {
-  happiness?: "😄" | "😊" | "🙂" | "😟" | "😫" | "😭";
+  happiness?: "😄" | "😊" | "🙂" | "😐" | "😟" | "😫" | "😭";
   moodScene?: "Work" | "Gathering" | "Exercise" | "Leisure" | "Dining" | "Rest";
   gratitudeObj?:
     | "Self"
@@ -58,13 +74,14 @@ export interface EmotionCheckIn {
     | "Family"
     | "Partner"
     | "Fellow"
-    | "Stranger"
-    | "";
+    | "Stranger";
+  gratitudeCnt?: "0" | "1" | "2" | "3" | "4" | "5+";
   ts: number;
 }
 
 export const CheckInOptions: Partial<Record<keyof EmotionCheckIn, string[]>> = {
-  happiness: ["😄", "😊", "🙂", "😟", "😫", "😭"],
+  happiness: ["😄", "😊", "🙂", "😐", "😟", "😫", "😭"],
   moodScene: ["Gathering", "Exercise", "Work", "Leisure", "Dining", "Rest"],
   gratitudeObj: ["Friend", "Partner", "Family", "Fellow", "Self", "Stranger"],
+  gratitudeCnt: ["0", "1", "2", "3", "4", "5+"],
 };
