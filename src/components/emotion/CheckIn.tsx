@@ -155,26 +155,6 @@ const CheckIn = () => {
           ))}
         </ToggleButtonGroup>
       </Box>
-      <Box sx={questionContainerSx}>
-        <Typography variant="body1" alignSelf="flex-start" textAlign="start">
-          3. {t("What are you most grateful for in the past 24 hours?")}
-        </Typography>
-        <ToggleButtonGroup
-          size="large"
-          value={state.gratitudeObj}
-          onChange={(_, v) =>
-            setState((prev) => ({ ...prev, gratitudeObj: v }))
-          }
-          exclusive
-          sx={{ flexWrap: "wrap", mx: 1 }}
-        >
-          {CheckInOptions.gratitudeCnt.map((v, idx) => (
-            <ToggleButton value={v} key={`gratituteCnt-${idx}`}>
-              <Typography variant="h6">{v}</Typography>
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
-      </Box>
       <Button variant="outlined" disabled={!isDone} onClick={handleSubmit}>
         OK
       </Button>
