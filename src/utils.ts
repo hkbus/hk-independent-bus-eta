@@ -2,6 +2,11 @@ import type { Company, EtaDb, Location, RouteList, StopList } from "hk-bus-eta";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import type { TransportType } from "./typing";
 import { isRouteAvaliable } from "./timetable";
+
+export const langSpace = (i18n) => {
+  return i18n.language === "en" ? " " : "";
+}
+
 export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   const R = 6371e3; // metres
   const φ1 = (a.lat * Math.PI) / 180; // φ, λ in radians
