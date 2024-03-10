@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Accordion,
@@ -12,22 +12,33 @@ import {
 import AppContext from "../../AppContext";
 import RouteNo from "../route-board/RouteNo";
 import TimeReport from "../route-eta/TimeReport";
+import useLanguage from "../../hooks/useTranslation";
+import { SearchResult } from "../../pages/RouteSearch";
 
-const SearchResult = ({ routes, idx, handleRouteClick, expanded, stopIdx }) => {
+interface SearchResultListProps {
+  routes: SearchResult;
+  idx: number;
+  handleRouteClick: (idx: number) => void;
+  expanded: boolean;
+  stopIdx: number[] | null
+}
+
+const SearchResultList = ({ routes, idx, handleRouteClick, expanded, stopIdx }: SearchResultListProps) => {
   const {
     db: { routeList, stopList },
   } = useContext(AppContext);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
 
-  const getStopString = (routes) => {
-    const ret = [];
+  const getStopString = useCallback((routes: SearchResult) => {
+    const ret: string[] = [];
     routes.forEach((selectedRoute) => {
       const { routeId, on } = selectedRoute;
       const { fares, stops } = routeList[routeId];
       ret.push(
         stopList[
           Object.values(stops).sort((a, b) => b.length - a.length)[0][on]
-        ].name[i18n.language] + (fares ? ` ($${fares[on]})` : "")
+        ].name[language] + (fares ? ` ($${fares[on]})` : "")
       );
     });
     const { routeId, off } = routes[routes.length - 1];
@@ -36,10 +47,10 @@ const SearchResult = ({ routes, idx, handleRouteClick, expanded, stopIdx }) => {
       .concat(
         stopList[
           Object.values(stops).sort((a, b) => b.length - a.length)[0][off]
-        ].name[i18n.language]
+        ].name[language]
       )
       .join(" → ");
-  };
+  }, [routeList, language, stopList]);
 
   return (
     <Accordion
@@ -82,7 +93,7 @@ const SearchResult = ({ routes, idx, handleRouteClick, expanded, stopIdx }) => {
   );
 };
 
-export default SearchResult;
+export default SearchResultList;
 
 const rootSx: SxProps<Theme> = {
   border: "1px solid rgba(0, 0, 0, .125)",

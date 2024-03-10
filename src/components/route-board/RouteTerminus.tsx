@@ -1,21 +1,28 @@
 import { useTranslation } from "react-i18next";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { toProperCase } from "../../utils";
+import { RouteListEntry } from "hk-bus-eta";
+import useLanguage from "../../hooks/useTranslation";
 
-const RouteTerminus = ({ terminus }) => {
-  const { t, i18n } = useTranslation();
+interface RouteTerminus {
+  terminus: RouteListEntry;
+}
+
+const RouteTerminus = ({ terminus }: RouteTerminus) => {
+  const { t } = useTranslation();
+  const language = useLanguage()
 
   return (
     <Box sx={rootSx}>
       <Box sx={fromToWrapperSx}>
         <span>{`${t("往")} `}</span>
         <Typography component="h3" variant="h6" sx={destinationSx}>
-          {toProperCase(terminus.dest[i18n.language])}
+          {toProperCase(terminus.dest[language])}
         </Typography>
       </Box>
       <Box sx={fromWrapperSx}>
         <Typography variant="body2">
-          {toProperCase(terminus.orig[i18n.language])}
+          {toProperCase(terminus.orig[language])}
         </Typography>
       </Box>
     </Box>

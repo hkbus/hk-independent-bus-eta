@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Box, Paper, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "../route-board/RouteNo";
 import { toProperCase } from "../../utils";
@@ -7,9 +7,11 @@ import AppContext from "../../AppContext";
 import ReverseButton from "./ReverseButton";
 import TimetableButton from "./TimeTableButton";
 import RouteStarButton from "./RouteStarButton";
+import useLanguage from "../../hooks/useTranslation";
 
 const RouteHeader = ({ routeId }: { routeId: string }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const {
     db: { routeList },
   } = useContext(AppContext);
@@ -19,8 +21,8 @@ const RouteHeader = ({ routeId }: { routeId: string }) => {
     <Paper id="route-eta-header" sx={PaperSx} elevation={0}>
       <RouteNo routeNo={t(route)} component="h1" align="center" />
       <Typography component="h2" variant="caption" align="center">
-        {t("往")} {toProperCase(dest[i18n.language])}{" "}
-        {nlbId ? t("由") + " " + toProperCase(orig[i18n.language]) : ""}
+        {t("往")} {toProperCase(dest[language])}{" "}
+        {nlbId ? t("由") + " " + toProperCase(orig[language]) : ""}
       </Typography>
       <ReverseButton routeId={routeId} />
       <Box sx={rightBtnGroupSx}>

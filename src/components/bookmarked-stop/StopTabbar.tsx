@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Tabs, Tab, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
+import useLanguage from "../../hooks/useTranslation";
 
 interface HomeTabbarProps {
   stopTab: string | null;
@@ -9,10 +10,8 @@ interface HomeTabbarProps {
 }
 
 const StopTabbar = ({ stopTab, onChangeTab }: HomeTabbarProps) => {
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage()
   const {
     db: { stopList },
     savedStops,
@@ -30,15 +29,15 @@ const StopTabbar = ({ stopTab, onChangeTab }: HomeTabbarProps) => {
   return (
     <Tabs
       value={stopTab}
-      onChange={(e, v) => onChangeTab(v, true)}
+      onChange={(_, v) => onChangeTab(v, true)}
       sx={tabbarSx}
       variant="scrollable"
       scrollButtons
     >
       {savedStops
         .map((stopId) => stopId.split("|"))
-        .filter(([co, stopId]) => stopList[stopId])
-        .map(([co, stopId], idx) => (
+        .filter(([_, stopId]) => stopList[stopId])
+        .map(([co, stopId]) => (
           <Tab
             key={`stops-${stopId}`}
             label={stopList[stopId].name[language]}

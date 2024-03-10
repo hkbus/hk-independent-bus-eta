@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import {
   Box,
   Dialog,
@@ -51,7 +51,7 @@ const CollectionDialog = () => {
         />
         <Tabs
           value={tab}
-          onChange={(e, value) => changeTab(value)}
+          onChange={(_, value) => changeTab(value)}
           sx={tabbarSx}
         >
           <Tab value="routes" label={t("路線")} />

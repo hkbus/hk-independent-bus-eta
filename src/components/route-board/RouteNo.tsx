@@ -1,5 +1,5 @@
-import React from "react";
 import { SxProps, Theme, Typography } from "@mui/material";
+import { useMemo } from "react";
 
 interface RouteNoProps {
   routeNo: string;
@@ -25,6 +25,8 @@ const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
   const prefix = routeNo.slice(0, splitIdx);
   const suffix = routeNo.slice(splitIdx);
 
+  const sx = useMemo(() => rootSx(fontSize), [fontSize])
+
   return (
     <Typography
       // @ts-ignore
@@ -32,7 +34,7 @@ const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
       align={align}
       variant="caption"
       color="textPrimary"
-      sx={rootSx(fontSize)}
+      sx={sx}
     >
       <span>{prefix}</span>
       <span>{suffix}</span>
@@ -42,7 +44,7 @@ const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
 
 export default RouteNo;
 
-const rootSx = (fontSize): SxProps<Theme> => {
+const rootSx = (fontSize?: string): SxProps<Theme> => {
   return {
     lineHeight: "normal",
     display: "inline",

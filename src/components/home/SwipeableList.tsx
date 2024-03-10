@@ -14,19 +14,19 @@ import SmartCollectionRouteList from "./lists/SmartCollectionRouteList";
 import CollectionRouteList from "./lists/CollectionRouteList";
 
 interface SwipeableListProps {
-  homeTab: HomeTabType;
+  homeTab: HomeTabType | string;
   onChangeTab: (v: string) => void;
 }
 
-interface SwipeableListRef {
-  changeTab: (v: HomeTabType) => void;
+export interface SwipeableListRef {
+  changeTab: (v: HomeTabType | string) => void;
 }
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ homeTab, onChangeTab }, ref) => {
     const { collections } = useContext(AppContext);
 
-    const defaultHometab = useRef(homeTab);
+    const defaultHometab = useRef<HomeTabType | string>(homeTab);
 
     useImperativeHandle(ref, () => ({
       changeTab: (v) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Dialog,
@@ -14,7 +14,12 @@ import {
 import { useTranslation } from "react-i18next";
 import { IosShare, MoreVert } from "@mui/icons-material";
 
-const InstallDialog = ({ open, handleClose }) => {
+interface InstallDialogProps {
+  open: boolean;
+  handleClose: () => void;
+}
+
+const InstallDialog = ({ open, handleClose }: InstallDialogProps) => {
   const { t } = useTranslation();
   const [tab, setTab] = useState<"PWA" | "App">("App");
 
@@ -22,7 +27,7 @@ const InstallDialog = ({ open, handleClose }) => {
     <Dialog open={open} onClose={handleClose} PaperProps={{ sx: dialogSx }}>
       <DialogTitle sx={titleSx}>{t("安裝步驟")}</DialogTitle>
       <DialogContent>
-        <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={tabbarSx}>
+        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={tabbarSx}>
           <Tab value="App" label="App" />
           <Tab value="PWA" label="PWA" />
         </Tabs>

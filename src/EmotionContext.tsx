@@ -11,9 +11,13 @@ interface EmotionContextValue extends EmotionContextState {
   updateLastCheckIn: (checkin: EmotionCheckIn) => void;
 }
 
-const EmotionContext = React.createContext<EmotionContextValue>(null);
+interface EmotionContextProviderProps {
+  children: React.ReactNode;
+}
 
-export const EmotionContextProvider = ({ children }) => {
+const EmotionContext = React.createContext<EmotionContextValue>({} as EmotionContextValue);
+
+export const EmotionContextProvider = ({ children }: EmotionContextProviderProps) => {
   const [state, setState] = useState<EmotionContextState>(DEFAULT_STATE);
 
   const isRemind = useMemo(() => {
@@ -66,22 +70,24 @@ const DEFAULT_STATE: EmotionContextState = {
 };
 
 export interface EmotionCheckIn {
-  happiness?: "😄" | "😊" | "🙂" | "😐" | "😟" | "😫" | "😭";
-  moodScene?: "Work" | "Gathering" | "Exercise" | "Leisure" | "Dining" | "Rest";
+  happiness?: "😄" | "😊" | "🙂" | "😐" | "😟" | "😫" | "😭" | null;
+  moodScene?: "Work" | "Gathering" | "Exercise" | "Leisure" | "Dining" | "Rest" | null;
   gratitudeObj?:
     | "Self"
     | "Friend"
     | "Family"
     | "Partner"
     | "Fellow"
-    | "Stranger";
-  gratitudeCnt?: "0" | "1" | "2" | "3" | "4" | "5+";
+    | "Stranger"
+    | null;
+  gratitudeCnt?: "0" | "1" | "2" | "3" | "4" | "5+" | null;
   ts: number;
 }
 
-export const CheckInOptions: Partial<Record<keyof EmotionCheckIn, string[]>> = {
+export const CheckInOptions: Record<keyof EmotionCheckIn, string[]> = {
   happiness: ["😄", "😊", "🙂", "😐", "😟", "😫", "😭"],
   moodScene: ["Gathering", "Exercise", "Work", "Leisure", "Dining", "Rest"],
   gratitudeObj: ["Friend", "Partner", "Family", "Fellow", "Self", "Stranger"],
   gratitudeCnt: ["0", "1", "2", "3", "4", "5+"],
+  ts: [],
 };

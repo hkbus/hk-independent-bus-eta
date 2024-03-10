@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import AppContext from "../../../AppContext";
 import {
   Box,
@@ -28,6 +28,10 @@ const CollectionSchedule = () => {
     addCollectionSchedule,
     removeCollectionSchedule,
   } = useContext(AppContext);
+  
+  if ( collectionIdx === null ) {
+    return null
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -51,7 +55,7 @@ const CollectionSchedule = () => {
             >
               {Array(7)
                 .fill(0)
-                .map((v, _weekday) => (
+                .map((_, _weekday) => (
                   <MenuItem key={`option-${idx}-${_weekday}`} value={_weekday}>
                     {t(`weekday-${_weekday}`)}
                   </MenuItem>

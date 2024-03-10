@@ -8,6 +8,7 @@ import React, {
 import SwipeableViews from "react-swipeable-views";
 import AppContext from "../../AppContext";
 import StopRouteList from "./StopRouteList";
+import { Company } from "hk-bus-eta";
 
 interface SwipeableStopListProps {
   stopTab: string;
@@ -52,13 +53,14 @@ const SwipeableStopList = React.forwardRef<
     () =>
       availableTabs.map((stopTab) => {
         if (stopTab === "") return [];
-        const ret = [stopTab.split("|")];
+        const ret = [stopTab.split("|") as [Company, string]];
         stopMap[ret[0][1]]?.forEach((v) => ret.push(v));
         return ret;
       }),
     [availableTabs, stopMap]
   );
 
+  
   return (
     <SwipeableViews
       index={getViewIdx()}

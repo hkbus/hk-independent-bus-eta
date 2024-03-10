@@ -5,16 +5,18 @@ import {
   MonitorHeartOutlined as MonitorHeartOutlinedIcon,
 } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
+import useLanguage from "../../hooks/useTranslation";
 
 const EmotionTabbar = () => {
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
   const { tab } = useParams();
   const navigate = useNavigate();
+  const language = useLanguage()
 
   return (
     <Tabs
       value={tab ?? "check-in"}
-      onChange={(_, v) => navigate(`/${i18n.language}/emotion/${v}`)}
+      onChange={(_, v) => navigate(`/${language}/emotion/${v}`)}
       sx={tabbarSx}
       centered
     >

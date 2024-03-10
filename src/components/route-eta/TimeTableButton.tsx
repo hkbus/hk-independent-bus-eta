@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Divider, SxProps, Theme } from "@mui/material";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
 import TimetableDrawer from "./TimetableDrawer";

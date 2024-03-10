@@ -1,9 +1,9 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Eta, fetchEtas } from "hk-bus-eta";
 import AppContext from "../AppContext";
+import useLanguage from "./useTranslation";
 
-export const useEtas = (routeId, disable = false) => {
+export const useEtas = (routeId: string, disable: boolean = false) => {
   const {
     db: { routeList, stopList },
     isVisible,
@@ -12,9 +12,7 @@ export const useEtas = (routeId, disable = false) => {
   const [routeKey, seq] = routeId.split("/");
   const routeObj = routeList[routeKey] || DefaultRoute;
   const [etas, setEtas] = useState<Eta[] | null>(null);
-  const {
-    i18n: { language },
-  } = useTranslation();
+  const language = useLanguage();
   const isMounted = useRef<boolean>(false);
 
   const fetchData = useCallback(() => {

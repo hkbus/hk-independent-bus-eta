@@ -1,6 +1,6 @@
+import React from "react";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
-import loadable from "@loadable/component";
 import { PaletteMode } from "@mui/material";
 import {
   StyledEngineProvider,
@@ -9,7 +9,6 @@ import {
 } from "@mui/material/styles";
 import "leaflet/dist/leaflet.css";
 import { useContext, useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import {
   Navigate,
   Route,
@@ -19,29 +18,28 @@ import {
 import "./App.css";
 import AppContext from "./AppContext";
 import { SearchContextProvider } from "./SearchContext";
-import Main from "./components/layout/Main";
+import Root from "./components/layout/Root";
 import RedirectPage from "./pages/RedirectPage";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
+import useLanguage from "./hooks/useTranslation";
 
-const Home = loadable(() => import("./pages/Home"));
-const RouteEta = loadable(() => import("./pages/RouteEta"));
-const BookmarkedStop = loadable(() => import("./pages/BookmarkedStop"));
-const RouteBoard = loadable(() => import("./pages/RouteBoard"));
-const RouteSearch = loadable(() => import("./pages/RouteSearch"));
-const Notice = loadable(() => import("./pages/Notice"));
-const Settings = loadable(() => import("./pages/Settings"));
-const EmotionPage = loadable(() => import("./pages/EmotionPage"));
-const PrivacyPolicy = loadable(() => import("./pages/PrivacyPolicy"));
-const TermsAndConditions = loadable(() => import("./pages/TermsAndConditions"));
-const Support = loadable(() => import("./pages/Support"));
-const DataImport = loadable(() => import("./pages/DataImport"));
-const DataExport = loadable(() => import("./pages/DataExport"));
+const Home = React.lazy(() => import("./pages/Home"));
+const RouteEta = React.lazy(() => import("./pages/RouteEta"));
+const BookmarkedStop = React.lazy(() => import("./pages/BookmarkedStop"));
+const RouteBoard = React.lazy(() => import("./pages/RouteBoard"));
+const RouteSearch = React.lazy(() => import("./pages/RouteSearch"));
+const Notice = React.lazy(() => import("./pages/Notice"));
+const Settings = React.lazy(() => import("./pages/Settings"));
+const EmotionPage = React.lazy(() => import("./pages/EmotionPage"));
+const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
+const TermsAndConditions = React.lazy(() => import("./pages/TermsAndConditions"));
+const Support = React.lazy(() => import("./pages/Support"));
+const DataImport = React.lazy(() => import("./pages/DataImport"));
+const DataExport = React.lazy(() => import("./pages/DataExport"));
 
 const App = () => {
   const { analytics, colorMode, fontSize } = useContext(AppContext);
-  const {
-    i18n: { language },
-  } = useTranslation();
+  const language = useLanguage();
 
   // If you want to start measuring performance in your app, pass a function
   // to log results (for example: reportWebVitals(console.log))
@@ -60,13 +58,12 @@ const App = () => {
             <SearchContextProvider>
               <Routes>
                 <Route path="/" element={<Navigate to={`/${language}`} />} />
-                <Route path="/:lang" element={<Main />}>
+                <Route path="/:lang" element={<Root />}>
                   <Route
                     path={`collections/:collectionName`}
                     element={<Home />}
                   />
-                  <Route path={`route/:id`} element={<RouteEta />} />
-                  <Route path={`route/:id/:panel`} element={<RouteEta />} />
+                  <Route path={`route/:id/:panel?`} element={<RouteEta />} />
                   <Route path={`settings`} element={<Settings />} />
                   <Route path={"notice"} element={<Notice />} />
                   <Route path={`import/:data?`} element={<DataImport />} />
@@ -146,7 +143,7 @@ export default App;
 const emotionCache = createCache({
   key: "hkbus",
   speedy: !(
-    process.env.NODE_ENV === "development" ||
+    import.meta.env.DEV ||
     navigator.userAgent === "prerendering"
   ),
 });

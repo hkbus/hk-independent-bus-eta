@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import {
   Avatar,
   Divider,
@@ -41,10 +41,10 @@ import { useTranslation } from "react-i18next";
 import FontSizeSlider from "./FontSizeSlider";
 
 interface OptionsListProps {
-  goToTab: (tab: string) => void;
+  goToManage: () => void;
 }
 
-const OptionsList = ({ goToTab }: OptionsListProps) => {
+const OptionsList = ({ goToManage }: OptionsListProps) => {
   const {
     resetUsageRecord,
     isRouteFilter,
@@ -77,7 +77,7 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
-          goToTab("manage");
+          goToManage();
         }}
       >
         <ListItemAvatar>
@@ -133,8 +133,8 @@ const OptionsList = ({ goToTab }: OptionsListProps) => {
               valueLabelDisplay="auto"
               size="small"
               valueLabelFormat={(v: number) => `${v}s`}
-              onChange={(e: Event, v: number) =>
-                updateRefreshInterval(v * 1000)
+              onChange={(_, v: number | number[]) =>
+                updateRefreshInterval((v as number) * 1000)
               }
             />
           }

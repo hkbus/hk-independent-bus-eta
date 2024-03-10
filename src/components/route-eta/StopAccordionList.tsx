@@ -1,9 +1,8 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Box, SxProps, Theme } from "@mui/material";
-import loadable from "@loadable/component";
 import type { RouteListEntry } from "hk-bus-eta";
 import StopAccordion from "./StopAccordion";
-const SharingModal = loadable(() => import("./SharingModal"));
+const SharingModal = React.lazy(() => import("./SharingModal"));
 
 interface StopAccordionsProps {
   routeId: string;
@@ -40,6 +39,10 @@ const StopAccordions = ({
     }
   }, [stopIdx]);
 
+  const handleRef = useCallback( (idx: number) => (el: HTMLDivElement) => {
+    accordionRef.current[idx] = el
+  }, [])
+
   return (
     <Box sx={rootSx}>
       {stopIds.map((stopId, idx) => (
@@ -52,7 +55,7 @@ const StopAccordions = ({
           onSummaryClick={handleChange}
           onStopInfoClick={onStopInfo}
           key={"stop-" + idx}
-          ref={(el) => (accordionRef.current[idx] = el)}
+          ref={handleRef(idx)}
         />
       ))}
       {sharingObj && <SharingModal {...sharingObj} />}

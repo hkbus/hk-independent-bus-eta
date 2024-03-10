@@ -9,7 +9,7 @@ import {
   Theme,
 } from "@mui/material";
 import RangeMap from "./RangeMap";
-import { TFunction, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { useCallback, useContext, useState } from "react";
 import AppContext from "../../AppContext";
 import { Location } from "hk-bus-eta";
@@ -48,7 +48,7 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
     onClose();
   }, [state, setManualGeolocation, setSearchRange, onClose]);
 
-  const updateGeolocation = useCallback((geolocation: Location | null) => {
+  const updateGeolocation = useCallback((geolocation: Location) => {
     setState((prev) => ({
       ...prev,
       geolocation,
@@ -61,6 +61,14 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
       searchRange,
     }));
   }, []);
+
+  const formatDistanceWithUnit = useCallback((
+    val: number,
+  ) => {
+    const { distance, unit } = getDistanceWithUnit(val);
+    return `${distance}${t(unit)}`;
+  }, [t]);
+  
 
   return (
     <Dialog open={open} onClose={handleClose} sx={rootSx}>
@@ -88,7 +96,7 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
             valueLabelDisplay="on"
             marks={sliderScale.map((val, index) => {
               return {
-                label: formatDistanceWithUnit(searchRangeScale[index], t),
+                label: formatDistanceWithUnit(searchRangeScale[index]),
                 value: val,
               };
             })}
@@ -98,7 +106,7 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
             scale={(value) =>
               convertScale(value, sliderScale, searchRangeScale)
             }
-            valueLabelFormat={(v) => formatDistanceWithUnit(v, t)}
+            valueLabelFormat={(v) => formatDistanceWithUnit(v)}
             onChange={(_, value) =>
               updateRange(
                 convertScale(
@@ -164,12 +172,4 @@ const convertScale = (
     }
   }
   return destScale[destScale.length - 1];
-};
-
-const formatDistanceWithUnit = (
-  val: number,
-  t: TFunction<"translation", undefined>
-) => {
-  const { distance, unit } = getDistanceWithUnit(val);
-  return `${distance}${t(unit)}`;
 };

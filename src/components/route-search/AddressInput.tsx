@@ -1,14 +1,20 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import debounce from "lodash.debounce";
 import AsyncSelect from "react-select/async";
 import { styled } from "@mui/material/styles";
 import proj4 from "proj4";
-import { StopList } from "hk-bus-eta";
+import { Location, StopList } from "hk-bus-eta";
+import useLanguage from "../../hooks/useTranslation";
+
+export interface Address {
+  label: string;
+  location: Location
+}
 
 interface AddressInputProps {
   placeholder?: string;
-  onChange: any;
+  onChange:(newValue: Address | null) => void;
   stopList: StopList;
   value: any;
 }
@@ -19,11 +25,12 @@ const AddressInput = ({
   stopList,
   value,
 }: AddressInputProps) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const abortController = useRef(new AbortController());
 
   const loadAddress = useRef(
-    debounce((addr, callback) => {
+    debounce((addr: string, callback: any) => {
       const stopAddresses = Object.values(stopList)
         .filter(
           (stop) =>
@@ -31,7 +38,7 @@ const AddressInput = ({
             stop.name.en.toLowerCase().includes(addr.toLowerCase())
         )
         .map((stop) => ({
-          label: `${stop.name[i18n.language]} - ${t("車站")}`,
+          label: `${stop.name[language]} - ${t("車站")}`,
           location: stop.location,
         }))
         .slice(0, 10);
@@ -43,7 +50,7 @@ const AddressInput = ({
         callback(
           stopAddresses.concat(
             suggestions.map(({ name, address, lat, lng }) => ({
-              label: [name[i18n.language], address[i18n.language]]
+              label: [name[language], address[language]]
                 .filter((e) => e)
                 .join(" - "),
               location: { lat, lng },
@@ -84,7 +91,7 @@ interface GeoAddrData {
 
 const loadAddressFromGeodata = async (
   addr: string,
-  options
+  options: any
 ): Promise<Suggestion[]> => {
   if (!addr) return new Promise((resolve) => resolve([]));
 
@@ -112,7 +119,7 @@ const loadAddressFromGeodata = async (
 
 export default AddressInput;
 
-const AddressAsyncSelect = styled(AsyncSelect)(({ theme }) => ({
+const AddressAsyncSelect = styled(AsyncSelect<Address>)(({ theme }) => ({
   ".react-select__control": {
     background: `${
       theme.palette.mode === "dark" ? theme.palette.background.default : "white"

@@ -2,8 +2,9 @@ import { Box, SxProps, Theme, Typography } from "@mui/material";
 import HomeRouteListDropDown from "./HomeRouteListDropDown";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { TransportType } from "../../../typing";
+import { TransportType } from "../../../@types/types";
 import {
+  Company,
   EtaDb,
   Location,
   RouteList,
@@ -138,7 +139,7 @@ const getRoutes = ({
     .reduce(
       (acc, [stopId]) => {
         Object.entries(routeList).forEach(([key, route]) => {
-          ["kmb", "lrtfeeder", "lightRail", "gmb", "ctb", "nlb"].forEach(
+          (["kmb", "lrtfeeder", "lightRail", "gmb", "ctb", "nlb"] as Company[]).forEach(
             (co) => {
               if (route.stops[co] && route.stops[co].includes(stopId)) {
                 if (acc[coToType[co]] === undefined) acc[coToType[co]] = [];
@@ -151,11 +152,11 @@ const getRoutes = ({
         });
         return acc;
       },
-      { bus: [], mtr: [], lightRail: [], minibus: [] }
+      { bus: [], mtr: [], lightRail: [], minibus: [] } as Record<TransportType, string[]>
     );
 
   return Object.entries(nearbyRoutes).reduce((acc, [type, nearbyRoutes]) => {
-    acc[type] = formatHandling(
+    acc[type as TransportType] = formatHandling(
       nearbyRoutes,
       isTodayHoliday,
       isRouteFilter,
@@ -165,7 +166,7 @@ const getRoutes = ({
       geolocation
     );
     return acc;
-  }, {});
+  }, {} as Record<TransportType, string>);
 };
 
 const rootSx: SxProps<Theme> = {

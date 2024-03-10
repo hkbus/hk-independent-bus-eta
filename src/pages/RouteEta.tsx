@@ -1,6 +1,5 @@
-import { useState, useEffect, useContext, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import loadable from "@loadable/component";
 import RouteHeader from "../components/route-eta/RouteHeader";
 import StopAccordionList from "../components/route-eta/StopAccordionList";
 import StopDialog from "../components/route-eta/StopDialog";
@@ -15,10 +14,13 @@ import {
   StopListEntry,
   StopMap,
 } from "hk-bus-eta";
-const RouteMap = loadable(() => import("../components/route-eta/RouteMap"));
+import useLanguage from "../hooks/useTranslation";
+const RouteMap = React.lazy(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
-  const { id, panel } = useParams<{ id: string; panel?: string }>();
+  const { id: _id, panel: _panel } = useParams();
+  const id = _id as string
+  const panel = _panel as (string | undefined)
   const {
     AppTitle,
     db: { routeList, stopList, stopMap },
@@ -65,12 +67,12 @@ const RouteEta = () => {
         let ret = 0;
         let currentDistance = 9999999;
         for (let stopCo in stops) {
-          let coStopsIdxes = stops[stopCo].reduce((ind, el, i) => {
-            if (el === id) {
-              ind.push(i);
+          let coStopsIdxes = stops[stopCo as Company].reduce((acc, companyStop, i) => {
+            if (companyStop === id) {
+              acc.push(i);
             }
-            return ind;
-          }, []);
+            return acc;
+          }, [] as number[]);
           for (let coStopsIdx of coStopsIdxes) {
             if (coStopsIdx >= 0) {
               let distanceToId = Math.abs(coStopsIdx - index);
@@ -93,21 +95,22 @@ const RouteEta = () => {
     [co, stopIdx, stopMap, stops]
   );
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const navigate = useNavigate();
 
   const handleChange = useCallback(
     (newStopIdx: number, expanded: boolean) => {
       if (expanded && stopIdx !== newStopIdx) {
-        let newStopId = stops[Object.keys(stops).sort()[0]][newStopIdx];
-        navigate(`/${i18n.language}/route/${id}/${newStopId}%2C${newStopIdx}`, {
+        let newStopId = stops[Object.keys(stops).sort()[0] as Company][newStopIdx];
+        navigate(`/${language}/route/${id}/${newStopId}%2C${newStopIdx}`, {
           replace: true,
         });
       }
 
       if (stopIdx === newStopIdx && !expanded) setIsDialogOpen(true);
     },
-    [navigate, i18n.language, id, stopIdx, stops]
+    [navigate, language, id, stopIdx, stops]
   );
 
   const onMarkerClick = useCallback(
@@ -115,11 +118,11 @@ const RouteEta = () => {
       if (stopIdx === newStopIdx) {
         setIsDialogOpen(true);
       }
-      navigate(`/${i18n.language}/route/${id}/${newStopIdx}`, {
+      navigate(`/${language}/route/${id}/${newStopIdx}`, {
         replace: true,
       });
     },
-    [navigate, i18n.language, id, stopIdx]
+    [navigate, language, id, stopIdx]
   );
 
   const handleStopInfo = useCallback(() => {
@@ -133,16 +136,16 @@ const RouteEta = () => {
   useEffect(() => {
     setIsDialogOpen(false);
     // the following is notify the rendering is done, for pre-rendering purpose
-    document.getElementById(id).setAttribute("value", id);
+    document.getElementById(id)?.setAttribute("value", id);
     updateSelectedRoute(id);
   }, [id, updateSelectedRoute]);
 
   useEffect(() => {
     if (id.toUpperCase() !== routeId.toUpperCase()) {
       console.log(id, routeId);
-      navigate(`/${i18n.language}/route/${routeId.toLowerCase()}`);
+      navigate(`/${language}/route/${routeId.toLowerCase()}`);
     }
-  }, [id, routeId, i18n.language, navigate]);
+  }, [id, routeId, language, navigate]);
 
   useEffect(() => {
     const pageDesc = () => {
@@ -151,7 +154,7 @@ const RouteEta = () => {
             .filter((v, idx, self) => self.indexOf(v) === idx)
             .map((v) => `$${v}`)
         : [];
-      if (i18n.language === "zh") {
+      if (language === "zh") {
         return (
           `路線${route}` +
           `由${orig.zh}出發，以${dest.zh}為終點，` +
@@ -181,17 +184,17 @@ const RouteEta = () => {
         " " +
         t("往") +
         " " +
-        toProperCase(dest[i18n.language]) +
+        toProperCase(dest[language]) +
         " - " +
         t(AppTitle),
       description: pageDesc(),
-      lang: i18n.language,
+      lang: language,
     });
   }, [
     AppTitle,
     dest,
     fares,
-    i18n.language,
+    language,
     orig.en,
     orig.zh,
     route,

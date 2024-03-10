@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import { areEqual } from "react-window";
 import { vibrate } from "../../utils";
 import RouteRow from "./RouteRow";
 import { RouteListEntry } from "hk-bus-eta";
 import AppContext from "../../AppContext";
-import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import useLanguage from "../../hooks/useTranslation";
 
 interface RouteRowListProps {
   data: {
@@ -14,7 +14,7 @@ interface RouteRowListProps {
     tab: "recent" | "all" | "bus" | "minibus" | "lightRail" | "mtr";
   };
   index: number;
-  style: React.CSSProperties;
+  style: React.CSSProperties | null;
 }
 
 const RouteRowList = React.memo(
@@ -26,19 +26,19 @@ const RouteRowList = React.memo(
     const route = routeList[index];
     const { addSearchHistory, removeSearchHistoryByRouteId } =
       useContext(AppContext);
-    const { i18n } = useTranslation();
+    const language = useLanguage();
     const navigate = useNavigate();
 
-    const handleClick = (e) => {
+    const handleClick = useCallback((e: React.MouseEvent) => {
       e.preventDefault();
       vibrate(vibrateDuration);
       addSearchHistory(route[0]);
       setTimeout(() => {
-        navigate(`/${i18n.language}/route/${route[0].toLowerCase()}`);
+        navigate(`/${language}/route/${route[0].toLowerCase()}`);
       }, 0);
-    };
+    }, [vibrate, vibrateDuration, addSearchHistory, route[0], navigate, language]);
 
-    const handleRemove = (e) => {
+    const handleRemove = (e: React.MouseEvent) => {
       e.preventDefault();
       vibrate(vibrateDuration);
       removeSearchHistoryByRouteId(route[0]);
@@ -46,10 +46,10 @@ const RouteRowList = React.memo(
 
     return (
       <RouteRow
-        handleClick={handleClick}
+        onClick={handleClick}
         route={route}
-        style={style}
-        onRemove={tab === "recent" ? handleRemove : null}
+        style={style ?? {}}
+        onRemove={tab === "recent" ? handleRemove : undefined}
       />
     );
   },

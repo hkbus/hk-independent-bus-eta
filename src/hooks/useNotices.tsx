@@ -49,7 +49,7 @@ const useNotices = () => {
               [...msgs, ...prev].reduce((acc, cur) => {
                 acc[cur.id] = cur;
                 return acc;
-              }, {})
+              }, {} as Record<string, Notice>)
             ).sort((a, b) => (a.date > b.date ? -1 : 1));
 
             localStorage.setItem("notices", JSON.stringify(newNotices));
@@ -88,6 +88,7 @@ const xmlToNotice = (xml: string): Notice[] => {
     .map((nodes) =>
       nodes.reduce(
         (acc, node) => {
+          if ( node.textContent === null ) return acc;
           switch (node.tagName) {
             case "INCIDENT_NUMBER":
               acc.incidentNo = node.textContent;

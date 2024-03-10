@@ -13,7 +13,13 @@ import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import RouteOffiicalUrlBtn from "./timetableDrawer/RouteOfficialUrlBtn";
 
-const TimetableDrawer = ({ routeId, open, onClose }) => {
+interface TimetableDrawerProps {
+  routeId: string;
+  open: boolean;
+  onClose: () => void;
+}
+
+const TimetableDrawer = ({ routeId, open, onClose }: TimetableDrawerProps) => {
   const { t } = useTranslation();
   const {
     db: { routeList },
@@ -55,7 +61,7 @@ const TimetableDrawer = ({ routeId, open, onClose }) => {
       <List>
         {freq &&
           Object.entries(freq).map(([serviceId, dayFreq]) => (
-            <ListItem key={`${serviceId}`} sx={entriesSx}>
+            <ListItem key={serviceId} sx={entriesSx}>
               <Typography variant="subtitle1">
                 {t(ServiceIds[serviceId])}
               </Typography>
@@ -87,7 +93,7 @@ const TimetableDrawer = ({ routeId, open, onClose }) => {
 
 export default TimetableDrawer;
 
-const ServiceIds = {
+const ServiceIds: Record<string, string> = {
   31: "星期一至五",
   287: "星期一至五",
   415: "星期一至五",

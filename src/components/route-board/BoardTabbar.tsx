@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Box, Tabs, Tab, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 import AppContext from "../../AppContext";
-import { BoardTabType } from "../../typing";
+import { BoardTabType } from "../../@types/types";
 
 interface BoardTabbarProps {
   boardTab: BoardTabType;
@@ -19,7 +19,7 @@ const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
     <Box>
       <Tabs
         value={boardTab}
-        onChange={(e, v) => onChangeTab(v, true)}
+        onChange={(_, v) => onChangeTab(v, true)}
         sx={tabbarSx}
       >
         {Object.keys(TRANSPORT_SEARCH_OPTIONS)

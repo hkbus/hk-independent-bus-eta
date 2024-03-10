@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import AppContext from "./AppContext";
 import { useTranslation } from "react-i18next";
+import useLanguage from "./hooks/useTranslation";
 
 interface ReactNativeContextState {
   alarmStopId: string;
@@ -20,16 +21,17 @@ interface ReactNativeContextValue extends ReactNativeContextState {
   toggleStopAlarm: (stopId: string) => void;
 }
 
-const ReactNativeContext = React.createContext<ReactNativeContextValue>(null);
+const ReactNativeContext = React.createContext<ReactNativeContextValue>({} as ReactNativeContextValue);
 
-export const ReactNativeContextProvider = ({ children }) => {
+export const ReactNativeContextProvider = ({ children }: { children: React.ReactNode }) => {
   const {
     geoPermission,
     setGeoPermission,
     updateGeolocation,
     db: { stopList },
   } = useContext(AppContext);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const [state, setState] = useState<ReactNativeContextState>(DEFAULT_STATE);
 
   const toggleDebug = useCallback(() => {
@@ -53,9 +55,9 @@ export const ReactNativeContextProvider = ({ children }) => {
   }, []);
 
   const handleMsg = useCallback(
-    (msg) => {
+    (msg: Event & {data?: string}) => {
       try {
-        const data = JSON.parse(msg.data);
+        const data = JSON.parse(msg.data ?? "{}");
         if (data.type === "geoPermission") {
           setGeoPermission(data.value);
         } else if (data.type === "location") {
@@ -99,13 +101,13 @@ export const ReactNativeContextProvider = ({ children }) => {
           value: {
             ...stop.location,
             body: t("到站了"),
-            title: stop.name[i18n.language],
+            title: stop.name[language],
             stopId,
           },
         })
       );
     },
-    [stopList, t, i18n]
+    [stopList, t, language]
   );
 
   useEffect(() => {

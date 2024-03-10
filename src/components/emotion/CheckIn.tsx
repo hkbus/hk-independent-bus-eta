@@ -18,10 +18,12 @@ import EmotionContext, {
 } from "../../EmotionContext";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import useLanguage from "../../hooks/useTranslation";
 
 const CheckIn = () => {
   const [state, setState] = useState<EmotionCheckIn>(DEFAULT_STATE);
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const navigate = useNavigate();
   const { isRemind, addCheckin, lastCheckIn, updateLastCheckIn } =
     useContext(EmotionContext);
@@ -53,11 +55,11 @@ const CheckIn = () => {
         </Typography>
         <Typography variant="h6">
           {t("The place most profound you is ")}
-          <u>{t(lastCheckIn.moodScene)}</u>
+          <u>{t(lastCheckIn.moodScene as string)}</u>
         </Typography>
         <Typography variant="h6">
           {t("And, what makes you most grateful is ")}
-          <u>{t(lastCheckIn.gratitudeObj)}</u>
+          <u>{t(lastCheckIn.gratitudeObj as string)}</u>
         </Typography>
         <Box sx={questionContainerSx}>
           <Typography variant="body1" alignSelf="flex-start" textAlign="start">
@@ -78,7 +80,7 @@ const CheckIn = () => {
         </Box>
         <Button
           variant="outlined"
-          onClick={() => navigate(`/${i18n.language}/emotion/chart`)}
+          onClick={() => navigate(`/${language}/emotion/chart`)}
           endIcon={<QueryStatsIcon />}
         >
           {t("Review")}

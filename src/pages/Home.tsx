@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Paper, SxProps, Theme, Typography } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -8,18 +8,20 @@ import { setSeoHeader } from "../utils";
 import HomeTabbar, { isHomeTab } from "../components/home/HomeTabbar";
 import type { HomeTabType } from "../components/home/HomeTabbar";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
-import SwipeableList from "../components/home/SwipeableList";
+import SwipeableList, { SwipeableListRef } from "../components/home/SwipeableList";
 import DbRenewReminder from "../components/layout/DbRenewReminder";
 import { useParams } from "react-router-dom";
+import useLanguage from "../hooks/useTranslation";
 
 const Home = () => {
   const { AppTitle, collections } = useContext(AppContext);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage()
   const { collectionName } = useParams();
 
-  const swipeableList = useRef(null);
+  const swipeableList = useRef<SwipeableListRef>(null);
   const _homeTab = collectionName ?? localStorage.getItem("homeTab");
-  const [homeTab, setHomeTab] = useState<HomeTabType>(
+  const [homeTab, setHomeTab] = useState<HomeTabType | string>(
     isHomeTab(_homeTab, collections) ? _homeTab : "nearby"
   );
 
@@ -27,12 +29,12 @@ const Home = () => {
     setSeoHeader({
       title: `${t("Dashboard")} - ${t(AppTitle)}`,
       description: t("home-page-description"),
-      lang: i18n.language,
+      lang: language,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
+  }, [language]);
 
-  const handleTabChange = (v: HomeTabType, rerenderList = false) => {
+  const handleTabChange = (v: HomeTabType | string, rerenderList: boolean = false) => {
     setHomeTab(v);
     localStorage.setItem("homeTab", v);
     if (swipeableList.current && rerenderList) {

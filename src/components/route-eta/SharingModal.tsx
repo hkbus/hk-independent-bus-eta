@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -15,6 +15,7 @@ import { toProperCase, triggerShare, triggerShareImg } from "../../utils";
 import AppContext from "../../AppContext";
 import { CircularProgress } from "../Progress";
 import { useParams } from "react-router-dom";
+import useLanguage from "../../hooks/useTranslation";
 
 export interface SharingModalProps {
   routeId: string;
@@ -41,7 +42,8 @@ const SharingModal = ({
     colorMode,
     db: { routeList, stopList },
   } = useContext(AppContext);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const [imgBase64, setImgBase64] = useState<string>("");
   const { id: routeUri } = useParams();
   const { route, dest } = routeList[routeId];
@@ -68,8 +70,8 @@ const SharingModal = ({
           return mergeImages(
             rawBase64s
               .filter(([v]) => v)
-              .map(([rawBase64, h, w]) => {
-                baseH += h;
+              .map(([rawBase64, h]) => {
+                baseH += h as number;
                 return {
                   src: rawBase64,
                   x: 0,
@@ -97,10 +99,10 @@ const SharingModal = ({
 
   const handleShareLink = useCallback(() => {
     triggerShare(
-      `https://${window.location.hostname}/${i18n.language}/route/${routeUri}/${stopId}%2C${seq}`,
-      `${seq + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
+      `https://${window.location.hostname}/${language}/route/${routeUri}/${stopId}%2C${seq}`,
+      `${seq + 1}. ${toProperCase(stop.name[language])} - ${route} ${t(
         "往"
-      )} ${toProperCase(dest[i18n.language])} - ${t(AppTitle)}`
+      )} ${toProperCase(dest[language])} - ${t(AppTitle)}`
     )
       .then(() => {
         if (navigator.clipboard) setIsCopied(true);
@@ -114,7 +116,7 @@ const SharingModal = ({
     dest,
     t,
     setIsCopied,
-    i18n.language,
+    language,
     seq,
     stop.name,
     stopId,
@@ -125,10 +127,10 @@ const SharingModal = ({
   const handleShareImg = useCallback(() => {
     triggerShareImg(
       imgBase64,
-      `https://${window.location.hostname}/${i18n.language}/route/${routeUri}/${stopId}%2C${seq}`,
-      `${seq + 1}. ${toProperCase(stop.name[i18n.language])} - ${route} ${t(
+      `https://${window.location.hostname}/${language}/route/${routeUri}/${stopId}%2C${seq}`,
+      `${seq + 1}. ${toProperCase(stop.name[language])} - ${route} ${t(
         "往"
-      )} ${toProperCase(dest[i18n.language])} - https://hkbus.app/`
+      )} ${toProperCase(dest[language])} - https://hkbus.app/`
     )
       .then(() => {
         if (navigator.clipboard) setIsCopied(true);
@@ -137,7 +139,7 @@ const SharingModal = ({
         setIsOpen(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerShareImg, imgBase64, i18n.language, routeUri, seq, route]);
+  }, [triggerShareImg, imgBase64, language, routeUri, seq, route]);
 
   return (
     <>
@@ -183,19 +185,20 @@ const SharingModal = ({
   );
 };
 
-const domToImage = (domId: string, colorMode: "dark" | "light") => {
-  if (document.getElementById(domId)) {
+const domToImage = (domId: string, colorMode: "dark" | "light"): Promise<[string, number, number]> => {
+  const el = document.getElementById(domId)
+  if (el) {
     return domtoimage
-      .toPng(document.getElementById(domId), {
+      .toPng(el, {
         bgcolor: colorMode === "light" ? "#fedb00" : "#000",
       })
       .then((base64) => [
         base64,
-        document.getElementById(domId).clientHeight,
-        document.getElementById(domId).clientWidth,
+        el.clientHeight,
+        el.clientWidth,
       ]);
   } else {
-    return Promise.resolve([null, 0, 0]);
+    return Promise.resolve(["", 0, 0]);
   }
 };
 

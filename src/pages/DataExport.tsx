@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from "react";
+import { useContext, useState, useMemo } from "react";
 import {
   Box,
   SxProps,
@@ -12,12 +12,11 @@ import { useTranslation } from "react-i18next";
 import AppContext from "../AppContext";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { compress as compressJson } from "lzutf8-light";
+import useLanguage from "../hooks/useTranslation";
 
 const DataExport = () => {
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const {
     savedStops,
     savedEtas,

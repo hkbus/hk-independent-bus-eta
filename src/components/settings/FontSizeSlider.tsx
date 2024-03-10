@@ -1,5 +1,5 @@
 import { ListItemText, Slider, Typography } from "@mui/material";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 
@@ -16,6 +16,11 @@ const FontSizeSlider = () => {
     };
   }, [setAppFontSize]);
 
+  const handleChange = useCallback((_: Event, v: number | number[]) => {
+    setFontSize(v as number);
+    value.current = v as number;
+  }, [])
+
   return (
     <ListItemText
       primary={<Typography sx={{ fontSize }}>{t("字體大小")}</Typography>}
@@ -27,10 +32,7 @@ const FontSizeSlider = () => {
           value={fontSize}
           valueLabelDisplay="auto"
           size="small"
-          onChange={(_, v: number) => {
-            setFontSize(v);
-            value.current = v;
-          }}
+          onChange={handleChange}
         />
       }
     />

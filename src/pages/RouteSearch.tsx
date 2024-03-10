@@ -1,23 +1,28 @@
-import React, { useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { Box, Divider, Paper, SxProps, Theme, Typography } from "@mui/material";
 import AppContext from "../AppContext";
 import SearchContext from "../SearchContext";
 import { useTranslation } from "react-i18next";
-import AddressInput from "../components/route-search/AddressInput";
-import SearchResult from "../components/route-search/SearchResult";
+import AddressInput, { Address } from "../components/route-search/AddressInput";
+import SearchResult from "../components/route-search/SearchResultList";
 import SearchMap from "../components/route-search/SearchMap";
 import { fetchEtas, Eta } from "hk-bus-eta";
 import { setSeoHeader, getDistance, vibrate } from "../utils";
 import { LinearProgress } from "../components/Progress";
+import useLanguage from "../hooks/useTranslation";
+import SearchResultList from "../components/route-search/SearchResultList";
 
-export type SearchResultType = Array<{
+export interface SearchRoute {
   routeId: string;
   on: number;
   off: number;
-}>;
+}
+
+export type SearchResult = SearchRoute[]
 
 const RouteSearch = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const {
     AppTitle,
     geolocation,
@@ -36,15 +41,15 @@ const RouteSearch = () => {
     setResultIdx,
   } = useContext(SearchContext);
 
-  const worker = useRef(undefined);
+  const worker = useRef<Worker | null>(null);
   const terminateWorker = () => {
     if (worker.current) {
       worker.current.terminate();
-      worker.current = undefined;
+      worker.current = null;
     }
   };
 
-  const updateRoutes = (routeResults: SearchResultType[]) => {
+  const updateRoutes = (routeResults: Array<SearchResult>) => {
     const uniqueRoutes = routeResults
       .reduce(
         (acc, routeArr) =>
@@ -71,19 +76,17 @@ const RouteSearch = () => {
               // @ts-ignore
               co: Object.keys(routeList[routeId].stops),
               // @ts-ignore
-              language: i18n.language,
+              language: language,
             }).then((p) => p.filter((e) => e.eta));
       })
     )
       .then((etas) =>
         // filter out non available route
         uniqueRoutes.filter(
-          (routeId, idx) =>
+          (_, idx) =>
             !navigator.onLine ||
             (etas[idx].length &&
-              etas[idx].reduce((acc, eta) => {
-                return acc || eta.eta;
-              }, null))
+              etas[idx].reduce((acc, eta) => Boolean(acc || eta.eta), false))
         )
       )
       .then((availableRoutes) => {
@@ -107,7 +110,7 @@ const RouteSearch = () => {
               let start = locations.start
                 ? locations.start.location
                 : geolocation;
-              return routes.map((route, idx) => {
+              return routes.map((route) => {
                 const stops = Object.values(
                   routeList[route.routeId].stops
                 ).sort((a, b) => b.length - a.length)[0];
@@ -128,7 +131,7 @@ const RouteSearch = () => {
               });
             })
             // sort route by number of stops
-            .map((routes): [SearchResultType, number] => [
+            .map((routes): [SearchResult, number] => [
               routes,
               routes.reduce((sum, route) => sum + route.off - route.on, 0),
             ])
@@ -142,10 +145,10 @@ const RouteSearch = () => {
     setSeoHeader({
       title: t("點對點路線搜尋") + " - " + t(AppTitle),
       description: t("route-search-page-description"),
-      lang: i18n.language,
+      lang: language,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
+  }, [language]);
 
   useEffect(() => {
     // update status if status is rendering
@@ -174,7 +177,7 @@ const RouteSearch = () => {
             setStatus(e.data.count ? "rendering" : "ready");
             return;
           }
-          updateRoutes(e.data.value.sort((a, b) => a.length - b.length));
+          updateRoutes(e.data.value.sort((a: SearchResult, b: SearchResult) => a.length - b.length));
         };
       }
     }
@@ -185,36 +188,37 @@ const RouteSearch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, locations]);
 
-  const handleStartChange = (value) => {
+  const handleStartChange = useCallback((address: Address | null) => {
     setLocations({
       ...locations,
-      start: value,
+      start: address,
     });
 
     setStatus("waiting");
     setResultIdx({ resultIdx: 0, stopIdx: [0, 0] });
     setResult([]);
-  };
+  }, [setLocations, setStatus, setResultIdx, setResult]);
 
-  const handleEndChange = (value) => {
+  const handleEndChange = useCallback((address: Address | null) => {
     setLocations({
       ...locations,
-      end: value,
+      end: address,
     });
 
-    if (value) setStatus("waiting");
+    if (address) setStatus("waiting");
     setResultIdx({ resultIdx: 0, stopIdx: [0, 0] });
     setResult([]);
-  };
+  }, [setLocations, setStatus, setResultIdx, setResult]);
 
-  const handleRouteClick = (idx) => {
+  const handleRouteClick = useCallback( (idx: number) => {
     vibrate(vibrateDuration);
     setTimeout(() => {
       setResultIdx({ resultIdx: idx, stopIdx: [0, 0] });
     }, 0);
-  };
+  }, [vibrate, vibrateDuration, setResultIdx]);
 
-  const handleMarkerClick = (routeId, offset) => {
+  const handleMarkerClick = useCallback((routeId: string, offset: number) => {
+    console.log(routeId)
     const routeIdx = result[resultIdx.resultIdx]
       .map((route) => route.routeId)
       .indexOf(routeId);
@@ -226,7 +230,7 @@ const RouteSearch = () => {
         stopIdx: _stopIdx,
       };
     });
-  };
+  }, [result, resultIdx, setResultIdx]);
 
   return (
     <Paper sx={rootSx} square elevation={0}>
@@ -260,7 +264,7 @@ const RouteSearch = () => {
           <LinearProgress />
         ) : "ready|waiting|rendering".includes(status) && result.length ? (
           result.map((routes, resIdx) => (
-            <SearchResult
+            <SearchResultList
               key={`search-result-${resIdx}`}
               routes={routes}
               idx={resIdx}

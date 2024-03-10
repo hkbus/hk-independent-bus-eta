@@ -2,7 +2,7 @@ import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import HomeRouteListDropDown from "./HomeRouteListDropDown";
 import { EtaDb, Location, RouteList, StopList } from "hk-bus-eta";
-import { RouteCollection } from "../../../typing";
+import { RouteCollection } from "../../../@types/types";
 import { formatHandling } from "../../../utils";
 import { useContext, useMemo } from "react";
 import AppContext from "../../../AppContext";
@@ -85,6 +85,12 @@ const SmartCollectionRouteList = ({
 
 export default SmartCollectionRouteList;
 
+interface ParsedCollection {
+  name: string;
+  routes: string;
+  defaultExpanded: boolean;
+}
+
 const getCollections = ({
   collections,
   geolocation,
@@ -101,34 +107,27 @@ const getCollections = ({
   isRouteFilter: boolean;
   isTodayHoliday: boolean;
   serviceDayMap: EtaDb["serviceDayMap"];
-}): Array<{
-  name: string;
-  routes: string;
-  defaultExpanded: boolean;
-}> => {
+}): Array<ParsedCollection> => {
   return collections
-    .reduce((acc, { name, list, schedules }) => {
-      acc.push({
-        name: name,
-        routes: list,
-        defaultExpanded: schedules.reduce((acc, { day, start, end }) => {
-          if (acc) return acc;
-          const curDate = new Date();
-          curDate.setUTCHours(curDate.getUTCHours() + 8);
-          const _day = curDate.getUTCDay();
-          // skip handling timezone here
-          if ((isTodayHoliday && day === 0) || day === _day) {
-            let sTs = start.hour * 60 + start.minute;
-            let eTs = end.hour * 60 + end.minute;
-            let curTs =
-              (curDate.getUTCHours() * 60 + curDate.getUTCMinutes()) % 1440;
-            return sTs <= curTs && curTs <= eTs;
-          }
-          return false;
-        }, false),
-      });
-      return acc;
-    }, [])
+    .map(({ name, list, schedules }) => ({
+      name: name,
+      routes: list,
+      defaultExpanded: schedules.reduce((acc, { day, start, end }) => {
+        if (acc) return acc;
+        const curDate = new Date();
+        curDate.setUTCHours(curDate.getUTCHours() + 8);
+        const _day = curDate.getUTCDay();
+        // skip handling timezone here
+        if ((isTodayHoliday && day === 0) || day === _day) {
+          let sTs = start.hour * 60 + start.minute;
+          let eTs = end.hour * 60 + end.minute;
+          let curTs =
+            (curDate.getUTCHours() * 60 + curDate.getUTCMinutes()) % 1440;
+          return sTs <= curTs && curTs <= eTs;
+        }
+        return false;
+      }, false),
+    }))
     .map((v) => ({
       ...v,
       routes: formatHandling(

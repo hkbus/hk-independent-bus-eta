@@ -17,29 +17,6 @@ export interface RouteCollection {
   schedules: DaySchedule[];
 }
 
-export const DEFAULT_DAY_SCHEDULE: DaySchedule = {
-  day: 0, // 0: Sunday, 1: Monday, ...
-  start: {
-    hour: 0,
-    minute: 0,
-  },
-  end: {
-    hour: 23,
-    minute: 59,
-  },
-};
-
-export const DEFAULT_ROUTE_COLLECTION: RouteCollection = {
-  name: "New Collection",
-  list: [],
-  schedules: Array(7)
-    .fill(0)
-    .map((v, idx) => ({
-      ...DEFAULT_DAY_SCHEDULE,
-      day: idx,
-    })),
-};
-
 export type TransportType = "bus" | "minibus" | "lightRail" | "mtr";
 
 export type BoardTabType = "recent" | "all" | TransportType;

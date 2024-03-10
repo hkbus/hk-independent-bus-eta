@@ -23,6 +23,7 @@ import { toProperCase } from "../../utils";
 import TimeReport from "./TimeReport";
 import { SharingModalProps } from "./SharingModal";
 import ReactNativeContext from "../../ReactNativeContext";
+import useLanguage from "../../hooks/useTranslation";
 
 interface StopAccordionProps {
   routeId: string;
@@ -53,7 +54,8 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
     } = useContext(AppContext);
     const { alarmStopId, toggleStopAlarm } = useContext(ReactNativeContext);
     const { isStopAlarm } = useContext(ReactNativeContext);
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
+    const language = useLanguage();
     const { fares, faresHoliday } = routeList[routeId];
     const stop = stopList[stopId];
     const isStarred = useMemo<boolean>(
@@ -68,7 +70,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
     );
 
     const handleShareClick = useCallback(
-      (e) => {
+      (e: React.MouseEvent) => {
         onShareClick({
           routeId,
           seq: idx,
@@ -97,7 +99,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
       >
         <AccordionSummary sx={accordionSummarySx}>
           <Typography component="h3" variant="body1" sx={{ fontWeight: 700 }}>
-            {idx + 1}. {toProperCase(stop.name[i18n.language])}
+            {idx + 1}. {toProperCase(stop.name[language])}
           </Typography>
           <Typography variant="body2">
             {fares && fares[idx] ? t("車費") + ": $" + fares[idx] : ""}

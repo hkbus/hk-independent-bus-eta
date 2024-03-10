@@ -4,6 +4,7 @@ import { decompress as decompressJson } from "lzutf8-light";
 
 const isEtaDb = (input: unknown): input is EtaDb => {
   return (
+    input !== null &&
     typeof input === "object" &&
     "routeList" in input &&
     "stopList" in input &&
@@ -18,7 +19,7 @@ const isEtaDb = (input: unknown): input is EtaDb => {
 // implant the DB Context logic into code to avoid loading error
 export const DB_CONTEXT_VERSION = "1.2.0";
 
-const decompressJsonString = (txt): EtaDb => {
+const decompressJsonString = (txt: Uint8Array | Buffer | string): EtaDb => {
   try {
     const ret = JSON.parse(decompressJson(txt, { inputEncoding: "Base64" }));
     ret.routeList = Object.keys(ret.routeList)
@@ -27,7 +28,7 @@ const decompressJsonString = (txt): EtaDb => {
         acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
           ret.routeList[k];
         return acc;
-      }, {});
+      }, {} as EtaDb["routeList"]);
     return ret;
   } catch (e) {
     // throw the error
@@ -52,7 +53,7 @@ export interface DatabaseType extends EtaDb {
 export const fetchDbFunc = async (
   forceRenew = false
 ): Promise<DatabaseType> => {
-  const autoRenew = !!JSON.parse(localStorage.getItem("autoRenew")) || false;
+  const autoRenew = !!JSON.parse(localStorage.getItem("autoRenew") ?? "false");
   if (localStorage.getItem("dbv") !== DB_CONTEXT_VERSION) {
     console.log("New DB, will refetch data");
     localStorage.removeItem("db");
@@ -62,20 +63,20 @@ export const fetchDbFunc = async (
     localStorage.removeItem("stopMap");
     localStorage.setItem("dbv", DB_CONTEXT_VERSION);
   }
-  const schemaVersion = localStorage.getItem("schemaVersion");
-  const versionMd5 = localStorage.getItem("versionMd5");
+  const schemaVersion = localStorage.getItem("schemaVersion") ?? "";
+  const versionMd5 = localStorage.getItem("versionMd5") ?? "";
   const lastUpdateTime = parseInt(
     localStorage.getItem("updateTime") || "" + Date.now(),
     10
   );
   const raw = localStorage.getItem("db");
-  const storedDb = (raw): Promise<DatabaseType> =>
+  const loadStoredDb = (_raw: string | null): Promise<DatabaseType> =>
     new Promise((resolve, reject) => {
       try {
-        if (raw === null) {
+        if (_raw === null) {
           reject("localStorage is null");
         } else {
-          const db = decompressJsonString(localStorage.getItem("db"));
+          const db = decompressJsonString(_raw);
           resolve({
             schemaVersion,
             versionMd5,
@@ -98,7 +99,7 @@ export const fetchDbFunc = async (
       autoRenew && Date.now() - lastUpdateTime > 7 * 24 * 3600 * 1000;
     if (isOffline || !shouldAutoRenew) {
       try {
-        const db = await storedDb(raw);
+        const db = await loadStoredDb(raw);
         return db;
       } catch {}
     }
@@ -106,7 +107,7 @@ export const fetchDbFunc = async (
 
   try {
     const [_schemaVersion, _md5] = await Promise.all([
-      fetch(process.env.PUBLIC_URL + "/schema-version.txt").then((res) =>
+      fetch("/schema-version.txt").then((res) =>
         res.text()
       ),
       fetchEtaDbMd5(),
@@ -120,7 +121,7 @@ export const fetchDbFunc = async (
     }
     try {
       if (!needRenew) {
-        const db = await storedDb(raw);
+        const db = await loadStoredDb(raw);
         if (isEtaDb(db)) {
           return db;
         }
@@ -131,7 +132,7 @@ export const fetchDbFunc = async (
     return new Promise((resolve_1) => {
       const timerId = setTimeout(() => {
         if (!forceRenew && raw !== null) {
-          const _cachedDb = storedDb(raw);
+          const _cachedDb = loadStoredDb(raw);
           if (isEtaDb(_cachedDb)) {
             resolve_1(_cachedDb);
           }
@@ -146,7 +147,7 @@ export const fetchDbFunc = async (
               acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
                 db_1.routeList[k];
               return acc;
-            }, {}),
+            }, {} as EtaDb["routeList"]),
           schemaVersion: _schemaVersion,
           versionMd5: _md5,
           updateTime: parseInt(updateTime),

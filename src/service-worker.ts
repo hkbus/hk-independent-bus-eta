@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable no-restricted-globals */
 
 // This service worker can be customized!
@@ -50,7 +51,7 @@ registerRoute(
 
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html")
+  createHandlerBoundToURL(import.meta.env.BASE_URL + "/index.html")
 );
 
 class CacheFirstCORS extends Strategy {

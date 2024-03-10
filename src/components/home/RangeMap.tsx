@@ -24,7 +24,7 @@ import { Location } from "hk-bus-eta";
 interface RangeMapProps {
   range: number;
   value: Location;
-  onChange: (location: Location | null) => void;
+  onChange: (location: Location) => void;
 }
 
 const RangeMap = React.forwardRef<Leaflet.Map, RangeMapProps>(
@@ -33,9 +33,9 @@ const RangeMap = React.forwardRef<Leaflet.Map, RangeMapProps>(
     const circleRef = useRef<Leaflet.Circle>(null);
     const position = useRef<Location>(value).current;
     const { geolocation, colorMode } = useContext(AppContext);
-    const [map, setMap] = useState<Leaflet.Map>(null);
+    const [map, setMap] = useState<Leaflet.Map | null>(null);
 
-    useImperativeHandle(ref, () => map, [map]);
+    useImperativeHandle(ref, () => map as Leaflet.Map, [map]);
 
     const handleMove = useCallback(() => {
       if (map === null) return;
@@ -68,19 +68,18 @@ const RangeMap = React.forwardRef<Leaflet.Map, RangeMapProps>(
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url={
             colorMode === "light"
-              ? process.env.REACT_APP_OSM_PROVIDER_URL
-              : process.env.REACT_APP_OSM_PROVIDER_URL_DARK
+              ? import.meta.env.VITE_OSM_PROVIDER_URL
+              : import.meta.env.VITE_OSM_PROVIDER_URL_DARK
           }
         />
         <Marker position={position} ref={markerRef} />
         <Circle center={position} radius={range} ref={circleRef} />
-        <SetViewOnClick map={map} onChange={onChange} />
+        <SetViewOnClick map={map as Leaflet.Map} onChange={onChange} />
         <CenterControl
           onClick={() => {
-            map.setView(geolocation, map.getZoom(), {
+            map?.setView(geolocation, map?.getZoom(), {
               animate: true,
             });
-            onChange(null);
           }}
         />
       </MapContainer>
@@ -108,7 +107,7 @@ const SetViewOnClick = ({ map, onChange }: SetViewOnClickProps) => {
   return null;
 };
 
-const CenterControl = ({ onClick }) => {
+const CenterControl = ({ onClick }: { onClick: React.MouseEventHandler<HTMLDivElement>}) => {
   return (
     <div className="leaflet-bottom leaflet-right">
       <Box

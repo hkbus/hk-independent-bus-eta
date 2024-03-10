@@ -1,3 +1,4 @@
+import React, { MouseEventHandler } from "react";
 import {
   Card,
   CardActionArea,
@@ -6,30 +7,38 @@ import {
   SxProps,
   Theme,
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import RouteTerminus from "./RouteTerminus";
 import RouteNoCompany from "./RouteNoCompany";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { grey } from "@mui/material/colors";
+import { RouteListEntry } from "hk-bus-eta";
+import useLanguage from "../../hooks/useTranslation";
 
-const RouteRow = ({ route, handleClick, style, onRemove }) => {
-  const { i18n } = useTranslation();
+interface RouteRowProps {
+  route: [string, RouteListEntry];
+  style: React.CSSProperties;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+  onRemove?: MouseEventHandler<HTMLButtonElement>;
+}
+
+const RouteRow = ({ route, onClick, style, onRemove }: RouteRowProps) => {
+  const language = useLanguage()
 
   return (
     <Link
       // for SEO, not for click
-      to={`/${i18n.language}/route/${route[0].toLowerCase()}`}
+      to={`/${language}/route/${route[0].toLowerCase()}`}
       style={style}
     >
       <Card variant="outlined" key={route[0]} square sx={rootSx}>
-        <CardActionArea onClick={handleClick}>
+        <CardActionArea onClick={onClick}>
           <CardContent sx={cardContentSx}>
             <RouteNoCompany route={route} />
             <RouteTerminus terminus={route[1]} />
           </CardContent>
         </CardActionArea>
-        {onRemove !== null && (
+        {onRemove && (
           <IconButton onClick={onRemove}>
             <CloseIcon />
           </IconButton>

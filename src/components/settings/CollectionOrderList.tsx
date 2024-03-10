@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, useEffect } from "react";
+import { useState, useContext, useCallback, useEffect } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import Droppable from "../StrictModeDroppable";
 import {
@@ -10,6 +10,7 @@ import AppContext from "../../AppContext";
 import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
 import { ManageMode } from "../../data";
+import { RouteCollection } from "../../@types/types";
 
 // mode: delete is for edit here
 const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
@@ -58,7 +59,6 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
                   item={item}
                   index={index}
                   key={`collection-${item.name}`}
-                  t={t}
                   mode={mode}
                   onDelete={() => handleDelete(index)}
                 />
@@ -78,38 +78,47 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
 
 export default CollectionOrderList;
 
+interface DraggableListItemProps {
+  item: RouteCollection;
+  index: number;
+  mode: ManageMode;
+  onDelete: () => void;
+}
+
 const DraggableListItem = ({
   item: { name, list },
   index,
-  t,
   mode,
   onDelete,
-}) => (
-  <Draggable draggableId={name} index={index} isDragDisabled={mode !== "order"}>
-    {(provided) => (
-      <Box
-        ref={provided.innerRef}
-        {...provided.draggableProps}
-        {...provided.dragHandleProps}
-        sx={entrySx}
-      >
-        <Box>
-          <Typography variant="body1">{name}</Typography>
-          <Typography variant="caption">
-            {t("Number of ETAs: ")}
-            {list.length}
-          </Typography>
+}: DraggableListItemProps) => {
+  const { t } = useTranslation()
+  return (
+    <Draggable draggableId={name} index={index} isDragDisabled={mode !== "order"}>
+      {(provided) => (
+        <Box
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          sx={entrySx}
+        >
+          <Box>
+            <Typography variant="body1">{name}</Typography>
+            <Typography variant="caption">
+              {t("Number of ETAs: ")}
+              {list.length}
+            </Typography>
+          </Box>
+          {mode === "order" && <DragHandleIcon />}
+          {mode === "delete" && (
+            <IconButton onClick={onDelete}>
+              <EditOutlinedIcon />
+            </IconButton>
+          )}
         </Box>
-        {mode === "order" && <DragHandleIcon />}
-        {mode === "delete" && (
-          <IconButton onClick={onDelete}>
-            <EditOutlinedIcon />
-          </IconButton>
-        )}
-      </Box>
-    )}
-  </Draggable>
-);
+      )}
+    </Draggable>
+  );
+}
 
 const containerSx: SxProps<Theme> = {
   p: 1,

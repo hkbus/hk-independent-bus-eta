@@ -1,5 +1,5 @@
 import { Company } from "hk-bus-eta";
-import { BoardTabType } from "./typing";
+import { BoardTabType, DaySchedule, RouteCollection } from "./@types/types";
 
 export const ETA_FORMAT_NEXT_TYPES: {
   [format: string]: "diff" | "exact" | "mixed";
@@ -37,4 +37,27 @@ export const TRANSPORT_ORDER = {
     "lightRail",
     "mtr",
   ],
+};
+
+export const DEFAULT_DAY_SCHEDULE: DaySchedule = {
+  day: 0, // 0: Sunday, 1: Monday, ...
+  start: {
+    hour: 0,
+    minute: 0,
+  },
+  end: {
+    hour: 23,
+    minute: 59,
+  },
+};
+
+export const DEFAULT_ROUTE_COLLECTION: RouteCollection = {
+  name: "New Collection",
+  list: [],
+  schedules: Array(7)
+    .fill(0)
+    .map((_, idx) => ({
+      ...DEFAULT_DAY_SCHEDULE,
+      day: idx,
+    })),
 };

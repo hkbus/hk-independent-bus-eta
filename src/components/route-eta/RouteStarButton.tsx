@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { IconButton, SxProps, Theme } from "@mui/material";
 import {
   Star as StarIcon,
@@ -6,7 +6,11 @@ import {
 } from "@mui/icons-material";
 import AppContext from "../../AppContext";
 
-const RouteStarButton = ({ routeId }) => {
+interface RouteStarButtonProps {
+  routeId: string;
+}
+
+const RouteStarButton = ({ routeId }: RouteStarButtonProps) => {
   const { savedEtas, setCollectionDrawerRoute } = useContext(AppContext);
 
   return (

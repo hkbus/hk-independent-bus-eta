@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useCallback } from "react";
 import SwipeableViews from "react-swipeable-views";
-import { virtualize, bindKeyboard } from "react-swipeable-views-utils";
+import { virtualize, bindKeyboard, SlideRendererCallback } from "react-swipeable-views-utils";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import { FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -10,14 +10,14 @@ import { Box, SxProps, Theme, Typography } from "@mui/material";
 
 import AppContext from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
-import type { BoardTabType } from "../../typing";
+import type { BoardTabType } from "../../@types/types";
 import { TRANSPORT_SEARCH_OPTIONS, TRANSPORT_ORDER } from "../../constants";
 import RouteRowList from "./RouteRowList";
 import { routeSortFunc } from "../../utils";
 
 interface SwipeableRouteBoardProps {
   boardTab: BoardTabType;
-  onChangeTab: (v: string) => void;
+  onChangeTab: (v: BoardTabType) => void;
 }
 
 const SwipeableRoutesBoard = ({
@@ -54,9 +54,10 @@ const SwipeableRoutesBoard = ({
           isRouteAvaliable(routeNo, freq, isTodayHoliday, serviceDayMap)
       )
       .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]));
+    console.log(baseRouteList)
     return Object.entries(TRANSPORT_SEARCH_OPTIONS)
       .filter(([key]) => isRecentSearchShown || key !== "recent")
-      .map(([tab, searchOptions], idx) => {
+      .map(([tab, searchOptions]) => {
         return createItemData(
           tab === "recent"
             ? routeSearchHistory
@@ -65,7 +66,7 @@ const SwipeableRoutesBoard = ({
                 )
                 .filter((routeNo) => routeList[routeNo])
                 .map((routeNo) => [routeNo, routeList[routeNo]])
-            : baseRouteList.filter(([routeNo, { co }]) =>
+            : baseRouteList.filter(([_, { co }]) =>
                 co.some((c) => searchOptions.includes(c))
               ),
           vibrateDuration,
@@ -98,12 +99,12 @@ const SwipeableRoutesBoard = ({
     return 110;
   }, []);
 
-  const availableBoardTab = useMemo(
+  const availableBoardTab = useMemo<BoardTabType[]>(
     () => BOARD_TAB.filter((tab) => isRecentSearchShown || tab !== "recent"),
     [isRecentSearchShown]
   );
 
-  const ListRenderer = useCallback(
+  const ListRenderer = useCallback<SlideRendererCallback>(
     ({ key, index }) => (
       <React.Fragment key={key}>
         {coItemDataList[index].routeList.length > 0 ? (
@@ -170,7 +171,7 @@ const SwipeableRoutesBoard = ({
       <>
         {navigator.userAgent === "prerendering" ? (
           <Box sx={prerenderListSx}>
-            {coItemDataList[0].routeList.map((data, idx) => (
+            {coItemDataList[0].routeList.map((_: any, idx: number) => (
               <RouteRowList
                 data={coItemDataList[0]}
                 key={`route-${idx}`}
@@ -210,7 +211,7 @@ const VirtualizeSwipeableViews = bindKeyboard(virtualize(SwipeableViews));
 
 export default SwipeableRoutesBoard;
 
-const BOARD_TAB = ["recent", "all", "bus", "minibus", "lightRail", "mtr"];
+const BOARD_TAB: BoardTabType[] = ["recent", "all", "bus", "minibus", "lightRail", "mtr"];
 
 const prerenderListSx: SxProps<Theme> = {
   height: "100%",

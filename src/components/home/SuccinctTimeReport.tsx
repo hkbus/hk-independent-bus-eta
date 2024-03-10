@@ -12,10 +12,10 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { Company, Eta, Location } from "hk-bus-eta";
-import React, { useContext, useMemo } from "react";
+import { Company, Eta, Location, RouteListEntry } from "hk-bus-eta";
+import React, { useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AppContext from "../../AppContext";
 import { ManageMode } from "../../data";
 import {
@@ -29,6 +29,7 @@ import {
 } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
 import SuccinctEtas from "./SuccinctEtas";
+import useLanguage from "../../hooks/useTranslation";
 
 interface DistAndFareProps {
   name: string;
@@ -88,10 +89,8 @@ const SuccinctTimeReport = ({
   mode = "time",
   onDelete = undefined,
 }: SuccinctTimeReportProps) => {
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const {
     db: { routeList, stopList },
     vibrateDuration,
@@ -105,13 +104,14 @@ const SuccinctTimeReport = ({
   const stop = stopList[stopId] || DEFAULT_STOP;
 
   const navigate = useNavigate();
-  const handleClick = (e) => {
+  const handleClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
+    if ( mode !== "time" ) return;
     vibrate(vibrateDuration);
     setTimeout(() => {
       navigate(`/${language}/route/${routeId.toLowerCase()}`);
     }, 0);
-  };
+  }, [vibrate, vibrateDuration, navigate, routeId, mode]);
 
   const platform = useMemo(() => {
     if (etas && etas.length > 0) {
@@ -146,22 +146,14 @@ const SuccinctTimeReport = ({
   return (
     <>
       <ListItem
-        component={mode === "time" ? Link : undefined}
-        to={`/${language}/route/${routeKey.toLowerCase()}`}
-        onClick={
-          mode === "time"
-            ? handleClick
-            : (e) => {
-                e.preventDefault();
-              }
-        }
+        onClick={handleClick}
         sx={rootSx}
       >
         <ListItemText
           primary={
             <RouteNo
               routeNo={language === "zh" ? t(routeNo) : routeNo}
-              fontSize={co[0] === "mtr" ? "1.1rem" : null}
+              fontSize={co[0] === "mtr" ? "1.1rem" : undefined}
             />
           }
         />
@@ -240,12 +232,13 @@ const DEFAULT_STOP = {
 export default SuccinctTimeReport;
 
 // TODO: better handling on buggy data in database
-const getStops = (co, stops) => {
+const getStops = (co: Company[], stops: RouteListEntry["stops"]): string[] => {
   for (let i = 0; i < co.length; ++i) {
     if (co[i] in stops) {
       return stops[co[i]];
     }
   }
+  return [];
 };
 
 const rootSx: SxProps<Theme> = {

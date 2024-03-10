@@ -1,4 +1,3 @@
-import React from "react";
 import { Paper, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useWeather } from "../Weather";
@@ -25,7 +24,7 @@ const BadWeatherCard = () => {
       <Paper
         variant="outlined"
         sx={rootSx}
-        onClick={() => window.open(t("bad-weather-link"), "_target")}
+        onClick={() => window.open(t("bad-weather-text"), "_target")}
       >
         <ErrorIcon color="error" />
         <Typography>{t("bad-weather-text")}</Typography>

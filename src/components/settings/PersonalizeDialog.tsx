@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Dialog,
@@ -21,10 +21,10 @@ interface PersonalizeModalProps {
   onClose: () => void;
 }
 
-type TAB = "options" | "manage";
+type TabType = "options" | "manage";
 
 const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
-  const [tab, setTab] = useState<TAB>("options");
+  const [tab, setTab] = useState<TabType>("options");
   const { t } = useTranslation();
 
   const handleClose = () => {
@@ -57,7 +57,7 @@ const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
         </IconButton>
       </DialogTitle>
       <Divider />
-      {tab === "options" && <OptionsList goToTab={(tab: TAB) => setTab(tab)} />}
+      {tab === "options" && <OptionsList goToManage={() => setTab("manage")} />}
       {tab === "manage" && <UserContentManagement />}
     </Dialog>
   );

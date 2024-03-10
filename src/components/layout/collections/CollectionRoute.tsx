@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import { useState, useContext, useCallback } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -18,10 +18,11 @@ const CollectionRoute = () => {
     collectionIdx,
     setCollectionEtas,
   } = useContext(AppContext);
-  const [items, setItems] = useState(
-    collections[collectionIdx].list.filter(
-      (id) => id.split("/")[0] in routeList
-    )
+  const [items, setItems] = useState<string[]>(
+    collectionIdx !== null ? 
+      collections[collectionIdx].list.filter(
+        (id) => id.split("/")[0] in routeList
+      ) : []
   );
   const { t } = useTranslation();
 
@@ -66,7 +67,12 @@ const CollectionRoute = () => {
 
 export default CollectionRoute;
 
-const DraggableListItem = ({ item, index }) => (
+interface DraggableListItemProps {
+  item: string;
+  index: number;
+}
+
+const DraggableListItem = ({ item, index }: DraggableListItemProps) => (
   <Draggable draggableId={item} index={index}>
     {(provided) => (
       <Box

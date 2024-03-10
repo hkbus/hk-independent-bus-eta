@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import AppContext from "../AppContext";
 import { Box } from "@mui/material";
 import RouteInputPad from "../components/route-board/RouteInputPad";
@@ -6,7 +6,8 @@ import { useTranslation } from "react-i18next";
 import { setSeoHeader } from "../utils";
 import BoardTabbar, { isBoardTab } from "../components/route-board/BoardTabbar";
 import SwipeableRoutesBoard from "../components/route-board/SwipeableRoutesBoard";
-import { BoardTabType } from "../typing";
+import { BoardTabType } from "../@types/types";
+import useLanguage from "../hooks/useTranslation";
 
 interface RouteListProps {
   boardTab: BoardTabType;
@@ -16,19 +17,20 @@ interface RouteListProps {
 const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
   const { AppTitle } = useContext(AppContext);
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
 
   useEffect(() => {
     setSeoHeader({
       title: t("搜尋") + " - " + t(AppTitle),
       description: t("route-board-page-description"),
-      lang: i18n.language,
+      lang: language,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
+  }, [language]);
 
   const handleTabChange = useCallback(
-    (v) => {
+    (v: BoardTabType) => {
       setBoardTab(v);
       localStorage.setItem("boardTab", v);
     },

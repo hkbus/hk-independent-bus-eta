@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -39,7 +39,7 @@ const DataImport = () => {
 
   const obj = useMemo<AppState & CollectionState>(() => {
     try {
-      let obj = unpack(data ?? state.split("/").pop());
+      let obj = unpack(data ?? state.split("/").pop() ?? "");
 
       if (!Array.isArray(obj.savedStops) || !isStrings(obj.savedStops)) {
         throw new Error("Error in parsing savedStops");

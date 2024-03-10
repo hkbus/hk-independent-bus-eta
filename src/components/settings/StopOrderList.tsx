@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import { useState, useContext, useCallback } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import Droppable from "../StrictModeDroppable";
 import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
@@ -10,6 +10,7 @@ import {
   DragHandle as DragHandleIcon,
 } from "@mui/icons-material";
 import { ManageMode } from "../../data";
+import useLanguage from "../../hooks/useTranslation";
 
 const StopOrderList = ({ mode }: { mode: ManageMode }) => {
   const {
@@ -36,8 +37,8 @@ const StopOrderList = ({ mode }: { mode: ManageMode }) => {
     [items, setItems, setSavedStops]
   );
 
-  const handleDelete = useCallback(
-    (stop: string) => {
+  const handleDelete = useCallback((stop: string) => 
+    () => {
       updateSavedStops(stop);
       setItems((prev) => prev.filter((v) => v !== stop));
     },
@@ -60,7 +61,7 @@ const StopOrderList = ({ mode }: { mode: ManageMode }) => {
                   index={index}
                   key={`savedStop-${stop}`}
                   mode={mode}
-                  onDelete={() => handleDelete(stop)}
+                  onDelete={handleDelete(stop)}
                 />
               ))
             ) : (
@@ -78,14 +79,19 @@ const StopOrderList = ({ mode }: { mode: ManageMode }) => {
 
 export default StopOrderList;
 
-const DraggableListItem = ({ item, index, mode, onDelete }) => {
+interface DraggableListItemProps {
+  item: string;
+  index: number;
+  mode: ManageMode;
+  onDelete: () => void;
+}
+
+const DraggableListItem = ({ item, index, mode, onDelete }: DraggableListItemProps) => {
   const {
     db: { stopList },
   } = useContext(AppContext);
   const [, stopId] = item.split("|");
-  const {
-    i18n: { language },
-  } = useTranslation();
+  const language = useLanguage();
 
   return (
     <Draggable

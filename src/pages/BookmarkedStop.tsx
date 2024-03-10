@@ -11,10 +11,10 @@ import { Box, Paper, SxProps, Theme } from "@mui/material";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
 import DbRenewReminder from "../components/layout/DbRenewReminder";
 import StopTabbar from "../components/bookmarked-stop/StopTabbar";
-import { useTranslation } from "react-i18next";
 import SwipeableStopList, {
   SwipeableStopListRef,
 } from "../components/bookmarked-stop/SwipeableStopList";
+import useLanguage from "../hooks/useTranslation";
 
 const BookmarkedStop = () => {
   const {
@@ -22,9 +22,7 @@ const BookmarkedStop = () => {
     db: { stopList },
     colorMode,
   } = useContext(AppContext);
-  const {
-    i18n: { language },
-  } = useTranslation();
+  const language = useLanguage();
   const swipeableList = useRef<SwipeableStopListRef>(null);
   const defaultTab = useMemo(() => {
     try {

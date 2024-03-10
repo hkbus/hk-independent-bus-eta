@@ -9,20 +9,24 @@ import {
 import { MapContainer, Marker, TileLayer, GeoJSON } from "react-leaflet";
 import Leaflet from "leaflet";
 import { Box, SxProps, Theme } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import { type Company } from "hk-bus-eta";
 import AppContext from "../../AppContext";
 import type { StopListEntry } from "hk-bus-eta";
 import { MyLocation as MyLocationIcon } from "@mui/icons-material";
 import { checkPosition, locationEqual } from "../../utils";
-import type { Map as LeafletMap } from "leaflet";
+import type { Map as LeafletMap, StyleFunction } from "leaflet";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
 import { useRoutePath } from "../../hooks/useRoutePath";
 import { getLineColor } from "../../utils";
+import useLanguage from "../../hooks/useTranslation";
 
-const CenterControl = ({ onClick }) => {
+interface CenterControlProps {
+  onClick: React.MouseEventHandler<HTMLDivElement>
+}
+
+const CenterControl = ({ onClick }: CenterControlProps) => {
   return (
     <div className="leaflet-bottom leaflet-right">
       <Box
@@ -73,8 +77,8 @@ const RouteMap = ({
     colorMode,
     db: { stopList },
   } = useContext(AppContext);
-  const { i18n } = useTranslation();
-  const [map, setMap] = useState<Leaflet.Map>(null);
+  const language = useLanguage();
+  const [map, setMap] = useState<Leaflet.Map | null>(null);
   const stops = useMemo(
     () => stopIds.map((stopId) => stopList[stopId]),
     [stopList, stopIds]
@@ -193,8 +197,8 @@ const RouteMap = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url={
             colorMode === "light"
-              ? process.env.REACT_APP_OSM_PROVIDER_URL
-              : process.env.REACT_APP_OSM_PROVIDER_URL_DARK
+              ? import.meta.env.VITE_OSM_PROVIDER_URL
+              : import.meta.env.VITE_OSM_PROVIDER_URL_DARK
           }
         />
         {stops.map((stop, idx) => (
@@ -206,7 +210,7 @@ const RouteMap = ({
               passed: idx < stopIdx,
               companies,
             })}
-            alt={`${idx}. ${stop.name[i18n.language]}`}
+            alt={`${idx}. ${stop.name[language]}`}
             eventHandlers={{
               click: (e) => {
                 onMarkerClick(idx, e);
@@ -219,11 +223,13 @@ const RouteMap = ({
           routePath?.features?.length && (
             <>
               <GeoJSON
+                // @ts-ignore
                 key={routePath?.["timeStamp"]}
                 data={routePath}
                 style={geoJsonStyle(companies, route, true)}
               />
               <GeoJSON
+                // @ts-ignore
                 key={routePath?.["timeStamp"]}
                 data={routePath}
                 style={geoJsonStyle(companies, route, false)}
@@ -241,15 +247,15 @@ const RouteMap = ({
 
 export default RouteMap;
 
-const geoJsonStyle = (companies, route, isBorder) => {
-  return function (feature: GeoJSON.Feature) {
+const geoJsonStyle = (companies: Company[], route: string, isBorder: boolean): StyleFunction<any> => {
+  return function () {
     return {
       color: isBorder ? "#000000" : getLineColor(companies, route),
       weight: isBorder ? 6 : 4,
       className:
         companies.includes("ctb") && companies.includes("kmb") && !isBorder
           ? classes.jointlyLine
-          : null,
+          : undefined,
     };
   };
 };

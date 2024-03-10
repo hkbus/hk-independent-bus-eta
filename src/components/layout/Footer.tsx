@@ -17,9 +17,11 @@ import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { vibrate } from "../../utils";
 import EmotionContext from "../../EmotionContext";
+import useLanguage from "../../hooks/useTranslation";
 
 const Footer = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const location = useLocation();
   const { selectedRoute, colorMode, vibrateDuration } = useContext(AppContext);
   const { isRemind } = useContext(EmotionContext);
@@ -44,55 +46,55 @@ const Footer = () => {
         <BottomNavigationAction
           label={t("首頁")}
           component={Link}
-          to={`/${i18n.language}`}
-          onClick={(e) => handleClick(`/${i18n.language}`, e)}
-          value={`/${i18n.language}`}
+          to={`/${language}`}
+          onClick={(e) => handleClick(`/${language}`, e)}
+          value={`/${language}`}
           icon={<HomeIcon />}
         />
         <BottomNavigationAction
           label={t("車站")}
           component={Link}
-          to={`/${i18n.language}/stops`}
-          onClick={(e) => handleClick(`/${i18n.language}/stops`, e)}
-          value={`/${i18n.language}/stops`}
+          to={`/${language}/stops`}
+          onClick={(e) => handleClick(`/${language}/stops`, e)}
+          value={`/${language}/stops`}
           icon={<FlagCircleIcon />}
         />
         <BottomNavigationAction
           label={t("搜尋")}
           component={Link}
-          to={`/${i18n.language}/board`}
-          onClick={(e) => handleClick(`/${i18n.language}/board`, e)}
-          value={`/${i18n.language}/board`}
+          to={`/${language}/board`}
+          onClick={(e) => handleClick(`/${language}/board`, e)}
+          value={`/${language}/board`}
           icon={<SearchIcon />}
         />
         <BottomNavigationAction
           label={t("規劃")}
           component={Link}
-          to={`/${i18n.language}/search`}
+          to={`/${language}/search`}
           onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
-            handleClick(`/${i18n.language}/search`, e)
+            handleClick(`/${language}/search`, e)
           }
-          value={`/${i18n.language}/search`}
+          value={`/${language}/search`}
           icon={<NearMeIcon />}
         />
         <BottomNavigationAction
           label={t("通告")}
           component={Link}
-          to={`/${i18n.language}/notice`}
+          to={`/${language}/notice`}
           onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
-            handleClick(`/${i18n.language}/notice`, e)
+            handleClick(`/${language}/notice`, e)
           }
-          value={`/${i18n.language}/notice`}
+          value={`/${language}/notice`}
           icon={<NewspaperIcon />}
         />
         <BottomNavigationAction
           label={t("Heart")}
           component={Link}
-          to={`/${i18n.language}/emotion`}
+          to={`/${language}/emotion`}
           onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
-            handleClick(`/${i18n.language}/emotion`, e)
+            handleClick(`/${language}/emotion`, e)
           }
-          value={`/${i18n.language}/emotion`}
+          value={`/${language}/emotion`}
           icon={
             <Badge
               invisible={!isRemind || location.pathname.endsWith("/emotion")}
@@ -108,7 +110,7 @@ const Footer = () => {
     // eslint-disable-next-line
     [
       location.pathname,
-      i18n.language,
+      language,
       colorMode,
       selectedRoute,
       vibrateDuration,

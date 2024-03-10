@@ -18,9 +18,10 @@ interface RotatedMarkerType<T> extends L.Marker<T> {
   setRotationOrigin: (origin: string) => void;
 }
 
+
 const RotatedMarker = forwardRef<RotatedMarkerType<any>, any>(
   ({ children, ...props }, forwardRef) => {
-    const markerRef = useRef<RotatedMarkerType<any>>(null);
+    const markerRef = useRef<RotatedMarkerType<any> | null>(null);
 
     const _compass = useCompass(100);
     const [compass, setCompass] = useState<OrientationState | null>(null);

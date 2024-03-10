@@ -5,7 +5,7 @@ import { EtaDb, Location, RouteList, StopList } from "hk-bus-eta";
 import { formatHandling } from "../../../utils";
 import { useContext, useMemo } from "react";
 import AppContext from "../../../AppContext";
-import { RouteCollection } from "../../../typing";
+import { RouteCollection } from "../../../@types/types";
 
 interface CollectionRouteListProps {
   collection: RouteCollection;

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useCallback } from "react";
+import { useContext, useMemo, useCallback } from "react";
 import { Button, Divider, SxProps, Theme } from "@mui/material";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { RouteListEntry } from "hk-bus-eta";
@@ -7,9 +7,11 @@ import { vibrate, getDistance } from "../../utils";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
+import useLanguage from "../../hooks/useTranslation";
 
 const ReverseButton = ({ routeId }: { routeId: string }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage()
   const {
     db: { routeList, holidays, stopList, serviceDayMap },
     vibrateDuration,
@@ -92,14 +94,14 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
   );
 
   const handleRevserClick = useCallback(
-    (e) => {
+    (e: React.MouseEvent) => {
       e.preventDefault();
       vibrate(vibrateDuration);
       setTimeout(() => {
-        navigate(`/${i18n.language}/route/${reverseRoute[0].toLowerCase()}`);
+        navigate(`/${language}/route/${reverseRoute[0].toLowerCase()}`);
       }, 0);
     },
-    [reverseRoute, navigate, i18n.language, vibrateDuration]
+    [reverseRoute, navigate, language, vibrateDuration]
   );
 
   return (

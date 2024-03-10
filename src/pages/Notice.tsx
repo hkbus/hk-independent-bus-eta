@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Paper, SxProps, Theme, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import useLanguage from "../hooks/useTranslation";
 
 interface NoticeType {
   ChinShort: string;
@@ -18,9 +18,7 @@ interface NoticeType {
 }
 
 const Notice = () => {
-  const {
-    i18n: { language },
-  } = useTranslation();
+  const language = useLanguage();
   const [notices, setNotices] = useState<NoticeType[]>([]);
 
   useEffect(() => {
@@ -86,12 +84,13 @@ const xmlToJson = (root: Document): NoticeType[] => {
     .map((msg) => Array.from(msg.querySelectorAll("*")))
     .map((nodes) =>
       nodes.reduce((acc, node) => {
+        if ( node.textContent === null ) return acc;
         if (node.tagName === "ReferenceDate") {
           acc[node.tagName] = node.textContent
             .replace("下午", "PM")
             .replace("上午", "AM");
         } else {
-          acc[node.tagName] = node.textContent.replace(/\n/g, "\n\n");
+          acc[node.tagName as keyof NoticeType] = node.textContent.replace(/\n/g, "\n\n");
         }
         return acc;
       }, {} as NoticeType)

@@ -30,6 +30,7 @@ import {
   NumPadOrder,
 } from "./data";
 import { DeviceOrientationPermission } from "react-world-compass";
+import useLanguage from "./hooks/useTranslation";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 
@@ -153,7 +154,7 @@ interface AppContextProviderProps {
   workbox?: Workbox;
 }
 
-const AppContext = React.createContext<AppContextValue>(null);
+const AppContext = React.createContext<AppContextValue>({} as AppContextValue);
 
 const isGeoPremission = (input: unknown): input is GeoPermission => {
   return (
@@ -166,7 +167,7 @@ const isGeoPremission = (input: unknown): input is GeoPermission => {
 
 const isGeoLocation = (input: unknown): input is GeoLocation => {
   if (input instanceof Object && input !== null && input !== undefined) {
-    if (typeof input["lat"] === "number" && typeof input["lng"] === "number") {
+    if ('lat' in input && 'lng' in input && typeof input["lat"] === "number" && typeof input["lng"] === "number") {
       return true;
     }
   }
@@ -209,7 +210,7 @@ export const AppContextProvider = ({
     const searchRoute = "";
     const geoPermission: unknown = localStorage.getItem("geoPermission");
     const geoLocation: unknown = JSON.parse(
-      localStorage.getItem("geolocation")
+      localStorage.getItem("geolocation") ?? "null"
     );
     const compassPermission: unknown =
       localStorage.getItem("compassPermission");
@@ -217,7 +218,7 @@ export const AppContextProvider = ({
     const numPadOrder: unknown = localStorage.getItem("numPadOrder");
     const etaFormat: unknown = localStorage.getItem("etaFormat");
     const routeSearchHistory: unknown = JSON.parse(
-      localStorage.getItem("routeSearchHistory")
+      localStorage.getItem("routeSearchHistory") ?? "null"
     );
 
     return {
@@ -232,7 +233,7 @@ export const AppContextProvider = ({
         ? compassPermission
         : "default",
       isRouteFilter:
-        !!JSON.parse(localStorage.getItem("isRouteFilter")) || false,
+        !!JSON.parse(localStorage.getItem("isRouteFilter") ?? "false"),
       busSortOrder: isBusSortOrder(busSortOrder) ? busSortOrder : "KMB first",
       numPadOrder: isNumPadOrder(numPadOrder) ? numPadOrder : "123456789c0b",
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
@@ -243,9 +244,9 @@ export const AppContextProvider = ({
       _colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
         : "dark",
-      energyMode: !!JSON.parse(localStorage.getItem("energyMode")) || false,
-      platformMode: !!JSON.parse(localStorage.getItem("platformMode")) || false,
-      vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration")) ?? 1,
+      energyMode: !!JSON.parse(localStorage.getItem("energyMode") ?? "false"),
+      platformMode: !!JSON.parse(localStorage.getItem("platformMode") ?? "false"),
+      vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration") ?? "1"),
       isRecentSearchShown: !!JSON.parse(
         localStorage.getItem("isRecentSearchShown") ?? "true"
       ),
@@ -253,17 +254,18 @@ export const AppContextProvider = ({
       analytics:
         iOSRNWebView() && !iOSTracking()
           ? false
-          : JSON.parse(localStorage.getItem("analytics")) ?? true,
+          : JSON.parse(localStorage.getItem("analytics") || "true"),
       refreshInterval:
-        JSON.parse(localStorage.getItem("refreshInterval")) ?? 30000,
+        JSON.parse(localStorage.getItem("refreshInterval") ?? "30000"),
       annotateScheduled:
-        JSON.parse(localStorage.getItem("annotateScheduled")) ?? false,
-      fontSize: JSON.parse(localStorage.getItem("fontSize")) ?? 14,
+        JSON.parse(localStorage.getItem("annotateScheduled") ?? "false"),
+      fontSize: JSON.parse(localStorage.getItem("fontSize") ?? "14"),
       searchRange:
-        JSON.parse(localStorage.getItem("searchRange")) ?? DEFAULT_SEARCH_RANGE,
+        JSON.parse(localStorage.getItem("searchRange") ?? `${DEFAULT_SEARCH_RANGE}`),
     };
   };
   const { i18n } = useTranslation();
+  const language = useLanguage();
   type State = AppState;
   const [state, setStateRaw] = useState(getInitialState);
   const { geoPermission } = state;
@@ -342,7 +344,7 @@ export const AppContextProvider = ({
     },
     [setState]
   );
-  const geoWatcherId = useRef(null);
+  const geoWatcherId = useRef<number | null>(null);
 
   const updateGeoPermission = useCallback(
     (geoPermission: AppState["geoPermission"], deniedCallback?: () => void) => {
@@ -537,7 +539,7 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const addSearchHistory = useCallback((route) => {
+  const addSearchHistory = useCallback((route: string) => {
     setStateRaw(
       produce((state: State) => {
         const newSearchHistory = [route, ...state.routeSearchHistory]
@@ -548,7 +550,7 @@ export const AppContextProvider = ({
     );
   }, []);
 
-  const removeSearchHistoryByRouteId = useCallback((routeId) => {
+  const removeSearchHistoryByRouteId = useCallback((routeId: string) => {
     setStateRaw(
       produce((state: State) => {
         const newSearchHistory = state.routeSearchHistory.filter(
@@ -607,20 +609,14 @@ export const AppContextProvider = ({
     } else {
       const mql = window.matchMedia("(prefers-color-scheme: light)");
       setColorMode(mql.matches ? "light" : "dark");
-      const themeListener = (e) => setColorMode(e.matches ? "light" : "dark");
+      const themeListener = (e: MediaQueryListEvent) => setColorMode(e.matches ? "light" : "dark");
       mql?.addEventListener("change", themeListener);
       return () => mql?.removeEventListener("change", themeListener);
     }
   }, [state._colorMode, setColorMode]);
 
   const importAppState = useCallback((appState: AppState) => {
-    setStateRaw(
-      produce((state: State) => {
-        Object.entries(appState).forEach(([key, value]) => {
-          state[key] = value;
-        });
-      })
-    );
+    setStateRaw(appState)
   }, []);
 
   useEffect(() => {
@@ -628,7 +624,7 @@ export const AppContextProvider = ({
   }, [state.geolocation]);
 
   useEffect(() => {
-    localStorage.setItem("geoPermission", state.geoPermission);
+    localStorage.setItem("geoPermission", JSON.stringify(state.geoPermission));
   }, [state.geoPermission]);
 
   useEffect(() => {
@@ -703,8 +699,8 @@ export const AppContextProvider = ({
   }, [state.vibrateDuration]);
 
   useEffect(() => {
-    localStorage.setItem("lang", i18n.language);
-  }, [i18n.language]);
+    localStorage.setItem("lang", language);
+  }, [language]);
 
   useEffect(() => {
     localStorage.setItem("fontSize", JSON.stringify(state.fontSize));

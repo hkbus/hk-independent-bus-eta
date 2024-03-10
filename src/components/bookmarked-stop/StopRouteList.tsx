@@ -1,9 +1,10 @@
 import { Box, CircularProgress, List, SxProps, Theme } from "@mui/material";
 import SuccinctTimeReport from "../home/SuccinctTimeReport";
 import { useStopEtas } from "../../hooks/useStopEtas";
+import { Company } from "hk-bus-eta";
 
 interface StopRouteListProps {
-  stops: string[][]; // [[co, stopId]]
+  stops: Array<[Company, string]>; // [[co, stopId]]
   isFocus: boolean;
 }
 

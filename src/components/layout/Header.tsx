@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useContext } from "react";
+import { useEffect, useCallback, useContext } from "react";
 import {
   Avatar,
   Box,
@@ -25,6 +25,7 @@ import { vibrate, checkMobile } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useWeatherCode, WeatherIcons } from "../Weather";
 import useOnline from "../../hooks/useOnline";
+import useLanguage from "../../hooks/useTranslation";
 
 const Header = () => {
   const {
@@ -38,7 +39,8 @@ const Header = () => {
     _colorMode,
     toggleColorMode,
   } = useContext(AppContext);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage()
   let location = useLocation();
   const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
@@ -46,7 +48,7 @@ const Header = () => {
 
   const handleLanguageChange = (lang: "zh" | "en") => {
     vibrate(vibrateDuration);
-    navigate(location.pathname.replace("/" + i18n.language, "/" + lang), {
+    navigate(location.pathname.replace("/" + language, "/" + lang), {
       replace: true,
     });
     changeLanguage(lang);
@@ -80,11 +82,11 @@ const Header = () => {
         setSearchRoute(searchRoute.slice(0, -1));
       } else if (key.length === 1) {
         setSearchRoute(searchRoute + key);
-        navigate(`/${i18n.language}/board`, { replace: true });
+        navigate(`/${language}/board`, { replace: true });
       }
     },
     // eslint-disable-next-line
-    [searchRoute, i18n.language, setSearchRoute]
+    [searchRoute, language, setSearchRoute]
   );
 
   useEffect(() => {
@@ -97,11 +99,11 @@ const Header = () => {
   return (
     <Toolbar sx={rootSx}>
       <Link
-        to={`/${i18n.language}`}
+        to={`/${language}`}
         onClick={(e) => {
           e.preventDefault();
           vibrate(vibrateDuration);
-          navigate(`/${i18n.language}`);
+          navigate(`/${language}`);
         }}
         rel="nofollow"
       >
@@ -127,7 +129,7 @@ const Header = () => {
             e.target.value in routeList
           ) {
             (document.activeElement as HTMLElement).blur();
-            navigate(`/${i18n.language}/route/${e.target.value}`);
+            navigate(`/${language}/route/${e.target.value}`);
           }
           setSearchRoute(e.target.value);
         }}
@@ -136,7 +138,7 @@ const Header = () => {
           if (navigator.userAgent !== "prerendering" && checkMobile()) {
             (document.activeElement as HTMLElement).blur();
           }
-          navigate(`/${i18n.language}/board`, { replace: true });
+          navigate(`/${language}/board`, { replace: true });
         }}
       />
       <Box sx={funcPanelSx}>
@@ -145,7 +147,7 @@ const Header = () => {
             onClick={() =>
               window.open(
                 `https://www.hko.gov.hk/${
-                  i18n.language === "zh" ? "tc" : "en"
+                  language === "zh" ? "tc" : "en"
                 }/detail.htm`
               )
             }
@@ -167,14 +169,14 @@ const Header = () => {
         <Button
           sx={languageSx}
           onClick={() =>
-            handleLanguageChange(i18n.language === "zh" ? "en" : "zh")
+            handleLanguageChange(language === "zh" ? "en" : "zh")
           }
           id="lang-selector"
           variant="text"
           disableElevation
           disableRipple
         >
-          {i18n.language !== "zh" ? "繁" : "En"}
+          {language !== "zh" ? "繁" : "En"}
         </Button>
         <IconButton
           onClick={() => {
@@ -190,7 +192,7 @@ const Header = () => {
         </IconButton>
         <IconButton
           component={Link}
-          to={`/${i18n.language}/settings`}
+          to={`/${language}/settings`}
           rel="nofollow"
         >
           <SettingsIcon fontSize="small" />

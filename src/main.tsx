@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
-import loadable from "@loadable/component";
+import React, { Suspense, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { DbProvider } from "./DbContext";
 import { AppContextProvider } from "./AppContext";
 import "./i18n";
-import { fetchDbFunc } from "./db";
-import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import { DatabaseType, fetchDbFunc } from "./db";
 import ErrorBoundary from "./ErrorBoundary";
 import { CollectionContextProvider } from "./CollectionContext";
 import { ReactNativeContextProvider } from "./ReactNativeContext";
 import { EmotionContextProvider } from "./EmotionContext";
-const App = loadable(() => import("./App"));
+const App = React.lazy(() => import("./App"));
 
 const isHuman = () => {
   const agents = [
@@ -36,42 +34,37 @@ if (isHuman()) {
   // fetching should be done to avoid unnecessary rendering
   // Target: render only if development or prerendering or in registered app or lazy loading page
   const prerenderStyle = document.querySelector("style[prerender]");
-  const workboxPromise = serviceWorkerRegistration.register({
-    onUpdate: (_, skipWaiting) => {
-      skipWaiting();
-    },
-  });
+  
   const fetchDb = fetchDbFunc();
-  const allPromise = Promise.all([fetchDb, workboxPromise]);
+  const allPromises = Promise.all([fetchDb]);
 
   // remove prerendered style
   if (prerenderStyle instanceof HTMLStyleElement) {
+    // @ts-ignore
     document.getElementById("root").innerHTML = "";
     prerenderStyle.innerHTML = "";
   }
   const Container = () => {
-    const [state, setState] = useState({
-      initialized: false,
-      workbox: undefined,
-      db: undefined,
-    });
+    const [state, setState] = useState<DatabaseType | null>(null);
 
     useEffect(() => {
-      allPromise.then(([fetchDbResult, workbox]) => {
-        setState({ initialized: true, workbox: workbox, db: fetchDbResult });
+      allPromises.then(([fetchDbResult]) => {
+        setState(fetchDbResult);
       });
     }, []);
 
-    if (!state.initialized) return <></>;
+    if (state === null) return <></>;
 
     return (
       <ErrorBoundary>
-        <DbProvider initialDb={state.db}>
+        <DbProvider initialDb={state}>
           <CollectionContextProvider>
-            <AppContextProvider workbox={state.workbox}>
+            <AppContextProvider>
               <EmotionContextProvider>
                 <ReactNativeContextProvider>
-                  <App />
+                  <Suspense fallback={null}>
+                    <App />
+                  </Suspense>
                 </ReactNativeContextProvider>
               </EmotionContextProvider>
             </AppContextProvider>
@@ -81,7 +74,7 @@ if (isHuman()) {
     );
   };
 
-  const root = createRoot(document.getElementById("root"));
+  const root = createRoot(document.getElementById("root")!);
   root.render(
     <React.StrictMode>
       <Container />

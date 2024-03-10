@@ -23,14 +23,14 @@ interface DbProviderProps {
   children: ReactNode;
 }
 
-const DbContext = React.createContext<DatabaseContextValue>(null);
+const DbContext = React.createContext<DatabaseContextValue>({} as DatabaseContextValue);
 
 export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
   const AppTitle = "巴士到站預報 App （免費無廣告）";
   // route list & stop list & route-stop list
   const [{ db, autoRenew }, setState] = useState<DatabaseContextState>({
     db: initialDb,
-    autoRenew: !!JSON.parse(localStorage.getItem("autoRenew")) || false,
+    autoRenew: !!JSON.parse(localStorage.getItem("autoRenew") ?? "false"),
   });
 
   const renewDb = useCallback(

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import {
   Avatar,
   Box,
@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 interface CollectionProps {
   name: string;
   list: string[];
-  collectionIdx?: number;
+  collectionIdx?: number | null;
 }
 
 const Collection = ({ name, list, collectionIdx = null }: CollectionProps) => {
@@ -54,10 +54,12 @@ const Collection = ({ name, list, collectionIdx = null }: CollectionProps) => {
         <Checkbox
           icon={<BookmarkBorderIcon />}
           checkedIcon={<BookmarkIcon />}
-          checked={list.includes(collectionDrawerRoute)}
-          onClick={() =>
-            toggleCollectionEta(collectionDrawerRoute, collectionIdx)
-          }
+          checked={list.includes(collectionDrawerRoute ?? "")}
+          onClick={() => {
+            if ( collectionDrawerRoute ) {
+              toggleCollectionEta(collectionDrawerRoute, collectionIdx)
+            }
+          }}
         />
       </Box>
     </Box>

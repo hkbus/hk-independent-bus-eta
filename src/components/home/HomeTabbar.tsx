@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Tabs, Tab, SxProps, Theme } from "@mui/material";
 import {
   Star as StarIcon,
@@ -7,10 +7,10 @@ import {
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
-import { RouteCollection } from "../../typing";
+import { RouteCollection } from "../../@types/types";
 
 interface HomeTabbarProps {
-  homeTab: HomeTabType;
+  homeTab: HomeTabType | string;
   onChangeTab: (v: HomeTabType, rerenderList: boolean) => void;
 }
 

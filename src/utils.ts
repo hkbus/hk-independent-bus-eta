@@ -1,7 +1,8 @@
-import type { Company, EtaDb, Location, RouteList, StopList } from "hk-bus-eta";
+import type { Company, EtaDb, Location, RouteList, RouteListEntry, StopList } from "hk-bus-eta";
 import type { Location as GeoLocation } from "hk-bus-eta";
-import type { TransportType } from "./typing";
+import type { TransportType } from "./@types/types";
 import { isRouteAvaliable } from "./timetable";
+
 export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   const R = 6371e3; // metres
   const φ1 = (a.lat * Math.PI) / 180; // φ, λ in radians
@@ -75,7 +76,7 @@ export const checkMobile = () => {
       )
     )
       check = true;
-  })(navigator.userAgent || navigator.vendor || window["opera"]);
+  })(navigator.userAgent || navigator.vendor);
   return check;
 };
 
@@ -131,49 +132,49 @@ export const setSeoHeader = ({
   document.title = title;
   document
     .querySelector('meta[name="description"]')
-    .setAttribute("content", description);
+    ?.setAttribute("content", description);
   document
     .querySelector('link[rel="canonical"]')
-    .setAttribute("href", `https://hkbus.app${window.location.pathname}`);
+    ?.setAttribute("href", `https://hkbus.app${window.location.pathname}`);
   // language related meta tag
   document
     .querySelector("html")
-    .setAttribute("lang", lang === "zh" ? "zh-Hant" : lang);
+    ?.setAttribute("lang", lang === "zh" ? "zh-Hant" : lang);
   document
     .querySelector('link[rel="alternative"][hreflang="en"]')
-    .setAttribute(
+    ?.setAttribute(
       "href",
       "https://hkbus.app" + window.location.pathname.replace(`/${lang}`, "/en")
     );
   document
     .querySelector('link[rel="alternative"][hreflang="zh-Hant"]')
-    .setAttribute(
+    ?.setAttribute(
       "href",
       "https://hkbus.app" + window.location.pathname.replace(`/${lang}`, "/zh")
     );
   document
     .querySelector('link[rel="alternative"][hreflang="x-default"]')
-    .setAttribute(
+    ?.setAttribute(
       "href",
       "https://hkbus.app" + window.location.pathname.replace(`/${lang}`, "/zh")
     );
   // facebook
   document
     .querySelector('meta[property="og:title"]')
-    .setAttribute("content", title);
+    ?.setAttribute("content", title);
   document
     .querySelector('meta[property="og:url"]')
-    .setAttribute("content", `https://hkbus.app${window.location.pathname}`);
+    ?.setAttribute("content", `https://hkbus.app${window.location.pathname}`);
   document
     .querySelector('meta[property="og:description"]')
-    .setAttribute("content", description);
+    ?.setAttribute("content", description);
   // twitter card
   document
     .querySelector('meta[name="twitter:title"]')
-    .setAttribute("content", title);
+    ?.setAttribute("content", title);
   document
     .querySelector('meta[name="twitter:description"]')
-    .setAttribute("content", description);
+    ?.setAttribute("content", description);
 };
 
 export const toProperCase = (txt: string) => {
@@ -259,7 +260,7 @@ export const reorder = <T>(
   return result;
 };
 
-export const routeSortFunc = (a, b, transportOrder: string[]) => {
+export const routeSortFunc = (a: [string, RouteListEntry], b: [string, RouteListEntry], transportOrder: string[]) => {
   const aRoute = a[0].split("-");
   const bRoute = b[0].split("-");
 
@@ -353,7 +354,7 @@ const PLATFORM_SOLID = [
   "➒",
 ] as const;
 
-export const getPlatformSymbol = (number, platformMode) => {
+export const getPlatformSymbol = (number: number, platformMode: boolean) => {
   return platformMode ? PLATFORM_SOLID[number] : PLATFORM[number];
 };
 
@@ -494,6 +495,6 @@ export const getLineColor = (
   return color;
 };
 
-export const distinctFilter = (value, index, array) => {
+export const distinctFilter = (value: any, index: number, array: Array<any>) => {
   return array.indexOf(value) === index;
 };

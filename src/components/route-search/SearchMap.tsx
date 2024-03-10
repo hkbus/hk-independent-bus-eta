@@ -6,8 +6,7 @@ import {
   Polyline,
   useMap,
 } from "react-leaflet";
-import Leaflet from "leaflet";
-import { useTranslation } from "react-i18next";
+import Leaflet, { LatLngExpression } from "leaflet";
 import { Box, SxProps, Theme } from "@mui/material";
 import AppContext from "../../AppContext";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
@@ -15,8 +14,16 @@ import { checkPosition } from "../../utils";
 import { Location as GeoLocation } from "hk-bus-eta";
 import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
+import useLanguage from "../../hooks/useTranslation";
+import { SearchResult, SearchRoute } from "../../pages/RouteSearch";
 
-const ChangeMapCenter = ({ center, start, end }) => {
+interface ChangeMapCenter {
+  center: GeoLocation | null;
+  start: GeoLocation;
+  end: GeoLocation | null;
+}
+
+const ChangeMapCenter = ({ center, start, end }: ChangeMapCenter) => {
   const map = useMap();
   if (center) map.flyTo(checkPosition(center));
   else if (end)
@@ -29,21 +36,25 @@ const ChangeMapCenter = ({ center, start, end }) => {
   return <></>;
 };
 
-const StartMarker = ({ start }) => {
+const StartMarker = ({ start }: {start: GeoLocation}) => {
   if (start) {
     return <Marker position={start} icon={EndsMarker({ isStart: true })} />;
   }
   return null;
 };
 
-const EndMarker = ({ end }) => {
+const EndMarker = ({ end }: {end: GeoLocation | null}) => {
   if (end) {
     return <Marker position={end} icon={EndsMarker({ isStart: false })} />;
   }
   return null;
 };
 
-const CenterControl = ({ onClick }) => {
+interface CenterControlProps {
+  onClick: React.MouseEventHandler<HTMLDivElement>
+}
+
+const CenterControl = ({ onClick }: CenterControlProps) => {
   return (
     <div className="leaflet-bottom leaflet-right">
       <Box
@@ -57,16 +68,23 @@ const CenterControl = ({ onClick }) => {
   );
 };
 
+interface BusRouteProps {
+  route: SearchRoute;
+  lv: number;
+  stopIdx: number;
+  onMarkerClick: (routeId: string, offset: number) => void;
+}
+
 const BusRoute = ({
   route: { routeId, on, off },
   lv,
   stopIdx,
   onMarkerClick,
-}) => {
+}: BusRouteProps) => {
   const {
     db: { routeList, stopList },
   } = useContext(AppContext);
-  const { i18n } = useTranslation();
+  const language = useLanguage()
   const stops = Object.values(routeList[routeId].stops)
     .sort((a, b) => b.length - a.length)[0]
     .slice(on, off + 1);
@@ -83,9 +101,9 @@ const BusRoute = ({
             passed: idx < stopIdx,
             lv,
           })}
-          alt={`${idx}. ${routeNo} - ${stopList[stopId].name[i18n.language]}`}
+          alt={`${idx}. ${routeNo} - ${stopList[stopId].name[language]}`}
           eventHandlers={{
-            click: (e) => {
+            click: (_) => {
               onMarkerClick(routeId, idx);
             },
           }}
@@ -105,7 +123,13 @@ const BusRoute = ({
   );
 };
 
-const Walklines = ({ routes, start, end }) => {
+interface WalklinesProps {
+  routes: SearchResult;
+  start: GeoLocation | null;
+  end: GeoLocation | null;
+}
+
+const Walklines = ({ routes, start, end }: WalklinesProps) => {
   const {
     db: { routeList, stopList },
   } = useContext(AppContext);
@@ -140,21 +164,29 @@ const Walklines = ({ routes, start, end }) => {
   );
 };
 
-const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
+interface SearchMapProps {
+  routes: SearchResult;
+  start: GeoLocation;
+  end: GeoLocation | null;
+  stopIdx: number[] | null;
+  onMarkerClick: (routeId: string, offset: number) => void;
+}
+
+const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }: SearchMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } =
     useContext(AppContext);
-  const [mapState, setMapState] = useState({
+  const [mapState, setMapState] = useState<{center: GeoLocation | null, isFollow: boolean}>({
     center: null,
     isFollow: false,
   });
   const { center, isFollow } = mapState;
-  const [map, setMap] = useState<Leaflet.Map>(null);
+  const [map, setMap] = useState<Leaflet.Map | null>(null);
 
   const updateCenter = useCallback(
     (state?: { center?: GeoLocation; isFollow?: boolean }) => {
       const { center, isFollow } = state ?? {};
       setMapState({
-        center: center || map?.getCenter(),
+        center: center || map?.getCenter() || null,
         isFollow: isFollow || false,
       });
     },
@@ -226,7 +258,7 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
               : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           }
         />
-        {(routes || []).map((route, idx) => (
+        {stopIdx !== null && (routes || []).map((route, idx) => (
           <BusRoute
             key={`route-${idx}`}
             route={route}
@@ -260,9 +292,15 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }) => {
 
 export default SearchMap;
 
-const getPoint = ({ lat, lng }) => [lat, lng];
+const getPoint = ({ lat, lng }: GeoLocation): LatLngExpression => [lat, lng];
 
-const BusStopMarker = ({ active, passed, lv }) => {
+interface BusStopMarkerProps {
+  active: boolean;
+  passed: boolean;
+  lv: number;
+}
+
+const BusStopMarker = ({ active, passed, lv }: BusStopMarkerProps) => {
   return Leaflet.icon({
     iconSize: [24, 40],
     iconAnchor: [12, 40],
@@ -273,7 +311,7 @@ const BusStopMarker = ({ active, passed, lv }) => {
   });
 };
 
-const EndsMarker = ({ isStart }) => {
+const EndsMarker = ({ isStart }: {isStart : boolean}) => {
   return Leaflet.icon({
     iconSize: [24, 40],
     iconAnchor: [12, 40],

@@ -28,10 +28,9 @@ const EmotionChart = () => {
       gratitudeCnt: checkIns
         .reduce(
           (acc, { gratitudeCnt: v }) => {
-            console.log(v);
             if (!v) return acc;
-            if (v === "5+") return [acc[0] + 5, "+"];
-            return [acc[0] + parseInt(v), acc[1]];
+            if (v === "5+") return [acc[0] + 5, "+"] as [number, string];
+            return [acc[0] + parseInt(v), acc[1]] as [number, string];
           },
           [0, ""] as [number, string]
         )

@@ -6,13 +6,13 @@ import {
   useRef,
   useState,
 } from "react";
-import { useTranslation } from "react-i18next";
-import { Eta, fetchEtas } from "hk-bus-eta";
+import { Company, Eta, fetchEtas } from "hk-bus-eta";
 import AppContext from "../AppContext";
 import { isRouteAvaliable } from "../timetable";
+import useLanguage from "./useTranslation";
 
 interface useStopEtasProps {
-  stopKeys: string[][];
+  stopKeys: Array<[Company, string]>;
   disabled?: boolean;
 }
 
@@ -30,7 +30,7 @@ export const useStopEtas = ({
   } = useContext(AppContext);
 
   const isLightRail = useMemo(
-    () => stopKeys.reduce((acc, [co]) => co === "lightRail", false),
+    () => stopKeys.reduce((acc, [co]) => acc || co === "lightRail", false),
     [stopKeys]
   );
 
@@ -52,7 +52,7 @@ export const useStopEtas = ({
             });
           });
           return acc;
-        }, [])
+        }, [] as Array<[string, number]>)
         // uniquify routeKeys
         .map((v) => v.join("|"))
         .filter((value, idx, self) => self.indexOf(value) === idx)
@@ -61,9 +61,7 @@ export const useStopEtas = ({
   }, [stopKeys, routeList, isRouteFilter, isTodayHoliday, serviceDayMap]);
 
   const [stopEtas, setStopEtas] = useState<Array<[string, Eta[]]>>([]);
-  const {
-    i18n: { language },
-  } = useTranslation();
+  const language = useLanguage();
   const isMounted = useRef<boolean>(false);
 
   const fetchData = useCallback(() => {
@@ -86,7 +84,7 @@ export const useStopEtas = ({
       if (isMounted.current) {
         setStopEtas(
           _etas
-            .map((e, idx) => [
+            .map((e, idx): [string, Eta[]] => [
               routeKeys[idx].join("/"),
               e.filter(({ co, dest }) => {
                 if (co !== "mtr") return true;

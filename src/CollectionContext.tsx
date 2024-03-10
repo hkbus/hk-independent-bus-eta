@@ -1,10 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
-import {
-  DEFAULT_DAY_SCHEDULE,
-  DEFAULT_ROUTE_COLLECTION,
-  RouteCollection,
-} from "./typing";
+import { DaySchedule, RouteCollection } from "./@types/types";
 import { isStrings } from "./utils";
+import { DEFAULT_DAY_SCHEDULE, DEFAULT_ROUTE_COLLECTION } from "./constants"
 import { produce } from "immer";
 
 export interface CollectionState {
@@ -27,32 +24,36 @@ interface CollectionContextValue extends CollectionState {
   updateCollectionName: (v: any) => void;
   addCollectionSchedule: () => void;
   removeCollectionSchedule: (idx: number) => void;
-  updateCollectionSchedule: (idx: number, field: string, value: any) => void;
+  updateCollectionSchedule: (idx: number, field: keyof DaySchedule, value: any) => void;
   toggleCollectionEta: (eta: string, idx: number | null) => void;
   setCollectionEtas: (etas: string[]) => void;
   setCollections: (collections: RouteCollection[]) => void;
   importCollectionState: (collectionState: CollectionState) => void;
 }
 
-const CollectionContext = React.createContext<CollectionContextValue>(null);
+const CollectionContext = React.createContext<CollectionContextValue>({} as CollectionContextValue);
 
-export const CollectionContextProvider = ({ children }) => {
+interface CollectionContextProviderProps {
+  children: React.ReactNode
+}
+
+export const CollectionContextProvider = ({ children }: CollectionContextProviderProps) => {
   type State = CollectionState;
   const getInitialState = (): CollectionState => {
-    const savedStops: unknown = JSON.parse(localStorage.getItem("savedStops"));
-    const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas"));
+    const savedStops: unknown = JSON.parse(localStorage.getItem("savedStops") ?? "null");
+    const savedEtas: unknown = JSON.parse(localStorage.getItem("savedEtas") ?? "null");
     return {
       savedStops:
         Array.isArray(savedStops) && isStrings(savedStops) ? savedStops : [],
       savedEtas:
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
-      collections: JSON.parse(localStorage.getItem("collections")) ?? [
+      collections: JSON.parse(localStorage.getItem("collections") ?? "null") ?? [
         {
           name: "Home",
           list: [],
           schedules: Array(7)
             .fill(0)
-            .map((v, idx) => ({
+            .map((_, idx) => ({
               ...DEFAULT_DAY_SCHEDULE,
               day: idx,
             })),
@@ -98,7 +99,7 @@ export const CollectionContextProvider = ({ children }) => {
   }, []);
 
   // for re-ordering
-  const setSavedStops = useCallback((savedStops) => {
+  const setSavedStops = useCallback((savedStops: string[]) => {
     setStateRaw(
       produce((state: State) => {
         state.savedStops = savedStops;
@@ -124,7 +125,7 @@ export const CollectionContextProvider = ({ children }) => {
   }, []);
 
   // for re-ordering
-  const setSavedEtas = useCallback((savedEtas) => {
+  const setSavedEtas = useCallback((savedEtas: string[]) => {
     setStateRaw(
       produce((state: State) => {
         state.savedEtas = savedEtas;
@@ -156,7 +157,7 @@ export const CollectionContextProvider = ({ children }) => {
     setStateRaw(
       produce((state: State) => {
         const newCollections = state.collections.filter(
-          (v, _idx) => idx !== _idx
+          (_, _idx) => idx !== _idx
         );
         state.collections = newCollections;
         state.collectionIdx = null;
@@ -167,6 +168,7 @@ export const CollectionContextProvider = ({ children }) => {
   const updateCollectionName = useCallback((v: any) => {
     setStateRaw(
       produce((state: State) => {
+        if ( state.collectionIdx === null ) return;
         const idx = state.collectionIdx;
         const newCollections = state.collections;
         newCollections[idx].name = v;
@@ -176,9 +178,10 @@ export const CollectionContextProvider = ({ children }) => {
   }, []);
 
   const updateCollectionSchedule = useCallback(
-    (idx: number, field: string, value: any) => {
+    (idx: number, field: keyof DaySchedule, value: any) => {
       setStateRaw(
         produce((state: State) => {
+          if ( state.collectionIdx === null ) return;
           const collectionIdx = state.collectionIdx;
           const newCollections = state.collections;
           newCollections[collectionIdx].schedules[idx][field] = value;
@@ -192,6 +195,7 @@ export const CollectionContextProvider = ({ children }) => {
   const addCollectionSchedule = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
+        if ( state.collectionIdx === null ) return;
         const collectionIdx = state.collectionIdx;
         const newCollections = state.collections;
         newCollections[collectionIdx].schedules =
@@ -204,11 +208,12 @@ export const CollectionContextProvider = ({ children }) => {
   const removeCollectionSchedule = useCallback((idx: number) => {
     setStateRaw(
       produce((state: State) => {
+        if ( state.collectionIdx === null ) return;
         const collectionIdx = state.collectionIdx;
         const newCollections = state.collections;
         newCollections[collectionIdx].schedules = newCollections[
           collectionIdx
-        ].schedules.filter((v, _idx) => idx !== _idx);
+        ].schedules.filter((_, _idx) => idx !== _idx);
         state.collections = newCollections;
       })
     );
@@ -241,6 +246,7 @@ export const CollectionContextProvider = ({ children }) => {
   const setCollectionEtas = useCallback((etas: string[]) => {
     setStateRaw(
       produce((state: State) => {
+        if ( state.collectionIdx === null ) return;
         const collectionIdx = state.collectionIdx;
         const newCollections = state.collections;
         newCollections[collectionIdx].list = etas;
@@ -270,13 +276,7 @@ export const CollectionContextProvider = ({ children }) => {
 
   const importCollectionState = useCallback(
     (collectionState: CollectionState) => {
-      setStateRaw(
-        produce((state: State) => {
-          Object.entries(collectionState).forEach(([key, value]) => {
-            state[key] = value;
-          });
-        })
-      );
+      setStateRaw(collectionState);
     },
     []
   );

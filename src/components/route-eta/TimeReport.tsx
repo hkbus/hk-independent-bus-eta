@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
@@ -6,6 +6,7 @@ import { useEtas } from "../../hooks/useEtas";
 import { LinearProgress } from "../Progress";
 import { Eta, Terminal } from "hk-bus-eta";
 import { getPlatformSymbol, getLineColor } from "../../utils";
+import useLanguage from "../../hooks/useTranslation";
 
 interface TimeReportProps {
   routeId: string;
@@ -20,10 +21,8 @@ const TimeReport = ({
   containerSx,
   showStopName = false,
 }: TimeReportProps) => {
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const {
     db: { routeList, stopList },
   } = useContext(AppContext);
@@ -111,10 +110,8 @@ const EtaLine = ({
   showCompany,
   route,
 }: EtaMsgProps) => {
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const { etaFormat, platformMode } = useContext(AppContext);
 
   const branchRoute = useMemo(() => {
@@ -162,7 +159,7 @@ const EtaLine = ({
       <Box
         component="span"
         sx={{ ...waitTimeSx, color: (theme) => theme.palette.warning.main }}
-        fontSize={trainTextUsed && "0.9em"}
+        fontSize={trainTextUsed ? "0.9em" : undefined}
       >
         {waitTimeText}
       </Box>
@@ -224,7 +221,7 @@ const getRemark = (
   // or if the only numerical string occurrence are more than one digit, use original remark
   if (platform.length === 2 && platform[1].length) {
     // only support single digit number
-    remark = getPlatformSymbol(platform[1], platformMode);
+    remark = getPlatformSymbol(Number(platform[1]), platformMode);
   }
 
   if (language === "zh") {

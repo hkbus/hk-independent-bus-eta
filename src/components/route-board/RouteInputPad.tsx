@@ -1,18 +1,26 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Box, Button, Grid, SxProps, Theme } from "@mui/material";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
 import AppContext from "../../AppContext";
-import { type BoardTabType } from "../../typing";
+import { type BoardTabType } from "../../@types/types";
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
+import { RouteList } from "hk-bus-eta";
 
-const KeyButton = ({ k, handleClick, disabled = false, sx }) => {
+interface KeyButtonProps {
+  k: string;
+  sx: SxProps<Theme> | undefined;
+  onClick: (k: string) => void;
+  disabled?: boolean;
+}
+
+const KeyButton = ({ k, onClick, disabled = false, sx }: KeyButtonProps) => {
   return (
     <Button
       size="large"
       variant="contained"
-      sx={{ ...buttonSx, ...sx }}
-      onClick={() => handleClick(k)}
+      sx={{ ...buttonSx, ...sx } as SxProps<Theme>}
+      onClick={() => onClick(k)}
       disabled={disabled}
       disableRipple
     >
@@ -27,7 +35,7 @@ const KeyButton = ({ k, handleClick, disabled = false, sx }) => {
   );
 };
 
-const RouteNumPad = ({ possibleChar }) => {
+const RouteNumPad = ({ possibleChar }: { possibleChar: string[]}) => {
   const { numPadOrder, searchRoute, updateSearchRouteByButton } =
     useContext(AppContext);
 
@@ -37,7 +45,7 @@ const RouteNumPad = ({ possibleChar }) => {
         <Grid item xs={4} key={"input-" + k}>
           <KeyButton
             k={k}
-            handleClick={updateSearchRouteByButton}
+            onClick={updateSearchRouteByButton}
             sx={numberSx}
             disabled={
               (k === "b" && searchRoute === "") ||
@@ -51,7 +59,7 @@ const RouteNumPad = ({ possibleChar }) => {
   );
 };
 
-const RouteAlphabetPad = ({ possibleChar }) => {
+const RouteAlphabetPad = ({ possibleChar }: { possibleChar: string[]}) => {
   const { updateSearchRouteByButton } = useContext(AppContext);
 
   return (
@@ -62,7 +70,7 @@ const RouteAlphabetPad = ({ possibleChar }) => {
           <Grid item xs={6} key={"input-" + k}>
             <KeyButton
               k={k}
-              handleClick={updateSearchRouteByButton}
+              onClick={updateSearchRouteByButton}
               sx={alphabetSx}
             />
           </Grid>
@@ -71,7 +79,7 @@ const RouteAlphabetPad = ({ possibleChar }) => {
   );
 };
 
-const RouteInputPad = ({ boardTab }) => {
+const RouteInputPad = ({ boardTab }: { boardTab: BoardTabType }) => {
   const {
     searchRoute,
     db: { routeList },
@@ -143,11 +151,11 @@ const numPadContainerSx: SxProps<Theme> = {
 
 const getPossibleChar = (
   searchRoute: string,
-  routeList: Record<string, unknown>,
+  routeList: RouteList,
   boardTab: BoardTabType
 ) => {
   if (routeList == null) return [];
-  let possibleChar = {};
+  let possibleChar: Record<string, number> = {};
   Object.entries(routeList).forEach(([routeNo, meta]) => {
     if (
       routeNo.startsWith(searchRoute.toUpperCase()) &&

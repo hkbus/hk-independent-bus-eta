@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useMemo } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import AppContext from "../AppContext";
 import {
   Avatar,
@@ -52,6 +52,7 @@ import Donations from "../Donations";
 import PersonalizeDialog from "../components/settings/PersonalizeDialog";
 import { useNavigate } from "react-router-dom";
 import ReactNativeContext from "../ReactNativeContext";
+import useLanguage from "../hooks/useTranslation";
 
 const Settings = () => {
   const {
@@ -74,7 +75,8 @@ const Settings = () => {
   const [isOpenInstallDialog, setIsOpenInstallDialog] = useState(false);
   const [isPersonalizeDialog, setIsPersonalizeDialog] = useState(false);
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage();
   const donationId = useMemo(
     () => Math.floor(Math.random() * Donations.length),
     []
@@ -88,11 +90,11 @@ const Settings = () => {
     setSeoHeader({
       title: t("設定") + " - " + t(AppTitle),
       description: t("setting-page-description"),
-      lang: i18n.language,
+      lang: language,
     });
     setUpdating(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateTime, i18n.language]);
+  }, [updateTime, language]);
 
   return (
     <Paper sx={rootSx} square elevation={0}>
@@ -118,16 +120,16 @@ const Settings = () => {
             />
           </ListItemButton>
         )}
-        {(process.env.REACT_APP_COMMIT_HASH ||
-          process.env.REACT_APP_VERSION) && (
+        {(import.meta.env.VITE_COMMIT_HASH ||
+          import.meta.env.VITE_VERSION) && (
           <ListItemButton
             component="a"
             href={`${
-              process.env.REACT_APP_REPO_URL ||
+              import.meta.env.VITE_REPO_URL ||
               "https://github.com/hkbus/hk-independent-bus-eta"
             }${
-              process.env.REACT_APP_COMMIT_HASH
-                ? `/commit/${process.env.REACT_APP_COMMIT_HASH}`
+              import.meta.env.VITE_COMMIT_HASH
+                ? `/commit/${import.meta.env.VITE_COMMIT_HASH}`
                 : ""
             }`}
             target="_blank"
@@ -140,13 +142,13 @@ const Settings = () => {
             </ListItemAvatar>
             <ListItemText
               primary={`${t("版本")}: ${
-                process.env.REACT_APP_VERSION || "unknown"
+                import.meta.env.VITE_VERSION || "unknown"
               }${
-                process.env.REACT_APP_COMMIT_HASH
-                  ? ` - ${process.env.REACT_APP_COMMIT_HASH}`
+                import.meta.env.VITE_COMMIT_HASH
+                  ? ` - ${import.meta.env.VITE_COMMIT_HASH}`
                   : ""
               }`}
-              secondary={process.env.REACT_APP_COMMIT_MESSAGE || ""}
+              secondary={import.meta.env.VITE_COMMIT_MESSAGE || ""}
             />
           </ListItemButton>
         )}
@@ -244,7 +246,7 @@ const Settings = () => {
         <ListItemButton
           onClick={() => {
             vibrate(vibrateDuration);
-            navigate(`/${i18n.language}/export`);
+            navigate(`/${language}/export`);
           }}
         >
           <ListItemAvatar>
@@ -257,7 +259,7 @@ const Settings = () => {
         <ListItemButton
           onClick={() => {
             vibrate(vibrateDuration);
-            navigate(`/${i18n.language}/import`);
+            navigate(`/${language}/import`);
           }}
         >
           <ListItemAvatar>
@@ -332,7 +334,7 @@ const Settings = () => {
           <ListItemButton
             onClick={() => {
               vibrate(vibrateDuration);
-              navigate(`/${i18n.language}/support`);
+              navigate(`/${language}/support`);
             }}
           >
             <ListItemAvatar>
@@ -380,7 +382,7 @@ const Settings = () => {
         {!iOSRNWebView() && (
           <ListItemButton
             component="a"
-            href={Donations[donationId].url[i18n.language]}
+            href={Donations[donationId].url[language]}
             target="_blank"
             onClick={() => {
               vibrate(vibrateDuration);
@@ -393,7 +395,7 @@ const Settings = () => {
             </ListItemAvatar>
             <ListItemText
               primary={t("捐款支持")}
-              secondary={Donations[donationId].description[i18n.language]}
+              secondary={Donations[donationId].description[language]}
             />
           </ListItemButton>
         )}
@@ -401,7 +403,7 @@ const Settings = () => {
         <ListItemButton
           component={"a"}
           href={
-            process.env.REACT_APP_REPO_URL ||
+            import.meta.env.VITE_REPO_URL ||
             `https://github.com/hkbus/hk-independent-bus-eta`
           }
           target="_blank"
@@ -452,7 +454,7 @@ const Settings = () => {
         </ListItemButton>
         <ListItemButton
           component={"a"}
-          href={`/${i18n.language}/privacy`}
+          href={`/${language}/privacy`}
           onClick={() => {
             vibrate(vibrateDuration);
           }}
@@ -466,7 +468,7 @@ const Settings = () => {
         </ListItemButton>
         <ListItemButton
           component={"a"}
-          href={`/${i18n.language}/terms`}
+          href={`/${language}/terms`}
           onClick={() => {
             vibrate(vibrateDuration);
           }}
@@ -499,7 +501,7 @@ const Settings = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={showGeoPermissionDenied}
         autoHideDuration={1500}
-        onClose={(e, reason) => {
+        onClose={() => {
           setShowGeoPermissionDenied(false);
         }}
         message={t("無法獲得地理位置定位功能權限")}
@@ -508,7 +510,7 @@ const Settings = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={isCopied}
         autoHideDuration={1500}
-        onClose={(event, reason) => {
+        onClose={() => {
           setIsCopied(false);
         }}
         message={t("鏈結已複製到剪貼簿")}

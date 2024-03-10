@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, SxProps, Theme, Container, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Footer from "./Footer";
@@ -6,16 +5,19 @@ import Header from "./Header";
 import GACookieConsent from "./GACookieConsent";
 import CollectionDrawer from "./CollectionDrawer";
 import CollectionDialog from "./collections/CollectionDialog";
+import { Suspense } from "react";
 
-const Main = () => {
+const Root = () => {
   return (
     <Container maxWidth="xs" disableGutters sx={rootSx}>
       <CssBaseline />
       <Header />
-      <Box sx={mainSx}>
-        <GACookieConsent />
-        <Outlet />
-      </Box>
+      <Suspense fallback={null}>
+        <Box sx={mainSx}>
+          <GACookieConsent />
+          <Outlet />
+        </Box>
+      </Suspense>
       <Footer />
       <CollectionDrawer />
       <CollectionDialog />
@@ -38,4 +40,4 @@ const mainSx: SxProps<Theme> = {
   backgroundColor: (theme) => theme.palette.background.default,
 };
 
-export default Main;
+export default Root;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Box, ListItemText, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useEtas } from "../../hooks/useEtas";
@@ -6,9 +6,10 @@ import AppContext from "../../AppContext";
 import { Eta } from "hk-bus-eta";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
 import LaptopIcon from "@mui/icons-material/Laptop";
+import useLanguage from "../../hooks/useTranslation";
 
 interface SuccinctEtasProps {
-  routeId?: string;
+  routeId: string;
   value?: Eta[];
   isEndOfTrainLine?: boolean;
 }
@@ -18,12 +19,13 @@ const SuccinctEtas = ({
   value = undefined,
   isEndOfTrainLine = false,
 }: SuccinctEtasProps) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const language = useLanguage()
   const { etaFormat, annotateScheduled } = useContext(AppContext);
   const _etas = useEtas(routeId, Boolean(value));
   const etas = value ?? _etas;
 
-  const getEtaString = (eta: Eta | null, seq, highlight: boolean = false) => {
+  const getEtaString = (eta: Eta | null, seq: number, highlight: boolean = false) => {
     if (!eta || !eta.eta) {
       if (isEndOfTrainLine && seq === 0) return t("終點站");
       return "";
@@ -32,7 +34,7 @@ const SuccinctEtas = ({
         (new Date(eta.eta).getTime() - new Date().getTime()) / 60 / 1000
       );
       if (!Number.isInteger(waitTime)) {
-        return eta.remark[i18n.language];
+        return eta.remark[language];
       }
 
       const { remark } = eta;

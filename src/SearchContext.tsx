@@ -1,47 +1,55 @@
 import React, { useState } from "react";
-import { Location as GeoLocation } from "hk-bus-eta";
+import { Address } from "./components/route-search/AddressInput";
+
+type SearchResult = Array<Array<{routeId: string, on: number, off: number}>>
 
 interface SearchContextProps {
   locations: {
-    start: { location: GeoLocation } | null;
-    end: { location: GeoLocation } | null;
+    start: Address | null;
+    end: Address | null;
   };
   status: "ready" | "rendering" | "waiting";
-  result: any[];
+  result: SearchResult;
   resultIdx: {
     resultIdx: number;
     stopIdx: number[];
   };
-  setLocations: any;
-  setStatus: any;
-  setResult: any;
-  setResultIdx: any;
+  setLocations: React.Dispatch<React.SetStateAction<{
+    start: Address | null;
+    end: Address | null;
+  }>>;
+  setStatus: React.Dispatch<React.SetStateAction<"ready" | "rendering" | "waiting">>;
+  setResult: React.Dispatch<React.SetStateAction<SearchResult>>;
+  setResultIdx: React.Dispatch<React.SetStateAction<{
+    resultIdx: number;
+    stopIdx: number[];
+  }>>;
 }
 
 const SearchContext = React.createContext({} as SearchContextProps);
 
-export const SearchContextProvider = (props) => {
-  const [locations, setLocations] = useState({ start: null, end: null });
+export const SearchContextProvider = ({children}: {children: React.ReactNode}) => {
+  const [locations, setLocations] = useState<{start: Address | null; end: Address | null}>({ start: null, end: null });
   const [status, setStatus] = useState<"ready" | "rendering" | "waiting">(
     "ready"
   );
-  const [result, setResult] = useState([]);
-  const [resultIdx, setResultIdx] = useState({ resultIdx: 0, stopIdx: [0, 0] });
+  const [result, setResult] = useState<SearchResult>([]);
+  const [resultIdx, setResultIdx] = useState<{resultIdx: number, stopIdx: number[]}>({ resultIdx: 0, stopIdx: [0, 0] });
 
   return (
     <SearchContext.Provider
       value={{
         locations,
-        setLocations,
         status,
-        setStatus,
         result,
-        setResult,
         resultIdx,
+        setLocations,
+        setStatus,
+        setResult,
         setResultIdx,
       }}
     >
-      {props.children}
+      {children}
     </SearchContext.Provider>
   );
 };

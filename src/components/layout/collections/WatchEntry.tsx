@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import { useCallback, useContext } from "react";
 import {
   Avatar,
   Box,
@@ -21,13 +21,14 @@ const WatchEntry = () => {
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
+    if ( collectionDrawerRoute === null ) return;
     const [routeId, seq] = collectionDrawerRoute.split("/");
     const isApple =
       os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
     const subdomain = isApple ? "watch" : "wear";
     try {
       const stopId = seq
-        ? routeList[routeId].stops[routeList[routeId].co[0]][seq]
+        ? routeList[routeId].stops[routeList[routeId].co[0]][Number(seq)]
         : undefined;
       const url = `https://${subdomain}.hkbus.app/route/${routeId.toLowerCase()}/${
         stopId ? stopId + "%2C" + seq : seq

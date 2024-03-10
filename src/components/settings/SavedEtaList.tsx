@@ -58,7 +58,7 @@ const SavedEtaList = ({ mode }: { mode: ManageMode }) => {
                     item={eta}
                     index={index}
                     mode={mode}
-                    onDelete={(_) => handleDelete(eta)}
+                    onDelete={() => handleDelete(eta)}
                   />
                 </React.Fragment>
               ))
@@ -77,7 +77,14 @@ const SavedEtaList = ({ mode }: { mode: ManageMode }) => {
 
 export default SavedEtaList;
 
-const DraggableListItem = ({ item, index, mode, onDelete }) => (
+interface DraggableListItemProps {
+  item: string;
+  index: number;
+  mode: ManageMode;
+  onDelete: () => void;
+}
+
+const DraggableListItem = ({ item, index, mode, onDelete }: DraggableListItemProps) => (
   <Draggable draggableId={item} index={index} isDragDisabled={mode !== "order"}>
     {(provided) => (
       <Box

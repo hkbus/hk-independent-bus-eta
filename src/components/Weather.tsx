@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 type Warning = {
   name: string;
-  code: string;
+  code: WeatherCode;
   actionCode: "ISSUE" | "REISSUE" | "CANCEL" | "EXTEND" | "UPDATE";
   issueTime: string;
   expireTime: string | null;
@@ -68,7 +68,7 @@ export const useWeatherCode = () => {
 };
 
 // no copyright to use HKO image
-const CODE_ORDER = [
+const CODE_ORDER: WeatherCode[] = [
   "TC10",
   "TC9",
   "TC8SW",
@@ -93,7 +93,7 @@ const CODE_ORDER = [
 ];
 
 // no copyright to use HKO image
-export const WeatherIcons = {
+export const WeatherIcons: Partial<Record<WeatherCode, string>> = {
   TC10: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/No._10_Hurricane_Signal.png/30px-No._10_Hurricane_Signal.png",
   TC9: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/No._09_Increasing_Gale_or_Storm_Signal.png/30px-No._09_Increasing_Gale_or_Storm_Signal.png",
   TC8SW:
@@ -126,3 +126,25 @@ export const WeatherIcons = {
   WMSGNL:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/HK_Monsoon_Signal.png/25px-HK_Monsoon_Signal.png",
 };
+
+export type WeatherCode = "TC10"
+| "TC9"
+| "TC8SW"
+| "TC8NW"
+| "TC8SE"
+| "TC8NE"
+| "WRAINB"
+| "WRAINR"
+| "TC3"
+| "TC1"
+| "WRAINA"
+| "WFROST"
+| "WL"
+| "WTMW"
+| "WTS"
+| "WFNTSA"
+| "WFIRER"
+| "WFIREY"
+| "WHOT"
+| "WCOLD"
+| "WMSGNL"

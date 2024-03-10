@@ -15,10 +15,10 @@ import {
   Theme,
 } from "@mui/material";
 import { useCallback, useContext, useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import StopRouteList from "../bookmarked-stop/StopRouteList";
 import { Company } from "hk-bus-eta";
+import useLanguage from "../../hooks/useTranslation";
 
 interface StopDialogProps {
   open: boolean;
@@ -32,7 +32,7 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
     savedStops,
     updateSavedStops,
   } = useContext(AppContext);
-  const { i18n } = useTranslation();
+  const language = useLanguage()
 
   const bookmarked = useMemo<boolean>(
     () =>
@@ -71,7 +71,7 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
           <IconButton onClick={() => updateSavedStops(stops[0].join("|"))}>
             {bookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
           </IconButton>
-          {stopList[stops[0][1]]?.name[i18n.language]}
+          {stopList[stops[0][1]]?.name[language]}
           &nbsp;&nbsp;
           <IconButton onClick={handleClickDirection}>
             <DirectionsIcon />

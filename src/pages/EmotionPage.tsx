@@ -1,7 +1,8 @@
 import { Box, Paper, SxProps, Theme } from "@mui/material";
 import CheckIn from "../components/emotion/CheckIn";
-import EmotionChart from "../components/emotion/EmotionChart";
 import { useParams } from "react-router-dom";
+import { Suspense } from "react";
+import EmotionChart from "../components/emotion/EmotionChart";
 import EmotionTabbar from "../components/emotion/EmotionTabbar";
 
 const EmotionPage = () => {
@@ -10,10 +11,12 @@ const EmotionPage = () => {
   return (
     <Paper sx={paperSx}>
       <EmotionTabbar />
-      <Box overflow="auto">
-        {(!tab || tab === "check-in") && <CheckIn />}
-        {tab === "chart" && <EmotionChart />}
-      </Box>
+      <Suspense fallback={<></>}>
+        <Box overflow="auto">
+          {(!tab || tab === "check-in") && <CheckIn />}
+          {tab === "chart" && <EmotionChart />}
+        </Box>
+      </Suspense>
     </Paper>
   );
 };
