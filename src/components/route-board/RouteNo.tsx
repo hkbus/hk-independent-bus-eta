@@ -25,7 +25,7 @@ const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
   const prefix = routeNo.slice(0, splitIdx);
   const suffix = routeNo.slice(splitIdx);
 
-  const sx = useMemo(() => rootSx(fontSize), [fontSize])
+  const sx = useMemo(() => rootSx(fontSize), [fontSize]);
 
   return (
     <Typography

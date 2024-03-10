@@ -91,9 +91,13 @@ const DraggableListItem = ({
   mode,
   onDelete,
 }: DraggableListItemProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   return (
-    <Draggable draggableId={name} index={index} isDragDisabled={mode !== "order"}>
+    <Draggable
+      draggableId={name}
+      index={index}
+      isDragDisabled={mode !== "order"}
+    >
       {(provided) => (
         <Box
           ref={provided.innerRef}
@@ -118,7 +122,7 @@ const DraggableListItem = ({
       )}
     </Draggable>
   );
-}
+};
 
 const containerSx: SxProps<Theme> = {
   p: 1,

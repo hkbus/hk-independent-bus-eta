@@ -62,13 +62,13 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
     }));
   }, []);
 
-  const formatDistanceWithUnit = useCallback((
-    val: number,
-  ) => {
-    const { distance, unit } = getDistanceWithUnit(val);
-    return `${distance}${t(unit)}`;
-  }, [t]);
-  
+  const formatDistanceWithUnit = useCallback(
+    (val: number) => {
+      const { distance, unit } = getDistanceWithUnit(val);
+      return `${distance}${t(unit)}`;
+    },
+    [t]
+  );
 
   return (
     <Dialog open={open} onClose={handleClose} sx={rootSx}>

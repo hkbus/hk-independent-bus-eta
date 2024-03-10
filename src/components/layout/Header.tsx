@@ -40,7 +40,7 @@ const Header = () => {
     toggleColorMode,
   } = useContext(AppContext);
   const { t } = useTranslation();
-  const language = useLanguage()
+  const language = useLanguage();
   let location = useLocation();
   const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
@@ -168,9 +168,7 @@ const Header = () => {
         )}
         <Button
           sx={languageSx}
-          onClick={() =>
-            handleLanguageChange(language === "zh" ? "en" : "zh")
-          }
+          onClick={() => handleLanguageChange(language === "zh" ? "en" : "zh")}
           id="lang-selector"
           variant="text"
           disableElevation

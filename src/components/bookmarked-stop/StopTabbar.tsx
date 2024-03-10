@@ -11,7 +11,7 @@ interface HomeTabbarProps {
 
 const StopTabbar = ({ stopTab, onChangeTab }: HomeTabbarProps) => {
   const { t } = useTranslation();
-  const language = useLanguage()
+  const language = useLanguage();
   const {
     db: { stopList },
     savedStops,

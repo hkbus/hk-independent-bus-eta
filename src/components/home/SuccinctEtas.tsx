@@ -20,12 +20,16 @@ const SuccinctEtas = ({
   isEndOfTrainLine = false,
 }: SuccinctEtasProps) => {
   const { t } = useTranslation();
-  const language = useLanguage()
+  const language = useLanguage();
   const { etaFormat, annotateScheduled } = useContext(AppContext);
   const _etas = useEtas(routeId, Boolean(value));
   const etas = value ?? _etas;
 
-  const getEtaString = (eta: Eta | null, seq: number, highlight: boolean = false) => {
+  const getEtaString = (
+    eta: Eta | null,
+    seq: number,
+    highlight: boolean = false
+  ) => {
     if (!eta || !eta.eta) {
       if (isEndOfTrainLine && seq === 0) return t("終點站");
       return "";

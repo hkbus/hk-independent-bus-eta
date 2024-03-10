@@ -32,7 +32,9 @@ const Notice = React.lazy(() => import("./pages/Notice"));
 const Settings = React.lazy(() => import("./pages/Settings"));
 const EmotionPage = React.lazy(() => import("./pages/EmotionPage"));
 const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
-const TermsAndConditions = React.lazy(() => import("./pages/TermsAndConditions"));
+const TermsAndConditions = React.lazy(
+  () => import("./pages/TermsAndConditions")
+);
 const Support = React.lazy(() => import("./pages/Support"));
 const DataImport = React.lazy(() => import("./pages/DataImport"));
 const DataExport = React.lazy(() => import("./pages/DataExport"));
@@ -142,10 +144,7 @@ export default App;
 
 const emotionCache = createCache({
   key: "hkbus",
-  speedy: !(
-    import.meta.env.DEV ||
-    navigator.userAgent === "prerendering"
-  ),
+  speedy: !(import.meta.env.DEV || navigator.userAgent === "prerendering"),
 });
 
 declare module "@mui/material/styles" {

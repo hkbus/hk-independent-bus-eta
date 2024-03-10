@@ -11,7 +11,7 @@ import useLanguage from "../../hooks/useTranslation";
 
 const ReverseButton = ({ routeId }: { routeId: string }) => {
   const { t } = useTranslation();
-  const language = useLanguage()
+  const language = useLanguage();
   const {
     db: { routeList, holidays, stopList, serviceDayMap },
     vibrateDuration,

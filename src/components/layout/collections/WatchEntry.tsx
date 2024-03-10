@@ -21,7 +21,7 @@ const WatchEntry = () => {
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    if ( collectionDrawerRoute === null ) return;
+    if (collectionDrawerRoute === null) return;
     const [routeId, seq] = collectionDrawerRoute.split("/");
     const isApple =
       os === "ios" || /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);

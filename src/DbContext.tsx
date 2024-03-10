@@ -23,7 +23,9 @@ interface DbProviderProps {
   children: ReactNode;
 }
 
-const DbContext = React.createContext<DatabaseContextValue>({} as DatabaseContextValue);
+const DbContext = React.createContext<DatabaseContextValue>(
+  {} as DatabaseContextValue
+);
 
 export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
   const AppTitle = "巴士到站預報 App （免費無廣告）";

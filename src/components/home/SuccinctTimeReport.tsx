@@ -104,14 +104,17 @@ const SuccinctTimeReport = ({
   const stop = stopList[stopId] || DEFAULT_STOP;
 
   const navigate = useNavigate();
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    if ( mode !== "time" ) return;
-    vibrate(vibrateDuration);
-    setTimeout(() => {
-      navigate(`/${language}/route/${routeId.toLowerCase()}`);
-    }, 0);
-  }, [vibrate, vibrateDuration, navigate, routeId, mode]);
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (mode !== "time") return;
+      vibrate(vibrateDuration);
+      setTimeout(() => {
+        navigate(`/${language}/route/${routeId.toLowerCase()}`);
+      }, 0);
+    },
+    [vibrate, vibrateDuration, navigate, routeId, mode]
+  );
 
   const platform = useMemo(() => {
     if (etas && etas.length > 0) {
@@ -145,10 +148,7 @@ const SuccinctTimeReport = ({
 
   return (
     <>
-      <ListItem
-        onClick={handleClick}
-        sx={rootSx}
-      >
+      <ListItem onClick={handleClick} sx={rootSx}>
         <ListItemText
           primary={
             <RouteNo

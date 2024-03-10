@@ -23,7 +23,7 @@ interface RouteRowProps {
 }
 
 const RouteRow = ({ route, onClick, style, onRemove }: RouteRowProps) => {
-  const language = useLanguage()
+  const language = useLanguage();
 
   return (
     <Link

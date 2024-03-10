@@ -72,11 +72,14 @@ const RouteOffiicalUrlBtn = ({ routeId }: RouteOffiicalUrlBtnProps) => {
     [co, route, language, gtfsId]
   );
 
-  const handleClick = useCallback((url: string) => () => {
-    if ( url ) {
-      window.open(url, "_blank")
-    }
-  }, [])
+  const handleClick = useCallback(
+    (url: string) => () => {
+      if (url) {
+        window.open(url, "_blank");
+      }
+    },
+    []
+  );
 
   return (
     <Box sx={rootSx}>

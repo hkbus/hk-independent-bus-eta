@@ -35,7 +35,7 @@ const KeyButton = ({ k, onClick, disabled = false, sx }: KeyButtonProps) => {
   );
 };
 
-const RouteNumPad = ({ possibleChar }: { possibleChar: string[]}) => {
+const RouteNumPad = ({ possibleChar }: { possibleChar: string[] }) => {
   const { numPadOrder, searchRoute, updateSearchRouteByButton } =
     useContext(AppContext);
 
@@ -59,7 +59,7 @@ const RouteNumPad = ({ possibleChar }: { possibleChar: string[]}) => {
   );
 };
 
-const RouteAlphabetPad = ({ possibleChar }: { possibleChar: string[]}) => {
+const RouteAlphabetPad = ({ possibleChar }: { possibleChar: string[] }) => {
   const { updateSearchRouteByButton } = useContext(AppContext);
 
   return (

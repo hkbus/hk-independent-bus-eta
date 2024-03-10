@@ -24,11 +24,14 @@ const decompressJsonString = (txt: Uint8Array | Buffer | string): EtaDb => {
     const ret = JSON.parse(decompressJson(txt, { inputEncoding: "Base64" }));
     ret.routeList = Object.keys(ret.routeList)
       .sort()
-      .reduce((acc, k) => {
-        acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
-          ret.routeList[k];
-        return acc;
-      }, {} as EtaDb["routeList"]);
+      .reduce(
+        (acc, k) => {
+          acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
+            ret.routeList[k];
+          return acc;
+        },
+        {} as EtaDb["routeList"]
+      );
     return ret;
   } catch (e) {
     // throw the error
@@ -107,9 +110,7 @@ export const fetchDbFunc = async (
 
   try {
     const [_schemaVersion, _md5] = await Promise.all([
-      fetch("/schema-version.txt").then((res) =>
-        res.text()
-      ),
+      fetch("/schema-version.txt").then((res) => res.text()),
       fetchEtaDbMd5(),
     ]);
     let needRenew = forceRenew;
@@ -143,11 +144,14 @@ export const fetchDbFunc = async (
           ...db_1,
           routeList: Object.keys(db_1.routeList)
             .sort()
-            .reduce((acc, k) => {
-              acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
-                db_1.routeList[k];
-              return acc;
-            }, {} as EtaDb["routeList"]),
+            .reduce(
+              (acc, k) => {
+                acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
+                  db_1.routeList[k];
+                return acc;
+              },
+              {} as EtaDb["routeList"]
+            ),
           schemaVersion: _schemaVersion,
           versionMd5: _md5,
           updateTime: parseInt(updateTime),

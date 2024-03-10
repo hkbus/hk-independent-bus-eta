@@ -9,12 +9,12 @@ import useLanguage from "../../hooks/useTranslation";
 
 export interface Address {
   label: string;
-  location: Location
+  location: Location;
 }
 
 interface AddressInputProps {
   placeholder?: string;
-  onChange:(newValue: Address | null) => void;
+  onChange: (newValue: Address | null) => void;
   stopList: StopList;
   value: any;
 }

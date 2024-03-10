@@ -185,18 +185,17 @@ const SharingModal = ({
   );
 };
 
-const domToImage = (domId: string, colorMode: "dark" | "light"): Promise<[string, number, number]> => {
-  const el = document.getElementById(domId)
+const domToImage = (
+  domId: string,
+  colorMode: "dark" | "light"
+): Promise<[string, number, number]> => {
+  const el = document.getElementById(domId);
   if (el) {
     return domtoimage
       .toPng(el, {
         bgcolor: colorMode === "light" ? "#fedb00" : "#000",
       })
-      .then((base64) => [
-        base64,
-        el.clientHeight,
-        el.clientWidth,
-      ]);
+      .then((base64) => [base64, el.clientHeight, el.clientWidth]);
   } else {
     return Promise.resolve(["", 0, 0]);
   }

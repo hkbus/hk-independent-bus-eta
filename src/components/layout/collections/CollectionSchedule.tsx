@@ -28,9 +28,9 @@ const CollectionSchedule = () => {
     addCollectionSchedule,
     removeCollectionSchedule,
   } = useContext(AppContext);
-  
-  if ( collectionIdx === null ) {
-    return null
+
+  if (collectionIdx === null) {
+    return null;
   }
 
   return (

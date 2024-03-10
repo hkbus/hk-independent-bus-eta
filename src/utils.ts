@@ -1,4 +1,11 @@
-import type { Company, EtaDb, Location, RouteList, RouteListEntry, StopList } from "hk-bus-eta";
+import type {
+  Company,
+  EtaDb,
+  Location,
+  RouteList,
+  RouteListEntry,
+  StopList,
+} from "hk-bus-eta";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import type { TransportType } from "./@types/types";
 import { isRouteAvaliable } from "./timetable";
@@ -260,7 +267,11 @@ export const reorder = <T>(
   return result;
 };
 
-export const routeSortFunc = (a: [string, RouteListEntry], b: [string, RouteListEntry], transportOrder: string[]) => {
+export const routeSortFunc = (
+  a: [string, RouteListEntry],
+  b: [string, RouteListEntry],
+  transportOrder: string[]
+) => {
   const aRoute = a[0].split("-");
   const bRoute = b[0].split("-");
 
@@ -495,6 +506,10 @@ export const getLineColor = (
   return color;
 };
 
-export const distinctFilter = (value: any, index: number, array: Array<any>) => {
+export const distinctFilter = (
+  value: any,
+  index: number,
+  array: Array<any>
+) => {
   return array.indexOf(value) === index;
 };

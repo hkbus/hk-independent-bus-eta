@@ -11,7 +11,7 @@ const EmotionTabbar = () => {
   const { t } = useTranslation();
   const { tab } = useParams();
   const navigate = useNavigate();
-  const language = useLanguage()
+  const language = useLanguage();
 
   return (
     <Tabs
