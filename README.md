@@ -34,7 +34,7 @@ In the project directory, you can run:
 ### `yarn start`
 
 Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 
 The page will reload if you make edits.\
 You will also see lint errors in the console.
@@ -49,7 +49,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn predeploy`
+### `yarn production-build`
 
 Build the app with SEO optimized pages.
 
