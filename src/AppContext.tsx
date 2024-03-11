@@ -167,7 +167,12 @@ const isGeoPremission = (input: unknown): input is GeoPermission => {
 
 const isGeoLocation = (input: unknown): input is GeoLocation => {
   if (input instanceof Object && input !== null && input !== undefined) {
-    if ('lat' in input && 'lng' in input && typeof input["lat"] === "number" && typeof input["lng"] === "number") {
+    if (
+      "lat" in input &&
+      "lng" in input &&
+      typeof input["lat"] === "number" &&
+      typeof input["lng"] === "number"
+    ) {
       return true;
     }
   }
@@ -232,8 +237,9 @@ export const AppContextProvider = ({
       compassPermission: isCompassPermission(compassPermission)
         ? compassPermission
         : "default",
-      isRouteFilter:
-        !!JSON.parse(localStorage.getItem("isRouteFilter") ?? "false"),
+      isRouteFilter: !!JSON.parse(
+        localStorage.getItem("isRouteFilter") ?? "false"
+      ),
       busSortOrder: isBusSortOrder(busSortOrder) ? busSortOrder : "KMB first",
       numPadOrder: isNumPadOrder(numPadOrder) ? numPadOrder : "123456789c0b",
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
@@ -245,8 +251,12 @@ export const AppContextProvider = ({
         ? devicePreferColorScheme
         : "dark",
       energyMode: !!JSON.parse(localStorage.getItem("energyMode") ?? "false"),
-      platformMode: !!JSON.parse(localStorage.getItem("platformMode") ?? "false"),
-      vibrateDuration: JSON.parse(localStorage.getItem("vibrateDuration") ?? "1"),
+      platformMode: !!JSON.parse(
+        localStorage.getItem("platformMode") ?? "false"
+      ),
+      vibrateDuration: JSON.parse(
+        localStorage.getItem("vibrateDuration") ?? "1"
+      ),
       isRecentSearchShown: !!JSON.parse(
         localStorage.getItem("isRecentSearchShown") ?? "true"
       ),
@@ -255,13 +265,16 @@ export const AppContextProvider = ({
         iOSRNWebView() && !iOSTracking()
           ? false
           : JSON.parse(localStorage.getItem("analytics") || "true"),
-      refreshInterval:
-        JSON.parse(localStorage.getItem("refreshInterval") ?? "30000"),
-      annotateScheduled:
-        JSON.parse(localStorage.getItem("annotateScheduled") ?? "false"),
+      refreshInterval: JSON.parse(
+        localStorage.getItem("refreshInterval") ?? "30000"
+      ),
+      annotateScheduled: JSON.parse(
+        localStorage.getItem("annotateScheduled") ?? "false"
+      ),
       fontSize: JSON.parse(localStorage.getItem("fontSize") ?? "14"),
-      searchRange:
-        JSON.parse(localStorage.getItem("searchRange") ?? `${DEFAULT_SEARCH_RANGE}`),
+      searchRange: JSON.parse(
+        localStorage.getItem("searchRange") ?? `${DEFAULT_SEARCH_RANGE}`
+      ),
     };
   };
   const { i18n } = useTranslation();
@@ -609,14 +622,15 @@ export const AppContextProvider = ({
     } else {
       const mql = window.matchMedia("(prefers-color-scheme: light)");
       setColorMode(mql.matches ? "light" : "dark");
-      const themeListener = (e: MediaQueryListEvent) => setColorMode(e.matches ? "light" : "dark");
+      const themeListener = (e: MediaQueryListEvent) =>
+        setColorMode(e.matches ? "light" : "dark");
       mql?.addEventListener("change", themeListener);
       return () => mql?.removeEventListener("change", themeListener);
     }
   }, [state._colorMode, setColorMode]);
 
   const importAppState = useCallback((appState: AppState) => {
-    setStateRaw(appState)
+    setStateRaw(appState);
   }, []);
 
   useEffect(() => {

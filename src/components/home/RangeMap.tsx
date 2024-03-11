@@ -107,7 +107,11 @@ const SetViewOnClick = ({ map, onChange }: SetViewOnClickProps) => {
   return null;
 };
 
-const CenterControl = ({ onClick }: { onClick: React.MouseEventHandler<HTMLDivElement>}) => {
+const CenterControl = ({
+  onClick,
+}: {
+  onClick: React.MouseEventHandler<HTMLDivElement>;
+}) => {
   return (
     <div className="leaflet-bottom leaflet-right">
       <Box

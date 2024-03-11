@@ -23,7 +23,7 @@ import { getLineColor } from "../../utils";
 import useLanguage from "../../hooks/useTranslation";
 
 interface CenterControlProps {
-  onClick: React.MouseEventHandler<HTMLDivElement>
+  onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
 const CenterControl = ({ onClick }: CenterControlProps) => {
@@ -247,7 +247,11 @@ const RouteMap = ({
 
 export default RouteMap;
 
-const geoJsonStyle = (companies: Company[], route: string, isBorder: boolean): StyleFunction<any> => {
+const geoJsonStyle = (
+  companies: Company[],
+  route: string,
+  isBorder: boolean
+): StyleFunction<any> => {
   return function () {
     return {
       color: isBorder ? "#000000" : getLineColor(companies, route),

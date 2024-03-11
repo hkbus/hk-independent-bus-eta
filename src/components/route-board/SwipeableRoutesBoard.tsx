@@ -1,6 +1,10 @@
 import React, { useContext, useMemo, useCallback } from "react";
 import SwipeableViews from "react-swipeable-views";
-import { virtualize, bindKeyboard, SlideRendererCallback } from "react-swipeable-views-utils";
+import {
+  virtualize,
+  bindKeyboard,
+  SlideRendererCallback,
+} from "react-swipeable-views-utils";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import { FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -54,7 +58,7 @@ const SwipeableRoutesBoard = ({
           isRouteAvaliable(routeNo, freq, isTodayHoliday, serviceDayMap)
       )
       .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]));
-    console.log(baseRouteList)
+    console.log(baseRouteList);
     return Object.entries(TRANSPORT_SEARCH_OPTIONS)
       .filter(([key]) => isRecentSearchShown || key !== "recent")
       .map(([tab, searchOptions]) => {
@@ -211,7 +215,14 @@ const VirtualizeSwipeableViews = bindKeyboard(virtualize(SwipeableViews));
 
 export default SwipeableRoutesBoard;
 
-const BOARD_TAB: BoardTabType[] = ["recent", "all", "bus", "minibus", "lightRail", "mtr"];
+const BOARD_TAB: BoardTabType[] = [
+  "recent",
+  "all",
+  "bus",
+  "minibus",
+  "lightRail",
+  "mtr",
+];
 
 const prerenderListSx: SxProps<Theme> = {
   height: "100%",

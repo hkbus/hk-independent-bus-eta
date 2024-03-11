@@ -20,37 +20,46 @@ interface SearchResultListProps {
   idx: number;
   handleRouteClick: (idx: number) => void;
   expanded: boolean;
-  stopIdx: number[] | null
+  stopIdx: number[] | null;
 }
 
-const SearchResultList = ({ routes, idx, handleRouteClick, expanded, stopIdx }: SearchResultListProps) => {
+const SearchResultList = ({
+  routes,
+  idx,
+  handleRouteClick,
+  expanded,
+  stopIdx,
+}: SearchResultListProps) => {
   const {
     db: { routeList, stopList },
   } = useContext(AppContext);
   const { t } = useTranslation();
   const language = useLanguage();
 
-  const getStopString = useCallback((routes: SearchResult) => {
-    const ret: string[] = [];
-    routes.forEach((selectedRoute) => {
-      const { routeId, on } = selectedRoute;
-      const { fares, stops } = routeList[routeId];
-      ret.push(
-        stopList[
-          Object.values(stops).sort((a, b) => b.length - a.length)[0][on]
-        ].name[language] + (fares ? ` ($${fares[on]})` : "")
-      );
-    });
-    const { routeId, off } = routes[routes.length - 1];
-    const { stops } = routeList[routeId];
-    return ret
-      .concat(
-        stopList[
-          Object.values(stops).sort((a, b) => b.length - a.length)[0][off]
-        ].name[language]
-      )
-      .join(" → ");
-  }, [routeList, language, stopList]);
+  const getStopString = useCallback(
+    (routes: SearchResult) => {
+      const ret: string[] = [];
+      routes.forEach((selectedRoute) => {
+        const { routeId, on } = selectedRoute;
+        const { fares, stops } = routeList[routeId];
+        ret.push(
+          stopList[
+            Object.values(stops).sort((a, b) => b.length - a.length)[0][on]
+          ].name[language] + (fares ? ` ($${fares[on]})` : "")
+        );
+      });
+      const { routeId, off } = routes[routes.length - 1];
+      const { stops } = routeList[routeId];
+      return ret
+        .concat(
+          stopList[
+            Object.values(stops).sort((a, b) => b.length - a.length)[0][off]
+          ].name[language]
+        )
+        .join(" → ");
+    },
+    [routeList, language, stopList]
+  );
 
   return (
     <Accordion

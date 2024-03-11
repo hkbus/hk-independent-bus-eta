@@ -84,7 +84,12 @@ interface DraggableListItemProps {
   onDelete: () => void;
 }
 
-const DraggableListItem = ({ item, index, mode, onDelete }: DraggableListItemProps) => (
+const DraggableListItem = ({
+  item,
+  index,
+  mode,
+  onDelete,
+}: DraggableListItemProps) => (
   <Draggable draggableId={item} index={index} isDragDisabled={mode !== "order"}>
     {(provided) => (
       <Box

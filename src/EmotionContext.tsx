@@ -15,9 +15,13 @@ interface EmotionContextProviderProps {
   children: React.ReactNode;
 }
 
-const EmotionContext = React.createContext<EmotionContextValue>({} as EmotionContextValue);
+const EmotionContext = React.createContext<EmotionContextValue>(
+  {} as EmotionContextValue
+);
 
-export const EmotionContextProvider = ({ children }: EmotionContextProviderProps) => {
+export const EmotionContextProvider = ({
+  children,
+}: EmotionContextProviderProps) => {
   const [state, setState] = useState<EmotionContextState>(DEFAULT_STATE);
 
   const isRemind = useMemo(() => {
@@ -71,7 +75,14 @@ const DEFAULT_STATE: EmotionContextState = {
 
 export interface EmotionCheckIn {
   happiness?: "😄" | "😊" | "🙂" | "😐" | "😟" | "😫" | "😭" | null;
-  moodScene?: "Work" | "Gathering" | "Exercise" | "Leisure" | "Dining" | "Rest" | null;
+  moodScene?:
+    | "Work"
+    | "Gathering"
+    | "Exercise"
+    | "Leisure"
+    | "Dining"
+    | "Rest"
+    | null;
   gratitudeObj?:
     | "Self"
     | "Friend"

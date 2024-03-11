@@ -8,7 +8,9 @@ import { setSeoHeader } from "../utils";
 import HomeTabbar, { isHomeTab } from "../components/home/HomeTabbar";
 import type { HomeTabType } from "../components/home/HomeTabbar";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
-import SwipeableList, { SwipeableListRef } from "../components/home/SwipeableList";
+import SwipeableList, {
+  SwipeableListRef,
+} from "../components/home/SwipeableList";
 import DbRenewReminder from "../components/layout/DbRenewReminder";
 import { useParams } from "react-router-dom";
 import useLanguage from "../hooks/useTranslation";
@@ -16,7 +18,7 @@ import useLanguage from "../hooks/useTranslation";
 const Home = () => {
   const { AppTitle, collections } = useContext(AppContext);
   const { t } = useTranslation();
-  const language = useLanguage()
+  const language = useLanguage();
   const { collectionName } = useParams();
 
   const swipeableList = useRef<SwipeableListRef>(null);
@@ -34,7 +36,10 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
-  const handleTabChange = (v: HomeTabType | string, rerenderList: boolean = false) => {
+  const handleTabChange = (
+    v: HomeTabType | string,
+    rerenderList: boolean = false
+  ) => {
     setHomeTab(v);
     localStorage.setItem("homeTab", v);
     if (swipeableList.current && rerenderList) {

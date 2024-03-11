@@ -36,14 +36,14 @@ const ChangeMapCenter = ({ center, start, end }: ChangeMapCenter) => {
   return <></>;
 };
 
-const StartMarker = ({ start }: {start: GeoLocation}) => {
+const StartMarker = ({ start }: { start: GeoLocation }) => {
   if (start) {
     return <Marker position={start} icon={EndsMarker({ isStart: true })} />;
   }
   return null;
 };
 
-const EndMarker = ({ end }: {end: GeoLocation | null}) => {
+const EndMarker = ({ end }: { end: GeoLocation | null }) => {
   if (end) {
     return <Marker position={end} icon={EndsMarker({ isStart: false })} />;
   }
@@ -51,7 +51,7 @@ const EndMarker = ({ end }: {end: GeoLocation | null}) => {
 };
 
 interface CenterControlProps {
-  onClick: React.MouseEventHandler<HTMLDivElement>
+  onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
 const CenterControl = ({ onClick }: CenterControlProps) => {
@@ -84,7 +84,7 @@ const BusRoute = ({
   const {
     db: { routeList, stopList },
   } = useContext(AppContext);
-  const language = useLanguage()
+  const language = useLanguage();
   const stops = Object.values(routeList[routeId].stops)
     .sort((a, b) => b.length - a.length)[0]
     .slice(on, off + 1);
@@ -172,10 +172,19 @@ interface SearchMapProps {
   onMarkerClick: (routeId: string, offset: number) => void;
 }
 
-const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }: SearchMapProps) => {
+const SearchMap = ({
+  routes,
+  start,
+  end,
+  stopIdx,
+  onMarkerClick,
+}: SearchMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission, colorMode } =
     useContext(AppContext);
-  const [mapState, setMapState] = useState<{center: GeoLocation | null, isFollow: boolean}>({
+  const [mapState, setMapState] = useState<{
+    center: GeoLocation | null;
+    isFollow: boolean;
+  }>({
     center: null,
     isFollow: false,
   });
@@ -258,15 +267,16 @@ const SearchMap = ({ routes, start, end, stopIdx, onMarkerClick }: SearchMapProp
               : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           }
         />
-        {stopIdx !== null && (routes || []).map((route, idx) => (
-          <BusRoute
-            key={`route-${idx}`}
-            route={route}
-            lv={idx}
-            stopIdx={stopIdx[idx]}
-            onMarkerClick={onMarkerClick}
-          />
-        ))}
+        {stopIdx !== null &&
+          (routes || []).map((route, idx) => (
+            <BusRoute
+              key={`route-${idx}`}
+              route={route}
+              lv={idx}
+              stopIdx={stopIdx[idx]}
+              onMarkerClick={onMarkerClick}
+            />
+          ))}
         <Walklines routes={routes} start={start} end={end} />
         <SelfCircle />
         <StartMarker start={start} />
@@ -311,7 +321,7 @@ const BusStopMarker = ({ active, passed, lv }: BusStopMarkerProps) => {
   });
 };
 
-const EndsMarker = ({ isStart }: {isStart : boolean}) => {
+const EndsMarker = ({ isStart }: { isStart: boolean }) => {
   return Leaflet.icon({
     iconSize: [24, 40],
     iconAnchor: [12, 40],

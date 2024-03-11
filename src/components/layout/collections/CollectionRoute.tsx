@@ -19,10 +19,11 @@ const CollectionRoute = () => {
     setCollectionEtas,
   } = useContext(AppContext);
   const [items, setItems] = useState<string[]>(
-    collectionIdx !== null ? 
-      collections[collectionIdx].list.filter(
-        (id) => id.split("/")[0] in routeList
-      ) : []
+    collectionIdx !== null
+      ? collections[collectionIdx].list.filter(
+          (id) => id.split("/")[0] in routeList
+        )
+      : []
   );
   const { t } = useTranslation();
 

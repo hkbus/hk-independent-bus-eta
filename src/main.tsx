@@ -34,7 +34,7 @@ if (isHuman()) {
   // fetching should be done to avoid unnecessary rendering
   // Target: render only if development or prerendering or in registered app or lazy loading page
   const prerenderStyle = document.querySelector("style[prerender]");
-  
+
   const fetchDb = fetchDbFunc();
   const allPromises = Promise.all([fetchDb]);
 

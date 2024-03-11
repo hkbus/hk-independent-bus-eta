@@ -117,7 +117,10 @@ const getRoutes = ({
           // if specified which stop
           return [
             routeUrl,
-            getDistance(geolocation, stopList[_stops[Number(stopIdx)]].location),
+            getDistance(
+              geolocation,
+              stopList[_stops[Number(stopIdx)]].location
+            ),
             self.length - idx,
           ];
         } else {

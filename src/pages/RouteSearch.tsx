@@ -18,7 +18,7 @@ export interface SearchRoute {
   off: number;
 }
 
-export type SearchResult = SearchRoute[]
+export type SearchResult = SearchRoute[];
 
 const RouteSearch = () => {
   const { t } = useTranslation();
@@ -177,7 +177,11 @@ const RouteSearch = () => {
             setStatus(e.data.count ? "rendering" : "ready");
             return;
           }
-          updateRoutes(e.data.value.sort((a: SearchResult, b: SearchResult) => a.length - b.length));
+          updateRoutes(
+            e.data.value.sort(
+              (a: SearchResult, b: SearchResult) => a.length - b.length
+            )
+          );
         };
       }
     }
@@ -188,49 +192,61 @@ const RouteSearch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, locations]);
 
-  const handleStartChange = useCallback((address: Address | null) => {
-    setLocations({
-      ...locations,
-      start: address,
-    });
+  const handleStartChange = useCallback(
+    (address: Address | null) => {
+      setLocations({
+        ...locations,
+        start: address,
+      });
 
-    setStatus("waiting");
-    setResultIdx({ resultIdx: 0, stopIdx: [0, 0] });
-    setResult([]);
-  }, [setLocations, setStatus, setResultIdx, setResult]);
+      setStatus("waiting");
+      setResultIdx({ resultIdx: 0, stopIdx: [0, 0] });
+      setResult([]);
+    },
+    [setLocations, setStatus, setResultIdx, setResult]
+  );
 
-  const handleEndChange = useCallback((address: Address | null) => {
-    setLocations({
-      ...locations,
-      end: address,
-    });
+  const handleEndChange = useCallback(
+    (address: Address | null) => {
+      setLocations({
+        ...locations,
+        end: address,
+      });
 
-    if (address) setStatus("waiting");
-    setResultIdx({ resultIdx: 0, stopIdx: [0, 0] });
-    setResult([]);
-  }, [setLocations, setStatus, setResultIdx, setResult]);
+      if (address) setStatus("waiting");
+      setResultIdx({ resultIdx: 0, stopIdx: [0, 0] });
+      setResult([]);
+    },
+    [setLocations, setStatus, setResultIdx, setResult]
+  );
 
-  const handleRouteClick = useCallback( (idx: number) => {
-    vibrate(vibrateDuration);
-    setTimeout(() => {
-      setResultIdx({ resultIdx: idx, stopIdx: [0, 0] });
-    }, 0);
-  }, [vibrate, vibrateDuration, setResultIdx]);
+  const handleRouteClick = useCallback(
+    (idx: number) => {
+      vibrate(vibrateDuration);
+      setTimeout(() => {
+        setResultIdx({ resultIdx: idx, stopIdx: [0, 0] });
+      }, 0);
+    },
+    [vibrate, vibrateDuration, setResultIdx]
+  );
 
-  const handleMarkerClick = useCallback((routeId: string, offset: number) => {
-    console.log(routeId)
-    const routeIdx = result[resultIdx.resultIdx]
-      .map((route) => route.routeId)
-      .indexOf(routeId);
-    setResultIdx((prevResultIdx) => {
-      const _stopIdx = [...prevResultIdx.stopIdx];
-      _stopIdx[routeIdx] = offset;
-      return {
-        ...prevResultIdx,
-        stopIdx: _stopIdx,
-      };
-    });
-  }, [result, resultIdx, setResultIdx]);
+  const handleMarkerClick = useCallback(
+    (routeId: string, offset: number) => {
+      console.log(routeId);
+      const routeIdx = result[resultIdx.resultIdx]
+        .map((route) => route.routeId)
+        .indexOf(routeId);
+      setResultIdx((prevResultIdx) => {
+        const _stopIdx = [...prevResultIdx.stopIdx];
+        _stopIdx[routeIdx] = offset;
+        return {
+          ...prevResultIdx,
+          stopIdx: _stopIdx,
+        };
+      });
+    },
+    [result, resultIdx, setResultIdx]
+  );
 
   return (
     <Paper sx={rootSx} square elevation={0}>

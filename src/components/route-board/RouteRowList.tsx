@@ -29,14 +29,17 @@ const RouteRowList = React.memo(
     const language = useLanguage();
     const navigate = useNavigate();
 
-    const handleClick = useCallback((e: React.MouseEvent) => {
-      e.preventDefault();
-      vibrate(vibrateDuration);
-      addSearchHistory(route[0]);
-      setTimeout(() => {
-        navigate(`/${language}/route/${route[0].toLowerCase()}`);
-      }, 0);
-    }, [vibrate, vibrateDuration, addSearchHistory, route[0], navigate, language]);
+    const handleClick = useCallback(
+      (e: React.MouseEvent) => {
+        e.preventDefault();
+        vibrate(vibrateDuration);
+        addSearchHistory(route[0]);
+        setTimeout(() => {
+          navigate(`/${language}/route/${route[0].toLowerCase()}`);
+        }, 0);
+      },
+      [vibrate, vibrateDuration, addSearchHistory, route[0], navigate, language]
+    );
 
     const handleRemove = (e: React.MouseEvent) => {
       e.preventDefault();

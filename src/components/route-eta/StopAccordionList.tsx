@@ -39,9 +39,12 @@ const StopAccordions = ({
     }
   }, [stopIdx]);
 
-  const handleRef = useCallback( (idx: number) => (el: HTMLDivElement) => {
-    accordionRef.current[idx] = el
-  }, [])
+  const handleRef = useCallback(
+    (idx: number) => (el: HTMLDivElement) => {
+      accordionRef.current[idx] = el;
+    },
+    []
+  );
 
   return (
     <Box sx={rootSx}>

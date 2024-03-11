@@ -32,7 +32,7 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
     savedStops,
     updateSavedStops,
   } = useContext(AppContext);
-  const language = useLanguage()
+  const language = useLanguage();
 
   const bookmarked = useMemo<boolean>(
     () =>

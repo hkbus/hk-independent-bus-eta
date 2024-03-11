@@ -19,7 +19,7 @@ const FontSizeSlider = () => {
   const handleChange = useCallback((_: Event, v: number | number[]) => {
     setFontSize(v as number);
     value.current = v as number;
-  }, [])
+  }, []);
 
   return (
     <ListItemText

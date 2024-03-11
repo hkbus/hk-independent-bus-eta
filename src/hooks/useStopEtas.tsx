@@ -37,22 +37,25 @@ export const useStopEtas = ({
   const routeKeys = useMemo(() => {
     return (
       Object.entries(routeList)
-        .reduce((acc, [routeId, { stops, freq }]) => {
-          if (
-            isRouteFilter &&
-            !isRouteAvaliable(routeId, freq, isTodayHoliday, serviceDayMap)
-          ) {
-            return acc;
-          }
-          stopKeys.forEach(([co, stopId]) => {
-            stops[co]?.forEach((_stopId, seq) => {
-              if (_stopId === stopId) {
-                acc.push([routeId, seq]);
-              }
+        .reduce(
+          (acc, [routeId, { stops, freq }]) => {
+            if (
+              isRouteFilter &&
+              !isRouteAvaliable(routeId, freq, isTodayHoliday, serviceDayMap)
+            ) {
+              return acc;
+            }
+            stopKeys.forEach(([co, stopId]) => {
+              stops[co]?.forEach((_stopId, seq) => {
+                if (_stopId === stopId) {
+                  acc.push([routeId, seq]);
+                }
+              });
             });
-          });
-          return acc;
-        }, [] as Array<[string, number]>)
+            return acc;
+          },
+          [] as Array<[string, number]>
+        )
         // uniquify routeKeys
         .map((v) => v.join("|"))
         .filter((value, idx, self) => self.indexOf(value) === idx)

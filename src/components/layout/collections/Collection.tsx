@@ -56,8 +56,8 @@ const Collection = ({ name, list, collectionIdx = null }: CollectionProps) => {
           checkedIcon={<BookmarkIcon />}
           checked={list.includes(collectionDrawerRoute ?? "")}
           onClick={() => {
-            if ( collectionDrawerRoute ) {
-              toggleCollectionEta(collectionDrawerRoute, collectionIdx)
+            if (collectionDrawerRoute) {
+              toggleCollectionEta(collectionDrawerRoute, collectionIdx);
             }
           }}
         />

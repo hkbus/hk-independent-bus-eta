@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback,
+} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import RouteHeader from "../components/route-eta/RouteHeader";
 import StopAccordionList from "../components/route-eta/StopAccordionList";
@@ -19,8 +25,8 @@ const RouteMap = React.lazy(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
   const { id: _id, panel: _panel } = useParams();
-  const id = _id as string
-  const panel = _panel as (string | undefined)
+  const id = _id as string;
+  const panel = _panel as string | undefined;
   const {
     AppTitle,
     db: { routeList, stopList, stopMap },
@@ -67,12 +73,15 @@ const RouteEta = () => {
         let ret = 0;
         let currentDistance = 9999999;
         for (let stopCo in stops) {
-          let coStopsIdxes = stops[stopCo as Company].reduce((acc, companyStop, i) => {
-            if (companyStop === id) {
-              acc.push(i);
-            }
-            return acc;
-          }, [] as number[]);
+          let coStopsIdxes = stops[stopCo as Company].reduce(
+            (acc, companyStop, i) => {
+              if (companyStop === id) {
+                acc.push(i);
+              }
+              return acc;
+            },
+            [] as number[]
+          );
           for (let coStopsIdx of coStopsIdxes) {
             if (coStopsIdx >= 0) {
               let distanceToId = Math.abs(coStopsIdx - index);
@@ -102,7 +111,8 @@ const RouteEta = () => {
   const handleChange = useCallback(
     (newStopIdx: number, expanded: boolean) => {
       if (expanded && stopIdx !== newStopIdx) {
-        let newStopId = stops[Object.keys(stops).sort()[0] as Company][newStopIdx];
+        let newStopId =
+          stops[Object.keys(stops).sort()[0] as Company][newStopIdx];
         navigate(`/${language}/route/${id}/${newStopId}%2C${newStopIdx}`, {
           replace: true,
         });

@@ -60,7 +60,6 @@ const SwipeableStopList = React.forwardRef<
     [availableTabs, stopMap]
   );
 
-  
   return (
     <SwipeableViews
       index={getViewIdx()}

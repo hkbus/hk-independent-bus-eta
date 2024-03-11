@@ -10,7 +10,7 @@ interface RouteTerminus {
 
 const RouteTerminus = ({ terminus }: RouteTerminus) => {
   const { t } = useTranslation();
-  const language = useLanguage()
+  const language = useLanguage();
 
   return (
     <Box sx={rootSx}>

@@ -37,8 +37,8 @@ const StopOrderList = ({ mode }: { mode: ManageMode }) => {
     [items, setItems, setSavedStops]
   );
 
-  const handleDelete = useCallback((stop: string) => 
-    () => {
+  const handleDelete = useCallback(
+    (stop: string) => () => {
       updateSavedStops(stop);
       setItems((prev) => prev.filter((v) => v !== stop));
     },
@@ -86,7 +86,12 @@ interface DraggableListItemProps {
   onDelete: () => void;
 }
 
-const DraggableListItem = ({ item, index, mode, onDelete }: DraggableListItemProps) => {
+const DraggableListItem = ({
+  item,
+  index,
+  mode,
+  onDelete,
+}: DraggableListItemProps) => {
   const {
     db: { stopList },
   } = useContext(AppContext);

@@ -2,6 +2,21 @@
   "name": "hk-independent-bus-eta",
   "version": "11.1.0",
   "private": true,
+  "scripts": {
+    "start": ". ./scripts/prebuild.sh; vite",
+    "build": ". ./scripts/prebuild.sh; tsc && vite build",
+    "production-build": "yarn build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
+    "render": "node scripts/pre-rendering.js",
+    "deploy": "yarn build && gh-pages -d build -t",
+    "full-deploy": "yarn production-build && gh-pages -d build -t",
+    "alpha-deploy": "yarn build && gh-pages -d build --remote alpha -t -f",
+    "alpha-full-deploy": "yarn production-build && gh-pages -d build --remote alpha -t -f",
+    "docker": "cd docker && docker-compose up -d --build",
+    "docker:build": "docker build . --pull --build-arg $(sed 's:#.*$::g' docker/.env | sed '/^\\s*$/d' | sed ':a;N;$!ba;s/\\n/ --build-arg /g')",
+    "docker:build-noenv": "docker build . --pull --build-arg $(sed 's:#.*$::g' .env | sed '/^\\s*$/d' | sed ':a;N;$!ba;s/\\n/ --build-arg /g')",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
@@ -13,7 +28,6 @@
     "core-js": "^3.23.1",
     "dayjs": "^1.11.7",
     "dom-to-image": "^2.6.0",
-    "dotenv": "^16.0.1",
     "hk-bus-eta": "^3.2.1",
     "i18next": "^23.10.0",
     "immer": "^9.0.15",
@@ -35,54 +49,14 @@
     "react-plotly.js": "^2.6.0",
     "react-router-dom": "^6.22.2",
     "react-select": "^5.3.2",
-    "react-select-search": "^3.0.5",
     "react-swipeable-views": "^0.14.0",
     "react-virtualized-auto-sizer": "^1.0.24",
     "react-window": "^1.8.6",
     "react-world-compass": "^1.1.1",
     "remark-gfm": "^3.0.1",
     "string-similarity": "^4.0.4",
-    "web-vitals": "^2.1.4",
-    "workbox-background-sync": "^6.3.0",
-    "workbox-broadcast-update": "^6.3.0",
-    "workbox-cacheable-response": "^6.3.0",
-    "workbox-core": "^6.3.0",
-    "workbox-expiration": "^6.3.0",
-    "workbox-google-analytics": "^6.3.0",
-    "workbox-navigation-preload": "^6.3.0",
-    "workbox-precaching": "^6.3.0",
-    "workbox-range-requests": "^6.3.0",
-    "workbox-recipes": "^6.3.0",
-    "workbox-routing": "^6.3.0",
-    "workbox-strategies": "^6.3.0",
-    "workbox-streams": "^6.3.0",
-    "workbox-window": "^6.3.0"
+    "web-vitals": "^2.1.4"
   },
-  "scripts": {
-    "start": ". ./scripts/prebuild.sh; vite",
-    "build": ". ./scripts/prebuild.sh; tsc && vite build",
-    "production-build": "yarn build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
-    "render": "node scripts/pre-rendering.js",
-    "deploy": "yarn build && gh-pages -d build -t",
-    "alpha-deploy": "yarn build && gh-pages -d build --remote alpha -t -f",
-    "docker": "cd docker && docker-compose up -d --build",
-    "docker:build": "docker build . --pull --build-arg $(sed 's:#.*$::g' docker/.env | sed '/^\\s*$/d' | sed ':a;N;$!ba;s/\\n/ --build-arg /g')",
-    "docker:build-noenv": "docker build . --pull --build-arg $(sed 's:#.*$::g' .env | sed '/^\\s*$/d' | sed ':a;N;$!ba;s/\\n/ --build-arg /g')",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ],
-  "homepage": "https://hkbus.app/",
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "13.3.0",
@@ -114,7 +88,7 @@
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "clean-css": "^5.3.0",
-    "dotenv-cli": "^5.1.0",
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
@@ -123,16 +97,22 @@
     "jsdom": "^24.0.0",
     "prettier": "^3.1.0",
     "puppeteer": "^14.4.1",
-    "source-map-explorer": "^2.5.2",
     "typescript": "^5.3.3",
     "vite": "^5.1.5",
     "vite-plugin-pwa": "^0.19.2"
   },
-  "resolutions": {
-    "autoprefixer": "10.4.5",
-    "core-js": "^3.23.1",
-    "svgo": "^2.8.0"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
+  "homepage": "https://hkbus.app/",
   "license": "GPL-3.0-only",
   "type": "module"
 }

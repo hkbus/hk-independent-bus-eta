@@ -21,9 +21,15 @@ interface ReactNativeContextValue extends ReactNativeContextState {
   toggleStopAlarm: (stopId: string) => void;
 }
 
-const ReactNativeContext = React.createContext<ReactNativeContextValue>({} as ReactNativeContextValue);
+const ReactNativeContext = React.createContext<ReactNativeContextValue>(
+  {} as ReactNativeContextValue
+);
 
-export const ReactNativeContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const ReactNativeContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const {
     geoPermission,
     setGeoPermission,
@@ -55,7 +61,7 @@ export const ReactNativeContextProvider = ({ children }: { children: React.React
   }, []);
 
   const handleMsg = useCallback(
-    (msg: Event & {data?: string}) => {
+    (msg: Event & { data?: string }) => {
       try {
         const data = JSON.parse(msg.data ?? "{}");
         if (data.type === "geoPermission") {

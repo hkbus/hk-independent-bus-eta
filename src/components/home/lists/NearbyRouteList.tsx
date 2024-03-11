@@ -139,34 +139,40 @@ const getRoutes = ({
     .reduce(
       (acc, [stopId]) => {
         Object.entries(routeList).forEach(([key, route]) => {
-          (["kmb", "lrtfeeder", "lightRail", "gmb", "ctb", "nlb"] as Company[]).forEach(
-            (co) => {
-              if (route.stops[co] && route.stops[co].includes(stopId)) {
-                if (acc[coToType[co]] === undefined) acc[coToType[co]] = [];
-                acc[coToType[co]].push(
-                  key + "/" + route.stops[co].indexOf(stopId)
-                );
-              }
+          (
+            ["kmb", "lrtfeeder", "lightRail", "gmb", "ctb", "nlb"] as Company[]
+          ).forEach((co) => {
+            if (route.stops[co] && route.stops[co].includes(stopId)) {
+              if (acc[coToType[co]] === undefined) acc[coToType[co]] = [];
+              acc[coToType[co]].push(
+                key + "/" + route.stops[co].indexOf(stopId)
+              );
             }
-          );
+          });
         });
         return acc;
       },
-      { bus: [], mtr: [], lightRail: [], minibus: [] } as Record<TransportType, string[]>
+      { bus: [], mtr: [], lightRail: [], minibus: [] } as Record<
+        TransportType,
+        string[]
+      >
     );
 
-  return Object.entries(nearbyRoutes).reduce((acc, [type, nearbyRoutes]) => {
-    acc[type as TransportType] = formatHandling(
-      nearbyRoutes,
-      isTodayHoliday,
-      isRouteFilter,
-      routeList,
-      stopList,
-      serviceDayMap,
-      geolocation
-    );
-    return acc;
-  }, {} as Record<TransportType, string>);
+  return Object.entries(nearbyRoutes).reduce(
+    (acc, [type, nearbyRoutes]) => {
+      acc[type as TransportType] = formatHandling(
+        nearbyRoutes,
+        isTodayHoliday,
+        isRouteFilter,
+        routeList,
+        stopList,
+        serviceDayMap,
+        geolocation
+      );
+      return acc;
+    },
+    {} as Record<TransportType, string>
+  );
 };
 
 const rootSx: SxProps<Theme> = {

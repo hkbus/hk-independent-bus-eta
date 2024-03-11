@@ -120,8 +120,7 @@ const Settings = () => {
             />
           </ListItemButton>
         )}
-        {(import.meta.env.VITE_COMMIT_HASH ||
-          import.meta.env.VITE_VERSION) && (
+        {(import.meta.env.VITE_COMMIT_HASH || import.meta.env.VITE_VERSION) && (
           <ListItemButton
             component="a"
             href={`${
