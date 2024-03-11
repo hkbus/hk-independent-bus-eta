@@ -152,7 +152,6 @@ const RouteEta = () => {
 
   useEffect(() => {
     if (id.toUpperCase() !== routeId.toUpperCase()) {
-      console.log(id, routeId);
       navigate(`/${language}/route/${routeId.toLowerCase()}`);
     }
   }, [id, routeId, language, navigate]);
