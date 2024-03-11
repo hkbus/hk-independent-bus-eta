@@ -58,7 +58,7 @@ const SwipeableRoutesBoard = ({
           isRouteAvaliable(routeNo, freq, isTodayHoliday, serviceDayMap)
       )
       .sort((a, b) => routeSortFunc(a, b, TRANSPORT_ORDER[busSortOrder]));
-    console.log(baseRouteList);
+
     return Object.entries(TRANSPORT_SEARCH_OPTIONS)
       .filter(([key]) => isRecentSearchShown || key !== "recent")
       .map(([tab, searchOptions]) => {
@@ -126,44 +126,40 @@ const SwipeableRoutesBoard = ({
             )}
           </AutoSizer>
         ) : (
-          <>
-            <Box sx={noResultSx}>
+          <Box sx={noResultSx}>
+            <Box display="flex" alignItems="center">
               <SentimentVeryDissatisfiedIcon fontSize="small" />
-              <Box>
-                {availableBoardTab[index] !== "recent" ? (
-                  <>
+              {availableBoardTab[index] !== "recent" ? (
+                <>
+                  <Typography variant="h6">"{searchRoute}"</Typography>
+                  <Typography variant="h6">
+                    {t("route-search-no-result")}
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  {searchRoute.length > 0 && (
                     <Typography variant="h6">"{searchRoute}"</Typography>
-                    <Typography variant="h6">
-                      {t("route-search-no-result")}
-                    </Typography>
-                  </>
-                ) : (
-                  <>
-                    {searchRoute.length > 0 && (
-                      <Typography variant="h6">"{searchRoute}"</Typography>
-                    )}
-                    <Typography variant="h6">
-                      {t("no-recent-search")}
-                    </Typography>
-                  </>
-                )}
-              </Box>
+                  )}
+                  <Typography variant="h6">{t("no-recent-search")}</Typography>
+                </>
+              )}
             </Box>
             {availableBoardTab[index] !== "all" && (
-              <Box sx={noResultSx}>
+              <Box display="flex">
+                <Typography
+                  variant="h6"
+                  sx={clickableLinkSx}
+                  onClick={() => onChangeTab("all")}
+                >
+                  {t("click-here")}
+                </Typography>
                 <Typography variant="h6">
-                  <Typography
-                    variant="h6"
-                    sx={clickableLinkSx}
-                    onClick={() => onChangeTab("all")}
-                  >
-                    {t("click-here")}
-                  </Typography>
                   {t("to-search-all-routes")}
                 </Typography>
               </Box>
             )}
-          </>
+          </Box>
         )}
       </React.Fragment>
     ),
@@ -230,15 +226,16 @@ const prerenderListSx: SxProps<Theme> = {
 };
 
 const noResultSx: SxProps<Theme> = {
-  height: "140px",
+  height: "120px",
   display: "flex",
-  flexDirection: "row",
+  flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
   [`& .MuiSvgIcon-root`]: {
-    fontSize: "4em",
+    fontSize: "3em",
     mr: 2,
   },
+  gap: 2,
 };
 
 const clickableLinkSx: SxProps<Theme> = {
