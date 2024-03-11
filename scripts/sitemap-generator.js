@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 const host = "https://" + fs.readFileSync("public/CNAME", "utf8");
 

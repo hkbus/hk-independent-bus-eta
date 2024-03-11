@@ -1,10 +1,13 @@
-const express = require("express");
-const fs = require("fs");
-const resolve = require("path").resolve;
-const puppeteer = require("puppeteer");
-const jsdom = require("jsdom");
-const CleanCSS = require("clean-css");
-require("dotenv").config();
+import express from "express";
+import fs from "fs";
+import { resolve } from "path";
+import puppeteer from "puppeteer";
+import jsdom from "jsdom";
+import CleanCSS from "clean-css";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const cleanCss = new CleanCSS();
 let app;
 

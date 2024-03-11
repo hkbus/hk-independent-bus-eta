@@ -59,13 +59,10 @@
     "workbox-window": "^6.3.0"
   },
   "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": ". ./scripts/prebuild.sh; vite",
     "build": ". ./scripts/prebuild.sh; tsc && vite build",
     "production-build": "yarn build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
     "render": "node scripts/pre-rendering.js",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "deploy": "yarn build && gh-pages -d build -t",
     "alpha-deploy": "yarn build && gh-pages -d build --remote alpha -t -f",
     "docker": "cd docker && docker-compose up -d --build",
@@ -123,6 +120,7 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "express": "^4.18.1",
     "gh-pages": "^6.1.1",
+    "jsdom": "^24.0.0",
     "prettier": "^3.1.0",
     "puppeteer": "^14.4.1",
     "source-map-explorer": "^2.5.2",
