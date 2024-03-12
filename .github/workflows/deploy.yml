@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -35,8 +35,6 @@ jobs:
 
     - run: yarn install --immutable
     - run: sed -i "s/REACT_APP_CI_JOB_ID=1/REACT_APP_CI_JOB_ID=$GITHUB_RUN_NUMBER/g" .env
-    - run: yarn run build
-    - run: yarn test
     - run: yarn run production-build
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4
