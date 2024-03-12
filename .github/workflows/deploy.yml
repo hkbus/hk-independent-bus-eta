@@ -34,7 +34,6 @@ jobs:
           ${{ runner.os }}-
 
     - run: yarn install --immutable
-    - run: sed -i "s/REACT_APP_CI_JOB_ID=1/REACT_APP_CI_JOB_ID=$GITHUB_RUN_NUMBER/g" .env
     - run: yarn run production-build
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4
