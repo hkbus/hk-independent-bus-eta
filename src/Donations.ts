@@ -1,16 +1,6 @@
 const Donations = [
   {
     url: {
-      zh: "https://points-media.com/supports/",
-      en: "https://points-media.com/supports/",
-    },
-    description: {
-      zh: "請訂閱《棱角媒體》",
-      en: "Please subscribe Points Media",
-    },
-  },
-  {
-    url: {
       zh: "https://www.inmediahk.net/supportus",
       en: "https://www.inmediahk.net/supportus",
     },
