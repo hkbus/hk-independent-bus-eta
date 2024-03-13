@@ -156,7 +156,7 @@ interface AppContextProviderProps {
 
 const AppContext = React.createContext<AppContextValue>({} as AppContextValue);
 
-const isGeoPremission = (input: unknown): input is GeoPermission => {
+const isGeoPermission = (input: unknown): input is GeoPermission => {
   return (
     input === "opening" ||
     input === "granted" ||
@@ -229,7 +229,7 @@ export const AppContextProvider = ({
     return {
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
-      geoPermission: isGeoPremission(geoPermission) ? geoPermission : null,
+      geoPermission: isGeoPermission(geoPermission) ? geoPermission : null,
       geolocation: isGeoLocation(geoLocation)
         ? geoLocation
         : DEFAULT_GEOLOCATION,
@@ -638,7 +638,7 @@ export const AppContextProvider = ({
   }, [state.geolocation]);
 
   useEffect(() => {
-    localStorage.setItem("geoPermission", JSON.stringify(state.geoPermission));
+    localStorage.setItem("geoPermission", state.geoPermission ?? "null");
   }, [state.geoPermission]);
 
   useEffect(() => {
