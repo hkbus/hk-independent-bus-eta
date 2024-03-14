@@ -16,13 +16,9 @@ import AppContext from "../../AppContext";
 import { CircularProgress } from "../Progress";
 import { useParams } from "react-router-dom";
 import useLanguage from "../../hooks/useTranslation";
+import { SharingEntry } from "hk-bus-eta";
 
-export interface SharingModalProps {
-  routeId: string;
-  stopId: string;
-  seq: number;
-  event: any;
-}
+export interface SharingModalProps extends SharingEntry {}
 
 interface SharingModalState {
   isOpen: boolean;
@@ -93,8 +89,7 @@ const SharingModal = ({
   }, [isOpen, colorMode, seq]);
 
   useEffect(() => {
-    setIsOpen(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (event) setIsOpen(true);
   }, [setIsOpen, event]);
 
   const handleShareLink = useCallback(() => {
@@ -138,8 +133,7 @@ const SharingModal = ({
       .finally(() => {
         setIsOpen(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerShareImg, imgBase64, language, routeUri, seq, route]);
+  }, [triggerShareImg, imgBase64, language, routeUri, seq, route, navigator]);
 
   return (
     <>

@@ -1,6 +1,12 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  Suspense,
+} from "react";
 import { Box, SxProps, Theme } from "@mui/material";
-import type { RouteListEntry } from "hk-bus-eta";
+import type { RouteListEntry, SharingEntry } from "hk-bus-eta";
 import StopAccordion from "./StopAccordion";
 const SharingModal = React.lazy(() => import("./SharingModal"));
 
@@ -19,7 +25,7 @@ const StopAccordions = ({
   handleChange,
   onStopInfo,
 }: StopAccordionsProps) => {
-  const [sharingObj, setSharingObj] = useState<any | null>(null);
+  const [sharingObj, setSharingObj] = useState<SharingEntry | null>(null);
   const accordionRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
@@ -61,7 +67,12 @@ const StopAccordions = ({
           ref={handleRef(idx)}
         />
       ))}
-      {sharingObj && <SharingModal {...sharingObj} />}
+
+      {sharingObj && (
+        <Suspense fallback={<></>}>
+          <SharingModal {...sharingObj} />
+        </Suspense>
+      )}
     </Box>
   );
 };

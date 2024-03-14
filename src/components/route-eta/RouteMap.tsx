@@ -46,7 +46,7 @@ interface RouteMapProps {
   stopIdx: number;
   route: string;
   companies: Company[];
-  onMarkerClick: (idx: number, event: unknown) => void;
+  onMarkerClick: (idx: number, event: Leaflet.LeafletMouseEvent) => void;
 }
 
 interface RouteMapRef {
