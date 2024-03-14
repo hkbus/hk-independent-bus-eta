@@ -1,8 +1,11 @@
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import Plot from "react-plotly.js";
+import Plotly from "plotly.js-basic-dist"
+import createPlotlyComponent from "react-plotly.js/factory";
 import EmotionContext, { CheckInOptions } from "../../EmotionContext";
+
+const Plot = createPlotlyComponent(Plotly)
 
 const EmotionChart = () => {
   const { t } = useTranslation();

@@ -20,3 +20,10 @@ export interface RouteCollection {
 export type TransportType = "bus" | "minibus" | "lightRail" | "mtr";
 
 export type BoardTabType = "recent" | "all" | TransportType;
+
+export interface SharingEntry {
+  routeId: string;
+  stopId: string;
+  seq: number;
+  event: any;
+}

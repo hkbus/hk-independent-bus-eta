@@ -16,7 +16,7 @@ import AppContext from "../../AppContext";
 import { CircularProgress } from "../Progress";
 import { useParams } from "react-router-dom";
 import useLanguage from "../../hooks/useTranslation";
-import { SharingEntry } from "hk-bus-eta";
+import { SharingEntry } from "../../@types/types";
 
 export interface SharingModalProps extends SharingEntry {}
 

@@ -6,8 +6,9 @@ import React, {
   Suspense,
 } from "react";
 import { Box, SxProps, Theme } from "@mui/material";
-import type { RouteListEntry, SharingEntry } from "hk-bus-eta";
+import type { RouteListEntry } from "hk-bus-eta";
 import StopAccordion from "./StopAccordion";
+import { SharingEntry } from "../../@types/types";
 const SharingModal = React.lazy(() => import("./SharingModal"));
 
 interface StopAccordionsProps {
