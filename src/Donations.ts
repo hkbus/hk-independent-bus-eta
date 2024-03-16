@@ -75,8 +75,8 @@ const Donations = [
       en: "https://channelchk.com/plan",
     },
     description: {
-      zh: "Channel C HK",
-      en: "Channel C HK",
+      zh: "請訂閱《Channel C HK》",
+      en: "Please subscribe Channel C HK",
     },
   },
   {
@@ -117,6 +117,56 @@ const Donations = [
     description: {
       zh: "請訂閱《庭刊》",
       en: "Please subscribe The HK Court News",
+    },
+  },
+  {
+    url: {
+      zh: "https://www.patreon.com/reNews",
+      en: "https://www.patreon.com/reNews",
+    },
+    description: {
+      zh: "請訂閱《reNews》",
+      en: "Please subscribe reNews",
+    },
+  },
+  {
+    url: {
+      zh: "https://theinitium.com/subscription/offers",
+      en: "https://theinitium.com/subscription/offers",
+    },
+    description: {
+      zh: "請訂閱《端傳媒》",
+      en: "Please subscribe the Initium Media",
+    },
+  },
+  {
+    url: {
+      zh: "https://commonshk.com/subcribe/",
+      en: "https://commonshk.com/subcribe/",
+    },
+    description: {
+      zh: "請訂閱《同文》",
+      en: "Please subscribe the Commons",
+    },
+  },
+  {
+    url: {
+      zh: "https://www.patreon.com/thechasernews",
+      en: "https://www.patreon.com/thechasernews",
+    },
+    description: {
+      zh: "請訂閱《追新聞》",
+      en: "Please subscribe The Chaser",
+    },
+  },
+  {
+    url: {
+      zh: "https://greenbean.media/支持綠豆/",
+      en: "https://greenbean.media/en/支持綠豆/",
+    },
+    description: {
+      zh: "請訂閱《綠豆》",
+      en: "Please subscribe Green Bean Media",
     },
   },
 ];
