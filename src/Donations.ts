@@ -141,6 +141,16 @@ const Donations = [
   },
   {
     url: {
+      zh: "https://commonshk.com/subcribe/",
+      en: "https://commonshk.com/subcribe/",
+    },
+    description: {
+      zh: "請訂閱《同文》",
+      en: "Please subscribe the Commons",
+    },
+  },
+  {
+    url: {
       zh: "https://www.patreon.com/thechasernews",
       en: "https://www.patreon.com/thechasernews",
     },
