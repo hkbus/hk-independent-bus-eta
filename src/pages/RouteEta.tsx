@@ -4,6 +4,7 @@ import React, {
   useContext,
   useMemo,
   useCallback,
+  Suspense,
 } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import RouteHeader from "../components/route-eta/RouteHeader";
@@ -217,14 +218,16 @@ const RouteEta = () => {
       <input hidden id={id} />
       <RouteHeader routeId={routeId} />
       {!energyMode && navigator.userAgent !== "prerendering" && (
-        <RouteMap
-          routeId={routeId}
-          stopIds={stopIds}
-          stopIdx={stopIdx}
-          route={route}
-          companies={co}
-          onMarkerClick={onMarkerClick}
-        />
+        <Suspense fallback={null}>
+          <RouteMap
+            routeId={routeId}
+            stopIds={stopIds}
+            stopIdx={stopIdx}
+            route={route}
+            companies={co}
+            onMarkerClick={onMarkerClick}
+          />
+        </Suspense>
       )}
       <StopAccordionList
         routeId={routeId}
