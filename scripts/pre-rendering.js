@@ -138,7 +138,7 @@ async function getHTMLfromPuppeteerPage(page, pageUrl, idx) {
         var ev2 = new Event("input", { bubbles: true });
         input.dispatchEvent(ev2);
       }, q);
-      await page.waitForSelector(`input[id="${q}"][value="${q}"]`, {
+      await page.waitForSelector(`input[id="render"][value="done"]`, {
         timeout: 1000,
       });
     }

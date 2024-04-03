@@ -152,8 +152,11 @@ const RouteEta = () => {
   useEffect(() => {
     setIsDialogOpen(false);
     // the following is notify the rendering is done, for pre-rendering purpose
-    document.getElementById(id)?.setAttribute("value", id);
+    document.getElementById("render")?.setAttribute("value", "done");
     updateSelectedRoute(id);
+    return () => {
+      document.getElementById("render")?.setAttribute("value", "");
+    };
   }, [id, updateSelectedRoute]);
 
   useEffect(() => {
@@ -227,7 +230,7 @@ const RouteEta = () => {
 
   return (
     <>
-      <input hidden id={id} />
+      <input hidden id="render" />
       <RouteHeader routeId={routeId} />
       {!energyMode && navigator.userAgent !== "prerendering" && (
         <Suspense fallback={null}>

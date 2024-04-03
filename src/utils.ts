@@ -190,7 +190,6 @@ export const setSeoRouteFeature = ({route, stopList, lang, t}: {route: RouteList
     jsonLd.textContent = JSON.stringify({
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "@name": "123",
       "mainEntity": [{
         "@type": "Question",
         "name": lang === 'en' ? `What transport route is ${route.route}?` : `${route.route} 是甚麼路綫？`,
@@ -218,7 +217,7 @@ export const setSeoRouteFeature = ({route, stopList, lang, t}: {route: RouteList
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "<ol>" +
-            route.stops[Object.values(route.co)[0]].map(stopId => `<li>${stopList[stopId].name[lang as "zh" | "en"]}</li>`).join("") +
+            Object.values(route.stops)[0].map(stopId => `<li>${stopList[stopId].name[lang as "zh" | "en"]}</li>`).join("") +
           "</ol>"
         }
       }, ...Object.entries(route.freq ?? {}).map(([serviceId, dayFreq]) => ({
