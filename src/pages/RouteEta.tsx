@@ -12,7 +12,12 @@ import StopAccordionList from "../components/route-eta/StopAccordionList";
 import StopDialog from "../components/route-eta/StopDialog";
 import AppContext from "../AppContext";
 import { useTranslation } from "react-i18next";
-import { setSeoHeader, toProperCase, getDistance } from "../utils";
+import {
+  setSeoHeader,
+  toProperCase,
+  getDistance,
+  setSeoRouteFeature,
+} from "../utils";
 import StrSim from "string-similarity";
 import {
   Company,
@@ -200,6 +205,12 @@ const RouteEta = () => {
       description: pageDesc(),
       lang: language,
     });
+    setSeoRouteFeature({
+      route: routeListEntry,
+      stopList,
+      t,
+      lang: language,
+    });
   }, [
     AppTitle,
     dest,
@@ -211,6 +222,7 @@ const RouteEta = () => {
     stopList,
     stopIds,
     t,
+    routeListEntry,
   ]);
 
   return (

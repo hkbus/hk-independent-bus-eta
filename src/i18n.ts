@@ -1,6 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import resources from "./i18n/translation.json";
+import resources from "./i18n/translation";
 
 const getSavedLang = (): "zh" | "en" | undefined => {
   const savedLang = localStorage.getItem("lang");

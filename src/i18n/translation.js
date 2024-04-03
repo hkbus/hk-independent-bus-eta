@@ -1,4 +1,4 @@
-{
+const resources = {
   "en": {
     "translation": {
       "bad-weather-text": "Services may be impacted by bad weather. Data displayed below might not be accurate. Check here to see official announcements.",
@@ -269,3 +269,5 @@
     }
   }
 }
+
+export default resources
