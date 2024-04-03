@@ -238,75 +238,20 @@ export const setSeoRouteFeature = ({
           // @ts-ignore
           : `${route.route} 在${t(ServiceIds[serviceId])}的服務時間表？`,
         "acceptedAnswer": {
-            "@type": "Answer",
-            text:
-              lang === "en"
-                ? "<p>" +
-                  `The route ${route.route} travel between ${route.orig.en} and ${route.dest.en}, with the service provided by ${route.co.map((co) => t(co)).join(" and ")}. ` +
-                  `${route.jt ? `The whole journey takes about ${route.jt} minutes. ` : ""}` +
-                  `${
-                    route.fares
-                      ? `The segmented fares for the trip is $${route.fares
-                          .filter((v, idx, self) => self.indexOf(v) === idx)
-                          .map((v) => `$${v}`)}.`
-                      : ""
-                  }` +
-                  "</p>"
-                : "<p>" +
-                  `${route.route} 往來${route.orig.zh}和${route.dest.zh}，由${route.co.map((co) => t(co)).join("和")}營運` +
-                  `${route.jt ? `，全程${route.jt}分鐘` : ""}` +
-                  `${
-                    route.fares
-                      ? `，分段車費為 ${route.fares
-                          .filter((v, idx, self) => self.indexOf(v) === idx)
-                          .map((v) => `$${v}`)}`
-                      : ""
-                  }` +
-                  "。</p>",
-          },
-        },
-        {
-          "@type": "Question",
-          name:
-            lang === "en"
-              ? `What are the stops for the route ${route.route} from ${route.orig.en}?`
-              : `由${route.orig.zh}開出的 ${route.route} 會經過甚麼站？`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text:
-              "<ol>" +
-              route.stops[Object.values(route.co)[0]]
-                .map(
-                  (stopId) =>
-                    `<li>${stopList[stopId].name[lang as "zh" | "en"]}</li>`
-                )
-                .join("") +
-              "</ol>",
-          },
-        },
-        ...Object.entries(route.freq ?? {}).map(([serviceId, dayFreq]) => ({
-          "@type": "Question",
-          name:
-            lang === "en"
-              ? // @ts-ignore
-                `What are the timetable for ${route.route} from ${t(ServiceIds[serviceId])}?`
-              : // @ts-ignore
-                `${route.route} 在${t(ServiceIds[serviceId])}的服務時間表？`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text:
-              "<ul>" +
-              Object.entries(dayFreq)
-                .sort((a, b) => (a[0] < b[0] ? -1 : 1))
-                .map(
-                  ([start, details]) =>
-                    "<li>" +
-                    `${start} ${details ? `- ${details[0]}    ${parseInt(details[1], 10) / 60}${t("分鐘")}` : ""}` +
-                    "</li>"
-                ) +
-              "</ul>",
-          },
-        })),
+          "@type": "Answer",
+          text:
+            "<ul>" +
+            Object.entries(dayFreq)
+              .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+              .map(
+                ([start, details]) =>
+                  "<li>" +
+                  `${start} ${details ? `- ${details[0]}    ${parseInt(details[1], 10) / 60}${t("分鐘")}` : ""}` +
+                  "</li>"
+              ).join("") +
+            "</ul>",
+        }
+      })),
       ],
     });
   }
