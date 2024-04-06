@@ -21,6 +21,14 @@ export const useEtas = (routeId: string, disable: boolean = false) => {
       setEtas(null);
       return new Promise((resolve) => resolve([]));
     }
+    if (
+      routeObj.co.includes("hkkf") ||
+      routeObj.co.includes("fortuneferry") ||
+      routeObj.co.includes("sunferry")
+    ) {
+      setEtas([]);
+      return Promise.resolve([]);
+    }
     return fetchEtas({
       ...routeObj,
       seq: parseInt(seq, 10),

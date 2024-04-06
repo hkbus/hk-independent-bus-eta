@@ -17,7 +17,7 @@ export interface RouteCollection {
   schedules: DaySchedule[];
 }
 
-export type TransportType = "bus" | "minibus" | "lightRail" | "mtr";
+export type TransportType = "bus" | "minibus" | "lightRail" | "mtr" | "ferry";
 
 export type BoardTabType = "recent" | "all" | TransportType;
 

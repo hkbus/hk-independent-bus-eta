@@ -218,6 +218,7 @@ const BOARD_TAB: BoardTabType[] = [
   "minibus",
   "lightRail",
   "mtr",
+  "ferry",
 ];
 
 const prerenderListSx: SxProps<Theme> = {

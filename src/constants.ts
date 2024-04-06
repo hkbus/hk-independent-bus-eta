@@ -22,6 +22,7 @@ export const TRANSPORT_SEARCH_OPTIONS: Record<BoardTabType, Company[]> = {
   minibus: ["gmb"],
   lightRail: ["lightRail"],
   mtr: ["mtr"],
+  ferry: ["sunferry", "fortuneferry", "hkkf"],
 };
 
 export const TRANSPORT_ORDER = {
