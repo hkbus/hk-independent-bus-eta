@@ -442,11 +442,11 @@ export const coToType: Record<Company, TransportType> = {
   ctb: "bus",
   lrtfeeder: "bus",
   gmb: "minibus",
-  gmbHki: "minibus",
-  gmbKln: "minibus",
-  gmbNt: "minibus",
   lightRail: "lightRail",
   mtr: "mtr",
+  sunferry: "ferry",
+  fortuneferry: "ferry",
+  hkkf: "ferry",
 };
 
 const PLATFORM = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"] as const;

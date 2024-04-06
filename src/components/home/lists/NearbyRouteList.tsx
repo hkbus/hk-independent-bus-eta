@@ -152,7 +152,7 @@ const getRoutes = ({
         });
         return acc;
       },
-      { bus: [], mtr: [], lightRail: [], minibus: [] } as Record<
+      { bus: [], mtr: [], lightRail: [], minibus: [], ferry: [] } as Record<
         TransportType,
         string[]
       >
