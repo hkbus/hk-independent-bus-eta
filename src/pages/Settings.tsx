@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useMemo } from "react";
+import { useContext, useEffect, useState, useMemo, useCallback } from "react";
 import AppContext from "../AppContext";
 import {
   Avatar,
@@ -96,6 +96,22 @@ const Settings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateTime, language]);
 
+  const updateApp = useCallback(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js", { scope: "/" })
+        .then((registration) => {
+          // registration worked
+          registration.update();
+          window.location.reload();
+        })
+        .catch(() => {
+          // registration failed
+          console.error(`Not registrated`);
+        });
+    }
+  }, []);
+
   return (
     <Paper sx={rootSx} square elevation={0}>
       <Typography component="h1" style={visuallyHidden}>{`${t("設定")} - ${t(
@@ -121,19 +137,7 @@ const Settings = () => {
           </ListItemButton>
         )}
         {(import.meta.env.VITE_COMMIT_HASH || import.meta.env.VITE_VERSION) && (
-          <ListItemButton
-            component="a"
-            href={`${
-              import.meta.env.VITE_REPO_URL ||
-              "https://github.com/hkbus/hk-independent-bus-eta"
-            }${
-              import.meta.env.VITE_COMMIT_HASH
-                ? `/commit/${import.meta.env.VITE_COMMIT_HASH}`
-                : ""
-            }`}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <ListItemButton onClick={updateApp}>
             <ListItemAvatar>
               <Avatar>
                 <InfoIcon />
