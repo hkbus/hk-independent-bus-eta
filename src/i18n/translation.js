@@ -136,7 +136,7 @@ const resources = {
       "route-search-no-result": "No Result",
       "no-recent-search": "No Record",
       "click-here": "Click here",
-      "to-search-all-routes": " to search all routes",
+      "to-search-all-routes": " to search all routes.",
       對頭線: "REV",
       附近未有任何路線: "No available routes nearby",
       未有收藏路線: "No starred routes",
