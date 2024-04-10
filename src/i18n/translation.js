@@ -223,7 +223,7 @@ const resources = {
       minibus: "小巴",
       lightRail: "輕鐵",
       mtr: "港鐵",
-      ferry: "輪船",
+      ferry: "渡輪",
       "KMB first": "九巴優先",
       "CTB first": "城巴優先",
       "route-search-no-result": "沒有結果",
