@@ -142,7 +142,10 @@ export const setSeoHeader = ({
     ?.setAttribute("content", description);
   document
     .querySelector('link[rel="canonical"]')
-    ?.setAttribute("href", `https://hkbus.app${window.location.pathname.replace(/\(/g, "%28").replace(/\)/g, "%29")}`);
+    ?.setAttribute(
+      "href",
+      `https://hkbus.app${window.location.pathname.replace(/\(/g, "%28").replace(/\)/g, "%29")}`
+    );
   // language related meta tag
   document
     .querySelector("html")
