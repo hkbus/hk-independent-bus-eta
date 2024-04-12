@@ -15,7 +15,7 @@ import { Location as GeoLocation } from "hk-bus-eta";
 import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
 import useLanguage from "../../hooks/useTranslation";
-import { SearchResult, SearchRoute } from "../../pages/RouteSearch";
+import { SearchRoute } from "../../pages/RouteSearch";
 
 interface ChangeMapCenter {
   center: GeoLocation | null;
@@ -124,7 +124,7 @@ const BusRoute = ({
 };
 
 interface WalklinesProps {
-  routes: SearchResult;
+  routes: SearchRoute[];
   start: GeoLocation | null;
   end: GeoLocation | null;
 }
@@ -165,7 +165,7 @@ const Walklines = ({ routes, start, end }: WalklinesProps) => {
 };
 
 interface SearchMapProps {
-  routes: SearchResult;
+  routes: SearchRoute[];
   start: GeoLocation;
   end: GeoLocation | null;
   stopIdx: number[] | null;

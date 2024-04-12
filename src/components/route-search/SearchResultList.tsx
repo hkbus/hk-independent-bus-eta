@@ -13,10 +13,10 @@ import AppContext from "../../AppContext";
 import RouteNo from "../route-board/RouteNo";
 import TimeReport from "../route-eta/TimeReport";
 import useLanguage from "../../hooks/useTranslation";
-import { SearchResult } from "../../pages/RouteSearch";
+import { SearchRoute } from "../../pages/RouteSearch";
 
 interface SearchResultListProps {
-  routes: SearchResult;
+  routes: SearchRoute[];
   idx: number;
   handleRouteClick: (idx: number) => void;
   expanded: boolean;
@@ -37,7 +37,7 @@ const SearchResultList = ({
   const language = useLanguage();
 
   const getStopString = useCallback(
-    (routes: SearchResult) => {
+    (routes: SearchRoute[]) => {
       const ret: string[] = [];
       routes.forEach((selectedRoute) => {
         const { routeId, on } = selectedRoute;

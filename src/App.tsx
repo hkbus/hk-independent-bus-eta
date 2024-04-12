@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import { PaletteMode } from "@mui/material";
@@ -56,129 +56,34 @@ const App = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CacheProvider value={emotionCache}>
-          <Router>
-            <SearchContextProvider>
+          <SearchContextProvider>
+            <Router>
               <Routes>
                 <Route path="/" element={<Navigate to={`/${language}`} />} />
                 <Route path="/:lang" element={<Root />}>
                   <Route
                     path={`collections/:collectionName`}
-                    element={
-                      <Suspense fallback={null}>
-                        <Home />
-                      </Suspense>
-                    }
+                    element={<Home />}
                   />
-                  <Route
-                    path={`route/:id/:panel?`}
-                    element={
-                      <Suspense fallback={null}>
-                        <RouteEta />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path={`settings`}
-                    element={
-                      <Suspense fallback={null}>
-                        <Settings />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path={"notice"}
-                    element={
-                      <Suspense fallback={null}>
-                        <Notice />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path={`import/:data?`}
-                    element={
-                      <Suspense fallback={null}>
-                        <DataImport />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path={`export`}
-                    element={
-                      <Suspense fallback={null}>
-                        <DataExport />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path={`board`}
-                    element={
-                      <Suspense fallback={null}>
-                        <RouteBoard />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path={`stops`}
-                    element={
-                      <Suspense fallback={null}>
-                        <BookmarkedStop />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path={`search`}
-                    element={
-                      <Suspense fallback={null}>
-                        <RouteSearch />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="emotion/:tab?"
-                    element={
-                      <Suspense fallback={null}>
-                        <EmotionPage />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path={`privacy`}
-                    element={
-                      <Suspense fallback={null}>
-                        <PrivacyPolicy />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path={`terms`}
-                    element={
-                      <Suspense fallback={null}>
-                        <TermsAndConditions />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path={`support`}
-                    element={
-                      <Suspense fallback={null}>
-                        <Support />
-                      </Suspense>
-                    }
-                  />
+                  <Route path={`route/:id/:panel?`} element={<RouteEta />} />
+                  <Route path={`settings`} element={<Settings />} />
+                  <Route path={"notice"} element={<Notice />} />
+                  <Route path={`import/:data?`} element={<DataImport />} />
+                  <Route path={`export`} element={<DataExport />} />
+                  <Route path={`board`} element={<RouteBoard />} />
+                  <Route path={`stops`} element={<BookmarkedStop />} />
+                  <Route path={`search`} element={<RouteSearch />} />
+                  <Route path="emotion/:tab?" element={<EmotionPage />} />
+                  <Route path={`privacy`} element={<PrivacyPolicy />} />
+                  <Route path={`terms`} element={<TermsAndConditions />} />
+                  <Route path={`support`} element={<Support />} />
                   <Route
                     path={"patreon"}
                     element={
                       <RedirectPage url="https://www.patreon.com/hkbus" />
                     }
                   />
-                  <Route
-                    path={``}
-                    element={
-                      <Suspense fallback={null}>
-                        <Home />
-                      </Suspense>
-                    }
-                  />
+                  <Route path={``} element={<Home />} />
                 </Route>
                 <Route
                   path="/android"
@@ -227,8 +132,8 @@ const App = () => {
                   }
                 />
               </Routes>
-            </SearchContextProvider>
-          </Router>
+            </Router>
+          </SearchContextProvider>
         </CacheProvider>
       </ThemeProvider>
     </StyledEngineProvider>

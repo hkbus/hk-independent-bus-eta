@@ -1,6 +1,6 @@
 {
   "name": "hk-independent-bus-eta",
-  "version": "11.1.0",
+  "version": "11.2.0",
   "private": true,
   "scripts": {
     "start": ". ./scripts/prebuild.sh; vite",
@@ -8,7 +8,7 @@
     "production-build": "yarn build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
     "render": "node scripts/pre-rendering.js",
     "deploy": "yarn build && gh-pages -d build -t",
-    "full-deploy": "yarn production-build && gh-pages -d build -t",
+    "full-deploy": "yarn production-build && gh-pages -d build -t -f",
     "alpha-deploy": "yarn build && gh-pages -d build --remote alpha -t -f",
     "alpha-full-deploy": "yarn production-build && gh-pages -d build --remote alpha -t -f",
     "docker": "cd docker && docker-compose up -d --build",

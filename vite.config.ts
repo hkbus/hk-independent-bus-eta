@@ -60,12 +60,13 @@ const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => 
     },
     registerType: "autoUpdate",
     workbox: {
+      globPatterns: ['**/*.{css,html,ico,png,svg}'],
       runtimeCaching: [
         // for lazy caching anything
         // reference to https://vite-pwa-org.netlify.app/workbox/generate-sw.html#cache-external-resources 
         {
           urlPattern: ({url}) => (
-            url.origin === self.location.origin && url.pathname.startsWith("/static")
+            url.origin === self.location.origin && url.pathname.startsWith("/assets")
           ),
           handler: "CacheFirst",
           options: {

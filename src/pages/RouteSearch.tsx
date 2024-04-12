@@ -1,10 +1,8 @@
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Box, Divider, Paper, SxProps, Theme, Typography } from "@mui/material";
 import AppContext from "../AppContext";
-import SearchContext from "../SearchContext";
 import { useTranslation } from "react-i18next";
 import AddressInput, { Address } from "../components/route-search/AddressInput";
-import SearchResult from "../components/route-search/SearchResultList";
 import SearchMap from "../components/route-search/SearchMap";
 import { fetchEtas, Eta } from "hk-bus-eta";
 import { setSeoHeader, getDistance, vibrate } from "../utils";
@@ -18,7 +16,18 @@ export interface SearchRoute {
   off: number;
 }
 
-export type SearchResult = SearchRoute[];
+interface RouteSearchState {
+  locations: {
+    start: Address | null;
+    end: Address | null;
+  };
+  status: "ready" | "rendering" | "waiting";
+  result: Array<{ routeId: string; on: number; off: number }[]>;
+  resultIdx: {
+    resultIdx: number;
+    stopIdx: number[];
+  };
+}
 
 const RouteSearch = () => {
   const { t } = useTranslation();
@@ -30,16 +39,9 @@ const RouteSearch = () => {
     db: { routeList, stopList },
     vibrateDuration,
   } = useContext(AppContext);
-  const {
-    locations,
-    setLocations,
-    status,
-    setStatus,
-    result,
-    setResult,
-    resultIdx,
-    setResultIdx,
-  } = useContext(SearchContext);
+
+  const [state, setState] = useState<RouteSearchState>(DEFAULT_STATE);
+  const { locations, status, result, resultIdx } = state;
 
   const worker = useRef<Worker | null>(null);
   const terminateWorker = () => {
@@ -49,7 +51,7 @@ const RouteSearch = () => {
     }
   };
 
-  const updateRoutes = (routeResults: Array<SearchResult>) => {
+  const updateRoutes = (routeResults: Array<SearchRoute[]>) => {
     const uniqueRoutes = routeResults
       .reduce(
         (acc, routeArr) =>
@@ -90,54 +92,58 @@ const RouteSearch = () => {
         )
       )
       .then((availableRoutes) => {
-        setResult((prevResult) => [
-          ...prevResult,
-          // save current available route only
-          ...routeResults
-            .filter((routes) =>
-              routes.reduce((ret, route) => {
-                return (
-                  ret &&
-                  (availableRoutes.indexOf(`${route.routeId}/${route.on}`) !==
-                    -1 ||
-                    availableRoutes.indexOf(`${route.routeId}/${route.off}`) !==
-                      -1)
-                );
-              }, true)
-            )
-            // refine nearest start if available
-            .map((routes) => {
-              let start = locations.start
-                ? locations.start.location
-                : geolocation;
-              return routes.map((route) => {
-                const stops = Object.values(
-                  routeList[route.routeId].stops
-                ).sort((a, b) => b.length - a.length)[0];
-                let bestOn = -1;
-                let dist = 100000;
-                for (var i = route.on; i < route.off; ++i) {
-                  let _dist = getDistance(stopList[stops[i]].location, start);
-                  if (_dist < dist) {
-                    bestOn = i;
-                    dist = _dist;
+        setState((prev) => ({
+          ...prev,
+          result: [
+            ...prev.result,
+            // save current available route only
+            ...routeResults
+              .filter((routes) =>
+                routes.reduce((ret, route) => {
+                  return (
+                    ret &&
+                    (availableRoutes.indexOf(`${route.routeId}/${route.on}`) !==
+                      -1 ||
+                      availableRoutes.indexOf(
+                        `${route.routeId}/${route.off}`
+                      ) !== -1)
+                  );
+                }, true)
+              )
+              // refine nearest start if available
+              .map((routes) => {
+                let start = locations.start
+                  ? locations.start.location
+                  : geolocation;
+                return routes.map((route) => {
+                  const stops = Object.values(
+                    routeList[route.routeId].stops
+                  ).sort((a, b) => b.length - a.length)[0];
+                  let bestOn = -1;
+                  let dist = 100000;
+                  for (var i = route.on; i < route.off; ++i) {
+                    let _dist = getDistance(stopList[stops[i]].location, start);
+                    if (_dist < dist) {
+                      bestOn = i;
+                      dist = _dist;
+                    }
                   }
-                }
-                start = stopList[stops[route.off]].location;
-                return {
-                  ...route,
-                  on: bestOn,
-                };
-              });
-            })
-            // sort route by number of stops
-            .map((routes): [SearchResult, number] => [
-              routes,
-              routes.reduce((sum, route) => sum + route.off - route.on, 0),
-            ])
-            .sort((a, b) => a[1] - b[1])
-            .map((v) => v[0]),
-        ]);
+                  start = stopList[stops[route.off]].location;
+                  return {
+                    ...route,
+                    on: bestOn,
+                  };
+                });
+              })
+              // sort route by number of stops
+              .map((routes): [SearchRoute[], number] => [
+                routes,
+                routes.reduce((sum, route) => sum + route.off - route.on, 0),
+              ])
+              .sort((a, b) => a[1] - b[1])
+              .map((v) => v[0]),
+          ],
+        }));
       });
   };
 
@@ -153,7 +159,7 @@ const RouteSearch = () => {
   useEffect(() => {
     // update status if status is rendering
     if (status === "rendering") {
-      setStatus("ready");
+      setState((prev) => ({ ...prev, status: "ready" }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
@@ -174,12 +180,15 @@ const RouteSearch = () => {
           if (e.data.type === "done") {
             terminateWorker();
             // set status to rendering result if result not empty
-            setStatus(e.data.count ? "rendering" : "ready");
+            setState((prev) => ({
+              ...prev,
+              status: e.data.count ? "rendering" : "ready",
+            }));
             return;
           }
           updateRoutes(
             e.data.value.sort(
-              (a: SearchResult, b: SearchResult) => a.length - b.length
+              (a: SearchRoute[], b: SearchRoute[]) => a.length - b.length
             )
           );
         };
@@ -192,42 +201,49 @@ const RouteSearch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, locations]);
 
-  const handleStartChange = useCallback(
-    (address: Address | null) => {
-      setLocations({
-        ...locations,
+  const handleStartChange = useCallback((address: Address | null) => {
+    setState((prev) => ({
+      ...prev,
+      locations: {
+        ...prev.locations,
         start: address,
-      });
+      },
+      status: "waiting",
+      resultIdx: {
+        resultIdx: 0,
+        stopIdx: [0, 0],
+      },
+      result: [],
+    }));
+  }, []);
 
-      setStatus("waiting");
-      setResultIdx({ resultIdx: 0, stopIdx: [0, 0] });
-      setResult([]);
-    },
-    [setLocations, setStatus, setResultIdx, setResult]
-  );
-
-  const handleEndChange = useCallback(
-    (address: Address | null) => {
-      setLocations({
-        ...locations,
+  const handleEndChange = useCallback((address: Address | null) => {
+    setState((prev) => ({
+      ...prev,
+      locations: {
+        ...prev.locations,
         end: address,
-      });
-
-      if (address) setStatus("waiting");
-      setResultIdx({ resultIdx: 0, stopIdx: [0, 0] });
-      setResult([]);
-    },
-    [setLocations, setStatus, setResultIdx, setResult]
-  );
+      },
+      status: address ? "waiting" : prev.status,
+      resultIdx: {
+        resultIdx: 0,
+        stopIdx: [0, 0],
+      },
+      result: [],
+    }));
+  }, []);
 
   const handleRouteClick = useCallback(
     (idx: number) => {
       vibrate(vibrateDuration);
       setTimeout(() => {
-        setResultIdx({ resultIdx: idx, stopIdx: [0, 0] });
+        setState((prev) => ({
+          ...prev,
+          resultIdx: { resultIdx: idx, stopIdx: [0, 0] },
+        }));
       }, 0);
     },
-    [vibrate, vibrateDuration, setResultIdx]
+    [vibrate, vibrateDuration]
   );
 
   const handleMarkerClick = useCallback(
@@ -236,16 +252,19 @@ const RouteSearch = () => {
       const routeIdx = result[resultIdx.resultIdx]
         .map((route) => route.routeId)
         .indexOf(routeId);
-      setResultIdx((prevResultIdx) => {
-        const _stopIdx = [...prevResultIdx.stopIdx];
+      setState((prev) => {
+        const _stopIdx = [...prev.resultIdx.stopIdx];
         _stopIdx[routeIdx] = offset;
         return {
-          ...prevResultIdx,
-          stopIdx: _stopIdx,
+          ...prev,
+          resultIdx: {
+            ...prev.resultIdx,
+            stopIdx: _stopIdx,
+          },
         };
       });
     },
-    [result, resultIdx, setResultIdx]
+    [result, resultIdx]
   );
 
   return (
@@ -318,6 +337,19 @@ const RouteSearchDetails = () => {
 };
 
 export default RouteSearch;
+
+const DEFAULT_STATE: RouteSearchState = {
+  locations: {
+    start: null,
+    end: null,
+  },
+  status: "ready",
+  result: [],
+  resultIdx: {
+    resultIdx: 0,
+    stopIdx: [0, 0],
+  },
+};
 
 const rootSx: SxProps<Theme> = {
   background: (theme) =>

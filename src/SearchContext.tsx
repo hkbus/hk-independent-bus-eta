@@ -3,7 +3,7 @@ import { Address } from "./components/route-search/AddressInput";
 
 type SearchResult = Array<Array<{ routeId: string; on: number; off: number }>>;
 
-interface SearchContextProps {
+interface SearchContextState {
   locations: {
     start: Address | null;
     end: Address | null;
@@ -14,55 +14,26 @@ interface SearchContextProps {
     resultIdx: number;
     stopIdx: number[];
   };
-  setLocations: React.Dispatch<
-    React.SetStateAction<{
-      start: Address | null;
-      end: Address | null;
-    }>
-  >;
-  setStatus: React.Dispatch<
-    React.SetStateAction<"ready" | "rendering" | "waiting">
-  >;
-  setResult: React.Dispatch<React.SetStateAction<SearchResult>>;
-  setResultIdx: React.Dispatch<
-    React.SetStateAction<{
-      resultIdx: number;
-      stopIdx: number[];
-    }>
-  >;
 }
 
-const SearchContext = React.createContext({} as SearchContextProps);
+interface SearchContextValue extends SearchContextState {
+  setState: React.Dispatch<React.SetStateAction<SearchContextState>>;
+}
+
+const SearchContext = React.createContext({} as SearchContextValue);
 
 export const SearchContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [locations, setLocations] = useState<{
-    start: Address | null;
-    end: Address | null;
-  }>({ start: null, end: null });
-  const [status, setStatus] = useState<"ready" | "rendering" | "waiting">(
-    "ready"
-  );
-  const [result, setResult] = useState<SearchResult>([]);
-  const [resultIdx, setResultIdx] = useState<{
-    resultIdx: number;
-    stopIdx: number[];
-  }>({ resultIdx: 0, stopIdx: [0, 0] });
+  const [state, setState] = useState<SearchContextState>(DEFAULT_STATE);
 
   return (
     <SearchContext.Provider
       value={{
-        locations,
-        status,
-        result,
-        resultIdx,
-        setLocations,
-        setStatus,
-        setResult,
-        setResultIdx,
+        ...state,
+        setState,
       }}
     >
       {children}
@@ -71,3 +42,16 @@ export const SearchContextProvider = ({
 };
 
 export default SearchContext;
+
+const DEFAULT_STATE: SearchContextState = {
+  locations: {
+    start: null,
+    end: null,
+  },
+  status: "ready",
+  result: [],
+  resultIdx: {
+    resultIdx: 0,
+    stopIdx: [0, 0],
+  },
+};
