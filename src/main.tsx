@@ -4,13 +4,24 @@ import * as Sentry from "@sentry/react";
 import "./index.css";
 import "./i18n";
 import AppWrapper from "./AppWrapper";
-
+import { DatabaseType, fetchDbFunc } from "./db";
+import ErrorBoundary from "./ErrorBoundary";
+import { CollectionContextProvider } from "./CollectionContext";
+import { ReactNativeContextProvider } from "./ReactNativeContext";
+import { EmotionContextProvider } from "./EmotionContext";
+import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from "react-router-dom";
 
 // Copied from https://docs.sentry.io/platforms/javascript/guides/react/#configure
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
-    Sentry.browserTracingIntegration(),
+    Sentry.reactRouterV6BrowserTracingIntegration({
+      useEffect: React.useEffect,
+      useLocation,
+      useNavigationType,
+      createRoutesFromChildren,
+      matchRoutes,
+    }),
     Sentry.replayIntegration()
   ],
 
@@ -26,6 +37,7 @@ Sentry.init({
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
 });
+const App = React.lazy(() => import("./App"));
 
 const isHuman = () => {
   const agents = [
