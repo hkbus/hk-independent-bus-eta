@@ -25,6 +25,7 @@
     "@mui/material": "^5.15.11",
     "@mui/styles": "^5.8.4",
     "@mui/x-date-pickers": "^6.5.0",
+    "@sentry/react": "^7.110.0",
     "@types/plotly.js-basic-dist": "^1.54.4",
     "core-js": "^3.23.1",
     "dayjs": "^1.11.7",
