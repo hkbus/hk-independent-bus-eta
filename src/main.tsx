@@ -1,8 +1,31 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
+import React, { Suspense, useEffect, useState } from "react";
+import ReactDOM, { createRoot } from "react-dom/client";
+import * as Sentry from "@sentry/react";
 import "./index.css";
 import "./i18n";
 import AppWrapper from "./AppWrapper";
+
+
+// Copied from https://docs.sentry.io/platforms/javascript/guides/react/#configure
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration()
+  ],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  tracesSampleRate: 0.1,
+
+  // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+  tracePropagationTargets: ["localhost"], // FIXME: See if we need to include additional hosts here
+
+  // Capture Replay for 10% of all sessions,
+  // plus for 100% of sessions with an error
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+});
 
 const isHuman = () => {
   const agents = [
