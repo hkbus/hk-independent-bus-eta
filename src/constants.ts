@@ -17,7 +17,18 @@ export const ETA_FORMAT_STR = {
 
 export const TRANSPORT_SEARCH_OPTIONS: Record<BoardTabType, Company[]> = {
   recent: ["kmb", "ctb", "lrtfeeder", "nlb", "gmb", "lightRail", "mtr"],
-  all: ["kmb", "ctb", "lrtfeeder", "nlb", "gmb", "lightRail", "mtr", "sunferry", "fortuneferry", "hkkf"],
+  all: [
+    "kmb",
+    "ctb",
+    "lrtfeeder",
+    "nlb",
+    "gmb",
+    "lightRail",
+    "mtr",
+    "sunferry",
+    "fortuneferry",
+    "hkkf",
+  ],
   bus: ["kmb", "ctb", "lrtfeeder", "nlb"],
   minibus: ["gmb"],
   lightRail: ["lightRail"],
