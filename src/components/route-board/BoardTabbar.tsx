@@ -44,7 +44,8 @@ export const isBoardTab = (
     input === "bus" ||
     input === "minibus" ||
     input === "lightRail" ||
-    input === "mtr"
+    input === "mtr" ||
+    input === "ferry"
   );
 };
 

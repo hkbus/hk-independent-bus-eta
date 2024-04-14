@@ -5,7 +5,7 @@ import useLanguage from "./useTranslation";
 
 export const useEtas = (routeId: string, disable: boolean = false) => {
   const {
-    db: { routeList, stopList },
+    db: { routeList, stopList, holidays, serviceDayMap },
     isVisible,
     refreshInterval,
   } = useContext(AppContext);
@@ -21,24 +21,18 @@ export const useEtas = (routeId: string, disable: boolean = false) => {
       setEtas(null);
       return new Promise((resolve) => resolve([]));
     }
-    if (
-      routeObj.co.includes("hkkf") ||
-      routeObj.co.includes("fortuneferry") ||
-      routeObj.co.includes("sunferry")
-    ) {
-      setEtas([]);
-      return Promise.resolve([]);
-    }
     return fetchEtas({
       ...routeObj,
       seq: parseInt(seq, 10),
       stopList,
       // @ts-ignore
       language,
+      holidays,
+      serviceDayMap,
     }).then((_etas) => {
       if (isMounted.current) setEtas(_etas);
     });
-  }, [isVisible, language, routeObj, seq, stopList]);
+  }, [isVisible, language, routeObj, seq, stopList, holidays, serviceDayMap]);
 
   useEffect(() => {
     if (disable) return;

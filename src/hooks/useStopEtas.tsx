@@ -22,7 +22,7 @@ export const useStopEtas = ({
   disabled = false,
 }: useStopEtasProps) => {
   const {
-    db: { routeList, stopList, serviceDayMap },
+    db: { routeList, stopList, serviceDayMap, holidays },
     isVisible,
     refreshInterval,
     isRouteFilter,
@@ -81,6 +81,8 @@ export const useStopEtas = ({
           stopList,
           // @ts-ignore
           language,
+          holidays,
+          serviceDayMap,
         })
       )
     ).then((_etas) => {
@@ -119,6 +121,8 @@ export const useStopEtas = ({
     stopList,
     routeKeys,
     isLightRail,
+    holidays,
+    serviceDayMap,
   ]);
 
   useEffect(() => {
