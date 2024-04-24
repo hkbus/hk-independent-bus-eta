@@ -1,10 +1,19 @@
-// @ts-nocheck
 import { StopListEntry } from "hk-bus-eta";
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../AppContext";
 
+interface GeoJsonType extends GeoJSON.GeoJsonObject {
+  features?: Array<{
+    type: string;
+    geometry: {
+      type: string;
+      coordinates: Array<[number, number]>;
+    };
+  }>;
+}
+
 export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
-  const [geoJson, setGeoJson] = useState<GeoJSON.GeoJsonObject>(null);
+  const [geoJson, setGeoJson] = useState<GeoJsonType | null>(null);
   const {
     db: { routeList },
   } = useContext(AppContext);
@@ -31,10 +40,13 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
               type: "Feature",
               geometry: {
                 type: "LineString",
-                coordinates: stops.reduce((acc, { location: { lat, lng } }) => {
-                  acc.push([lng, lat]);
-                  return acc;
-                }, []),
+                coordinates: stops.reduce(
+                  (acc, { location: { lat, lng } }) => {
+                    acc.push([lng, lat]);
+                    return acc;
+                  },
+                  [] as [number, number][]
+                ),
               },
             },
           ],

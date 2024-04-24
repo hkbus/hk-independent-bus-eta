@@ -103,7 +103,7 @@ const BusRoute = ({
           })}
           alt={`${idx}. ${routeNo} - ${stopList[stopId].name[language]}`}
           eventHandlers={{
-            click: (_) => {
+            click: () => {
               onMarkerClick(routeId, idx);
             },
           }}
@@ -147,7 +147,7 @@ const Walklines = ({ routes, start, end }: WalklinesProps) => {
     points.push(stopList[stops[off]].location);
   });
   points.push(end || start);
-  for (var i = 0; i < points.length / 2; ++i) {
+  for (let i = 0; i < points.length / 2; ++i) {
     lines.push([points[i * 2], points[i * 2 + 1]]);
   }
 
@@ -199,8 +199,7 @@ const SearchMap = ({
         isFollow: isFollow || false,
       });
     },
-    // eslint-disable-next-line
-    [setMapState]
+    [map, setMapState]
   );
 
   const getMapCenter = () => {

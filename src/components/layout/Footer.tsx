@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import {
   Badge,
   BottomNavigation,
@@ -23,18 +23,18 @@ const Footer = () => {
   const { t } = useTranslation();
   const language = useLanguage();
   const location = useLocation();
-  const { selectedRoute, colorMode, vibrateDuration } = useContext(AppContext);
+  const { vibrateDuration } = useContext(AppContext);
   const { isRemind } = useContext(EmotionContext);
 
   const navigate = useNavigate();
-  const handleClick = (
-    link: string,
-    e: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    e.preventDefault();
-    vibrate(vibrateDuration);
-    setTimeout(() => navigate(link), 0);
-  };
+  const handleClick = useCallback(
+    (link: string, e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      vibrate(vibrateDuration);
+      setTimeout(() => navigate(link), 0);
+    },
+    [vibrateDuration, navigate]
+  );
 
   return useMemo(
     () => (
@@ -107,8 +107,7 @@ const Footer = () => {
         />
       </BottomNavigation>
     ),
-    // eslint-disable-next-line
-    [location.pathname, language, colorMode, selectedRoute, vibrateDuration]
+    [location.pathname, language, t, isRemind, handleClick]
   );
 };
 

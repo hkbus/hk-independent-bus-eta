@@ -38,7 +38,7 @@ const RouteRowList = React.memo(
           navigate(`/${language}/route/${route[0].toLowerCase()}`);
         }, 0);
       },
-      [vibrate, vibrateDuration, addSearchHistory, route[0], navigate, language]
+      [vibrateDuration, addSearchHistory, route, navigate, language]
     );
 
     const handleRemove = (e: React.MouseEvent) => {

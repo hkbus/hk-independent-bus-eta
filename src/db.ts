@@ -20,23 +20,18 @@ const isEtaDb = (input: unknown): input is EtaDb => {
 export const DB_CONTEXT_VERSION = "1.2.0";
 
 const decompressJsonString = (txt: Uint8Array | Buffer | string): EtaDb => {
-  try {
-    const ret = JSON.parse(decompressJson(txt, { inputEncoding: "Base64" }));
-    ret.routeList = Object.keys(ret.routeList)
-      .sort()
-      .reduce(
-        (acc, k) => {
-          acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
-            ret.routeList[k];
-          return acc;
-        },
-        {} as EtaDb["routeList"]
-      );
-    return ret;
-  } catch (e) {
-    // throw the error
-    throw e;
-  }
+  const ret = JSON.parse(decompressJson(txt, { inputEncoding: "Base64" }));
+  ret.routeList = Object.keys(ret.routeList)
+    .sort()
+    .reduce(
+      (acc, k) => {
+        acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
+          ret.routeList[k];
+        return acc;
+      },
+      {} as EtaDb["routeList"]
+    );
+  return ret;
 };
 
 export interface DatabaseType extends EtaDb {
@@ -101,10 +96,8 @@ export const fetchDbFunc = async (
     let shouldAutoRenew =
       autoRenew && Date.now() - lastUpdateTime > 7 * 24 * 3600 * 1000;
     if (isOffline || !shouldAutoRenew) {
-      try {
-        const db = await loadStoredDb(raw);
-        return db;
-      } catch {}
+      const db = await loadStoredDb(raw);
+      return db;
     }
   }
 
@@ -120,14 +113,12 @@ export const fetchDbFunc = async (
     if (versionMd5 !== _md5) {
       needRenew = true;
     }
-    try {
-      if (!needRenew) {
-        const db = await loadStoredDb(raw);
-        if (isEtaDb(db)) {
-          return db;
-        }
+    if (!needRenew) {
+      const db = await loadStoredDb(raw);
+      if (isEtaDb(db)) {
+        return db;
       }
-    } catch {}
+    }
     const updateTime = Date.now() + "";
     localStorage.setItem("updateTime", updateTime);
     return new Promise((resolve_1) => {

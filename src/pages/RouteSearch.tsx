@@ -4,7 +4,7 @@ import AppContext from "../AppContext";
 import { useTranslation } from "react-i18next";
 import AddressInput, { Address } from "../components/route-search/AddressInput";
 import SearchMap from "../components/route-search/SearchMap";
-import { fetchEtas, Eta } from "hk-bus-eta";
+import { fetchEtas, Eta, Company, Location } from "hk-bus-eta";
 import { setSeoHeader, getDistance, vibrate } from "../utils";
 import { LinearProgress } from "../components/Progress";
 import useLanguage from "../hooks/useTranslation";
@@ -36,7 +36,7 @@ const RouteSearch = () => {
     AppTitle,
     geolocation,
     energyMode,
-    db: { routeList, stopList },
+    db: { routeList, stopList, holidays, serviceDayMap },
     vibrateDuration,
   } = useContext(AppContext);
 
@@ -51,101 +51,106 @@ const RouteSearch = () => {
     }
   };
 
-  const updateRoutes = (routeResults: Array<SearchRoute[]>) => {
-    const uniqueRoutes = routeResults
-      .reduce(
-        (acc, routeArr) =>
-          acc.concat(
-            ...routeArr.map((r) => [
-              `${r.routeId}/${r.on}`,
-              `${r.routeId}/${r.off}`,
-            ])
-          ),
-        [] as string[]
-      )
-      .filter((v, i, s) => s.indexOf(v) === i);
-
-    // check currently available routes by fetching ETA
-    Promise.all(
-      uniqueRoutes.map((routeIdSeq): Promise<Eta[]> => {
-        const [routeId, seq] = routeIdSeq.split("/");
-        return !navigator.onLine
-          ? new Promise((resolve) => resolve([]))
-          : fetchEtas({
-              ...routeList[routeId],
-              seq: parseInt(seq, 10),
-              routeStops: routeList[routeId].stops,
-              // @ts-ignore
-              co: Object.keys(routeList[routeId].stops),
-              // @ts-ignore
-              language: language,
-            }).then((p) => p.filter((e) => e.eta));
-      })
-    )
-      .then((etas) =>
-        // filter out non available route
-        uniqueRoutes.filter(
-          (_, idx) =>
-            !navigator.onLine ||
-            (etas[idx].length &&
-              etas[idx].reduce((acc, eta) => Boolean(acc || eta.eta), false))
-        )
-      )
-      .then((availableRoutes) => {
-        setState((prev) => ({
-          ...prev,
-          result: [
-            ...prev.result,
-            // save current available route only
-            ...routeResults
-              .filter((routes) =>
-                routes.reduce((ret, route) => {
-                  return (
-                    ret &&
-                    (availableRoutes.indexOf(`${route.routeId}/${route.on}`) !==
-                      -1 ||
-                      availableRoutes.indexOf(
-                        `${route.routeId}/${route.off}`
-                      ) !== -1)
-                  );
-                }, true)
-              )
-              // refine nearest start if available
-              .map((routes) => {
-                let start = locations.start
-                  ? locations.start.location
-                  : geolocation;
-                return routes.map((route) => {
-                  const stops = Object.values(
-                    routeList[route.routeId].stops
-                  ).sort((a, b) => b.length - a.length)[0];
-                  let bestOn = -1;
-                  let dist = 100000;
-                  for (var i = route.on; i < route.off; ++i) {
-                    let _dist = getDistance(stopList[stops[i]].location, start);
-                    if (_dist < dist) {
-                      bestOn = i;
-                      dist = _dist;
-                    }
-                  }
-                  start = stopList[stops[route.off]].location;
-                  return {
-                    ...route,
-                    on: bestOn,
-                  };
-                });
-              })
-              // sort route by number of stops
-              .map((routes): [SearchRoute[], number] => [
-                routes,
-                routes.reduce((sum, route) => sum + route.off - route.on, 0),
+  const updateRoutes = useCallback(
+    (routeResults: Array<SearchRoute[]>, startLocation: Location) => {
+      const uniqueRoutes = routeResults
+        .reduce(
+          (acc, routeArr) =>
+            acc.concat(
+              ...routeArr.map((r) => [
+                `${r.routeId}/${r.on}`,
+                `${r.routeId}/${r.off}`,
               ])
-              .sort((a, b) => a[1] - b[1])
-              .map((v) => v[0]),
-          ],
-        }));
-      });
-  };
+            ),
+          [] as string[]
+        )
+        .filter((v, i, s) => s.indexOf(v) === i);
+
+      // check currently available routes by fetching ETA
+      Promise.all(
+        uniqueRoutes.map((routeIdSeq): Promise<Eta[]> => {
+          const [routeId, seq] = routeIdSeq.split("/");
+          return !navigator.onLine
+            ? new Promise((resolve) => resolve([]))
+            : fetchEtas({
+                ...routeList[routeId],
+                seq: parseInt(seq, 10),
+                co: Object.keys(routeList[routeId].stops) as Company[],
+                language: language as "en" | "zh",
+                stopList,
+                serviceDayMap,
+                holidays,
+              }).then((p) => p.filter((e) => e.eta));
+        })
+      )
+        .then((etas) =>
+          // filter out non available route
+          uniqueRoutes.filter(
+            (_, idx) =>
+              !navigator.onLine ||
+              (etas[idx].length &&
+                etas[idx].reduce((acc, eta) => Boolean(acc || eta.eta), false))
+          )
+        )
+        .then((availableRoutes) => {
+          setState((prev) => ({
+            ...prev,
+            result: [
+              ...prev.result,
+              // save current available route only
+              ...routeResults
+                .filter((routes) =>
+                  routes.reduce((ret, route) => {
+                    return (
+                      ret &&
+                      (availableRoutes.indexOf(
+                        `${route.routeId}/${route.on}`
+                      ) !== -1 ||
+                        availableRoutes.indexOf(
+                          `${route.routeId}/${route.off}`
+                        ) !== -1)
+                    );
+                  }, true)
+                )
+                // refine nearest start if available
+                .map((routes) => {
+                  let start = startLocation;
+                  return routes.map((route) => {
+                    const stops = Object.values(
+                      routeList[route.routeId].stops
+                    ).sort((a, b) => b.length - a.length)[0];
+                    let bestOn = -1;
+                    let dist = 100000;
+                    for (let i = route.on; i < route.off; ++i) {
+                      let _dist = getDistance(
+                        stopList[stops[i]].location,
+                        start
+                      );
+                      if (_dist < dist) {
+                        bestOn = i;
+                        dist = _dist;
+                      }
+                    }
+                    start = stopList[stops[route.off]].location;
+                    return {
+                      ...route,
+                      on: bestOn,
+                    };
+                  });
+                })
+                // sort route by number of stops
+                .map((routes): [SearchRoute[], number] => [
+                  routes,
+                  routes.reduce((sum, route) => sum + route.off - route.on, 0),
+                ])
+                .sort((a, b) => a[1] - b[1])
+                .map((v) => v[0]),
+            ],
+          }));
+        });
+    },
+    [holidays, language, routeList, serviceDayMap, stopList]
+  );
 
   useEffect(() => {
     setSeoHeader({
@@ -153,26 +158,27 @@ const RouteSearch = () => {
       description: t("route-search-page-description"),
       lang: language,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language]);
+  }, [language, t, AppTitle]);
 
   useEffect(() => {
     // update status if status is rendering
     if (status === "rendering") {
       setState((prev) => ({ ...prev, status: "ready" }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [result]);
+  }, [status, result]);
 
   useEffect(() => {
     if (status === "waiting" && locations.end) {
       if (window.Worker) {
         terminateWorker();
+        const startLocation = locations.start
+          ? locations.start.location
+          : geolocation;
         worker.current = new Worker("/search-worker.js");
         worker.current.postMessage({
           routeList,
           stopList,
-          start: locations.start ? locations.start.location : geolocation,
+          start: startLocation,
           end: locations.end.location,
           maxDepth: 2,
         });
@@ -189,7 +195,8 @@ const RouteSearch = () => {
           updateRoutes(
             e.data.value.sort(
               (a: SearchRoute[], b: SearchRoute[]) => a.length - b.length
-            )
+            ),
+            startLocation
           );
         };
       }
@@ -198,8 +205,7 @@ const RouteSearch = () => {
     return () => {
       terminateWorker();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, locations]);
+  }, [status, locations, geolocation, routeList, stopList, updateRoutes]);
 
   const handleStartChange = useCallback((address: Address | null) => {
     setState((prev) => ({
@@ -243,12 +249,11 @@ const RouteSearch = () => {
         }));
       }, 0);
     },
-    [vibrate, vibrateDuration]
+    [vibrateDuration]
   );
 
   const handleMarkerClick = useCallback(
     (routeId: string, offset: number) => {
-      console.log(routeId);
       const routeIdx = result[resultIdx.resultIdx]
         .map((route) => route.routeId)
         .indexOf(routeId);

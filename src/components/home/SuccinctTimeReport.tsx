@@ -113,7 +113,7 @@ const SuccinctTimeReport = ({
         navigate(`/${language}/route/${routeId.toLowerCase()}`);
       }, 0);
     },
-    [vibrate, vibrateDuration, navigate, routeId, mode]
+    [vibrateDuration, navigate, routeId, language, mode]
   );
 
   const platform = useMemo(() => {

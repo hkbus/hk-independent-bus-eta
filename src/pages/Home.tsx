@@ -33,8 +33,7 @@ const Home = () => {
       description: t("home-page-description"),
       lang: language,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language]);
+  }, [language, AppTitle, t]);
 
   const handleTabChange = (
     v: HomeTabType | string,

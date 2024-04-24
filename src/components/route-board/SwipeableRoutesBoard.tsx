@@ -70,7 +70,7 @@ const SwipeableRoutesBoard = ({
                 )
                 .filter((routeNo) => routeList[routeNo])
                 .map((routeNo) => [routeNo, routeList[routeNo]])
-            : baseRouteList.filter(([_, { co }]) =>
+            : baseRouteList.filter(([, { co }]) =>
                 co.some((c) => searchOptions.includes(c))
               ),
           vibrateDuration,
@@ -131,7 +131,9 @@ const SwipeableRoutesBoard = ({
               <SentimentVeryDissatisfiedIcon fontSize="small" />
               {availableBoardTab[index] !== "recent" ? (
                 <>
-                  <Typography variant="h6">"{searchRoute}"</Typography>
+                  <Typography variant="h6">
+                    &quot;{searchRoute}&quot;
+                  </Typography>
                   <Typography variant="h6">
                     {t("route-search-no-result")}
                   </Typography>
@@ -139,7 +141,9 @@ const SwipeableRoutesBoard = ({
               ) : (
                 <>
                   {searchRoute.length > 0 && (
-                    <Typography variant="h6">"{searchRoute}"</Typography>
+                    <Typography variant="h6">
+                      &quot;{searchRoute}&quot;
+                    </Typography>
                   )}
                   <Typography variant="h6">{t("no-recent-search")}</Typography>
                 </>

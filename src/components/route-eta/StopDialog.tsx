@@ -44,23 +44,19 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
   );
 
   const handleClickDirection = useCallback(() => {
-    try {
-      const { lat, lng } = stopList[stops[0][1]]?.location;
+    if (stopList[stops[0][1]]?.location) {
+      const { lat, lng } = stopList[stops[0][1]].location;
       window.open(
         `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
         "_blank"
       );
-    } catch (err) {
-      console.error(err);
     }
   }, [stopList, stops]);
 
   const handleClickLocation = useCallback(() => {
-    try {
-      const { lat, lng } = stopList[stops[0][1]]?.location;
+    if (stopList[stops[0][1]]?.location) {
+      const { lat, lng } = stopList[stops[0][1]].location;
       window.open(`https://www.google.com/maps/?q=${lat},${lng}`, "_blank");
-    } catch (err) {
-      console.error(err);
     }
   }, [stopList, stops]);
 

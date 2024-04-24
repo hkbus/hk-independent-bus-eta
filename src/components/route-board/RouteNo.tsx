@@ -29,7 +29,6 @@ const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
 
   return (
     <Typography
-      // @ts-ignore
       component={component || "h2"}
       align={align}
       variant="caption"

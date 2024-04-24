@@ -48,15 +48,15 @@ export const ReactNativeContextProvider = ({
   }, []);
 
   const os = useMemo<ReactNativeContextValue["os"]>(() => {
-    // @ts-ignore
+    // @ts-expect-error iOSRNWebView is defined in the mobile app
     if (window?.iOSRNWebView === true) return "ios";
-    // @ts-ignore
+    // @ts-expect-error iOSRNWebView is defined in the mobile app
     else if (window?.iOSRNWebView === false) return "android";
     return null;
   }, []);
 
   const isStopAlarm = useMemo<boolean>(() => {
-    // @ts-ignore
+    // @ts-expect-error stopAlarm is defined in the mobile app
     return window?.stopAlarm === true;
   }, []);
 
@@ -74,7 +74,9 @@ export const ReactNativeContextProvider = ({
             alarmStopId: data.value,
           }));
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error(e);
+      }
     },
     [setGeoPermission, updateGeolocation]
   );
@@ -100,7 +102,7 @@ export const ReactNativeContextProvider = ({
     (stopId: string) => {
       const stop = stopList[stopId];
       if (!stop) return;
-      // @ts-ignore
+      // @ts-expect-error ReactNativeWebView is defined in the mobile app
       window.ReactNativeWebView?.postMessage(
         JSON.stringify({
           type: "stop-alarm",
@@ -117,7 +119,7 @@ export const ReactNativeContextProvider = ({
   );
 
   useEffect(() => {
-    // @ts-ignore
+    // @ts-expect-error ReactNativeWebView is defined in the mobile app
     if (window.ReactNativeWebView !== undefined) {
       // react native web view
       if (
@@ -125,14 +127,14 @@ export const ReactNativeContextProvider = ({
         geoPermission === "opening" ||
         geoPermission === "granted"
       ) {
-        // @ts-ignore
+        // @ts-expect-error ReactNativeWebView is defined in the mobile app
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
             type: "start-geolocation",
           })
         );
       } else if (geoPermission === "closed") {
-        // @ts-ignore
+        // @ts-expect-error ReactNativeWebView is defined in the mobile app
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
             type: "stop-geolocation",

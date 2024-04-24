@@ -79,7 +79,6 @@ export const useStopEtas = ({
           ...routeList[id],
           seq: parseInt(seq, 10),
           stopList,
-          // @ts-ignore
           language,
           holidays,
           serviceDayMap,

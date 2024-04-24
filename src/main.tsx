@@ -40,7 +40,7 @@ if (isHuman()) {
 
   // remove prerendered style
   if (prerenderStyle instanceof HTMLStyleElement) {
-    // @ts-ignore
+    // @ts-expect-error root is always here
     document.getElementById("root").innerHTML = "";
     prerenderStyle.innerHTML = "";
   }

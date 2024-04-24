@@ -56,7 +56,7 @@ const Header = () => {
 
   const relocateGeolocation = useCallback(() => {
     try {
-      // @ts-ignore don't use geolocation navigator for Webview
+      // @ts-expect-error don't use geolocation navigator for Webview
       if (window.iOSRNWebView === true) return;
       navigator.geolocation.getCurrentPosition(
         ({ coords: { latitude, longitude } }) => {
@@ -85,8 +85,7 @@ const Header = () => {
         navigate(`/${language}/board`, { replace: true });
       }
     },
-    // eslint-disable-next-line
-    [searchRoute, language, setSearchRoute]
+    [searchRoute, language, setSearchRoute, navigate]
   );
 
   useEffect(() => {

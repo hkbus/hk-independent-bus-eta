@@ -26,8 +26,7 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
       description: t("route-board-page-description"),
       lang: language,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language]);
+  }, [language, t, AppTitle]);
 
   const handleTabChange = useCallback(
     (v: BoardTabType) => {

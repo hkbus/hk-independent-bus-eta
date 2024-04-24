@@ -218,25 +218,22 @@ const RouteMap = ({
             }}
           />
         ))}
-        {
-          // @ts-ignore
-          routePath?.features?.length && (
-            <>
-              <GeoJSON
-                // @ts-ignore
-                key={routePath?.["timeStamp"]}
-                data={routePath}
-                style={geoJsonStyle(companies, route, true)}
-              />
-              <GeoJSON
-                // @ts-ignore
-                key={routePath?.["timeStamp"]}
-                data={routePath}
-                style={geoJsonStyle(companies, route, false)}
-              />
-            </>
-          )
-        }
+        {routePath?.features?.length && (
+          <>
+            <GeoJSON
+              // @ts-expect-error "timestamp" is in the crawled routePath
+              key={routePath?.timeStamp}
+              data={routePath}
+              style={geoJsonStyle(companies, route, true)}
+            />
+            <GeoJSON
+              // @ts-expect-error "timestamp" is in the crawled routePath
+              key={routePath?.timeStamp}
+              data={routePath}
+              style={geoJsonStyle(companies, route, false)}
+            />
+          </>
+        )}
         <SelfCircle />
         <CenterControl onClick={onClickJumpToMyLocation} />
         <CompassControl />

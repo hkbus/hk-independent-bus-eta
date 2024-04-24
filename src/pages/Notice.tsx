@@ -38,10 +38,8 @@ const Notice = () => {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              p: ({ node, ...props }) => (
-                <Typography variant="body1" {...props} />
-              ),
-              a: ({ node, ...props }) => <Link sx={linkSx} {...props} />,
+              p: ({ ...props }) => <Typography variant="body1" {...props} />,
+              a: ({ ...props }) => <Link sx={linkSx} {...props} />,
             }}
           >
             {language === "zh" ? ChinText : EngText}

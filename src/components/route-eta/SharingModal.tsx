@@ -133,7 +133,19 @@ const SharingModal = ({
       .finally(() => {
         setIsOpen(false);
       });
-  }, [triggerShareImg, imgBase64, language, routeUri, seq, route, navigator]);
+  }, [
+    dest,
+    setIsCopied,
+    setIsOpen,
+    stop.name,
+    stopId,
+    t,
+    imgBase64,
+    language,
+    routeUri,
+    seq,
+    route,
+  ]);
 
   return (
     <>

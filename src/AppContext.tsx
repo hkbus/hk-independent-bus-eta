@@ -298,10 +298,18 @@ export const AppContextProvider = ({
     [setState]
   );
 
+  const updateGeolocation = useCallback((geolocation: GeoLocation) => {
+    setStateRaw(
+      produce((state: State) => {
+        state.geolocation = geolocation;
+      })
+    );
+  }, []);
+
   useEffect(() => {
     if (geoPermission === "granted") {
       try {
-        // @ts-ignore don't use geolocation navigator for Webview
+        // @ts-expect-error don't use geolocation navigator for Webview
         if (window.iOSRNWebView === true) return;
         const _geoWatcherId = navigator.geolocation.watchPosition(
           ({ coords: { latitude, longitude } }) => {
@@ -327,16 +335,7 @@ export const AppContextProvider = ({
       }
       window.removeEventListener("visibilitychange", onVisibilityChange);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const updateGeolocation = useCallback((geolocation: GeoLocation) => {
-    setStateRaw(
-      produce((state: State) => {
-        state.geolocation = geolocation;
-      })
-    );
-  }, []);
+  }, [geoPermission, updateGeolocation]);
 
   const setManualGeolocation = useCallback(
     (manualGeolocation: GeoLocation | null) => {
@@ -363,7 +362,7 @@ export const AppContextProvider = ({
     (geoPermission: AppState["geoPermission"], deniedCallback?: () => void) => {
       if (geoPermission === "opening") {
         setGeoPermission("opening");
-        // @ts-ignore
+        // @ts-expect-error iOSRNWebView is defined in mobile app
         if (window.iOSRNWebView !== true) {
           const _geoWatcherId = navigator.geolocation.watchPosition(
             ({ coords: { latitude, longitude } }) => {

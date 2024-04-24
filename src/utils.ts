@@ -9,6 +9,7 @@ import type {
 import type { Location as GeoLocation } from "hk-bus-eta";
 import type { TransportType } from "./@types/types";
 import { ServiceIds, isRouteAvaliable } from "./timetable";
+import { TFunction } from "i18next";
 
 export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   const R = 6371e3; // metres
@@ -196,7 +197,7 @@ export const setSeoRouteFeature = ({
   route: RouteListEntry;
   stopList: EtaDb["stopList"];
   lang: string;
-  t: any;
+  t: TFunction<"translation", undefined>;
 }) => {
   const jsonLd = document.querySelector('script[type="application/ld+json"]');
   if (jsonLd) {
@@ -261,9 +262,9 @@ export const setSeoRouteFeature = ({
           "@type": "Question",
           name:
             lang === "en"
-              ? // @ts-ignore
+              ? // @ts-expect-error service id should be valid
                 `What are the timetable for ${route.route} from ${t(ServiceIds[serviceId])}?`
-              : // @ts-ignore
+              : // @ts-expect-error service id should be valid
                 `${route.route} 在${t(ServiceIds[serviceId])}的服務時間表？`,
           acceptedAnswer: {
             "@type": "Answer",
@@ -334,7 +335,7 @@ export const binarySearch = <T>(
 
 export const checkAppInstalled = () => {
   if (window.matchMedia("(display-mode: standalone)").matches) return true;
-  // @ts-ignore
+  // @ts-expect-error window.navigator.standalone exists in iOS only
   const standalone = window.navigator.standalone;
   const userAgent = window.navigator.userAgent.toLowerCase();
   const safari = /safari/.test(userAgent);
@@ -423,12 +424,12 @@ export const routeSortFunc = (
 };
 
 export const iOSRNWebView = (): boolean => {
-  // @ts-ignore
+  // @ts-expect-error iOSRNWebView is for the react native mobile app
   return window.iOSRNWebView;
 };
 
 export const iOSTracking = (): boolean => {
-  // @ts-ignore
+  // @ts-expect-error iOSRNWebView is for the react native mobile app
   return window.iOSTracking;
 };
 

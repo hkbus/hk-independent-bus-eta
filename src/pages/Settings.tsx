@@ -93,8 +93,7 @@ const Settings = () => {
       lang: language,
     });
     setUpdating(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateTime, language]);
+  }, [updateTime, language, t, AppTitle]);
 
   const updateApp = useCallback(() => {
     if ("serviceWorker" in navigator) {
@@ -205,7 +204,6 @@ const Settings = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            // @ts-ignore
             primary={t("地理位置定位功能")}
             secondary={t(
               geoPermission === "granted"

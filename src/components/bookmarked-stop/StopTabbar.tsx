@@ -36,7 +36,7 @@ const StopTabbar = ({ stopTab, onChangeTab }: HomeTabbarProps) => {
     >
       {savedStops
         .map((stopId) => stopId.split("|"))
-        .filter(([_, stopId]) => stopList[stopId])
+        .filter(([, stopId]) => stopList[stopId])
         .map(([co, stopId]) => (
           <Tab
             key={`stops-${stopId}`}

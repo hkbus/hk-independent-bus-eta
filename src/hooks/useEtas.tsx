@@ -25,7 +25,6 @@ export const useEtas = (routeId: string, disable: boolean = false) => {
       ...routeObj,
       seq: parseInt(seq, 10),
       stopList,
-      // @ts-ignore
       language,
       holidays,
       serviceDayMap,
