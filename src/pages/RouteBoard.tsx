@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState, useCallback } from "react";
-import AppContext from "../AppContext";
+import AppContext from "../context/AppContext";
 import { Box } from "@mui/material";
 import RouteInputPad from "../components/route-board/RouteInputPad";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,7 @@ import BoardTabbar, { isBoardTab } from "../components/route-board/BoardTabbar";
 import SwipeableRoutesBoard from "../components/route-board/SwipeableRoutesBoard";
 import { BoardTabType } from "../@types/types";
 import useLanguage from "../hooks/useTranslation";
-import DbContext from "../DbContext";
+import DbContext from "../context/DbContext";
 
 interface RouteListProps {
   boardTab: BoardTabType;

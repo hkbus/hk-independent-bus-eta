@@ -20,13 +20,13 @@ import {
   WifiOff as WifiOffIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { vibrate, checkMobile } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useWeatherCode, WeatherIcons } from "../Weather";
 import useOnline from "../../hooks/useOnline";
 import useLanguage from "../../hooks/useTranslation";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 const Header = () => {
   const {

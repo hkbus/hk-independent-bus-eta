@@ -10,7 +10,7 @@ import { MapContainer, Marker, TileLayer, GeoJSON } from "react-leaflet";
 import Leaflet from "leaflet";
 import { Box, SxProps, Theme } from "@mui/material";
 import { type Company } from "hk-bus-eta";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import type { StopListEntry } from "hk-bus-eta";
 import { MyLocation as MyLocationIcon } from "@mui/icons-material";
 import { checkPosition, locationEqual } from "../../utils";
@@ -21,7 +21,7 @@ import CompassControl from "../map/CompassControl";
 import { useRoutePath } from "../../hooks/useRoutePath";
 import { getLineColor } from "../../utils";
 import useLanguage from "../../hooks/useTranslation";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 interface CenterControlProps {
   onClick: React.MouseEventHandler<HTMLDivElement>;

@@ -8,7 +8,7 @@ import {
 } from "react-leaflet";
 import Leaflet, { LatLngExpression } from "leaflet";
 import { Box, SxProps, Theme } from "@mui/material";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { checkPosition } from "../../utils";
 import { Location as GeoLocation } from "hk-bus-eta";
@@ -16,7 +16,7 @@ import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
 import useLanguage from "../../hooks/useTranslation";
 import { SearchRoute } from "../../pages/RouteSearch";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 interface ChangeMapCenter {
   center: GeoLocation | null;

@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import AppContext from "./AppContext";
 import { useTranslation } from "react-i18next";
-import useLanguage from "./hooks/useTranslation";
+import useLanguage from "../hooks/useTranslation";
 import DbContext from "./DbContext";
 
 interface ReactNativeContextState {

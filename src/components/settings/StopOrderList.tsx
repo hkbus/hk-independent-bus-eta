@@ -10,7 +10,7 @@ import {
 } from "@mui/icons-material";
 import { ManageMode } from "../../data";
 import useLanguage from "../../hooks/useTranslation";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
 
 const StopOrderList = ({ mode }: { mode: ManageMode }) => {

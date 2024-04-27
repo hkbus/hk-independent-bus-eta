@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { checkPosition } from "../../utils";
 import { Circle, Marker, MarkerProps } from "react-leaflet";
 import L from "leaflet";
@@ -9,8 +9,6 @@ import { Location } from "hk-bus-eta";
 
 interface RotatedMarkerProps extends MarkerProps {
   rotationOrigin: string;
-  // setRotationAngle: (angle: number) => void;
-  // setRotationOrigin: (origin: string) => void;
 }
 
 interface RotatedMarkerRef extends L.Marker {

@@ -5,8 +5,8 @@ import { EtaDb, Location, RouteList, StopList } from "hk-bus-eta";
 import { RouteCollection } from "../../../@types/types";
 import { formatHandling } from "../../../utils";
 import { useContext, useMemo } from "react";
-import AppContext from "../../../AppContext";
-import DbContext from "../../../DbContext";
+import AppContext from "../../../context/AppContext";
+import DbContext from "../../../context/DbContext";
 import CollectionContext from "../../../CollectionContext";
 
 interface SmartCollectionRouteListProps {

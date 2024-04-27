@@ -12,7 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { decompress } from "lzutf8-light";
 import { Check as CheckIcon } from "@mui/icons-material";
 import throttle from "lodash.throttle";
-import AppContext, { AppState } from "../AppContext";
+import AppContext, { AppState } from "../context/AppContext";
 import { DEFAULT_SEARCH_RANGE, isStrings } from "../utils";
 import CollectionContext, { CollectionState } from "../CollectionContext";
 

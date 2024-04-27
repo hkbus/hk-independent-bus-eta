@@ -3,7 +3,7 @@ import { Tabs, Tab, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import useLanguage from "../../hooks/useTranslation";
 import CollectionContext from "../../CollectionContext";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 interface HomeTabbarProps {
   stopTab: string | null;

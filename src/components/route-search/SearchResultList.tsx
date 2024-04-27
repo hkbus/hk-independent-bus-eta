@@ -13,7 +13,7 @@ import RouteNo from "../route-board/RouteNo";
 import TimeReport from "../route-eta/TimeReport";
 import useLanguage from "../../hooks/useTranslation";
 import { SearchRoute } from "../../pages/RouteSearch";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 interface SearchResultListProps {
   routes: SearchRoute[];

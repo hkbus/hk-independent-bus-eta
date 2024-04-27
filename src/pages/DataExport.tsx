@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import AppContext from "../AppContext";
+import AppContext from "../context/AppContext";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { compress as compressJson } from "lzutf8-light";
 import useLanguage from "../hooks/useTranslation";

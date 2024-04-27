@@ -35,7 +35,7 @@ import {
   LooksOneRounded as LooksOneRoundedIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { vibrate } from "../../utils";
 import { useTranslation } from "react-i18next";
 import FontSizeSlider from "./FontSizeSlider";

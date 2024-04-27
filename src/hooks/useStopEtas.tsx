@@ -7,10 +7,10 @@ import {
   useState,
 } from "react";
 import { Company, Eta, fetchEtas } from "hk-bus-eta";
-import AppContext from "../AppContext";
+import AppContext from "../context/AppContext";
 import { isRouteAvaliable } from "../timetable";
 import useLanguage from "./useTranslation";
-import DbContext from "../DbContext";
+import DbContext from "../context/DbContext";
 
 interface useStopEtasProps {
   stopKeys: Array<[Company, string]>;

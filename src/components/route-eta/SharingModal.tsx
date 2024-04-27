@@ -12,12 +12,12 @@ import { useTranslation } from "react-i18next";
 import domtoimage from "dom-to-image";
 import mergeImages from "merge-images";
 import { toProperCase, triggerShare, triggerShareImg } from "../../utils";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { CircularProgress } from "../Progress";
 import { useParams } from "react-router-dom";
 import useLanguage from "../../hooks/useTranslation";
 import { SharingEntry } from "../../@types/types";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 export interface SharingModalProps extends SharingEntry {}
 

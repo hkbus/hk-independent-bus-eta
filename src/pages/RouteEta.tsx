@@ -10,7 +10,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import RouteHeader from "../components/route-eta/RouteHeader";
 import StopAccordionList from "../components/route-eta/StopAccordionList";
 import StopDialog from "../components/route-eta/StopDialog";
-import AppContext from "../AppContext";
+import AppContext from "../context/AppContext";
 import { useTranslation } from "react-i18next";
 import {
   setSeoHeader,
@@ -27,7 +27,7 @@ import {
   StopMap,
 } from "hk-bus-eta";
 import useLanguage from "../hooks/useTranslation";
-import DbContext from "../DbContext";
+import DbContext from "../context/DbContext";
 const RouteMap = React.lazy(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {

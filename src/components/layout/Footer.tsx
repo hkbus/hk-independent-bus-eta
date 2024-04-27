@@ -14,9 +14,9 @@ import NewspaperIcon from "@mui/icons-material/Newspaper";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { vibrate } from "../../utils";
-import EmotionContext from "../../EmotionContext";
+import EmotionContext from "../../context/EmotionContext";
 import useLanguage from "../../hooks/useTranslation";
 
 const Footer = () => {

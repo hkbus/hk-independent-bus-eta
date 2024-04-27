@@ -13,10 +13,10 @@ import {
   iOSTracking,
   isStrings,
   vibrate,
-} from "./utils";
+} from "../utils";
 import { produce, freeze } from "immer";
 import type { Location as GeoLocation } from "hk-bus-eta";
-import { ETA_FORMAT_NEXT_TYPES } from "./constants";
+import { ETA_FORMAT_NEXT_TYPES } from "../constants";
 import { useTranslation } from "react-i18next";
 import {
   BusSortOrder,
@@ -24,9 +24,9 @@ import {
   EtaFormat,
   Language,
   NumPadOrder,
-} from "./data";
+} from "../data";
 import { DeviceOrientationPermission } from "react-world-compass";
-import useLanguage from "./hooks/useTranslation";
+import useLanguage from "../hooks/useTranslation";
 
 type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
 

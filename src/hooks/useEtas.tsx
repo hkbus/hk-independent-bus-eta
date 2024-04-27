@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Eta, fetchEtas } from "hk-bus-eta";
-import AppContext from "../AppContext";
+import AppContext from "../context/AppContext";
 import useLanguage from "./useTranslation";
-import DbContext from "../DbContext";
+import DbContext from "../context/DbContext";
 
 export const useEtas = (routeId: string, disable: boolean = false) => {
   const { isVisible, refreshInterval } = useContext(AppContext);

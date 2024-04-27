@@ -9,7 +9,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { DEFAULT_SEARCH_RANGE_OPTIONS, getDistanceWithUnit } from "../../utils";
 import { useContext, useState } from "react";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import RangeMapDialog from "./RangeMapDialog";
 import { grey } from "@mui/material/colors";
 

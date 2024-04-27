@@ -7,7 +7,7 @@ import ReverseButton from "./ReverseButton";
 import TimetableButton from "./TimeTableButton";
 import RouteStarButton from "./RouteStarButton";
 import useLanguage from "../../hooks/useTranslation";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 const RouteHeader = ({ routeId }: { routeId: string }) => {
   const { t } = useTranslation();

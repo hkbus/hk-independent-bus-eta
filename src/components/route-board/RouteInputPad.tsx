@@ -2,11 +2,11 @@ import { useContext } from "react";
 import { Box, Button, Grid, SxProps, Theme } from "@mui/material";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { type BoardTabType } from "../../@types/types";
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 import { RouteList } from "hk-bus-eta";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 interface KeyButtonProps {
   k: string;

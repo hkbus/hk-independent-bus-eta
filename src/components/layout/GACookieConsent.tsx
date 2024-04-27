@@ -1,7 +1,7 @@
 import { useCallback, useContext, useState } from "react";
 import { Box, Button, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { iOSRNWebView } from "../../utils";
 
 const GACookieConsent = () => {

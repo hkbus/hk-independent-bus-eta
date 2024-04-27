@@ -15,7 +15,7 @@ import { useCallback, useContext, useMemo, useState } from "react";
 import EmotionContext, {
   CheckInOptions,
   EmotionCheckIn,
-} from "../../EmotionContext";
+} from "../../context/EmotionContext";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import useLanguage from "../../hooks/useTranslation";

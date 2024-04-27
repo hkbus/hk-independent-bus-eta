@@ -12,9 +12,9 @@ import {
   StopListEntry,
 } from "hk-bus-eta";
 import { coToType, formatHandling, getDistance } from "../../../utils";
-import AppContext from "../../../AppContext";
+import AppContext from "../../../context/AppContext";
 import throttle from "lodash.throttle";
-import DbContext from "../../../DbContext";
+import DbContext from "../../../context/DbContext";
 
 interface NearbyRouteListProps {
   isFocus: boolean;

@@ -3,7 +3,7 @@ import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import Plotly from "plotly.js-basic-dist";
 import createPlotlyComponent from "react-plotly.js/factory";
-import EmotionContext, { CheckInOptions } from "../../EmotionContext";
+import EmotionContext, { CheckInOptions } from "../../context/EmotionContext";
 
 const Plot = createPlotlyComponent(Plotly);
 

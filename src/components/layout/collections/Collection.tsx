@@ -12,7 +12,7 @@ import {
   BookmarkBorder as BookmarkBorderIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import DbContext from "../../../DbContext";
+import DbContext from "../../../context/DbContext";
 import CollectionContext from "../../../CollectionContext";
 
 interface CollectionProps {

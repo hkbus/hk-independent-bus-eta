@@ -18,7 +18,7 @@ import { useCallback, useContext, useMemo } from "react";
 import StopRouteList from "../bookmarked-stop/StopRouteList";
 import { Company } from "hk-bus-eta";
 import useLanguage from "../../hooks/useTranslation";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
 
 interface StopDialogProps {

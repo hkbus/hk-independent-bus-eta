@@ -16,7 +16,7 @@ import {
   Routes,
 } from "react-router-dom";
 import "./App.css";
-import AppContext from "./AppContext";
+import AppContext from "./context/AppContext";
 import { SearchContextProvider } from "./SearchContext";
 import Root from "./components/layout/Root";
 import RedirectPage from "./pages/RedirectPage";

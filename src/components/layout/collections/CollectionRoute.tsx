@@ -9,7 +9,7 @@ import { Box, Typography } from "@mui/material";
 import SuccinctTimeReport from "../../home/SuccinctTimeReport";
 import { reorder } from "../../../utils";
 import { useTranslation } from "react-i18next";
-import DbContext from "../../../DbContext";
+import DbContext from "../../../context/DbContext";
 import CollectionContext from "../../../CollectionContext";
 
 const CollectionRoute = () => {

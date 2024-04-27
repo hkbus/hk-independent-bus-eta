@@ -1,7 +1,7 @@
 // work only after the API give the header "Access-Control-Allow-Origin: *"
 
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import AppContext from "../AppContext";
+import AppContext from "../context/AppContext";
 
 export interface Notice {
   incidentNo: string;

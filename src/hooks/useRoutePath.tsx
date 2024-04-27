@@ -1,6 +1,6 @@
 import { StopListEntry } from "hk-bus-eta";
 import { useContext, useEffect, useState } from "react";
-import DbContext from "../DbContext";
+import DbContext from "../context/DbContext";
 
 interface GeoJsonType extends GeoJSON.GeoJsonObject {
   features?: Array<{

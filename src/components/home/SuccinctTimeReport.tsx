@@ -16,7 +16,7 @@ import { Company, Eta, Location, RouteListEntry } from "hk-bus-eta";
 import React, { useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { ManageMode } from "../../data";
 import {
   getLineColor,
@@ -30,7 +30,7 @@ import {
 import RouteNo from "../route-board/RouteNo";
 import SuccinctEtas from "./SuccinctEtas";
 import useLanguage from "../../hooks/useTranslation";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 interface DistAndFareProps {
   name: string;

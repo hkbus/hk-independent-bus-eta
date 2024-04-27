@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Box, Divider, Paper, SxProps, Theme, Typography } from "@mui/material";
-import AppContext from "../AppContext";
+import AppContext from "../context/AppContext";
 import { useTranslation } from "react-i18next";
 import AddressInput, { Address } from "../components/route-search/AddressInput";
 import SearchMap from "../components/route-search/SearchMap";
@@ -9,7 +9,7 @@ import { setSeoHeader, getDistance, vibrate } from "../utils";
 import { LinearProgress } from "../components/Progress";
 import useLanguage from "../hooks/useTranslation";
 import SearchResultList from "../components/route-search/SearchResultList";
-import DbContext from "../DbContext";
+import DbContext from "../context/DbContext";
 
 export interface SearchRoute {
   routeId: string;

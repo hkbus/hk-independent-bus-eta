@@ -18,7 +18,7 @@ import {
   TileLayer,
   useMapEvent,
 } from "react-leaflet";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { Location } from "hk-bus-eta";
 
 interface RangeMapProps {

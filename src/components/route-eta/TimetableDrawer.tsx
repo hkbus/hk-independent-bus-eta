@@ -12,7 +12,7 @@ import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import RouteOffiicalUrlBtn from "./timetableDrawer/RouteOfficialUrlBtn";
 import { isHoliday } from "../../timetable";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 interface TimetableDrawerProps {
   routeId: string;

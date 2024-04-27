@@ -21,9 +21,9 @@ import { useTranslation } from "react-i18next";
 import { toProperCase } from "../../utils";
 import TimeReport from "./TimeReport";
 import { SharingModalProps } from "./SharingModal";
-import ReactNativeContext from "../../ReactNativeContext";
+import ReactNativeContext from "../../context/ReactNativeContext";
 import useLanguage from "../../hooks/useTranslation";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
 
 interface StopAccordionProps {

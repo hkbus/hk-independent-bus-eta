@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import AppContext from "../AppContext";
+import AppContext from "../context/AppContext";
 import { Box, Paper, SxProps, Theme } from "@mui/material";
 import BadWeatherCard from "../components/layout/BadWeatherCard";
 import DbRenewReminder from "../components/layout/DbRenewReminder";
@@ -16,7 +16,7 @@ import SwipeableStopList, {
 } from "../components/bookmarked-stop/SwipeableStopList";
 import useLanguage from "../hooks/useTranslation";
 import CollectionContext from "../CollectionContext";
-import DbContext from "../DbContext";
+import DbContext from "../context/DbContext";
 
 const BookmarkedStop = () => {
   const { colorMode } = useContext(AppContext);

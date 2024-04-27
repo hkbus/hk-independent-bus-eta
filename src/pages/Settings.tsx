@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState, useMemo, useCallback } from "react";
-import AppContext from "../AppContext";
+import AppContext from "../context/AppContext";
 import {
   Avatar,
   Divider,
@@ -51,9 +51,9 @@ import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
 import PersonalizeDialog from "../components/settings/PersonalizeDialog";
 import { useNavigate } from "react-router-dom";
-import ReactNativeContext from "../ReactNativeContext";
+import ReactNativeContext from "../context/ReactNativeContext";
 import useLanguage from "../hooks/useTranslation";
-import DbContext from "../DbContext";
+import DbContext from "../context/DbContext";
 
 const Settings = () => {
   const {

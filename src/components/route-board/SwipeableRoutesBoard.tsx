@@ -12,13 +12,13 @@ import memorize from "memoize-one";
 import { useTranslation } from "react-i18next";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 import type { BoardTabType } from "../../@types/types";
 import { TRANSPORT_SEARCH_OPTIONS, TRANSPORT_ORDER } from "../../constants";
 import RouteRowList from "./RouteRowList";
 import { routeSortFunc } from "../../utils";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 interface SwipeableRouteBoardProps {
   boardTab: BoardTabType;

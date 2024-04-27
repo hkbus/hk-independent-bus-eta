@@ -2,7 +2,7 @@ import { Box, SxProps, Theme } from "@mui/material";
 import { Explore as ExploreIcon } from "@mui/icons-material";
 import { isSafari, requestPermission } from "react-world-compass";
 import { useCallback, useContext } from "react";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 
 const CompassControl = () => {
   const { compassPermission, setCompassPermission } = useContext(AppContext);

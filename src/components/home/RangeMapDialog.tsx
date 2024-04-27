@@ -11,7 +11,7 @@ import {
 import RangeMap from "./RangeMap";
 import { useTranslation } from "react-i18next";
 import { useCallback, useContext, useState } from "react";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { Location } from "hk-bus-eta";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { getDistanceWithUnit } from "../../utils";

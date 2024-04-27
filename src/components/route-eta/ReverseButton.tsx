@@ -5,10 +5,10 @@ import { RouteListEntry } from "hk-bus-eta";
 import { useNavigate } from "react-router-dom";
 import { vibrate, getDistance } from "../../utils";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 import useLanguage from "../../hooks/useTranslation";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 const ReverseButton = ({ routeId }: { routeId: string }) => {
   const { t } = useTranslation();

@@ -1,7 +1,7 @@
 import { ListItemText, Slider, Typography } from "@mui/material";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 
 const FontSizeSlider = () => {
   const { fontSize: _fontSize, setFontSize: setAppFontSize } =

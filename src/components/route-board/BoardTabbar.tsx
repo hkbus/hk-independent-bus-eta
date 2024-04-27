@@ -3,7 +3,7 @@ import { Box, Tabs, Tab, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
-import AppContext from "../../AppContext";
+import AppContext from "../../context/AppContext";
 import { BoardTabType } from "../../@types/types";
 
 interface BoardTabbarProps {

@@ -14,7 +14,7 @@ import DbRenewReminder from "../components/layout/DbRenewReminder";
 import { useParams } from "react-router-dom";
 import useLanguage from "../hooks/useTranslation";
 import CollectionContext from "../CollectionContext";
-import DbContext from "../DbContext";
+import DbContext from "../context/DbContext";
 
 const Home = () => {
   const { AppTitle } = useContext(DbContext);

@@ -4,9 +4,9 @@ import SuccinctTimeReport from "../SuccinctTimeReport";
 import { EtaDb, Location, RouteList, StopList } from "hk-bus-eta";
 import { formatHandling } from "../../../utils";
 import { useContext, useMemo } from "react";
-import AppContext from "../../../AppContext";
+import AppContext from "../../../context/AppContext";
 import { RouteCollection } from "../../../@types/types";
-import DbContext from "../../../DbContext";
+import DbContext from "../../../context/DbContext";
 
 interface CollectionRouteListProps {
   collection: RouteCollection;

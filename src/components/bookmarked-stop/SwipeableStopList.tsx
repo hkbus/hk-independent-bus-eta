@@ -8,7 +8,7 @@ import React, {
 import SwipeableViews from "react-swipeable-views";
 import StopRouteList from "./StopRouteList";
 import { Company } from "hk-bus-eta";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
 
 interface SwipeableStopListProps {

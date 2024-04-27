@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import type { ReactNode } from "react";
-import { isEmptyObj } from "./utils";
-import { fetchDbFunc } from "./db";
+import { isEmptyObj } from "../utils";
+import { fetchDbFunc } from "../db";
 import { compress as compressJson } from "lzutf8-light";
-import type { DatabaseType } from "./db";
-import { isHoliday } from "./timetable";
+import type { DatabaseType } from "../db";
+import { isHoliday } from "../timetable";
 
 interface DatabaseContextState {
   db: DatabaseType;

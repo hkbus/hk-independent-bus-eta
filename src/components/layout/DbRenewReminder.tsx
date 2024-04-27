@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import DbContext from "../../DbContext";
+import DbContext from "../../context/DbContext";
 
 const DbRenewReminder = () => {
   const { t } = useTranslation();
