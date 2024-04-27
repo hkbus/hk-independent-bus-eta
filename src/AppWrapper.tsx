@@ -17,6 +17,8 @@ const AppWrapper = () => {
     fetchDbFunc().then((db) => {
       setState(db);
     });
+    document.querySelector<HTMLElement>("#launcher-loading")!.style.display =
+      "none";
   }, []);
 
   if (state === null) return <></>;
