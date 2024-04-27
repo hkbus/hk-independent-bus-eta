@@ -9,6 +9,7 @@ import { setSeoHeader, getDistance, vibrate } from "../utils";
 import { LinearProgress } from "../components/Progress";
 import useLanguage from "../hooks/useTranslation";
 import SearchResultList from "../components/route-search/SearchResultList";
+import DbContext from "../DbContext";
 
 export interface SearchRoute {
   routeId: string;
@@ -34,11 +35,9 @@ const RouteSearch = () => {
   const language = useLanguage();
   const {
     AppTitle,
-    geolocation,
-    energyMode,
     db: { routeList, stopList, holidays, serviceDayMap },
-    vibrateDuration,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
+  const { geolocation, energyMode, vibrateDuration } = useContext(AppContext);
 
   const [state, setState] = useState<RouteSearchState>(DEFAULT_STATE);
   const { locations, status, result, resultIdx } = state;
@@ -173,7 +172,7 @@ const RouteSearch = () => {
         terminateWorker();
         const startLocation = locations.start
           ? locations.start.location
-          : geolocation;
+          : geolocation.current;
         worker.current = new Worker("/search-worker.js");
         worker.current.postMessage({
           routeList,
@@ -276,7 +275,9 @@ const RouteSearch = () => {
     <Paper sx={rootSx} square elevation={0}>
       {!energyMode ? (
         <SearchMap
-          start={locations.start ? locations.start.location : geolocation}
+          start={
+            locations.start ? locations.start.location : geolocation.current
+          }
           end={locations.end ? locations.end.location : null}
           routes={result[resultIdx.resultIdx]}
           stopIdx={resultIdx.stopIdx}

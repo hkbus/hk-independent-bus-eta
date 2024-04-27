@@ -8,14 +8,15 @@ import { useTranslation } from "react-i18next";
 import AppContext from "../../AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
 import useLanguage from "../../hooks/useTranslation";
+import DbContext from "../../DbContext";
 
 const ReverseButton = ({ routeId }: { routeId: string }) => {
   const { t } = useTranslation();
   const language = useLanguage();
   const {
     db: { routeList, holidays, stopList, serviceDayMap },
-    vibrateDuration,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
+  const { vibrateDuration } = useContext(AppContext);
   const { route, stops, co, gtfsId } = routeList[routeId];
   const navigate = useNavigate();
 

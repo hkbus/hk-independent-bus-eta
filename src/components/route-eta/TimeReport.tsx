@@ -7,6 +7,7 @@ import { LinearProgress } from "../Progress";
 import { Eta, Terminal } from "hk-bus-eta";
 import { getPlatformSymbol, getLineColor } from "../../utils";
 import useLanguage from "../../hooks/useTranslation";
+import DbContext from "../../DbContext";
 
 interface TimeReportProps {
   routeId: string;
@@ -25,7 +26,7 @@ const TimeReport = ({
   const language = useLanguage();
   const {
     db: { routeList, stopList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const etas = useEtas(`${routeId}/${seq}`);
 
   const { route, co, stops } = routeList[routeId];

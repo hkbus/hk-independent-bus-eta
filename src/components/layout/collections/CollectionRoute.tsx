@@ -6,18 +6,18 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import { Box, Typography } from "@mui/material";
-import AppContext from "../../../AppContext";
 import SuccinctTimeReport from "../../home/SuccinctTimeReport";
 import { reorder } from "../../../utils";
 import { useTranslation } from "react-i18next";
+import DbContext from "../../../DbContext";
+import CollectionContext from "../../../CollectionContext";
 
 const CollectionRoute = () => {
   const {
     db: { routeList },
-    collections,
-    collectionIdx,
-    setCollectionEtas,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
+  const { collections, collectionIdx, setCollectionEtas } =
+    useContext(CollectionContext);
   const [items, setItems] = useState<string[]>(
     collectionIdx !== null
       ? collections[collectionIdx].list.filter(

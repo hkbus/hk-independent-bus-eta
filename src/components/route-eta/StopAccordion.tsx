@@ -17,13 +17,14 @@ import {
   Info as InfoIcon,
   Share as ShareIcon,
 } from "@mui/icons-material";
-import AppContext from "../../AppContext";
 import { useTranslation } from "react-i18next";
 import { toProperCase } from "../../utils";
 import TimeReport from "./TimeReport";
 import { SharingModalProps } from "./SharingModal";
 import ReactNativeContext from "../../ReactNativeContext";
 import useLanguage from "../../hooks/useTranslation";
+import DbContext from "../../DbContext";
+import CollectionContext from "../../CollectionContext";
 
 interface StopAccordionProps {
   routeId: string;
@@ -48,10 +49,9 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
     } = props;
     const {
       db: { routeList, stopList },
-      savedEtas,
-      setCollectionDrawerRoute,
-      collections,
-    } = useContext(AppContext);
+    } = useContext(DbContext);
+    const { savedEtas, setCollectionDrawerRoute, collections } =
+      useContext(CollectionContext);
     const { alarmStopId, toggleStopAlarm } = useContext(ReactNativeContext);
     const { isStopAlarm } = useContext(ReactNativeContext);
     const { t } = useTranslation();

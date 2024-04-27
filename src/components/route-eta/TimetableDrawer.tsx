@@ -10,9 +10,9 @@ import {
 } from "@mui/material";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
 import RouteOffiicalUrlBtn from "./timetableDrawer/RouteOfficialUrlBtn";
 import { isHoliday } from "../../timetable";
+import DbContext from "../../DbContext";
 
 interface TimetableDrawerProps {
   routeId: string;
@@ -24,7 +24,7 @@ const TimetableDrawer = ({ routeId, open, onClose }: TimetableDrawerProps) => {
   const { t } = useTranslation();
   const {
     db: { routeList, holidays },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const { freq, jt } = routeList[routeId];
 
   const isTodayHoliday = useMemo(

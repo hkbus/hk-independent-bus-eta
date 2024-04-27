@@ -2,13 +2,13 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Eta, fetchEtas } from "hk-bus-eta";
 import AppContext from "../AppContext";
 import useLanguage from "./useTranslation";
+import DbContext from "../DbContext";
 
 export const useEtas = (routeId: string, disable: boolean = false) => {
+  const { isVisible, refreshInterval } = useContext(AppContext);
   const {
     db: { routeList, stopList, holidays, serviceDayMap },
-    isVisible,
-    refreshInterval,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const [routeKey, seq] = routeId.split("/");
   const routeObj = routeList[routeKey] || DefaultRoute;
   const [etas, setEtas] = useState<Eta[] | null>(null);

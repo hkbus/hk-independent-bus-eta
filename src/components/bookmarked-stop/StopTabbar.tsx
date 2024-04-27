@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { Tabs, Tab, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
 import useLanguage from "../../hooks/useTranslation";
+import CollectionContext from "../../CollectionContext";
+import DbContext from "../../DbContext";
 
 interface HomeTabbarProps {
   stopTab: string | null;
@@ -12,10 +13,10 @@ interface HomeTabbarProps {
 const StopTabbar = ({ stopTab, onChangeTab }: HomeTabbarProps) => {
   const { t } = useTranslation();
   const language = useLanguage();
+  const { savedStops } = useContext(CollectionContext);
   const {
     db: { stopList },
-    savedStops,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
 
   if (savedStops.length === 0) {
     return (

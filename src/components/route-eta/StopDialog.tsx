@@ -15,10 +15,11 @@ import {
   Theme,
 } from "@mui/material";
 import { useCallback, useContext, useMemo } from "react";
-import AppContext from "../../AppContext";
 import StopRouteList from "../bookmarked-stop/StopRouteList";
 import { Company } from "hk-bus-eta";
 import useLanguage from "../../hooks/useTranslation";
+import DbContext from "../../DbContext";
+import CollectionContext from "../../CollectionContext";
 
 interface StopDialogProps {
   open: boolean;
@@ -29,9 +30,8 @@ interface StopDialogProps {
 const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
   const {
     db: { stopList },
-    savedStops,
-    updateSavedStops,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
+  const { savedStops, updateSavedStops } = useContext(CollectionContext);
   const language = useLanguage();
 
   const bookmarked = useMemo<boolean>(

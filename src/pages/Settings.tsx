@@ -53,6 +53,7 @@ import PersonalizeDialog from "../components/settings/PersonalizeDialog";
 import { useNavigate } from "react-router-dom";
 import ReactNativeContext from "../ReactNativeContext";
 import useLanguage from "../hooks/useTranslation";
+import DbContext from "../DbContext";
 
 const Settings = () => {
   const {
@@ -61,6 +62,8 @@ const Settings = () => {
     renewDb,
     autoRenew,
     toggleAutoDbRenew,
+  } = useContext(DbContext);
+  const {
     geoPermission,
     updateGeoPermission,
     vibrateDuration,

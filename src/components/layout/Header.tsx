@@ -26,12 +26,12 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useWeatherCode, WeatherIcons } from "../Weather";
 import useOnline from "../../hooks/useOnline";
 import useLanguage from "../../hooks/useTranslation";
+import DbContext from "../../DbContext";
 
 const Header = () => {
   const {
     searchRoute,
     setSearchRoute,
-    db: { routeList },
     vibrateDuration,
     geoPermission,
     updateGeolocation,
@@ -39,6 +39,9 @@ const Header = () => {
     _colorMode,
     toggleColorMode,
   } = useContext(AppContext);
+  const {
+    db: { routeList },
+  } = useContext(DbContext);
   const { t } = useTranslation();
   const language = useLanguage();
   let location = useLocation();

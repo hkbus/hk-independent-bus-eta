@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import AppContext from "../../../AppContext";
 import {
   Box,
   Button,
@@ -18,6 +17,7 @@ import {
   RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import dayjs from "dayjs";
+import CollectionContext from "../../../CollectionContext";
 
 const CollectionSchedule = () => {
   const { t } = useTranslation();
@@ -27,7 +27,7 @@ const CollectionSchedule = () => {
     updateCollectionSchedule,
     addCollectionSchedule,
     removeCollectionSchedule,
-  } = useContext(AppContext);
+  } = useContext(CollectionContext);
 
   if (collectionIdx === null) {
     return null;

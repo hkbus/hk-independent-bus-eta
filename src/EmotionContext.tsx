@@ -52,16 +52,19 @@ export const EmotionContextProvider = ({
     localStorage.setItem("emotion-checkins", JSON.stringify(state.checkIns));
   }, [state.checkIns]);
 
+  const contextValue = useMemo(
+    () => ({
+      ...state,
+      lastCheckIn,
+      isRemind,
+      addCheckin,
+      updateLastCheckIn,
+    }),
+    [state, lastCheckIn, isRemind, addCheckin, updateLastCheckIn]
+  );
+
   return (
-    <EmotionContext.Provider
-      value={{
-        ...state,
-        lastCheckIn,
-        isRemind,
-        addCheckin,
-        updateLastCheckIn,
-      }}
-    >
+    <EmotionContext.Provider value={contextValue}>
       {children}
     </EmotionContext.Provider>
   );

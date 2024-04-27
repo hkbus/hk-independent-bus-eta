@@ -7,11 +7,11 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import AppContext from "../../AppContext";
 import Collection from "./collections/Collection";
 import { useTranslation } from "react-i18next";
 import { Add as AddIcon, Maximize as MaximizeIcon } from "@mui/icons-material";
 import WatchEntry from "./collections/WatchEntry";
+import CollectionContext from "../../CollectionContext";
 
 const CollectionDrawer = () => {
   const { t } = useTranslation();
@@ -21,7 +21,7 @@ const CollectionDrawer = () => {
     savedEtas,
     collections,
     addNewCollection,
-  } = useContext(AppContext);
+  } = useContext(CollectionContext);
 
   return (
     <Drawer

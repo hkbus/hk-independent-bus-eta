@@ -77,7 +77,7 @@ const RangeMap = React.forwardRef<Leaflet.Map, RangeMapProps>(
         <SetViewOnClick map={map as Leaflet.Map} onChange={onChange} />
         <CenterControl
           onClick={() => {
-            map?.setView(geolocation, map?.getZoom(), {
+            map?.setView(geolocation.current, map?.getZoom(), {
               animate: true,
             });
           }}

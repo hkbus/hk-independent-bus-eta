@@ -13,13 +13,14 @@ import { decompress } from "lzutf8-light";
 import { Check as CheckIcon } from "@mui/icons-material";
 import throttle from "lodash.throttle";
 import AppContext, { AppState } from "../AppContext";
-import { DEFAULT_GEOLOCATION, DEFAULT_SEARCH_RANGE, isStrings } from "../utils";
-import { CollectionState } from "../CollectionContext";
+import { DEFAULT_SEARCH_RANGE, isStrings } from "../utils";
+import CollectionContext, { CollectionState } from "../CollectionContext";
 
 const DataImport = () => {
   const { data } = useParams();
   const { t } = useTranslation();
-  const { importAppState, importCollectionState } = useContext(AppContext);
+  const { importAppState } = useContext(AppContext);
+  const { importCollectionState } = useContext(CollectionContext);
   const navigate = useNavigate();
   const [state, setState] = useState<string>(data ?? "");
 
@@ -101,7 +102,6 @@ const DataImport = () => {
     importAppState({
       geoPermission: null,
       compassPermission: "default",
-      geolocation: DEFAULT_GEOLOCATION,
       manualGeolocation: null,
       searchRoute: "",
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",

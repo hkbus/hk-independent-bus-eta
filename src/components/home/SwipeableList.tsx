@@ -5,13 +5,13 @@ import React, {
   useRef,
 } from "react";
 import SwipeableViews from "react-swipeable-views";
-import AppContext from "../../AppContext";
 import type { HomeTabType } from "./HomeTabbar";
 import SearchRangeController from "./SearchRangeController";
 import NearbyRouteList from "./lists/NearbyRouteList";
 import SavedRouteList from "./lists/SavedRouteList";
 import SmartCollectionRouteList from "./lists/SmartCollectionRouteList";
 import CollectionRouteList from "./lists/CollectionRouteList";
+import CollectionContext from "../../CollectionContext";
 
 interface SwipeableListProps {
   homeTab: HomeTabType | string;
@@ -24,7 +24,7 @@ export interface SwipeableListRef {
 
 const SwipeableList = React.forwardRef<SwipeableListRef, SwipeableListProps>(
   ({ homeTab, onChangeTab }, ref) => {
-    const { collections } = useContext(AppContext);
+    const { collections } = useContext(CollectionContext);
 
     const defaultHometab = useRef<HomeTabType | string>(homeTab);
 

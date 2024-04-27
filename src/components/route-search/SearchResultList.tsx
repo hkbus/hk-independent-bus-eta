@@ -9,11 +9,11 @@ import {
   SxProps,
   Theme,
 } from "@mui/material";
-import AppContext from "../../AppContext";
 import RouteNo from "../route-board/RouteNo";
 import TimeReport from "../route-eta/TimeReport";
 import useLanguage from "../../hooks/useTranslation";
 import { SearchRoute } from "../../pages/RouteSearch";
+import DbContext from "../../DbContext";
 
 interface SearchResultListProps {
   routes: SearchRoute[];
@@ -32,7 +32,7 @@ const SearchResultList = ({
 }: SearchResultListProps) => {
   const {
     db: { routeList, stopList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const { t } = useTranslation();
   const language = useLanguage();
 

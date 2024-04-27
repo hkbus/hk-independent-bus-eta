@@ -16,6 +16,7 @@ import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
 import useLanguage from "../../hooks/useTranslation";
 import { SearchRoute } from "../../pages/RouteSearch";
+import DbContext from "../../DbContext";
 
 interface ChangeMapCenter {
   center: GeoLocation | null;
@@ -83,7 +84,7 @@ const BusRoute = ({
 }: BusRouteProps) => {
   const {
     db: { routeList, stopList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const language = useLanguage();
   const stops = Object.values(routeList[routeId].stops)
     .sort((a, b) => b.length - a.length)[0]
@@ -132,7 +133,7 @@ interface WalklinesProps {
 const Walklines = ({ routes, start, end }: WalklinesProps) => {
   const {
     db: { routeList, stopList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const lines = [];
   const points = [];
 
@@ -237,10 +238,10 @@ const SearchMap = ({
     if (isFollow) {
       if (
         !center ||
-        geolocation.lat !== center.lat ||
-        geolocation.lng !== center.lng
+        geolocation.current.lat !== center.lat ||
+        geolocation.current.lng !== center.lng
       )
-        updateCenter({ center: geolocation, isFollow: true });
+        updateCenter({ center: geolocation.current, isFollow: true });
     }
   }, [geolocation, center, isFollow, updateCenter]);
 

@@ -6,16 +6,16 @@ import {
   EditOutlined as EditOutlinedIcon,
 } from "@mui/icons-material";
 import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
-import AppContext from "../../AppContext";
 import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
 import { ManageMode } from "../../data";
 import { RouteCollection } from "../../@types/types";
+import CollectionContext from "../../CollectionContext";
 
 // mode: delete is for edit here
 const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
   const { collections, setCollections, toggleCollectionDialog } =
-    useContext(AppContext);
+    useContext(CollectionContext);
   const [items, setItems] = useState(
     // cannot use Array.reverse() as it is in-place reverse
     collections

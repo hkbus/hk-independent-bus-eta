@@ -6,9 +6,10 @@ import React, {
   useCallback,
 } from "react";
 import SwipeableViews from "react-swipeable-views";
-import AppContext from "../../AppContext";
 import StopRouteList from "./StopRouteList";
 import { Company } from "hk-bus-eta";
+import DbContext from "../../DbContext";
+import CollectionContext from "../../CollectionContext";
 
 interface SwipeableStopListProps {
   stopTab: string;
@@ -23,10 +24,10 @@ const SwipeableStopList = React.forwardRef<
   SwipeableStopListRef,
   SwipeableStopListProps
 >(({ stopTab, onChangeTab }, ref) => {
+  const { savedStops } = useContext(CollectionContext);
   const {
     db: { stopList, stopMap },
-    savedStops,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const defaultStoptab = useRef<string>(stopTab);
 
   useImperativeHandle(ref, () => ({

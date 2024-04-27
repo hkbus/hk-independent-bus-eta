@@ -6,8 +6,8 @@ import {
   Bookmark as BookmarkIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
 import { RouteCollection } from "../../@types/types";
+import CollectionContext from "../../CollectionContext";
 
 interface HomeTabbarProps {
   homeTab: HomeTabType | string;
@@ -16,7 +16,7 @@ interface HomeTabbarProps {
 
 const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
   const { t } = useTranslation();
-  const { collections } = useContext(AppContext);
+  const { collections } = useContext(CollectionContext);
 
   return (
     <Tabs

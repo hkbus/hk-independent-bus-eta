@@ -3,18 +3,18 @@ import { Box, Paper, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "../route-board/RouteNo";
 import { toProperCase } from "../../utils";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
 import ReverseButton from "./ReverseButton";
 import TimetableButton from "./TimeTableButton";
 import RouteStarButton from "./RouteStarButton";
 import useLanguage from "../../hooks/useTranslation";
+import DbContext from "../../DbContext";
 
 const RouteHeader = ({ routeId }: { routeId: string }) => {
   const { t } = useTranslation();
   const language = useLanguage();
   const {
     db: { routeList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const { route, orig, dest, nlbId } = routeList[routeId];
 
   return (

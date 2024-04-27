@@ -27,6 +27,7 @@ import {
   StopMap,
 } from "hk-bus-eta";
 import useLanguage from "../hooks/useTranslation";
+import DbContext from "../DbContext";
 const RouteMap = React.lazy(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
@@ -36,11 +37,9 @@ const RouteEta = () => {
   const {
     AppTitle,
     db: { routeList, stopList, stopMap },
-    updateSelectedRoute,
-    energyMode,
-    geoPermission,
-    geolocation,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
+  const { updateSelectedRoute, energyMode, geoPermission, geolocation } =
+    useContext(AppContext);
   const routeId = getRouteEntry(id.toUpperCase(), routeList);
   const routeListEntry = routeList[routeId];
   const { route, stops, co, orig, dest, fares } = routeListEntry;
@@ -58,7 +57,7 @@ const RouteEta = () => {
       const nearbyStop = stopIds
         .map((stopId, idx) => [
           idx,
-          getDistance(geolocation, stopList[stopId].location),
+          getDistance(geolocation.current, stopList[stopId].location),
         ])
         .sort((a, b) => a[1] - b[1])[0];
 

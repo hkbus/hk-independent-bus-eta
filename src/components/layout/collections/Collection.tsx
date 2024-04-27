@@ -11,8 +11,9 @@ import {
   Bookmark as BookmarkIcon,
   BookmarkBorder as BookmarkBorderIcon,
 } from "@mui/icons-material";
-import AppContext from "../../../AppContext";
 import { useTranslation } from "react-i18next";
+import DbContext from "../../../DbContext";
+import CollectionContext from "../../../CollectionContext";
 
 interface CollectionProps {
   name: string;
@@ -23,11 +24,10 @@ interface CollectionProps {
 const Collection = ({ name, list, collectionIdx = null }: CollectionProps) => {
   const { t } = useTranslation();
   const {
-    collectionDrawerRoute,
     db: { routeList },
-    toggleCollectionDialog,
-    toggleCollectionEta,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
+  const { collectionDrawerRoute, toggleCollectionDialog, toggleCollectionEta } =
+    useContext(CollectionContext);
 
   return (
     <Box sx={collectionSx}>

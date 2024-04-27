@@ -13,14 +13,13 @@ import AppContext from "../AppContext";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { compress as compressJson } from "lzutf8-light";
 import useLanguage from "../hooks/useTranslation";
+import CollectionContext from "../CollectionContext";
 
 const DataExport = () => {
   const { t } = useTranslation();
   const language = useLanguage();
+  const { savedStops, savedEtas, collections } = useContext(CollectionContext);
   const {
-    savedStops,
-    savedEtas,
-    collections,
     _colorMode,
     energyMode,
     platformMode,

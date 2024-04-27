@@ -15,13 +15,15 @@ import SwipeableStopList, {
   SwipeableStopListRef,
 } from "../components/bookmarked-stop/SwipeableStopList";
 import useLanguage from "../hooks/useTranslation";
+import CollectionContext from "../CollectionContext";
+import DbContext from "../DbContext";
 
 const BookmarkedStop = () => {
+  const { colorMode } = useContext(AppContext);
+  const { savedStops } = useContext(CollectionContext);
   const {
-    savedStops,
     db: { stopList },
-    colorMode,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const language = useLanguage();
   const swipeableList = useRef<SwipeableStopListRef>(null);
   const defaultTab = useMemo(() => {

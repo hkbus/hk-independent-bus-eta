@@ -9,14 +9,15 @@ import {
 } from "@mui/material";
 import { Watch as WatchIcon, Launch as LaunchIcon } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../../AppContext";
 import ReactNativeContext from "../../../ReactNativeContext";
+import CollectionContext from "../../../CollectionContext";
+import DbContext from "../../../DbContext";
 
 const WatchEntry = () => {
+  const { collectionDrawerRoute } = useContext(CollectionContext);
   const {
-    collectionDrawerRoute,
     db: { routeList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const { os } = useContext(ReactNativeContext);
   const { t } = useTranslation();
 

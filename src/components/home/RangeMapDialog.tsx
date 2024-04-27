@@ -38,7 +38,7 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
   const { t } = useTranslation();
 
   const [state, setState] = useState<RangeMapDialogState>({
-    geolocation: manualGeolocation ?? geolocation,
+    geolocation: manualGeolocation ?? geolocation.current,
     searchRange,
   });
 

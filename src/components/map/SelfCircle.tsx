@@ -5,6 +5,7 @@ import { Circle, Marker, MarkerProps } from "react-leaflet";
 import L from "leaflet";
 import useCompass, { OrientationState } from "react-world-compass";
 import "leaflet-rotatedmarker";
+import { Location } from "hk-bus-eta";
 
 interface RotatedMarkerProps extends MarkerProps {
   rotationOrigin: string;
@@ -64,6 +65,18 @@ const RotatedMarker = (props: RotatedMarkerProps) => {
 const SelfCircle = () => {
   const { geolocation, geoPermission } = useContext(AppContext);
   const icon = useMemo(() => myIcon(), []);
+  const [state, setState] = useState<Location>(
+    checkPosition(geolocation.current)
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setState(checkPosition(geolocation.current));
+    }, 100);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [geolocation]);
 
   if (geoPermission !== "granted") {
     return null;
@@ -71,12 +84,12 @@ const SelfCircle = () => {
 
   return (
     <>
-      <Circle center={checkPosition(geolocation)} radius={25} />
+      <Circle center={state} radius={25} />
       <RotatedMarker
         key="rotated-marker"
         rotationOrigin="center"
         icon={icon}
-        position={checkPosition(geolocation)}
+        position={state}
       />
     </>
   );

@@ -6,6 +6,8 @@ import { RouteCollection } from "../../../@types/types";
 import { formatHandling } from "../../../utils";
 import { useContext, useMemo } from "react";
 import AppContext from "../../../AppContext";
+import DbContext from "../../../DbContext";
+import CollectionContext from "../../../CollectionContext";
 
 interface SmartCollectionRouteListProps {
   isFocus: boolean;
@@ -16,19 +18,18 @@ const SmartCollectionRouteList = ({
 }: SmartCollectionRouteListProps) => {
   const { t } = useTranslation();
 
+  const { geolocation, isRouteFilter } = useContext(AppContext);
+  const { collections: _collections } = useContext(CollectionContext);
   const {
-    collections: _collections,
-    geolocation,
     db: { routeList, stopList, serviceDayMap },
-    isRouteFilter,
     isTodayHoliday,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
 
   const collections = useMemo(
     () =>
       getCollections({
         collections: _collections,
-        geolocation,
+        geolocation: geolocation.current,
         stopList,
         routeList,
         isRouteFilter,

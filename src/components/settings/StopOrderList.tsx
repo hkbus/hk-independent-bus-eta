@@ -2,7 +2,6 @@ import { useState, useContext, useCallback } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import Droppable from "../StrictModeDroppable";
 import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
-import AppContext from "../../AppContext";
 import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
 import {
@@ -11,14 +10,15 @@ import {
 } from "@mui/icons-material";
 import { ManageMode } from "../../data";
 import useLanguage from "../../hooks/useTranslation";
+import DbContext from "../../DbContext";
+import CollectionContext from "../../CollectionContext";
 
 const StopOrderList = ({ mode }: { mode: ManageMode }) => {
   const {
     db: { stopList },
-    savedStops,
-    setSavedStops,
-    updateSavedStops,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
+  const { savedStops, setSavedStops, updateSavedStops } =
+    useContext(CollectionContext);
   const [items, setItems] = useState(
     savedStops.filter((id) => id.split("|")[1] in stopList)
   );
@@ -94,7 +94,7 @@ const DraggableListItem = ({
 }: DraggableListItemProps) => {
   const {
     db: { stopList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const [, stopId] = item.split("|");
   const language = useLanguage();
 

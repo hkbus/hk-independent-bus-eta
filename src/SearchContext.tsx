@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Address } from "./components/route-search/AddressInput";
 
 type SearchResult = Array<Array<{ routeId: string; on: number; off: number }>>;
@@ -28,14 +28,16 @@ export const SearchContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [state, setState] = useState<SearchContextState>(DEFAULT_STATE);
+  const contextValue: SearchContextValue = useMemo(
+    () => ({
+      ...state,
+      setState,
+    }),
+    [state, setState]
+  );
 
   return (
-    <SearchContext.Provider
-      value={{
-        ...state,
-        setState,
-      }}
-    >
+    <SearchContext.Provider value={contextValue}>
       {children}
     </SearchContext.Provider>
   );

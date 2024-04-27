@@ -8,6 +8,7 @@ import React, {
 import AppContext from "./AppContext";
 import { useTranslation } from "react-i18next";
 import useLanguage from "./hooks/useTranslation";
+import DbContext from "./DbContext";
 
 interface ReactNativeContextState {
   alarmStopId: string;
@@ -30,12 +31,11 @@ export const ReactNativeContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { geoPermission, setGeoPermission, updateGeolocation } =
+    useContext(AppContext);
   const {
-    geoPermission,
-    setGeoPermission,
-    updateGeolocation,
     db: { stopList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const { t } = useTranslation();
   const language = useLanguage();
   const [state, setState] = useState<ReactNativeContextState>(DEFAULT_STATE);
@@ -148,16 +148,19 @@ export const ReactNativeContextProvider = ({
     localStorage.setItem("debug", JSON.stringify(state.debug));
   }, [state.debug]);
 
+  const contextValue: ReactNativeContextValue = useMemo(
+    () => ({
+      os,
+      isStopAlarm,
+      ...state,
+      toggleDebug,
+      toggleStopAlarm,
+    }),
+    [os, isStopAlarm, state, toggleDebug, toggleStopAlarm]
+  );
+
   return (
-    <ReactNativeContext.Provider
-      value={{
-        os,
-        isStopAlarm,
-        ...state,
-        toggleDebug,
-        toggleStopAlarm,
-      }}
-    >
+    <ReactNativeContext.Provider value={contextValue}>
       {children}
     </ReactNativeContext.Provider>
   );

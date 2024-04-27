@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import AppContext from "../../AppContext";
+import DbContext from "../../DbContext";
 
 const DbRenewReminder = () => {
   const { t } = useTranslation();
@@ -9,7 +9,7 @@ const DbRenewReminder = () => {
   const {
     db: { updateTime },
     renewDb,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
 
   const isOutdated = useMemo(
     () => Date.now() > updateTime + 28 * 24 * 3600 * 1000,

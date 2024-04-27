@@ -1,9 +1,9 @@
 import React, {
-  useContext,
   useEffect,
   useState,
   useRef,
   useCallback,
+  useMemo,
 } from "react";
 import type { ReactNode } from "react";
 import {
@@ -14,14 +14,10 @@ import {
   isStrings,
   vibrate,
 } from "./utils";
-import DbContext from "./DbContext";
-import type { DatabaseContextValue } from "./DbContext";
-import { Workbox } from "workbox-window";
 import { produce, freeze } from "immer";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import { ETA_FORMAT_NEXT_TYPES } from "./constants";
 import { useTranslation } from "react-i18next";
-import CollectionContext, { CollectionContextValue } from "./CollectionContext";
 import {
   BusSortOrder,
   ColorMode,
@@ -38,7 +34,6 @@ export interface AppState {
   searchRoute: string;
   selectedRoute: string;
   geoPermission: GeoPermission;
-  geolocation: GeoLocation;
   /**
    * location set by user for home page nearby routes
    */
@@ -107,10 +102,8 @@ export interface AppState {
   searchRange: number;
 }
 
-interface AppContextValue
-  extends AppState,
-    DatabaseContextValue,
-    CollectionContextValue {
+interface AppContextValue extends AppState {
+  geolocation: React.MutableRefObject<GeoLocation>;
   colorMode: "light" | "dark";
   setSearchRoute: (searchRoute: string) => void;
   updateSearchRouteByButton: (buttonValue: string) => void;
@@ -142,7 +135,6 @@ interface AppContextValue
   changeLanguage: (lang: Language) => void;
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
-  workbox?: Workbox;
   setSearchRange: (searchRange: number) => void;
 
   // for React Native Context
@@ -151,7 +143,6 @@ interface AppContextValue
 
 interface AppContextProviderProps {
   children: ReactNode;
-  workbox?: Workbox;
 }
 
 const AppContext = React.createContext<AppContextValue>({} as AppContextValue);
@@ -201,12 +192,12 @@ const isColorMode = (input: unknown): input is ColorMode => {
   return input === "dark" || input === "light" || input === "system";
 };
 
-export const AppContextProvider = ({
-  workbox,
-  children,
-}: AppContextProviderProps) => {
-  const dbContext = useContext(DbContext);
-  const collectionContext = useContext(CollectionContext);
+export const AppContextProvider = ({ children }: AppContextProviderProps) => {
+  const _geolocation = useMemo<GeoLocation>(() => {
+    const v = JSON.parse(localStorage.getItem("geolocation") ?? "null");
+    return isGeoLocation(v) ? v : DEFAULT_GEOLOCATION;
+  }, []);
+
   const getInitialState = (): AppState => {
     const devicePreferColorScheme =
       localStorage.getItem("colorMode") ||
@@ -214,9 +205,6 @@ export const AppContextProvider = ({
       "system";
     const searchRoute = "";
     const geoPermission: unknown = localStorage.getItem("geoPermission");
-    const geoLocation: unknown = JSON.parse(
-      localStorage.getItem("geolocation") ?? "null"
-    );
     const compassPermission: unknown =
       localStorage.getItem("compassPermission");
     const busSortOrder: unknown = localStorage.getItem("busSortOrder");
@@ -230,9 +218,6 @@ export const AppContextProvider = ({
       searchRoute: searchRoute,
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
       geoPermission: isGeoPermission(geoPermission) ? geoPermission : null,
-      geolocation: isGeoLocation(geoLocation)
-        ? geoLocation
-        : DEFAULT_GEOLOCATION,
       manualGeolocation: null, // never save manual location
       compassPermission: isCompassPermission(compassPermission)
         ? compassPermission
@@ -277,6 +262,8 @@ export const AppContextProvider = ({
       ),
     };
   };
+  const geolocation = useRef<GeoLocation>(_geolocation);
+
   const { i18n } = useTranslation();
   const language = useLanguage();
   type State = AppState;
@@ -298,12 +285,9 @@ export const AppContextProvider = ({
     [setState]
   );
 
-  const updateGeolocation = useCallback((geolocation: GeoLocation) => {
-    setStateRaw(
-      produce((state: State) => {
-        state.geolocation = geolocation;
-      })
-    );
+  const updateGeolocation = useCallback((value: GeoLocation) => {
+    geolocation.current = value;
+    localStorage.setItem("geolocation", JSON.stringify(value));
   }, []);
 
   useEffect(() => {
@@ -575,12 +559,8 @@ export const AppContextProvider = ({
 
   const resetUsageRecord = useCallback(() => {
     localStorage.clear();
-    setStateRaw(
-      produce((state: State) => {
-        state.geolocation = DEFAULT_GEOLOCATION;
-      })
-    );
-  }, []);
+    updateGeolocation(DEFAULT_GEOLOCATION);
+  }, [updateGeolocation]);
 
   const toggleIsRecentSearchShown = useCallback(() => {
     setStateRaw(
@@ -631,10 +611,6 @@ export const AppContextProvider = ({
   const importAppState = useCallback((appState: AppState) => {
     setStateRaw(appState);
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("geolocation", JSON.stringify(state.geolocation));
-  }, [state.geolocation]);
 
   useEffect(() => {
     localStorage.setItem("geoPermission", state.geoPermission ?? "null");
@@ -723,45 +699,74 @@ export const AppContextProvider = ({
     localStorage.setItem("searchRange", JSON.stringify(state.searchRange));
   }, [state.searchRange]);
 
+  const contextValue: AppContextValue = useMemo(
+    () => ({
+      ...state,
+      geolocation,
+      colorMode,
+      setSearchRoute,
+      updateSearchRouteByButton,
+      updateSelectedRoute,
+      setCompassPermission,
+      updateGeolocation,
+      setManualGeolocation,
+      addSearchHistory,
+      removeSearchHistoryByRouteId,
+      resetUsageRecord,
+      updateGeoPermission,
+      toggleRouteFilter,
+      toggleBusSortOrder,
+      toggleNumPadOrder,
+      toggleEtaFormat,
+      toggleColorMode,
+      toggleEnergyMode,
+      togglePlatformMode,
+      toggleVibrateDuration,
+      toggleAnalytics,
+      updateRefreshInterval,
+      toggleAnnotateScheduled,
+      toggleIsRecentSearchShown,
+      changeLanguage,
+      setFontSize,
+      importAppState,
+      setGeoPermission,
+      setSearchRange,
+    }),
+    [
+      state,
+      colorMode,
+      setSearchRoute,
+      updateSearchRouteByButton,
+      updateSelectedRoute,
+      setCompassPermission,
+      updateGeolocation,
+      setManualGeolocation,
+      addSearchHistory,
+      removeSearchHistoryByRouteId,
+      resetUsageRecord,
+      updateGeoPermission,
+      toggleRouteFilter,
+      toggleBusSortOrder,
+      toggleNumPadOrder,
+      toggleEtaFormat,
+      toggleColorMode,
+      toggleEnergyMode,
+      togglePlatformMode,
+      toggleVibrateDuration,
+      toggleAnalytics,
+      updateRefreshInterval,
+      toggleAnnotateScheduled,
+      toggleIsRecentSearchShown,
+      changeLanguage,
+      setFontSize,
+      importAppState,
+      setGeoPermission,
+      setSearchRange,
+    ]
+  );
+
   return (
-    <AppContext.Provider
-      value={{
-        ...dbContext,
-        ...collectionContext,
-        ...state,
-        colorMode,
-        setSearchRoute,
-        updateSearchRouteByButton,
-        updateSelectedRoute,
-        setCompassPermission,
-        updateGeolocation,
-        setManualGeolocation,
-        addSearchHistory,
-        removeSearchHistoryByRouteId,
-        resetUsageRecord,
-        updateGeoPermission,
-        toggleRouteFilter,
-        toggleBusSortOrder,
-        toggleNumPadOrder,
-        toggleEtaFormat,
-        toggleColorMode,
-        toggleEnergyMode,
-        togglePlatformMode,
-        toggleVibrateDuration,
-        toggleAnalytics,
-        updateRefreshInterval,
-        toggleAnnotateScheduled,
-        toggleIsRecentSearchShown,
-        changeLanguage,
-        setFontSize,
-        importAppState,
-        workbox,
-        setGeoPermission,
-        setSearchRange,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 };
 

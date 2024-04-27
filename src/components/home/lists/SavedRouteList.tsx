@@ -10,6 +10,8 @@ import {
 } from "hk-bus-eta";
 import { formatHandling, getDistance } from "../../../utils";
 import AppContext from "../../../AppContext";
+import DbContext from "../../../DbContext";
+import CollectionContext from "../../../CollectionContext";
 
 interface SavedRouteListProps {
   isFocus: boolean;
@@ -17,19 +19,18 @@ interface SavedRouteListProps {
 
 const SavedRouteList = ({ isFocus }: SavedRouteListProps) => {
   const { t } = useTranslation();
+  const { geolocation, isRouteFilter } = useContext(AppContext);
+  const { savedEtas } = useContext(CollectionContext);
   const {
-    savedEtas,
-    geolocation,
     db: { routeList, stopList, serviceDayMap },
-    isRouteFilter,
     isTodayHoliday,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
 
   const savedRoutes = useMemo(
     () =>
       getRoutes({
         savedEtas,
-        geolocation,
+        geolocation: geolocation.current,
         stopList,
         routeList,
         isRouteFilter,

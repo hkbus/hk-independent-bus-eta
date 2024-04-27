@@ -3,7 +3,6 @@ import { Paper, SxProps, Theme, Typography } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
 
-import AppContext from "../AppContext";
 import { setSeoHeader } from "../utils";
 import HomeTabbar, { isHomeTab } from "../components/home/HomeTabbar";
 import type { HomeTabType } from "../components/home/HomeTabbar";
@@ -14,9 +13,12 @@ import SwipeableList, {
 import DbRenewReminder from "../components/layout/DbRenewReminder";
 import { useParams } from "react-router-dom";
 import useLanguage from "../hooks/useTranslation";
+import CollectionContext from "../CollectionContext";
+import DbContext from "../DbContext";
 
 const Home = () => {
-  const { AppTitle, collections } = useContext(AppContext);
+  const { AppTitle } = useContext(DbContext);
+  const { collections } = useContext(CollectionContext);
   const { t } = useTranslation();
   const language = useLanguage();
   const { collectionName } = useParams();

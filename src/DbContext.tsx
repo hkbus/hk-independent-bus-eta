@@ -81,19 +81,20 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
     [db.holidays]
   );
 
+  const contextValue: DatabaseContextValue = useMemo(
+    () => ({
+      AppTitle,
+      db,
+      autoRenew,
+      isTodayHoliday,
+      renewDb,
+      toggleAutoDbRenew,
+    }),
+    [AppTitle, db, autoRenew, isTodayHoliday, renewDb, toggleAutoDbRenew]
+  );
+
   return (
-    <DbContext.Provider
-      value={{
-        AppTitle,
-        db,
-        autoRenew,
-        isTodayHoliday,
-        renewDb,
-        toggleAutoDbRenew,
-      }}
-    >
-      {children}
-    </DbContext.Provider>
+    <DbContext.Provider value={contextValue}>{children}</DbContext.Provider>
   );
 };
 

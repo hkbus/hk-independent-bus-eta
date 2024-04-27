@@ -4,14 +4,14 @@ import {
   Star as StarIcon,
   StarBorderOutlined as StarOutlinedIcon,
 } from "@mui/icons-material";
-import AppContext from "../../AppContext";
+import CollectionContext from "../../CollectionContext";
 
 interface RouteStarButtonProps {
   routeId: string;
 }
 
 const RouteStarButton = ({ routeId }: RouteStarButtonProps) => {
-  const { savedEtas, setCollectionDrawerRoute } = useContext(AppContext);
+  const { savedEtas, setCollectionDrawerRoute } = useContext(CollectionContext);
 
   return (
     <IconButton

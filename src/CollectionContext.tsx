@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { DaySchedule, RouteCollection } from "./@types/types";
 import { isStrings } from "./utils";
 import { DEFAULT_DAY_SCHEDULE, DEFAULT_ROUTE_COLLECTION } from "./constants";
@@ -307,28 +307,49 @@ export const CollectionContextProvider = ({
     localStorage.setItem("collections", JSON.stringify(state.collections));
   }, [state.collections]);
 
+  const contextValue: CollectionContextValue = useMemo(
+    () => ({
+      ...state,
+      updateSavedStops,
+      setSavedStops,
+      updateSavedEtas,
+      setSavedEtas,
+      setCollectionDrawerRoute,
+      addNewCollection,
+      removeCollection,
+      toggleCollectionDialog,
+      updateCollectionName,
+      updateCollectionSchedule,
+      addCollectionSchedule,
+      removeCollectionSchedule,
+      toggleCollectionEta,
+      setCollectionEtas,
+      setCollections,
+      importCollectionState,
+    }),
+    [
+      state,
+      updateSavedStops,
+      setSavedStops,
+      updateSavedEtas,
+      setSavedEtas,
+      setCollectionDrawerRoute,
+      addNewCollection,
+      removeCollection,
+      toggleCollectionDialog,
+      updateCollectionName,
+      updateCollectionSchedule,
+      addCollectionSchedule,
+      removeCollectionSchedule,
+      toggleCollectionEta,
+      setCollectionEtas,
+      setCollections,
+      importCollectionState,
+    ]
+  );
+
   return (
-    <CollectionContext.Provider
-      value={{
-        ...state,
-        updateSavedStops,
-        setSavedStops,
-        updateSavedEtas,
-        setSavedEtas,
-        setCollectionDrawerRoute,
-        addNewCollection,
-        removeCollection,
-        toggleCollectionDialog,
-        updateCollectionName,
-        updateCollectionSchedule,
-        addCollectionSchedule,
-        removeCollectionSchedule,
-        toggleCollectionEta,
-        setCollectionEtas,
-        setCollections,
-        importCollectionState,
-      }}
-    >
+    <CollectionContext.Provider value={contextValue}>
       {children}
     </CollectionContext.Provider>
   );

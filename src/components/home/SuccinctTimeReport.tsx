@@ -30,6 +30,7 @@ import {
 import RouteNo from "../route-board/RouteNo";
 import SuccinctEtas from "./SuccinctEtas";
 import useLanguage from "../../hooks/useTranslation";
+import DbContext from "../../DbContext";
 
 interface DistAndFareProps {
   name: string;
@@ -57,7 +58,7 @@ const DistAndFare = ({
     .join(", ");
 
   const { distance, unit, decimalPlace } = getDistanceWithUnit(
-    getDistance(location, manualGeolocation || geolocation)
+    getDistance(location, manualGeolocation || geolocation.current)
   );
 
   if (geoPermission !== "granted" || location.lat === 0) {
@@ -91,11 +92,10 @@ const SuccinctTimeReport = ({
 }: SuccinctTimeReportProps) => {
   const { t } = useTranslation();
   const language = useLanguage();
+  const { vibrateDuration, platformMode } = useContext(AppContext);
   const {
     db: { routeList, stopList },
-    vibrateDuration,
-    platformMode,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
   const { co, stops, dest, fares, faresHoliday, route } =

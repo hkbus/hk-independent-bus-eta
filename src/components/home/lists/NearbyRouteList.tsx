@@ -14,6 +14,7 @@ import {
 import { coToType, formatHandling, getDistance } from "../../../utils";
 import AppContext from "../../../AppContext";
 import throttle from "lodash.throttle";
+import DbContext from "../../../DbContext";
 
 interface NearbyRouteListProps {
   isFocus: boolean;
@@ -21,18 +22,16 @@ interface NearbyRouteListProps {
 
 const NearbyRouteList = ({ isFocus }: NearbyRouteListProps) => {
   const { t } = useTranslation();
+  const { manualGeolocation, geolocation, isRouteFilter, searchRange } =
+    useContext(AppContext);
   const {
-    manualGeolocation,
-    geolocation,
     db: { routeList, stopList, serviceDayMap },
-    isRouteFilter,
     isTodayHoliday,
-    searchRange,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
 
   // throttle to avoid rapidly UI changes due to geolocation changes
   const [state, setState] = useState<Location>(
-    manualGeolocation ?? geolocation
+    manualGeolocation ?? geolocation.current
   );
   const throttleUpdateGeolocation = useMemo(
     () =>
@@ -43,7 +42,7 @@ const NearbyRouteList = ({ isFocus }: NearbyRouteListProps) => {
   );
 
   useEffect(() => {
-    throttleUpdateGeolocation(manualGeolocation ?? geolocation);
+    throttleUpdateGeolocation(manualGeolocation ?? geolocation.current);
   }, [manualGeolocation, geolocation, throttleUpdateGeolocation]);
 
   const routes = useMemo(

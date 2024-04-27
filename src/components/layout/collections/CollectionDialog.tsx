@@ -11,11 +11,11 @@ import {
   TextField,
   Theme,
 } from "@mui/material";
-import AppContext from "../../../AppContext";
 import { useTranslation } from "react-i18next";
 import { DeleteForever as DeleteForeverIcon } from "@mui/icons-material";
 import CollectionSchedule from "./CollectionSchedule";
 import CollectionRoute from "./CollectionRoute";
+import CollectionContext from "../../../CollectionContext";
 
 const CollectionDialog = () => {
   const {
@@ -24,7 +24,7 @@ const CollectionDialog = () => {
     toggleCollectionDialog,
     updateCollectionName,
     removeCollection,
-  } = useContext(AppContext);
+  } = useContext(CollectionContext);
   const { t } = useTranslation();
 
   const [tab, changeTab] = useState<"time" | "routes">("routes");

@@ -21,6 +21,7 @@ import CompassControl from "../map/CompassControl";
 import { useRoutePath } from "../../hooks/useRoutePath";
 import { getLineColor } from "../../utils";
 import useLanguage from "../../hooks/useTranslation";
+import DbContext from "../../DbContext";
 
 interface CenterControlProps {
   onClick: React.MouseEventHandler<HTMLDivElement>;
@@ -70,13 +71,11 @@ const RouteMap = ({
   companies,
   onMarkerClick,
 }: RouteMapProps) => {
+  const { geolocation, geoPermission, updateGeoPermission, colorMode } =
+    useContext(AppContext);
   const {
-    geolocation,
-    geoPermission,
-    updateGeoPermission,
-    colorMode,
     db: { stopList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const language = useLanguage();
   const [map, setMap] = useState<Leaflet.Map | null>(null);
   const stops = useMemo(
@@ -107,7 +106,7 @@ const RouteMap = ({
       mapRef.current.stopIdx === stopIdx &&
       isFollow
     ) {
-      _center = geolocation;
+      _center = geolocation.current;
     } else {
       _center = stops[stopIdx] ? stops[stopIdx].location : checkPosition();
     }
@@ -163,10 +162,10 @@ const RouteMap = ({
 
   const onClickJumpToMyLocation = useCallback(() => {
     if (geoPermission === "granted") {
-      mapRef.current.map?.flyTo(geolocation);
+      mapRef.current.map?.flyTo(geolocation.current);
       mapRef.current = {
         ...mapRef.current,
-        center: geolocation,
+        center: geolocation.current,
         isFollow: true,
       };
     } else if (geoPermission !== "denied") {
@@ -177,7 +176,7 @@ const RouteMap = ({
       };
       updateGeoPermission("opening");
     }
-  }, [geoPermission, geolocation, updateGeoPermission]);
+  }, [geolocation, geoPermission, updateGeoPermission]);
 
   return (
     <Box id="route-map" sx={rootSx}>

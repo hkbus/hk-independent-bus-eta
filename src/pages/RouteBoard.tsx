@@ -8,6 +8,7 @@ import BoardTabbar, { isBoardTab } from "../components/route-board/BoardTabbar";
 import SwipeableRoutesBoard from "../components/route-board/SwipeableRoutesBoard";
 import { BoardTabType } from "../@types/types";
 import useLanguage from "../hooks/useTranslation";
+import DbContext from "../DbContext";
 
 interface RouteListProps {
   boardTab: BoardTabType;
@@ -15,7 +16,7 @@ interface RouteListProps {
 }
 
 const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
-  const { AppTitle } = useContext(AppContext);
+  const { AppTitle } = useContext(DbContext);
 
   const { t } = useTranslation();
   const language = useLanguage();

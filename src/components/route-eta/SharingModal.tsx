@@ -17,6 +17,7 @@ import { CircularProgress } from "../Progress";
 import { useParams } from "react-router-dom";
 import useLanguage from "../../hooks/useTranslation";
 import { SharingEntry } from "../../@types/types";
+import DbContext from "../../DbContext";
 
 export interface SharingModalProps extends SharingEntry {}
 
@@ -35,9 +36,9 @@ const SharingModal = ({
     useState<SharingModalState>(DEFAULT_STATE);
   const {
     AppTitle,
-    colorMode,
     db: { routeList, stopList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
+  const { colorMode } = useContext(AppContext);
   const { t } = useTranslation();
   const language = useLanguage();
   const [imgBase64, setImgBase64] = useState<string>("");

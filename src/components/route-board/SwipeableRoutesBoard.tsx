@@ -18,6 +18,7 @@ import type { BoardTabType } from "../../@types/types";
 import { TRANSPORT_SEARCH_OPTIONS, TRANSPORT_ORDER } from "../../constants";
 import RouteRowList from "./RouteRowList";
 import { routeSortFunc } from "../../utils";
+import DbContext from "../../DbContext";
 
 interface SwipeableRouteBoardProps {
   boardTab: BoardTabType;
@@ -30,13 +31,15 @@ const SwipeableRoutesBoard = ({
 }: SwipeableRouteBoardProps) => {
   const {
     searchRoute,
-    db: { holidays, routeList, serviceDayMap },
     isRouteFilter,
     busSortOrder,
     routeSearchHistory,
     vibrateDuration,
     isRecentSearchShown,
   } = useContext(AppContext);
+  const {
+    db: { holidays, routeList, serviceDayMap },
+  } = useContext(DbContext);
   const isTodayHoliday = useMemo(
     () => isHoliday(holidays, new Date()),
     [holidays]

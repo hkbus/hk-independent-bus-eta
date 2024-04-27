@@ -1,6 +1,6 @@
 import { StopListEntry } from "hk-bus-eta";
 import { useContext, useEffect, useState } from "react";
-import AppContext from "../AppContext";
+import DbContext from "../DbContext";
 
 interface GeoJsonType extends GeoJSON.GeoJsonObject {
   features?: Array<{
@@ -16,7 +16,7 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
   const [geoJson, setGeoJson] = useState<GeoJsonType | null>(null);
   const {
     db: { routeList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const { gtfsId, bound, co } = routeList[routeId];
 
   useEffect(() => {

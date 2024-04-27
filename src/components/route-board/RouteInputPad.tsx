@@ -6,6 +6,7 @@ import AppContext from "../../AppContext";
 import { type BoardTabType } from "../../@types/types";
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 import { RouteList } from "hk-bus-eta";
+import DbContext from "../../DbContext";
 
 interface KeyButtonProps {
   k: string;
@@ -80,10 +81,10 @@ const RouteAlphabetPad = ({ possibleChar }: { possibleChar: string[] }) => {
 };
 
 const RouteInputPad = ({ boardTab }: { boardTab: BoardTabType }) => {
+  const { searchRoute } = useContext(AppContext);
   const {
-    searchRoute,
     db: { routeList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
 
   const possibleChar = getPossibleChar(searchRoute, routeList, boardTab);
 

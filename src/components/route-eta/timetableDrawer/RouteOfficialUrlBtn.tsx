@@ -1,9 +1,9 @@
 import { useCallback, useContext, useMemo } from "react";
-import AppContext from "../../../AppContext";
 import { useTranslation } from "react-i18next";
 import { Box, Button, SxProps, Theme } from "@mui/material";
 import { Launch as LaunchIcon } from "@mui/icons-material";
 import useLanguage from "../../../hooks/useTranslation";
+import DbContext from "../../../DbContext";
 
 interface RouteOffiicalUrlBtnProps {
   routeId: string;
@@ -12,7 +12,7 @@ interface RouteOffiicalUrlBtnProps {
 const RouteOffiicalUrlBtn = ({ routeId }: RouteOffiicalUrlBtnProps) => {
   const {
     db: { routeList },
-  } = useContext(AppContext);
+  } = useContext(DbContext);
   const { t } = useTranslation();
   const language = useLanguage();
   const { route, co, gtfsId } = routeList[routeId];

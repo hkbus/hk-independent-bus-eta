@@ -6,6 +6,7 @@ import { formatHandling } from "../../../utils";
 import { useContext, useMemo } from "react";
 import AppContext from "../../../AppContext";
 import { RouteCollection } from "../../../@types/types";
+import DbContext from "../../../DbContext";
 
 interface CollectionRouteListProps {
   collection: RouteCollection;
@@ -17,18 +18,17 @@ const CollectionRouteList = ({
   isFocus,
 }: CollectionRouteListProps) => {
   const { t } = useTranslation();
+  const { geolocation, isRouteFilter } = useContext(AppContext);
   const {
-    geolocation,
     db: { routeList, stopList, serviceDayMap },
-    isRouteFilter,
     isTodayHoliday,
-  } = useContext(AppContext);
+  } = useContext(DbContext);
 
   const routes = useMemo(
     () =>
       getRoutes({
         savedEtas: collection.list,
-        geolocation,
+        geolocation: geolocation.current,
         stopList,
         routeList,
         isRouteFilter,
