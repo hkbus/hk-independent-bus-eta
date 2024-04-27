@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import { PaletteMode } from "@mui/material";
@@ -43,14 +43,16 @@ const App = () => {
   const { analytics, colorMode, fontSize } = useContext(AppContext);
   const language = useLanguage();
 
-  // If you want to start measuring performance in your app, pass a function
-  // to log results (for example: reportWebVitals(console.log))
-  // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-  analytics && reportWebVitals(sendToGoogleAnalytics);
-
   const theme = useMemo(() => {
     return createTheme(getThemeTokens(colorMode, fontSize), [colorMode]);
   }, [colorMode, fontSize]);
+
+  useEffect(() => {
+    // If you want to start measuring performance in your app, pass a function
+    // to log results (for example: reportWebVitals(console.log))
+    // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+    if (analytics) reportWebVitals(sendToGoogleAnalytics);
+  }, [analytics]);
 
   return (
     <StyledEngineProvider injectFirst>

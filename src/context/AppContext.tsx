@@ -314,7 +314,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     };
     window.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
-      if (geoWatcherId.current) {
+      if (geoPermission === "granted" && geoWatcherId.current) {
         navigator.geolocation.clearWatch(geoWatcherId.current);
       }
       window.removeEventListener("visibilitychange", onVisibilityChange);
@@ -348,7 +348,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         setGeoPermission("opening");
         // @ts-expect-error iOSRNWebView is defined in mobile app
         if (window.iOSRNWebView !== true) {
-          const _geoWatcherId = navigator.geolocation.watchPosition(
+          geoWatcherId.current = navigator.geolocation.watchPosition(
             ({ coords: { latitude, longitude } }) => {
               updateGeolocation({ lat: latitude, lng: longitude });
               setGeoPermission("granted");
@@ -358,7 +358,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
               if (deniedCallback) deniedCallback();
             }
           );
-          geoWatcherId.current = _geoWatcherId;
+          console.log(geoWatcherId.current);
         }
       } else if (geoWatcherId.current) {
         navigator.geolocation.clearWatch(geoWatcherId.current);

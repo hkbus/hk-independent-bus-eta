@@ -10,7 +10,12 @@ import { isHoliday, isRouteAvaliable } from "../../timetable";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
 
-const ReverseButton = ({ routeId }: { routeId: string }) => {
+interface ReverseButtonProps {
+  routeId: string;
+  stopId: string;
+}
+
+const ReverseButton = ({ routeId, stopId }: ReverseButtonProps) => {
   const { t } = useTranslation();
   const language = useLanguage();
   const {
@@ -25,88 +30,101 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
     [holidays]
   );
 
-  const reverseRoute = useMemo(
-    () =>
-      Object.entries(routeList)
-        .reduce<Array<[string, RouteListEntry]>>(
-          (acc, [key, _routeListEntry]) => {
-            if (key === routeId) return acc;
-            const { co: _co, route: _route, gtfsId: _gtfsId } = _routeListEntry;
-            if (co[0] === "gmb" && gtfsId && gtfsId !== _gtfsId) {
-              return acc;
-            }
-            if (
-              _route === route &&
-              JSON.stringify(co) === JSON.stringify(_co)
-            ) {
-              return [...acc, [key, _routeListEntry]];
-            }
+  const reverseRouteUrl = useMemo(() => {
+    const reverseRoute = Object.entries(routeList)
+      .reduce<Array<[string, RouteListEntry]>>(
+        (acc, [key, _routeListEntry]) => {
+          if (key === routeId) return acc;
+          const { co: _co, route: _route, gtfsId: _gtfsId } = _routeListEntry;
+          if (co[0] === "gmb" && gtfsId && gtfsId !== _gtfsId) {
             return acc;
-          },
-          []
-        )
-        .sort(([, a], [, b]) => {
-          const aAval = isRouteAvaliable(
-            a.route,
-            a.freq,
-            isTodayHoliday,
-            serviceDayMap
-          );
-          const bAval = isRouteAvaliable(
-            b.route,
-            b.freq,
-            isTodayHoliday,
-            serviceDayMap
-          );
-          if (aAval === bAval) {
-            const refOrig = stopList[Object.values(stops)[0][0]];
-            const refDest = stopList[Object.values(stops)[0].slice(-1)[0]];
-            // calculate distance between starting stop of reference route and candidate route A
-            const aOrig = stopList[Object.values(a.stops)[0][0]];
-            const aDest = stopList[Object.values(a.stops)[0].slice(-1)[0]];
-            const aDist =
-              getDistance(aOrig.location, refDest.location) +
-              getDistance(refOrig.location, aDest.location);
-            // calculate distance between starting stop of reference route and candidate route B
-            const bOrig = stopList[Object.values(b.stops)[0][0]];
-            const bDest = stopList[Object.values(b.stops)[0].slice(-1)[0]];
-            const bDist =
-              getDistance(bOrig.location, refDest.location) +
-              getDistance(refOrig.location, bDest.location);
-            // pick furtherest one
-            return aDist < bDist ? -1 : 1;
           }
-          // compare boolean, available route first
-          return aAval > bAval ? -1 : 1;
-        })
-        .map(([_routeId]) => _routeId)
-        .filter((_routeId) => _routeId.toLowerCase() !== routeId),
-    [
-      route,
-      co,
-      gtfsId,
-      routeList,
-      stopList,
-      isTodayHoliday,
-      routeId,
-      stops,
-      serviceDayMap,
-    ]
-  );
+          if (_route === route && JSON.stringify(co) === JSON.stringify(_co)) {
+            return [...acc, [key, _routeListEntry]];
+          }
+          return acc;
+        },
+        []
+      )
+      .sort(([, a], [, b]) => {
+        const aAval = isRouteAvaliable(
+          a.route,
+          a.freq,
+          isTodayHoliday,
+          serviceDayMap
+        );
+        const bAval = isRouteAvaliable(
+          b.route,
+          b.freq,
+          isTodayHoliday,
+          serviceDayMap
+        );
+        if (aAval === bAval) {
+          const refOrig = stopList[Object.values(stops)[0][0]];
+          const refDest = stopList[Object.values(stops)[0].slice(-1)[0]];
+          // calculate distance between starting stop of reference route and candidate route A
+          const aOrig = stopList[Object.values(a.stops)[0][0]];
+          const aDest = stopList[Object.values(a.stops)[0].slice(-1)[0]];
+          const aDist =
+            getDistance(aOrig.location, refDest.location) +
+            getDistance(refOrig.location, aDest.location);
+          // calculate distance between starting stop of reference route and candidate route B
+          const bOrig = stopList[Object.values(b.stops)[0][0]];
+          const bDest = stopList[Object.values(b.stops)[0].slice(-1)[0]];
+          const bDist =
+            getDistance(bOrig.location, refDest.location) +
+            getDistance(refOrig.location, bDest.location);
+          // pick furtherest one
+          return aDist < bDist ? -1 : 1;
+        }
+        // compare boolean, available route first
+        return aAval > bAval ? -1 : 1;
+      })
+      .map(([_routeId]) => _routeId)
+      .filter((_routeId) => _routeId.toLowerCase() !== routeId);
+    if (reverseRoute[0].length === 0) {
+      return null;
+    }
+
+    const curStop = stopList[stopId].location;
+    let stopIds = Object.values(routeList[reverseRoute[0]].stops)[0];
+    let stopIdx = -1;
+    let minDist = 9999999;
+    for (let i = 0; i < stopIds.length; ++i) {
+      let dist = getDistance(curStop, stopList[stopIds[i]].location);
+      if (dist < minDist) {
+        minDist = dist;
+        stopIdx = i;
+      }
+    }
+    return `/${language}/route/${reverseRoute[0].toLowerCase()}/${stopIds[stopIdx]}%2C${stopIdx}`;
+  }, [
+    route,
+    co,
+    gtfsId,
+    routeList,
+    stopList,
+    isTodayHoliday,
+    routeId,
+    stops,
+    serviceDayMap,
+    language,
+    stopId,
+  ]);
 
   const handleRevserClick = useCallback(
-    (e: React.MouseEvent) => {
+    (url: string | null) => (e: React.MouseEvent) => {
       e.preventDefault();
-      vibrate(vibrateDuration);
-      setTimeout(() => {
-        navigate(`/${language}/route/${reverseRoute[0].toLowerCase()}`);
-      }, 0);
+      if (url) {
+        vibrate(vibrateDuration);
+        navigate(url);
+      }
     },
-    [reverseRoute, navigate, language, vibrateDuration]
+    [navigate, vibrateDuration]
   );
 
   return (
-    reverseRoute.length > 0 && (
+    reverseRouteUrl && (
       <>
         <Divider orientation="vertical" sx={buttonDividerSx} />
         <Button
@@ -115,7 +133,7 @@ const ReverseButton = ({ routeId }: { routeId: string }) => {
           sx={buttonSx}
           size="small"
           startIcon={<SyncAltIcon />}
-          onClick={handleRevserClick}
+          onClick={handleRevserClick(reverseRouteUrl)}
         >
           {t("對頭線")}
         </Button>

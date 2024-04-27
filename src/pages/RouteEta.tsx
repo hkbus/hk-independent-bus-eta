@@ -31,16 +31,14 @@ import DbContext from "../context/DbContext";
 const RouteMap = React.lazy(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
-  const { id: _id, panel: _panel } = useParams();
-  const id = _id as string;
-  const panel = _panel as string | undefined;
+  const { id, panel } = useParams();
   const {
     AppTitle,
     db: { routeList, stopList, stopMap },
   } = useContext(DbContext);
   const { updateSelectedRoute, energyMode, geoPermission, geolocation } =
     useContext(AppContext);
-  const routeId = getRouteEntry(id.toUpperCase(), routeList);
+  const routeId = getRouteEntry(id!.toUpperCase(), routeList);
   const routeListEntry = routeList[routeId];
   const { route, stops, co, orig, dest, fares } = routeListEntry;
   const stopIds = useMemo(() => {
@@ -52,7 +50,7 @@ const RouteEta = () => {
       .map(([id]) => id);
   }, [co, stopList, stops]);
 
-  const [defaultStopIdx] = useState(() => {
+  const defaultStopIdx = useMemo(() => {
     if (geoPermission === "granted") {
       const nearbyStop = stopIds
         .map((stopId, idx) => [
@@ -66,7 +64,7 @@ const RouteEta = () => {
       }
     }
     return 0;
-  });
+  }, [geoPermission, geolocation, stopList, stopIds]);
 
   const stopIdx = useMemo(() => {
     if (panel !== undefined) {
@@ -152,14 +150,14 @@ const RouteEta = () => {
     setIsDialogOpen(false);
     // the following is notify the rendering is done, for pre-rendering purpose
     document.getElementById("render")?.setAttribute("value", "done");
-    updateSelectedRoute(id);
+    updateSelectedRoute(id!);
     return () => {
       document.getElementById("render")?.setAttribute("value", "");
     };
   }, [id, updateSelectedRoute]);
 
   useEffect(() => {
-    if (id.toUpperCase() !== routeId.toUpperCase()) {
+    if (id!.toUpperCase() !== routeId.toUpperCase()) {
       navigate(`/${language}/route/${routeId.toLowerCase()}`);
     }
   }, [id, routeId, language, navigate]);
@@ -230,7 +228,7 @@ const RouteEta = () => {
   return (
     <>
       <input hidden id="render" />
-      <RouteHeader routeId={routeId} />
+      <RouteHeader routeId={routeId} stopId={stopIds[stopIdx]} />
       {!energyMode && navigator.userAgent !== "prerendering" && (
         <Suspense fallback={null}>
           <RouteMap

@@ -9,7 +9,12 @@ import RouteStarButton from "./RouteStarButton";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
 
-const RouteHeader = ({ routeId }: { routeId: string }) => {
+interface RouteHeaderProps {
+  routeId: string;
+  stopId: string;
+}
+
+const RouteHeader = ({ routeId, stopId }: RouteHeaderProps) => {
   const { t } = useTranslation();
   const language = useLanguage();
   const {
@@ -24,7 +29,7 @@ const RouteHeader = ({ routeId }: { routeId: string }) => {
         {t("往")} {toProperCase(dest[language])}{" "}
         {nlbId ? t("由") + " " + toProperCase(orig[language]) : ""}
       </Typography>
-      <ReverseButton routeId={routeId} />
+      <ReverseButton routeId={routeId} stopId={stopId} />
       <Box sx={rightBtnGroupSx}>
         <RouteStarButton routeId={routeId} />
         <TimetableButton routeId={routeId} />
