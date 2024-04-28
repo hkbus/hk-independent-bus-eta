@@ -82,7 +82,7 @@ const ReverseButton = ({ routeId, stopId }: ReverseButtonProps) => {
       })
       .map(([_routeId]) => _routeId)
       .filter((_routeId) => _routeId.toLowerCase() !== routeId);
-    if (reverseRoute[0].length === 0) {
+    if (reverseRoute.length === 0) {
       return null;
     }
 
