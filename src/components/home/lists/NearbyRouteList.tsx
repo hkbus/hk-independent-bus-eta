@@ -37,12 +37,18 @@ const NearbyRouteList = ({ isFocus }: NearbyRouteListProps) => {
     () =>
       throttle((geolocation: Location) => {
         setState(geolocation);
-      }, 1000),
+      }, 500),
     []
   );
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      throttleUpdateGeolocation(manualGeolocation ?? geolocation.current);
+    }, 1000);
     throttleUpdateGeolocation(manualGeolocation ?? geolocation.current);
+    return () => {
+      clearInterval(interval);
+    };
   }, [manualGeolocation, geolocation, throttleUpdateGeolocation]);
 
   const routes = useMemo(
