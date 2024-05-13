@@ -291,27 +291,28 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   }, []);
 
   useEffect(() => {
-    if (geoPermission === "granted") {
-      try {
-        // @ts-expect-error don't use geolocation navigator for Webview
-        if (window.iOSRNWebView === true) return;
-        const _geoWatcherId = navigator.geolocation.watchPosition(
-          ({ coords: { latitude, longitude } }) => {
-            updateGeolocation({ lat: latitude, lng: longitude });
-          }
-        );
-        geoWatcherId.current = _geoWatcherId;
-      } catch (e) {
-        console.error("cannot watch position", e);
-      }
-    }
     const onVisibilityChange = () => {
+      if (geoPermission === "granted") {
+        try {
+          // @ts-expect-error don't use geolocation navigator for Webview
+          if (window.iOSRNWebView === true) return;
+          const _geoWatcherId = navigator.geolocation.watchPosition(
+            ({ coords: { latitude, longitude } }) => {
+              updateGeolocation({ lat: latitude, lng: longitude });
+            }
+          );
+          geoWatcherId.current = _geoWatcherId;
+        } catch (e) {
+          console.error("cannot watch position", e);
+        }
+      }
       setStateRaw(
         produce((state: State) => {
           state.isVisible = !document.hidden;
         })
       );
     };
+    onVisibilityChange();
     window.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
       if (geoPermission === "granted" && geoWatcherId.current) {
