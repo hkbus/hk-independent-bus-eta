@@ -1,26 +1,39 @@
 import { useState, useContext, useCallback, useEffect } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
-import Droppable from "../StrictModeDroppable";
 import {
   DragHandle as DragHandleIcon,
   EditOutlined as EditOutlinedIcon,
 } from "@mui/icons-material";
 import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
-import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
+
+// Utils
+import { reorder } from "../../utils";
+import Droppable from "../StrictModeDroppable";
+
+// Data
 import { ManageMode } from "../../data";
-import { RouteCollection } from "../../@types/types";
+
+// Context
 import CollectionContext from "../../CollectionContext";
+
+// Types
+import { RouteCollection } from "../../@types/types";
 
 // mode: delete is for edit here
 const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
-  const { collections, setCollections, toggleCollectionDialog } =
-    useContext(CollectionContext);
-  const [items, setItems] = useState(
-    // cannot use Array.reverse() as it is in-place reverse
-    collections
-  );
   const { t } = useTranslation();
+  const { collections, setCollections, toggleCollectionDialog, savedEtas } =
+    useContext(CollectionContext);
+  const [items, setItems] = useState([
+    // cannot use Array.reverse() as it is in-place reverse
+    {
+      name: t('常用'),
+      list: savedEtas,
+      schedules: [],
+    },
+    ...collections
+  ]);
 
   const handleDragEnd = useCallback(
     ({ destination, source }: DropResult) => {
@@ -28,6 +41,8 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
       if (!destination) return;
 
       const newItems = reorder(items, source.index, destination.index);
+      // Remove the savedEtas (first object in the items array)
+      newItems.shift()
       setCollections(newItems);
     },
     [items, setCollections]
@@ -41,8 +56,16 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
   );
 
   useEffect(() => {
-    setItems(collections);
-  }, [collections]);
+    setItems([
+      // cannot use Array.reverse() as it is in-place reverse
+      {
+        name: t('常用'),
+        list: savedEtas,
+        schedules: [],
+      },
+      ...collections
+    ]);
+  }, [collections, savedEtas, t]);
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
@@ -53,6 +76,11 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
             {...provided.droppableProps}
             sx={containerSx}
           >
+            {/* <SavedEtasItem
+              item={item}
+              mode={mode}
+              onDelete={() => handleDelete(index)}
+            /> */}
             {items.length ? (
               items.map((item, index) => (
                 <DraggableListItem
@@ -96,7 +124,7 @@ const DraggableListItem = ({
     <Draggable
       draggableId={name}
       index={index}
-      isDragDisabled={mode !== "order"}
+      isDragDisabled={mode !== "order" || name === '常用'}
     >
       {(provided) => (
         <Box
@@ -112,7 +140,7 @@ const DraggableListItem = ({
               {list.length}
             </Typography>
           </Box>
-          {mode === "order" && <DragHandleIcon />}
+          {mode === "order" && name !== '常用' && <DragHandleIcon />}
           {mode === "delete" && (
             <IconButton onClick={onDelete}>
               <EditOutlinedIcon />

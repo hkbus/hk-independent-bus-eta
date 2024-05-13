@@ -14,15 +14,19 @@ import {
   EditOutlined as EditOutlinedIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import SavedEtaList from "./SavedEtaList";
+
+// Components
 import CollectionOrderList from "./CollectionOrderList";
 import StopOrderList from "./StopOrderList";
+// import SavedEtaList from "./SavedEtaList";
+
+// Data
 import { ManageMode } from "../../data";
 
 type TAB = "savedOrder" | "collectionOrder" | "stopOrder";
 
 const UserContentManagement = () => {
-  const [tab, setTab] = useState<TAB>("savedOrder");
+  const [tab, setTab] = useState<TAB>("collectionOrder");
   const [mode, setMode] = useState<ManageMode>("order");
   const { t } = useTranslation();
 
@@ -36,7 +40,7 @@ const UserContentManagement = () => {
           variant="scrollable"
           scrollButtons
         >
-          <Tab value="savedOrder" label={t("常用路線")} />
+          {/* <Tab value="savedOrder" label={t("常用路線")} /> */}
           <Tab value="collectionOrder" label={t("路線收藏")} />
           <Tab value="stopOrder" label={t("車站")} />
         </Tabs>
@@ -56,7 +60,7 @@ const UserContentManagement = () => {
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>
-      {tab === "savedOrder" && <SavedEtaList mode={mode} />}
+      {/* {tab === "savedOrder" && <SavedEtaList mode={mode} />} */}
       {tab === "collectionOrder" && <CollectionOrderList mode={mode} />}
       {tab === "stopOrder" && <StopOrderList mode={mode} />}
     </Box>

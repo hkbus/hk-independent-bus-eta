@@ -1,31 +1,46 @@
-import { useState, useContext, useCallback } from "react";
+import { useState, useContext, useCallback, useEffect } from "react";
 import {
   DragDropContext,
-  Droppable,
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { Box, Typography } from "@mui/material";
-import SuccinctTimeReport from "../../home/SuccinctTimeReport";
-import { reorder } from "../../../utils";
 import { useTranslation } from "react-i18next";
+import { Box, Typography } from "@mui/material";
+
+// Components
+import SuccinctTimeReport from "../../home/SuccinctTimeReport";
+
+// Utils
+import { reorder } from "../../../utils";
+import Droppable from "../../StrictModeDroppable";
+
+// Context
 import DbContext from "../../../context/DbContext";
 import CollectionContext from "../../../CollectionContext";
 
 const CollectionRoute = () => {
+  const { t } = useTranslation();
   const {
     db: { routeList },
   } = useContext(DbContext);
-  const { collections, collectionIdx, setCollectionEtas } =
+  const { collections, collectionIdx, setCollectionEtas, savedEtas, setSavedEtas } =
     useContext(CollectionContext);
+  
+  const [newCollection, setNewCollection] = useState([
+    {
+      name: t('常用'),
+      list: savedEtas,
+      schedules: [],
+    },
+    ...collections
+  ])
   const [items, setItems] = useState<string[]>(
     collectionIdx !== null
-      ? collections[collectionIdx].list.filter(
+      ? newCollection[collectionIdx].list.filter(
           (id) => id.split("/")[0] in routeList
         )
       : []
   );
-  const { t } = useTranslation();
 
   const handleDragEnd = useCallback(
     ({ destination, source }: DropResult) => {
@@ -35,10 +50,26 @@ const CollectionRoute = () => {
       const newItems = reorder(items, source.index, destination.index);
 
       setItems(newItems);
-      setCollectionEtas(Array.from(newItems));
+      if(collectionIdx === 0) {
+        setSavedEtas(Array.from(newItems));
+      } else {
+        setCollectionEtas(Array.from(newItems));
+      }
     },
-    [items, setItems, setCollectionEtas]
+    [items, collectionIdx, setSavedEtas, setCollectionEtas]
   );
+  
+  useEffect(() => {
+    setNewCollection([
+      // cannot use Array.reverse() as it is in-place reverse
+      {
+        name: t('常用'),
+        list: savedEtas,
+        schedules: [],
+      },
+      ...collections
+    ]);
+  }, [collections, savedEtas, t]);
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
