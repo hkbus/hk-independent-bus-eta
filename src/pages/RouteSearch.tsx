@@ -282,22 +282,22 @@ const RouteSearch = () => {
   );
 
   const handleReverseClick = useCallback(() => {
-    setState((prev => {
-        return {
-          ...prev,
-          locations: {
-            start: prev.locations.end,
-            end: prev.locations.start
-          },
-          status: "waiting",
-          resultIdx: {
-            resultIdx: 0,
-            stopIdx: [0, 0],
-          },
-          result: [],
-        };
-    }))
-  }, [])
+    setState((prev) => {
+      return {
+        ...prev,
+        locations: {
+          start: prev.locations.end,
+          end: prev.locations.start,
+        },
+        status: "waiting",
+        resultIdx: {
+          resultIdx: 0,
+          stopIdx: [0, 0],
+        },
+        result: [],
+      };
+    });
+  }, []);
 
   return (
     <Paper sx={rootSx} square elevation={0}>
@@ -412,8 +412,8 @@ const inputBoxSx: SxProps<Theme> = {
 };
 
 const reverseIconSx: SxProps<Theme> = {
-  'min-width': '24px'
-}
+  "min-width": "24px",
+};
 
 const resultListSx: SxProps<Theme> = {
   overflowY: "scroll",
