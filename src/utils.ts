@@ -13,7 +13,7 @@ import { TFunction } from "i18next";
 
 export const langSpace = (i18n) => {
   return i18n.language === "en" ? " " : "";
-}
+};
 
 export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   const R = 6371e3; // metres
