@@ -48,11 +48,14 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
             : JSON.stringify(co) === JSON.stringify(data.co))
         ) {
           if (
-            stopList[data.stops[co[0]][data.stops[co[0]].length - 1]].name.zh !==
-            stopList[stops[co[0]][stops[co[0]].length - 1]].name.zh
+            stopList[data.stops[co[0]][data.stops[co[0]].length - 1]].name
+              .zh !== stopList[stops[co[0]][stops[co[0]].length - 1]].name.zh
           ) {
             remark = t("開往") + dest[i18n.language];
-          } else if (stopList[data.stops[co[0]][0]].name.zh !== stopList[stops[co[0]][0]].name.zh) {
+          } else if (
+            stopList[data.stops[co[0]][0]].name.zh !==
+            stopList[stops[co[0]][0]].name.zh
+          ) {
             if (!terminus.nlbId) {
               remark = t("從") + orig[i18n.language] + t("開出");
             }
