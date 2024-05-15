@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { toProperCase } from "../../utils";
@@ -16,11 +16,11 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
   } = useContext(DbContext);
   const { route, co, orig, dest, stops, bound, gtfsId } = terminus;
 
-  const firstLastDiff = (arr) => {
+  const firstLastDiff = (arr: string[]) => {
     if (arr.length < 2) return arr;
     return [arr[0], arr[arr.length - 1]];
   };
-  const diffConsecutive = (array, sequence) => {
+  const diffConsecutive = (array: string[], sequence: string[]) => {
     for (let i = 0; i <= array.length - sequence.length; i++) {
       let j;
       for (j = 0; j < sequence.length; j++) {
@@ -37,7 +37,7 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
 
   let routeRemark = useMemo(() => {
     let remark = "";
-    if (terminus.serviceType >= 2) {
+    if (Number(terminus.serviceType) >= 2) {
       for (let [, data] of Object.entries(routeList)) {
         if (
           Number(data.serviceType) === 1 &&
@@ -48,11 +48,11 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
             : JSON.stringify(co) === JSON.stringify(data.co))
         ) {
           if (
-            data.stops[co[0]][data.stops[co[0]].length - 1].zh !==
-            stops[co[0]][stops[co[0]].length - 1].zh
+            stopList[data.stops[co[0]][data.stops[co[0]].length - 1]].name.zh !==
+            stopList[stops[co[0]][stops[co[0]].length - 1]].name.zh
           ) {
             remark = t("開往") + dest[i18n.language];
-          } else if (data.stops[co[0]][0].zh !== stops[co[0]][0].zh) {
+          } else if (stopList[data.stops[co[0]][0]].name.zh !== stopList[stops[co[0]][0]].name.zh) {
             if (!terminus.nlbId) {
               remark = t("從") + orig[i18n.language] + t("開出");
             }
