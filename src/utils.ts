@@ -11,6 +11,10 @@ import type { TransportType } from "./@types/types";
 import { ServiceIds, isRouteAvaliable } from "./timetable";
 import { TFunction } from "i18next";
 
+export const langSpace = (i18n) => {
+  return i18n.language === "en" ? " " : "";
+}
+
 export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   const R = 6371e3; // metres
   const φ1 = (a.lat * Math.PI) / 180; // φ, λ in radians
