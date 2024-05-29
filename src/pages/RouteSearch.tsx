@@ -1,5 +1,15 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Box, Divider, Paper, SxProps, Theme, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Paper,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
+import { ChangeCircle as ChangeCircleIcon } from "@mui/icons-material";
+
 import AppContext from "../context/AppContext";
 import { useTranslation } from "react-i18next";
 import AddressInput, { Address } from "../components/route-search/AddressInput";
@@ -271,6 +281,24 @@ const RouteSearch = () => {
     [result, resultIdx]
   );
 
+  const handleReverseClick = useCallback(() => {
+    setState((prev) => {
+      return {
+        ...prev,
+        locations: {
+          start: prev.locations.end,
+          end: prev.locations.start,
+        },
+        status: "waiting",
+        resultIdx: {
+          resultIdx: 0,
+          stopIdx: [0, 0],
+        },
+        result: [],
+      };
+    });
+  }, []);
+
   return (
     <Paper sx={rootSx} square elevation={0}>
       {!energyMode ? (
@@ -285,18 +313,23 @@ const RouteSearch = () => {
         />
       ) : null}
       <Box sx={inputContainerSx}>
-        <AddressInput
-          value={locations.start}
-          placeholder={t("你的位置")}
-          onChange={handleStartChange}
-          stopList={stopList}
-        />
-        <AddressInput
-          value={locations.end}
-          placeholder={t("目的地")}
-          onChange={handleEndChange}
-          stopList={stopList}
-        />
+        <Box sx={inputBoxSx}>
+          <AddressInput
+            value={locations.start}
+            placeholder={t("你的位置")}
+            onChange={handleStartChange}
+            stopList={stopList}
+          />
+          <AddressInput
+            value={locations.end}
+            placeholder={t("目的地")}
+            onChange={handleEndChange}
+            stopList={stopList}
+          />
+        </Box>
+        <Button sx={reverseIconSx} onClick={handleReverseClick}>
+          <ChangeCircleIcon />
+        </Button>
       </Box>
       <Box sx={!energyMode ? resultListSx : resultListEnergySx}>
         {!locations.end ? (
@@ -366,8 +399,20 @@ const rootSx: SxProps<Theme> = {
 };
 
 const inputContainerSx: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "row",
   marginTop: "2%",
   padding: "0% 2%",
+};
+
+const inputBoxSx: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+};
+
+const reverseIconSx: SxProps<Theme> = {
+  "min-width": "24px",
 };
 
 const resultListSx: SxProps<Theme> = {
