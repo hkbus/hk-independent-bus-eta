@@ -4,7 +4,8 @@ import { DbProvider } from "./context/DbContext";
 import { AppContextProvider } from "./context/AppContext";
 import "./i18n";
 import { DatabaseType, fetchDbFunc } from "./db";
-import ErrorBoundary from "./ErrorBoundary";
+import ErrorFallback from "./ErrorFallback";
+import { ErrorBoundary } from "react-error-boundary";
 import { CollectionContextProvider } from "./CollectionContext";
 import { ReactNativeContextProvider } from "./context/ReactNativeContext";
 import { EmotionContextProvider } from "./context/EmotionContext";
@@ -24,7 +25,7 @@ const AppWrapper = () => {
   if (state === null) return <></>;
 
   return (
-    <ErrorBoundary>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
       <DbProvider initialDb={state}>
         <CollectionContextProvider>
           <AppContextProvider>
