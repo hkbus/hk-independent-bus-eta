@@ -1,9 +1,5 @@
 import { useState, useContext, useCallback, useEffect } from "react";
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { Box, Typography } from "@mui/material";
 
@@ -23,17 +19,22 @@ const CollectionRoute = () => {
   const {
     db: { routeList },
   } = useContext(DbContext);
-  const { collections, collectionIdx, setCollectionEtas, savedEtas, setSavedEtas } =
-    useContext(CollectionContext);
-  
+  const {
+    collections,
+    collectionIdx,
+    setCollectionEtas,
+    savedEtas,
+    setSavedEtas,
+  } = useContext(CollectionContext);
+
   const [newCollection, setNewCollection] = useState([
     {
-      name: t('常用'),
+      name: t("常用"),
       list: savedEtas,
       schedules: [],
     },
-    ...collections
-  ])
+    ...collections,
+  ]);
   const [items, setItems] = useState<string[]>(
     collectionIdx !== null
       ? newCollection[collectionIdx].list.filter(
@@ -50,7 +51,7 @@ const CollectionRoute = () => {
       const newItems = reorder(items, source.index, destination.index);
 
       setItems(newItems);
-      if(collectionIdx === 0) {
+      if (collectionIdx === 0) {
         setSavedEtas(Array.from(newItems));
       } else {
         setCollectionEtas(Array.from(newItems));
@@ -58,16 +59,16 @@ const CollectionRoute = () => {
     },
     [items, collectionIdx, setSavedEtas, setCollectionEtas]
   );
-  
+
   useEffect(() => {
     setNewCollection([
       // cannot use Array.reverse() as it is in-place reverse
       {
-        name: t('常用'),
+        name: t("常用"),
         list: savedEtas,
         schedules: [],
       },
-      ...collections
+      ...collections,
     ]);
   }, [collections, savedEtas, t]);
 

@@ -28,11 +28,11 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
   const [items, setItems] = useState([
     // cannot use Array.reverse() as it is in-place reverse
     {
-      name: t('常用'),
+      name: t("常用"),
       list: savedEtas,
       schedules: [],
     },
-    ...collections
+    ...collections,
   ]);
 
   const handleDragEnd = useCallback(
@@ -42,7 +42,7 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
 
       const newItems = reorder(items, source.index, destination.index);
       // Remove the savedEtas (first object in the items array)
-      newItems.shift()
+      newItems.shift();
       setCollections(newItems);
     },
     [items, setCollections]
@@ -59,11 +59,11 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
     setItems([
       // cannot use Array.reverse() as it is in-place reverse
       {
-        name: t('常用'),
+        name: t("常用"),
         list: savedEtas,
         schedules: [],
       },
-      ...collections
+      ...collections,
     ]);
   }, [collections, savedEtas, t]);
 
@@ -124,7 +124,7 @@ const DraggableListItem = ({
     <Draggable
       draggableId={name}
       index={index}
-      isDragDisabled={mode !== "order" || name === '常用'}
+      isDragDisabled={mode !== "order" || name === "常用"}
     >
       {(provided) => (
         <Box
@@ -140,7 +140,7 @@ const DraggableListItem = ({
               {list.length}
             </Typography>
           </Box>
-          {mode === "order" && name !== '常用' && <DragHandleIcon />}
+          {mode === "order" && name !== "常用" && <DragHandleIcon />}
           {mode === "delete" && (
             <IconButton onClick={onDelete}>
               <EditOutlinedIcon />
