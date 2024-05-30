@@ -41,7 +41,7 @@ const CollectionSchedule = () => {
     },
     ...collections,
   ]);
-  
+
   useEffect(() => {
     setNewCollection([
       // cannot use Array.reverse() as it is in-place reverse
