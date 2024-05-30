@@ -31,6 +31,8 @@ const CollectionDialog = () => {
     removeCollection,
     savedEtas,
   } = useContext(CollectionContext);
+
+  // GitHub Pull: 181
   const [newCollection, setNewCollection] = useState([
     {
       name: t("常用"),

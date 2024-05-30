@@ -1,8 +1,14 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import { DaySchedule, RouteCollection } from "./@types/types";
-import { isStrings } from "./utils";
-import { DEFAULT_DAY_SCHEDULE, DEFAULT_ROUTE_COLLECTION } from "./constants";
 import { produce } from "immer";
+
+// Types
+import { DaySchedule, RouteCollection } from "./@types/types";
+
+// Utils
+import { isStrings } from "./utils";
+
+// Defaults
+import { DEFAULT_DAY_SCHEDULE, DEFAULT_ROUTE_COLLECTION } from "./constants";
 
 export interface CollectionState {
   savedStops: string[];
@@ -261,7 +267,8 @@ export const CollectionContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         if (state.collectionIdx === null) return;
-        const collectionIdx = state.collectionIdx;
+        // GitHub Pull: 181
+        const collectionIdx = state.collectionIdx - 1;
         const newCollections = state.collections;
         newCollections[collectionIdx].list = etas;
         state.collections = newCollections;

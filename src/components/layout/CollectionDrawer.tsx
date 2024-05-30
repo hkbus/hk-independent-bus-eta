@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Box,
   Drawer,
@@ -7,10 +8,13 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import Collection from "./collections/Collection";
-import { useTranslation } from "react-i18next";
 import { Add as AddIcon, Maximize as MaximizeIcon } from "@mui/icons-material";
+
+// Components
+import Collection from "./collections/Collection";
 import WatchEntry from "./collections/WatchEntry";
+
+// Context
 import CollectionContext from "../../CollectionContext";
 
 const CollectionDrawer = () => {
@@ -49,10 +53,10 @@ const CollectionDrawer = () => {
         <Box sx={collectionContentSx}>
           {collections.map(({ name, list }, idx) => (
             <Collection
-              key={`collection-${idx}`}
+              key={`collection-${idx + 1}`}
               name={name}
               list={list}
-              collectionIdx={idx}
+              collectionIdx={idx + 1}
             />
           ))}
         </Box>

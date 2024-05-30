@@ -25,6 +25,8 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
   const { t } = useTranslation();
   const { collections, setCollections, toggleCollectionDialog, savedEtas } =
     useContext(CollectionContext);
+
+  // GitHub Pull: 181
   const [items, setItems] = useState([
     // cannot use Array.reverse() as it is in-place reverse
     {
