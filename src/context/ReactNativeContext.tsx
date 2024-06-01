@@ -73,6 +73,12 @@ export const ReactNativeContextProvider = ({
             ...prev,
             alarmStopId: data.value,
           }));
+        } else if (data.type === "initStorage") {
+          for (const k in data.kvs) {
+            localStorage.setItem(k, data.kvs[k]);
+          }
+          localStorage.setItem("iOSInit", "true");
+          window.location.reload();
         }
       } catch (e) {
         console.error(e);
@@ -118,6 +124,7 @@ export const ReactNativeContextProvider = ({
     [stopList, t, language]
   );
 
+  // Use mobile geolocation
   useEffect(() => {
     // @ts-expect-error ReactNativeWebView is defined in the mobile app
     if (window.ReactNativeWebView !== undefined) {
@@ -147,6 +154,63 @@ export const ReactNativeContextProvider = ({
   useEffect(() => {
     localStorage.setItem("debug", JSON.stringify(state.debug));
   }, [state.debug]);
+
+  // for iOS, override localStorage to use expo Async storage
+  useEffect(() => {
+    setTimeout(() => {
+      // @ts-expect-error ReactNativeWebView is in the mobile app
+      if (window.ReactNativeWebView && window?.iOSRNWebView === true) {
+        // overwrite localstorage setItem
+        const { setItem, removeItem, clear } = localStorage;
+        localStorage.setItem = function (key: string, value: string) {
+          setItem.call(this, key, value);
+          // @ts-expect-error ReactNativeWebView is in the mobile app
+          window.ReactNativeWebView!.postMessage(
+            JSON.stringify({
+              type: "setItem",
+              value: {
+                key,
+                value,
+              },
+            })
+          );
+        };
+        localStorage.removeItem = function (key: string) {
+          removeItem.call(this, key);
+          // @ts-expect-error ReactNativeWebView is in the mobile app
+          window.ReactNativeWebView!.postMessage(
+            JSON.stringify({
+              type: "removeItem",
+              value: key,
+            })
+          );
+        };
+        localStorage.clear = function () {
+          clear.call(this);
+          // @ts-expect-error ReactNativeWebView is in the mobile app
+          window.ReactNativeWebView!.postMessage(
+            JSON.stringify({
+              type: "clear",
+            })
+          );
+        };
+      }
+    }, 10000);
+    // obtain all values from storage
+    // @ts-expect-error ReactNativeWebView is in the mobile app
+    if (
+      window.ReactNativeWebView &&
+      window?.iOSRNWebView === true &&
+      localStorage.getItem("iOSInit") !== "true"
+    ) {
+      // @ts-expect-error ReactNativeWebView is in the mobile app
+      window.ReactNativeWebView!.postMessage(
+        JSON.stringify({
+          type: "multiGet",
+        })
+      );
+    }
+  }, []);
 
   const contextValue: ReactNativeContextValue = useMemo(
     () => ({
