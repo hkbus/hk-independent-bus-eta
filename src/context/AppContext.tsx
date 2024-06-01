@@ -294,7 +294,6 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     const onVisibilityChange = () => {
       if (geoPermission === "granted") {
         try {
-          // @ts-expect-error don't use geolocation navigator for Webview
           if (window.iOSRNWebView === true) return;
           const _geoWatcherId = navigator.geolocation.watchPosition(
             ({ coords: { latitude, longitude } }) => {
@@ -347,7 +346,6 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     (geoPermission: AppState["geoPermission"], deniedCallback?: () => void) => {
       if (geoPermission === "opening") {
         setGeoPermission("opening");
-        // @ts-expect-error iOSRNWebView is defined in mobile app
         if (window.iOSRNWebView !== true) {
           geoWatcherId.current = navigator.geolocation.watchPosition(
             ({ coords: { latitude, longitude } }) => {

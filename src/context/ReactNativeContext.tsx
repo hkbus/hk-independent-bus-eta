@@ -10,6 +10,13 @@ import { useTranslation } from "react-i18next";
 import useLanguage from "../hooks/useTranslation";
 import DbContext from "./DbContext";
 
+declare global {
+  interface Window {
+    ReactNativeWebView?: any;
+    iOSRNWebView?: boolean;
+  }
+}
+
 interface ReactNativeContextState {
   alarmStopId: string;
   debug: boolean;
@@ -48,9 +55,7 @@ export const ReactNativeContextProvider = ({
   }, []);
 
   const os = useMemo<ReactNativeContextValue["os"]>(() => {
-    // @ts-expect-error iOSRNWebView is defined in the mobile app
     if (window?.iOSRNWebView === true) return "ios";
-    // @ts-expect-error iOSRNWebView is defined in the mobile app
     else if (window?.iOSRNWebView === false) return "android";
     return null;
   }, []);
@@ -108,7 +113,6 @@ export const ReactNativeContextProvider = ({
     (stopId: string) => {
       const stop = stopList[stopId];
       if (!stop) return;
-      // @ts-expect-error ReactNativeWebView is defined in the mobile app
       window.ReactNativeWebView?.postMessage(
         JSON.stringify({
           type: "stop-alarm",
@@ -126,7 +130,6 @@ export const ReactNativeContextProvider = ({
 
   // Use mobile geolocation
   useEffect(() => {
-    // @ts-expect-error ReactNativeWebView is defined in the mobile app
     if (window.ReactNativeWebView !== undefined) {
       // react native web view
       if (
@@ -134,14 +137,12 @@ export const ReactNativeContextProvider = ({
         geoPermission === "opening" ||
         geoPermission === "granted"
       ) {
-        // @ts-expect-error ReactNativeWebView is defined in the mobile app
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
             type: "start-geolocation",
           })
         );
       } else if (geoPermission === "closed") {
-        // @ts-expect-error ReactNativeWebView is defined in the mobile app
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
             type: "stop-geolocation",
@@ -158,14 +159,12 @@ export const ReactNativeContextProvider = ({
   // for iOS, override localStorage to use expo Async storage
   useEffect(() => {
     setTimeout(() => {
-      // @ts-expect-error ReactNativeWebView is in the mobile app
-      if (window.ReactNativeWebView && window?.iOSRNWebView === true) {
+      if (window.ReactNativeWebView && window.iOSRNWebView === true) {
         // overwrite localstorage setItem
         const { setItem, removeItem, clear } = localStorage;
         localStorage.setItem = function (key: string, value: string) {
           setItem.call(this, key, value);
-          // @ts-expect-error ReactNativeWebView is in the mobile app
-          window.ReactNativeWebView!.postMessage(
+          window.ReactNativeWebView.postMessage(
             JSON.stringify({
               type: "setItem",
               value: {
@@ -177,8 +176,7 @@ export const ReactNativeContextProvider = ({
         };
         localStorage.removeItem = function (key: string) {
           removeItem.call(this, key);
-          // @ts-expect-error ReactNativeWebView is in the mobile app
-          window.ReactNativeWebView!.postMessage(
+          window.ReactNativeWebView.postMessage(
             JSON.stringify({
               type: "removeItem",
               value: key,
@@ -187,7 +185,6 @@ export const ReactNativeContextProvider = ({
         };
         localStorage.clear = function () {
           clear.call(this);
-          // @ts-expect-error ReactNativeWebView is in the mobile app
           window.ReactNativeWebView!.postMessage(
             JSON.stringify({
               type: "clear",
@@ -197,13 +194,11 @@ export const ReactNativeContextProvider = ({
       }
     }, 10000);
     // obtain all values from storage
-    // @ts-expect-error ReactNativeWebView is in the mobile app
     if (
       window.ReactNativeWebView &&
-      window?.iOSRNWebView === true &&
+      window.iOSRNWebView === true &&
       localStorage.getItem("iOSInit") !== "true"
     ) {
-      // @ts-expect-error ReactNativeWebView is in the mobile app
       window.ReactNativeWebView!.postMessage(
         JSON.stringify({
           type: "multiGet",
