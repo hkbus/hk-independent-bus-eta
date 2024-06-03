@@ -62,6 +62,7 @@ export const useWeather = () => {
 export const useWeatherCode = () => {
   const weather = useWeather();
   return Object.values(weather)
+    .filter(({ actionCode }) => actionCode !== "CANCEL")
     .map(({ code }) => code)
     .filter((code) => CODE_ORDER.indexOf(code) >= 0)
     .sort((a, b) => (CODE_ORDER.indexOf(a) < CODE_ORDER.indexOf(b) ? -1 : 1));

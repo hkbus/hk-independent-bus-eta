@@ -20,6 +20,7 @@ import {
 } from "react-leaflet";
 import AppContext from "../../context/AppContext";
 import { Location } from "hk-bus-eta";
+import useLanguage from "../../hooks/useTranslation";
 
 interface RangeMapProps {
   range: number;
@@ -29,6 +30,7 @@ interface RangeMapProps {
 
 const RangeMap = React.forwardRef<Leaflet.Map, RangeMapProps>(
   ({ range, value, onChange }, ref) => {
+    const language = useLanguage();
     const markerRef = useRef<Leaflet.Marker>(null);
     const circleRef = useRef<Leaflet.Circle>(null);
     const position = useRef<Location>(value).current;
@@ -65,12 +67,23 @@ const RangeMap = React.forwardRef<Leaflet.Map, RangeMapProps>(
           maxNativeZoom={18}
           keepBuffer={10}
           updateWhenIdle={false}
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url={
             colorMode === "light"
               ? import.meta.env.VITE_OSM_PROVIDER_URL
               : import.meta.env.VITE_OSM_PROVIDER_URL_DARK
           }
+        />
+        <TileLayer
+          crossOrigin="anonymous"
+          maxZoom={Leaflet.Browser.retina ? 20 : 19}
+          maxNativeZoom={18}
+          keepBuffer={10}
+          updateWhenIdle={false}
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> © <a href="https://api.portal.hkmapservice.gov.hk/disclaimer">地圖版權屬香港特別行政區政府</a>'
+          url={import.meta.env.VITE_MAP_LABEL_URL.replace(
+            "{lang}",
+            language === "zh" ? "tc" : "en"
+          )}
         />
         <Marker position={position} ref={markerRef} />
         <Circle center={position} radius={range} ref={circleRef} />
