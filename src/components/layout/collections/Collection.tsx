@@ -57,10 +57,10 @@ const Collection = ({ name, list, collectionIdx = null }: CollectionProps) => {
           checked={list.includes(collectionDrawerRoute ?? "")}
           onClick={() => {
             if (collectionDrawerRoute && collectionIdx !== null) {
-              if(collectionIdx > 0) {
+              if (collectionIdx > 0) {
                 toggleCollectionEta(collectionDrawerRoute, collectionIdx - 1);
               } else {
-                toggleCollectionEta(collectionDrawerRoute, null)
+                toggleCollectionEta(collectionDrawerRoute, null);
               }
             }
           }}

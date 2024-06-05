@@ -52,7 +52,7 @@ const CollectionDrawer = () => {
         </Box>
         <Box sx={collectionContentSx}>
           {collections.map(({ name, list }, idx) => {
-            const collectionIdx = idx + 1
+            const collectionIdx = idx + 1;
 
             return (
               <Collection
