@@ -42,7 +42,7 @@ const CollectionDrawer = () => {
           <WatchEntry />
         </Box>
         <Box sx={savedContainerSx}>
-          <Collection name={t("常用")} list={savedEtas} />
+          <Collection name={t("常用")} list={savedEtas} collectionIdx={0} />
         </Box>
         <Box sx={collectionTitleSx}>
           <Typography variant="h6">{t("Collections")}</Typography>
@@ -51,14 +51,18 @@ const CollectionDrawer = () => {
           </IconButton>
         </Box>
         <Box sx={collectionContentSx}>
-          {collections.map(({ name, list }, idx) => (
-            <Collection
-              key={`collection-${idx + 1}`}
-              name={name}
-              list={list}
-              collectionIdx={idx + 1}
-            />
-          ))}
+          {collections.map(({ name, list }, idx) => {
+            const collectionIdx = idx + 1
+
+            return (
+              <Collection
+                key={`collection-${collectionIdx}`}
+                name={name}
+                list={list}
+                collectionIdx={collectionIdx}
+              />
+            );
+          })}
         </Box>
       </Box>
     </Drawer>

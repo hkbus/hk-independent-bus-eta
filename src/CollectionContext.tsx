@@ -168,7 +168,7 @@ export const CollectionContextProvider = ({
           DEFAULT_ROUTE_COLLECTION
         );
         state.collections = newCollections;
-        state.collectionIdx = newCollections.length - 1;
+        state.collectionIdx = newCollections.length;
       })
     );
   }, []);
@@ -177,7 +177,7 @@ export const CollectionContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         const newCollections = state.collections.filter(
-          (_, _idx) => idx !== _idx
+          (_, _idx) => idx !== _idx + 1
         );
         state.collections = newCollections;
         state.collectionIdx = null;
@@ -189,7 +189,7 @@ export const CollectionContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         if (state.collectionIdx === null) return;
-        const idx = state.collectionIdx;
+        const idx = state.collectionIdx - 1;
         const newCollections = state.collections;
         newCollections[idx].name = v;
         state.collections = newCollections;
@@ -202,7 +202,7 @@ export const CollectionContextProvider = ({
       setStateRaw(
         produce((state: State) => {
           if (state.collectionIdx === null) return;
-          const collectionIdx = state.collectionIdx;
+          const collectionIdx = state.collectionIdx - 1;
           const newCollections = state.collections;
           newCollections[collectionIdx].schedules[idx][field] = value;
           state.collections = newCollections;
@@ -216,7 +216,7 @@ export const CollectionContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         if (state.collectionIdx === null) return;
-        const collectionIdx = state.collectionIdx;
+        const collectionIdx = state.collectionIdx - 1;
         const newCollections = state.collections;
         newCollections[collectionIdx].schedules =
           newCollections[collectionIdx].schedules.concat(DEFAULT_DAY_SCHEDULE);
@@ -229,7 +229,7 @@ export const CollectionContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         if (state.collectionIdx === null) return;
-        const collectionIdx = state.collectionIdx;
+        const collectionIdx = state.collectionIdx - 1;
         const newCollections = state.collections;
         newCollections[collectionIdx].schedules = newCollections[
           collectionIdx

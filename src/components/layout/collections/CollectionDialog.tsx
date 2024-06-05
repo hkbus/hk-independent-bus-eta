@@ -56,7 +56,8 @@ const CollectionDialog = () => {
     ]);
   }, [collections, savedEtas, t]);
 
-  if (collectionIdx === null) {
+  // collections state hasn't updated when added new collection, need to add the following
+  if (collectionIdx === null || newCollection[collectionIdx] === undefined) {
     return null;
   }
 
