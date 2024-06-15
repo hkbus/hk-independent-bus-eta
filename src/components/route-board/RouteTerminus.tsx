@@ -62,9 +62,9 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
           } else {
             let mainRouteFirstStop = stopList[data.stops[co][0]].name;
             let mainRouteLastStop =
-              stopList[data.stops[co][data.stops[co].length - 1]].name;
-            let routeFirstStop = stopList[stops[co][0]].name;
-            let routeLastStop = stopList[stops[co][stops[co].length - 1]].name;
+              stopList[data.stops[co[0]][data.stops[co[0]].length - 1]].name;
+            let routeFirstStop = stopList[stops[co[0]][0]].name;
+            let routeLastStop = stopList[stops[co[0]][stops[co[0]].length - 1]].name;
 
             if (mainRouteLastStop.zh !== routeLastStop.zh) {
               remark = t("開往") + routeLastStop[i18n.language];
@@ -73,8 +73,8 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
                 remark = t("從") + routeFirstStop[i18n.language] + t("開出");
               }
             } else {
-              let difference = stops[co].filter(
-                (x) => !data.stops[co].includes(x)
+              let difference = stops[co[0]].filter(
+                (x) => !data.stops[co[0]].includes(x)
               );
               let diffName = difference.map(
                 (x) => stopList[x].name[i18n.language]
@@ -83,11 +83,11 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
                 remark =
                   t("經") +
                   firstLastDiff(diffName).join(
-                    t(diffConsecutive(data.stops[co], difference) ? "至" : "及")
+                    t(diffConsecutive(data.stops[co[0]], difference) ? "至" : "及")
                   );
               } else {
-                let difference = data.stops[co].filter(
-                  (x) => !stops[co].includes(x)
+                let difference = data.stops[co[0]].filter(
+                  (x) => !stops[co[0]].includes(x)
                 );
                 let diffName = difference.map(
                   (x) => stopList[x].name[i18n.language]
@@ -97,7 +97,7 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
                     t("不經") +
                     firstLastDiff(diffName).join(
                       t(
-                        diffConsecutive(data.stops[co], difference)
+                        diffConsecutive(data.stops[co[0]], difference)
                           ? "至"
                           : "及"
                       )
@@ -110,14 +110,12 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
         }
       }
     }
-    if (remark === "" || terminus.nlbId) {
-      remark =
-        t("從") +
-        toProperCase(terminus.orig[i18n.language]) +
-        t("開出") +
-        " " +
-        remark;
-    }
+    remark =
+      t("從") +
+      toProperCase(terminus.orig[i18n.language]) +
+      t("開出") +
+      " " +
+      remark;
     return remark;
   }, [
     terminus,
