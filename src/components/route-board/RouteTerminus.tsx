@@ -64,7 +64,8 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
             let mainRouteLastStop =
               stopList[data.stops[co[0]][data.stops[co[0]].length - 1]].name;
             let routeFirstStop = stopList[stops[co[0]][0]].name;
-            let routeLastStop = stopList[stops[co[0]][stops[co[0]].length - 1]].name;
+            let routeLastStop =
+              stopList[stops[co[0]][stops[co[0]].length - 1]].name;
 
             if (mainRouteLastStop.zh !== routeLastStop.zh) {
               remark = t("開往") + routeLastStop[i18n.language];
@@ -83,7 +84,11 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
                 remark =
                   t("經") +
                   firstLastDiff(diffName).join(
-                    t(diffConsecutive(data.stops[co[0]], difference) ? "至" : "及")
+                    t(
+                      diffConsecutive(data.stops[co[0]], difference)
+                        ? "至"
+                        : "及"
+                    )
                   );
               } else {
                 let difference = data.stops[co[0]].filter(
