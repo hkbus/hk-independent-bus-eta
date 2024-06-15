@@ -11,8 +11,8 @@ import type { TransportType } from "./@types/types";
 import { ServiceIds, isRouteAvaliable } from "./timetable";
 import { TFunction } from "i18next";
 
-export const langSpace = (i18n) => {
-  return i18n.language === "en" ? " " : "";
+export const langSpace = (language) => {
+  return language === "en" ? " " : "";
 };
 
 export const getDistance = (a: GeoLocation, b: GeoLocation) => {
