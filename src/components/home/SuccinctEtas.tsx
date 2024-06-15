@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Box, ListItemText, SxProps, Theme, Typography } from "@mui/material";
+import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useEtas } from "../../hooks/useEtas";
 import AppContext from "../../context/AppContext";
@@ -107,21 +107,17 @@ const SuccinctEtas = ({
   };
 
   return (
-    <ListItemText
-      primary={
-        <Typography component="h5" color="textPrimary" sx={primarySx}>
-          {etas ? getEtaString(etas[0], 0, true) : ""}
-        </Typography>
-      }
-      secondary={
-        <Typography variant="h6" color="textSecondary" sx={secondarySx}>
-          {etas ? getEtaString(etas[1], 1) : ""}
-          <br />
-          {etas ? getEtaString(etas[2], 2) : ""}
-        </Typography>
-      }
-      sx={rootSx}
-    />
+    <Box display="flex" flexDirection="column" textAlign="right">
+      <Typography component="h5" color="textPrimary" sx={primarySx}>
+        {etas ? getEtaString(etas[0], 0, true) : ""}
+      </Typography>
+      <Typography component="h6" color="textSecondary" sx={secondarySx}>
+        {etas ? getEtaString(etas[1], 1) : ""}
+      </Typography>
+      <Typography component="h6" color="textSecondary" sx={secondarySx}>
+        {etas ? getEtaString(etas[2], 2) : ""}
+      </Typography>
+    </Box>
   );
 };
 
@@ -158,16 +154,13 @@ export const DoubleTrainIcon = () => (
 
 export default SuccinctEtas;
 
-const rootSx: SxProps<Theme> = {
-  textAlign: "right",
-};
-
 const primarySx: SxProps<Theme> = {
   whiteSpace: "nowrap",
+  fontSize: "1em",
 };
 
 const secondarySx: SxProps<Theme> = {
-  fontSize: "0.875rem !important",
+  fontSize: "0.875em",
   fontWeight: "400",
   lineHeight: "1.43",
   whiteSpace: "nowrap",

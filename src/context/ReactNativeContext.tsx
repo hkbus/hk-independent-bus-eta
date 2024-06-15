@@ -10,6 +10,13 @@ import { useTranslation } from "react-i18next";
 import useLanguage from "../hooks/useTranslation";
 import DbContext from "./DbContext";
 
+declare global {
+  interface Window {
+    ReactNativeWebView?: any;
+    iOSRNWebView?: boolean;
+  }
+}
+
 interface ReactNativeContextState {
   alarmStopId: string;
   debug: boolean;
@@ -48,9 +55,7 @@ export const ReactNativeContextProvider = ({
   }, []);
 
   const os = useMemo<ReactNativeContextValue["os"]>(() => {
-    // @ts-expect-error iOSRNWebView is defined in the mobile app
     if (window?.iOSRNWebView === true) return "ios";
-    // @ts-expect-error iOSRNWebView is defined in the mobile app
     else if (window?.iOSRNWebView === false) return "android";
     return null;
   }, []);
@@ -73,6 +78,12 @@ export const ReactNativeContextProvider = ({
             ...prev,
             alarmStopId: data.value,
           }));
+        } else if (data.type === "initStorage") {
+          for (const k in data.kvs) {
+            localStorage.setItem(k, data.kvs[k]);
+          }
+          localStorage.setItem("iOSInit", "true");
+          window.location.reload();
         }
       } catch (e) {
         console.error(e);
@@ -102,7 +113,6 @@ export const ReactNativeContextProvider = ({
     (stopId: string) => {
       const stop = stopList[stopId];
       if (!stop) return;
-      // @ts-expect-error ReactNativeWebView is defined in the mobile app
       window.ReactNativeWebView?.postMessage(
         JSON.stringify({
           type: "stop-alarm",
@@ -118,8 +128,8 @@ export const ReactNativeContextProvider = ({
     [stopList, t, language]
   );
 
+  // Use mobile geolocation
   useEffect(() => {
-    // @ts-expect-error ReactNativeWebView is defined in the mobile app
     if (window.ReactNativeWebView !== undefined) {
       // react native web view
       if (
@@ -127,14 +137,12 @@ export const ReactNativeContextProvider = ({
         geoPermission === "opening" ||
         geoPermission === "granted"
       ) {
-        // @ts-expect-error ReactNativeWebView is defined in the mobile app
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
             type: "start-geolocation",
           })
         );
       } else if (geoPermission === "closed") {
-        // @ts-expect-error ReactNativeWebView is defined in the mobile app
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
             type: "stop-geolocation",
@@ -147,6 +155,57 @@ export const ReactNativeContextProvider = ({
   useEffect(() => {
     localStorage.setItem("debug", JSON.stringify(state.debug));
   }, [state.debug]);
+
+  // for iOS, override localStorage to use expo Async storage
+  useEffect(() => {
+    setTimeout(() => {
+      if (window.ReactNativeWebView && window.iOSRNWebView === true) {
+        // overwrite localstorage setItem
+        const { setItem, removeItem, clear } = localStorage;
+        localStorage.setItem = function (key: string, value: string) {
+          setItem.call(this, key, value);
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({
+              type: "setItem",
+              value: {
+                key,
+                value,
+              },
+            })
+          );
+        };
+        localStorage.removeItem = function (key: string) {
+          removeItem.call(this, key);
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({
+              type: "removeItem",
+              value: key,
+            })
+          );
+        };
+        localStorage.clear = function () {
+          clear.call(this);
+          window.ReactNativeWebView!.postMessage(
+            JSON.stringify({
+              type: "clear",
+            })
+          );
+        };
+      }
+    }, 10000);
+    // obtain all values from storage
+    if (
+      window.ReactNativeWebView &&
+      window.iOSRNWebView === true &&
+      localStorage.getItem("iOSInit") !== "true"
+    ) {
+      window.ReactNativeWebView!.postMessage(
+        JSON.stringify({
+          type: "multiGet",
+        })
+      );
+    }
+  }, []);
 
   const contextValue: ReactNativeContextValue = useMemo(
     () => ({

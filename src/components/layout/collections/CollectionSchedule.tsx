@@ -1,4 +1,5 @@
-import { useContext } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Box,
   Button,
@@ -8,7 +9,6 @@ import {
   TextField,
   Theme,
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileTimePicker as TimePicker } from "@mui/x-date-pickers/MobileTimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -17,6 +17,8 @@ import {
   RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import dayjs from "dayjs";
+
+// Context
 import CollectionContext from "../../../CollectionContext";
 
 const CollectionSchedule = () => {
@@ -27,16 +29,42 @@ const CollectionSchedule = () => {
     updateCollectionSchedule,
     addCollectionSchedule,
     removeCollectionSchedule,
+    savedEtas,
   } = useContext(CollectionContext);
 
-  if (collectionIdx === null) {
+  const [newCollection, setNewCollection] = useState([
+    {
+      name: t("常用"),
+      list: savedEtas,
+      schedules: [],
+    },
+    ...collections,
+  ]);
+
+  const newCollectionIdx = useMemo(
+    () => (collectionIdx !== null ? collectionIdx + 1 : null),
+    [collectionIdx]
+  );
+
+  useEffect(() => {
+    setNewCollection([
+      {
+        name: t("常用"),
+        list: savedEtas,
+        schedules: [],
+      },
+      ...collections,
+    ]);
+  }, [collections, savedEtas, t]);
+
+  if (newCollectionIdx === null) {
     return null;
   }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={rootSx}>
-        {collections[collectionIdx].schedules.map((daySchedule, idx) => (
+        {newCollection[newCollectionIdx].schedules.map((daySchedule, idx) => (
           <Box key={`schedule-${idx}`} sx={daySx}>
             <IconButton
               size="small"

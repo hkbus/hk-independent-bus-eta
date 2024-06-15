@@ -59,7 +59,6 @@ const Header = () => {
 
   const relocateGeolocation = useCallback(() => {
     try {
-      // @ts-expect-error don't use geolocation navigator for Webview
       if (window.iOSRNWebView === true) return;
       navigator.geolocation.getCurrentPosition(
         ({ coords: { latitude, longitude } }) => {

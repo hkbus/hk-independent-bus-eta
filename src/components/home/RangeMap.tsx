@@ -1,5 +1,3 @@
-import MyLocationIcon from "@mui/icons-material/MyLocation";
-import { Box, SxProps, Theme } from "@mui/material";
 import Leaflet from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
@@ -11,15 +9,11 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  Circle,
-  MapContainer,
-  Marker,
-  TileLayer,
-  useMapEvent,
-} from "react-leaflet";
+import { Circle, MapContainer, Marker, useMapEvent } from "react-leaflet";
 import AppContext from "../../context/AppContext";
 import { Location } from "hk-bus-eta";
+import CenterControl from "../map/CenterControl";
+import BaseTile from "../map/BaseTile";
 
 interface RangeMapProps {
   range: number;
@@ -32,7 +26,7 @@ const RangeMap = React.forwardRef<Leaflet.Map, RangeMapProps>(
     const markerRef = useRef<Leaflet.Marker>(null);
     const circleRef = useRef<Leaflet.Circle>(null);
     const position = useRef<Location>(value).current;
-    const { geolocation, colorMode } = useContext(AppContext);
+    const { geolocation } = useContext(AppContext);
     const [map, setMap] = useState<Leaflet.Map | null>(null);
 
     useImperativeHandle(ref, () => map as Leaflet.Map, [map]);
@@ -59,19 +53,7 @@ const RangeMap = React.forwardRef<Leaflet.Map, RangeMapProps>(
         scrollWheelZoom={false}
         ref={setMap}
       >
-        <TileLayer
-          crossOrigin="anonymous"
-          maxZoom={Leaflet.Browser.retina ? 20 : 19}
-          maxNativeZoom={18}
-          keepBuffer={10}
-          updateWhenIdle={false}
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url={
-            colorMode === "light"
-              ? import.meta.env.VITE_OSM_PROVIDER_URL
-              : import.meta.env.VITE_OSM_PROVIDER_URL_DARK
-          }
-        />
+        <BaseTile />
         <Marker position={position} ref={markerRef} />
         <Circle center={position} radius={range} ref={circleRef} />
         <SetViewOnClick map={map as Leaflet.Map} onChange={onChange} />
@@ -105,48 +87,4 @@ const SetViewOnClick = ({ map, onChange }: SetViewOnClickProps) => {
   });
 
   return null;
-};
-
-const CenterControl = ({
-  onClick,
-}: {
-  onClick: React.MouseEventHandler<HTMLDivElement>;
-}) => {
-  return (
-    <div className="leaflet-bottom leaflet-right">
-      <Box
-        sx={centerControlSx}
-        className="leaflet-control leaflet-bar"
-        onClick={onClick}
-      >
-        <MyLocationIcon className={classes.centerControl} />
-      </Box>
-    </div>
-  );
-};
-
-const PREFIX = "range-map";
-
-const classes = {
-  mapContainerBox: `${PREFIX}-mapContainerBox`,
-  mapContainer: `${PREFIX}-mapContainer`,
-  centerControl: `${PREFIX}-centerControl`,
-  marker: `${PREFIX}-marker`,
-  active: `${PREFIX}-active`,
-  passed: `${PREFIX}-passed`,
-};
-
-const centerControlSx: SxProps<Theme> = {
-  background: "white",
-  width: 32,
-  height: 32,
-  marginBottom: "20px !important",
-  marginRight: "5px !important",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  [`& .${classes.centerControl}`]: {
-    padding: "3px",
-    color: "black",
-  },
 };

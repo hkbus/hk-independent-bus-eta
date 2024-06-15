@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Box,
   Drawer,
@@ -7,9 +8,8 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import Collection from "./collections/Collection";
-import { useTranslation } from "react-i18next";
 import { Add as AddIcon, Maximize as MaximizeIcon } from "@mui/icons-material";
+import Collection from "./collections/Collection";
 import WatchEntry from "./collections/WatchEntry";
 import CollectionContext from "../../CollectionContext";
 
@@ -38,7 +38,7 @@ const CollectionDrawer = () => {
           <WatchEntry />
         </Box>
         <Box sx={savedContainerSx}>
-          <Collection name={t("常用")} list={savedEtas} />
+          <Collection name={t("常用")} list={savedEtas} collectionIdx={-1} />
         </Box>
         <Box sx={collectionTitleSx}>
           <Typography variant="h6">{t("Collections")}</Typography>

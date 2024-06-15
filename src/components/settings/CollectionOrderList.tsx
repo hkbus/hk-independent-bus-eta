@@ -1,26 +1,23 @@
-import { useState, useContext, useCallback, useEffect } from "react";
+import { useContext, useCallback, useMemo } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
-import Droppable from "../StrictModeDroppable";
 import {
   DragHandle as DragHandleIcon,
   EditOutlined as EditOutlinedIcon,
 } from "@mui/icons-material";
 import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
-import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
+import { reorder } from "../../utils";
+import Droppable from "../StrictModeDroppable";
 import { ManageMode } from "../../data";
-import { RouteCollection } from "../../@types/types";
 import CollectionContext from "../../CollectionContext";
+import type { RouteCollection } from "../../@types/types";
 
 // mode: delete is for edit here
 const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
-  const { collections, setCollections, toggleCollectionDialog } =
-    useContext(CollectionContext);
-  const [items, setItems] = useState(
-    // cannot use Array.reverse() as it is in-place reverse
-    collections
-  );
   const { t } = useTranslation();
+  const { collections, setCollections, toggleCollectionDialog, savedEtas } =
+    useContext(CollectionContext);
+  const items = useMemo(() => collections, [collections]);
 
   const handleDragEnd = useCallback(
     ({ destination, source }: DropResult) => {
@@ -33,16 +30,12 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
     [items, setCollections]
   );
 
-  const handleDelete = useCallback(
+  const handleEdit = useCallback(
     (idx: number) => {
       toggleCollectionDialog(idx);
     },
     [toggleCollectionDialog]
   );
-
-  useEffect(() => {
-    setItems(collections);
-  }, [collections]);
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
@@ -53,14 +46,22 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
             {...provided.droppableProps}
             sx={containerSx}
           >
-            {items.length ? (
+            {mode === "edit" && (
+              <DraggableListItem
+                item={{ name: "常用", list: savedEtas, schedules: [] }}
+                index={-1}
+                mode={mode}
+                onEdit={() => handleEdit(-1)}
+              />
+            )}
+            {collections.length ? (
               items.map((item, index) => (
                 <DraggableListItem
                   item={item}
                   index={index}
                   key={`collection-${item.name}`}
                   mode={mode}
-                  onDelete={() => handleDelete(index)}
+                  onEdit={() => handleEdit(index)}
                 />
               ))
             ) : (
@@ -82,14 +83,14 @@ interface DraggableListItemProps {
   item: RouteCollection;
   index: number;
   mode: ManageMode;
-  onDelete: () => void;
+  onEdit: () => void;
 }
 
 const DraggableListItem = ({
   item: { name, list },
   index,
   mode,
-  onDelete,
+  onEdit,
 }: DraggableListItemProps) => {
   const { t } = useTranslation();
   return (
@@ -113,8 +114,8 @@ const DraggableListItem = ({
             </Typography>
           </Box>
           {mode === "order" && <DragHandleIcon />}
-          {mode === "delete" && (
-            <IconButton onClick={onDelete}>
+          {mode === "edit" && (
+            <IconButton onClick={onEdit}>
               <EditOutlinedIcon />
             </IconButton>
           )}

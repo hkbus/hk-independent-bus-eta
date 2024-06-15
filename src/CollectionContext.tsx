@@ -29,7 +29,7 @@ interface CollectionContextValue extends CollectionState {
     field: keyof DaySchedule,
     value: any
   ) => void;
-  toggleCollectionEta: (eta: string, idx: number | null) => void;
+  toggleCollectionEta: (eta: string, idx: number) => void;
   setCollectionEtas: (etas: string[]) => void;
   setCollections: (collections: RouteCollection[]) => void;
   importCollectionState: (collectionState: CollectionState) => void;
@@ -234,8 +234,8 @@ export const CollectionContextProvider = ({
   }, []);
 
   const toggleCollectionEta = useCallback(
-    (eta: string, idx: number | null) => {
-      if (idx === null) {
+    (eta: string, idx: number) => {
+      if (idx === -1) {
         updateSavedEtas(eta);
         return;
       }

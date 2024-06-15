@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import {
   Box,
   Dialog,
@@ -16,20 +16,34 @@ import { DeleteForever as DeleteForeverIcon } from "@mui/icons-material";
 import CollectionSchedule from "./CollectionSchedule";
 import CollectionRoute from "./CollectionRoute";
 import CollectionContext from "../../../CollectionContext";
+import { RouteCollection } from "../../../@types/types";
 
 const CollectionDialog = () => {
+  const { t } = useTranslation();
   const {
     collections,
     collectionIdx,
     toggleCollectionDialog,
     updateCollectionName,
     removeCollection,
+    savedEtas,
   } = useContext(CollectionContext);
-  const { t } = useTranslation();
+
+  const collection: RouteCollection = useMemo(() => {
+    if (collectionIdx !== null && collectionIdx >= 0) {
+      return collections[collectionIdx];
+    }
+    return {
+      name: "常用",
+      list: savedEtas,
+      schedules: [],
+    };
+  }, [collections, collectionIdx, savedEtas]);
 
   const [tab, changeTab] = useState<"time" | "routes">("routes");
 
-  if (collectionIdx === null) {
+  // collections state hasn't updated when added new collection, need to add the following
+  if (collectionIdx === null || collection === undefined) {
     return null;
   }
 
@@ -45,8 +59,9 @@ const CollectionDialog = () => {
         <TextField
           id="collection-input"
           variant="standard"
-          value={collections[collectionIdx].name}
+          value={collection.name}
           onChange={({ target: { value } }) => updateCollectionName(value)}
+          disabled={collectionIdx === -1}
           fullWidth
         />
         <Tabs
@@ -55,21 +70,27 @@ const CollectionDialog = () => {
           sx={tabbarSx}
         >
           <Tab value="routes" label={t("路線")} />
-          <Tab value="time" label={t("顯示時間")} />
+          {collection.schedules.length !== 0 && (
+            <Tab value="time" label={t("顯示時間")} />
+          )}
         </Tabs>
         <Box sx={mainSx}>
           {tab === "routes" && <CollectionRoute />}
-          {tab === "time" && <CollectionSchedule />}
+          {tab === "time" && collection.schedules.length !== 0 && (
+            <CollectionSchedule />
+          )}
         </Box>
       </DialogContent>
-      <DialogActions sx={actionSx}>
-        <IconButton
-          onClick={() => removeCollection(collectionIdx)}
-          sx={deleteSx}
-        >
-          <DeleteForeverIcon />
-        </IconButton>
-      </DialogActions>
+      {collectionIdx !== -1 && (
+        <DialogActions sx={actionSx}>
+          <IconButton
+            onClick={() => removeCollection(collectionIdx)}
+            sx={deleteSx}
+          >
+            <DeleteForeverIcon />
+          </IconButton>
+        </DialogActions>
+      )}
     </Dialog>
   );
 };

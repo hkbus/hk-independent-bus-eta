@@ -8,7 +8,11 @@ import {
   type RouteList,
   type StopList,
 } from "hk-bus-eta";
+
+// Utils
 import { formatHandling, getDistance } from "../../../utils";
+
+// Context
 import AppContext from "../../../context/AppContext";
 import DbContext from "../../../context/DbContext";
 import CollectionContext from "../../../CollectionContext";
@@ -141,7 +145,8 @@ const getRoutes = ({
       })
       .sort((a, b) => a[2] - b[2])
       .map((v) => v[0])
-      .slice(0, 40),
+      .slice(0, 40)
+      .reverse(),
     isTodayHoliday,
     isRouteFilter,
     routeList,
