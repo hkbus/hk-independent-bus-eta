@@ -110,7 +110,7 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
         }
       }
     }
-    if (terminus.nlbId) {
+    if (remark === "" || terminus.nlbId) {
       remark =
         t("從") +
         toProperCase(terminus.orig[i18n.language]) +
