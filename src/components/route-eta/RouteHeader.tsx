@@ -26,10 +26,8 @@ const RouteHeader = ({ routeId, stopId }: RouteHeaderProps) => {
     <Paper id="route-eta-header" sx={PaperSx} elevation={0}>
       <RouteNo routeNo={t(route)} component="h1" align="center" />
       <Typography component="h2" variant="caption" align="center">
-        {t("往")}
-        {langSpace(i18n)}
-        {toProperCase(dest[i18n.language])}{" "}
-        {nlbId ? t("從") + toProperCase(orig[i18n.language]) + t("開出") : ""}
+        {`${t("往")}${langSpace(i18n)}${toProperCase(dest[i18n.language])} `}
+        {nlbId ? `${t("從")}${toProperCase(orig[i18n.language])}${t("開出")}` : ""}
       </Typography>
       <ReverseButton routeId={routeId} stopId={stopId} />
       <Box sx={rightBtnGroupSx}>
