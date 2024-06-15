@@ -51,13 +51,13 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
             stopList[data.stops[co[0]][data.stops[co[0]].length - 1]].name
               .zh !== stopList[stops[co[0]][stops[co[0]].length - 1]].name.zh
           ) {
-            remark = t("開往") + dest?.[i18n.language];
+            remark = t("開往") + dest[i18n.language];
           } else if (
             stopList[data.stops[co[0]][0]].name.zh !==
             stopList[stops[co[0]][0]].name.zh
           ) {
             if (!terminus.nlbId) {
-              remark = t("從") + orig?.[i18n.language] + t("開出");
+              remark = t("從") + orig[i18n.language] + t("開出");
             }
           } else {
             let mainRouteFirstStop = stopList[data.stops[co][0]].name;
@@ -67,10 +67,10 @@ const RouteTerminus = ({ terminus }: RouteTerminus) => {
             let routeLastStop = stopList[stops[co][stops[co].length - 1]].name;
 
             if (mainRouteLastStop.zh !== routeLastStop.zh) {
-              remark = t("開往") + routeLastStop?.[i18n.language];
+              remark = t("開往") + routeLastStop[i18n.language];
             } else if (mainRouteFirstStop.zh !== routeFirstStop.zh) {
               if (!terminus.nlbId) {
-                remark = t("從") + routeFirstStop?.[i18n.language] + t("開出");
+                remark = t("從") + routeFirstStop[i18n.language] + t("開出");
               }
             } else {
               let difference = stops[co].filter(
