@@ -11,8 +11,8 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://hkfeature.com/%E5%8A%A0%E5%85%A5%E6%9C%83%E5%93%A1/",
-      en: "https://hkfeature.com/%E5%8A%A0%E5%85%A5%E6%9C%83%E5%93%A1/",
+      zh: "https://hkfeature.com/加入會員/",
+      en: "https://hkfeature.com/加入會員/",
     },
     description: {
       zh: "請訂閱《誌》",
@@ -21,8 +21,8 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://support.hongkongfp.com/en/donations/donate/",
-      en: "https://support.hongkongfp.com/en/donations/donate/",
+      zh: "https://support.hongkongfp.com/en/",
+      en: "https://support.hongkongfp.com/en/",
     },
     description: {
       zh: "請捐款到《香港自由新聞》",
@@ -91,8 +91,8 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://wavezinehk.com/%e8%a8%82%e9%96%b1%e6%94%af%e6%8c%81",
-      en: "https://wavezinehk.com/%e8%a8%82%e9%96%b1%e6%94%af%e6%8c%81",
+      zh: "https://wavezinehk.com/訂閱支持/",
+      en: "https://wavezinehk.com/訂閱支持/",
     },
     description: {
       zh: "請訂閱《Wave. 流行文化誌》",
@@ -101,8 +101,8 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://thecollectivehk.com/subscribe",
-      en: "https://thecollectivehk.com/subscribe",
+      zh: "https://thecollectivehk.com/subscribe/",
+      en: "https://thecollectivehk.com/subscribe/",
     },
     description: {
       zh: "請訂閱《集誌社》",
@@ -162,7 +162,7 @@ const Donations = [
   {
     url: {
       zh: "https://greenbean.media/支持綠豆/",
-      en: "https://greenbean.media/en/支持綠豆/",
+      en: "https://greenbean.media/en/support-us/",
     },
     description: {
       zh: "請訂閱《綠豆》",
