@@ -1,14 +1,8 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import { produce } from "immer";
-
-// Types
 import { DaySchedule, RouteCollection } from "./@types/types";
-
-// Utils
 import { isStrings } from "./utils";
-
-// Defaults
 import { DEFAULT_DAY_SCHEDULE, DEFAULT_ROUTE_COLLECTION } from "./constants";
+import { produce } from "immer";
 
 export interface CollectionState {
   savedStops: string[];
@@ -35,7 +29,7 @@ interface CollectionContextValue extends CollectionState {
     field: keyof DaySchedule,
     value: any
   ) => void;
-  toggleCollectionEta: (eta: string, idx: number | null) => void;
+  toggleCollectionEta: (eta: string, idx: number) => void;
   setCollectionEtas: (etas: string[]) => void;
   setCollections: (collections: RouteCollection[]) => void;
   importCollectionState: (collectionState: CollectionState) => void;
@@ -168,7 +162,7 @@ export const CollectionContextProvider = ({
           DEFAULT_ROUTE_COLLECTION
         );
         state.collections = newCollections;
-        state.collectionIdx = newCollections.length;
+        state.collectionIdx = newCollections.length - 1;
       })
     );
   }, []);
@@ -177,7 +171,7 @@ export const CollectionContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         const newCollections = state.collections.filter(
-          (_, _idx) => idx !== _idx + 1
+          (_, _idx) => idx !== _idx
         );
         state.collections = newCollections;
         state.collectionIdx = null;
@@ -189,7 +183,7 @@ export const CollectionContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         if (state.collectionIdx === null) return;
-        const idx = state.collectionIdx - 1;
+        const idx = state.collectionIdx;
         const newCollections = state.collections;
         newCollections[idx].name = v;
         state.collections = newCollections;
@@ -202,7 +196,7 @@ export const CollectionContextProvider = ({
       setStateRaw(
         produce((state: State) => {
           if (state.collectionIdx === null) return;
-          const collectionIdx = state.collectionIdx - 1;
+          const collectionIdx = state.collectionIdx;
           const newCollections = state.collections;
           newCollections[collectionIdx].schedules[idx][field] = value;
           state.collections = newCollections;
@@ -216,7 +210,7 @@ export const CollectionContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         if (state.collectionIdx === null) return;
-        const collectionIdx = state.collectionIdx - 1;
+        const collectionIdx = state.collectionIdx;
         const newCollections = state.collections;
         newCollections[collectionIdx].schedules =
           newCollections[collectionIdx].schedules.concat(DEFAULT_DAY_SCHEDULE);
@@ -229,7 +223,7 @@ export const CollectionContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         if (state.collectionIdx === null) return;
-        const collectionIdx = state.collectionIdx - 1;
+        const collectionIdx = state.collectionIdx;
         const newCollections = state.collections;
         newCollections[collectionIdx].schedules = newCollections[
           collectionIdx
@@ -240,8 +234,8 @@ export const CollectionContextProvider = ({
   }, []);
 
   const toggleCollectionEta = useCallback(
-    (eta: string, idx: number | null) => {
-      if (idx === null) {
+    (eta: string, idx: number) => {
+      if (idx === -1) {
         updateSavedEtas(eta);
         return;
       }
@@ -267,8 +261,7 @@ export const CollectionContextProvider = ({
     setStateRaw(
       produce((state: State) => {
         if (state.collectionIdx === null) return;
-        // GitHub Pull: 181
-        const collectionIdx = state.collectionIdx - 1;
+        const collectionIdx = state.collectionIdx;
         const newCollections = state.collections;
         newCollections[collectionIdx].list = etas;
         state.collections = newCollections;

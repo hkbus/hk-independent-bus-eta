@@ -201,7 +201,7 @@ const SuccinctTimeReport = ({
             <ReorderIcon />
           </Box>
         )}
-        {mode === "delete" && (
+        {mode === "edit" && (
           <Box sx={iconContainerSx}>
             <IconButton onClick={(e) => onDelete && onDelete(e)}>
               <DeleteIcon />

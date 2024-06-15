@@ -18,10 +18,10 @@ import CollectionContext from "../../../CollectionContext";
 interface CollectionProps {
   name: string;
   list: string[];
-  collectionIdx?: number | null;
+  collectionIdx: number;
 }
 
-const Collection = ({ name, list, collectionIdx = null }: CollectionProps) => {
+const Collection = ({ name, list, collectionIdx }: CollectionProps) => {
   const { t } = useTranslation();
   const {
     db: { routeList },
@@ -34,7 +34,7 @@ const Collection = ({ name, list, collectionIdx = null }: CollectionProps) => {
       <Box
         sx={{
           ...leftContainerSx,
-          cursor: collectionIdx !== null ? "pointer" : "auto",
+          cursor: "pointer",
         }}
         onClick={() => toggleCollectionDialog(collectionIdx)}
       >
@@ -57,11 +57,7 @@ const Collection = ({ name, list, collectionIdx = null }: CollectionProps) => {
           checked={list.includes(collectionDrawerRoute ?? "")}
           onClick={() => {
             if (collectionDrawerRoute && collectionIdx !== null) {
-              if (collectionIdx > 0) {
-                toggleCollectionEta(collectionDrawerRoute, collectionIdx - 1);
-              } else {
-                toggleCollectionEta(collectionDrawerRoute, null);
-              }
+              toggleCollectionEta(collectionDrawerRoute, collectionIdx);
             }
           }}
         />

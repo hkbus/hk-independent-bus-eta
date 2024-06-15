@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback, useEffect } from "react";
+import { useContext, useCallback, useMemo } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import {
   DragHandle as DragHandleIcon,
@@ -6,36 +6,18 @@ import {
 } from "@mui/icons-material";
 import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-
-// Utils
 import { reorder } from "../../utils";
 import Droppable from "../StrictModeDroppable";
-
-// Data
 import { ManageMode } from "../../data";
-
-// Context
 import CollectionContext from "../../CollectionContext";
-
-// Types
-import { RouteCollection } from "../../@types/types";
+import type { RouteCollection } from "../../@types/types";
 
 // mode: delete is for edit here
 const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
   const { t } = useTranslation();
   const { collections, setCollections, toggleCollectionDialog, savedEtas } =
     useContext(CollectionContext);
-
-  // GitHub Pull: 181
-  const [items, setItems] = useState([
-    // cannot use Array.reverse() as it is in-place reverse
-    {
-      name: t("常用"),
-      list: savedEtas,
-      schedules: [],
-    },
-    ...collections,
-  ]);
+  const items = useMemo(() => collections, [collections]);
 
   const handleDragEnd = useCallback(
     ({ destination, source }: DropResult) => {
@@ -43,31 +25,17 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
       if (!destination) return;
 
       const newItems = reorder(items, source.index, destination.index);
-      // Remove the savedEtas (first object in the items array)
-      newItems.shift();
       setCollections(newItems);
     },
     [items, setCollections]
   );
 
-  const handleDelete = useCallback(
+  const handleEdit = useCallback(
     (idx: number) => {
       toggleCollectionDialog(idx);
     },
     [toggleCollectionDialog]
   );
-
-  useEffect(() => {
-    setItems([
-      // cannot use Array.reverse() as it is in-place reverse
-      {
-        name: t("常用"),
-        list: savedEtas,
-        schedules: [],
-      },
-      ...collections,
-    ]);
-  }, [collections, savedEtas, t]);
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
@@ -78,19 +46,22 @@ const CollectionOrderList = ({ mode }: { mode: ManageMode }) => {
             {...provided.droppableProps}
             sx={containerSx}
           >
-            {/* <SavedEtasItem
-              item={item}
-              mode={mode}
-              onDelete={() => handleDelete(index)}
-            /> */}
-            {items.length ? (
+            {mode === "edit" && (
+              <DraggableListItem
+                item={{ name: "常用", list: savedEtas, schedules: [] }}
+                index={-1}
+                mode={mode}
+                onEdit={() => handleEdit(-1)}
+              />
+            )}
+            {collections.length ? (
               items.map((item, index) => (
                 <DraggableListItem
                   item={item}
                   index={index}
                   key={`collection-${item.name}`}
                   mode={mode}
-                  onDelete={() => handleDelete(index)}
+                  onEdit={() => handleEdit(index)}
                 />
               ))
             ) : (
@@ -112,21 +83,21 @@ interface DraggableListItemProps {
   item: RouteCollection;
   index: number;
   mode: ManageMode;
-  onDelete: () => void;
+  onEdit: () => void;
 }
 
 const DraggableListItem = ({
   item: { name, list },
   index,
   mode,
-  onDelete,
+  onEdit,
 }: DraggableListItemProps) => {
   const { t } = useTranslation();
   return (
     <Draggable
       draggableId={name}
       index={index}
-      isDragDisabled={mode !== "order" || name === "常用"}
+      isDragDisabled={mode !== "order"}
     >
       {(provided) => (
         <Box
@@ -142,9 +113,9 @@ const DraggableListItem = ({
               {list.length}
             </Typography>
           </Box>
-          {mode === "order" && name !== "常用" && <DragHandleIcon />}
-          {mode === "delete" && (
-            <IconButton onClick={onDelete}>
+          {mode === "order" && <DragHandleIcon />}
+          {mode === "edit" && (
+            <IconButton onClick={onEdit}>
               <EditOutlinedIcon />
             </IconButton>
           )}

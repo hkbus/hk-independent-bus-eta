@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Box,
@@ -32,7 +32,6 @@ const CollectionSchedule = () => {
     savedEtas,
   } = useContext(CollectionContext);
 
-  // GitHub Pull: 181
   const [newCollection, setNewCollection] = useState([
     {
       name: t("常用"),
@@ -42,9 +41,13 @@ const CollectionSchedule = () => {
     ...collections,
   ]);
 
+  const newCollectionIdx = useMemo(
+    () => (collectionIdx !== null ? collectionIdx + 1 : null),
+    [collectionIdx]
+  );
+
   useEffect(() => {
     setNewCollection([
-      // cannot use Array.reverse() as it is in-place reverse
       {
         name: t("常用"),
         list: savedEtas,
@@ -54,14 +57,14 @@ const CollectionSchedule = () => {
     ]);
   }, [collections, savedEtas, t]);
 
-  if (collectionIdx === null) {
+  if (newCollectionIdx === null) {
     return null;
   }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={rootSx}>
-        {newCollection[collectionIdx].schedules.map((daySchedule, idx) => (
+        {newCollection[newCollectionIdx].schedules.map((daySchedule, idx) => (
           <Box key={`schedule-${idx}`} sx={daySx}>
             <IconButton
               size="small"

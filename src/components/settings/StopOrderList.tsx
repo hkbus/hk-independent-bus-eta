@@ -117,7 +117,7 @@ const DraggableListItem = ({
             </Typography>
           </Box>
           {mode === "order" && <DragHandleIcon />}
-          {mode === "delete" && (
+          {mode === "edit" && (
             <IconButton onClick={onDelete}>
               <DeleteIcon />
             </IconButton>
