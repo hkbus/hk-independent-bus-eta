@@ -6,13 +6,12 @@ import {
   useState,
   useMemo,
 } from "react";
-import { MapContainer, Marker, TileLayer, GeoJSON } from "react-leaflet";
+import { MapContainer, Marker, GeoJSON } from "react-leaflet";
 import Leaflet from "leaflet";
 import { Box, SxProps, Theme } from "@mui/material";
 import { type Company } from "hk-bus-eta";
 import AppContext from "../../context/AppContext";
 import type { StopListEntry } from "hk-bus-eta";
-import { MyLocation as MyLocationIcon } from "@mui/icons-material";
 import { checkPosition, locationEqual } from "../../utils";
 import type { Map as LeafletMap, StyleFunction } from "leaflet";
 import type { Location as GeoLocation } from "hk-bus-eta";
@@ -22,24 +21,8 @@ import { useRoutePath } from "../../hooks/useRoutePath";
 import { getLineColor } from "../../utils";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
-
-interface CenterControlProps {
-  onClick: React.MouseEventHandler<HTMLDivElement>;
-}
-
-const CenterControl = ({ onClick }: CenterControlProps) => {
-  return (
-    <div className="leaflet-bottom leaflet-right">
-      <Box
-        sx={centerControlSx}
-        className="leaflet-control leaflet-bar"
-        onClick={onClick}
-      >
-        <MyLocationIcon className={classes.centerControl} />
-      </Box>
-    </div>
-  );
-};
+import CenterControl from "../map/CenterControl";
+import BaseTile from "../map/BaseTile";
 
 interface RouteMapProps {
   routeId: string;
@@ -71,7 +54,7 @@ const RouteMap = ({
   companies,
   onMarkerClick,
 }: RouteMapProps) => {
-  const { geolocation, geoPermission, updateGeoPermission, colorMode } =
+  const { geolocation, geoPermission, updateGeoPermission } =
     useContext(AppContext);
   const {
     db: { stopList },
@@ -187,30 +170,7 @@ const RouteMap = ({
         className={classes.mapContainer}
         ref={setMap}
       >
-        <TileLayer
-          crossOrigin="anonymous"
-          maxZoom={Leaflet.Browser.retina ? 20 : 19}
-          maxNativeZoom={18}
-          keepBuffer={10}
-          updateWhenIdle={false}
-          url={
-            colorMode === "light"
-              ? import.meta.env.VITE_OSM_PROVIDER_URL
-              : import.meta.env.VITE_OSM_PROVIDER_URL_DARK
-          }
-        />
-        <TileLayer
-          crossOrigin="anonymous"
-          maxZoom={Leaflet.Browser.retina ? 20 : 19}
-          maxNativeZoom={18}
-          keepBuffer={10}
-          updateWhenIdle={false}
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> © <a href="https://api.portal.hkmapservice.gov.hk/disclaimer">地圖版權屬香港特別行政區政府</a>'
-          url={import.meta.env.VITE_MAP_LABEL_URL.replace(
-            "{lang}",
-            language === "zh" ? "tc" : "en"
-          )}
-        />
+        <BaseTile />
         {stops.map((stop, idx) => (
           <Marker
             key={`${stop.location.lng}-${stop.location.lat}-${idx}`}
@@ -344,7 +304,7 @@ const StopMarker = ({ active, passed, companies }: StopMarkerProps) => {
   });
 };
 
-const PREFIX = "routeMap";
+const PREFIX = "map";
 
 const classes = {
   mapContainerBox: `${PREFIX}-mapContainerBox`,
@@ -416,20 +376,5 @@ const rootSx: SxProps<Theme> = {
     backgroundPosition: "center",
     transition: "transform 0.1s ease-out",
     transformOrigin: "center",
-  },
-};
-
-const centerControlSx: SxProps<Theme> = {
-  background: "white",
-  width: 32,
-  height: 32,
-  marginBottom: "20px !important",
-  marginRight: "5px !important",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  [`& .${classes.centerControl}`]: {
-    padding: "3px",
-    color: "black",
   },
 };

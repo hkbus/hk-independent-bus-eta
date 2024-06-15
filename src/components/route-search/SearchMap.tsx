@@ -1,15 +1,8 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import {
-  MapContainer,
-  Marker,
-  TileLayer,
-  Polyline,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, Marker, Polyline, useMap } from "react-leaflet";
 import Leaflet, { LatLngExpression } from "leaflet";
 import { Box, SxProps, Theme } from "@mui/material";
 import AppContext from "../../context/AppContext";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { checkPosition } from "../../utils";
 import { Location as GeoLocation } from "hk-bus-eta";
 import SelfCircle from "../map/SelfCircle";
@@ -17,6 +10,8 @@ import CompassControl from "../map/CompassControl";
 import useLanguage from "../../hooks/useTranslation";
 import { SearchRoute } from "../../pages/RouteSearch";
 import DbContext from "../../context/DbContext";
+import CenterControl from "../map/CenterControl";
+import BaseTile from "../map/BaseTile";
 
 interface ChangeMapCenter {
   center: GeoLocation | null;
@@ -49,24 +44,6 @@ const EndMarker = ({ end }: { end: GeoLocation | null }) => {
     return <Marker position={end} icon={EndsMarker({ isStart: false })} />;
   }
   return null;
-};
-
-interface CenterControlProps {
-  onClick: React.MouseEventHandler<HTMLDivElement>;
-}
-
-const CenterControl = ({ onClick }: CenterControlProps) => {
-  return (
-    <div className="leaflet-bottom leaflet-right">
-      <Box
-        sx={centerControlSx}
-        className="leaflet-control leaflet-bar"
-        onClick={onClick}
-      >
-        <MyLocationIcon className={classes.centralControl} />
-      </Box>
-    </div>
-  );
 };
 
 interface BusRouteProps {
@@ -180,9 +157,8 @@ const SearchMap = ({
   stopIdx,
   onMarkerClick,
 }: SearchMapProps) => {
-  const { geolocation, geoPermission, updateGeoPermission, colorMode } =
+  const { geolocation, geoPermission, updateGeoPermission } =
     useContext(AppContext);
-  const language = useLanguage();
   const [mapState, setMapState] = useState<{
     center: GeoLocation | null;
     isFollow: boolean;
@@ -260,30 +236,7 @@ const SearchMap = ({
           start={checkPosition(start)}
           end={end}
         />
-        <TileLayer
-          crossOrigin="anonymous"
-          maxZoom={Leaflet.Browser.retina ? 20 : 19}
-          maxNativeZoom={18}
-          keepBuffer={10}
-          updateWhenIdle={false}
-          url={
-            colorMode === "light"
-              ? import.meta.env.VITE_OSM_PROVIDER_URL
-              : import.meta.env.VITE_OSM_PROVIDER_URL_DARK
-          }
-        />
-        <TileLayer
-          crossOrigin="anonymous"
-          maxZoom={Leaflet.Browser.retina ? 20 : 19}
-          maxNativeZoom={18}
-          keepBuffer={10}
-          updateWhenIdle={false}
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> © <a href="https://api.portal.hkmapservice.gov.hk/disclaimer">地圖版權屬香港特別行政區政府</a>'
-          url={import.meta.env.VITE_MAP_LABEL_URL.replace(
-            "{lang}",
-            language === "zh" ? "tc" : "en"
-          )}
-        />
+        <BaseTile />
         {stopIdx !== null &&
           (routes || []).map((route, idx) => (
             <BusRoute
@@ -347,7 +300,7 @@ const EndsMarker = ({ isStart }: { isStart: boolean }) => {
   });
 };
 
-const PREFIX = "searchMap";
+const PREFIX = "map";
 
 const classes = {
   mapContainer: `${PREFIX}-mapContainer`,
@@ -392,16 +345,5 @@ const rootSx: SxProps<Theme> = {
     backgroundPosition: "center",
     transition: "transform 0.1s ease-out",
     transformOrigin: "center",
-  },
-};
-
-const centerControlSx = {
-  background: "white",
-  height: "28px",
-  marginBottom: "20px !important",
-  marginRight: "5px !important",
-  [`& .${classes.centralControl}`]: {
-    padding: "5px",
-    color: "black",
   },
 };
