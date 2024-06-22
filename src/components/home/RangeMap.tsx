@@ -45,6 +45,11 @@ const RangeMap = React.forwardRef<Leaflet.Map, RangeMapProps>(
       };
     }, [handleMove, map]);
 
+    useEffect(() => {
+      const bounds = circleRef.current?.getBounds();
+      bounds && map?.fitBounds(bounds);
+    }, [map, range]);
+
     return (
       <MapContainer
         style={{ height: "100%", position: "relative" }}
