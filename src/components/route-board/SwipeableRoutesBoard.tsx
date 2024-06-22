@@ -9,7 +9,7 @@ import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDiss
 import { FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import memorize from "memoize-one";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 
 import AppContext from "../../context/AppContext";
@@ -154,15 +154,19 @@ const SwipeableRoutesBoard = ({
             </Box>
             {availableBoardTab[index] !== "all" && (
               <Box display="flex">
-                <Typography
-                  variant="h6"
-                  sx={clickableLinkSx}
-                  onClick={() => onChangeTab("all")}
-                >
-                  {t("click-here")}
-                </Typography>
                 <Typography variant="h6">
-                  {t("to-search-all-routes")}
+                  <Trans
+                    i18nKey="click-here-to-search-all-routes"
+                    components={{
+                      ClickHereLink: (
+                        <Typography
+                          variant="h6"
+                          sx={clickableLinkSx}
+                          onClick={() => onChangeTab("all")}
+                        />
+                      ),
+                    }}
+                  />
                 </Typography>
               </Box>
             )}
