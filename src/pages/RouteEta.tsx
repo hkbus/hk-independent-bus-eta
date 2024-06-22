@@ -28,6 +28,7 @@ import {
 } from "hk-bus-eta";
 import useLanguage from "../hooks/useTranslation";
 import DbContext from "../context/DbContext";
+import RouteUpdateNotice from "../components/route-eta/RouteUpdateNotice";
 const RouteMap = React.lazy(() => import("../components/route-eta/RouteMap"));
 
 const RouteEta = () => {
@@ -229,6 +230,7 @@ const RouteEta = () => {
     <>
       <input hidden id="render" />
       <RouteHeader routeId={routeId} stopId={stopIds[stopIdx]} />
+      <RouteUpdateNotice route={routeListEntry} />
       {!energyMode && navigator.userAgent !== "prerendering" && (
         <Suspense fallback={null}>
           <RouteMap
