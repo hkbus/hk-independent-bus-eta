@@ -191,7 +191,7 @@ const resources = {
       "bad-weather-text":
         "公共交通及班次或受惡劣天氣影響，以下資料未必反映最新狀況。按此查看官方公佈。",
       "bad-weather-link": "https://www.td.gov.hk/tc/special_news/spnews.htm",
-      "db-renew-text": "路線資料已更新，按此手動更新",
+      "db-renew-text": "路線資料已作修訂，請按此處更新",
       kmb: "九巴",
       ctb: "城巴",
       nlb: "嶼巴",
