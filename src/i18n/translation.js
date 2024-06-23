@@ -4,7 +4,7 @@ const resources = {
       "bad-weather-text":
         "Services may be impacted by bad weather. Data displayed below might not be accurate. Check here to see official announcements.",
       "bad-weather-link": "https://www.td.gov.hk/en/special_news/spnews.htm",
-      "db-renew-text": "Route data has not been updated, click here to update",
+      "db-renew-text": "Route data has not been updated, tap here to update",
       "巴士到站預報 App （免費無廣告）": "HK Bus ETA App (Free and Ad-free)",
       巴士到站預報: "HK BUS ETA",
       點對點路線搜尋: "Point to point route search",
@@ -134,8 +134,8 @@ const resources = {
       ferry: "Ferry",
       "route-search-no-result": "No Result",
       "no-recent-search": "No Record",
-      "click-here-to-search-all-routes":
-        "<ClickHereLink>Click here</ClickHereLink> to search all routes",
+      "tap-here-to-search-all-routes":
+        "<TapHereLink>Tap here</TapHereLink> to search all routes",
       對頭線: "REV",
       附近未有任何路線: "No available routes nearby",
       未有收藏路線: "No starred routes",
@@ -227,8 +227,8 @@ const resources = {
       "CTB first": "城巴優先",
       "route-search-no-result": "沒有結果",
       "no-recent-search": "沒有記錄",
-      "click-here-to-search-all-routes":
-        "<ClickHereLink>按此</ClickHereLink>以搜尋「全部」路綫",
+      "tap-here-to-search-all-routes":
+        "<TapHereLink>按此</TapHereLink>以搜尋「全部」路綫",
       "Source code": "原始碼",
       "We'd like to set analytics cookies that help us improve hkbus.app by measuring how you use it.":
         "我們希望設置 cookie，了解你如何使用 hkbus.app 來幫助我們改進。",

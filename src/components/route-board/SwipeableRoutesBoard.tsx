@@ -156,9 +156,9 @@ const SwipeableRoutesBoard = ({
               <Box display="flex">
                 <Typography variant="h6">
                   <Trans
-                    i18nKey="click-here-to-search-all-routes"
+                    i18nKey="tap-here-to-search-all-routes"
                     components={{
-                      ClickHereLink: (
+                      TapHereLink: (
                         <Typography
                           variant="h6"
                           sx={clickableLinkSx}
