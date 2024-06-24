@@ -1,14 +1,9 @@
-import React, { Suspense, useEffect, useState } from "react";
-import ReactDOM, { createRoot } from "react-dom/client";
+import React from "react";
+import ReactDOM from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import "./index.css";
 import "./i18n";
 import AppWrapper from "./AppWrapper";
-import { DatabaseType, fetchDbFunc } from "./db";
-import ErrorBoundary from "./ErrorBoundary";
-import { CollectionContextProvider } from "./CollectionContext";
-import { ReactNativeContextProvider } from "./ReactNativeContext";
-import { EmotionContextProvider } from "./EmotionContext";
 import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from "react-router-dom";
 
 // Copied from https://docs.sentry.io/platforms/javascript/guides/react/#configure
