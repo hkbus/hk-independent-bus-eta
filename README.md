@@ -55,10 +55,30 @@ Build the app with SEO optimized pages.
 
 ## Error Reporting
 
-Sentry can be used to collect errors and events form users for troubleshooting purpose. To enable the integration, the following steps are required.
+Sentry can be used to collect errors and events from users for troubleshooting purpose. To enable the integration, the following steps are required.
 
-### Configure Sentry DSN
+### Pre-requisite
 
+1. A project created on Sentry (either sentry.io or your own Sentry installation), [with DSN](https://docs.sentry.io/concepts/key-terms/dsn-explainer/#where-to-find-your-dsn) created.
+
+### Enable Sentry during build time
+
+Set the DSN to the environment variable `VITE_SENTRY_DSN` when you build the project.
+Can be injected in GitHub Actions by secret `SENTRY_DSN`
+
+### Automating Sentry-related tasks at build time
+
+Set these environment variables in CI/CD pipeline:
+```
+# You can derieve the SENTRY_ORG and SENTRY_PROJECT (their slug) from your Sentry project URL. For example, "https://my-org.sentry.io/projects/my-project/", then SENTRY_ORG=my-org, SENTRY_PROJECT=my-project
+SENTRY_ORG=
+SENTRY_PROJECT=
+SENTRY_AUTH_TOKEN=<See how to get it from https://docs.sentry.io/account/auth-tokens/>
+```
+
+Can be injected in GitHub Actions by Variables `SENTRY_ORG`, `SENTRY_PROJECT` and secret `SENTRY_AUTH_TOKEN`.
+
+Reference: https://github.com/getsentry/sentry-javascript-bundler-plugins
 
 ## Contributors
 
