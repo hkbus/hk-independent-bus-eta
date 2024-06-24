@@ -53,6 +53,13 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 Build the app with SEO optimized pages.
 
+## Error Reporting
+
+Sentry can be used to collect errors and events form users for troubleshooting purpose. To enable the integration, the following steps are required.
+
+### Configure Sentry DSN
+
+
 ## Contributors
 
 Project owner [chunlaw](https://github.com/chunlaw) is the initiator of the whole project. Everyone is welcome to contribute. Other contributors are listed below (ordered by alphabetical order):
