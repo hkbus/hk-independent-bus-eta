@@ -36,3 +36,6 @@ jobs:
 
     - run: yarn install --immutable
     - run: yarn run build
+      env:
+        VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        # No need to inject SENTRY_ORG and such as this build is not published for general public use
