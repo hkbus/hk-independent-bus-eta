@@ -4,7 +4,7 @@ const resources = {
       "bad-weather-text":
         "Services may be impacted by bad weather. Data displayed below might not be accurate. Check here to see official announcements.",
       "bad-weather-link": "https://www.td.gov.hk/en/special_news/spnews.htm",
-      "db-renew-text": "Route data has not been updated, tap here to update",
+      "db-renew-text": "Tap to fetch revised route info",
       "巴士到站預報 App （免費無廣告）": "HK Bus ETA App (Free and Ad-free)",
       巴士到站預報: "HK BUS ETA",
       點對點路線搜尋: "Point to point route search",
