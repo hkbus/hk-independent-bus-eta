@@ -15,6 +15,8 @@ import {
   BrowserRouter as Router,
   Routes,
 } from "react-router-dom";
+import * as Sentry from "@sentry/react";
+
 import "./App.css";
 import AppContext from "./context/AppContext";
 import { SearchContextProvider } from "./SearchContext";
@@ -40,6 +42,9 @@ const DataImport = React.lazy(() => import("./pages/DataImport"));
 const DataExport = React.lazy(() => import("./pages/DataExport"));
 
 const App = () => {
+  // Integration with reference to https://docs.sentry.io/platforms/javascript/guides/react/features/react-router/#usage-with-routes--component
+  const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
+
   const { analytics, colorMode, fontSize } = useContext(AppContext);
   const language = useLanguage();
 
@@ -60,7 +65,7 @@ const App = () => {
         <CacheProvider value={emotionCache}>
           <SearchContextProvider>
             <Router>
-              <Routes>
+              <SentryRoutes>
                 <Route path="/" element={<Navigate to={`/${language}`} />} />
                 <Route path="/:lang" element={<Root />}>
                   <Route
@@ -133,7 +138,7 @@ const App = () => {
                     <RedirectPage url="https://github.com/hkbus/hk-independent-bus-eta/wiki/%E5%B8%B8%E8%A6%8B%E5%95%8F%E9%A1%8C-FAQ" />
                   }
                 />
-              </Routes>
+              </SentryRoutes>
             </Router>
           </SearchContextProvider>
         </CacheProvider>
