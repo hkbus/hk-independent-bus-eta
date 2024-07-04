@@ -16,18 +16,19 @@ import {
 } from "@mui/material";
 import { useCallback, useContext, useMemo } from "react";
 import StopRouteList from "../bookmarked-stop/StopRouteList";
-import { Company } from "hk-bus-eta";
+import { Company, RouteListEntry } from "hk-bus-eta";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
 
 interface StopDialogProps {
   open: boolean;
+  routeId : string;
   stops: Array<[Company, string]>;
   onClose: () => void;
 }
 
-const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
+const StopDialog = ({ open, routeId, stops, onClose }: StopDialogProps) => {
   const {
     db: { stopList },
   } = useContext(DbContext);
@@ -83,7 +84,7 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
         </Box>
       </DialogTitle>
       <DialogContent>
-        <StopRouteList stops={stops} isFocus={true} />
+        <StopRouteList routeId={routeId} stops={stops} isFocus={true} />
       </DialogContent>
     </Dialog>
   );

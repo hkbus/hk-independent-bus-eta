@@ -1,15 +1,18 @@
 import { Box, CircularProgress, List, SxProps, Theme } from "@mui/material";
 import SuccinctTimeReport from "../home/SuccinctTimeReport";
+import { useStopGroup } from "../../hooks/useStopGroup";
 import { useStopEtas } from "../../hooks/useStopEtas";
-import { Company } from "hk-bus-eta";
+import { Company, RouteListEntry } from "hk-bus-eta";
 
 interface StopRouteListProps {
   stops: Array<[Company, string]>; // [[co, stopId]]
+  routeId : string | undefined;
   isFocus: boolean;
 }
 
-const StopRouteList = ({ stops, isFocus }: StopRouteListProps) => {
-  const stopEtas = useStopEtas({ stopKeys: stops, disabled: !isFocus });
+const StopRouteList = ({ stops, routeId = undefined, isFocus }: StopRouteListProps) => {
+  const stopGroup = useStopGroup({ stopKeys: stops, routeId : routeId });
+  const stopEtas = useStopEtas({ stopKeys: stopGroup, disabled: !isFocus });
 
   if (stopEtas.length === 0) {
     return (

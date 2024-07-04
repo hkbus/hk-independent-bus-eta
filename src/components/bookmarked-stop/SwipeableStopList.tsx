@@ -72,6 +72,7 @@ const SwipeableStopList = React.forwardRef<
         <StopRouteList
           key={`savedStops-${idx}`}
           stops={stops}
+          routeId={undefined}
           isFocus={getViewIdx() === idx}
         />
       ))}

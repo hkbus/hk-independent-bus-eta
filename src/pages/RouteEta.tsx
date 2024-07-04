@@ -253,6 +253,7 @@ const RouteEta = () => {
       />
       <StopDialog
         open={isDialogOpen}
+        routeId={routeId}
         stops={dialogStop}
         onClose={handleCloseDialog}
       />
