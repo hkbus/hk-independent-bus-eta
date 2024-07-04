@@ -34,10 +34,11 @@ export const useStopEtas = ({
   );
 
   const routeKeys = useMemo(() => {
+    const hashTable : Array<string> = [];
     return (
       Object.entries(routeList)
         .reduce(
-          (acc, [routeId, { stops, freq }]) => {
+          (acc, [routeId, { route, dest, bound, stops, freq }]) => {
             if (
               isRouteFilter &&
               !isRouteAvaliable(routeId, freq, isTodayHoliday, serviceDayMap)
@@ -47,7 +48,15 @@ export const useStopEtas = ({
             stopKeys.forEach(([co, stopId]) => {
               stops[co]?.forEach((_stopId, seq) => {
                 if (_stopId === stopId) {
-                  acc.push([routeId, seq]);
+                  const hash1 = `${route}|${bound[co]??""}|${stopId}`;
+                  const hash2 = `${route}|${dest.zh}|${stopId}`;
+                  const hash3 = `${route}|${seq}`;
+                  if(!hashTable.includes(hash1) && !hashTable.includes(hash2) && !hashTable.includes(hash3)) {
+                    hashTable.push(hash1);
+                    hashTable.push(hash2);
+                    hashTable.push(hash3);
+                    acc.push([routeId, seq]);
+                  }
                 }
               });
             });
