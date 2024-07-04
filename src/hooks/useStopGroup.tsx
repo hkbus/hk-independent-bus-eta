@@ -49,7 +49,7 @@ export const useStopGroup = ({
   const getBearingStops = (a : StopListEntry, b : StopListEntry) => {
     return getBearing(a.location, b.location);
   };
-  
+ 
   const findRouteStopBearings = (routeStops : RouteKey[]) => {
     // routeStop example: {"routeKey":"101+1+KENNEDY TOWN+KWUN TONG (YUE MAN SQUARE)","co":"ctb","seq":12}
     return routeStops.map(routeStop => {
@@ -73,7 +73,7 @@ export const useStopGroup = ({
     // StopDialog
     let targetRouteStops = routeList[routeId].stops;
     stopKeys.forEach(([co, stopId]) => {
-      let seq = targetRouteStops[co].indexOf(stopId);
+      let seq = targetRouteStops[co]?.indexOf(stopId) ?? -1;
       if(seq != -1) {
         routeStops.push({
           routeKey : routeId,
@@ -86,7 +86,7 @@ export const useStopGroup = ({
     // SwipableStopList (saved stop list)
     stopKeys.forEach(([co, stopId]) => {
       Object.keys(routeList).forEach(routeKey => {
-        let seq = routeList[routeKey].stops[co].indexOf(stopId);
+        let seq = routeList[routeKey]?.stops[co]?.indexOf(stopId) ?? -1;
         if(seq != -1) {
           routeStops.push({
             routeKey : routeKey,
@@ -116,45 +116,45 @@ export const useStopGroup = ({
       return false;
     }
   }
-  const findNearbyStops = (targetId : string, excludeList : string[]) => {
-    let targetStop = stopList[targetId];
-
-    return Object.keys(stopList).filter((stopId) => {
-      // find stops that are within X metres of target stop and along similar direction
-      return getDistanceStop(targetStop, stopList[stopId]) <= DISTANCE_THRESHOLD &&
-      // filter out stops that have not been added into excludeList before
-      !excludeList.includes(stopId);
-    })
-    .reduce( (acc, stopId) => {
-      // get all the routes that has stop with this stopId
-      const rs = Object.entries(routeList).map(([routeKey, routeListEntry]) => {
-        const stops = routeListEntry.stops ?? {};
-        const companies = Object.keys(stops) as Company[];
-        for(let co of companies) {
-          let stopPos = stops[co].indexOf(stopId);
-          if(stopPos > -1)
-            return { routeKey : routeKey, co : co, seq : stopPos } as RouteKey;
-        }
-        return { routeKey : routeKey, co : 'ctb', seq : -1 } as RouteKey; // use ctb as dummy value and seq = -1, will be discarded in next filter
-      })
-      .filter((obj) => obj.seq != -1);
-      // if any of the stops is within acceptable bearing range, add to the list
-      const bearings = findRouteStopBearings(rs);
-      if(bearings.find(b => isBearingAccepted(b)) !== undefined) {
-        const thisStop : StopListEntryExtended = {
-          ...stopList[stopId],
-          id : stopId,
-          distance : 0 // dummy value
-        };
-        acc.push(thisStop);
-      }
-      return acc
-    }, [] as Array<StopListEntryExtended>);
-  }
 
   const stopGroup = useMemo<Array<[Company, string]>>(() => {
     const stopGroup : Array<[Company, string]> = [];
     let stopListEntries : StopListEntryExtended[] = [];
+    const findNearbyStops = (targetId : string, excludeList : string[]) => {
+      let targetStop = stopList[targetId];
+
+      return Object.keys(stopList).filter((stopId) => {
+        // find stops that are within X metres of target stop and along similar direction
+        return getDistanceStop(targetStop, stopList[stopId]) <= DISTANCE_THRESHOLD &&
+        // filter out stops that have not been added into excludeList before
+        !excludeList.includes(stopId);
+      })
+      .reduce( (acc, stopId) => {
+        // get all the routes that has stop with this stopId
+        const _routeStop = Object.entries(routeList).map(([routeKey, routeListEntry]) => {
+          const stops = routeListEntry.stops ?? {};
+          const companies = Object.keys(stops) as Company[];
+          for(let co of companies) {
+            let stopPos = stops[co]?.indexOf(stopId) ?? -1;
+            if(stopPos > -1)
+              return { routeKey : routeKey, co : co, seq : stopPos } as RouteKey;
+          }
+          return { routeKey : routeKey, co : 'ctb', seq : -1 } as RouteKey; // use ctb as dummy value and seq = -1, will be discarded in next filter
+        })
+        .filter((obj) => obj.seq != -1);
+        // if any of the stops is within acceptable bearing range, add to the list
+        const bearings = findRouteStopBearings(_routeStop);
+        if(bearings.find(b => isBearingAccepted(b)) !== undefined) {
+          const thisStop : StopListEntryExtended = {
+            ...stopList[stopId],
+            id : stopId,
+            distance : 0 // dummy value
+          };
+          acc.push(thisStop);
+        }
+        return acc
+      }, [] as Array<StopListEntryExtended>);
+    }
 
     stopKeys.forEach((stopKey) => {
       const [co, stopId] = stopKey;
@@ -196,7 +196,7 @@ export const useStopGroup = ({
       });
     }
     return stopGroup;
-  }, [stopKeys, routeList, stopList, findNearbyStops]);
+  }, [stopKeys, routeList, stopList]);
 
   return stopGroup;
 };
