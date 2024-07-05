@@ -38,7 +38,7 @@ export const useStopEtas = ({
     return (
       Object.entries(routeList)
         .reduce(
-          (acc, [routeId, { route, dest, bound, stops, freq }]) => {
+          (acc, [routeId, { route, dest, bound, stops, freq, fares }]) => {
             if (
               isRouteFilter &&
               !isRouteAvaliable(routeId, freq, isTodayHoliday, serviceDayMap)
@@ -50,7 +50,7 @@ export const useStopEtas = ({
                 if (_stopId === stopId) {
                   const hash1 = `${route}|${bound[co]??""}|${stopId}`;
                   const hash2 = `${route}|${dest.zh}|${stopId}`;
-                  const hash3 = `${route}|${seq}`;
+                  const hash3 = `${route}|${seq}|${(fares != null && seq < fares.length - 1 ? fares[seq] : 0)}`;
                   if(!hashTable.includes(hash1) && !hashTable.includes(hash2) && !hashTable.includes(hash3)) {
                     hashTable.push(hash1);
                     hashTable.push(hash2);
