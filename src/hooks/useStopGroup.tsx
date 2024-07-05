@@ -46,8 +46,7 @@ export const useStopGroup = ({
       const stopLength = routeList[routeKey].stops[co].length;
       let stopA, stopB;
       if(seq == stopLength - 1) { // last stop
-        // stopA = stopList[routeList[routeKey].stops[co][seq - 1]];
-        // stopB = stopList[routeList[routeKey].stops[co][seq]];
+        // no next stop, hence no forward bearing, just use -1 as dummy value then discard it later
         return -1;
       } else {
         stopA = stopList[routeList[routeKey].stops[co][seq]];
@@ -173,21 +172,6 @@ export const useStopGroup = ({
       stopListEntries.forEach((stopListEntry) => {
         if(stopListEntry.routeStops.length > 0)
           _stopGroup.push([stopListEntry.routeStops[0].co, stopListEntry.id]);
-        // // find co of stop id from routeList
-        // let found = false;
-        // for(let [,routeListEntry] of Object.entries(routeList)) {
-        //   const companies = Object.keys(routeListEntry.stops) as Company[];
-        //   for(let co of companies) {
-        //     if(routeListEntry.stops[co]?.includes(stopListEntry.id)) {
-        //       _stopGroup.push([co, stopListEntry.id]);
-        //       found = true;
-        //       break;
-        //     }
-        //   }
-        //   if(found) {
-        //     break;
-        //   }
-        // }
       });
     }
     return _stopGroup;
