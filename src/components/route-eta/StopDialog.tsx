@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useCallback, useContext, useMemo } from "react";
 import StopRouteList from "../bookmarked-stop/StopRouteList";
-import { Company, RouteListEntry } from "hk-bus-eta";
+import { Company } from "hk-bus-eta";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
