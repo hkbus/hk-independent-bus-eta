@@ -32,7 +32,7 @@ export const useStopGroup = ({
   const BEARING_THRESHOLD = 45; // in degrees (°), acceptable deviation to the left or right of current bearing
   const STOP_LIST_LIMIT = 50; // max number of stops in a group, if more than that, the ETA list will be too long and meaningless
 
-  const getDistanceStop = (a : StopListEntry, b : StopListEntry) => {
+  const getDistanceStops = (a : StopListEntry, b : StopListEntry) => {
     return getDistance(a.location, b.location);
   };
   const getBearingStops = (a : StopListEntry, b : StopListEntry) => {
@@ -56,35 +56,38 @@ export const useStopGroup = ({
     }).filter(brng => brng !== -1);
   }, [routeList, stopList]);
 
-  const routeStops : RouteStopCoSeq[]= [];
-  if(routeId !== undefined) {
-    // StopDialog
-    let targetRouteStops = routeList[routeId].stops;
-    stopKeys.forEach(([co, stopId]) => {
-      let seq = targetRouteStops[co]?.indexOf(stopId) ?? -1;
-      if(seq != -1) {
-        routeStops.push({
-          routeKey : routeId,
-          co : co,
-          seq : seq
-        });
-      }
-    });
-  } else {
-    // SwipableStopList (saved stop list)
-    stopKeys.forEach(([co, stopId]) => {
-      Object.keys(routeList).forEach(routeKey => {
-        let seq = routeList[routeKey]?.stops[co]?.indexOf(stopId) ?? -1;
+  const routeStops : RouteStopCoSeq[]= useMemo<RouteStopCoSeq[]>(() => {
+    let _routeStops: RouteStopCoSeq[] = [];
+    if(routeId !== undefined) {
+      // StopDialog
+      let targetRouteStops = routeList[routeId].stops;
+      stopKeys.forEach(([co, stopId]) => {
+        let seq = targetRouteStops[co]?.indexOf(stopId) ?? -1;
         if(seq != -1) {
-          routeStops.push({
-            routeKey : routeKey,
+          _routeStops.push({
+            routeKey : routeId,
             co : co,
             seq : seq
           });
         }
-      })
-    });
-  }
+      });
+    } else {
+      // SwipableStopList (saved stop list)
+      stopKeys.forEach(([co, stopId]) => {
+        Object.keys(routeList).forEach(routeKey => {
+          let seq = routeList[routeKey]?.stops[co]?.indexOf(stopId) ?? -1;
+          if(seq != -1) {
+            _routeStops.push({
+              routeKey : routeKey,
+              co : co,
+              seq : seq
+            });
+          }
+        })
+      });
+    }
+    return _routeStops;
+  }, [stopKeys, routeId, routeList]);
   const bearingTargets = getAllRouteStopsBearings(routeStops);
   const isBearingInRange = useCallback((bearing : number) => {
     if(BEARING_THRESHOLD >= 180 || bearingTargets.length == 0) {
@@ -110,7 +113,7 @@ export const useStopGroup = ({
 
     return Object.keys(stopList).filter((stopId) => {
       // find stops that are within DISTANCE_THRESHOLD metres of target stop and along similar direction
-      return getDistanceStop(targetStop, stopList[stopId]) <= DISTANCE_THRESHOLD &&
+      return getDistanceStops(targetStop, stopList[stopId]) <= DISTANCE_THRESHOLD &&
       // filter out stops that have not been added into excludeList before
       !excludedStopIdList.includes(stopId);
     })
@@ -165,7 +168,7 @@ export const useStopGroup = ({
       stopListEntries = stopListEntries.map(stop => {
         return {
           ... stop,
-          distance : getDistanceStop(stopList[stopId], stop)
+          distance : getDistanceStops(stopList[stopId], stop)
         };
       }).sort((stopA, stopB) => {
         return stopA.distance - stopB.distance
