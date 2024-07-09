@@ -48,15 +48,7 @@ export const useStopEtas = ({
             stopKeys.forEach(([co, stopId]) => {
               stops[co]?.forEach((_stopId, seq) => {
                 if (_stopId === stopId) {
-                  const hash1 = `${route}|${bound[co]??""}|${stopId}`;
-                  const hash2 = `${route}|${dest.zh}|${stopId}`;
-                  const hash3 = `${route}|${seq}|${(fares != null && seq < fares.length - 1 ? fares[seq] : 0)}`;
-                  if(!hashTable.includes(hash1) && !hashTable.includes(hash2) && !hashTable.includes(hash3)) {
-                    hashTable.push(hash1);
-                    hashTable.push(hash2);
-                    hashTable.push(hash3);
-                    acc.push([routeId, seq]);
-                  }
+                  acc.push([routeId, seq]);
                 }
               });
             });
@@ -94,15 +86,68 @@ export const useStopEtas = ({
       )
     ).then((_etas) => {
       if (isMounted.current) {
+        const tempEtas : [string, string[], Eta[]][] = []; // [Etas (as combined string), routeKey, Etas (as array)]
         setStopEtas(
           _etas
             .map((e, idx): [string, Eta[]] => [
               routeKeys[idx].join("/"),
               e.filter(({ co, dest }) => {
                 if (co !== "mtr") return true;
-                return dest.zh === routeList[routeKeys[idx][0]].dest.zh;
+                //return dest.zh === routeList[routeKeys[idx][0]].dest.zh; // checking just dest is not enough
+                return routeList[routeKeys[idx][0]].stops[co].map(stopCode => stopList[stopCode]?.name.zh).includes(dest.zh);
               }),
             ])
+            // try to remove duplicate routes
+            .reduce((agg, [_routeKey, _etas]) => {
+              if(_etas.length == 0) {
+                // no eta, add anyway
+                agg.push([_routeKey, _etas]);
+              } else {
+                // add to temp
+                const _etaStr = _etas.map(eta => eta.eta).join('|');
+                const tempEta = tempEtas.find(_eta => _eta[0] === _etaStr);
+                if(tempEta !== undefined) {
+                  tempEta[1].push(_routeKey);
+                } else {
+                  tempEtas.push([_etaStr, [_routeKey], _etas]);
+                }
+                // do not aggregate it yet
+              }
+              return agg;
+            }, [] as [string, Eta[]][])
+            .concat(
+              tempEtas.map(([, routeKeys, etas]) : [string, Eta[]] => {
+                if(routeKeys.length == 1) {
+                  // if only one route with this eta list, return it straight away
+                  return [routeKeys[0], etas];
+                } else {
+                  // find the best route
+                  // routeProperties = [routeKey, routeId, isRouteAvailable, serviceType]
+                  const routeProperties = routeKeys.map((routeKey) : [string, string, boolean, number] => {
+                    const [routeId, ] = routeKey.split("/");
+                    return [routeKey, routeId, isRouteAvaliable(routeId, routeList[routeId]?.freq ?? null, isTodayHoliday, serviceDayMap), Number(routeList[routeId]?.serviceType ?? "999999")];
+                  })
+                  const availableRoutes = routeProperties.filter(([,,isAvailable]) => isAvailable);
+                  if(availableRoutes.length == 1) {
+                    // only one route is available right now
+                    return [availableRoutes[0][0], etas];
+                  } else if(availableRoutes.length > 1) {
+                    // multiple routes are available
+                    const sortedRoutes = availableRoutes.sort(([,,,serviceTypeA], [,,,serviceTypeB]) => serviceTypeA - serviceTypeB);
+                    return [sortedRoutes[0][0], etas];
+                  } else {
+                    // no route is currently available according to timetable
+                    // find a normal route and display it
+                    const normalRoutes = routeProperties.filter(([,,,serviceType]) => serviceType === 1);
+                    if(normalRoutes.length > 0) {
+                      return [normalRoutes[0][0], etas];
+                    }
+                    return [routeKeys[0], etas]; // fallback case: use the first route
+                  }
+                }
+              })
+            )
+            // sort to display the earliest arrival transport first
             .sort(([keyA, a], [keyB, b]) => {
               if (a.length === 0) return 1;
               if (b.length === 0) return -1;
@@ -129,6 +174,7 @@ export const useStopEtas = ({
     routeKeys,
     isLightRail,
     holidays,
+    isTodayHoliday,
     serviceDayMap,
   ]);
 
