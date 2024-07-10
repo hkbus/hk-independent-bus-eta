@@ -34,11 +34,10 @@ export const useStopEtas = ({
   );
 
   const routeKeys = useMemo(() => {
-    const hashTable : Array<string> = [];
     return (
       Object.entries(routeList)
         .reduce(
-          (acc, [routeId, { route, dest, bound, stops, freq, fares }]) => {
+          (acc, [routeId, { stops, freq }]) => {
             if (
               isRouteFilter &&
               !isRouteAvaliable(routeId, freq, isTodayHoliday, serviceDayMap)
@@ -86,64 +85,80 @@ export const useStopEtas = ({
       )
     ).then((_etas) => {
       if (isMounted.current) {
-        const tempEtas : [string, string[], Eta[]][] = []; // [Etas (as combined string), routeKey, Etas (as array)]
+        const tempEtas : [string[], Eta[]][] = []; // [routeKey array, Etas (as array)]
         setStopEtas(
           _etas
             .map((e, idx): [string, Eta[]] => [
               routeKeys[idx].join("/"),
               e.filter(({ co, dest }) => {
                 if (co !== "mtr") return true;
-                //return dest.zh === routeList[routeKeys[idx][0]].dest.zh; // checking just dest is not enough
+                // return dest.zh === routeList[routeKeys[idx][0]].dest.zh; // checking just dest is not enough
                 return routeList[routeKeys[idx][0]].stops[co].map(stopCode => stopList[stopCode]?.name.zh).includes(dest.zh);
               }),
             ])
             // try to remove duplicate routes
-            .reduce((agg, [_routeKey, _etas]) => {
+            .reduce((acc, [_routeKey, _etas]) => {
               if(_etas.length == 0) {
                 // no eta, add anyway
-                agg.push([_routeKey, _etas]);
+                acc.push([_routeKey, _etas]);
               } else {
-                // add to temp
-                const _etaStr = _etas.map(eta => eta.eta).join('|');
-                const tempEta = tempEtas.find(_eta => _eta[0] === _etaStr);
+                // append routeKey to temp if same route no by same company
+                // otherwise add new record to temp
+                const tempEta = tempEtas.find(_tempEta => {
+                  try {
+                    const tempEtaTimes = _tempEta[1].map(eta => eta.eta).join('|');
+                    const thisEtaTimes = _etas.map(eta => eta.eta).join('|');
+                    const tempEtaRouteId = _tempEta[0][0].split("/")[0];
+                    const thisEtaRouteId = _routeKey.split("/")[0];
+                    const tempEtaRouteNo = routeList[tempEtaRouteId].route;
+                    const thisEtaRouteNo = routeList[thisEtaRouteId].route;
+                    const tempEtaCompanyList = routeList[tempEtaRouteId].co;
+                    const thisEtaCompany = _etas[0].co;
+                    return tempEtaTimes === thisEtaTimes && tempEtaCompanyList.includes(thisEtaCompany) && tempEtaRouteNo === thisEtaRouteNo;
+                  } catch (e) {
+                    return false; // just let it die;
+                  }
+                });
                 if(tempEta !== undefined) {
-                  tempEta[1].push(_routeKey);
+                  tempEta[0].push(_routeKey);
                 } else {
-                  tempEtas.push([_etaStr, [_routeKey], _etas]);
+                  tempEtas.push([[_routeKey], _etas]);
                 }
-                // do not aggregate it yet
+                // just add to temp first, do not accumulate into acc yet
               }
-              return agg;
+              return acc;
             }, [] as [string, Eta[]][])
             .concat(
-              tempEtas.map(([, routeKeys, etas]) : [string, Eta[]] => {
+              // among the routes with same Etas and same routeNo, find the best routeKey
+              tempEtas.map(([routeKeys, etas]) : [string, Eta[]] => {
                 if(routeKeys.length == 1) {
                   // if only one route with this eta list, return it straight away
                   return [routeKeys[0], etas];
                 } else {
-                  // find the best route
-                  // routeProperties = [routeKey, routeId, isRouteAvailable, serviceType]
-                  const routeProperties = routeKeys.map((routeKey) : [string, string, boolean, number] => {
+                  // find the best route using score-based heuristics (the smaller the score, the better)
+                  const routeScores = routeKeys.map((routeKey) : [string, number] => {
                     const [routeId, ] = routeKey.split("/");
-                    return [routeKey, routeId, isRouteAvaliable(routeId, routeList[routeId]?.freq ?? null, isTodayHoliday, serviceDayMap), Number(routeList[routeId]?.serviceType ?? "999999")];
-                  })
-                  const availableRoutes = routeProperties.filter(([,,isAvailable]) => isAvailable);
-                  if(availableRoutes.length == 1) {
-                    // only one route is available right now
-                    return [availableRoutes[0][0], etas];
-                  } else if(availableRoutes.length > 1) {
-                    // multiple routes are available
-                    const sortedRoutes = availableRoutes.sort(([,,,serviceTypeA], [,,,serviceTypeB]) => serviceTypeA - serviceTypeB);
-                    return [sortedRoutes[0][0], etas];
-                  } else {
-                    // no route is currently available according to timetable
-                    // find a normal route and display it
-                    const normalRoutes = routeProperties.filter(([,,,serviceType]) => serviceType === 1);
-                    if(normalRoutes.length > 0) {
-                      return [normalRoutes[0][0], etas];
+                    const _freq = routeList[routeId]?.freq ?? null;
+                    const _fares = routeList[routeId]?.fares ?? null;
+                    const _serviceType = Number(routeList[routeId]?.serviceType ?? "16");
+                    const _bounds = Object.entries(routeList[routeId]?.bound).map(([, bound]) => bound);
+                    const _available = isRouteAvaliable(routeId, _freq, isTodayHoliday, serviceDayMap);
+                    let routeScore = 0;
+                    routeScore += (_available ? 0 : 256); // route not available, add 256
+                    routeScore += (_freq !== null ? 0 : 128); // no freq table, add 128
+                    routeScore += (_fares !== null ? 0 : 128); // no fares table, add 128
+                    routeScore += (_bounds.includes("IO") || _bounds.includes("OI") ? 0 : 32); // if bounds is one-way, add 32 - prefer circular route
+                    routeScore += _serviceType; // add serviceType
+                    return [routeKey, routeScore];
+                  });
+                  const [bestRouteKey, ] = routeScores.reduce(([bestRouteKey, minScore], [currentRouteKey, currentScore]) => {
+                    if(currentScore < minScore) {
+                      bestRouteKey = currentRouteKey;
+                      minScore = currentScore;
                     }
-                    return [routeKeys[0], etas]; // fallback case: use the first route
-                  }
+                    return [bestRouteKey, minScore];
+                  }, ["", 999999]);
+                  return [bestRouteKey, etas];
                 }
               })
             )
