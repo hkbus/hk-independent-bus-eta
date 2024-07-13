@@ -5,7 +5,6 @@ import { useEtas } from "../../hooks/useEtas";
 import AppContext from "../../context/AppContext";
 import { Eta } from "hk-bus-eta";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
-import LaptopIcon from "@mui/icons-material/Laptop";
 import useLanguage from "../../hooks/useTranslation";
 
 interface SuccinctEtasProps {
