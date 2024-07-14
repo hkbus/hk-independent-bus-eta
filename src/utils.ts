@@ -34,6 +34,19 @@ export const getDistanceWithUnit = (distanceInMetre: number) => {
   };
 };
 
+export const getBearing = (a: GeoLocation, b: GeoLocation) => {
+	// Reference: https://www.movable-type.co.uk/scripts/latlong.html
+	const φ1 = a.lat * Math.PI / 180; // φ, λ = lat, lon in radians
+	const φ2 = b.lat * Math.PI / 180;
+	const λ1 = a.lng * Math.PI / 180; // φ, λ = lat, lon in radians
+	const λ2 = b.lng * Math.PI / 180;
+	const y = Math.sin(λ2 - λ1) * Math.cos(φ2);
+	const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2-λ1);
+	const θ = Math.atan2(y, x);
+	const brng = (θ * 180 / Math.PI + 360) % 360; // in degrees
+	return brng;
+};
+
 export const DEFAULT_GEOLOCATION: GeoLocation = {
   lat: 22.302711,
   lng: 114.177216,
