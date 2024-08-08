@@ -1,0 +1,1 @@
+import{r as o}from"./index-CRQFxemk.js";import{u as r}from"./BaseTile-Bikwek0F.js";function a(){return r().map}function c(n,e){const t=a();return o.useEffect(function(){return t.on(n,e),function(){t.off(n,e)}},[t,n,e]),t}export{a,c as u};
