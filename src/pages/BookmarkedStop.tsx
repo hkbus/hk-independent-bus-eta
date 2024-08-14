@@ -17,6 +17,7 @@ import SwipeableStopList, {
 import useLanguage from "../hooks/useTranslation";
 import CollectionContext from "../CollectionContext";
 import DbContext from "../context/DbContext";
+import NoticeCard from "../components/layout/NoticeCard";
 
 const BookmarkedStop = () => {
   const { colorMode } = useContext(AppContext);
@@ -83,6 +84,7 @@ const BookmarkedStop = () => {
       elevation={0}
     >
       <StopTabbar stopTab={stopTab} onChangeTab={handleTabChange} />
+      <NoticeCard />
       <BadWeatherCard />
       <DbRenewReminder />
       <Box sx={{ flex: 1, overflow: "scroll" }}>

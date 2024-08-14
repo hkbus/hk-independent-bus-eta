@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import useLanguage from "../hooks/useTranslation";
 import CollectionContext from "../CollectionContext";
 import DbContext from "../context/DbContext";
+import NoticeCard from "../components/layout/NoticeCard";
 
 const Home = () => {
   const { AppTitle } = useContext(DbContext);
@@ -57,6 +58,7 @@ const Home = () => {
         {t("home-page-description")}
       </Typography>
       <HomeTabbar homeTab={homeTab} onChangeTab={handleTabChange} />
+      <NoticeCard />
       <BadWeatherCard />
       <DbRenewReminder />
       <SwipeableList
