@@ -161,6 +161,7 @@ const SwipeableRoutesBoard = ({
                       TapHereLink: (
                         <Typography
                           variant="h6"
+                          component="span"
                           sx={clickableLinkSx}
                           onClick={() => onChangeTab("all")}
                         />
