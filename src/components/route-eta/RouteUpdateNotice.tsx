@@ -17,8 +17,9 @@ const RouteUpdateNotice = ({ route }: RouteUpdateNoticeProps) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    fetchRouteUpdatedAt(route)
-      .then(updatedAt => setShow(updatedAt > updateTime))
+    fetchRouteUpdatedAt(route).then((updatedAt) =>
+      setShow(updatedAt > updateTime)
+    );
   }, [route, updateTime]);
 
   if (!show) {
