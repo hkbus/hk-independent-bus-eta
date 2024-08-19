@@ -8,6 +8,7 @@ import { Eta, Terminal } from "hk-bus-eta";
 import { getPlatformSymbol, getLineColor } from "../../utils";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
+import { DoubleTrainIcon, SingleTrainIcon } from "../home/SuccinctEtas";
 
 interface TimeReportProps {
   routeId: string;
@@ -173,7 +174,7 @@ const EtaLine = ({
   );
 
   return (
-    <Typography variant="subtitle1">
+    <Typography variant="subtitle1" sx={{ justifyContent: "center" }}>
       {etaFormat === "diff" && waitTimeJsx}
       {etaFormat === "exact" && exactTimeJsx}
       {etaFormat === "mixed" && (
@@ -188,13 +189,12 @@ const EtaLine = ({
       >
         {showCompany && <>&emsp;{t(co)}</>}
         &emsp;
-        {isTrain ? (
-          <Box component="span" color={getLineColor([co], route, true)}>
-            {getRemark(remark[language], language, platformMode)}
-          </Box>
-        ) : (
-          getRemark(remark[language], language, platformMode)
-        )}
+        <EtaRemark
+          remark={remark}
+          co={co}
+          route={route}
+          platformMode={platformMode}
+        />
         {isTrain && " "}
         {!isTrain && <>&emsp;</>}
         {branchRoute && dest[language]}
@@ -203,33 +203,40 @@ const EtaLine = ({
   );
 };
 
-const getRemark = (
-  remark: string | null,
-  language: string,
-  platformMode: boolean
-) => {
+interface EtaRemarkProps {
+  remark: Eta["remark"];
+  co: Eta["co"];
+  route: string;
+  platformMode: boolean;
+}
+
+const EtaRemark = ({ remark, co, route, platformMode }: EtaRemarkProps) => {
   if (remark === null) return "";
   // retrieve single digit numerical string from remark as a circle text
-  const platform =
-    [
-      ...remark.matchAll(
-        language === "zh" ? /(\d+)號月台/g : /Platform (\d+)/g
-      ),
-    ][0] || [];
+  const platform = [...remark.en.matchAll(/Platform (\d+)/g)][0] || [];
 
+  let ret = "";
   // replace only when single occurrence of single digit numerical string
   // if the remark has more than one occurrence of numerical string
   // or if the only numerical string occurrence are more than one digit, use original remark
   if (platform.length === 2 && platform[1].length) {
     // only support single digit number
-    remark = getPlatformSymbol(Number(platform[1]), platformMode);
+    ret = getPlatformSymbol(Number(platform[1]), platformMode);
   }
 
-  if (language === "zh") {
-    return remark.replace(/▭▭/g, "雙卡").replace(/▭/g, "單卡");
-  } else {
-    return remark.replace(/▭▭/g, "Duel").replace(/▭/g, "Single");
-  }
+  const trains =
+    (/Platform [\d+] - (▭+)/gm.exec(remark?.en ?? "") ?? [])[1] ?? "";
+
+  return (
+    <>
+      <Box component="span" color={getLineColor([co], route, true)}>
+        {ret}
+      </Box>
+      &nbsp;
+      {trains.length === 1 && <SingleTrainIcon />}
+      {trains.length === 2 && <DoubleTrainIcon />}
+    </>
+  );
 };
 
 export default TimeReport;
