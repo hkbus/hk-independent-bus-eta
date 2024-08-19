@@ -23,6 +23,7 @@ import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
 import CenterControl from "../map/CenterControl";
 import BaseTile from "../map/BaseTile";
+import MtrExits from "../map/MtrExits";
 
 interface RouteMapProps {
   routeId: string;
@@ -171,6 +172,7 @@ const RouteMap = ({
         ref={setMap}
       >
         <BaseTile />
+        <MtrExits />
         {stops.map((stop, idx) => (
           <Marker
             key={`${stop.location.lng}-${stop.location.lat}-${idx}`}
@@ -376,5 +378,13 @@ const rootSx: SxProps<Theme> = {
     backgroundPosition: "center",
     transition: "transform 0.1s ease-out",
     transformOrigin: "center",
+  },
+  ["& .mtr-exit"]: {
+    backgroundImage: `url(/img/HK_MTR_logo.svg)`,
+  },
+  ["& .mtr-exit-label"]: {
+    background: "transparent",
+    color: "#AC2E44",
+    fontWeight: 600,
   },
 };

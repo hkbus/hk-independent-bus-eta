@@ -129,7 +129,21 @@ const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => 
               purgeOnQuotaError: true,
             }
           }
-        }
+        },
+        {
+          urlPattern: ({url}) => url.pathname.endsWith('exits.mtr.json'),
+          handler: "CacheFirst",
+          options: {
+            cacheName: "mtr-exits",
+            cacheableResponse: {
+              statuses: [200],
+            },
+            expiration: {
+              maxAgeSeconds: 60 * 24 * 7,
+              purgeOnQuotaError: true,
+            }
+          }
+        },
       ]
     }
   }
