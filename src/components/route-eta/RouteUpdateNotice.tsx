@@ -1,7 +1,7 @@
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import DbContext from "../../context/DbContext";
-import { RouteListEntry } from "hk-bus-eta";
+import { fetchRouteUpdatedAt, RouteListEntry } from "hk-bus-eta";
 import { useTranslation } from "react-i18next";
 
 interface RouteUpdateNoticeProps {
@@ -17,21 +17,8 @@ const RouteUpdateNotice = ({ route }: RouteUpdateNoticeProps) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    fetch(
-      `https://data.hkbus.app/route-ts/${`${route.route}+${route.serviceType}+${route.orig.en}+${route.dest.en}`.toUpperCase()}`
-    )
-      .then((r) => {
-        if (r.ok) {
-          return r.text();
-        }
-        throw Error("no update");
-      })
-      .then((r) => {
-        setShow(parseInt(r, 10) * 1000 > updateTime);
-      })
-      .catch((e) => {
-        console.log(e.message);
-      });
+    fetchRouteUpdatedAt(route)
+      .then(updatedAt => setShow(updatedAt > updateTime))
   }, [route, updateTime]);
 
   if (!show) {

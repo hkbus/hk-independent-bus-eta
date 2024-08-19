@@ -17,7 +17,6 @@ const NoticeCard = () => {
   const [state, setState] = useState<NoticeCardState | null>(null);
 
   useEffect(() => {
-    console.log("hihi");
     fetch("/notice.json")
       .then((r) => r.json())
       .then((r) => setState(r));
