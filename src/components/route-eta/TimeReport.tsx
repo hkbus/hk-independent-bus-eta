@@ -192,6 +192,7 @@ const EtaLine = ({
         <EtaRemark
           remark={remark}
           co={co}
+          language={language}
           route={route}
           platformMode={platformMode}
         />
@@ -208,9 +209,16 @@ interface EtaRemarkProps {
   co: Eta["co"];
   route: string;
   platformMode: boolean;
+  language: "zh" | "en";
 }
 
-const EtaRemark = ({ remark, co, route, platformMode }: EtaRemarkProps) => {
+const EtaRemark = ({
+  remark,
+  language,
+  co,
+  route,
+  platformMode,
+}: EtaRemarkProps) => {
   if (remark === null) return "";
   // retrieve single digit numerical string from remark as a circle text
   const platform = [...remark.en.matchAll(/Platform (\d+)/g)][0] || [];
@@ -226,6 +234,11 @@ const EtaRemark = ({ remark, co, route, platformMode }: EtaRemarkProps) => {
 
   const trains =
     (/Platform [\d+] - (▭+)/gm.exec(remark?.en ?? "") ?? [])[1] ?? "";
+
+  const isTrain = co === "mtr" || co === "lightRail";
+  if (!isTrain) {
+    return remark[language];
+  }
 
   return (
     <>
