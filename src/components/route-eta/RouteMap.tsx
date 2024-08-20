@@ -387,4 +387,8 @@ const rootSx: SxProps<Theme> = {
     color: "#AC2E44",
     fontWeight: 600,
   },
+  ["& .mtr-exit-barrier-free"]: {
+    backgroundImage: `url(/img/Wheelchair_symbol.svg)`,
+    backgroundSize: "12px 11px",
+  }
 };

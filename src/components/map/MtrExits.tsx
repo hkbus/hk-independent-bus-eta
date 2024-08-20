@@ -4,12 +4,14 @@ import useLanguage from "../../hooks/useTranslation";
 import Leaflet from "leaflet";
 
 interface MtrExit {
-  station: string;
-  name_en: string;
-  name_zh: string;
+  name: {
+    en: string;
+    zh: string;
+  },
   exit: string;
   lat: number;
   lng: number;
+  barrierFree: boolean;
 }
 
 interface MtrExitsState {
@@ -43,7 +45,7 @@ const MtrExits = () => {
   return (
     <>
       {state.exits.map((exit) => (
-        <React.Fragment key={`${exit.name_en}-${exit.exit}`}>
+        <React.Fragment key={`${exit.name.en}-${exit.exit}`}>
           {state.icon && (
             <Marker
               position={exit}
@@ -52,7 +54,7 @@ const MtrExits = () => {
                 iconAnchor: [7.5, 5],
                 className: "mtr-exit",
               })}
-              alt={exit[`name_${language}`]}
+              alt={exit.name[language]}
             />
           )}
           {state.label && (
@@ -64,6 +66,16 @@ const MtrExits = () => {
                 className: "mtr-exit-label",
               })}
             />
+          )}
+          {state.label && exit.barrierFree && (
+            <Marker
+              position={exit}
+              icon={Leaflet.divIcon({
+                iconSize: [12, 11],
+                iconAnchor: [-20, 5],
+                className: "mtr-exit-barrier-free",
+              })}
+          />
           )}
         </React.Fragment>
       ))}

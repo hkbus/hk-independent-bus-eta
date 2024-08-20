@@ -221,7 +221,7 @@ const EtaRemark = ({
 }: EtaRemarkProps) => {
   if (remark === null) return "";
   // retrieve single digit numerical string from remark as a circle text
-  const platform = [...remark.en.matchAll(/Platform (\d+)/g)][0] || [];
+  const platform = [...(remark.en?.matchAll(/Platform (\d+)/g) ?? [])][0] || [];
 
   let ret = "";
   // replace only when single occurrence of single digit numerical string
