@@ -390,5 +390,5 @@ const rootSx: SxProps<Theme> = {
   ["& .mtr-exit-barrier-free"]: {
     backgroundImage: `url(/img/Wheelchair_symbol.svg)`,
     backgroundSize: "12px 11px",
-  }
+  },
 };

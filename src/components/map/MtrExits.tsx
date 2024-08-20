@@ -7,7 +7,7 @@ interface MtrExit {
   name: {
     en: string;
     zh: string;
-  },
+  };
   exit: string;
   lat: number;
   lng: number;
@@ -75,7 +75,7 @@ const MtrExits = () => {
                 iconAnchor: [-20, 5],
                 className: "mtr-exit-barrier-free",
               })}
-          />
+            />
           )}
         </React.Fragment>
       ))}
