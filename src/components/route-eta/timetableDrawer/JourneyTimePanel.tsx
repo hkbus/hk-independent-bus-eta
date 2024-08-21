@@ -74,12 +74,12 @@ const JourneyTimePanel = ({ routeId }: JourneyTimePanelProps) => {
       startSeq: state.startSeq,
       endSeq: state.endSeq,
       stopList,
-      batchSize: Math.min(Math.ceil((state.endSeq - state.startSeq) / 3), 6),
+      batchSize: Math.max(Math.ceil((state.endSeq - state.startSeq) / 3), 6),
       signal: abortController.current.signal,
     }).then((jt) => {
       setState((prev) => ({
         ...prev,
-        jt,
+        jt: Math.round(jt),
         isLoading: false,
       }));
     });
