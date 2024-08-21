@@ -19,7 +19,7 @@ const TimeTableButton = ({ routeId }: { routeId: string }) => {
         startIcon={<ScheduleIcon />}
         onClick={() => setIsOpen(true)}
       >
-        {t("時間表")}
+        {t("車程")}
       </Button>
       <TimetableDrawer
         routeId={routeId}

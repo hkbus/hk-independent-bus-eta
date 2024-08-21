@@ -76,13 +76,21 @@ const JourneyTimePanel = ({ routeId }: JourneyTimePanelProps) => {
       stopList,
       batchSize: Math.max(Math.ceil((state.endSeq - state.startSeq) / 3), 6),
       signal: abortController.current.signal,
-    }).then((jt) => {
-      setState((prev) => ({
-        ...prev,
-        jt: Math.round(jt),
-        isLoading: false,
-      }));
-    });
+    })
+      .then((jt) => {
+        setState((prev) => ({
+          ...prev,
+          jt: Math.round(jt),
+          isLoading: false,
+        }));
+      })
+      .catch((e) => {
+        console.error(e);
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+        }));
+      });
   }, [route, state.endSeq, state.startSeq, stopList]);
 
   const stops = useMemo(() => {

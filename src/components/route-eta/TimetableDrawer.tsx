@@ -12,7 +12,7 @@ interface TimetableDrawerProps {
 
 const TimetableDrawer = ({ routeId, open, onClose }: TimetableDrawerProps) => {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<"schedule" | "jt">("schedule");
+  const [tab, setTab] = useState<"schedule" | "jt">("jt");
 
   const modalProps = useMemo(() => {
     return {
@@ -33,11 +33,11 @@ const TimetableDrawer = ({ routeId, open, onClose }: TimetableDrawerProps) => {
       anchor="right"
     >
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={tabbarSx}>
-        <Tab value="schedule" label={t("時間表")} />
         <Tab label={t("車程")} value="jt" />
+        <Tab value="schedule" label={t("時間表")} />
       </Tabs>
-      {tab === "schedule" && <TimeTable routeId={routeId} />}
       {tab === "jt" && <JourneyTimePanel routeId={routeId} />}
+      {tab === "schedule" && <TimeTable routeId={routeId} />}
     </Drawer>
   );
 };
