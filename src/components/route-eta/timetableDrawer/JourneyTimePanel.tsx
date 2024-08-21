@@ -79,7 +79,7 @@ const JourneyTimePanel = ({ routeId }: JourneyTimePanelProps) => {
     }).then((jt) => {
       setState((prev) => ({
         ...prev,
-        jt,
+        jt: Math.max(Math.round(jt), 1),
         isLoading: false,
       }));
     });
