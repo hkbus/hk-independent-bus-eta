@@ -8,8 +8,9 @@ import type {
 } from "hk-bus-eta";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import type { TransportType } from "./@types/types";
-import { ServiceIds, isRouteAvaliable } from "./timetable";
+import { isRouteAvaliable } from "./timetable";
 import { TFunction } from "i18next";
+import { ServiceIds } from "./components/route-eta/timetableDrawer/TimeTable";
 
 export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   const R = 6371e3; // metres
@@ -262,10 +263,8 @@ export const setSeoRouteFeature = ({
           "@type": "Question",
           name:
             lang === "en"
-              ? // @ts-expect-error service id should be valid
-                `What are the timetable for ${route.route} from ${t(ServiceIds[serviceId])}?`
-              : // @ts-expect-error service id should be valid
-                `${route.route} 在${t(ServiceIds[serviceId])}的服務時間表？`,
+              ? `What are the timetable for ${route.route} from ${t(ServiceIds[serviceId])}?`
+              : `${route.route} 在${t(ServiceIds[serviceId])}的服務時間表？`,
           acceptedAnswer: {
             "@type": "Answer",
             text:

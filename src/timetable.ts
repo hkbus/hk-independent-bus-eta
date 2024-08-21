@@ -1,24 +1,5 @@
 import { EtaDb, Freq } from "hk-bus-eta";
 
-export const ServiceIds = {
-  "31": "星期一至五",
-  "287": "星期一至五",
-  "415": "星期一至五",
-  "63": "星期一至六",
-  "319": "星期一至六",
-  "447": "星期一至六",
-  "416": "星期六至日",
-  "480": "星期六至日",
-  "266": "星期二至四",
-  "271": "星期一至四",
-  "272": "星期五",
-  "288": "星期六",
-  "320": "星期日及公眾假期",
-  "448": "星期日及公眾假期",
-  "511": "所有日子",
-  "111": "除星期三外",
-};
-
 // return minute offset start from sunday 00:00
 const getWeeklyTimestamp = (day: number, dayTime: string): number => {
   let ret = day * 24 * 60;

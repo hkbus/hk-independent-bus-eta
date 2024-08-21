@@ -90,7 +90,7 @@ const resources = {
       到站時差: "Minutes remaining",
       到站時間: "Clock time",
       "到站時間（到站時差）": "Clock time (Minutes remaining)",
-      車程: "Trip duration",
+      車程: "Journey Time",
       開啟地圖功能: "Map - ON",
       關閉地圖功能: "Map - OFF",
       圖標來源: "Logo Designer",

@@ -17,8 +17,9 @@ export default defineConfig(({mode}: ConfigEnv) => {
       VitePWA(getPwaOptions(env))
     ],
     server: {
-      https: false,
+      https: true,
       host: true,
+      port: 443,
       // port: parseInt(env.PORT ?? "9100", 10),
       // strictPort: true,
     },
