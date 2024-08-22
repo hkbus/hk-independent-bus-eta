@@ -5497,10 +5497,10 @@ hast-util-whitespace@^2.0.0:
   resolved "https://registry.yarnpkg.com/hast-util-whitespace/-/hast-util-whitespace-2.0.1.tgz#0ec64e257e6fc216c7d14c8a1b74d27d650b4557"
   integrity sha512-nAxA0v8+vXSBDt3AnRUNjyRIQ0rD+ntpbAp4LnPkumc5M9yUbSMa4XDU9Q6etY4f1Wp4bNgvc1yjiZtsTTrSng==
 
-hk-bus-eta@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-3.5.1.tgz#3ee213e0a6208554d80fbc3e9ab38b25e71b3125"
-  integrity sha512-YLJYBtV29XKhRpqHvTgb9yMYQHXsLtzrEzgi2aOwrhqYUx6UP0pKzuBW5TLV3XezBh04kTXjmBnpYF/ZJ0nZiw==
+hk-bus-eta@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-3.5.2.tgz#a4962d4a1b4ab9c4513542f06f434aae25d965f8"
+  integrity sha512-qW8ac1Li5T7YbeKYXcymIEIXx9NQhQitev2+1Jqiv2+YGW8O5n81xJCpyr8EwPnCzh6oqXdzSPmMbAP7+yY4NA==
 
 hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
