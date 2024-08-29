@@ -12,6 +12,10 @@ import { isRouteAvaliable } from "./timetable";
 import { TFunction } from "i18next";
 import { ServiceIds } from "./components/route-eta/timetableDrawer/TimeTable";
 
+export const langSpace = (language) => {
+  return language === "en" ? " " : "";
+};
+
 export const getDistance = (a: GeoLocation, b: GeoLocation) => {
   const R = 6371e3; // metres
   const φ1 = (a.lat * Math.PI) / 180; // φ, λ in radians
