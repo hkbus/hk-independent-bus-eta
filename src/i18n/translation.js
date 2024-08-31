@@ -30,6 +30,7 @@ const resources = {
       取消: "Clear",
       路線: "Route",
       你的位置: "Your Location",
+      起點: "Start Location",
       目的地: "Destination",
       已複製到剪貼簿: "Copied to clipboard",
       資料更新中: "Data updating",
