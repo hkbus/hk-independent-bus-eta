@@ -3,8 +3,8 @@
   "version": "11.2.0",
   "private": true,
   "scripts": {
-    "start": ". ./scripts/prebuild.sh; vite --force",
-    "build": ". ./scripts/prebuild.sh; tsc && vite build",
+    "start": "./scripts/start-all-platforms.cmd",
+    "build": "./scripts/build-all-platforms.cmd",
     "production-build": "yarn build && node scripts/sitemap-generator.js && node scripts/pre-rendering.js",
     "render": "node scripts/pre-rendering.js",
     "deploy": "yarn build && gh-pages -d build -t -f -a",
