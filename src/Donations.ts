@@ -168,7 +168,8 @@ const Donations = [
       zh: "請訂閱《綠豆》",
       en: "Please subscribe Green Bean Media",
     },
-    {
+  },
+  {
     url: {
       zh: "https://www.metwarn.com/donate/",
       en: "https://www.metwarn.com/donate/",
