@@ -175,7 +175,7 @@ const Donations = [
       en: "https://www.metwarn.com/donate/",
     },
     description: {
-      zh: "請捐款到《MET WARN》",
+      zh: "請捐款到《MET WARN 天氣預警》",
       en: "Please donate to MET WARN",
     },
   },
