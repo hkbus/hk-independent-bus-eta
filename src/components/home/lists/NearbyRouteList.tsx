@@ -150,7 +150,14 @@ const getRoutes = ({
           ).forEach((co) => {
             if (route.stops[co] && route.stops[co].includes(stopId)) {
               if (acc[coToType[co]] === undefined) acc[coToType[co]] = [];
-              if(addedList.find(([_route, _co, _serviceType]) => _route == route.route && _co == co && _serviceType < route.serviceType) === undefined) {
+              if (
+                addedList.find(
+                  ([_route, _co, _serviceType]) =>
+                    _route == route.route &&
+                    _co == co &&
+                    _serviceType < route.serviceType
+                ) === undefined
+              ) {
                 acc[coToType[co]].push(
                   key + "/" + route.stops[co].indexOf(stopId)
                 );
