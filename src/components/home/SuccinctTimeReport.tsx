@@ -98,7 +98,7 @@ const SuccinctTimeReport = ({
   } = useContext(DbContext);
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
-  const { co, stops, dest, fares, faresHoliday, route } =
+  const { co, stops, dest, fares, faresHoliday, route, serviceType } =
     routeList[routeKey] || DEFAULT_ROUTE;
   const stopId = getStops(co, stops)[parseInt(seq, 10)];
   const stop = stopList[stopId] || DEFAULT_STOP;
@@ -151,10 +151,22 @@ const SuccinctTimeReport = ({
       <ListItem onClick={handleClick} sx={rootSx}>
         <ListItemText
           primary={
-            <RouteNo
-              routeNo={language === "zh" ? t(routeNo) : routeNo}
-              fontSize={co[0] === "mtr" ? "1.1rem" : undefined}
-            />
+            <Box overflow="hidden">
+              <RouteNo
+                routeNo={language === "zh" ? t(routeNo) : routeNo}
+                fontSize={co[0] === "mtr" ? "1.1rem" : undefined}
+              />
+              {parseInt(serviceType, 10) >= 2 && (
+                <Typography variant="caption" sx={specialTripSx}>
+                  {t("特別班")}
+                </Typography>
+              )}
+            </Box>
+          }
+          secondary={
+            <Typography component="h4" variant="caption" sx={companySx}>
+              {co.map((co) => t(co)).join("+")}
+            </Typography>
           }
         />
         <ListItemText
@@ -268,4 +280,15 @@ const iconContainerSx: SxProps<Theme> = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+};
+
+const companySx: SxProps<Theme> = {
+  color: (theme) => theme.palette.text.secondary,
+  textOverflow: "ellipsis",
+};
+
+const specialTripSx: SxProps<Theme> = {
+  color: (theme) => theme.palette.text.secondary,
+  fontSize: "0.6rem",
+  marginLeft: "8px",
 };

@@ -129,6 +129,7 @@ const getRoutes = ({
   serviceDayMap: EtaDb["serviceDayMap"];
   searchRange: number;
 }): Partial<Record<TransportType, string>> => {
+  const addedList = [] as [string, Company, string][];
   const nearbyRoutes = Object.entries(stopList)
     .map((stop: [string, StopListEntry]): [string, StopListEntry, number] =>
       // potentially could be optimized by other distance function
@@ -149,9 +150,19 @@ const getRoutes = ({
           ).forEach((co) => {
             if (route.stops[co] && route.stops[co].includes(stopId)) {
               if (acc[coToType[co]] === undefined) acc[coToType[co]] = [];
-              acc[coToType[co]].push(
-                key + "/" + route.stops[co].indexOf(stopId)
-              );
+              if (
+                addedList.find(
+                  ([_route, _co, _serviceType]) =>
+                    _route == route.route &&
+                    _co == co &&
+                    _serviceType < route.serviceType
+                ) === undefined
+              ) {
+                acc[coToType[co]].push(
+                  key + "/" + route.stops[co].indexOf(stopId)
+                );
+                addedList.push([route.route, co, route.serviceType]);
+              }
             }
           });
         });

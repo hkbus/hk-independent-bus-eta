@@ -200,6 +200,9 @@ export const useStopEtas = ({
             )
             // sort to display the earliest arrival transport first
             .sort(([keyA, a], [keyB, b]) => {
+              a = a.filter((e) => e.eta);
+              b = b.filter((e) => e.eta);
+              if (a.length === 0 && b.length === 0) return keyA < keyB ? -1 : 1;
               if (a.length === 0) return 1;
               if (b.length === 0) return -1;
               if (isLightRail) {
