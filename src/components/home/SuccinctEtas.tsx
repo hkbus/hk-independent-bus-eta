@@ -6,6 +6,7 @@ import AppContext from "../../context/AppContext";
 import { Eta } from "hk-bus-eta";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
 import useLanguage from "../../hooks/useTranslation";
+import { getPlatformSymbol } from "../../utils";
 
 interface SuccinctEtasProps {
   routeId: string;
@@ -20,7 +21,7 @@ const SuccinctEtas = ({
 }: SuccinctEtasProps) => {
   const { t } = useTranslation();
   const language = useLanguage();
-  const { etaFormat, annotateScheduled } = useContext(AppContext);
+  const { etaFormat, annotateScheduled, platformMode } = useContext(AppContext);
   const _etas = useEtas(routeId, Boolean(value));
   const etas = value ?? _etas;
 
@@ -47,6 +48,15 @@ const SuccinctEtas = ({
       const trains =
         (/Platform [\d+] - (▭+)/gm.exec(remark?.en ?? "") ?? [])[1] ?? "";
 
+      const platform =
+        [...(remark.en?.matchAll(/Platform (\d+)/g) ?? [])][0] || [];
+      let platformSymbol = "";
+      if (platform.length === 2 && platform[1].length) {
+        // only support single digit number
+        platformSymbol =
+          getPlatformSymbol(Number(platform[1]), platformMode) + " ";
+      }
+
       const exactTimeJsx = (
         <Box
           component="span"
@@ -58,6 +68,7 @@ const SuccinctEtas = ({
               &nbsp;
             </>
           )}
+          {platformSymbol}
           {trains.length === 1 && <SingleTrainIcon />}
           {trains.length === 2 && <DoubleTrainIcon />}
           {eta.eta.slice(11, 16)}
@@ -67,6 +78,7 @@ const SuccinctEtas = ({
       const isTrain = eta.co === "mtr" || eta.co === "lightRail";
       const waitTimeJsx = (
         <Box component="span">
+          {platformSymbol}
           {etaFormat === "diff" && trains.length === 1 && <SingleTrainIcon />}
           {etaFormat === "diff" && trains.length === 2 && <DoubleTrainIcon />}
           <Box

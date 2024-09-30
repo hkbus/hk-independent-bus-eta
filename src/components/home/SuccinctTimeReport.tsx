@@ -13,19 +13,16 @@ import {
   Typography,
 } from "@mui/material";
 import { Company, Eta, Location, RouteListEntry } from "hk-bus-eta";
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useCallback, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../context/AppContext";
 import { ManageMode } from "../../data";
 import {
-  getLineColor,
-  getPlatformSymbol,
   getDistance,
   getDistanceWithUnit,
   toProperCase,
   vibrate,
-  distinctFilter,
 } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
 import SuccinctEtas from "./SuccinctEtas";
@@ -92,13 +89,13 @@ const SuccinctTimeReport = ({
 }: SuccinctTimeReportProps) => {
   const { t } = useTranslation();
   const language = useLanguage();
-  const { vibrateDuration, platformMode } = useContext(AppContext);
+  const { vibrateDuration } = useContext(AppContext);
   const {
     db: { routeList, stopList },
   } = useContext(DbContext);
   const [routeNo] = routeId.split("-");
   const [routeKey, seq] = routeId.split("/");
-  const { co, stops, dest, fares, faresHoliday, route, serviceType } =
+  const { co, stops, dest, fares, faresHoliday, serviceType } =
     routeList[routeKey] || DEFAULT_ROUTE;
   const stopId = getStops(co, stops)[parseInt(seq, 10)];
   const stop = stopList[stopId] || DEFAULT_STOP;
@@ -115,28 +112,6 @@ const SuccinctTimeReport = ({
     },
     [vibrateDuration, navigate, routeId, language, mode]
   );
-
-  const platform = useMemo(() => {
-    if (etas && etas.length > 0) {
-      const no = etas
-        .map((p) =>
-          getPlatformSymbol(
-            parseInt(
-              (/Platform ([\d]+)/gm.exec(p.remark?.en ?? "") ?? [])[1] ?? "0",
-              10
-            ),
-            platformMode
-          )
-        )
-        .filter((p) => p)
-        .filter(distinctFilter)
-        .sort()
-        .join("");
-      if (!no) return "";
-      return `${no} `;
-    }
-    return "";
-  }, [etas, platformMode]);
 
   let isEndOfTrainLine = false;
   if (co[0] === "mtr") {
@@ -177,12 +152,7 @@ const SuccinctTimeReport = ({
               color="textPrimary"
               sx={fromToWrapperSx}
             >
-              <span>
-                <Box component="span" color={getLineColor(co, route, true)}>
-                  {platform}
-                </Box>
-                {t("往")}
-              </span>
+              <span>{t("往")}</span>
               <b>{toProperCase(dest[language])}</b>
             </Typography>
           }
