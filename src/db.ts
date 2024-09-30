@@ -51,37 +51,37 @@ export const fetchDbFunc = async (
     localStorage.getItem("updateTime") || "" + Date.now(),
     10
   );
-  
+
   const loadStoredDb = (): Promise<DatabaseType> =>
     new Promise((resolve, reject) => {
-      let request = indexedDB.open('hkbus', 1)
+      let request = indexedDB.open("hkbus", 1);
       request.onupgradeneeded = (event) => {
-        let idb = (event.target as IDBOpenDBRequest).result
-        idb.createObjectStore('etadb', { keyPath: 'versionMd5' })
-      }
+        let idb = (event.target as IDBOpenDBRequest).result;
+        idb.createObjectStore("etadb", { keyPath: "versionMd5" });
+      };
       request.onsuccess = (event) => {
-        let idb = (event.target as IDBOpenDBRequest).result
-        let transaction = idb.transaction(['etadb'], 'readonly')
-        let store = transaction.objectStore('etadb')
-        let req = store.get(versionMd5)
+        let idb = (event.target as IDBOpenDBRequest).result;
+        let transaction = idb.transaction(["etadb"], "readonly");
+        let store = transaction.objectStore("etadb");
+        let req = store.get(versionMd5);
         req.onsuccess = () => {
-          if ( req.result ) {
+          if (req.result) {
             resolve({
               schemaVersion,
               versionMd5,
               updateTime: lastUpdateTime,
               ...req.result,
-            })
+            });
           }
           reject();
-        }
+        };
         req.onerror = () => {
           reject();
-        }
-      }
+        };
+      };
       request.onerror = () => {
         reject();
-      }
+      };
     });
 
   if (!forceRenew) {
@@ -93,7 +93,7 @@ export const fetchDbFunc = async (
         const db = await loadStoredDb();
         return db;
       } catch (e) {
-        console.error("not able to retrieve db")
+        console.error("not able to retrieve db");
       }
     }
   }
