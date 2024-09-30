@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import type { ReactNode } from "react";
 import { isEmptyObj } from "../utils";
 import { fetchDbFunc } from "../db";
-import { compress as compressJson } from "lzutf8-light";
 import type { DatabaseType } from "../db";
 import { isHoliday } from "../timetable";
 
@@ -68,10 +67,17 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
 
       // make costly compression async
       setTimeout(() => {
-        localStorage.setItem(
-          "db",
-          compressJson(JSON.stringify(db), { outputEncoding: "Base64" })
-        );
+        let request = indexedDB.open("hkbus", 1);
+        request.onupgradeneeded = (event) => {
+          let idb = (event.target as IDBOpenDBRequest).result;
+          idb.createObjectStore("etadb", { keyPath: "versionMd5" });
+        };
+        request.onsuccess = (event) => {
+          let idb = (event.target as IDBOpenDBRequest).result;
+          let transaction = idb.transaction(["etadb"], "readwrite");
+          let store = transaction.objectStore("etadb");
+          store.put(db);
+        };
       }, 0);
     }
   }, [db]);

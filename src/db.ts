@@ -1,6 +1,5 @@
 import { fetchEtaDb, fetchEtaDbMd5 } from "hk-bus-eta";
 import type { EtaDb } from "hk-bus-eta";
-import { decompress as decompressJson } from "lzutf8-light";
 
 const isEtaDb = (input: unknown): input is EtaDb => {
   return (
@@ -18,21 +17,6 @@ const isEtaDb = (input: unknown): input is EtaDb => {
 
 // implant the DB Context logic into code to avoid loading error
 export const DB_CONTEXT_VERSION = "1.2.0";
-
-const decompressJsonString = (txt: Uint8Array | Buffer | string): EtaDb => {
-  const ret = JSON.parse(decompressJson(txt, { inputEncoding: "Base64" }));
-  ret.routeList = Object.keys(ret.routeList)
-    .sort()
-    .reduce(
-      (acc, k) => {
-        acc[k.replace(/\+/g, "-").replace(/ /g, "-").toUpperCase()] =
-          ret.routeList[k];
-        return acc;
-      },
-      {} as EtaDb["routeList"]
-    );
-  return ret;
-};
 
 export interface DatabaseType extends EtaDb {
   schemaVersion: string;
@@ -67,37 +51,50 @@ export const fetchDbFunc = async (
     localStorage.getItem("updateTime") || "" + Date.now(),
     10
   );
-  const raw = localStorage.getItem("db");
-  const loadStoredDb = (_raw: string | null): Promise<DatabaseType> =>
+  
+  const loadStoredDb = (): Promise<DatabaseType> =>
     new Promise((resolve, reject) => {
-      try {
-        if (_raw === null) {
-          reject("localStorage is null");
-        } else {
-          const db = decompressJsonString(_raw);
-          resolve({
-            schemaVersion,
-            versionMd5,
-            updateTime: lastUpdateTime,
-            holidays: db.holidays,
-            routeList: db.routeList,
-            stopList: db.stopList,
-            stopMap: db.stopMap,
-            serviceDayMap: db.serviceDayMap,
-          });
+      let request = indexedDB.open('hkbus', 1)
+      request.onupgradeneeded = (event) => {
+        let idb = (event.target as IDBOpenDBRequest).result
+        idb.createObjectStore('etadb', { keyPath: 'versionMd5' })
+      }
+      request.onsuccess = (event) => {
+        let idb = (event.target as IDBOpenDBRequest).result
+        let transaction = idb.transaction(['etadb'], 'readonly')
+        let store = transaction.objectStore('etadb')
+        let req = store.get(versionMd5)
+        req.onsuccess = () => {
+          if ( req.result ) {
+            resolve({
+              schemaVersion,
+              versionMd5,
+              updateTime: lastUpdateTime,
+              ...req.result,
+            })
+          }
+          reject();
         }
-      } catch (e) {
-        reject(e);
+        req.onerror = () => {
+          reject();
+        }
+      }
+      request.onerror = () => {
+        reject();
       }
     });
 
-  if (raw !== null && !forceRenew) {
+  if (!forceRenew) {
     let isOffline = !navigator.onLine;
     let shouldAutoRenew =
       autoRenew && Date.now() - lastUpdateTime > 7 * 24 * 3600 * 1000;
     if (isOffline || !shouldAutoRenew) {
-      const db = await loadStoredDb(raw);
-      return db;
+      try {
+        const db = await loadStoredDb();
+        return db;
+      } catch (e) {
+        console.error("not able to retrieve db")
+      }
     }
   }
 
@@ -114,7 +111,7 @@ export const fetchDbFunc = async (
       needRenew = true;
     }
     if (!needRenew) {
-      const db = await loadStoredDb(raw);
+      const db = await loadStoredDb();
       if (isEtaDb(db)) {
         return db;
       }
@@ -123,8 +120,8 @@ export const fetchDbFunc = async (
     localStorage.setItem("updateTime", updateTime);
     return new Promise((resolve_1) => {
       const timerId = setTimeout(() => {
-        if (!forceRenew && raw !== null) {
-          const _cachedDb = loadStoredDb(raw);
+        if (!forceRenew) {
+          const _cachedDb = loadStoredDb();
           if (isEtaDb(_cachedDb)) {
             resolve_1(_cachedDb);
           }
