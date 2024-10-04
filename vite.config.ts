@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
 import eslint from "vite-plugin-eslint"
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig(({mode}: ConfigEnv) => {
@@ -14,7 +15,15 @@ export default defineConfig(({mode}: ConfigEnv) => {
         
       }), 
       basicSsl(), 
-      VitePWA(getPwaOptions(env))
+      VitePWA(getPwaOptions(env)),
+      sentryVitePlugin({
+        // Put the Sentry vite plugin after all other plugins: https://www.npmjs.com/package/@sentry/vite-plugin
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        // Auth tokens can be obtained from https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        reactComponentAnnotation: {enabled: true},
+      }),
     ],
     server: {
       https: true,
@@ -24,6 +33,7 @@ export default defineConfig(({mode}: ConfigEnv) => {
       // strictPort: true,
     },
     build: {
+      sourcemap: true, // Source map generation must be turned on
       outDir: "./build"
     }
   }
