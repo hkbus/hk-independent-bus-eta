@@ -181,7 +181,7 @@ const isCurrentTimeslot = (
 ): boolean => {
   if (!isMatchServiceId(serviceId, isHoliday)) return false;
   const date = new Date();
-  const ts = `${date.getHours()}${date.getMinutes()}`;
+  const ts = `${date.getHours().toString().padStart(2, "0")}${date.getMinutes().toString().padStart(2, "0")}`;
   if (details) {
     return start <= ts && ts <= details[0];
   }
