@@ -25,7 +25,9 @@ const RouteNoCompany = ({ route }: RouteNoCompanyProps) => {
         </Typography>
       )}
       <Typography component="h4" variant="caption" sx={companySx}>
-        {route[1].co.map((co) => t(co)).join("+")}
+        {Object.keys(route[1].stops)
+          .map((co) => t(co))
+          .join("+")}
       </Typography>
     </Box>
   );
