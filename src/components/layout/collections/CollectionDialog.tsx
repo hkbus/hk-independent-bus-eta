@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import {
   Box,
   Dialog,
@@ -42,6 +42,15 @@ const CollectionDialog = () => {
 
   const [tab, changeTab] = useState<"time" | "routes">("routes");
 
+  const handleCollectionRemoval = useCallback(() => {
+    if (
+      collectionIdx !== null &&
+      window.confirm(t("確定刪除 ") + collection.name + "?")
+    ) {
+      removeCollection(collectionIdx);
+    }
+  }, [removeCollection, collectionIdx, collection, t]);
+
   // collections state hasn't updated when added new collection, need to add the following
   if (collectionIdx === null || collection === undefined) {
     return null;
@@ -83,10 +92,7 @@ const CollectionDialog = () => {
       </DialogContent>
       {collectionIdx !== -1 && (
         <DialogActions sx={actionSx}>
-          <IconButton
-            onClick={() => removeCollection(collectionIdx)}
-            sx={deleteSx}
-          >
+          <IconButton onClick={handleCollectionRemoval} sx={deleteSx}>
             <DeleteForeverIcon />
           </IconButton>
         </DialogActions>

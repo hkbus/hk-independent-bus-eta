@@ -49,6 +49,7 @@ const resources = {
       無法獲得地理位置定位功能權限: "Permission denied: Geolocation",
       一鍵清空用戶記錄: "Clear Usage Records",
       "確定清空？": "Confirm delete?",
+      "確定刪除 ": "Confirm remove ",
       包括鎖定和常用報時: "Includes saved and commonly used ETA",
       交通資料來源: "ETA Data Source",
       資料一線通: "DATA.GOV.HK",
