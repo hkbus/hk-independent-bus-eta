@@ -18,6 +18,7 @@ import {
   WbSunny as WbSunnyIcon,
   DarkMode as DarkModeIcon,
   WifiOff as WifiOffIcon,
+  Search as SearchIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import AppContext from "../../context/AppContext";
@@ -124,6 +125,7 @@ const Header = () => {
         type="text"
         value={searchRoute}
         placeholder={t("路線")}
+        startAdornment={<SearchIcon fontSize="small" sx={{ opacity: 0.8 }} />}
         onChange={(e) => {
           if (
             e.target.value.toUpperCase() in routeList ||
@@ -142,7 +144,7 @@ const Header = () => {
           navigate(`/${language}/board`, { replace: true });
         }}
       />
-      <Box sx={funcPanelSx}>
+      <Box sx={weatherPanelSx}>
         {weatherCodes.slice(0, 2).map((code) => (
           <Avatar
             onClick={() =>
@@ -158,6 +160,8 @@ const Header = () => {
             sx={weatherImg}
           />
         ))}
+      </Box>
+      <Box sx={funcPanelSx}>
         {geoPermission === "granted" && (
           <IconButton
             aria-label="relocate"
@@ -237,9 +241,15 @@ const searchRouteInputSx: SxProps<Theme> = {
   },
 };
 
+const weatherPanelSx: SxProps<Theme> = {
+  display: "flex",
+  alignContent: "center",
+};
+
 const funcPanelSx: SxProps<Theme> = {
   display: "flex",
   alignItems: "center",
+  opacity: 0.7,
 };
 
 const languageSx: SxProps<Theme> = {

@@ -196,6 +196,7 @@ const secondarySx: SxProps<Theme> = {
   lineHeight: "1.43",
   whiteSpace: "nowrap",
   textAlign: "right",
+  opacity: 0.8,
 };
 
 const waitTimeSx: SxProps<Theme> = {

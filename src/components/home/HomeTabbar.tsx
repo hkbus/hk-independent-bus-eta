@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Tabs, Tab, SxProps, Theme } from "@mui/material";
 import {
   Star as StarIcon,
-  CompassCalibration as CompassCalibrationIcon,
+  NearMe as NearMeIcon,
   Bookmark as BookmarkIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
@@ -28,7 +28,7 @@ const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
     >
       <Tab
         iconPosition="start"
-        icon={<CompassCalibrationIcon />}
+        icon={<NearMeIcon />}
         label={t("附近")}
         value="nearby"
         disableRipple
@@ -91,5 +91,11 @@ const tabbarSx: SxProps<Theme> = {
   },
   [`& .MuiTabs-flexContainer`]: {
     justifyContent: "flex-start",
+    "& svg": {
+      fontSize: "1rem",
+    },
+    "& .MuiTab-root": {
+      fontSize: "0.8em",
+    },
   },
 };
