@@ -1,0 +1,17 @@
+{
+  "content": {
+    "zh": [
+      "因資料一線通提供的 API 出現異常",
+      "hkbus.app 現以額外伺服器處理九巴資料",
+      "望請捐款支持"
+    ],
+    "en": [
+      "Due to the API abnormality of data.gov.hk,",
+      "hkbus.app is now using extra server to handle KMB ETA.",
+      "We need your donations."
+    ]
+  },
+  "url": "https://www.patreon.com/hkbus",
+  "enableLinkInIos": false,
+  "isShown": false
+}
