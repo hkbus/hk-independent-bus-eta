@@ -24,7 +24,7 @@ const BadWeatherCard = () => {
       <Paper
         variant="outlined"
         sx={rootSx}
-        onClick={() => window.open(t("bad-weather-text"), "_target")}
+        onClick={() => window.open(t("bad-weather-link"), "_target")}
       >
         <ErrorIcon color="error" />
         <Typography>{t("bad-weather-text")}</Typography>
