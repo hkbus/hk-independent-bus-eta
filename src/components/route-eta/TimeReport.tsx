@@ -228,8 +228,8 @@ const EtaRemark = ({
   // if the remark has more than one occurrence of numerical string
   // or if the only numerical string occurrence are more than one digit, use original remark
   if (platform.length === 2 && platform[1].length) {
-    // only support single digit number
-    ret = getPlatformSymbol(Number(platform[1]), platformMode);
+    // getPlatformSymbol only supports single digit number
+    ret = getPlatformSymbol(Number(platform[1]), platformMode) ?? platform[1];
   }
 
   const trains =
