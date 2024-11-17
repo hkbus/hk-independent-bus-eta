@@ -23,25 +23,49 @@ The project is a [React](https://reactjs.org/) web app with [Material-UI](https:
 
 ## Docker
 
-See docker.md for more information about using docker for deployment / development.
+See `docker.md` for more information about using docker for deployment / development.
 
-## Available Scripts
+## Setup a Development Environment locally
 
-> ***Note***: It is assumed that you are running the scripts in a unix-like environment. Windows is not supported.
+To run this project, you need `nodejs` and `yarn`.
 
-In the project directory, you can run:
+Go ahead to [https://nodejs.org](https://noejs.org) to download and install nodejs on your system.
+
+Once you have nodejs installed, you can run:
+
+### `npm install -g yarn`
+
+which would install yarn in your system.
+
+## Install Dependency
+
+If you have `yarn` installed, go to the project directory, run the following command:
+
+### `yarn install`
+
+This command downloads all the dependencies required to run this app and save them in the `node_modules` sub-directory.
+
+You only need to do this once, unless the project has been updated and the required dependencies have changed.
+
+## Start the app
+
+With the dependencies downloaded, in the project directory, you can run:
 
 ### `yarn start`
 
-Runs the app in development mode.\
-Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
+This runs the app in development mode.\
+Open [https://localhost:443](http://localhost:443) (or simply [https://localhost](http://localhost)) to view it in your browser.
 
 The page will reload if you make edits.\
 You will also see lint errors in the console.
 
+## Build the app
+
+In the project directory, you can run:
+
 ### `yarn build`
 
-Builds the app for production to the `build` folder.\
+This command builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.\

@@ -8,7 +8,7 @@ You can deploy hkbus using docker.
 docker compose up -d
 ```
 
-Check out http://localhost:5173 in the browser
+Check out https://localhost:5173 in the browser
 
 * If you prefer port other than 5173, add `DEV_PORT=<PORT_NUMBER>` in `.env` file.
 

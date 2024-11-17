@@ -5,7 +5,7 @@ services:
     build: ./docker
     restart: unless-stopped
     ports:
-      - ${DEV_PORT:-5173}:5173
+      - ${DEV_PORT:-5173}:443
     volumes:
       - ./:/app
     command: 'bash ./docker/run.sh'
