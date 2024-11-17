@@ -2,7 +2,7 @@ const resources = {
   en: {
     translation: {
       "bad-weather-text":
-        "Services may be impacted by bad weather. Data displayed below might not be accurate. Check here to see official announcements.",
+        "Services may be impacted by bad weather. Data displayed below might not be accurate. Check here for official announcements.",
       "bad-weather-link": "https://www.td.gov.hk/en/special_news/spnews.htm",
       "db-renew-text": "Tap to fetch revised route info",
       "巴士到站預報 App （免費無廣告）": "HK Bus ETA App (Free and Ad-free)",
