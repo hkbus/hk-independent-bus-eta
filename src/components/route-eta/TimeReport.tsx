@@ -220,34 +220,56 @@ const EtaRemark = ({
   platformMode,
 }: EtaRemarkProps) => {
   if (remark === null) return "";
-  // retrieve single digit numerical string from remark as a circle text
-  const platform = [...(remark.en?.matchAll(/Platform (\d+)/g) ?? [])][0] || [];
-
-  let ret = "";
-  // replace only when single occurrence of single digit numerical string
-  // if the remark has more than one occurrence of numerical string
-  // or if the only numerical string occurrence are more than one digit, use original remark
-  if (platform.length === 2 && platform[1].length) {
-    // getPlatformSymbol only supports single digit number
-    ret = getPlatformSymbol(Number(platform[1]), platformMode) ?? platform[1];
-  }
-
-  const trains =
-    (/Platform [\d+] - (▭+)/gm.exec(remark?.en ?? "") ?? [])[1] ?? "";
 
   const isTrain = co === "mtr" || co === "lightRail";
   if (!isTrain) {
     return remark[language];
   }
 
+  const parts: string[] = [];
+  let ret = "";
+  let trains = "";
+
+  // the parser only works with en but zh can be used as fallback for display anyway
+  (remark.en || remark[language]).split(" - ").forEach((part, i) => {
+    // retrieve single digit numerical string from remark as a circle text
+    const platform = [...(part.matchAll(/^Platform (\d+)$/g) ?? [])][0] || [];
+    // replace only when single occurrence of single digit numerical string
+    // if the remark has more than one occurrence of numerical string
+    // or if the only numerical string occurrence are more than one digit, use original remark
+    if (platform.length === 2 && platform[1].length) {
+      // getPlatformSymbol only supports single digit number
+      ret = getPlatformSymbol(Number(platform[1]), platformMode) ?? platform[1];
+      return;
+    }
+
+    const trainsLocal = (/^▭+$/g.exec(part) ?? [])[0];
+    if (trainsLocal) {
+      trains = trainsLocal;
+      return;
+    }
+
+    parts.push(remark[language].split(" - ")[i]);
+  });
+
   return (
     <>
-      <Box component="span" color={getLineColor([co], route, true)}>
+      <Box
+        component="span"
+        color={getLineColor([co], route, true)}
+        sx={{ marginX: 0.25 }}
+      >
         {ret}
       </Box>
-      &nbsp;
-      {trains.length === 1 && <SingleTrainIcon />}
-      {trains.length === 2 && <DoubleTrainIcon />}
+      <Box component="span" sx={{ marginX: 0.25 }}>
+        {trains.length === 1 && <SingleTrainIcon />}
+        {trains.length === 2 && <DoubleTrainIcon />}
+      </Box>
+      {parts.map((part, i) => (
+        <Box key={i} component="span" sx={{ marginX: 0.25 }}>
+          {part}
+        </Box>
+      ))}
     </>
   );
 };
