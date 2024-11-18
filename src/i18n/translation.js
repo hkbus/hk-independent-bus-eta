@@ -52,7 +52,7 @@ const resources = {
       "確定刪除 ": "Confirm remove ",
       包括鎖定和常用報時: "Includes saved and commonly used ETA",
       交通資料來源: "ETA Data Source",
-      資料一線通: "DATA.GOV.HK",
+      開放數據平台: "DATA.GOV.HK",
       捐款支持: "Donate",
       複製應用程式鏈結: "Copy App URL",
       經不同媒介分享給親友: "Share it!",
