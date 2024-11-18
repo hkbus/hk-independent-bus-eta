@@ -492,7 +492,7 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText
             primary={t("交通資料來源") + ` ${debug === true ? "DEBUG" : ""}`}
-            secondary={t("資料一線通") + "  https://data.gov.hk"}
+            secondary={t("開放數據平台") + "  https://data.gov.hk"}
           />
         </ListItem>
       </List>
