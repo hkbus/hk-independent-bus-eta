@@ -37,7 +37,7 @@ const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => 
     manifest: {
       short_name: "巴士預報",
       name: "巴士到站預報 App",
-      description: "巴士預報（純享版），資料來源為資料一線通 data.gov.hk",
+      description: "巴士預報（純享版），資料來源為「開放數據平台」（前稱資料一線通） data.gov.hk",
       icons: [
         {
           src: "favicon.ico",
