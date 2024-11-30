@@ -71,16 +71,6 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://channelchk.com/plan",
-      en: "https://channelchk.com/plan",
-    },
-    description: {
-      zh: "請訂閱《Channel C HK》",
-      en: "Please subscribe Channel C HK",
-    },
-  },
-  {
-    url: {
       zh: "https://photonmedia.net/subscribe",
       en: "https://photonmedia.net/subscribe",
     },
