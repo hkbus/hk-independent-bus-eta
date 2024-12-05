@@ -599,13 +599,48 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       setColorMode(state._colorMode);
     } else {
       const mql = window.matchMedia("(prefers-color-scheme: light)");
-      setColorMode(mql.matches ? "light" : "dark");
-      const themeListener = (e: MediaQueryListEvent) =>
-        setColorMode(e.matches ? "light" : "dark");
+      const themeListener = () => {
+        let colorMode: "light" | "dark" | undefined = undefined;
+        // App webview always matches (prefers-color-scheme: light)
+        if (
+          window.systemColorScheme?.value &&
+          ["light", "dark"].includes(window.systemColorScheme?.value)
+        ) {
+          colorMode = window.systemColorScheme?.value;
+        }
+        colorMode ??= window.matchMedia("(prefers-color-scheme: light)").matches
+          ? "light"
+          : "dark";
+        setColorMode(colorMode);
+      };
+      window.systemColorSchemeCallbacks?.push(themeListener);
       mql?.addEventListener("change", themeListener);
-      return () => mql?.removeEventListener("change", themeListener);
+
+      themeListener();
+
+      return () => {
+        mql?.removeEventListener("change", themeListener);
+        if (
+          window.systemColorSchemeCallbacks &&
+          Array.isArray(window.systemColorSchemeCallbacks)
+        ) {
+          window.systemColorSchemeCallbacks =
+            window.systemColorSchemeCallbacks?.filter(
+              (cb) => cb !== themeListener
+            );
+        }
+      };
     }
   }, [state._colorMode, setColorMode]);
+
+  useEffect(() => {
+    window.ReactNativeWebView?.postMessage(
+      JSON.stringify({
+        type: "color-mode",
+        value: colorMode,
+      })
+    );
+  }, [colorMode]);
 
   const importAppState = useCallback((appState: AppState) => {
     setStateRaw(appState);
