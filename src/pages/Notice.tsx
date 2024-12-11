@@ -42,7 +42,7 @@ const Notice = () => {
               remarkPlugins={[remarkGfm]}
               components={{
                 p: ({ ...props }) => <Typography variant="body1" {...props} />,
-                a: ({ ...props }) => <Link sx={linkSx} {...props} />,
+                a: ({ ...props }) => <Link sx={linkSx} target="_blank" {...props} />,
               }}
             >
               {language === "zh" ? ChinText : EngText}
