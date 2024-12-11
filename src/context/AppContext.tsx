@@ -618,17 +618,22 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       const themeListener = () => setColorMode(calculateColorMode());
 
       const mql = window.matchMedia("(prefers-color-scheme: light)");
-      mql?.addEventListener("change", themeListener);
-      window.systemColorSchemeCallbacks?.push(themeListener);
+      mql.addEventListener("change", themeListener);
+      if (
+        window.systemColorSchemeCallbacks &&
+        Array.isArray(window.systemColorSchemeCallbacks)
+      ) {
+        window.systemColorSchemeCallbacks.push(themeListener);
+      }
 
       return () => {
-        mql?.removeEventListener("change", themeListener);
+        mql.removeEventListener("change", themeListener);
         if (
           window.systemColorSchemeCallbacks &&
           Array.isArray(window.systemColorSchemeCallbacks)
         ) {
           window.systemColorSchemeCallbacks =
-            window.systemColorSchemeCallbacks?.filter(
+            window.systemColorSchemeCallbacks.filter(
               (cb) => cb !== themeListener
             );
         }
