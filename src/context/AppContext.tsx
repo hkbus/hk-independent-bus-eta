@@ -593,30 +593,33 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
-  const [colorMode, setColorMode] = useState<"light" | "dark">("light");
-  useEffect(() => {
+  const calculateColorMode = useCallback(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
-      setColorMode(state._colorMode);
+      return state._colorMode;
     } else {
-      const mql = window.matchMedia("(prefers-color-scheme: light)");
-      const themeListener = () => {
-        let colorMode: "light" | "dark" | undefined = undefined;
-        // App webview always matches (prefers-color-scheme: light)
-        if (
-          window.systemColorScheme?.value &&
-          ["light", "dark"].includes(window.systemColorScheme?.value)
-        ) {
-          colorMode = window.systemColorScheme?.value;
-        }
-        colorMode ??= window.matchMedia("(prefers-color-scheme: light)").matches
-          ? "light"
-          : "dark";
-        setColorMode(colorMode);
-      };
-      window.systemColorSchemeCallbacks?.push(themeListener);
-      mql?.addEventListener("change", themeListener);
+      if (
+        window.systemColorScheme?.value &&
+        ["light", "dark"].includes(window.systemColorScheme?.value)
+      ) {
+        return window.systemColorScheme?.value;
+      }
+      return window.matchMedia("(prefers-color-scheme: light)").matches
+        ? "light"
+        : "dark";
+    }
+  }, [state._colorMode]);
+  const [colorMode, setColorMode] = useState<"light" | "dark">(
+    calculateColorMode()
+  );
+  useEffect(() => {
+    setColorMode(calculateColorMode());
 
-      themeListener();
+    if (state._colorMode === "system") {
+      const themeListener = () => setColorMode(calculateColorMode());
+
+      const mql = window.matchMedia("(prefers-color-scheme: light)");
+      mql?.addEventListener("change", themeListener);
+      window.systemColorSchemeCallbacks?.push(themeListener);
 
       return () => {
         mql?.removeEventListener("change", themeListener);
@@ -631,7 +634,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         }
       };
     }
-  }, [state._colorMode, setColorMode]);
+  }, [state._colorMode, calculateColorMode]);
 
   useEffect(() => {
     window.ReactNativeWebView?.postMessage(
