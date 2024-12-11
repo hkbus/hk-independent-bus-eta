@@ -92,10 +92,16 @@ const xmlToJson = (root: Document): NoticeType[] => {
             .replace("下午", "PM")
             .replace("上午", "AM");
         } else {
-          acc[node.tagName as keyof NoticeType] = node.textContent.replace(
-            /\n/g,
-            "\n\n"
-          );
+          acc[node.tagName as keyof NoticeType] = node.textContent
+            .replace(/\n/g, "\n\n")
+            .replace(
+              /詳情請參看: 特別交通消息網頁。/g,
+              "詳情請參看: [特別交通消息網頁](https://www.td.gov.hk/tc/special_news/spnews.htm)。"
+            )
+            .replace(
+              /For more details, please visit: Special Traffic News Page./g,
+              "For more details, please visit: [Special Traffic News Page](https://www.td.gov.hk/en/special_news/spnews.htm)."
+            );
         }
         return acc;
       }, {} as NoticeType)
