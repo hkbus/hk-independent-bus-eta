@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { Link, Paper, SxProps, Theme, Typography } from "@mui/material";
+import { Fragment, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import useLanguage from "../hooks/useTranslation";
@@ -30,21 +30,27 @@ const Notice = () => {
 
   return (
     <Paper sx={paperSx} square elevation={0}>
-      {notices.map(({ msgID, ChinText, EngText, ReferenceDate }) => (
-        <Paper key={msgID} elevation={5} sx={noticeContainerSx}>
-          <Typography variant="body2" sx={{ alignSelf: "flex-end" }}>
-            {ReferenceDate}
-          </Typography>
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              p: ({ ...props }) => <Typography variant="body1" {...props} />,
-              a: ({ ...props }) => <Link sx={linkSx} {...props} />,
-            }}
-          >
-            {language === "zh" ? ChinText : EngText}
-          </ReactMarkdown>
-        </Paper>
+      {notices.map(({ msgID, ChinText, EngText, ReferenceDate }, i) => (
+        <Fragment key={msgID}>
+          {(i === 0 || ReferenceDate !== notices[i - 1].ReferenceDate) && (
+            <Typography variant="body2" sx={{ alignSelf: "flex-end" }}>
+              {ReferenceDate}
+            </Typography>
+          )}
+          <Paper elevation={5} sx={noticeContainerSx}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                p: ({ ...props }) => <Typography variant="body1" {...props} />,
+                a: ({ ...props }) => (
+                  <Link sx={linkSx} target="_blank" {...props} />
+                ),
+              }}
+            >
+              {language === "zh" ? ChinText : EngText}
+            </ReactMarkdown>
+          </Paper>
+        </Fragment>
       ))}
     </Paper>
   );
@@ -88,10 +94,16 @@ const xmlToJson = (root: Document): NoticeType[] => {
             .replace("下午", "PM")
             .replace("上午", "AM");
         } else {
-          acc[node.tagName as keyof NoticeType] = node.textContent.replace(
-            /\n/g,
-            "\n\n"
-          );
+          acc[node.tagName as keyof NoticeType] = node.textContent
+            .replace(/\n/g, "\n\n")
+            .replace(
+              /詳情請參看: 特別交通消息網頁。/g,
+              "詳情請參看: [特別交通消息網頁](https://www.td.gov.hk/tc/special_news/spnews.htm)。"
+            )
+            .replace(
+              /For more details, please visit: Special Traffic News Page./g,
+              "For more details, please visit: [Special Traffic News Page](https://www.td.gov.hk/en/special_news/spnews.htm)."
+            );
         }
         return acc;
       }, {} as NoticeType)
