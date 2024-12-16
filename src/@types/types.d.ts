@@ -27,3 +27,17 @@ export interface SharingEntry {
   seq: number;
   event: any;
 }
+
+declare global {
+  interface Window {
+    /** Injected by hkbus.app app webview
+     * @since Dec 2024
+     */
+    systemColorSchemeCallbacks?: Function[];
+    /** Injected by hkbus.app app webview
+     * @since Dec 2024
+     * @see https://reactnative.dev/docs/usecolorscheme
+     */
+    systemColorScheme?: { value: "light" | "dark" | null };
+  }
+}
