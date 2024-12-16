@@ -135,6 +135,7 @@ const resources = {
       mtr: "MTR",
       ferry: "Ferry",
       "route-search-no-result": "No Result",
+      "suggest-update-database": "You may Go Settings and Update Route Database",
       "no-recent-search": "No Record",
       "tap-here-to-search-all-routes":
         "<TapHereLink>Tap here</TapHereLink> to search all routes",
@@ -228,6 +229,7 @@ const resources = {
       "KMB first": "九巴優先",
       "CTB first": "城巴優先",
       "route-search-no-result": "沒有結果",
+      "suggest-update-database": "可嘗試到設定，更新路線資料庫",
       "no-recent-search": "沒有記錄",
       "tap-here-to-search-all-routes":
         "<TapHereLink>按此</TapHereLink>以搜尋「全部」路綫",
