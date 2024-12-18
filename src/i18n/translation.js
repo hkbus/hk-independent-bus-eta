@@ -135,7 +135,8 @@ const resources = {
       mtr: "MTR",
       ferry: "Ferry",
       "route-search-no-result": "No Result",
-      "suggest-update-database": "You may Go Settings and Update Route Database",
+      "suggest-update-database":
+        "You may Go Settings and Update Route Database",
       "no-recent-search": "No Record",
       "tap-here-to-search-all-routes":
         "<TapHereLink>Tap here</TapHereLink> to search all routes",
