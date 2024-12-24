@@ -19,7 +19,7 @@ export default defineConfig(({mode}: ConfigEnv) => {
     server: {
       https: true,
       host: true,
-      port: 443,
+      port: 11443,
       // port: parseInt(env.PORT ?? "9100", 10),
       // strictPort: true,
     },

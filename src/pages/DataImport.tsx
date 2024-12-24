@@ -106,6 +106,7 @@ const DataImport = () => {
       searchRoute: "",
       selectedRoute: "1-1-CHUK-YUEN-ESTATE-STAR-FERRY",
       routeSearchHistory: obj.routeSearchHistory ?? [],
+      pinnedEtas: [],
       isRouteFilter: obj.isRouteFilter ?? true,
       busSortOrder: obj.busSortOrder ?? "KMB first",
       numPadOrder: obj.numPadOrder ?? "123456789c0b",

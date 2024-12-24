@@ -44,6 +44,10 @@ export interface AppState {
    */
   routeSearchHistory: string[];
   /**
+   * ETAs for PinDialog
+   */
+  pinnedEtas: string[];
+  /**
    * filter routes by route schedule against time
    */
   isRouteFilter: boolean;
@@ -128,6 +132,7 @@ interface AppContextValue extends AppState {
   toggleEnergyMode: () => void;
   togglePlatformMode: () => void;
   toggleVibrateDuration: () => void;
+  togglePinnedEta: (eta: string) => void;
   toggleAnalytics: () => void; // not
   updateRefreshInterval: (interval: number) => void;
   toggleAnnotateScheduled: () => void;
@@ -222,6 +227,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       compassPermission: isCompassPermission(compassPermission)
         ? compassPermission
         : "default",
+      pinnedEtas: [],
       isRouteFilter: !!JSON.parse(
         localStorage.getItem("isRouteFilter") ?? "false"
       ),
@@ -500,6 +506,20 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
+  const togglePinnedEta = useCallback((eta: string) => {
+    setStateRaw(
+      produce((state: State) => {
+        if (state.pinnedEtas.includes(eta)) {
+          state.pinnedEtas = state.pinnedEtas.filter(
+            (pinnedEta) => eta !== pinnedEta
+          );
+        } else {
+          state.pinnedEtas = [...state.pinnedEtas, eta];
+        }
+      })
+    );
+  }, []);
+
   const updateSearchRouteByButton = useCallback(
     (buttonValue: string) => {
       vibrate(state.vibrateDuration);
@@ -764,6 +784,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleEnergyMode,
       togglePlatformMode,
       toggleVibrateDuration,
+      togglePinnedEta,
       toggleAnalytics,
       updateRefreshInterval,
       toggleAnnotateScheduled,
@@ -795,6 +816,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleEnergyMode,
       togglePlatformMode,
       toggleVibrateDuration,
+      togglePinnedEta,
       toggleAnalytics,
       updateRefreshInterval,
       toggleAnnotateScheduled,

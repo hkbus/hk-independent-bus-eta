@@ -6,6 +6,7 @@ import GACookieConsent from "./GACookieConsent";
 import CollectionDrawer from "./CollectionDrawer";
 import CollectionDialog from "./collections/CollectionDialog";
 import { Suspense } from "react";
+import PinDialog from "./PinDialog";
 
 const Root = () => {
   return (
@@ -21,6 +22,7 @@ const Root = () => {
       <Footer />
       <CollectionDrawer />
       <CollectionDialog />
+      <PinDialog />
     </Container>
   );
 };
