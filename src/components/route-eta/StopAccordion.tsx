@@ -27,7 +27,7 @@ import ReactNativeContext from "../../context/ReactNativeContext";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
-import AppContext from "../../context/AppContext";
+import PinnedEtasContext from "../../context/PinnedEtasContext";
 
 interface StopAccordionProps {
   routeId: string;
@@ -57,7 +57,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
       useContext(CollectionContext);
     const { alarmStopId, toggleStopAlarm } = useContext(ReactNativeContext);
     const { isStopAlarm } = useContext(ReactNativeContext);
-    const { pinnedEtas, togglePinnedEta } = useContext(AppContext);
+    const { pinnedEtas, togglePinnedEta } = useContext(PinnedEtasContext);
     const { t } = useTranslation();
     const language = useLanguage();
     const { fares, faresHoliday } = routeList[routeId];

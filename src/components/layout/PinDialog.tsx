@@ -9,12 +9,13 @@ import {
 } from "@mui/material";
 import { RefObject, useContext, useRef } from "react";
 import Draggable from "react-draggable";
-import AppContext from "../../context/AppContext";
 import SuccinctTimeReport from "../home/SuccinctTimeReport";
 import {
+  Minimize as MinimizeIcon,
   Close as CloseIcon,
   PushPin as PushPinIcon,
 } from "@mui/icons-material";
+import PinnedEtasContext from "../../context/PinnedEtasContext";
 
 const PinDialogContainer = (props: ContainerProps) => {
   const nodeRef = useRef<HTMLDivElement>(null);
@@ -31,7 +32,13 @@ const PinDialogContainer = (props: ContainerProps) => {
 };
 
 export default function PinDialog() {
-  const { pinnedEtas, togglePinnedEta } = useContext(AppContext);
+  const {
+    pinnedEtas,
+    isHidden,
+    togglePinnedEta,
+    tooglePinnedEtasDialog,
+    closePinnedEtas,
+  } = useContext(PinnedEtasContext);
 
   if (pinnedEtas.length === 0) {
     return null;
@@ -50,19 +57,30 @@ export default function PinDialog() {
           bgcolor: (t) => t.palette.background.default,
         }}
       >
-        <PushPinIcon sx={{ transform: "rotate(-45deg)" }} />
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <PushPinIcon sx={{ transform: "rotate(-45deg)" }} />
+          <IconButton onClick={tooglePinnedEtasDialog}>
+            <MinimizeIcon />
+          </IconButton>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton onClick={closePinnedEtas}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
       </Box>
       <Paper id="pin-dialog-paper" sx={{ overflow: "scroll" }}>
-        {pinnedEtas.map((eta) => (
-          <Box sx={entrySx} key={`pinned-${eta}`}>
-            <SuccinctTimeReport routeId={eta} />
-            <Box>
-              <IconButton onClick={() => togglePinnedEta(eta)}>
-                <CloseIcon />
-              </IconButton>
+        {!isHidden &&
+          pinnedEtas.map((eta) => (
+            <Box sx={entrySx} key={`pinned-${eta}`}>
+              <SuccinctTimeReport routeId={eta} />
+              <Box>
+                <IconButton onClick={() => togglePinnedEta(eta)}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
-        ))}
+          ))}
       </Paper>
     </PinDialogContainer>
   );
