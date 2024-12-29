@@ -23,7 +23,7 @@ const PinDialogContainer = (props: ContainerProps) => {
     <Draggable
       nodeRef={nodeRef as RefObject<HTMLDivElement>}
       handle="#draggable-pin-dialog-title"
-      cancel='[id*="pin-dialog-paper"]'
+      cancel='[id*="pin-dialog-irrelavant"]'
       positionOffset={{ x: 0, y: 150 }}
     >
       <Container {...props} ref={nodeRef} />
@@ -59,17 +59,23 @@ export default function PinDialog() {
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <PushPinIcon sx={{ transform: "rotate(-45deg)" }} />
-          <IconButton onClick={tooglePinnedEtasDialog}>
+          <IconButton
+            onClick={tooglePinnedEtasDialog}
+            id="pin-dialog-irrelavant-min-icon"
+          >
             <MinimizeIcon />
           </IconButton>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={closePinnedEtas}>
+          <IconButton
+            onClick={closePinnedEtas}
+            id="pin-dialog-irrelavant-close-icon"
+          >
             <CloseIcon />
           </IconButton>
         </Box>
       </Box>
-      <Paper id="pin-dialog-paper" sx={{ overflow: "scroll" }}>
+      <Paper id="pin-dialog-irrelavant-paper" sx={{ overflow: "scroll" }}>
         {!isHidden &&
           pinnedEtas.map((eta) => (
             <Box sx={entrySx} key={`pinned-${eta}`}>
