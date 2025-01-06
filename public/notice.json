@@ -1,17 +1,13 @@
 {
   "content": {
     "zh": [
-      "因「開放數據平台」提供的 API 出現異常",
-      "hkbus.app 現以額外伺服器處理九巴資料",
-      "望請捐款支持"
+      "1 月 5 日最新票價資料有待運輸署更新開放數據"
     ],
     "en": [
-      "Due to the API abnormality of data.gov.hk,",
-      "hkbus.app is now using extra server to handle KMB ETA.",
-      "We need your donations."
+      "Updated fares info from 5/1 to be updated by the Transport Department's open data."
     ]
   },
-  "url": "https://www.patreon.com/hkbus",
-  "enableLinkInIos": false,
-  "isShown": false
+  "url": "https://www.td.gov.hk/tc/traffic_notices/index_id_78709.html",
+  "enableLinkInIos": true,
+  "isShown": true
 }
