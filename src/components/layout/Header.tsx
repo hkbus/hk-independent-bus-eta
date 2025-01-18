@@ -64,7 +64,8 @@ const Header = () => {
       navigator.geolocation.getCurrentPosition(
         ({ coords: { latitude, longitude } }) => {
           updateGeolocation({ lat: latitude, lng: longitude });
-        }
+        },
+        { enableHighAccuracy: true }
       );
     } catch (e) {
       console.log("error in getting location");

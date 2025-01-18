@@ -299,6 +299,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
             ({ coords: { latitude, longitude } }) => {
               updateGeolocation({ lat: latitude, lng: longitude });
             }
+            { enableHighAccuracy: true }
           );
           geoWatcherId.current = _geoWatcherId;
         } catch (e) {
@@ -355,7 +356,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
             () => {
               setGeoPermission("denied");
               if (deniedCallback) deniedCallback();
-            }
+            },
+            { enableHighAccuracy: true }
           );
           console.log(geoWatcherId.current);
         }
