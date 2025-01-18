@@ -5,6 +5,9 @@ import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
 import eslint from "vite-plugin-eslint"
 
 // https://vitejs.dev/config/
+
+const mobile = !!/android|ios/.exec(process.env.TAURI_ENV_PLATFORM);
+
 export default defineConfig(({mode}: ConfigEnv) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
@@ -17,9 +20,9 @@ export default defineConfig(({mode}: ConfigEnv) => {
       VitePWA(getPwaOptions(env))
     ],
     server: {
-      https: true,
+      https: !mobile,
       host: true,
-      port: 443,
+      port: mobile ? 80 : 443,
       // port: parseInt(env.PORT ?? "9100", 10),
       // strictPort: true,
     },
