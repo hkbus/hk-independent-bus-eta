@@ -298,7 +298,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
           const _geoWatcherId = navigator.geolocation.watchPosition(
             ({ coords: { latitude, longitude } }) => {
               updateGeolocation({ lat: latitude, lng: longitude });
-            }
+            },
+            () => {},
             { enableHighAccuracy: true }
           );
           geoWatcherId.current = _geoWatcherId;
