@@ -65,6 +65,7 @@ const Header = () => {
         ({ coords: { latitude, longitude } }) => {
           updateGeolocation({ lat: latitude, lng: longitude });
         },
+        () => {},
         { enableHighAccuracy: true }
       );
     } catch (e) {
