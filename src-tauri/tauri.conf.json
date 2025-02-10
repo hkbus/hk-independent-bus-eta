@@ -1,0 +1,36 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "hk-independent-bus-eta",
+  "version": "0.1.0",
+  "identifier": "app.hkbus",
+  "build": {
+    "frontendDist": "../build",
+    "devUrl": "http://0.0.0.0:80",
+    "beforeDevCommand": "yarn start",
+    "beforeBuildCommand": "yarn build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "巴士到站預報 App",
+        "width": 600,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "../public/favicon.ico",
+      "../public/img/logo128.png",
+      "../public/img/logo192.png",
+      "../public/img/logo512.png"
+    ]
+  }
+}
