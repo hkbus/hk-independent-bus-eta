@@ -8,7 +8,9 @@ import { Language } from "../../data";
 interface NoticeCardState {
   content: Record<Language, string[]>;
   url: string;
+  link: Record<Language, string>;
   enableLinkInIos: boolean;
+  endDate: Date;
   isShown: boolean;
 }
 
@@ -19,7 +21,12 @@ const NoticeCard = () => {
   useEffect(() => {
     fetch("/notice.json")
       .then((r) => r.json())
-      .then((r) => setState(r));
+      .then((r) =>
+        setState({
+          ...r,
+          endDate: new Date(r.endDate),
+        })
+      );
   }, []);
 
   const handleClick = useCallback(() => {
@@ -27,10 +34,10 @@ const NoticeCard = () => {
     if (iOSRNWebView() && !state.enableLinkInIos) {
       return;
     }
-    window.open(state.url, "_target");
-  }, [state]);
+    window.open(state.link[language], "_target");
+  }, [language, state]);
 
-  if (state === null || !state.isShown) {
+  if (state === null || !state.isShown || state.endDate < new Date()) {
     return null;
   }
 
