@@ -1,0 +1,18 @@
+{
+  "content": {
+    "zh": [
+      "港鐵實時列車到站時間，由於開放數據提供方的技術問題，未能正常顯示。請到 App 設定，更新「版本」以繼續享受無廣告體驗"
+    ],
+    "en": [
+      "Due to technical issues with the open data provider, ETA of MTR cannot be displayed normally. Please go to App Settings and update 'Version' to continue enjoying your ad-free experience"
+    ]
+  },
+  "link": {
+    "zh": "https://data.gov.hk/tc-data/dataset/mtr-data2-nexttrain-data", 
+    "en": "https://data.gov.hk/en-data/dataset/mtr-data2-nexttrain-data"
+  },
+  "endDate": "2025-03-15T00:00:00.000Z",
+  "url": "https://data.gov.hk/tc-data/dataset/mtr-data2-nexttrain-data/resource/b8b66299-a3a8-40e6-bb01-fb93e37d9e42",
+  "enableLinkInIos": true,
+  "isShown": true
+}
