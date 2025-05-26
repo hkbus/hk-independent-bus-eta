@@ -8,6 +8,7 @@ import {
   SxProps,
   TextField,
   Theme,
+  Typography,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileTimePicker as TimePicker } from "@mui/x-date-pickers/MobileTimePicker";
@@ -64,70 +65,87 @@ const CollectionSchedule = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={rootSx}>
-        {newCollection[newCollectionIdx].schedules.map((daySchedule, idx) => (
-          <Box key={`schedule-${idx}`} sx={daySx}>
-            <IconButton
-              size="small"
-              onClick={() => removeCollectionSchedule(idx)}
-            >
-              <RemoveCircleOutlineIcon />
-            </IconButton>
-            <TextField
-              variant="standard"
-              value={daySchedule.day}
-              select
-              size="small"
-              onChange={({ target: { value } }) =>
-                updateCollectionSchedule(idx, "day", parseInt(value))
-              }
-            >
-              {Array(7)
-                .fill(0)
-                .map((_, _weekday) => (
-                  <MenuItem key={`option-${idx}-${_weekday}`} value={_weekday}>
-                    {t(`weekday-${_weekday}`)}
-                  </MenuItem>
-                ))}
-            </TextField>
-            <TimePicker
-              sx={{ flex: 0.45 }}
-              slotProps={{
-                textField: {
-                  size: "small",
-                  variant: "standard",
-                },
-              }}
-              value={dayjs(
-                `1991-12-02${daySchedule.start.hour}:${daySchedule.start.minute}`
-              )}
-              onChange={(v: any) =>
-                updateCollectionSchedule(idx, "start", {
-                  hour: v.$H,
-                  minute: v.$m,
-                })
-              }
-            />
-            -
-            <TimePicker
-              sx={{ flex: 0.45 }}
-              slotProps={{
-                textField: {
-                  size: "small",
-                  variant: "standard",
-                },
-              }}
-              value={dayjs(
-                `1991-12-02T${daySchedule.end.hour}:${daySchedule.end.minute}`
-              )}
-              onChange={(v: any) =>
-                updateCollectionSchedule(idx, "end", {
-                  hour: v.$H,
-                  minute: v.$m,
-                })
-              }
-            />
-          </Box>
-        ))}
+        {newCollection[newCollectionIdx].schedules.length > 0 ? (
+          <>
+            {newCollection[newCollectionIdx].schedules.map(
+              (daySchedule, idx) => (
+                <Box key={`schedule-${idx}`} sx={daySx}>
+                  <IconButton
+                    size="small"
+                    onClick={() => removeCollectionSchedule(idx)}
+                  >
+                    <RemoveCircleOutlineIcon />
+                  </IconButton>
+                  <TextField
+                    variant="standard"
+                    value={daySchedule.day}
+                    select
+                    size="small"
+                    onChange={({ target: { value } }) =>
+                      updateCollectionSchedule(idx, "day", parseInt(value))
+                    }
+                  >
+                    {/* Start with mon-sun, then holiday */}
+                    {[...Array(7).keys(), -1]
+                      .map((i) => (i === -1 ? -1 : (i + 1) % 7))
+                      .map((_weekday) => (
+                        <MenuItem
+                          key={`option-${idx}-${_weekday}`}
+                          value={_weekday}
+                        >
+                          {_weekday === -1
+                            ? t("public-holiday")
+                            : t(`weekday-${_weekday}`)}
+                        </MenuItem>
+                      ))}
+                  </TextField>
+                  <TimePicker
+                    sx={{ flex: 0.45 }}
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                        variant: "standard",
+                      },
+                    }}
+                    value={dayjs(
+                      `1991-12-02${daySchedule.start.hour}:${daySchedule.start.minute}`
+                    )}
+                    onChange={(v: any) =>
+                      updateCollectionSchedule(idx, "start", {
+                        hour: v.$H,
+                        minute: v.$m,
+                      })
+                    }
+                  />
+                  -
+                  <TimePicker
+                    sx={{ flex: 0.45 }}
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                        variant: "standard",
+                      },
+                    }}
+                    value={dayjs(
+                      `1991-12-02T${daySchedule.end.hour}:${daySchedule.end.minute}`
+                    )}
+                    onChange={(v: any) =>
+                      updateCollectionSchedule(idx, "end", {
+                        hour: v.$H,
+                        minute: v.$m,
+                      })
+                    }
+                  />
+                </Box>
+              )
+            )}
+          </>
+        ) : (
+          <Typography sx={{ marginTop: 5 }} fontWeight={700}>
+            {t("missing_schedule")}
+          </Typography>
+        )}
+
         <Button onClick={() => addCollectionSchedule()}>
           <AddIcon />
         </Button>
@@ -143,6 +161,7 @@ const rootSx: SxProps<Theme> = {
   flexDirection: "column",
   gap: 1.5,
   fontSize: "0.8em !important",
+  textAlign: "center",
 };
 
 const daySx: SxProps<Theme> = {

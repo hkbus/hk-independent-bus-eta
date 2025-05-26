@@ -119,7 +119,8 @@ const getCollections = ({
         curDate.setUTCHours(curDate.getUTCHours() + 8);
         const _day = curDate.getUTCDay();
         // skip handling timezone here
-        if ((isTodayHoliday && day === 0) || day === _day) {
+        // holiday -1; sun-0, mon-1, tue-2, wed-3, thu-4, fri-5, sat-6
+        if ((isTodayHoliday && day === -1) || day === _day) {
           let sTs = start.hour * 60 + start.minute;
           let eTs = end.hour * 60 + end.minute;
           let curTs =

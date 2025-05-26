@@ -79,15 +79,11 @@ const CollectionDialog = () => {
           sx={tabbarSx}
         >
           <Tab value="routes" label={t("路線")} />
-          {collection.schedules.length !== 0 && (
-            <Tab value="time" label={t("顯示時間")} />
-          )}
+          <Tab value="time" label={t("顯示時間")} />
         </Tabs>
         <Box sx={mainSx}>
           {tab === "routes" && <CollectionRoute />}
-          {tab === "time" && collection.schedules.length !== 0 && (
-            <CollectionSchedule />
-          )}
+          {tab === "time" && <CollectionSchedule />}
         </Box>
       </DialogContent>
       {collectionIdx !== -1 && (
