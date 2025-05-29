@@ -39,6 +39,8 @@ const Header = () => {
     changeLanguage,
     _colorMode,
     toggleColorMode,
+    isSearching,
+    setIsSearching,
   } = useContext(AppContext);
   const {
     db: { routeList },
@@ -127,7 +129,16 @@ const Header = () => {
         type="text"
         value={searchRoute}
         placeholder={t("路線")}
-        startAdornment={<SearchIcon fontSize="small" sx={{ opacity: 0.8 }} />}
+        startAdornment={
+          <Box
+            onClick={() => {
+              setIsSearching(!isSearching);
+            }}
+            sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+          >
+            <SearchIcon fontSize="small" sx={{ opacity: 0.8 }} />
+          </Box>
+        }
         onChange={(e) => {
           if (
             e.target.value.toUpperCase() in routeList ||
@@ -140,6 +151,7 @@ const Header = () => {
         }}
         onFocus={() => {
           vibrate(vibrateDuration);
+          setIsSearching(true);
           if (navigator.userAgent !== "prerendering" && checkMobile()) {
             (document.activeElement as HTMLElement).blur();
           }

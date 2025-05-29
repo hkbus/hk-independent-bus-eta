@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState, useCallback } from "react";
 import AppContext from "../context/AppContext";
-import { Box } from "@mui/material";
+import { Box, Slide } from "@mui/material";
 import RouteInputPad from "../components/route-board/RouteInputPad";
 import { useTranslation } from "react-i18next";
 import { setSeoHeader } from "../utils";
@@ -38,7 +38,13 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
   );
 
   return (
-    <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <BoardTabbar boardTab={boardTab} onChangeTab={handleTabChange} />
       <SwipeableRoutesBoard boardTab={boardTab} onChangeTab={handleTabChange} />
     </Box>
@@ -46,17 +52,49 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
 };
 
 const RouteBoard = () => {
-  const { isRecentSearchShown } = useContext(AppContext);
+  const { isRecentSearchShown, isSearching } = useContext(AppContext);
   const _boardTab = localStorage.getItem("boardTab");
   const [boardTab, setBoardTab] = useState<BoardTabType>(
     isBoardTab(_boardTab, isRecentSearchShown) ? _boardTab : "all"
   );
 
   return (
-    <>
-      <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
-      <RouteInputPad boardTab={boardTab} />
-    </>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflowY: "scroll",
+        }}
+      >
+        <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
+      </Box>
+      <Slide
+        direction="up"
+        in={window.innerHeight > 460 || isSearching}
+        mountOnEnter
+        unmountOnExit
+      >
+        <Box
+          sx={{
+            height: "auto",
+            maxHeight: "100%",
+            display: "flex",
+            flexDirection: "column",
+            overflowY: "scroll",
+          }}
+        >
+          <RouteInputPad boardTab={boardTab} />
+        </Box>
+      </Slide>
+    </Box>
   );
 };
 
