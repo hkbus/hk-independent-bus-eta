@@ -106,7 +106,6 @@ const Header = () => {
   const handleInputClick = (e: React.MouseEvent) => {
     if (!inputref.current) return;
     e.preventDefault();
-    console.log("input clicked");
     if (isSearching) {
       inputref.current.blur();
       setIsSearching(false);

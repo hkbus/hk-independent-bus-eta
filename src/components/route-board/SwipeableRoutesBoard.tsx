@@ -129,62 +129,68 @@ const SwipeableRoutesBoard = ({
             )}
           </AutoSizer>
         ) : (
-          <Box sx={noResultSx}>
-            <Box
-              display="flex"
-              alignItems="center"
-              flexDirection="column"
-              gap={1}
-            >
-              {availableBoardTab[index] !== "recent" ? (
-                <>
-                  <Box display="flex" alignItems="center">
-                    <SentimentVeryDissatisfiedIcon fontSize="small" />
-                    <Typography variant="h6">
-                      &quot;{searchRoute}&quot;
-                    </Typography>
-                    <Typography variant="h6">
-                      {t("route-search-no-result")}
-                    </Typography>
-                  </Box>
-                  <Typography variant="body1">
-                    {t("suggest-update-database")}
-                  </Typography>
-                </>
-              ) : (
-                <Box display="flex" alignItems="center" gap={2}>
-                  <Box display="flex" alignItems="center">
-                    <SentimentVeryDissatisfiedIcon fontSize="small" />
-                    {searchRoute.length > 0 && (
-                      <Typography variant="h6">
-                        &quot;{searchRoute}&quot;
+          <AutoSizer>
+            {({ width }) => (
+              <Box sx={noResultSx} width={width}>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  flexDirection="column"
+                  gap={1}
+                >
+                  {availableBoardTab[index] !== "recent" ? (
+                    <>
+                      <Box display="flex" alignItems="center">
+                        <SentimentVeryDissatisfiedIcon fontSize="small" />
+                        <Typography variant="h6">
+                          &quot;{searchRoute}&quot;
+                        </Typography>
+                        <Typography variant="h6">
+                          {t("route-search-no-result")}
+                        </Typography>
+                      </Box>
+                      <Typography variant="body1">
+                        {t("suggest-update-database")}
                       </Typography>
-                    )}
-                  </Box>
-                  <Typography variant="h6">{t("no-recent-search")}</Typography>
+                    </>
+                  ) : (
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <Box display="flex" alignItems="center">
+                        <SentimentVeryDissatisfiedIcon fontSize="small" />
+                        {searchRoute.length > 0 && (
+                          <Typography variant="h6">
+                            &quot;{searchRoute}&quot;
+                          </Typography>
+                        )}
+                      </Box>
+                      <Typography variant="h6">
+                        {t("no-recent-search")}
+                      </Typography>
+                    </Box>
+                  )}
                 </Box>
-              )}
-            </Box>
-            {availableBoardTab[index] !== "all" && (
-              <Box display="flex">
-                <Typography variant="h6">
-                  <Trans
-                    i18nKey="tap-here-to-search-all-routes"
-                    components={{
-                      TapHereLink: (
-                        <Typography
-                          variant="h6"
-                          component="span"
-                          sx={clickableLinkSx}
-                          onClick={() => onChangeTab("all")}
-                        />
-                      ),
-                    }}
-                  />
-                </Typography>
+                {availableBoardTab[index] !== "all" && (
+                  <Box display="flex">
+                    <Typography variant="h6">
+                      <Trans
+                        i18nKey="tap-here-to-search-all-routes"
+                        components={{
+                          TapHereLink: (
+                            <Typography
+                              variant="h6"
+                              component="span"
+                              sx={clickableLinkSx}
+                              onClick={() => onChangeTab("all")}
+                            />
+                          ),
+                        }}
+                      />
+                    </Typography>
+                  </Box>
+                )}
               </Box>
             )}
-          </Box>
+          </AutoSizer>
         )}
       </React.Fragment>
     ),
