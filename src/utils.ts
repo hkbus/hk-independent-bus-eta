@@ -286,15 +286,17 @@ export const setSeoRouteFeature = ({
   }
 };
 
-export const toProperCase = (txt: string) => (
-  txt.split(" ").map(word => {
-    if ( word.match("^[A-Za-z]+$") ) {
-      return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
-    } else {
-      return word
-    }
-  }).join(" ")
-);
+export const toProperCase = (txt: string) =>
+  txt
+    .split(" ")
+    .map((word) => {
+      if (word.match("^[A-Za-z]+$")) {
+        return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
+      } else {
+        return word;
+      }
+    })
+    .join(" ");
 
 export const isEmptyObj = (obj: unknown) => {
   return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
