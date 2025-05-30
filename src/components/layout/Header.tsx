@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useContext } from "react";
+import { useEffect, useCallback, useContext, useRef } from "react";
 import {
   Avatar,
   Box,
@@ -51,6 +51,7 @@ const Header = () => {
   const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
   const onlineStatus = useOnline();
+  const inputref = useRef<HTMLInputElement>(null);
 
   const handleLanguageChange = (lang: "zh" | "en") => {
     vibrate(vibrateDuration);
@@ -102,6 +103,19 @@ const Header = () => {
     };
   }, [handleKeydown]);
 
+  const handleInputClick = (e: React.MouseEvent) => {
+    if (!inputref.current) return;
+    e.preventDefault();
+    console.log("input clicked");
+    if (isSearching) {
+      inputref.current.blur();
+      setIsSearching(false);
+    } else {
+      inputref.current.focus();
+      setIsSearching(!isSearching);
+    }
+  };
+
   return (
     <Toolbar sx={rootSx}>
       <Link
@@ -127,6 +141,7 @@ const Header = () => {
         id="searchInput"
         sx={searchRouteInputSx}
         type="text"
+        ref={inputref}
         value={searchRoute}
         placeholder={t("路線")}
         startAdornment={
@@ -149,9 +164,9 @@ const Header = () => {
           }
           setSearchRoute(e.target.value);
         }}
+        onClick={handleInputClick}
         onFocus={() => {
           vibrate(vibrateDuration);
-          setIsSearching(true);
           if (navigator.userAgent !== "prerendering" && checkMobile()) {
             (document.activeElement as HTMLElement).blur();
           }
