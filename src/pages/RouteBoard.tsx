@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState, useCallback } from "react";
 import AppContext from "../context/AppContext";
-import { Box, Slide } from "@mui/material";
+import { Box } from "@mui/material";
 import RouteInputPad from "../components/route-board/RouteInputPad";
 import { useTranslation } from "react-i18next";
 import { setSeoHeader } from "../utils";
@@ -83,24 +83,17 @@ const RouteBoard = () => {
       >
         <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
       </Box>
-      <Slide
-        direction="up"
-        in={windowHeight > 525 || isSearching}
-        mountOnEnter
-        unmountOnExit
+      <Box
+        sx={{
+          height: "auto",
+          maxHeight: "100%",
+          display: windowHeight > 525 || isSearching ? "flex" : "none",
+          flexDirection: "column",
+          overflowY: "scroll",
+        }}
       >
-        <Box
-          sx={{
-            height: "auto",
-            maxHeight: "100%",
-            display: "flex",
-            flexDirection: "column",
-            overflowY: "scroll",
-          }}
-        >
-          <RouteInputPad boardTab={boardTab} />
-        </Box>
-      </Slide>
+        <RouteInputPad boardTab={boardTab} />
+      </Box>
     </Box>
   );
 };
