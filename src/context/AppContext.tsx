@@ -265,7 +265,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       searchRange: JSON.parse(
         localStorage.getItem("searchRange") ?? `${DEFAULT_SEARCH_RANGE}`
       ),
-      isSearching: true,
+      isSearching: false,
     };
   };
   const geolocation = useRef<GeoLocation>(_geolocation);

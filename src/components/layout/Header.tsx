@@ -52,6 +52,8 @@ const Header = () => {
   const weatherCodes = useWeatherCode();
   const onlineStatus = useOnline();
   const inputref = useRef<HTMLInputElement>(null);
+  const prevPathRef = useRef<string>(location.pathname);
+  const SwitchedTab = useRef<boolean>(false);
 
   const handleLanguageChange = (lang: "zh" | "en") => {
     vibrate(vibrateDuration);
@@ -103,9 +105,35 @@ const Header = () => {
     };
   }, [handleKeydown]);
 
+  /**
+   *  Detect if the previous path is different (i.e "/board")
+   */
+  useEffect(() => {
+    if (prevPathRef.current !== location.pathname) {
+      SwitchedTab.current = true;
+      setIsSearching(false);
+      prevPathRef.current = location.pathname;
+    }
+  }, [location.pathname]);
+
   const handleInputClick = (e: React.MouseEvent) => {
     if (!inputref.current) return;
     e.preventDefault();
+
+    // If the user has switched tabs, turn on keypad
+    if (SwitchedTab.current) {
+      SwitchedTab.current = false;
+      if (isSearching) {
+        inputref.current.blur();
+        setIsSearching(false);
+      } else {
+        inputref.current.focus();
+        setIsSearching(true);
+      }
+      return;
+    }
+
+    // Turning on/off the keypad
     if (isSearching) {
       inputref.current.blur();
       setIsSearching(false);
