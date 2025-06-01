@@ -114,7 +114,7 @@ const Header = () => {
       setIsSearching(false);
       prevPathRef.current = location.pathname;
     }
-  }, [location.pathname]);
+  }, [location.pathname, setIsSearching]);
 
   const handleInputClick = (e: React.MouseEvent) => {
     if (!inputref.current) return;
