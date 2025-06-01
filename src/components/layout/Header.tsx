@@ -51,9 +51,9 @@ const Header = () => {
   const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
   const onlineStatus = useOnline();
-  const inputref = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const prevPathRef = useRef<string>(location.pathname);
-  const SwitchedTab = useRef<boolean>(false);
+  const switchedTab = useRef<boolean>(false);
 
   const handleLanguageChange = (lang: "zh" | "en") => {
     vibrate(vibrateDuration);
@@ -110,36 +110,29 @@ const Header = () => {
    */
   useEffect(() => {
     if (prevPathRef.current !== location.pathname) {
-      SwitchedTab.current = true;
+      switchedTab.current = true;
       setIsSearching(false);
       prevPathRef.current = location.pathname;
     }
   }, [location.pathname, setIsSearching]);
 
-  const handleInputClick = (e: React.MouseEvent) => {
-    if (!inputref.current) return;
-    e.preventDefault();
+  const handleInputClick = () => {
+    if (!inputRef.current) return;
 
     // If the user has switched tabs, turn on keypad
-    if (SwitchedTab.current) {
-      SwitchedTab.current = false;
-      if (isSearching) {
-        inputref.current.blur();
-        setIsSearching(false);
-      } else {
-        inputref.current.focus();
-        setIsSearching(true);
-      }
+    if (switchedTab.current) {
+      switchedTab.current = false;
+      inputRef.current.focus();
+      setIsSearching(true);
       return;
     }
-
     // Turning on/off the keypad
     if (isSearching) {
-      inputref.current.blur();
+      inputRef.current.blur();
       setIsSearching(false);
     } else {
-      inputref.current.focus();
-      setIsSearching(!isSearching);
+      inputRef.current.focus();
+      setIsSearching(true);
     }
   };
 
@@ -168,7 +161,7 @@ const Header = () => {
         id="searchInput"
         sx={searchRouteInputSx}
         type="text"
-        ref={inputref}
+        ref={inputRef}
         value={searchRoute}
         placeholder={t("路線")}
         startAdornment={
@@ -177,6 +170,9 @@ const Header = () => {
               setIsSearching(!isSearching);
             }}
             sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+            role="button"
+            aria-label="Search Route"
+            tabIndex={0}
           >
             <SearchIcon fontSize="small" sx={{ opacity: 0.8 }} />
           </Box>
