@@ -38,7 +38,13 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
   );
 
   return (
-    <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <BoardTabbar boardTab={boardTab} onChangeTab={handleTabChange} />
       <SwipeableRoutesBoard boardTab={boardTab} onChangeTab={handleTabChange} />
     </Box>
@@ -46,17 +52,49 @@ const RouteList = ({ boardTab, setBoardTab }: RouteListProps) => {
 };
 
 const RouteBoard = () => {
-  const { isRecentSearchShown } = useContext(AppContext);
+  const { isRecentSearchShown, isSearching } = useContext(AppContext);
   const _boardTab = localStorage.getItem("boardTab");
   const [boardTab, setBoardTab] = useState<BoardTabType>(
     isBoardTab(_boardTab, isRecentSearchShown) ? _boardTab : "all"
   );
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => setWindowHeight(window.innerHeight);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
-    <>
-      <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
-      <RouteInputPad boardTab={boardTab} />
-    </>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflowY: "scroll",
+        }}
+      >
+        <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
+      </Box>
+      <Box
+        sx={{
+          height: "auto",
+          maxHeight: "100%",
+          display: windowHeight > 525 || isSearching ? "flex" : "none",
+          flexDirection: "column",
+          overflowY: "scroll",
+        }}
+      >
+        <RouteInputPad boardTab={boardTab} />
+      </Box>
+    </Box>
   );
 };
 

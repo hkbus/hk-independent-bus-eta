@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useContext } from "react";
+import { useEffect, useCallback, useContext, useRef } from "react";
 import {
   Avatar,
   Box,
@@ -39,6 +39,8 @@ const Header = () => {
     changeLanguage,
     _colorMode,
     toggleColorMode,
+    isSearching,
+    setIsSearching,
   } = useContext(AppContext);
   const {
     db: { routeList },
@@ -49,6 +51,9 @@ const Header = () => {
   const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
   const onlineStatus = useOnline();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const prevPathRef = useRef<string>(location.pathname);
+  const switchedTab = useRef<boolean>(false);
 
   const handleLanguageChange = (lang: "zh" | "en") => {
     vibrate(vibrateDuration);
@@ -100,6 +105,37 @@ const Header = () => {
     };
   }, [handleKeydown]);
 
+  /**
+   *  Detect if the previous path is different (i.e "/board")
+   */
+  useEffect(() => {
+    if (prevPathRef.current !== location.pathname) {
+      switchedTab.current = true;
+      setIsSearching(false);
+      prevPathRef.current = location.pathname;
+    }
+  }, [location.pathname, setIsSearching]);
+
+  const handleInputClick = () => {
+    if (!inputRef.current) return;
+
+    // If the user has switched tabs, turn on keypad
+    if (switchedTab.current) {
+      switchedTab.current = false;
+      inputRef.current.focus();
+      setIsSearching(true);
+      return;
+    }
+    // Turning on/off the keypad
+    if (isSearching) {
+      inputRef.current.blur();
+      setIsSearching(false);
+    } else {
+      inputRef.current.focus();
+      setIsSearching(true);
+    }
+  };
+
   return (
     <Toolbar sx={rootSx}>
       <Link
@@ -125,9 +161,22 @@ const Header = () => {
         id="searchInput"
         sx={searchRouteInputSx}
         type="text"
+        ref={inputRef}
         value={searchRoute}
         placeholder={t("路線")}
-        startAdornment={<SearchIcon fontSize="small" sx={{ opacity: 0.8 }} />}
+        startAdornment={
+          <Box
+            onClick={() => {
+              setIsSearching(!isSearching);
+            }}
+            sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+            role="button"
+            aria-label="Search Route"
+            tabIndex={0}
+          >
+            <SearchIcon fontSize="small" sx={{ opacity: 0.8 }} />
+          </Box>
+        }
         onChange={(e) => {
           if (
             e.target.value.toUpperCase() in routeList ||
@@ -138,6 +187,7 @@ const Header = () => {
           }
           setSearchRoute(e.target.value);
         }}
+        onClick={handleInputClick}
         onFocus={() => {
           vibrate(vibrateDuration);
           if (navigator.userAgent !== "prerendering" && checkMobile()) {

@@ -114,7 +114,9 @@ const rootSx: SxProps<Theme> = {
   flexDirection: "row",
   // TODO: increase to 258px or enable scroll
   height: "248px",
+  minHeight: "62px",
   justifyContent: "space-around",
+  overflow: "hidden",
 };
 
 const buttonSx: SxProps<Theme> = {
@@ -141,13 +143,16 @@ const alphabetSx: SxProps<Theme> = {
 
 const alphabetPadContainerSx: SxProps<Theme> = {
   width: "35%",
-  height: "246px",
+  height: "auto",
   overflowX: "hidden",
   overflowY: "scroll",
 };
 
 const numPadContainerSx: SxProps<Theme> = {
   width: "62%",
+  height: "auto",
+  overflowX: "hidden",
+  overflowY: "scroll",
 };
 
 const getPossibleChar = (

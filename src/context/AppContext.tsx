@@ -106,6 +106,10 @@ export interface AppState {
    * Range for home page nearby search
    */
   searchRange: number;
+  /**
+   * Is input currently being entered
+   */
+  isSearching: boolean;
 }
 
 interface AppContextValue extends AppState {
@@ -142,6 +146,7 @@ interface AppContextValue extends AppState {
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
   setSearchRange: (searchRange: number) => void;
+  setIsSearching: (searching: boolean) => void;
 
   // for React Native Context
   setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
@@ -267,6 +272,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       searchRange: JSON.parse(
         localStorage.getItem("searchRange") ?? `${DEFAULT_SEARCH_RANGE}`
       ),
+      isSearching: false,
     };
   };
   const geolocation = useRef<GeoLocation>(_geolocation);
@@ -603,6 +609,14 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
+  const setIsSearching = useCallback((searching: boolean) => {
+    setStateRaw(
+      produce((state: State) => {
+        state.isSearching = searching;
+      })
+    );
+  }, []);
+
   const calculateColorMode = useCallback(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
       return state._colorMode;
@@ -783,6 +797,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       importAppState,
       setGeoPermission,
       setSearchRange,
+      setIsSearching,
     }),
     [
       state,
@@ -814,6 +829,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       importAppState,
       setGeoPermission,
       setSearchRange,
+      setIsSearching,
     ]
   );
 
