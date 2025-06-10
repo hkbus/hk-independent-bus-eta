@@ -17,7 +17,7 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
   const {
     db: { routeList },
   } = useContext(DbContext);
-  const { gtfsId, bound, co } = routeList[routeId];
+  const { gtfsId, bound, co, route, dest } = routeList[routeId];
 
   useEffect(() => {
     let waypointsFile = "";
@@ -27,6 +27,9 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
       }.json`;
     } else if (co.includes("mtr")) {
       waypointsFile = `${routeId.split("-")[0].toLowerCase()}.json`;
+    } else if (route && co.includes("lightRail")) {
+      // For light rail map
+      waypointsFile = `${route}${dest.en.includes("Circular") ? "" : bound[co[0]] === "I" ? "_I" : "_O"}.json`;
     }
     fetch(`https://hkbus.github.io/route-waypoints/${waypointsFile}`)
       .then((r) => r.json())
@@ -56,7 +59,7 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
     return () => {
       setGeoJson(null);
     };
-  }, [routeId, gtfsId, bound, co, stops]);
+  }, [routeId, gtfsId, bound, co, stops, dest, route]);
 
   return geoJson;
 };
