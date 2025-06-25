@@ -53,10 +53,11 @@ const RouteBoard = () => {
   );
 
   return (
-    <>
-      <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
+    /** column-reverse ease the usage of screen reader (e.g., visual impairment) */
+    <Box display="flex" flexDirection="column-reverse" flex={1}>
       <RouteInputPad boardTab={boardTab} />
-    </>
+      <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
+    </Box>
   );
 };
 
