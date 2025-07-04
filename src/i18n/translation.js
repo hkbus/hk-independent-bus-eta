@@ -135,6 +135,8 @@ const resources = {
       mtr: "MTR",
       ferry: "Ferry",
       "route-search-no-result": "No Result",
+      "suggest-update-database":
+        "You may Go Settings and Update Route Database",
       "no-recent-search": "No Record",
       "tap-here-to-search-all-routes":
         "<TapHereLink>Tap here</TapHereLink> to search all routes",
@@ -149,6 +151,7 @@ const resources = {
       匯出網址: "Export URL",
       協助: "Support",
       顯示時間: "Hours",
+      "public-holiday": "HOL",
       "weekday-0": "SUN",
       "weekday-1": "MON",
       "weekday-2": "TUE",
@@ -156,6 +159,7 @@ const resources = {
       "weekday-4": "THUR",
       "weekday-5": "FRI",
       "weekday-6": "SAT",
+      missing_schedule: "Add Schedule",
       路線收藏: "Route Collections",
       "color-system": "Same as System",
       "color-dark": "Dark Theme",
@@ -228,6 +232,7 @@ const resources = {
       "KMB first": "九巴優先",
       "CTB first": "城巴優先",
       "route-search-no-result": "沒有結果",
+      "suggest-update-database": "可嘗試到設定，更新路線資料庫",
       "no-recent-search": "沒有記錄",
       "tap-here-to-search-all-routes":
         "<TapHereLink>按此</TapHereLink>以搜尋「全部」路綫",
@@ -238,6 +243,7 @@ const resources = {
       Reject: "不要",
       Collections: "收藏",
       "Number of ETAs: ": "到站預報數量：",
+      "public-holiday": "假期",
       "weekday-0": "周日",
       "weekday-1": "周一",
       "weekday-2": "周二",
@@ -245,6 +251,7 @@ const resources = {
       "weekday-4": "周四",
       "weekday-5": "周五",
       "weekday-6": "周六",
+      missing_schedule: "新增時間",
       "color-system": "跟隨系統",
       "color-dark": "黑夜模式",
       "color-light": "日照模式",

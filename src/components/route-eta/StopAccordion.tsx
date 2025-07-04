@@ -16,6 +16,8 @@ import {
   StarBorder as StarBorderIcon,
   Info as InfoIcon,
   Share as ShareIcon,
+  PushPin as PushPinIcon,
+  PushPinOutlined as PushPinOutlinedIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { toProperCase } from "../../utils";
@@ -25,6 +27,7 @@ import ReactNativeContext from "../../context/ReactNativeContext";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
+import PinnedEtasContext from "../../context/PinnedEtasContext";
 
 interface StopAccordionProps {
   routeId: string;
@@ -54,19 +57,20 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
       useContext(CollectionContext);
     const { alarmStopId, toggleStopAlarm } = useContext(ReactNativeContext);
     const { isStopAlarm } = useContext(ReactNativeContext);
+    const { pinnedEtas, togglePinnedEta } = useContext(PinnedEtasContext);
     const { t } = useTranslation();
     const language = useLanguage();
     const { fares, faresHoliday } = routeList[routeId];
     const stop = stopList[stopId];
+    const targetRouteId = `${routeId.toUpperCase()}/${idx}`;
     const isStarred = useMemo<boolean>(
       () =>
-        savedEtas.includes(`${routeId.toUpperCase()}/${idx}`) ||
+        savedEtas.includes(targetRouteId) ||
         collections.reduce(
-          (acc, cur) =>
-            acc || cur.list.includes(`${routeId.toUpperCase()}/${idx}`),
+          (acc, cur) => acc || cur.list.includes(targetRouteId),
           false
         ),
-      [savedEtas, collections, routeId, idx]
+      [savedEtas, targetRouteId, collections]
     );
 
     const handleShareClick = useCallback(
@@ -138,6 +142,18 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
               >
                 <InfoIcon />
               </IconButton>
+              <IconButton
+                aria-label="pin"
+                onClick={() => togglePinnedEta(targetRouteId)}
+                style={{ backgroundColor: "transparent" }}
+                size="large"
+              >
+                {pinnedEtas.includes(targetRouteId) ? (
+                  <PushPinIcon />
+                ) : (
+                  <PushPinOutlinedIcon />
+                )}
+              </IconButton>
             </Box>
             <Box>
               <IconButton
@@ -151,7 +167,6 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
               <IconButton
                 aria-label="favourite"
                 onClick={() => {
-                  const targetRouteId = `${routeId.toUpperCase()}/${idx}`;
                   setCollectionDrawerRoute(targetRouteId);
                 }}
                 style={{ backgroundColor: "transparent" }}

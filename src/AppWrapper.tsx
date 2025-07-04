@@ -9,6 +9,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { CollectionContextProvider } from "./CollectionContext";
 import { ReactNativeContextProvider } from "./context/ReactNativeContext";
 import { EmotionContextProvider } from "./context/EmotionContext";
+import { PinnedEtasContextProvider } from "./context/PinnedEtasContext";
 const App = React.lazy(() => import("./App"));
 
 const AppWrapper = () => {
@@ -30,11 +31,13 @@ const AppWrapper = () => {
         <CollectionContextProvider>
           <AppContextProvider>
             <EmotionContextProvider>
-              <ReactNativeContextProvider>
-                <Suspense fallback={null}>
-                  <App />
-                </Suspense>
-              </ReactNativeContextProvider>
+              <PinnedEtasContextProvider>
+                <ReactNativeContextProvider>
+                  <Suspense fallback={null}>
+                    <App />
+                  </Suspense>
+                </ReactNativeContextProvider>
+              </PinnedEtasContextProvider>
             </EmotionContextProvider>
           </AppContextProvider>
         </CollectionContextProvider>

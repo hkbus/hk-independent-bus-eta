@@ -130,26 +130,39 @@ const SwipeableRoutesBoard = ({
           </AutoSizer>
         ) : (
           <Box sx={noResultSx}>
-            <Box display="flex" alignItems="center">
-              <SentimentVeryDissatisfiedIcon fontSize="small" />
+            <Box
+              display="flex"
+              alignItems="center"
+              flexDirection="column"
+              gap={1}
+            >
               {availableBoardTab[index] !== "recent" ? (
                 <>
-                  <Typography variant="h6">
-                    &quot;{searchRoute}&quot;
-                  </Typography>
-                  <Typography variant="h6">
-                    {t("route-search-no-result")}
-                  </Typography>
-                </>
-              ) : (
-                <>
-                  {searchRoute.length > 0 && (
+                  <Box display="flex" alignItems="center">
+                    <SentimentVeryDissatisfiedIcon fontSize="small" />
                     <Typography variant="h6">
                       &quot;{searchRoute}&quot;
                     </Typography>
-                  )}
-                  <Typography variant="h6">{t("no-recent-search")}</Typography>
+                    <Typography variant="h6">
+                      {t("route-search-no-result")}
+                    </Typography>
+                  </Box>
+                  <Typography variant="body1">
+                    {t("suggest-update-database")}
+                  </Typography>
                 </>
+              ) : (
+                <Box display="flex" alignItems="center" gap={2}>
+                  <Box display="flex" alignItems="center">
+                    <SentimentVeryDissatisfiedIcon fontSize="small" />
+                    {searchRoute.length > 0 && (
+                      <Typography variant="h6">
+                        &quot;{searchRoute}&quot;
+                      </Typography>
+                    )}
+                  </Box>
+                  <Typography variant="h6">{t("no-recent-search")}</Typography>
+                </Box>
               )}
             </Box>
             {availableBoardTab[index] !== "all" && (

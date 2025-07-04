@@ -135,11 +135,13 @@ export const ReactNativeContextProvider = ({
       if (
         geoPermission === null ||
         geoPermission === "opening" ||
+        geoPermission === "force-opening" ||
         geoPermission === "granted"
       ) {
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
             type: "start-geolocation",
+            force: geoPermission === "force-opening",
           })
         );
       } else if (geoPermission === "closed") {
