@@ -190,6 +190,11 @@ const Settings = () => {
             vibrate(vibrateDuration);
             if (geoPermission === "granted") {
               updateGeoPermission("closed");
+            } else if (
+              geoPermission === "force-opening" ||
+              geoPermission === "opening"
+            ) {
+              updateGeoPermission("closed");
             } else {
               updateGeoPermission("force-opening", () => {
                 setShowGeoPermissionDenied(true);
