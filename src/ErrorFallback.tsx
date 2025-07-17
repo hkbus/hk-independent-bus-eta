@@ -25,7 +25,7 @@ const ErrorFallback = ({ error }: Props) => {
     <div style={{ color: "#fff", fontSize: 18 }}>
       <span>
         Sorry there is an error. Would you like to report it to the{" "}
-        <a className="tg" href="https://t.me/hkbusapp">
+        <a className="tg" href="https://t.me/+T245uB32DeNlNjJl">
           Telegram group
         </a>
         ?
