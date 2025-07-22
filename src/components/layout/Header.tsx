@@ -146,6 +146,7 @@ const Header = () => {
           navigate(`/${language}`);
         }}
         rel="nofollow"
+        aria-label="Home"
       >
         {onlineStatus === "online" && <Box sx={appTitleSx} />}
         {onlineStatus === "offline" && (
@@ -195,6 +196,7 @@ const Header = () => {
           }
           navigate(`/${language}/board`, { replace: true });
         }}
+        aria-label="search input, you may enter the route directly"
       />
       <Box sx={weatherPanelSx}>
         {weatherCodes.slice(0, 2).map((code) => (
@@ -230,6 +232,7 @@ const Header = () => {
           variant="text"
           disableElevation
           disableRipple
+          aria-label="Language button"
         >
           {language !== "zh" ? "繁" : "En"}
         </Button>
@@ -238,6 +241,7 @@ const Header = () => {
             vibrate(vibrateDuration);
             toggleColorMode();
           }}
+          aria-label="color theme button"
         >
           {_colorMode === "system" && (
             <SettingsBrightnessIcon fontSize="small" />
@@ -249,6 +253,7 @@ const Header = () => {
           component={Link}
           to={`/${language}/settings`}
           rel="nofollow"
+          aria-label="settings button"
         >
           <SettingsIcon fontSize="small" />
         </IconButton>

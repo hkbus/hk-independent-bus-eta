@@ -25,7 +25,7 @@ const Support = () => {
       <List sx={{ py: 0 }}>
         <ListItemButton
           component="a"
-          href="https://t.me/hkbusapp"
+          href="https://t.me/+T245uB32DeNlNjJl"
           target="_blank"
           rel="noreferrer"
         >
@@ -36,7 +36,7 @@ const Support = () => {
           </ListItemAvatar>
           <ListItemText
             primary={t("Telegram 交流區")}
-            secondary={"https://t.me/hkbusapp"}
+            secondary={"https://t.me/+T245uB32DeNlNjJl"}
           />
         </ListItemButton>
         <ListItemButton

@@ -28,7 +28,13 @@ import {
 import { DeviceOrientationPermission } from "react-world-compass";
 import useLanguage from "../hooks/useTranslation";
 
-type GeoPermission = "opening" | "granted" | "denied" | "closed" | null;
+type GeoPermission =
+  | "opening"
+  | "force-opening"
+  | "granted"
+  | "denied"
+  | "closed"
+  | null;
 
 export interface AppState {
   searchRoute: string;
@@ -155,6 +161,7 @@ const AppContext = React.createContext<AppContextValue>({} as AppContextValue);
 const isGeoPermission = (input: unknown): input is GeoPermission => {
   return (
     input === "opening" ||
+    input === "force-opening" ||
     input === "granted" ||
     input === "denied" ||
     input === null
@@ -352,8 +359,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
 
   const updateGeoPermission = useCallback(
     (geoPermission: AppState["geoPermission"], deniedCallback?: () => void) => {
-      if (geoPermission === "opening") {
-        setGeoPermission("opening");
+      if (geoPermission === "opening" || geoPermission === "force-opening") {
+        setGeoPermission(geoPermission);
         if (window.iOSRNWebView !== true) {
           geoWatcherId.current = navigator.geolocation.watchPosition(
             ({ coords: { latitude, longitude } }) => {

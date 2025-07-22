@@ -113,7 +113,9 @@ const App = () => {
                 />
                 <Route
                   path="/telegram"
-                  element={<RedirectPage url="https://t.me/hkbusapp" />}
+                  element={
+                    <RedirectPage url="https://t.me/+T245uB32DeNlNjJl" />
+                  }
                 />
                 <Route
                   path="/instagram"

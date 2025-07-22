@@ -69,20 +69,10 @@ const RouteBoard = () => {
     <Box
       sx={{
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "column-reverse",
         height: "100%",
       }}
     >
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          overflowY: "scroll",
-        }}
-      >
-        <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
-      </Box>
       <Box
         sx={{
           height: "auto",
@@ -93,6 +83,16 @@ const RouteBoard = () => {
         }}
       >
         <RouteInputPad boardTab={boardTab} />
+      </Box>
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflowY: "scroll",
+        }}
+      >
+        <RouteList boardTab={boardTab} setBoardTab={setBoardTab} />
       </Box>
     </Box>
   );
