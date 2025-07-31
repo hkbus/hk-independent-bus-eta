@@ -141,7 +141,7 @@ const getRoutes = ({
         stop[2] < searchRange
     )
     .sort((a, b) => a[2] - b[2])
-    .slice(0, 20)
+    .slice(0, 200)
     .reduce(
       (acc, [stopId]) => {
         Object.entries(routeList).forEach(([key, route]) => {
