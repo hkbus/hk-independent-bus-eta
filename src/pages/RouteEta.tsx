@@ -269,8 +269,8 @@ const getRouteEntry = (id: string, routeList: RouteList) => {
       Object.keys(routeList).filter((v) => v.startsWith(prefix))
     ).bestMatch.target;
   } catch (e) {
-    console.error(e)
-    return Object.keys(routeList)[0]
+    console.error(e);
+    return Object.keys(routeList)[0];
   }
 };
 
