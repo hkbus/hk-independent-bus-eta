@@ -263,10 +263,15 @@ const RouteEta = () => {
 const getRouteEntry = (id: string, routeList: RouteList) => {
   if (routeList[id] !== undefined) return id;
   const prefix = id.split("-")[0];
-  return StrSim.findBestMatch(
-    id.toUpperCase(),
-    Object.keys(routeList).filter((v) => v.startsWith(prefix))
-  ).bestMatch.target;
+  try {
+    return StrSim.findBestMatch(
+      id.toUpperCase(),
+      Object.keys(routeList).filter((v) => v.startsWith(prefix))
+    ).bestMatch.target;
+  } catch (e) {
+    console.error(e)
+    return Object.keys(routeList)[0]
+  }
 };
 
 // TODO: better handling on buggy data in database
