@@ -40,6 +40,17 @@ const TimeReport = ({
     [routeList, routeId, stopList]
   );
 
+  const filteredEtas = useMemo(() => {
+    if (!etas) return etas;
+    if (co.includes("mtr")) {
+      return etas.filter(eta => 
+        eta.dest.en.toLowerCase() === routeList[routeId].dest.en.toLowerCase() &&
+        eta.dest.zh === routeList[routeId].dest.zh
+      );
+    }
+    return etas;
+  }, [etas, co, routeList, routeId]);
+
   const noScheduleRemark = useMemo(() => {
     let isEndOfTrainLine = false;
     if (co[0] === "mtr") {
@@ -50,25 +61,25 @@ const TimeReport = ({
         stops["lightRail"].indexOf(stopId) + 1 >= stops["lightRail"].length;
     }
 
-    if (etas === null) {
+    if (filteredEtas === null) {
       return null;
     }
 
-    if (isEndOfTrainLine && etas.length === 0) {
+    if (isEndOfTrainLine && filteredEtas.length === 0) {
       return t("終點站");
     } else if (
-      etas.length > 0 &&
-      etas.every((e) => !e.eta) &&
-      etas[0].remark[language]
+      filteredEtas.length > 0 &&
+      filteredEtas.every((e: Eta) => !e.eta) &&
+      filteredEtas[0].remark[language]
     ) {
-      return etas[0].remark[language];
-    } else if (etas.length === 0 || etas.every((e) => !e.eta)) {
+      return filteredEtas[0].remark[language];
+    } else if (filteredEtas.length === 0 || filteredEtas.every((e: Eta) => !e.eta)) {
       return t("未有班次資料");
     }
     return null;
-  }, [etas, co, stops, stopId, t, language]);
+  }, [filteredEtas, co, stops, stopId, t, language]);
 
-  if (etas == null) {
+  if (filteredEtas == null) {
     return (
       <Box sx={containerSx}>
         <LinearProgress />
@@ -84,9 +95,9 @@ const TimeReport = ({
         </Typography>
       )}
       {noScheduleRemark}
-      {etas.length > 0 &&
-        etas.every((e) => e.eta) &&
-        etas.map((eta, idx) => (
+      {filteredEtas.length > 0 &&
+        filteredEtas.every((e: Eta) => e.eta) &&
+        filteredEtas.map((eta: Eta, idx: number) => (
           <EtaLine
             key={`route-${idx}`}
             eta={eta}
