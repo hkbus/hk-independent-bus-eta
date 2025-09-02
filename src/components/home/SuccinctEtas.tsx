@@ -57,11 +57,8 @@ const SuccinctEtas = ({
           getPlatformSymbol(Number(platform[1]), platformMode) + " ";
       }
 
-      const exactTimeJsx = (
-        <Box
-          component="span"
-          sx={{ fontSize: etaFormat !== "exact" ? "0.9em" : "1rem" }}
-        >
+      const prefixJsx = (
+        <>
           {isScheduled && annotateScheduled && (
             <>
               <ScheduleIcon sx={{ fontSize: "0.9em" }} />
@@ -69,8 +66,17 @@ const SuccinctEtas = ({
             </>
           )}
           {platformSymbol}
+          {eta.co === "mtr" && eta.dest[language] + " "}
           {trains.length === 1 && <SingleTrainIcon />}
           {trains.length === 2 && <DoubleTrainIcon />}
+        </>
+      );
+
+      const exactTimeJsx = (
+        <Box
+          component="span"
+          sx={{ fontSize: etaFormat !== "exact" ? "0.9em" : "1rem" }}
+        >
           {eta.eta.slice(11, 16)}
         </Box>
       );
@@ -78,9 +84,6 @@ const SuccinctEtas = ({
       const isTrain = eta.co === "mtr" || eta.co === "lightRail";
       const waitTimeJsx = (
         <Box component="span">
-          {platformSymbol}
-          {etaFormat === "diff" && trains.length === 1 && <SingleTrainIcon />}
-          {etaFormat === "diff" && trains.length === 2 && <DoubleTrainIcon />}
           <Box
             component="span"
             sx={{
@@ -89,12 +92,6 @@ const SuccinctEtas = ({
                 highlight ? theme.palette.warning.main : "inherit",
             }}
           >
-            {isScheduled && annotateScheduled && etaFormat === "diff" && (
-              <>
-                <ScheduleIcon color="inherit" sx={{ fontSize: "0.9rem" }} />
-                &nbsp;
-              </>
-            )}
             {waitTime < (isTrain ? 2 : 1) ? " - " : `${waitTime} `}
           </Box>
           <Box component="span" sx={{ fontSize: "0.8em" }}>
@@ -102,18 +99,18 @@ const SuccinctEtas = ({
           </Box>
         </Box>
       );
-      switch (etaFormat) {
-        case "exact":
-          return exactTimeJsx;
-        case "diff":
-          return waitTimeJsx;
-        default:
-          return (
+      return (
+        <>
+          {prefixJsx}
+          {etaFormat === "exact" && exactTimeJsx}
+          {etaFormat === "diff" && waitTimeJsx}
+          {etaFormat === "mixed" && (
             <>
               {exactTimeJsx}&emsp;{waitTimeJsx}
             </>
-          );
-      }
+          )}
+        </>
+      );
     }
   };
 
