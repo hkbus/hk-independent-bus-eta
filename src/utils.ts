@@ -156,19 +156,31 @@ export const setSeoHeader = ({
     .querySelector('link[rel="alternative"][hreflang="en"]')
     ?.setAttribute(
       "href",
-      "https://hkbus.app" + window.location.pathname.replace(/\(/g, "%28").replace(/\)/g, "%29").replace(`/${lang}`, "/en")
+      "https://hkbus.app" +
+        window.location.pathname
+          .replace(/\(/g, "%28")
+          .replace(/\)/g, "%29")
+          .replace(`/${lang}`, "/en")
     );
   document
     .querySelector('link[rel="alternative"][hreflang="zh-Hant"]')
     ?.setAttribute(
       "href",
-      "https://hkbus.app" + window.location.pathname.replace(/\(/g, "%28").replace(/\)/g, "%29").replace(`/${lang}`, "/zh")
+      "https://hkbus.app" +
+        window.location.pathname
+          .replace(/\(/g, "%28")
+          .replace(/\)/g, "%29")
+          .replace(`/${lang}`, "/zh")
     );
   document
     .querySelector('link[rel="alternative"][hreflang="x-default"]')
     ?.setAttribute(
       "href",
-      "https://hkbus.app" + window.location.pathname.replace(/\(/g, "%28").replace(/\)/g, "%29").replace(`/${lang}`, "/zh")
+      "https://hkbus.app" +
+        window.location.pathname
+          .replace(/\(/g, "%28")
+          .replace(/\)/g, "%29")
+          .replace(`/${lang}`, "/zh")
     );
   // facebook
   document
