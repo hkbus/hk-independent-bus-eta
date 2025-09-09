@@ -29,7 +29,9 @@ const DataImport = () => {
       throttle((str: string) => {
         try {
           return JSON.parse(
-            decompress(decodeURIComponent(str), { inputEncoding: "Base64" })
+            decompress(decodeURIComponent(str).replace(/-/g, "/"), {
+              inputEncoding: "Base64",
+            })
           );
         } catch (e) {
           return {};

@@ -61,7 +61,7 @@ const DataExport = () => {
             0
           ),
           { outputEncoding: "Base64" }
-        )
+        ).replace(/\//g, "-")
       ),
     [
       collections,
