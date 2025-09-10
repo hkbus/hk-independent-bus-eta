@@ -7,6 +7,7 @@ import { Eta } from "hk-bus-eta";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
 import useLanguage from "../../hooks/useTranslation";
 import { getPlatformSymbol } from "../../utils";
+import DbContext from "../../context/DbContext";
 
 interface SuccinctEtasProps {
   routeId: string;
@@ -22,8 +23,12 @@ const SuccinctEtas = ({
   const { t } = useTranslation();
   const language = useLanguage();
   const { etaFormat, annotateScheduled, platformMode } = useContext(AppContext);
+  const {
+    db: { routeList },
+  } = useContext(DbContext);
   const _etas = useEtas(routeId, Boolean(value));
   const etas = value ?? _etas;
+  const isCoop = routeList[routeId.split("/")[0]].co.length > 1;
 
   const getEtaString = (
     eta: Eta | null,
@@ -59,6 +64,7 @@ const SuccinctEtas = ({
 
       const prefixJsx = (
         <>
+          <Typography variant="caption">{isCoop && t(eta.co)}&emsp;</Typography>
           {isScheduled && annotateScheduled && (
             <>
               <ScheduleIcon sx={{ fontSize: "0.9em" }} />
