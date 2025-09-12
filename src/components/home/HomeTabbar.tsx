@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Tabs, Tab, SxProps, Theme } from "@mui/material";
 import {
   Star as StarIcon,
@@ -17,6 +17,25 @@ interface HomeTabbarProps {
 const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
   const { t } = useTranslation();
   const { collections } = useContext(CollectionContext);
+
+  useEffect(() => {
+    // Enable horizontal scroll with mouse wheel (PC)
+    const tabsScroller = document.querySelector(".MuiTabs-scroller");
+
+    const handleWheel = (event: Event) => {
+      const wheelEvent = event as WheelEvent;
+      if (wheelEvent.deltaY !== 0) {
+        wheelEvent.preventDefault();
+        if (tabsScroller) {
+          tabsScroller.scrollLeft += wheelEvent.deltaY * 0.3;
+        }
+      }
+    };
+    tabsScroller?.addEventListener("wheel", handleWheel);
+    return () => {
+      tabsScroller?.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
 
   return (
     <Tabs
