@@ -528,8 +528,8 @@ export const formatHandling = (
         .sort(([, a], [, b]) => (a < b ? -1 : 1))[0][0];
       return `${routeUrl}/${_stops.indexOf(stop as string)}`;
     })
-    .concat(Array(40).fill("")) // padding
-    .slice(0, 40)
+    .concat(Array(80).fill("")) // padding
+    .slice(0, 80)
     .join("|");
 };
 
