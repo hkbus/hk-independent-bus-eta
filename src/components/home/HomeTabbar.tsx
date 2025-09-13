@@ -8,6 +8,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { RouteCollection } from "../../@types/types";
 import CollectionContext from "../../CollectionContext";
+import { useHorizontalWheelScroll } from "../../hooks/useHorizontalWheelScroll";
 
 interface HomeTabbarProps {
   homeTab: HomeTabType | string;
@@ -17,6 +18,7 @@ interface HomeTabbarProps {
 const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
   const { t } = useTranslation();
   const { collections } = useContext(CollectionContext);
+  useHorizontalWheelScroll();
 
   return (
     <Tabs
@@ -25,6 +27,7 @@ const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
       sx={tabbarSx}
       variant="scrollable"
       scrollButtons
+      allowScrollButtonsMobile
     >
       <Tab
         iconPosition="start"

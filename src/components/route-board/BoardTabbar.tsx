@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 import AppContext from "../../context/AppContext";
 import { BoardTabType } from "../../@types/types";
+import { useHorizontalWheelScroll } from "../../hooks/useHorizontalWheelScroll";
 
 interface BoardTabbarProps {
   boardTab: BoardTabType;
@@ -14,6 +15,7 @@ interface BoardTabbarProps {
 const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
   const { t } = useTranslation();
   const { isRecentSearchShown } = useContext(AppContext);
+  useHorizontalWheelScroll();
 
   return (
     <Box>
@@ -21,6 +23,9 @@ const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
         value={boardTab}
         onChange={(_, v) => onChangeTab(v, true)}
         sx={tabbarSx}
+        variant="scrollable"
+        scrollButtons
+        allowScrollButtonsMobile
       >
         {Object.keys(TRANSPORT_SEARCH_OPTIONS)
           .filter((option) => isRecentSearchShown || option !== "recent")

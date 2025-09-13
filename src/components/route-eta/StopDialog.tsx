@@ -43,6 +43,22 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
     [stops, savedStops]
   );
 
+  const updateBookmark = useCallback(
+    (dialogStop: [Company, string]) => {
+      // Find the savedStop in localhost related to dialogStops and update
+      const bookmarkedStop = stops.find((stop) =>
+        savedStops.includes(stop.join("|"))
+      );
+
+      if (bookmarkedStop) {
+        updateSavedStops(bookmarkedStop.join("|"));
+      } else {
+        updateSavedStops(dialogStop.join("|"));
+      }
+    },
+    [savedStops, stops, updateSavedStops]
+  );
+
   const handleClickDirection = useCallback(() => {
     if (stopList[stops[0][1]]?.location) {
       const { lat, lng } = stopList[stops[0][1]].location;
@@ -64,7 +80,7 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
     <Dialog open={open} onClose={onClose} sx={rootSx}>
       <DialogTitle sx={titleSx}>
         <Box>
-          <IconButton onClick={() => updateSavedStops(stops[0].join("|"))}>
+          <IconButton onClick={() => updateBookmark(stops[0])}>
             {bookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
           </IconButton>
           {stopList[stops[0][1]]?.name[language]}
