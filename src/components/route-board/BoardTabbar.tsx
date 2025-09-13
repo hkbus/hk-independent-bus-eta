@@ -86,4 +86,7 @@ const tabbarSx: SxProps<Theme> = {
   [`& .MuiTabs-scroller`]: {
     overflow: "auto !important",
   },
+  [`& .Mui-selected`]: {
+    fontWeight: 700,
+  },
 };

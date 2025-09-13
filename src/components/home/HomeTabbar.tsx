@@ -117,4 +117,7 @@ const tabbarSx: SxProps<Theme> = {
       fontSize: "0.8em",
     },
   },
+  [`& .Mui-selected`]: {
+    fontWeight: 700,
+  },
 };
