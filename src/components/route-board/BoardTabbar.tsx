@@ -1,10 +1,11 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Box, Tabs, Tab, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 import AppContext from "../../context/AppContext";
 import { BoardTabType } from "../../@types/types";
+import { useHorizontalWheelScroll } from "../../hooks/useHorizontalWheelScroll";
 
 interface BoardTabbarProps {
   boardTab: BoardTabType;
@@ -14,25 +15,7 @@ interface BoardTabbarProps {
 const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
   const { t } = useTranslation();
   const { isRecentSearchShown } = useContext(AppContext);
-
-  useEffect(() => {
-    // Enable horizontal scroll with mouse wheel (PC)
-    const tabsScroller = document.querySelector(".MuiTabs-scroller");
-
-    const handleWheel = (event: Event) => {
-      const wheelEvent = event as WheelEvent;
-      if (wheelEvent.deltaY !== 0) {
-        wheelEvent.preventDefault();
-        if (tabsScroller) {
-          tabsScroller.scrollLeft += wheelEvent.deltaY * 0.3;
-        }
-      }
-    };
-    tabsScroller?.addEventListener("wheel", handleWheel);
-    return () => {
-      tabsScroller?.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
+  useHorizontalWheelScroll();
 
   return (
     <Box>

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import useLanguage from "../../hooks/useTranslation";
 import CollectionContext from "../../CollectionContext";
 import DbContext from "../../context/DbContext";
+import { useHorizontalWheelScroll } from "../../hooks/useHorizontalWheelScroll";
 
 interface HomeTabbarProps {
   stopTab: string | null;
@@ -17,6 +18,8 @@ const StopTabbar = ({ stopTab, onChangeTab }: HomeTabbarProps) => {
   const {
     db: { stopList },
   } = useContext(DbContext);
+
+  useHorizontalWheelScroll();
 
   if (savedStops.length === 0) {
     return (
@@ -34,6 +37,7 @@ const StopTabbar = ({ stopTab, onChangeTab }: HomeTabbarProps) => {
       sx={tabbarSx}
       variant="scrollable"
       scrollButtons
+      allowScrollButtonsMobile
     >
       {savedStops
         .map((stopId) => stopId.split("|"))
