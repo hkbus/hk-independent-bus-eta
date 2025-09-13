@@ -44,6 +44,7 @@ const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
       sx={tabbarSx}
       variant="scrollable"
       scrollButtons
+      allowScrollButtonsMobile
     >
       <Tab
         iconPosition="start"
@@ -116,8 +117,5 @@ const tabbarSx: SxProps<Theme> = {
     "& .MuiTab-root": {
       fontSize: "0.8em",
     },
-  },
-  [`& .Mui-selected`]: {
-    fontWeight: 700,
   },
 };

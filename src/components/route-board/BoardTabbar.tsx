@@ -41,7 +41,8 @@ const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
         onChange={(_, v) => onChangeTab(v, true)}
         sx={tabbarSx}
         variant="scrollable"
-        scrollButtons={true}
+        scrollButtons
+        allowScrollButtonsMobile
       >
         {Object.keys(TRANSPORT_SEARCH_OPTIONS)
           .filter((option) => isRecentSearchShown || option !== "recent")
@@ -85,8 +86,5 @@ const tabbarSx: SxProps<Theme> = {
   },
   [`& .MuiTabs-scroller`]: {
     overflow: "auto !important",
-  },
-  [`& .Mui-selected`]: {
-    fontWeight: 700,
   },
 };
