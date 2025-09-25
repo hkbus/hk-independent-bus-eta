@@ -121,7 +121,7 @@ const EtaLine = ({
       return true;
     }
     for (const routeDest of routeDests) {
-      if (routeDest.en.toLowerCase() === dest.en?.toLowerCase()) {
+      if (routeDest.en.toLowerCase() === dest.en.toLowerCase()) {
         return false;
       }
       if (routeDest.zh === dest.zh) {
