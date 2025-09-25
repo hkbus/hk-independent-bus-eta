@@ -41,7 +41,3 @@ body {
     transform: rotate(360deg);
   }
 }
-
-.Mui-selected {
-  font-weight: 700 !important;
-}
