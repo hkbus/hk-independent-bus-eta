@@ -1,10 +1,10 @@
 {
   "content": {
     "zh": [
-      "受雲端平台 Azure 技術故障影響，九巴報時資訊十分不穩"
+      "受雲端平台 Azure 技術故障影響，九巴及港鐵報時資訊十分不穩。"
     ],
     "en": [
-      "Due to technical issues of Azure, ETA of KMB cannot be displayed normally."
+      "Due to technical issues of Azure, ETA of KMB and MTR cannot be displayed normally."
     ]
   },
   "link": {
