@@ -1,59 +1,39 @@
-import Leaflet from "leaflet";
-import { useContext } from "react";
-import { TileLayer } from "react-leaflet";
+import { useContext, useEffect } from "react";
 import AppContext from "../../context/AppContext";
-import useLanguage from "../../hooks/useTranslation";
 import { Box, SxProps, Theme } from "@mui/material";
+import { Map } from "maplibre-gl";
 
-const BaseTile = () => {
+interface BaseTileProps {
+  map: Map | null;
+}
+
+const BaseTile = ({ map }: BaseTileProps) => {
   const { colorMode } = useContext(AppContext);
-  const language = useLanguage();
+
+  useEffect(() => {
+    if (!map) return;
+  }, [map, colorMode]);
+
   return (
-    <>
-      <TileLayer
-        crossOrigin="anonymous"
-        maxZoom={Leaflet.Browser.retina ? 20 : 19}
-        maxNativeZoom={20}
-        keepBuffer={10}
-        updateWhenIdle={false}
-        url={
-          colorMode === "light"
-            ? import.meta.env.VITE_BASE_MAP_URL
-            : import.meta.env.VITE_BASE_MAP_URL_DARK
-        }
-      />
-      <TileLayer
-        crossOrigin="anonymous"
-        maxZoom={Leaflet.Browser.retina ? 20 : 19}
-        maxNativeZoom={20}
-        keepBuffer={10}
-        updateWhenIdle={false}
-        attribution='&copy; <a href="https://api.portal.hkmapservice.gov.hk/disclaimer" target="_blank">Lands Department</a>'
-        url={import.meta.env.VITE_MAP_LABEL_URL.replace(
-          "{lang}",
-          language === "zh" ? "tc" : "en"
-        )}
-      />
-      <div className="leaflet-bottom leaflet-right">
-        <Box sx={attrSx}>
-          <img src="/img/Lands_Department.svg" alt="Lands Department" />
-        </Box>
-      </div>
-    </>
+    <Box sx={attrSx}>
+      <img src="/img/Lands_Department.svg" alt="Lands Department" />
+    </Box>
   );
 };
 
 export default BaseTile;
 
 const attrSx: SxProps<Theme> = {
+  position: "absolute",
+  bottom: 20,
+  right: 40,
   width: 32,
   height: 32,
-  marginBottom: "20px !important",
-  marginRight: "40px !important",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   pointerEvents: "none",
+  zIndex: 1,
   "& img": {
     width: 20,
     height: 20,

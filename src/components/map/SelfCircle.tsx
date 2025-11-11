@@ -1,26 +1,24 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import AppContext from "../../context/AppContext";
 import { checkPosition } from "../../utils";
-import { Circle, Marker, MarkerProps } from "react-leaflet";
-import L from "leaflet";
+import { Map, Marker } from "maplibre-gl";
 import useCompass, { OrientationState } from "react-world-compass";
-import "leaflet-rotatedmarker";
 import { Location } from "hk-bus-eta";
 
-interface RotatedMarkerProps extends MarkerProps {
-  rotationOrigin: string;
+interface SelfCircleProps {
+  map: Map | null;
 }
 
-interface RotatedMarkerRef extends L.Marker {
-  setRotationAngle: (angle: number) => void;
-  setRotationOrigin: (origin: string) => void;
-}
-
-const RotatedMarker = (props: RotatedMarkerProps) => {
-  const markerRef = useRef<RotatedMarkerRef | null>(null);
+const SelfCircle = ({ map }: SelfCircleProps) => {
+  const { geolocation, geoPermission } = useContext(AppContext);
+  const markerRef = useRef<Marker | null>(null);
+  const [state, setState] = useState<Location>(
+    checkPosition(geolocation.current)
+  );
 
   const _compass = useCompass(100);
   const [compass, setCompass] = useState<OrientationState | null>(null);
+
   useEffect(() => {
     const elf = (nativeEvent: any) => {
       try {
@@ -46,28 +44,6 @@ const RotatedMarker = (props: RotatedMarkerProps) => {
   }, [_compass]);
 
   useEffect(() => {
-    const marker = markerRef.current;
-    if (marker && compass) {
-      marker.setRotationAngle(360 - compass.degree);
-      marker.setRotationOrigin("center");
-    }
-  }, [compass]);
-
-  if (compass === null) {
-    return <></>;
-  }
-
-  return <Marker ref={markerRef} {...props} />;
-};
-
-const SelfCircle = () => {
-  const { geolocation, geoPermission } = useContext(AppContext);
-  const icon = useMemo(() => myIcon(), []);
-  const [state, setState] = useState<Location>(
-    checkPosition(geolocation.current)
-  );
-
-  useEffect(() => {
     const interval = setInterval(() => {
       setState(checkPosition(geolocation.current));
     }, 100);
@@ -76,29 +52,102 @@ const SelfCircle = () => {
     };
   }, [geolocation]);
 
-  if (geoPermission !== "granted") {
-    return null;
-  }
+  useEffect(() => {
+    if (!map || geoPermission !== "granted") {
+      if (markerRef.current) {
+        markerRef.current.remove();
+        markerRef.current = null;
+      }
+      return;
+    }
 
-  return (
-    <>
-      <Circle center={state} radius={25} />
-      <RotatedMarker
-        key="rotated-marker"
-        rotationOrigin="center"
-        icon={icon}
-        position={state}
-      />
-    </>
-  );
+    // Add circle layer if not exists
+    if (!map.getSource("self-circle")) {
+      map.addSource("self-circle", {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "Point",
+            coordinates: [state.lng, state.lat],
+          },
+        },
+      });
+
+      map.addLayer({
+        id: "self-circle-layer",
+        type: "circle",
+        source: "self-circle",
+        paint: {
+          "circle-radius": 25,
+          "circle-color": "#3887be",
+          "circle-opacity": 0.3,
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#3887be",
+        },
+      });
+    }
+
+    // Create marker if not exists
+    if (!markerRef.current) {
+      const el = document.createElement("div");
+      el.className = "self-center";
+      el.style.width = "20px";
+      el.style.height = "20px";
+      el.style.backgroundImage = "url(/img/self.svg)";
+      el.style.backgroundSize = "contain";
+      el.style.backgroundRepeat = "no-repeat";
+      el.style.backgroundPosition = "center";
+      el.style.transition = "transform 0.1s ease-out";
+      el.style.transformOrigin = "center";
+
+      markerRef.current = new Marker({
+        element: el,
+        anchor: "center",
+      })
+        .setLngLat([state.lng, state.lat])
+        .addTo(map);
+    }
+
+    // Update position
+    const source = map.getSource("self-circle") as any;
+    if (source) {
+      source.setData({
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Point",
+          coordinates: [state.lng, state.lat],
+        },
+      });
+    }
+
+    if (markerRef.current) {
+      markerRef.current.setLngLat([state.lng, state.lat]);
+      
+      // Update rotation
+      if (compass) {
+        const el = markerRef.current.getElement();
+        el.style.transform = `rotate(${360 - compass.degree}deg)`;
+      }
+    }
+
+    return () => {
+      if (markerRef.current) {
+        markerRef.current.remove();
+        markerRef.current = null;
+      }
+      if (map.getLayer("self-circle-layer")) {
+        map.removeLayer("self-circle-layer");
+      }
+      if (map.getSource("self-circle")) {
+        map.removeSource("self-circle");
+      }
+    };
+  }, [map, state, geoPermission, compass]);
+
+  return null;
 };
 
 export default SelfCircle;
-
-const myIcon = () => {
-  return L.divIcon({
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-    className: "self-center",
-  });
-};

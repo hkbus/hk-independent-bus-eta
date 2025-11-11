@@ -17,27 +17,26 @@ const CompassControl = () => {
   }
 
   return (
-    <div className="leaflet-bottom leaflet-right">
-      <Box
-        sx={compassControlSx}
-        className="leaflet-control leaflet-bar"
-        onClick={handleClick}
-      >
-        <ExploreIcon sx={{ p: "3px", color: "black" }} />
-      </Box>
-    </div>
+    <Box sx={compassControlSx} onClick={handleClick}>
+      <ExploreIcon sx={{ p: "3px", color: "black" }} />
+    </Box>
   );
 };
 
 export default CompassControl;
 
 const compassControlSx: SxProps<Theme> = {
+  position: "absolute",
+  bottom: 57,
+  right: 5,
   background: "white",
   width: 32,
   height: 32,
-  marginBottom: "57px !important",
-  marginRight: "5px !important",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  borderRadius: "4px",
+  boxShadow: "0 0 0 2px rgba(0,0,0,0.1)",
+  cursor: "pointer",
+  zIndex: 1,
 };

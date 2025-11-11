@@ -8,29 +8,28 @@ interface CenterControlProps {
 
 const CenterControl = ({ onClick }: CenterControlProps) => {
   return (
-    <div className="leaflet-bottom leaflet-right">
-      <Box
-        sx={centerControlSx}
-        className="leaflet-control leaflet-bar"
-        onClick={onClick}
-      >
-        <MyLocationIcon className="map-centralControl" />
-      </Box>
-    </div>
+    <Box sx={centerControlSx} onClick={onClick}>
+      <MyLocationIcon className="map-centralControl" />
+    </Box>
   );
 };
 
 export default CenterControl;
 
 const centerControlSx: SxProps<Theme> = {
+  position: "absolute",
+  bottom: 20,
+  right: 5,
   background: "white",
   width: 32,
   height: 32,
-  marginBottom: "20px !important",
-  marginRight: "5px !important",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  borderRadius: "4px",
+  boxShadow: "0 0 0 2px rgba(0,0,0,0.1)",
+  cursor: "pointer",
+  zIndex: 1,
   "& .map-centralControl": {
     padding: "2px",
     color: "black !important",

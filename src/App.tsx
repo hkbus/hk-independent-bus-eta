@@ -7,7 +7,7 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material/styles";
-import "leaflet/dist/leaflet.css";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { useContext, useMemo } from "react";
 import {
   Navigate,
@@ -22,6 +22,8 @@ import Root from "./components/layout/Root";
 import RedirectPage from "./pages/RedirectPage";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import useLanguage from "./hooks/useTranslation";
+import maplibregl from "maplibre-gl";
+import { Protocol } from "pmtiles";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const RouteEta = React.lazy(() => import("./pages/RouteEta"));
@@ -46,6 +48,14 @@ const App = () => {
   const theme = useMemo(() => {
     return createTheme(getThemeTokens(colorMode, fontSize), [colorMode]);
   }, [colorMode, fontSize]);
+
+  useEffect(() => {
+    const protocol = new Protocol();
+    maplibregl.addProtocol("pmtiles", protocol.tile);
+    return () => {
+      maplibregl.removeProtocol("pmtiles");
+    };
+  }, []);
 
   useEffect(() => {
     // If you want to start measuring performance in your app, pass a function

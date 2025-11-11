@@ -2,28 +2,22 @@ import {
   useContext,
   useEffect,
   useRef,
-  useCallback,
   useState,
   useMemo,
 } from "react";
-import { MapContainer, Marker, GeoJSON } from "react-leaflet";
-import Leaflet from "leaflet";
 import { Box, SxProps, Theme } from "@mui/material";
 import { type Company } from "hk-bus-eta";
 import AppContext from "../../context/AppContext";
 import type { StopListEntry } from "hk-bus-eta";
 import { checkPosition, locationEqual } from "../../utils";
-import type { Map as LeafletMap, StyleFunction } from "leaflet";
 import type { Location as GeoLocation } from "hk-bus-eta";
-import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
 import { useRoutePath } from "../../hooks/useRoutePath";
 import { getLineColor } from "../../utils";
-import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
-import CenterControl from "../map/CenterControl";
-import BaseTile from "../map/BaseTile";
 import MtrExits from "../map/MtrExits";
+import maplibregl, { Map as MapLibreMap, Marker } from "maplibre-gl";
+import { createMapStyle } from "../../utils/mapStyle";
 
 interface RouteMapProps {
   routeId: string;
@@ -31,16 +25,13 @@ interface RouteMapProps {
   stopIdx: number;
   route: string;
   companies: Company[];
-  onMarkerClick: (idx: number, event: Leaflet.LeafletMouseEvent) => void;
+  onMarkerClick: (idx: number, event: any) => void;
 }
 
 interface RouteMapRef {
   initialCenter: GeoLocation;
-  map?: LeafletMap;
+  map?: MapLibreMap;
   currentStopCenter: GeoLocation;
-  /**
-   * last center that requested by map.flyTo() / map.setView()
-   */
   center: GeoLocation;
   isFollow: boolean;
   stops: Array<StopListEntry>;
@@ -55,13 +46,14 @@ const RouteMap = ({
   companies,
   onMarkerClick,
 }: RouteMapProps) => {
-  const { geolocation, geoPermission, updateGeoPermission } =
+  const { geolocation, colorMode } =
     useContext(AppContext);
   const {
     db: { stopList },
   } = useContext(DbContext);
-  const language = useLanguage();
-  const [map, setMap] = useState<Leaflet.Map | null>(null);
+  const [map, setMap] = useState<MapLibreMap | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const markersRef = useRef<Marker[]>([]);
   const stops = useMemo(
     () => stopIds.map((stopId) => stopList[stopId]),
     [stopList, stopIds]
@@ -78,7 +70,55 @@ const RouteMap = ({
     stopIdx: stopIdx,
   });
 
+  // Initialize map
   useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    const initialCenter = stops[stopIdx]
+      ? stops[stopIdx].location
+      : checkPosition();
+
+    const newMap = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: createMapStyle(colorMode) as any,
+      center: [initialCenter.lng, initialCenter.lat],
+      zoom: 16,
+      pitch: 0,
+      maxPitch: 0,
+      minZoom: 0,
+      maxZoom: 22,
+    });
+
+    newMap.addControl(
+      new maplibregl.GeolocateControl({
+          positionOptions: {
+              enableHighAccuracy: true
+          },
+          trackUserLocation: true
+      })
+    );
+    newMap.addControl(new maplibregl.NavigationControl({
+      visualizePitch: true,
+      visualizeRoll: true,
+      showZoom: true,
+      showCompass: true
+    }));
+
+    newMap.on("load", () => {
+      setMap(newMap);
+    });
+
+    return () => {
+      newMap.remove();
+      setMap(null);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Update center when stop changes or follow mode changes
+  useEffect(() => {
+    if (!map) return;
+
     let isFollow: boolean, _center: GeoLocation;
     if (mapRef.current.stops !== stops || mapRef.current.stopIdx !== stopIdx) {
       isFollow = false;
@@ -97,9 +137,9 @@ const RouteMap = ({
     const center = mapRef.current.center;
     if (center !== _center && !locationEqual(_center, center)) {
       if (mapRef.current.stops !== stops) {
-        mapRef.current.map?.setView(_center);
+        map.setCenter([_center.lng, _center.lat]);
       } else {
-        mapRef.current.map?.flyTo(_center);
+        map.flyTo({ center: [_center.lng, _center.lat] });
       }
     }
     mapRef.current = {
@@ -112,126 +152,141 @@ const RouteMap = ({
       stopIdx: stopIdx,
       isFollow: isFollow,
     };
-  }, [stops, stopIdx, geolocation]);
+  }, [stops, stopIdx, geolocation, map]);
 
+  // Update map reference and drag handlers
   useEffect(() => {
-    if (map) {
+    if (!map) return;
+
+    mapRef.current = {
+      ...mapRef.current,
+      map: map,
+    };
+
+    const stopFollowingDeviceGeoLocation = () => {
       mapRef.current = {
         ...mapRef.current,
-        map: map,
+        center: mapRef.current.currentStopCenter,
+        isFollow: false,
       };
-      const stopFollowingDeviceGeoLocation = () => {
-        mapRef.current = {
-          ...mapRef.current,
-          center: mapRef.current.currentStopCenter,
-          isFollow: false,
-        };
-      };
-      map?.on({
-        dragend: stopFollowingDeviceGeoLocation,
-        dragstart: stopFollowingDeviceGeoLocation,
-      });
-      map?.setView(mapRef.current.center);
+    };
 
-      map?.invalidateSize();
+    map.on("dragend", stopFollowingDeviceGeoLocation);
+    map.on("dragstart", stopFollowingDeviceGeoLocation);
 
-      return () => {
-        map.off({
-          dragstart: stopFollowingDeviceGeoLocation,
-          dragend: stopFollowingDeviceGeoLocation,
-        });
-      };
-    }
+    return () => {
+      map.off("dragstart", stopFollowingDeviceGeoLocation);
+      map.off("dragend", stopFollowingDeviceGeoLocation);
+    };
   }, [map]);
 
-  const onClickJumpToMyLocation = useCallback(() => {
-    if (geoPermission === "granted") {
-      mapRef.current.map?.flyTo(geolocation.current);
-      mapRef.current = {
-        ...mapRef.current,
-        center: geolocation.current,
-        isFollow: true,
-      };
-    } else if (geoPermission !== "denied") {
-      // ask for loading geolocation
-      mapRef.current = {
-        ...mapRef.current,
-        isFollow: true,
-      };
-      updateGeoPermission("opening");
+  // Add route path to map
+  useEffect(() => {
+    if (!map || !routePath?.features?.length) return;
+
+    const sourceId = "route-path";
+    const borderLayerId = "route-path-border";
+    const lineLayerId = "route-path-line";
+
+    if (map.getLayer(lineLayerId)) map.removeLayer(lineLayerId);
+    if (map.getLayer(borderLayerId)) map.removeLayer(borderLayerId);
+    if (map.getSource(sourceId)) map.removeSource(sourceId);
+
+    map.addSource(sourceId, {
+      type: "geojson",
+      data: routePath as any,
+    });
+
+    const lineColor = getLineColor(companies, route);
+    function darkenColor(hex: string, percent: number) {
+      let c = hex.replace("#", "");
+      if (c.length === 3) c = c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+      const num = parseInt(c, 16);
+      let r = (num >> 16) & 0xff;
+      let g = (num >> 8) & 0xff;
+      let b = num & 0xff;
+      r = Math.max(0, Math.floor(r * (1 - percent)));
+      g = Math.max(0, Math.floor(g * (1 - percent)));
+      b = Math.max(0, Math.floor(b * (1 - percent)));
+      return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
     }
-  }, [geolocation, geoPermission, updateGeoPermission]);
+    const borderColor = darkenColor(lineColor, 0.4);
+
+    map.addLayer({
+      id: borderLayerId,
+      type: "line",
+      source: sourceId,
+      paint: {
+      "line-color": borderColor,
+      "line-width": 7,
+      },
+      layout: {
+        "line-join": "round",
+        "line-cap": "round"
+      }
+    });
+
+
+    map.addLayer({
+      id: lineLayerId,
+      type: "line",
+      source: sourceId,
+      paint: {
+        "line-color": lineColor,
+        "line-width": 4,
+      },
+      layout: {
+        "line-join": "round",
+        "line-cap": "round"
+      }
+    });
+
+    return () => {}
+  }, [map, routePath, companies, route]);
+
+  // Add stop markers to map
+  useEffect(() => {
+    if (!map) return;
+
+    // Clear existing markers
+    markersRef.current.forEach((marker) => marker.remove());
+    markersRef.current = [];
+
+    // Add new markers
+    stops.forEach((stop, idx) => {
+      const el = createStopMarkerElement({
+        active: idx === stopIdx,
+        passed: idx < stopIdx,
+        companies,
+      });
+
+      const marker = new Marker({ element: el, anchor: "bottom" })
+        .setLngLat([stop.location.lng, stop.location.lat])
+        .addTo(map);
+
+      el.addEventListener("click", (e) => {
+        onMarkerClick(idx, e);
+      });
+
+      markersRef.current.push(marker);
+    });
+
+    return () => {
+      markersRef.current.forEach((marker) => marker.remove());
+      markersRef.current = [];
+    };
+  }, [map, stops, stopIdx, companies, onMarkerClick]);
 
   return (
     <Box id="route-map" sx={rootSx}>
-      <MapContainer
-        center={mapRef.current.initialCenter}
-        zoom={16}
-        scrollWheelZoom={false}
-        className={classes.mapContainer}
-        ref={setMap}
-      >
-        <BaseTile />
-        <MtrExits />
-        {stops.map((stop, idx) => (
-          <Marker
-            key={`${stop.location.lng}-${stop.location.lat}-${idx}`}
-            position={stop.location}
-            icon={StopMarker({
-              active: idx === stopIdx,
-              passed: idx < stopIdx,
-              companies,
-            })}
-            alt={`${idx}. ${stop.name[language]}`}
-            eventHandlers={{
-              click: (e) => {
-                onMarkerClick(idx, e);
-              },
-            }}
-          />
-        ))}
-        {routePath?.features?.length && (
-          <>
-            <GeoJSON
-              // @ts-expect-error "timestamp" is in the crawled routePath
-              key={routePath?.timeStamp}
-              data={routePath}
-              style={geoJsonStyle(companies, route, true)}
-            />
-            <GeoJSON
-              // @ts-expect-error "timestamp" is in the crawled routePath
-              key={routePath?.timeStamp}
-              data={routePath}
-              style={geoJsonStyle(companies, route, false)}
-            />
-          </>
-        )}
-        <SelfCircle />
-        <CenterControl onClick={onClickJumpToMyLocation} />
-        <CompassControl />
-      </MapContainer>
+      <div ref={mapContainerRef} className={classes.mapContainer} />
+      <MtrExits map={map} />
+      <CompassControl />
     </Box>
   );
 };
 
 export default RouteMap;
-
-const geoJsonStyle = (
-  companies: Company[],
-  route: string,
-  isBorder: boolean
-): StyleFunction<any> => {
-  return function () {
-    return {
-      color: isBorder ? "#000000" : getLineColor(companies, route),
-      weight: isBorder ? 6 : 4,
-      className:
-        companies.includes("ctb") && companies.includes("kmb") && !isBorder
-          ? classes.jointlyLine
-          : undefined,
-    };
-  };
-};
 
 interface StopMarkerProps {
   active: boolean;
@@ -239,71 +294,59 @@ interface StopMarkerProps {
   companies: Company[];
 }
 
-const StopMarker = ({ active, passed, companies }: StopMarkerProps) => {
+const createStopMarkerElement = ({
+  active,
+  passed,
+  companies,
+}: StopMarkerProps): HTMLElement => {
+  const el = document.createElement("div");
+  el.style.width = "30px";
+  el.style.height = "30px";
+  el.style.cursor = "pointer";
+
+  let className = classes.marker;
+  let iconUrl = "/img/bus_kmb.svg";
+
   if (companies[0] === "mtr") {
-    return Leaflet.divIcon({
-      iconSize: [20, 20],
-      iconAnchor: [10, 10],
-      className: `${classes.mtrMarker} ${classes.marker} ${
-        active ? classes.active : ""
-      } ${passed ? classes.passed : ""}`,
-    });
+    className += ` ${classes.mtrMarker}`;
+    iconUrl = "/img/mtr.svg";
+    el.style.width = "20px";
+    el.style.height = "20px";
   } else if (companies.includes("lightRail")) {
-    return Leaflet.divIcon({
-      iconSize: [20, 20],
-      iconAnchor: [10, 10],
-      className: `${classes.mtrMarker} ${classes.marker} ${
-        active ? classes.active : ""
-      } ${passed ? classes.passed : ""}`,
-    });
+    className += ` ${classes.mtrMarker}`;
+    iconUrl = "/img/mtr.svg";
+    el.style.width = "20px";
+    el.style.height = "20px";
   } else if (companies[0].startsWith("gmb")) {
-    return Leaflet.divIcon({
-      iconSize: [30, 30],
-      iconAnchor: [15, 30],
-      className: `${classes.gmbMarker} ${classes.marker} ${
-        active ? classes.active : ""
-      } ${passed ? classes.passed : ""}`,
-    });
+    className += ` ${classes.gmbMarker}`;
+    iconUrl = "/img/minibus.svg";
   } else if (companies.includes("lrtfeeder")) {
-    return Leaflet.divIcon({
-      iconSize: [30, 30],
-      iconAnchor: [15, 30],
-      className: `${classes.lrtfeederMarker} ${classes.marker} ${
-        active ? classes.active : ""
-      } ${passed ? classes.passed : ""}`,
-    });
+    className += ` ${classes.lrtfeederMarker}`;
+    iconUrl = "/img/bus_lrtfeeder.svg";
   } else if (companies.includes("nlb")) {
-    return Leaflet.divIcon({
-      iconSize: [30, 30],
-      iconAnchor: [15, 30],
-      className: `${classes.nlbMarker} ${classes.marker} ${
-        active ? classes.active : ""
-      } ${passed ? classes.passed : ""}`,
-    });
+    className += ` ${classes.nlbMarker}`;
+    iconUrl = "/img/bus_nlb.svg";
   } else if (companies.includes("ctb") && companies.includes("kmb")) {
-    return Leaflet.divIcon({
-      iconSize: [30, 30],
-      iconAnchor: [15, 30],
-      className: `${classes.jointlyMarker} ${classes.marker} ${
-        active ? classes.active : ""
-      } ${passed ? classes.passed : ""}`,
-    });
+    className += ` ${classes.jointlyMarker}`;
+    iconUrl = "/img/bus_jointly.svg";
   } else if (companies.includes("ctb")) {
-    return Leaflet.divIcon({
-      iconSize: [30, 30],
-      iconAnchor: [15, 30],
-      className: `${classes.ctbMarker} ${classes.marker} ${
-        active ? classes.active : ""
-      } ${passed ? classes.passed : ""}`,
-    });
+    className += ` ${classes.ctbMarker}`;
+    iconUrl = "/img/bus_ctb.svg";
+  } else {
+    className += ` ${classes.kmbMarker}`;
+    iconUrl = "/img/bus_kmb.svg";
   }
-  return Leaflet.divIcon({
-    iconSize: [30, 30],
-    iconAnchor: [15, 30],
-    className: `${classes.kmbMarker} ${classes.marker} ${
-      active ? classes.active : ""
-    } ${passed ? classes.passed : ""}`,
-  });
+
+  if (active) className += ` ${classes.active}`;
+  if (passed) className += ` ${classes.passed}`;
+
+  el.className = className;
+  el.style.backgroundImage = `url(${iconUrl})`;
+  el.style.backgroundSize = "contain";
+  el.style.backgroundRepeat = "no-repeat";
+  el.style.backgroundPosition = "center";
+
+  return el;
 };
 
 const PREFIX = "map";
@@ -327,57 +370,18 @@ const classes = {
 
 const rootSx: SxProps<Theme> = {
   height: "35vh",
+  position: "relative",
   filter: (theme) =>
     theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
   [`& .${classes.mapContainer}`]: {
     height: "35vh",
-  },
-  [`& .${classes.mtrMarker}`]: {
-    backgroundImage: `url(/img/mtr.svg)`,
-  },
-  [`& .${classes.gmbMarker}`]: {
-    backgroundImage: `url(/img/minibus.svg)`,
-  },
-  [`& .${classes.ctbMarker}`]: {
-    backgroundImage: `url(/img/bus_ctb.svg)`,
-  },
-  [`& .${classes.jointlyMarker}`]: {
-    backgroundImage: `url(/img/bus_jointly.svg)`,
-  },
-  [`& .${classes.lrtfeederMarker}`]: {
-    backgroundImage: `url(/img/bus_lrtfeeder.svg)`,
-  },
-  [`& .${classes.nlbMarker}`]: {
-    backgroundImage: `url(/img/bus_nlb.svg)`,
-  },
-  [`& .${classes.kmbMarker}`]: {
-    backgroundImage: `url(/img/bus_kmb.svg)`,
-  },
-  [`& .${classes.jointlyLine}`]: {
-    stroke: getLineColor(["kmb"], ""),
-    animation: `${classes.jointlyLine}-color 10s infinite linear 1.5s`,
-  },
-  [`@keyframes ${classes.jointlyLine}-color`]: {
-    "50%": {
-      stroke: getLineColor(["ctb"], ""),
-    },
-    "100%": {
-      stroke: getLineColor(["kmb"], ""),
-    },
+    width: "100%",
   },
   [`& .${classes.active}`]: {
     animation: "blinker 1.5s infinite",
   },
   [`& .${classes.passed}`]: {
     filter: "grayscale(100%)",
-  },
-  [`& .self-center`]: {
-    backgroundImage: "url(/img/self.svg)",
-    backgroundSize: "contain",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-    transition: "transform 0.1s ease-out",
-    transformOrigin: "center",
   },
   ["& .mtr-exit"]: {
     backgroundImage: `url(/img/HK_MTR_logo.svg)`,
