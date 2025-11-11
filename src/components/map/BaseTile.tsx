@@ -18,8 +18,8 @@ const BaseTile = () => {
         updateWhenIdle={false}
         url={
           colorMode === "light"
-            ? import.meta.env.VITE_OSM_PROVIDER_URL
-            : import.meta.env.VITE_OSM_PROVIDER_URL_DARK
+            ? import.meta.env.VITE_BASE_MAP_URL
+            : import.meta.env.VITE_BASE_MAP_URL_DARK
         }
       />
       <TileLayer
