@@ -25,7 +25,7 @@ const BaseTile = () => {
       <TileLayer
         crossOrigin="anonymous"
         maxZoom={Leaflet.Browser.retina ? 20 : 19}
-        maxNativeZoom={18}
+        maxNativeZoom={20}
         keepBuffer={10}
         updateWhenIdle={false}
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a> &copy; <a href="https://api.portal.hkmapservice.gov.hk/disclaimer" target="_blank">Lands Department</a>'
