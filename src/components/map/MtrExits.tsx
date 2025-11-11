@@ -46,7 +46,7 @@ const MtrExits = () => {
     <>
       {state.exits.map((exit) => (
         <React.Fragment key={`${exit.name.en}-${exit.exit}`}>
-          {state.icon && (
+          {!import.meta.env.VITE_IS_BASE_MAP_FROM_CSDI && state.icon && (
             <Marker
               position={exit}
               icon={Leaflet.divIcon({
@@ -57,7 +57,7 @@ const MtrExits = () => {
               alt={exit.name[language]}
             />
           )}
-          {state.label && (
+          {!import.meta.env.VITE_IS_BASE_MAP_FROM_CSDI && state.label && (
             <Marker
               position={exit}
               icon={Leaflet.divIcon({
