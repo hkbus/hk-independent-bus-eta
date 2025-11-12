@@ -148,16 +148,38 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
       el.style.backgroundRepeat = "no-repeat";
 
       markerRef.current = new Marker({ element: el, anchor: "bottom" })
-        .setLngLat([position.lng, position.lat])
-        .addTo(map);
+      .setLngLat([position.lng, position.lat])
+      .addTo(map);
 
-      return () => {
-        if (markerRef.current) {
-          markerRef.current.remove();
-          markerRef.current = null;
-        }
-      };
-    }, [map, position.lng, position.lat]);
+    return () => {
+      if (markerRef.current) {
+        markerRef.current.remove();
+        markerRef.current = null;
+      }
+    };
+  }, [map]);
+
+  useEffect(() => {
+    if (!map) return;
+
+    const { lat, lng } = value;
+    const currentCenter = map.getCenter();
+    if (currentCenter.lat !== lat || currentCenter.lng !== lng) {
+      map.setCenter([lng, lat]);
+    }
+
+    if (markerRef.current) {
+      const markerPosition = markerRef.current.getLngLat();
+      if (markerPosition.lat !== lat || markerPosition.lng !== lng) {
+        markerRef.current.setLngLat([lng, lat]);
+      }
+    }
+
+    const source = map.getSource("range-circle") as any;
+    if (source) {
+      source.setData(createGeoJSONCircle({ lat, lng }, range));
+    }
+  }, [map, range, value.lat, value.lng]);
 
     // Handle map movement
     useEffect(() => {
@@ -183,20 +205,25 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
       map.fitBounds(bounds, { padding: 50, animate: false });
     }, [map, range]);
 
+
     useEffect(() => {
       if (!map) return;
-
       const handleClick = (e: any) => {
         const center = { lat: e.lngLat.lat, lng: e.lngLat.lng };
         map.setCenter([center.lng, center.lat]);
         onChange(center);
       };
-
       map.on("click", handleClick);
       return () => {
         map.off("click", handleClick);
       };
     }, [map, onChange]);
+
+    useEffect(() => {
+      if (!map) return;
+      const style = createMapStyle(colorMode);
+      map.setStyle(style as any);
+    }, [colorMode, map]);
 
     return (
       <div style={{ height: "100%", position: "relative" }}>

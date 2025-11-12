@@ -277,6 +277,89 @@ const RouteMap = ({
     };
   }, [map, stops, stopIdx, companies, onMarkerClick]);
 
+
+  function darkenColor(hex: string, percent: number) {
+    let c = hex.replace("#", "");
+    if (c.length === 3) c = c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+    const num = parseInt(c, 16);
+    let r = (num >> 16) & 0xff;
+    let g = (num >> 8) & 0xff;
+    let b = num & 0xff;
+    r = Math.max(0, Math.floor(r * (1 - percent)));
+    g = Math.max(0, Math.floor(g * (1 - percent)));
+    b = Math.max(0, Math.floor(b * (1 - percent)));
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+  }
+
+  useEffect(() => {
+    if (!map) return;
+    const style = createMapStyle(colorMode);
+    map.setStyle(style as any);
+
+    const onStyleData = () => {
+      if (routePath?.features?.length) {
+        const sourceId = "route-path";
+        const borderLayerId = "route-path-border";
+        const lineLayerId = "route-path-line";
+        if (map.getLayer(lineLayerId)) map.removeLayer(lineLayerId);
+        if (map.getLayer(borderLayerId)) map.removeLayer(borderLayerId);
+        if (map.getSource(sourceId)) map.removeSource(sourceId);
+        map.addSource(sourceId, {
+          type: "geojson",
+          data: routePath as any,
+        });
+        const lineColor = getLineColor(companies, route);
+        const borderColor = darkenColor(lineColor, 0.4);
+        map.addLayer({
+          id: borderLayerId,
+          type: "line",
+          source: sourceId,
+          paint: {
+            "line-color": borderColor,
+            "line-width": 7,
+          },
+          layout: {
+            "line-join": "round",
+            "line-cap": "round"
+          }
+        });
+        map.addLayer({
+          id: lineLayerId,
+          type: "line",
+          source: sourceId,
+          paint: {
+            "line-color": lineColor,
+            "line-width": 4,
+          },
+          layout: {
+            "line-join": "round",
+            "line-cap": "round"
+          }
+        });
+      }
+      markersRef.current.forEach((marker) => marker.remove());
+      markersRef.current = [];
+      stops.forEach((stop, idx) => {
+        const el = createStopMarkerElement({
+          active: idx === stopIdx,
+          passed: idx < stopIdx,
+          companies,
+        });
+        const marker = new Marker({ element: el, anchor: "bottom" })
+          .setLngLat([stop.location.lng, stop.location.lat])
+          .addTo(map);
+        el.addEventListener("click", (e) => {
+          onMarkerClick(idx, e);
+        });
+        markersRef.current.push(marker);
+      });
+    };
+    map.once("styledata", onStyleData);
+    return () => {
+      map.off("styledata", onStyleData);
+    };
+  }, [colorMode, map, routePath, companies, route, stops, stopIdx, onMarkerClick]);
+
   return (
     <Box id="route-map" sx={rootSx}>
       <div ref={mapContainerRef} className={classes.mapContainer} />
