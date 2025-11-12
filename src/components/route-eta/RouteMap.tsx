@@ -1,4 +1,11 @@
-import { useContext, useEffect, useRef, useState, useMemo, useCallback } from "react";
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { Box, SxProps, Theme } from "@mui/material";
 import { type Company } from "hk-bus-eta";
 import AppContext from "../../context/AppContext";
@@ -188,97 +195,103 @@ const RouteMap = ({
   }, [map]);
 
   // Helper function to add route path layers to map
-  const addRoutePathLayers = useCallback((
-    map: MapLibreMap,
-    routePath: any,
-    companies: Company[],
-    route: string,
-    darkenColor: (hex: string, percent: number) => string
-  ) => {
-    if (!routePath?.features?.length) return;
+  const addRoutePathLayers = useCallback(
+    (
+      map: MapLibreMap,
+      routePath: any,
+      companies: Company[],
+      route: string,
+      darkenColor: (hex: string, percent: number) => string
+    ) => {
+      if (!routePath?.features?.length) return;
 
-    const sourceId = "route-path";
-    const borderLayerId = "route-path-border";
-    const lineLayerId = "route-path-line";
+      const sourceId = "route-path";
+      const borderLayerId = "route-path-border";
+      const lineLayerId = "route-path-line";
 
-    // Remove existing layers and source
-    if (map.getLayer(lineLayerId)) map.removeLayer(lineLayerId);
-    if (map.getLayer(borderLayerId)) map.removeLayer(borderLayerId);
-    if (map.getSource(sourceId)) map.removeSource(sourceId);
+      // Remove existing layers and source
+      if (map.getLayer(lineLayerId)) map.removeLayer(lineLayerId);
+      if (map.getLayer(borderLayerId)) map.removeLayer(borderLayerId);
+      if (map.getSource(sourceId)) map.removeSource(sourceId);
 
-    // Add new source
-    map.addSource(sourceId, {
-      type: "geojson",
-      data: routePath as any,
-    });
+      // Add new source
+      map.addSource(sourceId, {
+        type: "geojson",
+        data: routePath as any,
+      });
 
-    // Calculate colors
-    const lineColor = getLineColor(companies, route);
-    const borderColor = darkenColor(lineColor, 0.4);
+      // Calculate colors
+      const lineColor = getLineColor(companies, route);
+      const borderColor = darkenColor(lineColor, 0.4);
 
-    // Add border layer
-    map.addLayer({
-      id: borderLayerId,
-      type: "line",
-      source: sourceId,
-      paint: {
-        "line-color": borderColor,
-        "line-width": 7,
-      },
-      layout: {
-        "line-join": "round",
-        "line-cap": "round",
-      },
-    });
+      // Add border layer
+      map.addLayer({
+        id: borderLayerId,
+        type: "line",
+        source: sourceId,
+        paint: {
+          "line-color": borderColor,
+          "line-width": 7,
+        },
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+      });
 
-    // Add line layer
-    map.addLayer({
-      id: lineLayerId,
-      type: "line",
-      source: sourceId,
-      paint: {
-        "line-color": lineColor,
-        "line-width": 4,
-      },
-      layout: {
-        "line-join": "round",
-        "line-cap": "round",
-      },
-    });
-  }, []);
+      // Add line layer
+      map.addLayer({
+        id: lineLayerId,
+        type: "line",
+        source: sourceId,
+        paint: {
+          "line-color": lineColor,
+          "line-width": 4,
+        },
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+      });
+    },
+    []
+  );
 
   // Helper function to add stop markers to map
-  const addStopMarkers = useCallback((
-    map: MapLibreMap,
-    stops: Array<StopListEntry>,
-    stopIdx: number,
-    companies: Company[],
-    onMarkerClick: (idx: number, event: MouseEvent) => void,
-    markersRef: React.MutableRefObject<Marker[]>
-  ) => {
-    // Clear existing markers
-    markersRef.current.forEach((marker) => marker.remove());
-    markersRef.current = [];
+  const addStopMarkers = useCallback(
+    (
+      map: MapLibreMap,
+      stops: Array<StopListEntry>,
+      stopIdx: number,
+      companies: Company[],
+      onMarkerClick: (idx: number, event: MouseEvent) => void,
+      markersRef: React.MutableRefObject<Marker[]>
+    ) => {
+      // Clear existing markers
+      markersRef.current.forEach((marker) => marker.remove());
+      markersRef.current = [];
 
-    // Add new markers
-    stops.forEach((stop, idx) => {
-      const el = createStopMarkerElement({
-        active: idx === stopIdx,
-        passed: idx < stopIdx,
-        companies,
+      // Add new markers
+      stops.forEach((stop, idx) => {
+        const el = createStopMarkerElement({
+          active: idx === stopIdx,
+          passed: idx < stopIdx,
+          companies,
+        });
+
+        const marker = new Marker({ element: el, anchor: "bottom" })
+          .setLngLat([stop.location.lng, stop.location.lat])
+          .addTo(map);
+
+        el.addEventListener("click", (e) => {
+          onMarkerClick(idx, e);
+        });
+
+        markersRef.current.push(marker);
       });
-
-      const marker = new Marker({ element: el, anchor: "bottom" })
-        .setLngLat([stop.location.lng, stop.location.lat])
-        .addTo(map);
-
-      el.addEventListener("click", (e) => {
-        onMarkerClick(idx, e);
-      });
-
-      markersRef.current.push(marker);
-    });
-  }, []);
+    },
+    []
+  );
 
   // Add route path to map
   useEffect(() => {
