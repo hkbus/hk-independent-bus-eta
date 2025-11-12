@@ -51,18 +51,18 @@ const SearchMap = ({
 
   const normalizeCoordinates = (coords: GeoLocation[]): GeoLocation[] => {
     if (coords.length === 0) return coords;
-    
+
     return coords.map((coord, i) => {
       if (i === 0) return { ...coord, lng: normalizeLng(coord.lng) };
-      
+
       let lng = coord.lng;
       const prevLng = coords[i - 1].lng;
-      
+
       lng = normalizeLng(lng);
 
       while (lng - prevLng > 180) lng -= 360;
       while (lng - prevLng < -180) lng += 360;
-      
+
       return { lat: coord.lat, lng };
     });
   };
@@ -142,12 +142,12 @@ const SearchMap = ({
 
     newMap.on("load", () => {
       setMap(newMap);
-      
+
       if (onMapClick) {
         newMap.on("click", (e) => {
           onMapClick({
             lng: e.lngLat.lng,
-            lat: e.lngLat.lat
+            lat: e.lngLat.lat,
           });
         });
       }
@@ -193,22 +193,22 @@ const SearchMap = ({
     if (end) {
       const normalizedCoords = normalizeCoordinates([start, end]);
       const bounds = new maplibregl.LngLatBounds();
-      
-      normalizedCoords.forEach(coord => {
+
+      normalizedCoords.forEach((coord) => {
         bounds.extend([coord.lng, coord.lat]);
       });
-      
+
       map.fitBounds(bounds, {
         padding: 80,
         duration: 1000,
-        maxZoom: 16
+        maxZoom: 16,
       });
     } else {
       const normalizedStart = normalizeCoordinates([start])[0];
       map.flyTo({
         center: [normalizedStart.lng, normalizedStart.lat],
         zoom: 15,
-        duration: 1000
+        duration: 1000,
       });
     }
   }, [map, start, end]);
@@ -220,16 +220,12 @@ const SearchMap = ({
     markersRef.current = [];
     removeAllSourcesAndLayers();
 
-    if (
-      stopIdx === null ||
-      !Array.isArray(routes) ||
-      routes.length === 0
-    ) {
+    if (stopIdx === null || !Array.isArray(routes) || routes.length === 0) {
       return;
     }
 
     const allPoints: GeoLocation[] = [start];
-    
+
     routes.forEach(({ routeId, on, off }) => {
       const route = routeList[routeId];
       const stopsCollections =
@@ -240,14 +236,14 @@ const SearchMap = ({
       const stops = Array.isArray(longestStops)
         ? longestStops.slice(on, off + 1)
         : [];
-      
-      stops.forEach(stopId => {
+
+      stops.forEach((stopId) => {
         if (stopList[stopId]) {
           allPoints.push(stopList[stopId].location);
         }
       });
     });
-    
+
     if (end) allPoints.push(end);
 
     const normalizedPoints = normalizeCoordinates(allPoints);
@@ -255,7 +251,7 @@ const SearchMap = ({
 
     const walkPoints: GeoLocation[] = [];
     walkPoints.push(normalizedPoints[pointIndex++]); // start
-    
+
     routes.forEach(({ routeId, on, off }) => {
       const route = routeList[routeId];
       const stopsCollections =
@@ -266,7 +262,7 @@ const SearchMap = ({
       const stops = Array.isArray(longestStops)
         ? longestStops.slice(on, off + 1)
         : [];
-      
+
       if (stops.length > 0) {
         walkPoints.push(normalizedPoints[pointIndex]); // first stop of route
         pointIndex += stops.length - 1;
@@ -274,8 +270,10 @@ const SearchMap = ({
         pointIndex++;
       }
     });
-    
-    walkPoints.push(end ? normalizedPoints[normalizedPoints.length - 1] : normalizedPoints[0]);
+
+    walkPoints.push(
+      end ? normalizedPoints[normalizedPoints.length - 1] : normalizedPoints[0]
+    );
 
     for (let i = 0; i < Math.floor(walkPoints.length / 2); ++i) {
       const walkSourceId = `walk-${i}`;
@@ -325,15 +323,25 @@ const SearchMap = ({
 
       if (stops.length === 0) return;
 
-      const routeNormalizedCoords = normalizedPoints.slice(pointIndex, pointIndex + stops.length);
+      const routeNormalizedCoords = normalizedPoints.slice(
+        pointIndex,
+        pointIndex + stops.length
+      );
       pointIndex += stops.length;
 
       const isMtrRoute = route && route.co && route.co.includes("mtr");
       const routeNumber = routeId.split("-")[0];
-      const lineColor = isMtrRoute ? getLineColor(route.co, routeNumber) : (idx === 0 ? "#2196F3" : "#FF9800");
+      const lineColor = isMtrRoute
+        ? getLineColor(route.co, routeNumber)
+        : idx === 0
+          ? "#2196F3"
+          : "#FF9800";
 
       const lineSourceId = `route-${idx}-line`;
-      const lineCoordinates = routeNormalizedCoords.map(coord => [coord.lng, coord.lat]);
+      const lineCoordinates = routeNormalizedCoords.map((coord) => [
+        coord.lng,
+        coord.lat,
+      ]);
 
       map.addSource(lineSourceId, {
         type: "geojson",
@@ -362,10 +370,8 @@ const SearchMap = ({
 
       routeNormalizedCoords.forEach((coord, stopIndex) => {
         const isPassed = stopIndex < stopIdx[idx];
-        
-        const markerColor = isPassed
-          ? "#9E9E9E"
-          : lineColor;
+
+        const markerColor = isPassed ? "#9E9E9E" : lineColor;
 
         const el = document.createElement("div");
         el.className = `${classes.marker} ${isPassed ? classes.passed : ""}`;
@@ -413,13 +419,11 @@ const SearchMap = ({
     startEndMarkersRef.current.forEach((marker) => marker.remove());
     startEndMarkersRef.current = [];
 
-    const normalizedCoords = normalizeCoordinates(
-      end ? [start, end] : [start]
-    );
+    const normalizedCoords = normalizeCoordinates(end ? [start, end] : [start]);
 
     const startMarker = new Marker({
       color: "#4CAF50",
-      scale: 1.2
+      scale: 1.2,
     })
       .setLngLat([normalizedCoords[0].lng, normalizedCoords[0].lat])
       .addTo(map);
@@ -430,11 +434,11 @@ const SearchMap = ({
     if (end && normalizedCoords.length > 1) {
       endMarker = new Marker({
         color: "#F44336",
-        scale: 1.2
+        scale: 1.2,
       })
         .setLngLat([normalizedCoords[1].lng, normalizedCoords[1].lat])
         .addTo(map);
-      
+
       startEndMarkersRef.current.push(endMarker);
     }
 
