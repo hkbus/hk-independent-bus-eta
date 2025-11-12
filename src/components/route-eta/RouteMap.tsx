@@ -76,8 +76,6 @@ const RouteMap = ({
       style: createMapStyle(colorMode) as any,
       center: [initialCenter.lng, initialCenter.lat],
       zoom: 16,
-      pitch: 0,
-      maxPitch: 0,
       minZoom: 0,
       maxZoom: 22,
     });

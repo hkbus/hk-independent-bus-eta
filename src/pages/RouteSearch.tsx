@@ -299,6 +299,76 @@ const RouteSearch = () => {
     });
   }, []);
 
+  const handleMapClick = useCallback(
+    (lngLat: { lng: number; lat: number }) => {
+      setState((prevState) => {
+        //both empty
+        if (!prevState.locations.start && !prevState.locations.end) {
+          return {
+            ...prevState,
+            locations: {
+              ...prevState.locations,
+              start: {
+                location: lngLat,
+                label: `${lngLat.lat.toFixed(6)}, ${lngLat.lng.toFixed(6)}`,
+              },
+            },
+            status: "waiting",
+            resultIdx: {
+              resultIdx: 0,
+              stopIdx: [0, 0],
+            },
+            result: [],
+          };
+        }
+        // only start empty
+        else if (!prevState.locations.start && prevState.locations.end) {
+          return {
+            ...prevState,
+            locations: {
+              ...prevState.locations,
+              start: {
+                location: lngLat,
+                label: `${lngLat.lat.toFixed(6)}, ${lngLat.lng.toFixed(6)}`,
+              },
+            },
+            status: "waiting",
+            resultIdx: {
+              resultIdx: 0,
+              stopIdx: [0, 0],
+            },
+            result: [],
+          };
+        }
+        // only end
+        else if (prevState.locations.start && !prevState.locations.end) {
+          console.log("Setting end position (end empty)");
+          return {
+            ...prevState,
+            locations: {
+              ...prevState.locations,
+              end: {
+                location: lngLat,
+                label: `${lngLat.lat.toFixed(6)}, ${lngLat.lng.toFixed(6)}`,
+              },
+            },
+            status: "waiting",
+            resultIdx: {
+              resultIdx: 0,
+              stopIdx: [0, 0],
+            },
+            result: [],
+          };
+        }
+        // both filled
+        else {
+          return prevState;
+        }
+      });
+    },
+    []
+  );
+
   return (
     <Paper sx={rootSx} square elevation={0}>
       {!energyMode ? (
@@ -310,6 +380,7 @@ const RouteSearch = () => {
           routes={result[resultIdx.resultIdx]}
           stopIdx={resultIdx.stopIdx}
           onMarkerClick={handleMarkerClick}
+          onMapClick={handleMapClick}
         />
       ) : null}
       <Box sx={inputContainerSx}>
