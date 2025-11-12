@@ -9,7 +9,7 @@ export const createMapStyle = (colorMode: "light" | "dark" = "light") => {
     sources: {
       protomaps: {
         type: "vector",
-        url: "pmtiles://https://maps.justusewheels.com/hong-kong.pmtiles",
+        url: "pmtiles://https://anscg.github.io/hk-pmtiles-generation/hong-kong.pmtiles.gz",
         attribution:
           '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
       },
