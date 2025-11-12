@@ -20,6 +20,20 @@ import MtrExits from "../map/MtrExits";
 import maplibregl, { Map as MapLibreMap, Marker } from "maplibre-gl";
 import { createMapStyle } from "../../utils/mapStyle";
 
+// Helper function to darken a hex color by a percentage
+function darkenColor(hex: string, percent: number) {
+  let c = hex.replace("#", "");
+  if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+  const num = parseInt(c, 16);
+  let r = (num >> 16) & 0xff;
+  let g = (num >> 8) & 0xff;
+  let b = num & 0xff;
+  r = Math.max(0, Math.floor(r * (1 - percent)));
+  g = Math.max(0, Math.floor(g * (1 - percent)));
+  b = Math.max(0, Math.floor(b * (1 - percent)));
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}
+
 interface RouteMapProps {
   routeId: string;
   stopIds: string[];
@@ -70,19 +84,6 @@ const RouteMap = ({
     stopIdx: stopIdx,
   });
   const previousColorMode = useRef(colorMode);
-
-  function darkenColor(hex: string, percent: number) {
-    let c = hex.replace("#", "");
-    if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
-    const num = parseInt(c, 16);
-    let r = (num >> 16) & 0xff;
-    let g = (num >> 8) & 0xff;
-    let b = num & 0xff;
-    r = Math.max(0, Math.floor(r * (1 - percent)));
-    g = Math.max(0, Math.floor(g * (1 - percent)));
-    b = Math.max(0, Math.floor(b * (1 - percent)));
-    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-  }
 
   // Initialize map
   useEffect(() => {
@@ -200,8 +201,7 @@ const RouteMap = ({
       map: MapLibreMap,
       routePath: any,
       companies: Company[],
-      route: string,
-      darkenColor: (hex: string, percent: number) => string
+      route: string
     ) => {
       if (!routePath?.features?.length) return;
 
@@ -297,7 +297,7 @@ const RouteMap = ({
   useEffect(() => {
     if (!map) return;
 
-    addRoutePathLayers(map, routePath, companies, route, darkenColor);
+    addRoutePathLayers(map, routePath, companies, route);
 
     return () => {};
   }, [map, routePath, companies, route, addRoutePathLayers]);
@@ -324,7 +324,7 @@ const RouteMap = ({
     map.setStyle(style as any);
 
     const onStyleData = () => {
-      addRoutePathLayers(map, routePath, companies, route, darkenColor);
+      addRoutePathLayers(map, routePath, companies, route);
       addStopMarkers(map, stops, stopIdx, companies, onMarkerClick, markersRef);
     };
     map.once("styledata", onStyleData);
