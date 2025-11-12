@@ -16,8 +16,6 @@ interface MtrExitsProps {
   map: Map | null;
 }
 
-
-
 const MtrExits = ({ map }: MtrExitsProps) => {
   const [exits, setExits] = useState<MtrExit[]>([]);
   const markersRef = useRef<Record<string, Marker>>({});
@@ -63,15 +61,20 @@ const MtrExits = ({ map }: MtrExitsProps) => {
 
           el.title = exit.name.en + (exit.barrierFree ? " (Barrier-free)" : "");
 
-          const marker = new Marker({ element: el, anchor: "bottom" })
-            .setLngLat([exit.lng, exit.lat]);
+          const marker = new Marker({
+            element: el,
+            anchor: "bottom",
+          }).setLngLat([exit.lng, exit.lat]);
           markersRef.current[exit.exit] = marker;
         }
 
         const marker = markersRef.current[exit.exit];
         marker.setLngLat([exit.lng, exit.lat]);
 
-        if (currentZoom >= 16 && bounds.contains({ lng: exit.lng, lat: exit.lat })) {
+        if (
+          currentZoom >= 16 &&
+          bounds.contains({ lng: exit.lng, lat: exit.lat })
+        ) {
           if (!marker.getElement().parentNode) {
             marker.addTo(map);
           }

@@ -1,10 +1,4 @@
-import {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-} from "react";
+import { useContext, useEffect, useRef, useState, useMemo } from "react";
 import { Box, SxProps, Theme } from "@mui/material";
 import { type Company } from "hk-bus-eta";
 import AppContext from "../../context/AppContext";
@@ -46,8 +40,7 @@ const RouteMap = ({
   companies,
   onMarkerClick,
 }: RouteMapProps) => {
-  const { geolocation, colorMode } =
-    useContext(AppContext);
+  const { geolocation, colorMode } = useContext(AppContext);
   const {
     db: { stopList },
   } = useContext(DbContext);
@@ -91,18 +84,20 @@ const RouteMap = ({
 
     newMap.addControl(
       new maplibregl.GeolocateControl({
-          positionOptions: {
-              enableHighAccuracy: true
-          },
-          trackUserLocation: true
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
       })
     );
-    newMap.addControl(new maplibregl.NavigationControl({
-      visualizePitch: true,
-      visualizeRoll: true,
-      showZoom: true,
-      showCompass: true
-    }));
+    newMap.addControl(
+      new maplibregl.NavigationControl({
+        visualizePitch: true,
+        visualizeRoll: true,
+        showZoom: true,
+        showCompass: true,
+      })
+    );
 
     newMap.on("load", () => {
       setMap(newMap);
@@ -200,7 +195,7 @@ const RouteMap = ({
     const lineColor = getLineColor(companies, route);
     function darkenColor(hex: string, percent: number) {
       let c = hex.replace("#", "");
-      if (c.length === 3) c = c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+      if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
       const num = parseInt(c, 16);
       let r = (num >> 16) & 0xff;
       let g = (num >> 8) & 0xff;
@@ -217,15 +212,14 @@ const RouteMap = ({
       type: "line",
       source: sourceId,
       paint: {
-      "line-color": borderColor,
-      "line-width": 7,
+        "line-color": borderColor,
+        "line-width": 7,
       },
       layout: {
         "line-join": "round",
-        "line-cap": "round"
-      }
+        "line-cap": "round",
+      },
     });
-
 
     map.addLayer({
       id: lineLayerId,
@@ -237,11 +231,11 @@ const RouteMap = ({
       },
       layout: {
         "line-join": "round",
-        "line-cap": "round"
-      }
+        "line-cap": "round",
+      },
     });
 
-    return () => {}
+    return () => {};
   }, [map, routePath, companies, route]);
 
   // Add stop markers to map
