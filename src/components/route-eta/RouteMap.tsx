@@ -197,12 +197,7 @@ const RouteMap = ({
 
   // Helper function to add route path layers to map
   const addRoutePathLayers = useCallback(
-    (
-      map: MapLibreMap,
-      routePath: any,
-      companies: Company[],
-      route: string
-    ) => {
+    (map: MapLibreMap, routePath: any, companies: Company[], route: string) => {
       if (!routePath?.features?.length) return;
 
       const sourceId = "route-path";
