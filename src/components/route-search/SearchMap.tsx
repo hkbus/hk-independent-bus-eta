@@ -427,6 +427,7 @@ const SearchMap = ({
       .setLngLat([normalizedCoords[0].lng, normalizedCoords[0].lat])
       .addTo(map);
 
+    startMarker.getElement().style.zIndex = "101";
     startEndMarkersRef.current.push(startMarker);
 
     let endMarker: Marker | null = null;
@@ -437,6 +438,8 @@ const SearchMap = ({
       })
         .setLngLat([normalizedCoords[1].lng, normalizedCoords[1].lat])
         .addTo(map);
+
+      endMarker.getElement().style.zIndex = "101";
 
       startEndMarkersRef.current.push(endMarker);
     }
