@@ -369,7 +369,7 @@ const SearchMap = ({
       sourceLayerIdsRef.current.add(lineSourceId);
 
       routeNormalizedCoords.forEach((coord, stopIndex) => {
-        const isPassed = stopIndex < stopIdx[idx];
+        const isPassed = stopIdx[idx] !== undefined && stopIndex < stopIdx[idx];
 
         const markerColor = isPassed ? "#9E9E9E" : lineColor;
 
