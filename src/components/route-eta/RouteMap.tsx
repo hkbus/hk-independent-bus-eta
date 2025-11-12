@@ -269,10 +269,9 @@ const RouteMap = ({
     };
   }, [map, stops, stopIdx, companies, onMarkerClick]);
 
-
   function darkenColor(hex: string, percent: number) {
     let c = hex.replace("#", "");
-    if (c.length === 3) c = c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+    if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
     const num = parseInt(c, 16);
     let r = (num >> 16) & 0xff;
     let g = (num >> 8) & 0xff;
@@ -312,8 +311,8 @@ const RouteMap = ({
           },
           layout: {
             "line-join": "round",
-            "line-cap": "round"
-          }
+            "line-cap": "round",
+          },
         });
         map.addLayer({
           id: lineLayerId,
@@ -325,8 +324,8 @@ const RouteMap = ({
           },
           layout: {
             "line-join": "round",
-            "line-cap": "round"
-          }
+            "line-cap": "round",
+          },
         });
       }
       markersRef.current.forEach((marker) => marker.remove());
@@ -350,7 +349,16 @@ const RouteMap = ({
     return () => {
       map.off("styledata", onStyleData);
     };
-  }, [colorMode, map, routePath, companies, route, stops, stopIdx, onMarkerClick]);
+  }, [
+    colorMode,
+    map,
+    routePath,
+    companies,
+    route,
+    stops,
+    stopIdx,
+    onMarkerClick,
+  ]);
 
   return (
     <Box id="route-map" sx={rootSx}>
