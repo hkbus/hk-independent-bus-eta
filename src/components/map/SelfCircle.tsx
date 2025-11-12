@@ -125,7 +125,7 @@ const SelfCircle = ({ map }: SelfCircleProps) => {
 
     if (markerRef.current) {
       markerRef.current.setLngLat([state.lng, state.lat]);
-      
+
       // Update rotation
       if (compass) {
         const el = markerRef.current.getElement();

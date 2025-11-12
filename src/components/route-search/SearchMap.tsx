@@ -23,8 +23,7 @@ const SearchMap = ({
   stopIdx,
   onMarkerClick,
 }: SearchMapProps) => {
-  const { geolocation, colorMode } =
-    useContext(AppContext);
+  const { geolocation, colorMode } = useContext(AppContext);
   const {
     db: { routeList, stopList },
   } = useContext(DbContext);
@@ -81,19 +80,21 @@ const SearchMap = ({
     });
 
     newMap.addControl(
-          new maplibregl.GeolocateControl({
-              positionOptions: {
-                  enableHighAccuracy: true
-              },
-              trackUserLocation: true
-          })
-        );
-        newMap.addControl(new maplibregl.NavigationControl({
-          visualizePitch: true,
-          visualizeRoll: true,
-          showZoom: true,
-          showCompass: true
-        }));
+      new maplibregl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+      })
+    );
+    newMap.addControl(
+      new maplibregl.NavigationControl({
+        visualizePitch: true,
+        visualizeRoll: true,
+        showZoom: true,
+        showCompass: true,
+      })
+    );
 
     newMap.on("load", () => {
       setMap(newMap);
@@ -153,7 +154,12 @@ const SearchMap = ({
   // Render route lines and markers
   useEffect(() => {
     // Guard: routes may be undefined during initial render; bail out early
-    if (!map || stopIdx === null || !Array.isArray(routes) || routes.length === 0)
+    if (
+      !map ||
+      stopIdx === null ||
+      !Array.isArray(routes) ||
+      routes.length === 0
+    )
       return;
 
     // Clear existing markers
@@ -176,7 +182,8 @@ const SearchMap = ({
     routes.forEach(({ routeId, on, off }, idx) => {
       // routeList or its stops may be missing — make access resilient
       const route = routeList[routeId];
-      const stopsCollections = route && route.stops ? Object.values(route.stops) : [];
+      const stopsCollections =
+        route && route.stops ? Object.values(route.stops) : [];
       const longestStops = stopsCollections.length
         ? (stopsCollections as any[]).sort((a, b) => b.length - a.length)[0]
         : [];
@@ -240,14 +247,17 @@ const SearchMap = ({
     points.push(start);
     routes.forEach(({ routeId, on, off }) => {
       const route = routeList[routeId];
-      const stopsCollections = route && route.stops ? Object.values(route.stops) : [];
+      const stopsCollections =
+        route && route.stops ? Object.values(route.stops) : [];
       const longestStops = stopsCollections.length
         ? (stopsCollections as any[]).sort((a, b) => b.length - a.length)[0]
         : [];
       const startStopId = longestStops && longestStops[on];
       const endStopId = longestStops && longestStops[off];
-      if (startStopId && stopList[startStopId]) points.push(stopList[startStopId].location);
-      if (endStopId && stopList[endStopId]) points.push(stopList[endStopId].location);
+      if (startStopId && stopList[startStopId])
+        points.push(stopList[startStopId].location);
+      if (endStopId && stopList[endStopId])
+        points.push(stopList[endStopId].location);
     });
     points.push(end || start);
 

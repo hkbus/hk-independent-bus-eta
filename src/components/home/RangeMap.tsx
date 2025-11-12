@@ -92,20 +92,20 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
       });
       newMap.addControl(
         new maplibregl.GeolocateControl({
-            positionOptions: {
-                enableHighAccuracy: true
-            },
-            trackUserLocation: true
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+          trackUserLocation: true,
         })
       );
-      newMap.addControl(new maplibregl.NavigationControl({
-        visualizePitch: true,
-        visualizeRoll: true,
-        showZoom: true,
-        showCompass: true
-      }));
-
-
+      newMap.addControl(
+        new maplibregl.NavigationControl({
+          visualizePitch: true,
+          visualizeRoll: true,
+          showZoom: true,
+          showCompass: true,
+        })
+      );
 
       newMap.on("load", () => {
         // Add circle source and layer (as polygon)
@@ -200,8 +200,13 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
         );
       }
       const bounds = new maplibregl.LngLatBounds();
-      const circle = createGeoJSONCircle({ lat: center.lat, lng: center.lng }, range);
-      circle.geometry.coordinates[0].forEach(([lng, lat]) => bounds.extend([lng, lat]));
+      const circle = createGeoJSONCircle(
+        { lat: center.lat, lng: center.lng },
+        range
+      );
+      circle.geometry.coordinates[0].forEach(([lng, lat]) =>
+        bounds.extend([lng, lat])
+      );
       map.fitBounds(bounds, { padding: 50, animate: false });
     }, [map, range]);
 
