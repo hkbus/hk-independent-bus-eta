@@ -399,7 +399,6 @@ const SearchMap = ({
     return () => {
       markersRef.current.forEach((marker) => marker.remove());
       markersRef.current = [];
-      removeAllSourcesAndLayers();
     };
   }, [
     map,
