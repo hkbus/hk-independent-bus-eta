@@ -148,38 +148,38 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
       el.style.backgroundRepeat = "no-repeat";
 
       markerRef.current = new Marker({ element: el, anchor: "bottom" })
-      .setLngLat([position.lng, position.lat])
-      .addTo(map);
+        .setLngLat([position.lng, position.lat])
+        .addTo(map);
 
-    return () => {
+      return () => {
+        if (markerRef.current) {
+          markerRef.current.remove();
+          markerRef.current = null;
+        }
+      };
+    }, [map]);
+
+    useEffect(() => {
+      if (!map) return;
+
+      const { lat, lng } = value;
+      const currentCenter = map.getCenter();
+      if (currentCenter.lat !== lat || currentCenter.lng !== lng) {
+        map.setCenter([lng, lat]);
+      }
+
       if (markerRef.current) {
-        markerRef.current.remove();
-        markerRef.current = null;
+        const markerPosition = markerRef.current.getLngLat();
+        if (markerPosition.lat !== lat || markerPosition.lng !== lng) {
+          markerRef.current.setLngLat([lng, lat]);
+        }
       }
-    };
-  }, [map]);
 
-  useEffect(() => {
-    if (!map) return;
-
-    const { lat, lng } = value;
-    const currentCenter = map.getCenter();
-    if (currentCenter.lat !== lat || currentCenter.lng !== lng) {
-      map.setCenter([lng, lat]);
-    }
-
-    if (markerRef.current) {
-      const markerPosition = markerRef.current.getLngLat();
-      if (markerPosition.lat !== lat || markerPosition.lng !== lng) {
-        markerRef.current.setLngLat([lng, lat]);
+      const source = map.getSource("range-circle") as any;
+      if (source) {
+        source.setData(createGeoJSONCircle({ lat, lng }, range));
       }
-    }
-
-    const source = map.getSource("range-circle") as any;
-    if (source) {
-      source.setData(createGeoJSONCircle({ lat, lng }, range));
-    }
-  }, [map, range, value.lat, value.lng]);
+    }, [map, range, value.lat, value.lng]);
 
     // Handle map movement
     useEffect(() => {
@@ -209,7 +209,6 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
       );
       map.fitBounds(bounds, { padding: 50, animate: false });
     }, [map, range]);
-
 
     useEffect(() => {
       if (!map) return;
