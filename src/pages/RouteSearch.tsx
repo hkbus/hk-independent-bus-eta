@@ -302,15 +302,15 @@ const RouteSearch = () => {
   const handleMapClick = useCallback((lngLat: { lng: number; lat: number }) => {
     setState((prevState) => {
       const { start, end } = prevState.locations;
-      
+
       // Both already set, no action
       if (start && end) {
         return prevState;
       }
-      
+
       // Determine which location to set
-      const targetField = !start ? 'start' : 'end';
-      
+      const targetField = !start ? "start" : "end";
+
       return {
         ...prevState,
         locations: {
