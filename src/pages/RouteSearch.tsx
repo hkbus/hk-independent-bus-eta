@@ -341,7 +341,6 @@ const RouteSearch = () => {
       }
       // only end
       else if (prevState.locations.start && !prevState.locations.end) {
-        console.log("Setting end position (end empty)");
         return {
           ...prevState,
           locations: {
