@@ -520,7 +520,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const toggleMapStyleType = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
-        state.mapStyleType = state.mapStyleType === "vector" ? "raster" : "vector";
+        state.mapStyleType =
+          state.mapStyleType === "vector" ? "raster" : "vector";
       })
     );
   }, []);

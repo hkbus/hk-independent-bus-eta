@@ -33,7 +33,7 @@ export const createMapStyle = (
           type: "raster",
           source: "rasterpmtiles",
           "raster-resampling": "nearest",
-        }
+        },
       ],
     } as const;
   }
@@ -70,7 +70,10 @@ export const ensureRasterLabelLayers = async (
       } as any);
     }
 
-    const url = colorMode === "dark" ? "/map/raster-styles-dark.json" : "/map/raster-styles.json";
+    const url =
+      colorMode === "dark"
+        ? "/map/raster-styles-dark.json"
+        : "/map/raster-styles.json";
     const res = await fetch(url);
     if (!res.ok) return;
     const layers = (await res.json()) as any[];
@@ -80,7 +83,9 @@ export const ensureRasterLabelLayers = async (
     let beforeId: string | undefined = undefined;
     if (style && Array.isArray(style.layers)) {
       const overlayLayer = style.layers.find((l) =>
-        /^(route-path-|route-\d+-line|walk-\d+-layer|range-circle-layer)/.test(l.id)
+        /^(route-path-|route-\d+-line|walk-\d+-layer|range-circle-layer)/.test(
+          l.id
+        )
       );
       if (overlayLayer) beforeId = overlayLayer.id; // insert beneath first overlay
     }

@@ -235,7 +235,10 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
         if (!map.getSource("range-circle")) {
           map.addSource("range-circle", {
             type: "geojson",
-            data: createGeoJSONCircle({ lat: center.lat, lng: center.lng }, range),
+            data: createGeoJSONCircle(
+              { lat: center.lat, lng: center.lng },
+              range
+            ),
           } as any);
         }
         if (!map.getLayer("range-circle-layer")) {
