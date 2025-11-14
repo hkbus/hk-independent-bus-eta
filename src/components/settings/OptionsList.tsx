@@ -33,6 +33,7 @@ import {
   UpdateDisabled as UpdateDisabledIcon,
   FormatSize as FormatSizeIcon,
   LooksOneRounded as LooksOneRoundedIcon,
+  Map as MapIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../context/AppContext";
@@ -69,6 +70,8 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
     toggleAnnotateScheduled,
     isRecentSearchShown,
     toggleIsRecentSearchShown,
+    mapStyleType,
+    toggleMapStyleType,
   } = useContext(AppContext);
   const { t } = useTranslation();
 
@@ -237,6 +240,24 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
         <ListItemText
           primary={t("省電模式")}
           secondary={t(!energyMode ? "開啟地圖功能" : "關閉地圖功能")}
+        />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration);
+          toggleMapStyleType();
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <MapIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={t("地圖樣式")}
+          secondary={t(
+            ("" + (mapStyleType === "vector" ? "向量地圖" : "點陣地圖")) as any
+          )}
         />
       </ListItemButton>
       <ListItemButton

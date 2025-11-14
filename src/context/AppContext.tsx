@@ -24,6 +24,7 @@ import {
   EtaFormat,
   Language,
   NumPadOrder,
+  MapStyleType,
 } from "../data";
 import { DeviceOrientationPermission } from "react-world-compass";
 import useLanguage from "../hooks/useTranslation";
@@ -103,6 +104,10 @@ export interface AppState {
    */
   fontSize: number;
   /**
+   * Map base style type
+   */
+  mapStyleType: MapStyleType;
+  /**
    * Range for home page nearby search
    */
   searchRange: number;
@@ -142,6 +147,7 @@ interface AppContextValue extends AppState {
   updateRefreshInterval: (interval: number) => void;
   toggleAnnotateScheduled: () => void;
   toggleIsRecentSearchShown: () => void;
+  toggleMapStyleType: () => void;
   changeLanguage: (lang: Language) => void;
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
@@ -225,6 +231,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     const routeSearchHistory: unknown = JSON.parse(
       localStorage.getItem("routeSearchHistory") ?? "null"
     );
+    const mapStyleType: unknown = localStorage.getItem("mapStyleType");
 
     return {
       searchRoute: searchRoute,
@@ -273,6 +280,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         localStorage.getItem("searchRange") ?? `${DEFAULT_SEARCH_RANGE}`
       ),
       isSearching: false,
+      mapStyleType:
+        mapStyleType === "raster" || mapStyleType === "vector"
+          ? (mapStyleType as MapStyleType)
+          : "vector",
     };
   };
   const geolocation = useRef<GeoLocation>(_geolocation);
@@ -502,6 +513,14 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         const prev = state.annotateScheduled;
         const annotateScheduled = !prev;
         state.annotateScheduled = annotateScheduled;
+      })
+    );
+  }, []);
+
+  const toggleMapStyleType = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        state.mapStyleType = state.mapStyleType === "vector" ? "raster" : "vector";
       })
     );
   }, []);
@@ -754,6 +773,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   }, [state.vibrateDuration]);
 
   useEffect(() => {
+    localStorage.setItem("mapStyleType", state.mapStyleType);
+  }, [state.mapStyleType]);
+
+  useEffect(() => {
     localStorage.setItem("lang", language);
   }, [language]);
 
@@ -792,6 +815,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       updateRefreshInterval,
       toggleAnnotateScheduled,
       toggleIsRecentSearchShown,
+      toggleMapStyleType,
       changeLanguage,
       setFontSize,
       importAppState,
@@ -824,6 +848,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       updateRefreshInterval,
       toggleAnnotateScheduled,
       toggleIsRecentSearchShown,
+      toggleMapStyleType,
       changeLanguage,
       setFontSize,
       importAppState,

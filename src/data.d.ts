@@ -9,3 +9,5 @@ export type EtaFormat = "exact" | "diff" | "mixed";
 export type Language = "zh" | "en";
 
 export type ManageMode = "order" | "edit";
+
+export type MapStyleType = "vector" | "raster";

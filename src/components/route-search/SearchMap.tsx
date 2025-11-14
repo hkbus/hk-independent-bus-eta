@@ -6,7 +6,7 @@ import { Location as GeoLocation } from "hk-bus-eta";
 import { SearchRoute } from "../../pages/RouteSearch";
 import DbContext from "../../context/DbContext";
 import maplibregl, { Map as MapLibreMap, Marker } from "maplibre-gl";
-import { createMapStyle } from "../../utils/mapStyle";
+import { createMapStyle, ensureRasterLabelLayers } from "../../utils/mapStyle";
 
 interface SearchMapProps {
   routes: SearchRoute[];
@@ -25,7 +25,7 @@ const SearchMap = ({
   onMarkerClick,
   onMapClick,
 }: SearchMapProps) => {
-  const { geolocation, colorMode } = useContext(AppContext);
+  const { geolocation, colorMode, mapStyleType } = useContext(AppContext);
   const {
     db: { routeList, stopList },
   } = useContext(DbContext);
@@ -42,6 +42,7 @@ const SearchMap = ({
   const markersRef = useRef<Marker[]>([]);
   const startEndMarkersRef = useRef<Marker[]>([]);
   const sourceLayerIdsRef = useRef<Set<string>>(new Set());
+  const [overlayVersion, setOverlayVersion] = useState(0);
 
   const normalizeLng = (lng: number): number => {
     while (lng > 180) lng -= 360;
@@ -113,7 +114,7 @@ const SearchMap = ({
 
     const newMap = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: createMapStyle(colorMode) as any,
+      style: createMapStyle(colorMode, mapStyleType) as any,
       center: [normalizeLng(initialCenter.lng), initialCenter.lat],
       zoom: 15,
       pitch: 0,
@@ -212,6 +213,23 @@ const SearchMap = ({
       });
     }
   }, [map, start, end]);
+
+  // Update map style when theme or map style type changes
+  useEffect(() => {
+    if (!map) return;
+    const style = createMapStyle(colorMode, mapStyleType);
+    map.setStyle(style as any);
+    const onStyle = () => {
+      if (mapStyleType === "raster") {
+        ensureRasterLabelLayers(map, colorMode);
+      }
+      setOverlayVersion((v) => v + 1);
+    };
+    map.once("styledata", onStyle);
+    return () => {
+      map.off("styledata", onStyle);
+    };
+  }, [map, colorMode, mapStyleType]);
 
   useEffect(() => {
     if (!map) return;
@@ -410,6 +428,7 @@ const SearchMap = ({
     start,
     end,
     removeAllSourcesAndLayers,
+    overlayVersion,
   ]);
 
   useEffect(() => {

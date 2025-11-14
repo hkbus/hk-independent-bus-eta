@@ -9,7 +9,7 @@ import React, {
 import AppContext from "../../context/AppContext";
 import { Location } from "hk-bus-eta";
 import maplibregl, { Map as MapLibreMap, Marker } from "maplibre-gl";
-import { createMapStyle } from "../../utils/mapStyle";
+import { createMapStyle, ensureRasterLabelLayers } from "../../utils/mapStyle";
 
 import type { Feature, Polygon } from "geojson";
 
@@ -52,7 +52,7 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
   ({ range, value, onChange }, ref) => {
     const markerRef = useRef<Marker | null>(null);
     const position = useRef<Location>(value).current;
-    const { colorMode } = useContext(AppContext);
+    const { colorMode, mapStyleType } = useContext(AppContext);
     const [map, setMap] = useState<MapLibreMap | null>(null);
     const mapContainerRef = useRef<HTMLDivElement>(null);
 
@@ -82,7 +82,7 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
 
       const newMap = new maplibregl.Map({
         container: mapContainerRef.current,
-        style: createMapStyle(colorMode) as any,
+        style: createMapStyle(colorMode, mapStyleType) as any,
         center: [position.lng, position.lat],
         zoom: 14,
         pitch: 0,
@@ -107,7 +107,7 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
         })
       );
 
-      newMap.on("load", () => {
+      newMap.on("load", async () => {
         // Add circle source and layer (as polygon)
         newMap.addSource("range-circle", {
           type: "geojson",
@@ -125,6 +125,9 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
           },
         });
 
+        if (mapStyleType === "raster") {
+          await ensureRasterLabelLayers(newMap, colorMode);
+        }
         setMap(newMap);
       });
 
@@ -225,9 +228,37 @@ const RangeMap = React.forwardRef<MapLibreMap, RangeMapProps>(
 
     useEffect(() => {
       if (!map) return;
-      const style = createMapStyle(colorMode);
+      const style = createMapStyle(colorMode, mapStyleType);
       map.setStyle(style as any);
-    }, [colorMode, map]);
+      const onStyle = () => {
+        const center = map.getCenter();
+        if (!map.getSource("range-circle")) {
+          map.addSource("range-circle", {
+            type: "geojson",
+            data: createGeoJSONCircle({ lat: center.lat, lng: center.lng }, range),
+          } as any);
+        }
+        if (!map.getLayer("range-circle-layer")) {
+          map.addLayer({
+            id: "range-circle-layer",
+            type: "fill",
+            source: "range-circle",
+            paint: {
+              "fill-color": "#3887be",
+              "fill-opacity": 0.3,
+              "fill-outline-color": "#3887be",
+            },
+          });
+        }
+        if (mapStyleType === "raster") {
+          ensureRasterLabelLayers(map, colorMode);
+        }
+      };
+      map.once("styledata", onStyle);
+      return () => {
+        map.off("styledata", onStyle);
+      };
+    }, [colorMode, mapStyleType, map, range]);
 
     return (
       <div style={{ height: "100%", position: "relative" }}>

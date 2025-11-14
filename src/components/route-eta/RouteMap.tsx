@@ -18,7 +18,7 @@ import { getLineColor } from "../../utils";
 import DbContext from "../../context/DbContext";
 import MtrExits from "../map/MtrExits";
 import maplibregl, { Map as MapLibreMap, Marker } from "maplibre-gl";
-import { createMapStyle } from "../../utils/mapStyle";
+import { createMapStyle, ensureRasterLabelLayers } from "../../utils/mapStyle";
 
 // Helper function to darken a hex color by a percentage
 function darkenColor(hex: string, percent: number) {
@@ -61,7 +61,7 @@ const RouteMap = ({
   companies,
   onMarkerClick,
 }: RouteMapProps) => {
-  const { geolocation, colorMode } = useContext(AppContext);
+  const { geolocation, colorMode, mapStyleType } = useContext(AppContext);
   const {
     db: { stopList },
   } = useContext(DbContext);
@@ -83,7 +83,7 @@ const RouteMap = ({
     stops: stops,
     stopIdx: stopIdx,
   });
-  const previousColorMode = useRef(colorMode);
+  const previousStyleKey = useRef(`${colorMode}-${mapStyleType}`);
 
   // Initialize map
   useEffect(() => {
@@ -95,7 +95,7 @@ const RouteMap = ({
 
     const newMap = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: createMapStyle(colorMode) as any,
+      style: createMapStyle(colorMode, mapStyleType) as any,
       center: [initialCenter.lng, initialCenter.lat],
       zoom: 16,
       minZoom: 0,
@@ -119,8 +119,11 @@ const RouteMap = ({
       })
     );
 
-    newMap.on("load", () => {
+    newMap.on("load", async () => {
       setMap(newMap);
+      if (mapStyleType === "raster") {
+        await ensureRasterLabelLayers(newMap, colorMode);
+      }
     });
 
     return () => {
@@ -311,16 +314,20 @@ const RouteMap = ({
 
   useEffect(() => {
     if (!map) return;
-    if (previousColorMode.current === colorMode) return;
+    const styleKey = `${colorMode}-${mapStyleType}`;
+    if (previousStyleKey.current === styleKey) return;
 
-    const style = createMapStyle(colorMode);
-    previousColorMode.current = colorMode;
+    const style = createMapStyle(colorMode, mapStyleType);
+    previousStyleKey.current = styleKey;
 
     map.setStyle(style as any);
 
     const onStyleData = () => {
       addRoutePathLayers(map, routePath, companies, route);
       addStopMarkers(map, stops, stopIdx, companies, onMarkerClick, markersRef);
+      if (mapStyleType === "raster") {
+        ensureRasterLabelLayers(map, colorMode);
+      }
     };
     map.once("styledata", onStyleData);
     return () => {
@@ -328,6 +335,7 @@ const RouteMap = ({
     };
   }, [
     colorMode,
+    mapStyleType,
     map,
     routePath,
     companies,
