@@ -37,6 +37,7 @@ import {
   SyncDisabled as SyncDisabledIcon,
   SecurityUpdate as SecurityUpdateIcon,
   Watch as WatchIcon,
+  Map as MapIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -461,6 +462,24 @@ const Settings = () => {
             <Avatar sx={iconSx} src="/img/logo128.png" alt="App Logo"></Avatar>
           </ListItemAvatar>
           <ListItemText primary={t("圖標來源")} secondary={"陳瓜 Chan Gua"} />
+        </ListItemButton>
+        <ListItemButton
+          component={"a"}
+          target="_blank"
+          href={`https://github.com/anscg/hk-pmtiles-generation`}
+          onClick={() => {
+            vibrate(vibrateDuration);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <MapIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={t("地圖資源")}
+            secondary={"HK pmtiles Generation by @anscg"}
+          />
         </ListItemButton>
         <ListItemButton
           component={"a"}

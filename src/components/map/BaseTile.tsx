@@ -1,27 +1,31 @@
 import Leaflet from "leaflet";
-import { useContext } from "react";
-import { TileLayer } from "react-leaflet";
+import { useContext, useEffect } from "react";
+import { TileLayer, useMap } from "react-leaflet";
 import AppContext from "../../context/AppContext";
 import useLanguage from "../../hooks/useTranslation";
 import { Box, SxProps, Theme } from "@mui/material";
+import { PMTiles, leafletRasterLayer } from "pmtiles";
 
 const BaseTile = () => {
   const { colorMode } = useContext(AppContext);
   const language = useLanguage();
+  const map = useMap();
+
+  useEffect(() => {
+    const p = new PMTiles(
+      colorMode === "dark"
+        ? "https://pmtiles.hkbus.app/hong-kong-raster-dark.pmtiles"
+        : "https://pmtiles.hkbus.app/hong-kong-raster.pmtiles"
+    );
+    const layer = leafletRasterLayer(p, {}).addTo(map);
+    layer.bringToBack();
+    return () => {
+      map.removeLayer(layer);
+    };
+  }, [map, colorMode]);
+
   return (
     <>
-      <TileLayer
-        crossOrigin="anonymous"
-        maxZoom={Leaflet.Browser.retina ? 20 : 19}
-        maxNativeZoom={20}
-        keepBuffer={10}
-        updateWhenIdle={false}
-        url={
-          colorMode === "light"
-            ? import.meta.env.VITE_BASE_MAP_URL
-            : import.meta.env.VITE_BASE_MAP_URL_DARK
-        }
-      />
       <TileLayer
         crossOrigin="anonymous"
         maxZoom={Leaflet.Browser.retina ? 20 : 19}
