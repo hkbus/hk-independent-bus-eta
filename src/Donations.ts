@@ -76,7 +76,7 @@ const Donations = [
     },
     description: {
       zh: "請訂閱《追光者》",
-      en: "Please subscribe the Pulse HK News",
+      en: "Please subscribe Pulse HK News",
     },
   },
   {
