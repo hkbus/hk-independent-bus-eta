@@ -11,8 +11,8 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://hkfeature.com/加入會員/",
-      en: "https://hkfeature.com/加入會員/",
+      zh: "https://hkfeature.com/joinus",
+      en: "https://hkfeature.com/joinus",
     },
     description: {
       zh: "請訂閱《誌》",
@@ -21,8 +21,8 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://support.hongkongfp.com/en/",
-      en: "https://support.hongkongfp.com/en/",
+      zh: "https://hongkongfp.com/support-hong-kong-free-press/",
+      en: "https://hongkongfp.com/support-hong-kong-free-press/",
     },
     description: {
       zh: "請捐款到《香港自由新聞》",
@@ -71,12 +71,12 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://photonmedia.net/subscribe",
-      en: "https://photonmedia.net/subscribe",
+      zh: "https://www.patreon.com/pulsehknews",
+      en: "https://www.patreon.com/pulsehknews",
     },
     description: {
-      zh: "請訂閱《光傳媒》",
-      en: "Please subscribe the Photon Media",
+      zh: "請訂閱《追光者》",
+      en: "Please subscribe the Pulse HK News",
     },
   },
   {
@@ -121,32 +121,12 @@ const Donations = [
   },
   {
     url: {
-      zh: "https://theinitium.com/subscription/offers",
-      en: "https://theinitium.com/subscription/offers",
+      zh: "https://theinitium.com/plans/",
+      en: "https://theinitium.com/plans/",
     },
     description: {
       zh: "請訂閱《端傳媒》",
       en: "Please subscribe the Initium Media",
-    },
-  },
-  {
-    url: {
-      zh: "https://commonshk.com/subcribe/",
-      en: "https://commonshk.com/subcribe/",
-    },
-    description: {
-      zh: "請訂閱《同文》",
-      en: "Please subscribe the Commons",
-    },
-  },
-  {
-    url: {
-      zh: "https://www.patreon.com/thechasernews",
-      en: "https://www.patreon.com/thechasernews",
-    },
-    description: {
-      zh: "請訂閱《追新聞》",
-      en: "Please subscribe The Chaser",
     },
   },
   {
@@ -157,16 +137,6 @@ const Donations = [
     description: {
       zh: "請訂閱《綠豆》",
       en: "Please subscribe Green Bean Media",
-    },
-  },
-  {
-    url: {
-      zh: "https://www.metwarn.com/donate/",
-      en: "https://www.metwarn.com/donate/",
-    },
-    description: {
-      zh: "請捐款到《MET WARN 天氣預警》",
-      en: "Please donate to MET WARN",
     },
   },
 ];
