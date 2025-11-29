@@ -17,7 +17,13 @@ const BaseTile = () => {
         ? "https://pmtiles.hkbus.app/hong-kong-raster-dark.pmtiles"
         : "https://pmtiles.hkbus.app/hong-kong-raster.pmtiles"
     );
-    const layer = leafletRasterLayer(p, {}).addTo(map);
+    const layer = leafletRasterLayer(p, {
+      // Source provides map tiles up to zoom level 17
+      // See https://github.com/hkbus/hk-pmtiles-generation/blob/main/.github/workflows/generate-maptiles.yml
+      maxNativeZoom: 17,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+    } as Leaflet.TileLayerOptions).addTo(map);
     layer.bringToBack();
     return () => {
       map.removeLayer(layer);
