@@ -1,7 +1,6 @@
 html {
   height: 100%;
   user-select: none;
-  filter: grayscale(1.0);
 }
 
 *::-webkit-scrollbar {
