@@ -190,7 +190,7 @@ const resources = {
       KTL: "Kwun Tong Line",
       DRL: "Disneyland Resort Line",
       "支援 WearOS 及 WatchOS 平台": "Support WearOS & WatchOS",
-      "地圖資源": "Map Resources"
+      地圖資源: "Map Resources",
     },
   },
   zh: {
