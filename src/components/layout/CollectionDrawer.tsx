@@ -34,14 +34,15 @@ const CollectionDrawer = () => {
     >
       <Box sx={rootSx}>
         <MaximizeIcon sx={dividerSx} />
-        { // @ts-expect-error harmonyBridger is in Harmony OS only 
+        {
+          // @ts-expect-error harmonyBridger is in Harmony OS only
           typeof harmonyBridger === "undefined" && (
             <Box sx={savedContainerSx}>
               <WatchEntry />
             </Box>
           )
         }
-        
+
         <Box sx={savedContainerSx}>
           <Collection name={t("常用")} list={savedEtas} collectionIdx={-1} />
         </Box>
