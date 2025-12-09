@@ -390,26 +390,29 @@ const Settings = () => {
             secondary={t("整理從 Google 收集的數據")}
           />
         </ListItemButton>
-        {!iOSRNWebView() && (
-          <ListItemButton
-            component="a"
-            href={Donations[donationId].url[language]}
-            target="_blank"
-            onClick={() => {
-              vibrate(vibrateDuration);
-            }}
-          >
-            <ListItemAvatar>
-              <Avatar>
-                <MonetizationOnIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={t("捐款支持")}
-              secondary={Donations[donationId].description[language]}
-            />
-          </ListItemButton>
-        )}
+        {
+          // @ts-expect-error harmonyBridger exists in Harmony OS only
+          !iOSRNWebView() && typeof harmonyBridger === "undefined" && (
+            <ListItemButton
+              component="a"
+              href={Donations[donationId].url[language]}
+              target="_blank"
+              onClick={() => {
+                vibrate(vibrateDuration);
+              }}
+            >
+              <ListItemAvatar>
+                <Avatar>
+                  <MonetizationOnIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={t("捐款支持")}
+                secondary={Donations[donationId].description[language]}
+              />
+            </ListItemButton>
+          )
+        }
         <Divider />
         <ListItemButton
           component={"a"}
