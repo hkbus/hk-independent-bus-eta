@@ -325,7 +325,7 @@ const Settings = () => {
         {!iOSRNWebView() ? (
           <ListItemButton
             component="a"
-            href={`https://t.me/+T245uB32DeNlNjJl`}
+            href={`https://t.me/hkbusapp`}
             target="_blank"
             onClick={() => {
               vibrate(vibrateDuration);
