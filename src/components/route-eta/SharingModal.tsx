@@ -56,6 +56,42 @@ const SharingModal = ({
   );
 
   useEffect(() => {
+    if (event) setIsOpen(true);
+  }, [setIsOpen, event]);
+
+  const handleShareLink = useCallback(() => {
+    triggerShare(
+      `https://${window.location.hostname}/${language}/route/${routeUri}/${stopId}%2C${seq}`,
+      `${seq + 1}. ${toProperCase(stop.name[language])} - ${route} ${t(
+        "往"
+      )} ${toProperCase(dest[language])} - ${t(AppTitle)}`
+    )
+      .then(() => {
+        if (navigator.clipboard) setIsCopied(true);
+      })
+      .finally(() => {
+        setIsOpen(false);
+      });
+  }, [
+    AppTitle,
+    routeUri,
+    dest,
+    t,
+    setIsCopied,
+    language,
+    seq,
+    stop.name,
+    stopId,
+    route,
+    setIsOpen,
+  ]);
+
+  useEffect(() => {
+    // @ts-expect-error harmonyShare is defined in the mobile app
+    if (isOpen && window.harmonyShare) {
+      handleShareLink();
+      return;
+    }
     if (isOpen) {
       Promise.all([
         domToImage("route-eta-header", colorMode),
@@ -87,38 +123,7 @@ const SharingModal = ({
     return () => {
       setImgBase64("");
     };
-  }, [isOpen, colorMode, seq]);
-
-  useEffect(() => {
-    if (event) setIsOpen(true);
-  }, [setIsOpen, event]);
-
-  const handleShareLink = useCallback(() => {
-    triggerShare(
-      `https://${window.location.hostname}/${language}/route/${routeUri}/${stopId}%2C${seq}`,
-      `${seq + 1}. ${toProperCase(stop.name[language])} - ${route} ${t(
-        "往"
-      )} ${toProperCase(dest[language])} - ${t(AppTitle)}`
-    )
-      .then(() => {
-        if (navigator.clipboard) setIsCopied(true);
-      })
-      .finally(() => {
-        setIsOpen(false);
-      });
-  }, [
-    AppTitle,
-    routeUri,
-    dest,
-    t,
-    setIsCopied,
-    language,
-    seq,
-    stop.name,
-    stopId,
-    route,
-    setIsOpen,
-  ]);
+  }, [isOpen, colorMode, seq, handleShareLink]);
 
   const handleShareImg = useCallback(() => {
     triggerShareImg(

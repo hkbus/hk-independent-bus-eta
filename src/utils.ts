@@ -352,6 +352,8 @@ export const binarySearch = <T>(
 
 export const checkAppInstalled = () => {
   if (window.matchMedia("(display-mode: standalone)").matches) return true;
+  // @ts-expect-error harmonyBridger exists in Harmony OS only
+  if (harmonyBridger) return true;
   // @ts-expect-error window.navigator.standalone exists in iOS only
   const standalone = window.navigator.standalone;
   const userAgent = window.navigator.userAgent.toLowerCase();

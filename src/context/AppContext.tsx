@@ -367,7 +367,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
               updateGeolocation({ lat: latitude, lng: longitude });
               setGeoPermission("granted");
             },
-            () => {
+            (positionError: GeolocationPositionError) => {
+              console.log(positionError);
               setGeoPermission("denied");
               if (deniedCallback) deniedCallback();
             },
