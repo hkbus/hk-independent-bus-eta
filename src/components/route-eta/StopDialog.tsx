@@ -20,6 +20,7 @@ import { Company } from "hk-bus-eta";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
+import AppContext from "../../context/AppContext";
 
 interface StopDialogProps {
   open: boolean;
@@ -32,6 +33,7 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
     db: { stopList },
   } = useContext(DbContext);
   const { savedStops, updateSavedStops } = useContext(CollectionContext);
+  const { openUrl } = useContext(AppContext);
   const language = useLanguage();
 
   const bookmarked = useMemo<boolean>(
@@ -46,19 +48,18 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
   const handleClickDirection = useCallback(() => {
     if (stopList[stops[0][1]]?.location) {
       const { lat, lng } = stopList[stops[0][1]].location;
-      window.open(
-        `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
-        "_blank"
+      openUrl(
+        `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`
       );
     }
-  }, [stopList, stops]);
+  }, [stopList, stops, openUrl]);
 
   const handleClickLocation = useCallback(() => {
     if (stopList[stops[0][1]]?.location) {
       const { lat, lng } = stopList[stops[0][1]].location;
-      window.open(`https://www.google.com/maps/?q=${lat},${lng}`, "_blank");
+      openUrl(`https://www.google.com/maps/?q=${lat},${lng}`);
     }
-  }, [stopList, stops]);
+  }, [openUrl, stopList, stops]);
 
   return (
     <Dialog open={open} onClose={onClose} sx={rootSx}>

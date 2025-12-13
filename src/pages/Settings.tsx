@@ -70,6 +70,7 @@ const Settings = () => {
     vibrateDuration,
     toggleAnalytics,
     analytics,
+    openUrl,
   } = useContext(AppContext);
   const { debug, toggleDebug } = useContext(ReactNativeContext);
   const { os } = useContext(ReactNativeContext);
@@ -303,13 +304,11 @@ const Settings = () => {
           />
         </ListItemButton>
         <ListItemButton
-          component={"a"}
-          href={
-            isApple ? `https://watch.hkbus.app/` : `https://wear.hkbus.app/`
-          }
-          target="_blank"
           onClick={() => {
             vibrate(vibrateDuration);
+            openUrl(
+              isApple ? `https://watch.hkbus.app/` : `https://wear.hkbus.app/`
+            );
           }}
         >
           <ListItemAvatar>
@@ -324,11 +323,9 @@ const Settings = () => {
         </ListItemButton>
         {!iOSRNWebView() ? (
           <ListItemButton
-            component="a"
-            href={`https://t.me/hkbusapp`}
-            target="_blank"
             onClick={() => {
               vibrate(vibrateDuration);
+              openUrl("https://t.me/hkbusapp");
             }}
           >
             <ListItemAvatar>
@@ -373,11 +370,11 @@ const Settings = () => {
           </ListItemButton>
         )}
         <ListItemButton
-          component="a"
-          href={`https://datastudio.google.com/embed/reporting/de590428-525e-4865-9d37-a955204b807a/page/psfZC`}
-          target="_blank"
           onClick={() => {
             vibrate(vibrateDuration);
+            openUrl(
+              "https://datastudio.google.com/embed/reporting/de590428-525e-4865-9d37-a955204b807a/page/psfZC"
+            );
           }}
         >
           <ListItemAvatar>
@@ -394,11 +391,9 @@ const Settings = () => {
           // @ts-expect-error harmonyBridger exists in Harmony OS only
           !iOSRNWebView() && typeof harmonyBridger === "undefined" && (
             <ListItemButton
-              component="a"
-              href={Donations[donationId].url[language]}
-              target="_blank"
               onClick={() => {
                 vibrate(vibrateDuration);
+                openUrl(Donations[donationId].url[language]);
               }}
             >
               <ListItemAvatar>
@@ -415,14 +410,12 @@ const Settings = () => {
         }
         <Divider />
         <ListItemButton
-          component={"a"}
-          href={
-            import.meta.env.VITE_REPO_URL ||
-            `https://github.com/hkbus/hk-independent-bus-eta`
-          }
-          target="_blank"
           onClick={() => {
             vibrate(vibrateDuration);
+            openUrl(
+              import.meta.env.VITE_REPO_URL ||
+                `https://github.com/hkbus/hk-independent-bus-eta`
+            );
           }}
         >
           <ListItemAvatar>
@@ -436,11 +429,9 @@ const Settings = () => {
           />
         </ListItemButton>
         <ListItemButton
-          component={"a"}
-          href={`/faq`}
-          target="_blank"
           onClick={() => {
             vibrate(vibrateDuration);
+            openUrl("/faq");
           }}
         >
           <ListItemAvatar>
@@ -454,11 +445,9 @@ const Settings = () => {
           />
         </ListItemButton>
         <ListItemButton
-          component={"a"}
-          href={`https://instagram.com/chan_gua`}
-          target="_blank"
           onClick={() => {
             vibrate(vibrateDuration);
+            openUrl(`https://instagram.com/chan_gua`);
           }}
         >
           <ListItemAvatar>
@@ -467,11 +456,9 @@ const Settings = () => {
           <ListItemText primary={t("圖標來源")} secondary={"陳瓜 Chan Gua"} />
         </ListItemButton>
         <ListItemButton
-          component={"a"}
-          target="_blank"
-          href={`https://github.com/anscg/hk-pmtiles-generation`}
           onClick={() => {
             vibrate(vibrateDuration);
+            openUrl(`https://github.com/anscg/hk-pmtiles-generation`);
           }}
         >
           <ListItemAvatar>

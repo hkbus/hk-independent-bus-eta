@@ -4,6 +4,7 @@ import { Box, Button, SxProps, Theme } from "@mui/material";
 import { Launch as LaunchIcon } from "@mui/icons-material";
 import useLanguage from "../../../hooks/useTranslation";
 import DbContext from "../../../context/DbContext";
+import AppContext from "../../../context/AppContext";
 
 interface RouteOffiicalUrlBtnProps {
   routeId: string;
@@ -13,6 +14,7 @@ const RouteOffiicalUrlBtn = ({ routeId }: RouteOffiicalUrlBtnProps) => {
   const {
     db: { routeList },
   } = useContext(DbContext);
+  const { openUrl } = useContext(AppContext);
   const { t } = useTranslation();
   const language = useLanguage();
   const { route, co, gtfsId } = routeList[routeId];
@@ -75,10 +77,10 @@ const RouteOffiicalUrlBtn = ({ routeId }: RouteOffiicalUrlBtnProps) => {
   const handleClick = useCallback(
     (url: string) => () => {
       if (url) {
-        window.open(url, "_blank");
+        openUrl(url);
       }
     },
-    []
+    [openUrl]
   );
 
   return (

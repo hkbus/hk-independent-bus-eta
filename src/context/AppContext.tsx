@@ -147,7 +147,7 @@ interface AppContextValue extends AppState {
   importAppState: (appState: AppState) => void;
   setSearchRange: (searchRange: number) => void;
   setIsSearching: (searching: boolean) => void;
-
+  openUrl: (url: string) => void;
   // for React Native Context
   setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
 }
@@ -618,6 +618,21 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
+  const openUrl = useCallback((url: string) => {
+    // @ts-expect-error harmonyBridger exists in Harmony OS only
+    if (typeof harmonyBridger !== "undefined") {
+      if (url.startsWith("/")) {
+        // @ts-expect-error harmonyBridger exists in Harmony OS only
+        harmonyBridger.openUrl(`https://${window.location.hostname}${url}`);
+      } else {
+        // @ts-expect-error harmonyBridger exists in Harmony OS only
+        harmonyBridger.openUrl(url);
+      }
+    } else {
+      window.open(url, "_blank");
+    }
+  }, []);
+
   const calculateColorMode = useCallback(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
       return state._colorMode;
@@ -673,6 +688,11 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         value: colorMode,
       })
     );
+    // @ts-expect-error harmonyBridger exists in Harmony OS only
+    if (typeof harmonyBridger !== 'undefined') {
+      // @ts-expect-error harmonyBridger exists in Harmony OS only
+      harmonyBridger.setTheme(colorMode)
+    }
   }, [colorMode]);
 
   const importAppState = useCallback((appState: AppState) => {
@@ -799,6 +819,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       setGeoPermission,
       setSearchRange,
       setIsSearching,
+      openUrl,
     }),
     [
       state,
@@ -831,6 +852,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       setGeoPermission,
       setSearchRange,
       setIsSearching,
+      openUrl,
     ]
   );
 

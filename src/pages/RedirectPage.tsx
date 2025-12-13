@@ -1,14 +1,17 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Typography } from "@mui/material";
+import AppContext from "../context/AppContext";
 
 interface RedirectPageProps {
   url: string;
 }
 
 const RedirectPage = ({ url }: RedirectPageProps) => {
+  const { openUrl } = useContext(AppContext)
   useEffect(() => {
-    window.location.replace(url);
-  }, [url]);
+    openUrl(url)
+
+  }, [openUrl, url]);
 
   return <Typography variant="body1">Redirecting...</Typography>;
 };
