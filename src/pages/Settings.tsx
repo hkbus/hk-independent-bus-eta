@@ -303,24 +303,28 @@ const Settings = () => {
             secondary={t("經不同媒介分享給親友")}
           />
         </ListItemButton>
-        <ListItemButton
-          onClick={() => {
-            vibrate(vibrateDuration);
-            openUrl(
-              isApple ? `https://watch.hkbus.app/` : `https://wear.hkbus.app/`
-            );
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <WatchIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={t("智能手錶應用程式")}
-            secondary={t("支援 WearOS 及 WatchOS 平台")}
-          />
-        </ListItemButton>
+        {
+          // @ts-expect-error harmonyBridger exists in Harmony OS only
+          typeof harmonyBridger === 'undefined' && (
+          <ListItemButton
+            onClick={() => {
+              vibrate(vibrateDuration);
+              openUrl(
+                isApple ? `https://watch.hkbus.app/` : `https://wear.hkbus.app/`
+              );
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <WatchIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={t("智能手錶應用程式")}
+              secondary={t("支援 WearOS 及 WatchOS 平台")}
+            />
+          </ListItemButton>
+        )}
         {!iOSRNWebView() ? (
           <ListItemButton
             onClick={() => {

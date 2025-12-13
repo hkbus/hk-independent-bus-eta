@@ -7,10 +7,9 @@ interface RedirectPageProps {
 }
 
 const RedirectPage = ({ url }: RedirectPageProps) => {
-  const { openUrl } = useContext(AppContext)
+  const { openUrl } = useContext(AppContext);
   useEffect(() => {
-    openUrl(url)
-
+    openUrl(url);
   }, [openUrl, url]);
 
   return <Typography variant="body1">Redirecting...</Typography>;

@@ -689,9 +689,9 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       })
     );
     // @ts-expect-error harmonyBridger exists in Harmony OS only
-    if (typeof harmonyBridger !== 'undefined') {
+    if (typeof harmonyBridger !== "undefined") {
       // @ts-expect-error harmonyBridger exists in Harmony OS only
-      harmonyBridger.setTheme(colorMode)
+      harmonyBridger.setTheme(colorMode);
     }
   }, [colorMode]);
 
