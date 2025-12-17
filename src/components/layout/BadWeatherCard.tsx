@@ -2,10 +2,13 @@ import { Paper, SxProps, Theme, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useWeather } from "../Weather";
 import ErrorIcon from "@mui/icons-material/Error";
+import { useContext } from "react";
+import AppContext from "../../context/AppContext";
 
 const BadWeatherCard = () => {
   const { t } = useTranslation();
   const weather = useWeather();
+  const { openUrl } = useContext(AppContext);
 
   const isAdverse = () => {
     if (!weather) {
@@ -24,7 +27,7 @@ const BadWeatherCard = () => {
       <Paper
         variant="outlined"
         sx={rootSx}
-        onClick={() => window.open(t("bad-weather-link"), "_target")}
+        onClick={() => openUrl(t("bad-weather-link"))}
       >
         <ErrorIcon color="error" />
         <Typography>{t("bad-weather-text")}</Typography>

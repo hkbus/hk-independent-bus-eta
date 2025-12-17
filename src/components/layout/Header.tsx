@@ -41,6 +41,7 @@ const Header = () => {
     toggleColorMode,
     isSearching,
     setIsSearching,
+    openUrl,
   } = useContext(AppContext);
   const {
     db: { routeList },
@@ -202,7 +203,7 @@ const Header = () => {
         {weatherCodes.slice(0, 2).map((code) => (
           <Avatar
             onClick={() =>
-              window.open(
+              openUrl(
                 `https://www.hko.gov.hk/${
                   language === "zh" ? "tc" : "en"
                 }/detail.htm`

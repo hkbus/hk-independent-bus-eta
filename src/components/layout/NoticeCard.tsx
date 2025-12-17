@@ -8,10 +8,11 @@ import {
 } from "@mui/material";
 import WarnIcon from "@mui/icons-material/Warning";
 import useLanguage from "../../hooks/useTranslation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { iOSRNWebView } from "../../utils";
 import { Language } from "../../data";
 import { Close as CloseIcon } from "@mui/icons-material";
+import AppContext from "../../context/AppContext";
 
 interface NoticeCardState {
   content: Record<Language, string[]>;
@@ -28,6 +29,7 @@ const NoticeCard = () => {
   const [closeNoticeContent, setCloseNoticeContent] = useState<string>(
     localStorage.getItem("closeNoticeContent") ?? ""
   );
+  const { openUrl } = useContext(AppContext);
 
   useEffect(() => {
     fetch("/notice.json")
@@ -45,8 +47,8 @@ const NoticeCard = () => {
     if (iOSRNWebView() && !state.enableLinkInIos) {
       return;
     }
-    window.open(state.link[language], "_target");
-  }, [language, state]);
+    openUrl(state.link[language]);
+  }, [language, openUrl, state]);
 
   const closeNotice = useCallback(() => {
     if (state) {
