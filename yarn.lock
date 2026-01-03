@@ -1893,6 +1893,11 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
+"@date-fns/tz@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@date-fns/tz/-/tz-1.4.1.tgz#2d905f282304630e07bef6d02d2e7dbf3f0cc4e4"
+  integrity sha512-P5LUNhtbj6YfI3iJjw5EL9eUAG6OitD0W3fWQcpQjDRc/QIsL0tRNuO1PcDvPccWL1fSTXXdE1ds+l95DV/OFA==
+
 "@emotion/babel-plugin@^11.11.0":
   version "11.11.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.11.0.tgz#c2d872b6a7767a9d176d007f5b31f7d504bb5d6c"
@@ -5603,11 +5608,12 @@ hast-util-whitespace@^2.0.0:
   resolved "https://registry.yarnpkg.com/hast-util-whitespace/-/hast-util-whitespace-2.0.1.tgz#0ec64e257e6fc216c7d14c8a1b74d27d650b4557"
   integrity sha512-nAxA0v8+vXSBDt3AnRUNjyRIQ0rD+ntpbAp4LnPkumc5M9yUbSMa4XDU9Q6etY4f1Wp4bNgvc1yjiZtsTTrSng==
 
-hk-bus-eta@^3.7.7:
-  version "3.7.7"
-  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-3.7.7.tgz#e76fa20a920e99293709e60c860d209ad90a1d10"
-  integrity sha512-jubEKLaR9PvRiT7quVu+ZaBir04JOcP8FmQYha3v6uDJvf5NL2RykC1S4RkIGzeZ9v7VOgSDetT8wVOvBekXeQ==
+hk-bus-eta@^3.7.8:
+  version "3.7.8"
+  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-3.7.8.tgz#44126db9e1b4d1925c8e32d458920e86f4527e52"
+  integrity sha512-+ejWyILxEsHWV8yJhuoVSQ372R4mb5glu5BvC91uIypoP1kmaOjp74MwrdCGy/eJNe6aLhBajmXD6Ot2gUgfNA==
   dependencies:
+    "@date-fns/tz" "^1.4.1"
     date-fns "^4.1.0"
     date-fns-tz "^3.2.0"
 
