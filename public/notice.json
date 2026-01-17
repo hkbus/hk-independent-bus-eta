@@ -1,18 +1,18 @@
 {
   "content": {
     "zh": [
-      "受雲端平台 Azure 技術故障影響，九巴及港鐵報時資訊十分不穩。"
+      "香港馬拉松2026的特別交通及運輸安排"
     ],
     "en": [
-      "Due to technical issues of Azure, ETA of KMB and MTR cannot be displayed normally."
+      "Special Traffic and Transport Arrangements for the Hong Kong Marathon 2026"
     ]
   },
   "link": {
-    "zh": "https://t.me/+P_yzNYLWqwNhYzQ1", 
-    "en": "https://t.me/+P_yzNYLWqwNhYzQ1"
+    "zh": "https://www.td.gov.hk/tc/traffic_notices/index_id_84775.html", 
+    "en": "https://www.td.gov.hk/en/traffic_notices/index_id_84775.html"
   },
-  "endDate": "2025-10-31T00:00:00.000Z",
-  "url": "https://t.me/+P_yzNYLWqwNhYzQ1",
+  "endDate": "2026-01-18T10:00:00.000Z",
+  "url": "https://www.td.gov.hk/tc/traffic_notices/index_id_84775.html",
   "enableLinkInIos": true,
-  "isShown": false
+  "isShown": true
 }
