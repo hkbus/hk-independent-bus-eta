@@ -1,18 +1,18 @@
 {
   "content": {
     "zh": [
-      "香港馬拉松2026的特別交通及運輸安排"
+      "【重要提醒】1月25日起，乘客在巴士上必須佩戴安全帶。"
     ],
     "en": [
-      "Special Traffic and Transport Arrangements for the Hong Kong Marathon 2026"
+      "Important Notice: Passengers must wear seat belts on buses starting from January 25."
     ]
   },
   "link": {
-    "zh": "https://www.td.gov.hk/tc/traffic_notices/index_id_84775.html", 
-    "en": "https://www.td.gov.hk/en/traffic_notices/index_id_84775.html"
+    "zh": "https://www.td.gov.hk/tc/road_safety/sb/", 
+    "en": "https://www.td.gov.hk/en/road_safety/sb/"
   },
-  "endDate": "2026-01-18T10:00:00.000Z",
-  "url": "https://www.td.gov.hk/tc/traffic_notices/index_id_84775.html",
+  "endDate": "2026-02-01T10:00:00.000Z",
+  "url": "https://www.info.gov.hk/gia/general/202601/08/P2026010800199.htm",
   "enableLinkInIos": true,
   "isShown": true
 }

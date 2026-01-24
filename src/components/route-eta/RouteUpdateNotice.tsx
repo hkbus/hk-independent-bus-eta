@@ -28,7 +28,7 @@ const RouteUpdateNotice = ({ route }: RouteUpdateNoticeProps) => {
 
   return (
     <Box sx={rootSx} onClick={renewDb}>
-      <Typography>{t("db-renew-text")}</Typography>
+      <Typography>⁉️ {t("db-renew-text")}</Typography>
     </Box>
   );
 };
