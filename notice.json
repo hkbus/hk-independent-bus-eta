@@ -1,0 +1,18 @@
+{
+  "content": {
+    "zh": [
+      "[港鐵] 2026-02-01 屯馬綫特別車務安排：乘客途經紅磡站需下車到對面月台轉車以繼續行程。"
+    ],
+    "en": [
+      "[MTR] 2026-02-01 Tuen Ma Line special train service arrangements: To continue your journey through Hung Hom, please exit the train and board the train at the opposite platform."
+    ]
+  },
+  "link": {
+    "zh": "https://tnews.mtr.com.hk/alert/tsi_simpletxt_title_tc.html?type=general",
+    "en": "https://tnews.mtr.com.hk/alert/tsi_simpletxt_title.html?type=general"
+  },
+  "endDate": "2026-02-01T19:00:00.000Z",
+  "url": "https://www.mtr.com.hk/archive/corporate/ch/press_release/PR-26-009-C.pdf",
+  "enableLinkInIos": true,
+  "isShown": true
+}
