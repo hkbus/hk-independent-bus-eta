@@ -1,18 +1,18 @@
 {
   "content": {
     "zh": [
-      "[港鐵] 2026-02-01 屯馬綫特別車務安排：乘客途經紅磡站需下車到對面月台轉車以繼續行程。"
+      "[巴士][小巴] 2026-02-10 將軍澳臨時交通及運輸安排：按此查閱改道資訊。"
     ],
     "en": [
-      "[MTR] 2026-02-01 Tuen Ma Line special train service arrangements: To continue your journey through Hung Hom, please exit the train and board the train at the opposite platform."
+      "[Bus][Minibus] 2026-02-10 Temporary Traffic and Transport Arrangements in Tseung Kwan O: Click here for diversion information."
     ]
   },
   "link": {
-    "zh": "https://tnews.mtr.com.hk/alert/tsi_simpletxt_title_tc.html?type=general",
-    "en": "https://tnews.mtr.com.hk/alert/tsi_simpletxt_title.html?type=general"
+    "zh": "https://www.td.gov.hk/filemanager/en/content_13/TDN-Temporary%20Traffic%20and%20Transport%20Arrangements%20in%20TKO_CHI.pdf#page=2",
+    "en": "https://www.td.gov.hk/filemanager/en/content_13/TDN-Temporary%20Traffic%20and%20Transport%20Arrangements%20in%20TKO_EN.pdf#page=3"
   },
-  "endDate": "2026-02-01T19:00:00.000Z",
-  "url": "https://www.mtr.com.hk/archive/corporate/ch/press_release/PR-26-009-C.pdf",
+  "endDate": "2026-02-11T00:00:00.000Z",
+  "url": "https://www.td.gov.hk/tc/traffic_notices/index_id_85208.html",
   "enableLinkInIos": true,
   "isShown": true
 }
