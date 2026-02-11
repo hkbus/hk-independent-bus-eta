@@ -7,7 +7,7 @@ import {
   Theme,
   Typography,
   List,
-  ListItem
+  ListItem,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -92,7 +92,15 @@ const DataImport = () => {
     return {};
   }, [unpack, data, state]);
 
-  const totalEtas = useMemo(() => obj.savedEtas?.length + obj.collections?.reduce((acc, collection) => acc += collection.list.length, 0), [obj]);
+  const totalEtas = useMemo(
+    () =>
+      obj.savedEtas?.length +
+      obj.collections?.reduce(
+        (acc, collection) => (acc += collection.list.length),
+        0
+      ),
+    [obj]
+  );
 
   const objStrForm = useMemo(() => JSON.stringify(obj, null, 2), [obj]);
 
@@ -148,32 +156,28 @@ const DataImport = () => {
         />
       )}
 
-      {
-        objStrForm !== "{}" && (
-          <Box sx={{ pl: 1 }}>
-            <Typography variant="h6">{t("資料匯入概括")}</Typography>
-            <List disablePadding dense={true} sx={{ listStyleType: 'disc', pl: 4 }}>
-              {
-                obj.savedStops.length > 0 && (
-                  <ListItem sx={{ display: 'list-item' }}>
-                      {obj.savedStops.length + t("個已收藏車站")}
-                  </ListItem>
-                )
-              }
-              {
-                totalEtas > 0 && (
-                  <ListItem sx={{ display: 'list-item' }}>
-                      {totalEtas + t("個到站預報")}
-                  </ListItem>
-                )
-              }
-              <ListItem sx={{ display: 'list-item' }}>
-                {t("個性化設定")}
+      {objStrForm !== "{}" && (
+        <Box sx={{ pl: 1 }}>
+          <Typography variant="h6">{t("資料匯入概括")}</Typography>
+          <List
+            disablePadding
+            dense={true}
+            sx={{ listStyleType: "disc", pl: 4 }}
+          >
+            {obj.savedStops.length > 0 && (
+              <ListItem sx={{ display: "list-item" }}>
+                {obj.savedStops.length + t("個已收藏車站")}
               </ListItem>
-            </List>
-          </Box>
-        )
-      }
+            )}
+            {totalEtas > 0 && (
+              <ListItem sx={{ display: "list-item" }}>
+                {totalEtas + t("個到站預報")}
+              </ListItem>
+            )}
+            <ListItem sx={{ display: "list-item" }}>{t("個性化設定")}</ListItem>
+          </List>
+        </Box>
+      )}
 
       <Button
         startIcon={<CheckIcon />}
@@ -196,7 +200,7 @@ const rootSx: SxProps<Theme> = {
   justifyContent: "flex-start",
   flex: 1,
   gap: 1,
-  m: 1
+  m: 1,
 };
 
 const buttonSx: SxProps<Theme> = {
