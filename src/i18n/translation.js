@@ -40,7 +40,7 @@ const resources = {
       更新時間: "Last updated",
       地理位置定位功能: "Geolocation",
       自動更新路線資料: "Auto Update Route Database",
-      個性化設定: "Customize",
+      個性化設定: "Customization Options",
       "日夜模式、時間格式、路線次序等":
         "Routes Ordering, Time Format, Theme...",
       開啟: "On",
@@ -148,6 +148,9 @@ const resources = {
       最近搜尋: "Recent",
       資料匯出: "Data Export",
       資料匯入: "Data Import",
+      資料匯入概括: "Import Summary",
+      個已收藏車站: " Bookmarked stops",
+      個到站預報: " ETAs",
       匯出網址: "Export URL",
       協助: "Support",
       顯示時間: "Hours",
