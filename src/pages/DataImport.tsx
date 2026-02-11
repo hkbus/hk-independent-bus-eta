@@ -94,11 +94,11 @@ const DataImport = () => {
 
   const totalEtas = useMemo(
     () =>
-      obj.savedEtas?.length +
-      obj.collections?.reduce(
-        (acc, collection) => (acc += collection.list.length),
+      (obj.savedEtas?.length ?? 0) +
+      (obj.collections?.reduce(
+        (acc, collection) => (acc + collection.list.length),
         0
-      ),
+      ) ?? 0),
     [obj]
   );
 
@@ -166,12 +166,12 @@ const DataImport = () => {
           >
             {obj.savedStops.length > 0 && (
               <ListItem sx={{ display: "list-item" }}>
-                {obj.savedStops.length + t("個已收藏車站")}
+                {obj.savedStops.length + t("個已收藏車站", { count: obj.savedStops.length })}
               </ListItem>
             )}
             {totalEtas > 0 && (
               <ListItem sx={{ display: "list-item" }}>
-                {totalEtas + t("個到站預報")}
+                {totalEtas + t("個到站預報", { count: totalEtas })}
               </ListItem>
             )}
             <ListItem sx={{ display: "list-item" }}>{t("個性化設定")}</ListItem>
