@@ -96,7 +96,7 @@ const DataImport = () => {
     () =>
       (obj.savedEtas?.length ?? 0) +
       (obj.collections?.reduce(
-        (acc, collection) => (acc + collection.list.length),
+        (acc, collection) => acc + collection.list.length,
         0
       ) ?? 0),
     [obj]
@@ -166,7 +166,8 @@ const DataImport = () => {
           >
             {obj.savedStops.length > 0 && (
               <ListItem sx={{ display: "list-item" }}>
-                {obj.savedStops.length + t("個已收藏車站", { count: obj.savedStops.length })}
+                {obj.savedStops.length +
+                  t("個已收藏車站", { count: obj.savedStops.length })}
               </ListItem>
             )}
             {totalEtas > 0 && (
