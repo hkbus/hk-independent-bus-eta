@@ -1,18 +1,18 @@
 {
   "content": {
     "zh": [
-      "[節日] 按此查閱《運輸署公告 - 為配合 2026 年新春國際匯演之夜及農曆新年煙花匯演實施的特別交通及運輸安排》"
+      "[巴士][小巴] 2026-02-10 晚上11時至翌日清晨5時將軍澳（坑口）道路工程臨時改道，詳情按此。"
     ],
     "en": [
-      "[Festival] Click here to read \"Transport Department Notice - Special Traffic and Transport Arrangements for the International Chinese New Year Night Parade and Chinese New Year Fireworks Display in 2026\""
+      "[Bus][Minibus] 2026-02-10 Diversion in Tseung Kwan O (Hang Hau) due to roadworks from 11.00 p.m. to 5.00 a.m. of the following day. Click here for details."
     ]
   },
   "link": {
-    "zh": "https://www.td.gov.hk/filemanager/tc/content_13/TDN_LNY%20Night%20Parade_Fireworks%20Display_chi_clean_20260212.pdf",
-    "en": "https://www.td.gov.hk/filemanager/en/content_13/TDN_LNY%20Night%20Parade_Fireworks%20Display_eng_clean_20260212.pdf"
+    "zh": "https://www.td.gov.hk/filemanager/en/content_13/TDN-Temporary%20Traffic%20and%20Transport%20Arrangements%20in%20TKO_CHI.pdf#page=2",
+    "en": "https://www.td.gov.hk/filemanager/en/content_13/TDN-Temporary%20Traffic%20and%20Transport%20Arrangements%20in%20TKO_EN.pdf#page=3"
   },
-  "endDate": "2026-02-19T00:00:00.000Z",
-  "url": "https://www.td.gov.hk/tc/traffic_notices/index_id_85311.html",
+  "endDate": "2026-02-11T00:00:00.000Z",
+  "url": "https://www.td.gov.hk/tc/traffic_notices/index_id_85208.html",
   "enableLinkInIos": true,
   "isShown": true
 }
