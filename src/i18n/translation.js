@@ -203,7 +203,7 @@ const resources = {
       ctb: "城巴",
       nlb: "嶼巴",
       gmb: "專線小巴",
-      lrtfeeder: "港鐵接駁巴",
+      lrtfeeder: "港鐵巴士",
       sunferry: "新渡輪",
       hkkf: "港九小輪",
       fortuneferry: "富裕小輪",
