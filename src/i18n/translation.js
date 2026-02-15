@@ -11,7 +11,7 @@ const resources = {
       kmb: "KMB",
       ctb: "CTB",
       nlb: "NLB",
-      lrtfeeder: "MTR Feeder",
+      lrtfeeder: "MTR Bus",
       gmb: "GMB",
       sunferry: "Sun",
       hkkf: "HKKF",
