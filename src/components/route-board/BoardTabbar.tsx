@@ -1,11 +1,16 @@
 import { useContext } from "react";
-import { Box, Tabs, Tab, SxProps, Theme } from "@mui/material";
+import { Box, Tabs, Tab, SxProps, Theme, IconButton } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import {
+  AllInclusive as AllInclusiveIcon,
+  FilterAlt as FilterAltIcon,
+} from "@mui/icons-material";
 
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
 import AppContext from "../../context/AppContext";
 import { BoardTabType } from "../../@types/types";
 import { useHorizontalWheelScroll } from "../../hooks/useHorizontalWheelScroll";
+import { vibrate } from "../../utils";
 
 interface BoardTabbarProps {
   boardTab: BoardTabType;
@@ -14,11 +19,26 @@ interface BoardTabbarProps {
 
 const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
   const { t } = useTranslation();
-  const { isRecentSearchShown } = useContext(AppContext);
+  const {
+    toggleRouteFilter,
+    vibrateDuration,
+    isRouteFilter,
+    isRecentSearchShown,
+  } = useContext(AppContext);
   useHorizontalWheelScroll();
 
   return (
-    <Box>
+    <Box display="flex" alignItems="center">
+      <IconButton
+        onClick={() => {
+          vibrate(vibrateDuration);
+          toggleRouteFilter();
+        }}
+        aria-label={t(isRouteFilter ? "只顯示現時路線" : "顯示所有路線")}
+        sx={{ mx: 1 }}
+      >
+        {isRouteFilter ? <FilterAltIcon /> : <AllInclusiveIcon />}
+      </IconButton>
       <Tabs
         value={boardTab}
         onChange={(_, v) => onChangeTab(v, true)}
