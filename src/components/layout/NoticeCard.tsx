@@ -71,7 +71,11 @@ const NoticeCard = () => {
       <WarnIcon color="warning" />
       <Box onClick={handleClick} sx={{ cursor: "pointer" }}>
         {state.content[language].map((v, idx) => (
-          <Typography key={`_notice-${idx}`} variant="subtitle2">
+          <Typography
+            key={`_notice-${idx}`}
+            variant="subtitle2"
+            sx={{ height: "3.14em", overflowY: "auto" }}
+          >
             {v}
           </Typography>
         ))}
