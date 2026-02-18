@@ -32,7 +32,7 @@ const NoticeCard = () => {
   const { openUrl } = useContext(AppContext);
 
   useEffect(() => {
-    fetch("/notice.json")
+    fetch("https://notice.hkbus.app/notice.json")
       .then((r) => r.json())
       .then((r) =>
         setState({
