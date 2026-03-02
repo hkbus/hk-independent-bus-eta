@@ -29,7 +29,7 @@ export const useWeather = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const fetchData = () => {
+    const fetchData = async () => {
       if (navigator.userAgent === "prerendering") {
         // skip if prerendering
         setWeather({});
@@ -46,9 +46,18 @@ export const useWeather = () => {
 
     const fetchEtaInterval = setInterval(() => {
       fetchData();
-    }, 300000);
+    }, 60000);
 
     fetchData();
+
+    // testing
+    //
+    // setWeather({
+    //   WFIRE: {
+    //     code: "WFIRER",
+    //     actionCode: "ISSUE",
+    //   }
+    // } as Weather);
 
     return () => {
       isMounted = false;
@@ -68,7 +77,6 @@ export const useWeatherCode = () => {
     .sort((a, b) => (CODE_ORDER.indexOf(a) < CODE_ORDER.indexOf(b) ? -1 : 1));
 };
 
-// no copyright to use HKO image
 const CODE_ORDER: WeatherCode[] = [
   "TC10",
   "TC9",
@@ -81,52 +89,25 @@ const CODE_ORDER: WeatherCode[] = [
   "TC3",
   "TC1",
   "WRAINA",
-  // "WFROST",
+  "WFROST",
   "WL",
-  // "WTMW",
+  "WTMW",
   "WTS",
   "WFNTSA",
-  // "WFIRER",
-  // "WFIREY",
+  "WFIRER",
+  "WFIREY",
   "WHOT",
   "WCOLD",
   "WMSGNL",
 ];
 
-// no copyright to use HKO image
-export const WeatherIcons: Partial<Record<WeatherCode, string>> = {
-  TC10: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/No._10_Hurricane_Signal.png/30px-No._10_Hurricane_Signal.png",
-  TC9: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/No._09_Increasing_Gale_or_Storm_Signal.png/30px-No._09_Increasing_Gale_or_Storm_Signal.png",
-  TC8SW:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/No._8_Southwest_Gale_or_Storm_Signal.png/30px-No._8_Southwest_Gale_or_Storm_Signal.png",
-  TC8NW:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/No._8_Northwest_Gale_or_Storm_Signal.png/30px-No._8_Northwest_Gale_or_Storm_Signal.png",
-  TC8SE:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/No._8_Southeast_Gale_or_Storm_Signal.png/30px-No._8_Southeast_Gale_or_Storm_Signal.png",
-  TC8NE:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/No._8_Northeast_Gale_or_Storm_Signal.png/30px-No._8_Northeast_Gale_or_Storm_Signal.png",
-  WRAINB:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Black_Rainstorm_Signal.png/25px-Black_Rainstorm_Signal.png",
-  WRAINR:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Red_Rainstorm_Signal.png/25px-Red_Rainstorm_Signal.png",
-  TC3: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/No._03_Strong_Wind_Signal.png/30px-No._03_Strong_Wind_Signal.png",
-  TC1: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/No._01_Standby_Signal.png/30px-No._01_Standby_Signal.png",
-  WRAINA:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Amber_Rainstorm_Signal.png/25px-Amber_Rainstorm_Signal.png",
-  // WFROST: "https://www.hko.gov.hk/tc/textonly/img/warn/images/frost.gif",
-  WL: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Landslip.gif/25px-Landslip.gif",
-  // WTMW: "https://www.hko.gov.hk/tc/textonly/img/warn/images/tsunami-warn.gif",
-  WTS: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Thunderstorm_Warning.png/25px-Thunderstorm_Warning.png",
-  WFNTSA:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Ntfl.gif/25px-Ntfl.gif",
-  // WFIRER: "https://www.hko.gov.hk/tc/textonly/img/warn/images/firer.gif",
-  // WFIREY: "https://www.hko.gov.hk/tc/textonly/img/warn/images/firey.gif",
-  WHOT: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Very_Hot_Weather_Warning.png/25px-Very_Hot_Weather_Warning.png",
-  WCOLD:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Cold_Weather_Warning.png/25px-Cold_Weather_Warning.png",
-  WMSGNL:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/HK_Monsoon_Signal.png/25px-HK_Monsoon_Signal.png",
-};
+export const WeatherIcons: Partial<Record<WeatherCode, string>> = (() => {
+  const icons: Partial<Record<WeatherCode, string>> = {};
+  for (const code of CODE_ORDER) {
+    icons[code] = `https://www.metwarn.hk/img/hko_warning_icon/${code}.png`;
+  }
+  return icons;
+})();
 
 export type WeatherCode =
   | "TC10"

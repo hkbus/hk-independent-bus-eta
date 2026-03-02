@@ -1,6 +1,5 @@
 import { useEffect, useCallback, useContext, useRef } from "react";
 import {
-  Avatar,
   Box,
   IconButton,
   Input,
@@ -201,7 +200,12 @@ const Header = () => {
       />
       <Box sx={weatherPanelSx}>
         {weatherCodes.slice(0, 2).map((code) => (
-          <Avatar
+          <Box
+            key={code}
+            sx={{
+              ...weatherImg,
+              backgroundImage: `url(${WeatherIcons[code]})`,
+            }}
             onClick={() =>
               openUrl(
                 `https://www.hko.gov.hk/${
@@ -209,11 +213,14 @@ const Header = () => {
                 }/detail.htm`
               )
             }
-            key={code}
-            variant="square"
-            src={WeatherIcons[code]}
-            sx={weatherImg}
           />
+          // <Avatar
+
+          //   key={code}
+          //   variant="square"
+          //   src={WeatherIcons[code]}
+          //   sx={weatherImg}
+          // />
         ))}
       </Box>
       <Box sx={funcPanelSx}>
@@ -320,8 +327,11 @@ const languageSx: SxProps<Theme> = {
 };
 
 const weatherImg: SxProps<Theme> = {
-  background: "white",
+  // background: "url",
   height: 24,
   width: 24,
+  backgroundSize: "contain",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "center",
   m: 1,
 };
