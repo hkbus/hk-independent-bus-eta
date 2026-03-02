@@ -206,6 +206,9 @@ const Header = () => {
               ...weatherImg,
               backgroundImage: `url(${WeatherIcons[code]})`,
             }}
+            role="button"
+            tabIndex={0}
+            aria-label={`weather warning ${code}`}
             onClick={() =>
               openUrl(
                 `https://www.hko.gov.hk/${
@@ -214,13 +217,6 @@ const Header = () => {
               )
             }
           />
-          // <Avatar
-
-          //   key={code}
-          //   variant="square"
-          //   src={WeatherIcons[code]}
-          //   sx={weatherImg}
-          // />
         ))}
       </Box>
       <Box sx={funcPanelSx}>
@@ -281,10 +277,7 @@ const rootSx: SxProps<Theme> = {
 };
 
 const appTitleSx: SxProps<Theme> = {
-  backgroundImage: (t) =>
-    t.palette.mode === "light"
-      ? "url(/img/logo128.png)"
-      : "url(/img/dark-32.jpg)",
+  backgroundImage: "url(/img/logo500_transparent.png)",
   backgroundSize: "contain",
   width: 32,
   height: 32,
@@ -333,5 +326,6 @@ const weatherImg: SxProps<Theme> = {
   backgroundSize: "contain",
   backgroundRepeat: "no-repeat",
   backgroundPosition: "center",
+  cursor: "pointer",
   m: 1,
 };
