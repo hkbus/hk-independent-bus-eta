@@ -49,7 +49,7 @@ export const useWeather = () => {
       fetchData();
     }, 300000);
 
-    // fetchData();
+    fetchData();
 
     // testing
     //
