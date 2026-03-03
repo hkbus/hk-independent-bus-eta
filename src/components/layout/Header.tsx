@@ -23,7 +23,7 @@ import { visuallyHidden } from "@mui/utils";
 import AppContext from "../../context/AppContext";
 import { vibrate, checkMobile } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { useWeatherCode, WeatherIcons } from "../Weather";
+import { useWeatherCode, useWeatherIcons } from "../Weather";
 import useOnline from "../../hooks/useOnline";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
@@ -50,6 +50,7 @@ const Header = () => {
   let location = useLocation();
   const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
+  const weatherIcons = useWeatherIcons();
   const onlineStatus = useOnline();
   const inputRef = useRef<HTMLInputElement>(null);
   const prevPathRef = useRef<string>(location.pathname);
@@ -204,7 +205,7 @@ const Header = () => {
             key={code}
             sx={{
               ...weatherImg,
-              backgroundImage: `url(${WeatherIcons[code]})`,
+              backgroundImage: `url(${weatherIcons[code]})`,
             }}
             role="button"
             tabIndex={0}

@@ -196,6 +196,9 @@ const resources = {
       DRL: "Disneyland Resort Line",
       "支援 WearOS 及 WatchOS 平台": "Support WearOS & WatchOS",
       地圖資源: "Map Resources",
+      氣象圖標來源: "Weather Icons Source",
+      "weather-icon-source-hko": "HKO",
+      "weather-icon-source-metwarn": "MetWarn",
     },
   },
   zh: {
@@ -306,6 +309,9 @@ const resources = {
       "The place most profound you is ": "令你感受最深的環境是",
       "And, what makes you most grateful is ": "最令你感恩的是",
       Review: "回顧",
+      氣象圖標來源: "氣象圖標來源",
+      "weather-icon-source-hko": "香港天文台",
+      "weather-icon-source-metwarn": "MetWarn",
     },
   },
 };
