@@ -38,6 +38,7 @@ import {
   SecurityUpdate as SecurityUpdateIcon,
   Watch as WatchIcon,
   Map as MapIcon,
+  WbCloudy,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -461,6 +462,22 @@ const Settings = () => {
             <Avatar sx={iconSx} src="/img/logo128.png" alt="App Logo"></Avatar>
           </ListItemAvatar>
           <ListItemText primary={t("圖標來源")} secondary={"陳瓜 Chan Gua"} />
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            vibrate(vibrateDuration);
+            openUrl(`https://metwarn.hk`);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <WbCloudy />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={t("氣象圖標來源")}
+            secondary={"HKO, MetWarn"}
+          />
         </ListItemButton>
         <ListItemButton
           onClick={() => {

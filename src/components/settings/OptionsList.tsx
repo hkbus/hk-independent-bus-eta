@@ -33,6 +33,7 @@ import {
   UpdateDisabled as UpdateDisabledIcon,
   FormatSize as FormatSizeIcon,
   LooksOneRounded as LooksOneRoundedIcon,
+  WbCloudy as WbCloudyIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../context/AppContext";
@@ -69,6 +70,8 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
     toggleAnnotateScheduled,
     isRecentSearchShown,
     toggleIsRecentSearchShown,
+    weatherIconSource,
+    toggleWeatherIconSource,
   } = useContext(AppContext);
   const { t } = useTranslation();
 
@@ -207,6 +210,22 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
         <ListItemText
           primary={t("注釋預定班次")}
           secondary={t(annotateScheduled ? "開啟" : "關閉")}
+        />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration);
+          toggleWeatherIconSource();
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <WbCloudyIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={t("氣象圖標來源")}
+          secondary={t(`weather-icon-source-${weatherIconSource}`)}
         />
       </ListItemButton>
       <ListItemButton
