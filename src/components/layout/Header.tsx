@@ -277,7 +277,13 @@ const rootSx: SxProps<Theme> = {
 };
 
 const appTitleSx: SxProps<Theme> = {
-  backgroundImage: "url(/img/logo500_transparent.png)",
+  backgroundImage: (theme) => {
+    if (theme.palette.mode === "dark") {
+      return "url(/img/dark-380.png)";
+    } else {
+      return "url(/img/logo128.png)";
+    }
+  },
   backgroundSize: "contain",
   width: 32,
   height: 32,

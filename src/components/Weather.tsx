@@ -48,7 +48,7 @@ export const useWeather = () => {
       fetchData();
     }, 300000);
 
-    fetchData();
+    // fetchData();
 
     // testing
     //
@@ -56,7 +56,11 @@ export const useWeather = () => {
     //   WFIRE: {
     //     code: "WFIRER",
     //     actionCode: "ISSUE",
-    //   }
+    //   },
+    //   WRAIN: {
+    //     code: "WRAINR",
+    //     actionCode: "ISSUE",
+    //   },
     // } as Weather);
 
     return () => {
