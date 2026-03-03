@@ -27,7 +27,7 @@ const FontSizeSlider = () => {
       secondary={
         <Slider
           step={2}
-          min={10}
+          min={6}
           max={26}
           value={fontSize}
           valueLabelDisplay="auto"
