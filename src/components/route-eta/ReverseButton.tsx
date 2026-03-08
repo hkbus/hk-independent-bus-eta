@@ -46,6 +46,8 @@ const ReverseButton = ({ routeId, stopId }: ReverseButtonProps) => {
         },
         []
       )
+      // the world is imprefect, the source data may give no stops...
+      .filter(([, route]) => Object.values(route.stops)[0].length)
       .sort(([, a], [, b]) => {
         const aAval = isRouteAvaliable(
           a.route,
