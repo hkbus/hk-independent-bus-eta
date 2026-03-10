@@ -4,6 +4,7 @@ import {
   Close as CloseIcon,
   NavigationOutlined as DirectionsIcon,
   PinDropOutlined as MapIcon,
+  ArrowOutward as ArrowOutwardIcon,
 } from "@mui/icons-material";
 import {
   Box,
@@ -21,6 +22,7 @@ import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
 import AppContext from "../../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 interface StopDialogProps {
   open: boolean;
@@ -35,6 +37,7 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
   const { savedStops, updateSavedStops } = useContext(CollectionContext);
   const { openUrl } = useContext(AppContext);
   const language = useLanguage();
+  const navigate = useNavigate();
 
   const bookmarked = useMemo<boolean>(
     () =>
@@ -75,6 +78,11 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
           </IconButton>
           <IconButton onClick={handleClickLocation}>
             <MapIcon />
+          </IconButton>
+          <IconButton
+            onClick={() => navigate(`/${language}/stop/${stops[0][1]}`)}
+          >
+            <ArrowOutwardIcon />
           </IconButton>
         </Box>
         <Box>

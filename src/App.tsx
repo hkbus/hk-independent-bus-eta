@@ -22,6 +22,7 @@ import Root from "./components/layout/Root";
 import RedirectPage from "./pages/RedirectPage";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import useLanguage from "./hooks/useTranslation";
+import StopEtaList from "./pages/StopEtaListPage";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const RouteEta = React.lazy(() => import("./pages/RouteEta"));
@@ -68,6 +69,7 @@ const App = () => {
                     element={<Home />}
                   />
                   <Route path={`route/:id/:panel?`} element={<RouteEta />} />
+                  <Route path={`stop/:stopId`} element={<StopEtaList />} />
                   <Route path={`settings`} element={<Settings />} />
                   <Route path={"notice"} element={<Notice />} />
                   <Route path={`import/:data?`} element={<DataImport />} />
