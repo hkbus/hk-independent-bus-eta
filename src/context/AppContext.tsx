@@ -24,6 +24,7 @@ import {
   EtaFormat,
   Language,
   NumPadOrder,
+  WeatherIconSource,
 } from "../data";
 import { DeviceOrientationPermission } from "react-world-compass";
 import useLanguage from "../hooks/useTranslation";
@@ -110,6 +111,10 @@ export interface AppState {
    * Is input currently being entered
    */
   isSearching: boolean;
+  /**
+   * Weather icon source
+   */
+  weatherIconSource: WeatherIconSource;
 }
 
 interface AppContextValue extends AppState {
@@ -148,6 +153,7 @@ interface AppContextValue extends AppState {
   setSearchRange: (searchRange: number) => void;
   setIsSearching: (searching: boolean) => void;
   openUrl: (url: string) => void;
+  toggleWeatherIconSource: () => void;
   // for React Native Context
   setGeoPermission: (geoPermission: AppState["geoPermission"]) => void;
 }
@@ -202,6 +208,10 @@ const isEtaFormat = (input: unknown): input is EtaFormat => {
 
 const isColorMode = (input: unknown): input is ColorMode => {
   return input === "dark" || input === "light" || input === "system";
+};
+
+const isWeatherIconSource = (input: unknown): input is WeatherIconSource => {
+  return input === "hko" || input === "metwarn";
 };
 
 export const AppContextProvider = ({ children }: AppContextProviderProps) => {
@@ -273,6 +283,11 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         localStorage.getItem("searchRange") ?? `${DEFAULT_SEARCH_RANGE}`
       ),
       isSearching: false,
+      weatherIconSource: isWeatherIconSource(
+        localStorage.getItem("weatherIconSource")
+      )
+        ? (localStorage.getItem("weatherIconSource") as WeatherIconSource)
+        : "metwarn",
     };
   };
   const geolocation = useRef<GeoLocation>(_geolocation);
@@ -587,6 +602,15 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
+  const toggleWeatherIconSource = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        state.weatherIconSource =
+          state.weatherIconSource === "hko" ? "metwarn" : "hko";
+      })
+    );
+  }, []);
+
   const changeLanguage = useCallback(
     (lang: Language) => {
       i18n.changeLanguage(lang);
@@ -786,6 +810,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     localStorage.setItem("searchRange", JSON.stringify(state.searchRange));
   }, [state.searchRange]);
 
+  useEffect(() => {
+    localStorage.setItem("weatherIconSource", state.weatherIconSource);
+  }, [state.weatherIconSource]);
+
   const contextValue: AppContextValue = useMemo(
     () => ({
       ...state,
@@ -820,6 +848,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       setSearchRange,
       setIsSearching,
       openUrl,
+      toggleWeatherIconSource,
     }),
     [
       state,
@@ -853,6 +882,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       setSearchRange,
       setIsSearching,
       openUrl,
+      toggleWeatherIconSource,
     ]
   );
 

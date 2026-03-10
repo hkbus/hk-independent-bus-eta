@@ -1,6 +1,5 @@
 import { useEffect, useCallback, useContext, useRef } from "react";
 import {
-  Avatar,
   Box,
   IconButton,
   Input,
@@ -24,7 +23,7 @@ import { visuallyHidden } from "@mui/utils";
 import AppContext from "../../context/AppContext";
 import { vibrate, checkMobile } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { useWeatherCode, WeatherIcons } from "../Weather";
+import { useWeatherCode, useWeatherIcons } from "../Weather";
 import useOnline from "../../hooks/useOnline";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
@@ -51,6 +50,7 @@ const Header = () => {
   let location = useLocation();
   const navigate = useNavigate();
   const weatherCodes = useWeatherCode();
+  const weatherIcons = useWeatherIcons();
   const onlineStatus = useOnline();
   const inputRef = useRef<HTMLInputElement>(null);
   const prevPathRef = useRef<string>(location.pathname);
@@ -201,7 +201,15 @@ const Header = () => {
       />
       <Box sx={weatherPanelSx}>
         {weatherCodes.slice(0, 2).map((code) => (
-          <Avatar
+          <Box
+            key={code}
+            sx={{
+              ...weatherImg,
+              backgroundImage: `url(${weatherIcons[code]})`,
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={`weather warning ${code}`}
             onClick={() =>
               openUrl(
                 `https://www.hko.gov.hk/${
@@ -209,10 +217,6 @@ const Header = () => {
                 }/detail.htm`
               )
             }
-            key={code}
-            variant="square"
-            src={WeatherIcons[code]}
-            sx={weatherImg}
           />
         ))}
       </Box>
@@ -274,10 +278,13 @@ const rootSx: SxProps<Theme> = {
 };
 
 const appTitleSx: SxProps<Theme> = {
-  backgroundImage: (t) =>
-    t.palette.mode === "light"
-      ? "url(/img/logo128.png)"
-      : "url(/img/dark-32.jpg)",
+  backgroundImage: (theme) => {
+    if (theme.palette.mode === "dark") {
+      return "url(/img/dark-380.png)";
+    } else {
+      return "url(/img/logo128.png)";
+    }
+  },
   backgroundSize: "contain",
   width: 32,
   height: 32,
@@ -320,8 +327,12 @@ const languageSx: SxProps<Theme> = {
 };
 
 const weatherImg: SxProps<Theme> = {
-  background: "white",
+  // background: "url",
   height: 24,
   width: 24,
+  backgroundSize: "contain",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "center",
+  cursor: "pointer",
   m: 1,
 };
