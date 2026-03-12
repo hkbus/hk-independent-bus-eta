@@ -95,37 +95,37 @@ const CODE_ORDER: WeatherCode[] = [
 
 // no copyright to use HKO image
 export const WeatherIcons: Partial<Record<WeatherCode, string>> = {
-  TC10: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/No._10_Hurricane_Signal.png/30px-No._10_Hurricane_Signal.png",
-  TC9: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/No._09_Increasing_Gale_or_Storm_Signal.png/30px-No._09_Increasing_Gale_or_Storm_Signal.png",
+  TC10: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/No._10_Hurricane_Signal.png/40px-No._10_Hurricane_Signal.png",
+  TC9: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/No._09_Increasing_Gale_or_Storm_Signal.png/40px-No._09_Increasing_Gale_or_Storm_Signal.png",
   TC8SW:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/No._8_Southwest_Gale_or_Storm_Signal.png/30px-No._8_Southwest_Gale_or_Storm_Signal.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/No._8_Southwest_Gale_or_Storm_Signal.png/40px-No._8_Southwest_Gale_or_Storm_Signal.png",
   TC8NW:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/No._8_Northwest_Gale_or_Storm_Signal.png/30px-No._8_Northwest_Gale_or_Storm_Signal.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/No._8_Northwest_Gale_or_Storm_Signal.png/40px-No._8_Northwest_Gale_or_Storm_Signal.png",
   TC8SE:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/No._8_Southeast_Gale_or_Storm_Signal.png/30px-No._8_Southeast_Gale_or_Storm_Signal.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/No._8_Southeast_Gale_or_Storm_Signal.png/40px-No._8_Southeast_Gale_or_Storm_Signal.png",
   TC8NE:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/No._8_Northeast_Gale_or_Storm_Signal.png/30px-No._8_Northeast_Gale_or_Storm_Signal.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/No._8_Northeast_Gale_or_Storm_Signal.png/40px-No._8_Northeast_Gale_or_Storm_Signal.png",
   WRAINB:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Black_Rainstorm_Signal.png/25px-Black_Rainstorm_Signal.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Black_Rainstorm_Signal.png/40px-Black_Rainstorm_Signal.png",
   WRAINR:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Red_Rainstorm_Signal.png/25px-Red_Rainstorm_Signal.png",
-  TC3: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/No._03_Strong_Wind_Signal.png/30px-No._03_Strong_Wind_Signal.png",
-  TC1: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/No._01_Standby_Signal.png/30px-No._01_Standby_Signal.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Red_Rainstorm_Signal.png/40px-Red_Rainstorm_Signal.png",
+  TC3: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/No._03_Strong_Wind_Signal.png/40px-No._03_Strong_Wind_Signal.png",
+  TC1: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/No._01_Standby_Signal.png/40px-No._01_Standby_Signal.png",
   WRAINA:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Amber_Rainstorm_Signal.png/25px-Amber_Rainstorm_Signal.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Amber_Rainstorm_Signal.png/40px-Amber_Rainstorm_Signal.png",
   // WFROST: "https://www.hko.gov.hk/tc/textonly/img/warn/images/frost.gif",
-  WL: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Landslip.gif/25px-Landslip.gif",
+  WL: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Landslip.gif/40px-Landslip.gif",
   // WTMW: "https://www.hko.gov.hk/tc/textonly/img/warn/images/tsunami-warn.gif",
-  WTS: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Thunderstorm_Warning.png/25px-Thunderstorm_Warning.png",
+  WTS: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Thunderstorm_Warning.png/40px-Thunderstorm_Warning.png",
   WFNTSA:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Ntfl.gif/25px-Ntfl.gif",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Ntfl.gif/40px-Ntfl.gif",
   // WFIRER: "https://www.hko.gov.hk/tc/textonly/img/warn/images/firer.gif",
   // WFIREY: "https://www.hko.gov.hk/tc/textonly/img/warn/images/firey.gif",
-  WHOT: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Very_Hot_Weather_Warning.png/25px-Very_Hot_Weather_Warning.png",
+  WHOT: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Very_Hot_Weather_Warning.png/40px-Very_Hot_Weather_Warning.png",
   WCOLD:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Cold_Weather_Warning.png/25px-Cold_Weather_Warning.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Cold_Weather_Warning.png/40px-Cold_Weather_Warning.png",
   WMSGNL:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/HK_Monsoon_Signal.png/25px-HK_Monsoon_Signal.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/HK_Monsoon_Signal.png/40px-HK_Monsoon_Signal.png",
 };
 
 export type WeatherCode =
