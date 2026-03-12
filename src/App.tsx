@@ -26,7 +26,9 @@ import StopEtaListPage from "./pages/StopEtaListPage";
 
 const HomePage = React.lazy(() => import("./pages/HomePage"));
 const RouteEtaPage = React.lazy(() => import("./pages/RouteEtaPage"));
-const BookmarkedStopPage = React.lazy(() => import("./pages/BookmarkedStopPage"));
+const BookmarkedStopPage = React.lazy(
+  () => import("./pages/BookmarkedStopPage")
+);
 const RouteBoardPage = React.lazy(() => import("./pages/RouteBoardPage"));
 const RouteSearchPage = React.lazy(() => import("./pages/RouteSearchPage"));
 const NoticePage = React.lazy(() => import("./pages/NoticePage"));
@@ -68,7 +70,10 @@ const App = () => {
                     path={`collections/:collectionName`}
                     element={<HomePage />}
                   />
-                  <Route path={`route/:id/:panel?`} element={<RouteEtaPage />} />
+                  <Route
+                    path={`route/:id/:panel?`}
+                    element={<RouteEtaPage />}
+                  />
                   <Route path={`stop/:stopId`} element={<StopEtaListPage />} />
                   <Route path={`settings`} element={<SettingsPage />} />
                   <Route path={"notice"} element={<NoticePage />} />
