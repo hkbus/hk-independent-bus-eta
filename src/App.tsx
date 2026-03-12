@@ -19,26 +19,26 @@ import "./App.css";
 import AppContext from "./context/AppContext";
 import { SearchContextProvider } from "./SearchContext";
 import Root from "./components/layout/Root";
-import RedirectPage from "./pages/RedirectPage";
+import RedirectPage from "./pages/RedirectPagePage";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import useLanguage from "./hooks/useTranslation";
-import StopEtaList from "./pages/StopEtaListPage";
+import StopEtaListPage from "./pages/StopEtaListPage";
 
-const Home = React.lazy(() => import("./pages/Home"));
-const RouteEta = React.lazy(() => import("./pages/RouteEta"));
-const BookmarkedStop = React.lazy(() => import("./pages/BookmarkedStop"));
-const RouteBoard = React.lazy(() => import("./pages/RouteBoard"));
-const RouteSearch = React.lazy(() => import("./pages/RouteSearch"));
-const Notice = React.lazy(() => import("./pages/Notice"));
-const Settings = React.lazy(() => import("./pages/Settings"));
+const HomePage = React.lazy(() => import("./pages/HomePage"));
+const RouteEtaPage = React.lazy(() => import("./pages/RouteEtaPage"));
+const BookmarkedStopPage = React.lazy(() => import("./pages/BookmarkedStopPage"));
+const RouteBoardPage = React.lazy(() => import("./pages/RouteBoardPage"));
+const RouteSearchPage = React.lazy(() => import("./pages/RouteSearchPage"));
+const NoticePage = React.lazy(() => import("./pages/NoticePage"));
+const SettingsPage = React.lazy(() => import("./pages/SettingsPage"));
 const EmotionPage = React.lazy(() => import("./pages/EmotionPage"));
-const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
-const TermsAndConditions = React.lazy(
-  () => import("./pages/TermsAndConditions")
+const PrivacyPolicyPage = React.lazy(() => import("./pages/PrivacyPolicyPage"));
+const TermsAndConditionsPage = React.lazy(
+  () => import("./pages/TermsAndConditionsPage")
 );
-const Support = React.lazy(() => import("./pages/Support"));
-const DataImport = React.lazy(() => import("./pages/DataImport"));
-const DataExport = React.lazy(() => import("./pages/DataExport"));
+const SupportPage = React.lazy(() => import("./pages/SupportPage"));
+const DataImportPage = React.lazy(() => import("./pages/DataImportPage"));
+const DataExportPage = React.lazy(() => import("./pages/DataExportPage"));
 
 const App = () => {
   const { analytics, colorMode, fontSize } = useContext(AppContext);
@@ -66,28 +66,28 @@ const App = () => {
                 <Route path="/:lang" element={<Root />}>
                   <Route
                     path={`collections/:collectionName`}
-                    element={<Home />}
+                    element={<HomePage />}
                   />
-                  <Route path={`route/:id/:panel?`} element={<RouteEta />} />
-                  <Route path={`stop/:stopId`} element={<StopEtaList />} />
-                  <Route path={`settings`} element={<Settings />} />
-                  <Route path={"notice"} element={<Notice />} />
-                  <Route path={`import/:data?`} element={<DataImport />} />
-                  <Route path={`export`} element={<DataExport />} />
-                  <Route path={`board`} element={<RouteBoard />} />
-                  <Route path={`stops`} element={<BookmarkedStop />} />
-                  <Route path={`search`} element={<RouteSearch />} />
+                  <Route path={`route/:id/:panel?`} element={<RouteEtaPage />} />
+                  <Route path={`stop/:stopId`} element={<StopEtaListPage />} />
+                  <Route path={`settings`} element={<SettingsPage />} />
+                  <Route path={"notice"} element={<NoticePage />} />
+                  <Route path={`import/:data?`} element={<DataImportPage />} />
+                  <Route path={`export`} element={<DataExportPage />} />
+                  <Route path={`board`} element={<RouteBoardPage />} />
+                  <Route path={`stops`} element={<BookmarkedStopPage />} />
+                  <Route path={`search`} element={<RouteSearchPage />} />
                   <Route path="emotion/:tab?" element={<EmotionPage />} />
-                  <Route path={`privacy`} element={<PrivacyPolicy />} />
-                  <Route path={`terms`} element={<TermsAndConditions />} />
-                  <Route path={`support`} element={<Support />} />
+                  <Route path={`privacy`} element={<PrivacyPolicyPage />} />
+                  <Route path={`terms`} element={<TermsAndConditionsPage />} />
+                  <Route path={`support`} element={<SupportPage />} />
                   <Route
                     path={"patreon"}
                     element={
                       <RedirectPage url="https://www.patreon.com/hkbus" />
                     }
                   />
-                  <Route path={``} element={<Home />} />
+                  <Route path={``} element={<HomePage />} />
                 </Route>
                 <Route
                   path="/android"

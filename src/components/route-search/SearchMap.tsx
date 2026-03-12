@@ -8,7 +8,7 @@ import { Location as GeoLocation } from "hk-bus-eta";
 import SelfCircle from "../map/SelfCircle";
 import CompassControl from "../map/CompassControl";
 import useLanguage from "../../hooks/useTranslation";
-import { SearchRoute } from "../../pages/RouteSearch";
+import { SearchRoute } from "../../pages/RouteSearchPage";
 import DbContext from "../../context/DbContext";
 import CenterControl from "../map/CenterControl";
 import BaseTile from "../map/BaseTile";
