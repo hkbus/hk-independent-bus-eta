@@ -629,6 +629,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         harmonyBridger.openUrl(url);
       }
     } else {
+      console.log(url);
       window.open(url, "_blank");
     }
   }, []);

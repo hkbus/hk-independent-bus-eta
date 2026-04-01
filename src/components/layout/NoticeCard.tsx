@@ -23,6 +23,7 @@ interface NoticeCardState {
   url: string;
   link: Record<Language, string>;
   enableLinkInIos: boolean;
+  startDate: Date;
   endDate: Date;
   isShown: boolean;
 }
@@ -38,7 +39,7 @@ const NoticeCard = () => {
 
   const handleClick = useCallback(
     (idx: number) => () => {
-      if (idx < state.length) return;
+      if (idx >= state.length) return;
       if (iOSRNWebView() && !state[idx].enableLinkInIos) {
         return;
       }
@@ -63,8 +64,12 @@ const NoticeCard = () => {
             .filter(({ id }) => !closeNoticeIds.includes(id))
             .map((notice) => ({
               ...notice,
+              startDate: notice.startDate
+                ? new Date(notice.startDate)
+                : new Date(),
               endDate: new Date(notice.endDate),
             }))
+            .filter((notice) => notice.startDate <= new Date())
             .filter((notice) => notice.endDate >= new Date())
         )
       )
@@ -87,6 +92,7 @@ const NoticeCard = () => {
         justifyContent="flex-start"
         flexDirection="column"
         gap={0.5}
+        overflow="scroll"
       >
         <Tabs
           sx={noticeTabsSx}
