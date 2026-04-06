@@ -139,7 +139,7 @@ export const getJoyYouFare = (
   }
   if (fares === null || !fares[idx]) return "";
   const baseFare = parseFloat(fares[idx]);
-  if (baseFare < 4) return `${(Math.round(baseFare * 10) / 20).toFixed(1)}`;
+  if (baseFare < 2) return fares[idx];
   if (baseFare < 10) return `2`;
   return (Math.round(baseFare * 2) / 10).toFixed(1);
 };
