@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Company, Eta, Location, RouteListEntry } from "hk-bus-eta";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../context/AppContext";
@@ -21,6 +21,7 @@ import { ManageMode } from "../../data";
 import {
   getDistance,
   getDistanceWithUnit,
+  getJoyYouFare,
   toProperCase,
   vibrate,
 } from "../../utils";
@@ -34,6 +35,7 @@ interface DistAndFareProps {
   location: Location;
   fares: string[] | null;
   faresHoliday: string[] | null;
+  joyYouFare: string;
   seq: number;
 }
 
@@ -42,6 +44,7 @@ const DistAndFare = ({
   location,
   fares,
   faresHoliday,
+  joyYouFare,
   seq,
 }: DistAndFareProps) => {
   const { t } = useTranslation();
@@ -50,13 +53,7 @@ const DistAndFare = ({
   const _fareString = fares && fares[seq] ? "$" + fares[seq] : "";
   const _fareHolidayString =
     faresHoliday && faresHoliday[seq] ? "$" + faresHoliday[seq] : "";
-  const fareString = [
-    _fareString,
-    _fareHolidayString,
-    fares && fares[seq]
-      ? "$" + Math.round(parseFloat(fares[seq]) * 2) / 10
-      : "",
-  ]
+  const fareString = [_fareString, _fareHolidayString, joyYouFare]
     .filter((v) => v)
     .join(", ");
 
@@ -105,6 +102,10 @@ const SuccinctTimeReport = ({
     routeList[routeKey] || DEFAULT_ROUTE;
   const stopId = getStops(co, stops)[parseInt(seq, 10)];
   const stop = stopList[stopId] || DEFAULT_STOP;
+  const joyYouFare = useMemo<string>(
+    () => getJoyYouFare(routeNo, co, fares, parseInt(seq, 10)),
+    [co, fares, seq, routeNo]
+  );
 
   const navigate = useNavigate();
   const handleClick = useCallback(
@@ -168,6 +169,7 @@ const SuccinctTimeReport = ({
               location={stop.location}
               fares={fares}
               faresHoliday={faresHoliday}
+              joyYouFare={joyYouFare}
               seq={parseInt(seq, 10)}
             />
           }

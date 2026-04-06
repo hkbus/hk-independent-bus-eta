@@ -20,7 +20,7 @@ import {
   PushPinOutlined as PushPinOutlinedIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import { toProperCase } from "../../utils";
+import { getJoyYouFare, toProperCase } from "../../utils";
 import TimeReport from "./TimeReport";
 import { SharingModalProps } from "./SharingModal";
 import ReactNativeContext from "../../context/ReactNativeContext";
@@ -60,7 +60,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
     const { pinnedEtas, togglePinnedEta } = useContext(PinnedEtasContext);
     const { t } = useTranslation();
     const language = useLanguage();
-    const { fares, faresHoliday } = routeList[routeId];
+    const { route, co, fares, faresHoliday } = routeList[routeId];
     const stop = stopList[stopId];
     const targetRouteId = `${routeId.toUpperCase()}/${idx}`;
     const isStarred = useMemo<boolean>(
@@ -71,6 +71,10 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
           false
         ),
       [savedEtas, targetRouteId, collections]
+    );
+    const joyYouFare = useMemo<string>(
+      () => getJoyYouFare(route, co, fares, idx),
+      [co, fares, idx, route]
     );
 
     const handleShareClick = useCallback(
@@ -110,12 +114,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
             {faresHoliday && faresHoliday[idx]
               ? "　　" + t("假日車費") + ": $" + faresHoliday[idx]
               : ""}
-            {fares && fares[idx]
-              ? "　　" +
-                t("樂悠車費") +
-                ": $" +
-                (Math.round(parseFloat(fares[idx]) * 2) / 10).toFixed(1)
-              : ""}
+            {joyYouFare ? "　　" + t("樂悠車費") + `: $${joyYouFare}` : ""}
           </Typography>
         </AccordionSummary>
         <AccordionDetails sx={accordionDetailsRootSx}>
