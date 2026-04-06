@@ -53,7 +53,11 @@ const DistAndFare = ({
   const _fareString = fares && fares[seq] ? "$" + fares[seq] : "";
   const _fareHolidayString =
     faresHoliday && faresHoliday[seq] ? "$" + faresHoliday[seq] : "";
-  const fareString = [_fareString, _fareHolidayString, joyYouFare]
+  const fareString = [
+    _fareString,
+    _fareHolidayString,
+    joyYouFare ? `$${joyYouFare}` : "",
+  ]
     .filter((v) => v)
     .join(", ");
 
