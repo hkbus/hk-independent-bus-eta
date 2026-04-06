@@ -108,7 +108,13 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
           <Typography variant="body2">
             {fares && fares[idx] ? t("車費") + ": $" + fares[idx] : ""}
             {faresHoliday && faresHoliday[idx]
-              ? "　　　　" + t("假日車費") + ": $" + faresHoliday[idx]
+              ? "　　" + t("假日車費") + ": $" + faresHoliday[idx]
+              : ""}
+            {fares && fares[idx]
+              ? "　　" +
+                t("樂悠車費") +
+                ": $" +
+                (Math.round(parseFloat(fares[idx]) * 2) / 10).toFixed(1)
               : ""}
           </Typography>
         </AccordionSummary>

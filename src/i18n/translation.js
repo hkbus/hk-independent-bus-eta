@@ -62,6 +62,7 @@ const resources = {
       "整理從 Google 收集的數據": "Data collected from Google",
       車費: "Fare",
       假日車費: "Holiday fare",
+      樂悠車費: "JoyYou fare",
       特別班: "SP.",
       "home-page-description":
         "Ad-free mobile application for checking bus routes, stops, estimated time of arrival(ETA) of Kowloon Motor Bus Co. (KMB), Long Win Bus (LWB), CityBus (CTB), New Lantao Bus (NLB) and Green Minibus (GMB) - HK Bus ETA App",

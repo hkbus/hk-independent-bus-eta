@@ -50,6 +50,7 @@ const NoticeCard = () => {
 
   const closeNotice = useCallback(
     (id: string) => () => {
+      setViewIdx((prev) => Math.max(prev - 1, 0));
       setCloseNoticeIds((prev) => [...prev, id]);
     },
     []
@@ -80,6 +81,7 @@ const NoticeCard = () => {
 
   if (
     state.length === 0 ||
+    viewIdx >= state.length ||
     !state.reduce((acc, cur) => acc || cur.isShown, false)
   ) {
     return null;
@@ -155,5 +157,6 @@ const noticeTabsSx: SxProps<Theme> = {
     borderBottom: "#7777 1px solid",
     minHeight: 5,
     mx: 1,
+    minWidth: 45,
   },
 };

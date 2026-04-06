@@ -50,7 +50,13 @@ const DistAndFare = ({
   const _fareString = fares && fares[seq] ? "$" + fares[seq] : "";
   const _fareHolidayString =
     faresHoliday && faresHoliday[seq] ? "$" + faresHoliday[seq] : "";
-  const fareString = [_fareString, _fareHolidayString]
+  const fareString = [
+    _fareString,
+    _fareHolidayString,
+    fares && fares[seq]
+      ? "$" + Math.round(parseFloat(fares[seq]) * 2) / 10
+      : "",
+  ]
     .filter((v) => v)
     .join(", ");
 
