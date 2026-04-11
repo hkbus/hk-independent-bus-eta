@@ -131,7 +131,10 @@ export const getJoyYouFare = (
   idx: number
 ) => {
   if (
-    (routeNo.startsWith("A") || routeNo.startsWith("NA") || routeNo.startsWith("H") || routeNo.startsWith("P")) &&
+    (routeNo.startsWith("A") ||
+      routeNo.startsWith("NA") ||
+      routeNo.startsWith("H") ||
+      routeNo.startsWith("P")) &&
     (co.includes("ctb") || co.includes("kmb"))
   ) {
     // no JoyYou Fare for A-, NA-, H-, P- bus
