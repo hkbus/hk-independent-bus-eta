@@ -131,16 +131,16 @@ export const getJoyYouFare = (
   idx: number
 ) => {
   if (
-    (routeNo.startsWith("A") || routeNo.startsWith("NA")) &&
+    (routeNo.startsWith("A") || routeNo.startsWith("NA") || routeNo.startsWith("H") || routeNo.startsWith("P")) &&
     (co.includes("ctb") || co.includes("kmb"))
   ) {
-    // no JoyYou Fare for A- and NA- bus
+    // no JoyYou Fare for A-, NA-, H-, P- bus
     return "";
   }
   if (fares === null || !fares[idx]) return "";
   const baseFare = parseFloat(fares[idx]);
   if (baseFare < 2) return fares[idx];
-  if (baseFare < 10) return `2`;
+  if (baseFare < 10) return `2.0`;
   return (Math.round(baseFare * 2) / 10).toFixed(1);
 };
 
