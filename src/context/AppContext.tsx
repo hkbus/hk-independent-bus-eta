@@ -305,9 +305,22 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
 
   useEffect(() => {
     const onVisibilityChange = () => {
-      if (geoPermission === "granted") {
+      const isVisible = !document.hidden;
+      if (geoWatcherId.current) {
+        navigator.geolocation.clearWatch(geoWatcherId.current);
+        geoWatcherId.current = null;
+      }
+
+      if (isVisible && geoPermission === "granted") {
         try {
           if (window.iOSRNWebView === true) return;
+          navigator.geolocation.getCurrentPosition(
+            ({ coords: { latitude, longitude } }) => {
+              updateGeolocation({ lat: latitude, lng: longitude });
+            },
+            (err) => console.error("Fresh fix failed", err),
+            { enableHighAccuracy: true }
+          );
           const _geoWatcherId = navigator.geolocation.watchPosition(
             ({ coords: { latitude, longitude } }) => {
               updateGeolocation({ lat: latitude, lng: longitude });
@@ -322,7 +335,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       }
       setStateRaw(
         produce((state: State) => {
-          state.isVisible = !document.hidden;
+          state.isVisible = isVisible;
         })
       );
     };
