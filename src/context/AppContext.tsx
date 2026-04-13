@@ -305,13 +305,12 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
 
   useEffect(() => {
     const onVisibilityChange = () => {
-      const isVisible = !document.hidden;
       if (geoWatcherId.current) {
         navigator.geolocation.clearWatch(geoWatcherId.current);
         geoWatcherId.current = null;
       }
 
-      if (isVisible && geoPermission === "granted") {
+      if (geoPermission === "granted") {
         try {
           if (window.iOSRNWebView === true) return;
           navigator.geolocation.getCurrentPosition(
@@ -335,7 +334,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       }
       setStateRaw(
         produce((state: State) => {
-          state.isVisible = isVisible;
+          state.isVisible = !document.hidden;
         })
       );
     };
@@ -375,6 +374,15 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       if (geoPermission === "opening" || geoPermission === "force-opening") {
         setGeoPermission(geoPermission);
         if (window.iOSRNWebView !== true) {
+          navigator.geolocation.getCurrentPosition(
+            ({ coords: { latitude, longitude } }) => {
+              updateGeolocation({ lat: latitude, lng: longitude });
+              console.log(latitude, longitude);
+              setGeoPermission("granted");
+            },
+            (err) => console.error("Fresh fix failed", err),
+            { enableHighAccuracy: true }
+          );
           geoWatcherId.current = navigator.geolocation.watchPosition(
             ({ coords: { latitude, longitude } }) => {
               updateGeolocation({ lat: latitude, lng: longitude });
@@ -387,7 +395,6 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
             },
             { enableHighAccuracy: true }
           );
-          console.log(geoWatcherId.current);
         }
       } else if (geoWatcherId.current) {
         navigator.geolocation.clearWatch(geoWatcherId.current);
