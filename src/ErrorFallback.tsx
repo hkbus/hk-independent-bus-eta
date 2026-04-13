@@ -8,7 +8,7 @@ const ErrorFallback = ({ error }: Props) => {
   useEffect(() => {
     if (error.name === "ChunkLoadError" || error.name === "TypeError") {
       setTimeout(() => {
-        // window.location.reload();
+        window.location.reload();
       }, 500);
     }
   }, [error]);
