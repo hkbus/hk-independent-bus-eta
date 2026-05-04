@@ -95,9 +95,9 @@ const loadAddressFromGeodata = async (
 ): Promise<Suggestion[]> => {
   if (!addr) return new Promise((resolve) => resolve([]));
 
-  // use geodata.gov.hk api, potentially add als.ogcio.gov.hk api
+  // use www.map.gov.hk api, potentially add als.ogcio.gov.hk api
   const suggestions: GeoAddrData[] = await fetch(
-    `https://geodata.gov.hk/gs/api/v1.0.0/locationSearch?q=${encodeURI(addr)}`,
+    `https://www.map.gov.hk/gs/api/v1.0.0/locationSearch?q=${encodeURI(addr)}`,
     options
   ).then((res) => res.json());
 
