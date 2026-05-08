@@ -5608,10 +5608,10 @@ hast-util-whitespace@^2.0.0:
   resolved "https://registry.yarnpkg.com/hast-util-whitespace/-/hast-util-whitespace-2.0.1.tgz#0ec64e257e6fc216c7d14c8a1b74d27d650b4557"
   integrity sha512-nAxA0v8+vXSBDt3AnRUNjyRIQ0rD+ntpbAp4LnPkumc5M9yUbSMa4XDU9Q6etY4f1Wp4bNgvc1yjiZtsTTrSng==
 
-hk-bus-eta@^3.7.8:
-  version "3.7.8"
-  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-3.7.8.tgz#44126db9e1b4d1925c8e32d458920e86f4527e52"
-  integrity sha512-+ejWyILxEsHWV8yJhuoVSQ372R4mb5glu5BvC91uIypoP1kmaOjp74MwrdCGy/eJNe6aLhBajmXD6Ot2gUgfNA==
+hk-bus-eta@^3.7.9:
+  version "3.7.9"
+  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-3.7.9.tgz#29e9989ffa17a0c09a3193f08d5b6cdcb4e268c0"
+  integrity sha512-ZmF1XsIGKqWfDrWq1RnY1evR0rNujFj6i05+M9/4Tjf3U+DdbBFPs+RPF/6a9gMehzemjw3qBN+JNCM6XSLj+Q==
   dependencies:
     "@date-fns/tz" "^1.4.1"
     date-fns "^4.1.0"
