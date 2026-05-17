@@ -1,22 +1,27 @@
 import { useContext, useMemo, type CSSProperties, type ReactNode } from "react";
 import { Map, NavigationControl, type MapProps } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
-import { Protocol } from "pmtiles";
+import { PMTiles, Protocol } from "pmtiles";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Box, type SxProps, type Theme } from "@mui/material";
 import AppContext from "../../../context/AppContext";
 import useLanguage from "../../../hooks/useTranslation";
-import { buildStyle } from "./style";
+import { buildStyle, VECTOR_PMTILES_URL } from "./style";
+import { CachedPMTilesSource } from "./CachedPMTilesSource";
 
 /**
  * Register the `pmtiles://` URL scheme handler with maplibre-gl
- * exactly once per page load. Calling `addProtocol` twice would
- * overwrite the handler and log a warning, so we gate it.
+ * exactly once per page load, and pre-register the Hong Kong
+ * vector archive so its tile reads are served from a
+ * Cache-Storage-backed full-file download instead of the network
+ * range requests pmtiles would otherwise issue per pan/zoom.
  */
 let protocolRegistered = false;
 const ensurePMTilesProtocol = () => {
   if (protocolRegistered) return;
   const protocol = new Protocol();
+  const source = new CachedPMTilesSource(VECTOR_PMTILES_URL);
+  protocol.add(new PMTiles(source));
   maplibregl.addProtocol("pmtiles", protocol.tile);
   protocolRegistered = true;
 };

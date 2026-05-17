@@ -77,11 +77,6 @@ const RangeMap = ({ range, value, onChange }: RangeMapProps) => {
         latitude: initial.lat,
         zoom: 14,
       }}
-      // scrollZoom enabled so trackpad pinch works on macOS (pinch is
-      // delivered as a wheel event with ctrlKey: true — disabling
-      // scrollZoom would also disable trackpad pinch). For
-      // wheel-scroll-only-on-ctrl behaviour, swap for
-      // `cooperativeGestures` instead.
       onMove={onMove}
       onClick={onMapClick}
       style={{ height: "100%", position: "relative" }}
