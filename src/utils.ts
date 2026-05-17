@@ -96,32 +96,12 @@ export const vibrate = (duration: number) => {
 };
 
 export const triggerShare = (url: string, title: string) => {
-  if (navigator.share) {
+  if (checkMobile() && navigator.share) {
     return navigator.share({ title, url });
   } else if (navigator.clipboard) {
     return navigator.clipboard.writeText(url);
   }
   return new Promise((resolve) => resolve(""));
-};
-
-export const triggerShareImg = async (
-  base64Img: string,
-  title: string,
-  text: string
-) => {
-  const blob = await fetch(base64Img).then((res) => res.blob());
-  const file = new File([blob], "hkbus.png", { type: blob.type });
-  if (navigator.share) {
-    return navigator.share({
-      title: title,
-      text: text,
-      files: [file],
-    });
-  } else if (navigator.clipboard) {
-    return navigator.clipboard.write([
-      new ClipboardItem({ "image/png": blob }),
-    ]);
-  }
 };
 
 export const getJoyYouFare = (

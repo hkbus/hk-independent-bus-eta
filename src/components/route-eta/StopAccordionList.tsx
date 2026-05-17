@@ -1,15 +1,8 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  Suspense,
-} from "react";
-import { Box, SxProps, Theme } from "@mui/material";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { Box, Snackbar, SxProps, Theme } from "@mui/material";
 import type { RouteListEntry } from "hk-bus-eta";
 import StopAccordion from "./StopAccordion";
-import { SharingEntry } from "../../@types/types";
-const SharingModal = React.lazy(() => import("./SharingModal"));
+import { useTranslation } from "react-i18next";
 
 interface StopAccordionsProps {
   routeId: string;
@@ -26,8 +19,9 @@ const StopAccordions = ({
   handleChange,
   onStopInfo,
 }: StopAccordionsProps) => {
-  const [sharingObj, setSharingObj] = useState<SharingEntry | null>(null);
   const accordionRef = useRef<HTMLDivElement[]>([]);
+  const [isCopied, setIsCopied] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // scroll to specific bus stop
@@ -61,19 +55,22 @@ const StopAccordions = ({
           stopId={stopId}
           stopIdx={stopIdx}
           idx={idx}
-          onShareClick={(obj) => setSharingObj(obj)}
+          onShareClick={() => setIsCopied(true)}
           onSummaryClick={handleChange}
           onStopInfoClick={onStopInfo}
           key={"stop-" + idx}
           ref={handleRef(idx)}
         />
       ))}
-
-      {sharingObj && (
-        <Suspense fallback={<></>}>
-          <SharingModal {...sharingObj} />
-        </Suspense>
-      )}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={isCopied}
+        autoHideDuration={1500}
+        onClose={() => {
+          setIsCopied(false);
+        }}
+        message={t("已複製到剪貼簿")}
+      />
     </Box>
   );
 };

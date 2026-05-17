@@ -20,27 +20,28 @@ import {
   PushPinOutlined as PushPinOutlinedIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import { getJoyYouFare, toProperCase } from "../../utils";
+import { getJoyYouFare, toProperCase, triggerShare } from "../../utils";
 import TimeReport from "./TimeReport";
-import { SharingModalProps } from "./SharingModal";
 import ReactNativeContext from "../../context/ReactNativeContext";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
 import PinnedEtasContext from "../../context/PinnedEtasContext";
+import { useParams } from "react-router-dom";
 
 interface StopAccordionProps {
   routeId: string;
   stopId: string;
   stopIdx: number;
   idx: number;
-  onShareClick: (obj: SharingModalProps) => void;
+  onShareClick: () => void;
   onStopInfoClick: () => void;
   onSummaryClick: (idx: number, expand: boolean) => void;
 }
 
 const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
   (props, ref) => {
+    const { id: routeUri } = useParams();
     const {
       routeId,
       stopId,
@@ -51,6 +52,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
       onStopInfoClick,
     } = props;
     const {
+      AppTitle,
       db: { routeList, stopList },
     } = useContext(DbContext);
     const { savedEtas, setCollectionDrawerRoute, collections } =
@@ -60,7 +62,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
     const { pinnedEtas, togglePinnedEta } = useContext(PinnedEtasContext);
     const { t } = useTranslation();
     const language = useLanguage();
-    const { route, co, fares, faresHoliday } = routeList[routeId];
+    const { route, co, fares, faresHoliday, dest } = routeList[routeId];
     const stop = stopList[stopId];
     const targetRouteId = `${routeId.toUpperCase()}/${idx}`;
     const isStarred = useMemo<boolean>(
@@ -77,17 +79,29 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
       [co, fares, idx, route]
     );
 
-    const handleShareClick = useCallback(
-      (e: React.MouseEvent) => {
-        onShareClick({
-          routeId,
-          seq: idx,
-          stopId,
-          event: e,
-        });
-      },
-      [onShareClick, routeId, idx, stopId]
-    );
+    const handleShareClick = useCallback(() => {
+      triggerShare(
+        `https://${window.location.hostname}/${language}/route/${routeUri}/${stopId}%2C${idx}`,
+        `${idx + 1}. ${toProperCase(stop.name[language])} - ${route} ${t(
+          "往"
+        )} ${toProperCase(dest[language])} - ${t(AppTitle)}`
+      ).then(() => {
+        if (navigator.clipboard) {
+          onShareClick();
+        }
+      });
+    }, [
+      language,
+      routeUri,
+      stopId,
+      idx,
+      stop.name,
+      route,
+      t,
+      dest,
+      AppTitle,
+      onShareClick,
+    ]);
 
     const handleChangeInner = useCallback(
       (_: unknown, expand: boolean) => {
