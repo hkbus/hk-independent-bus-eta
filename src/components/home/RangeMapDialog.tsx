@@ -8,7 +8,7 @@ import {
   SxProps,
   Theme,
 } from "@mui/material";
-import RangeMap from "./RangeMap";
+import RangeMap from "../map/maplibre/RangeMap";
 import { useTranslation } from "react-i18next";
 import { useCallback, useContext, useState } from "react";
 import AppContext from "../../context/AppContext";

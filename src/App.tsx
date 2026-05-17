@@ -7,7 +7,6 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material/styles";
-import "leaflet/dist/leaflet.css";
 import { useContext, useMemo } from "react";
 import {
   Navigate,

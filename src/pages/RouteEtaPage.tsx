@@ -29,7 +29,9 @@ import {
 import useLanguage from "../hooks/useTranslation";
 import DbContext from "../context/DbContext";
 import RouteUpdateNotice from "../components/route-eta/RouteUpdateNotice";
-const RouteMap = React.lazy(() => import("../components/route-eta/RouteMap"));
+const RouteMap = React.lazy(
+  () => import("../components/map/maplibre/RouteMap")
+);
 
 const RouteEta = () => {
   const { id, panel } = useParams();

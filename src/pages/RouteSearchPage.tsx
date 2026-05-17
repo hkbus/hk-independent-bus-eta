@@ -13,7 +13,7 @@ import { ChangeCircle as ChangeCircleIcon } from "@mui/icons-material";
 import AppContext from "../context/AppContext";
 import { useTranslation } from "react-i18next";
 import AddressInput, { Address } from "../components/route-search/AddressInput";
-import SearchMap from "../components/route-search/SearchMap";
+import SearchMap from "../components/map/maplibre/SearchMap";
 import { fetchEtas, Eta, Company, Location } from "hk-bus-eta";
 import { setSeoHeader, getDistance, vibrate } from "../utils";
 import { LinearProgress } from "../components/Progress";
