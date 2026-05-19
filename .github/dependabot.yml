@@ -18,3 +18,7 @@ updates:
     directory: /src-tauri
     schedule:
       interval: weekly
+  - package-ecosystem: docker
+    directory: /docker
+    schedule:
+      interval: weekly
