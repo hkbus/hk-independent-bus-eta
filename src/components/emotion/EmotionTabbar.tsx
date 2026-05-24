@@ -1,4 +1,4 @@
-import { SxProps, Tab, Tabs, Theme } from "@mui/material";
+import { Box, SxProps, Tab, Tabs, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import {
   TaskAlt as TaskAltIcon,
@@ -30,6 +30,23 @@ const EmotionTabbar = () => {
         label={t("Emotion Chart")}
         value="chart"
         icon={<MonitorHeartOutlinedIcon />}
+        iconPosition="start"
+      />
+      <Tab
+        label={t("同感心")}
+        value="sympathy"
+        icon={
+          <Box
+            sx={{
+              backgroundImage: 'url(/img/sympathy/tab-icon.png)',
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: 'contain',
+              height: 24,
+              width: 24,
+            }}
+          />
+        }
         iconPosition="start"
       />
     </Tabs>

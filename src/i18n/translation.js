@@ -197,6 +197,7 @@ const resources = {
       DRL: "Disneyland Resort Line",
       "支援 WearOS 及 WatchOS 平台": "Support WearOS & WatchOS",
       地圖資源: "Map Resources",
+      同感心: "Sympathy"
     },
   },
   zh: {

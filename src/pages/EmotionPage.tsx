@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { Suspense } from "react";
 import EmotionChart from "../components/emotion/EmotionChart";
 import EmotionTabbar from "../components/emotion/EmotionTabbar";
+import SympathyTab from "../components/emotion/SympathyTab";
 
 const EmotionPage = () => {
   const { tab } = useParams();
@@ -15,6 +16,7 @@ const EmotionPage = () => {
         <Box overflow="auto">
           {(!tab || tab === "check-in") && <CheckIn />}
           {tab === "chart" && <EmotionChart />}
+          {tab === "sympathy" && <SympathyTab />}
         </Box>
       </Suspense>
     </Paper>

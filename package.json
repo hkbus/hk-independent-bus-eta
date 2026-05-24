@@ -28,7 +28,7 @@
     "@types/plotly.js-basic-dist": "^1.54.4",
     "core-js": "^3.23.1",
     "dayjs": "^1.11.7",
-    "hk-bus-eta": "^3.8.0",
+    "hk-bus-eta": "^3.8.1",
     "i18next": "^23.10.0",
     "immer": "^9.0.15",
     "lodash.debounce": "^4.0.8",
