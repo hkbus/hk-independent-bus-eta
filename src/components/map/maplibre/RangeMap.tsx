@@ -5,6 +5,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type MutableRefObject,
 } from "react";
 import {
   Marker,
@@ -45,24 +46,27 @@ const RangeMap = ({ range, value, onChange }: RangeMapProps) => {
   const initial = useRef<Location>(value).current;
   const [center, setCenter] = useState<Location>(initial);
 
-  // Notify parent of every centre update.
-  useEffect(() => {
-    onChange(center);
-    // Intentionally omit onChange from deps — we don't want to
-    // re-fire when the handler identity changes between renders.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [center]);
-
+  // Continuous: update local centre so the marker + circle visually
+  // follow the map as the user drags. Fires every animation frame.
   const onMove = useCallback((e: ViewStateChangeEvent) => {
     const { longitude, latitude } = e.viewState;
     setCenter({ lat: latitude, lng: longitude });
   }, []);
 
+  // One-shot: notify the parent only at the end of a gesture (drag
+  // released, jumpTo settled, flyTo finished). Drops the parent
+  // re-render rate from per-frame to per-gesture.
+  const onMoveEnd = useCallback(
+    (e: ViewStateChangeEvent) => {
+      onChange({ lat: e.viewState.latitude, lng: e.viewState.longitude });
+    },
+    [onChange]
+  );
+
   const onMapClick = useCallback((e: MapLayerMouseEvent) => {
-    const next: Location = { lat: e.lngLat.lat, lng: e.lngLat.lng };
-    // Jump (no animation) to the clicked point.
-    e.target.jumpTo({ center: [next.lng, next.lat] });
-    setCenter(next);
+    // jumpTo emits both `move` and `moveend`, so onMove/onMoveEnd
+    // above handle the local state update + parent notification.
+    e.target.jumpTo({ center: [e.lngLat.lng, e.lngLat.lat] });
   }, []);
 
   const circleFeature = useMemo<Feature<Polygon>>(
@@ -78,6 +82,7 @@ const RangeMap = ({ range, value, onChange }: RangeMapProps) => {
         zoom: 14,
       }}
       onMove={onMove}
+      onMoveEnd={onMoveEnd}
       onClick={onMapClick}
       style={{ height: "100%", position: "relative" }}
     >
@@ -107,17 +112,36 @@ const RangeMap = ({ range, value, onChange }: RangeMapProps) => {
           alt=""
         />
       </Marker>
-      <CenterControl
-        onClick={() => {
-          const c = geolocation.current;
-          setCenter(c);
-        }}
-      />
+      <RecenterButton geolocationRef={geolocation} />
     </BaseMap>
   );
 };
 
 export default RangeMap;
+
+/**
+ * "Recentre on my location" button. Lives inside `<BaseMap>` so it
+ * can call `useImperativeMap` to fly the map itself — without this,
+ * the click would only update React state and the map view would
+ * stay put, leaving the marker stranded off-screen.
+ *
+ * `flyTo` emits `move` + `moveend`, so the outer `onMove`/`onMoveEnd`
+ * handlers take care of the local state update + parent notification.
+ */
+const RecenterButton = ({
+  geolocationRef,
+}: {
+  geolocationRef: MutableRefObject<Location>;
+}) => {
+  const m = useImperativeMap();
+  return (
+    <CenterControl
+      onClick={() => {
+        if (m.isReady()) m.flyTo(geolocationRef.current);
+      }}
+    />
+  );
+};
 
 /**
  * Inner child: when `range` (or center) changes, compute the circle's

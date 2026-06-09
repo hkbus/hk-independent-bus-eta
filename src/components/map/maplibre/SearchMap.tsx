@@ -135,8 +135,13 @@ const BusRoute = ({
   );
 
   const lineColor = lv === 0 ? "#FF9090" : "#d0b708";
-  const sourceId = `bus-route-line-${routeId}-${lv}`;
-  const layerId = `bus-route-line-layer-${routeId}-${lv}`;
+  // IDs are stable across routeId changes — the BusRoute component
+  // is reused (keyed by `lv`/idx) when the user picks a different
+  // proposed route, so swapping IDs would force react-map-gl to
+  // remove the maplibre Source while its Layer still references it,
+  // which crashes. With stable IDs we only update `data` and `paint`.
+  const sourceId = `bus-route-line-${lv}`;
+  const layerId = `bus-route-line-layer-${lv}`;
 
   return (
     <>

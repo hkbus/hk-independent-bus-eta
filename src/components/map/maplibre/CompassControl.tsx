@@ -31,8 +31,8 @@ export default CompassControl;
 
 const compassControlSx: SxProps<Theme> = {
   position: "absolute",
-  // Stacks above CenterControl.
-  bottom: 57,
+  // Stacks above CenterControl (bottom: 40, height: 32) with a 5 px gap.
+  bottom: 77,
   right: 5,
   width: 32,
   height: 32,

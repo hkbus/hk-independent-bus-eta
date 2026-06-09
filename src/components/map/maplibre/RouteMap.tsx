@@ -145,6 +145,11 @@ const RouteMap = ({
     };
   }, []);
 
+  // Stable handler — kept out of the inline `onApplied={() => …}` form
+  // so MapEffects' useEffect identity-dep on it doesn't fire on every
+  // parent render.
+  const handleNavApplied = useCallback(() => setPendingNav(null), []);
+
   const onClickJumpToMyLocation = useCallback(() => {
     if (geoPermission === "granted") {
       setPendingNav({ type: "flyTo", center: geolocation.current });
@@ -195,10 +200,7 @@ const RouteMap = ({
         onDragEnd={handleDragStartOrEnd}
         style={{ height: "35vh" }}
       >
-        <MapEffects
-          pending={pendingNav}
-          onApplied={() => setPendingNav(null)}
-        />
+        <MapEffects pending={pendingNav} onApplied={handleNavApplied} />
 
         <MtrExits />
 
