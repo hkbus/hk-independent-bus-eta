@@ -156,7 +156,7 @@ export const setSeoHeader = ({
     .querySelector("html")
     ?.setAttribute("lang", lang === "zh" ? "zh-Hant" : lang);
   document
-    .querySelector('link[rel="alternative"][hreflang="en"]')
+    .querySelector('link[rel="alternate"][hreflang="en"]')
     ?.setAttribute(
       "href",
       "https://hkbus.app" +
@@ -166,7 +166,7 @@ export const setSeoHeader = ({
           .replace(`/${lang}`, "/en")
     );
   document
-    .querySelector('link[rel="alternative"][hreflang="zh-Hant"]')
+    .querySelector('link[rel="alternate"][hreflang="zh-Hant"]')
     ?.setAttribute(
       "href",
       "https://hkbus.app" +
@@ -176,7 +176,7 @@ export const setSeoHeader = ({
           .replace(`/${lang}`, "/zh")
     );
   document
-    .querySelector('link[rel="alternative"][hreflang="x-default"]')
+    .querySelector('link[rel="alternate"][hreflang="x-default"]')
     ?.setAttribute(
       "href",
       "https://hkbus.app" +
@@ -215,10 +215,38 @@ export const setSeoRouteFeature = ({
   lang: string;
   t: TFunction<"translation", undefined>;
 }) => {
-  const jsonLd = document.querySelector('script[type="application/ld+json"]');
+  // Target the dedicated per-route script so we don't clobber the
+  // site-wide Organization / WebSite / WebApplication graph in index.html.
+  const jsonLd = document.querySelector("#route-jsonld");
   if (jsonLd) {
-    jsonLd.textContent = JSON.stringify({
-      "@context": "https://schema.org",
+    const l = lang === "en" ? "en" : "zh";
+    const routeUrl = `https://hkbus.app${window.location.pathname
+      .replace(/\(/g, "%28")
+      .replace(/\)/g, "%29")}`;
+    const breadcrumb = {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: lang === "en" ? "Home" : "主頁",
+          item: `https://hkbus.app/${l}`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: lang === "en" ? "Routes" : "路線",
+          item: `https://hkbus.app/${l}/board`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: route.route,
+          item: routeUrl,
+        },
+      ],
+    };
+    const faqPage = {
       "@type": "FAQPage",
       mainEntity: [
         {
@@ -297,6 +325,10 @@ export const setSeoRouteFeature = ({
           },
         })),
       ],
+    };
+    jsonLd.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [breadcrumb, faqPage],
     });
   }
 };

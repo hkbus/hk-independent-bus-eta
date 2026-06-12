@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="canonical" href="https://hkbus.app/" />
-    <link rel="alternative" hreflang="en" href="https://hkbus.app/en" />
-    <link rel="alternative" hreflang="zh-Hant" href="https://hkbus.app/zh" />
-    <link rel="alternative" hreflang="x-default" href="https://hkbus.app/zh" />
+    <link rel="alternate" hreflang="en" href="https://hkbus.app/en" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://hkbus.app/zh" />
+    <link rel="alternate" hreflang="x-default" href="https://hkbus.app/zh" />
     <meta name="apple-itunes-app" content="app-id=1612184906" />
     <meta
       name="viewport"
@@ -87,8 +87,13 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://hkbus.app/" />
+    <meta property="og:site_name" content="巴士到站預報 App" />
+    <meta property="og:locale" content="zh_HK" />
+    <meta property="og:locale:alternate" content="en_HK" />
     <meta property="og:image" content="https://hkbus.app/img/share.png" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="627" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="巴士到站預報 App" />
     <meta
       name="twitter:description"
@@ -97,7 +102,43 @@
     <meta name="twitter:image" content="https://hkbus.app/img/share.png" />
     <style prerender></style>
     <style>body { background: black; }</style>
-    <script type="application/ld+json"></script>
+    <!-- Site-wide structured data: identifies the site, its publisher, and
+         the web app. Always present on every page. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://hkbus.app/#organization",
+            "name": "巴士到站預報 App",
+            "url": "https://hkbus.app/",
+            "logo": "https://hkbus.app/img/logo512.png"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://hkbus.app/#website",
+            "url": "https://hkbus.app/",
+            "name": "巴士到站預報 App",
+            "publisher": { "@id": "https://hkbus.app/#organization" },
+            "inLanguage": ["zh-Hant", "en"]
+          },
+          {
+            "@type": "WebApplication",
+            "name": "巴士到站預報 App",
+            "url": "https://hkbus.app/",
+            "applicationCategory": "TravelApplication",
+            "operatingSystem": "Any",
+            "browserRequirements": "Requires JavaScript",
+            "publisher": { "@id": "https://hkbus.app/#organization" },
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "HKD" }
+          }
+        ]
+      }
+    </script>
+    <!-- Per-route structured data (BreadcrumbList + FAQPage), populated at
+         runtime / pre-render time by setSeoRouteFeature in src/utils.ts. -->
+    <script type="application/ld+json" id="route-jsonld"></script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
