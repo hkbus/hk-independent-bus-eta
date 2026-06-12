@@ -15,6 +15,12 @@ interface TimeReportProps {
   seq: number;
   containerSx?: SxProps<Theme>;
   showStopName?: boolean;
+  /**
+   * When true, the report is exposed as a polite live region so that
+   * screen readers announce arrival-time changes for the focused stop.
+   * Off by default to avoid chatter when many reports are on screen.
+   */
+  announce?: boolean;
 }
 
 const TimeReport = ({
@@ -22,6 +28,7 @@ const TimeReport = ({
   seq,
   containerSx,
   showStopName = false,
+  announce = false,
 }: TimeReportProps) => {
   const { t } = useTranslation();
   const language = useLanguage();
@@ -68,16 +75,20 @@ const TimeReport = ({
     return null;
   }, [etas, co, stops, stopId, t, language]);
 
+  const liveProps = announce
+    ? { role: "status" as const, "aria-live": "polite" as const }
+    : {};
+
   if (etas == null) {
     return (
-      <Box sx={containerSx}>
-        <LinearProgress />
+      <Box sx={containerSx} {...liveProps}>
+        <LinearProgress aria-label={t("資料更新中")} />
       </Box>
     );
   }
 
   return (
-    <Box sx={containerSx}>
+    <Box sx={containerSx} {...liveProps}>
       {showStopName && (
         <Typography variant="caption">
           {stopList[stopId].name[language]}

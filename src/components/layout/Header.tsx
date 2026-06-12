@@ -86,6 +86,17 @@ const Header = () => {
       // escape if any <input> has already been focused
       if ((target as HTMLElement).tagName.toUpperCase() === "INPUT") return;
       if ((target as HTMLElement).tagName.toUpperCase() === "TEXTAREA") return;
+      // escape if an interactive element is focused, so single-key entry
+      // doesn't hijack keyboard / screen-reader navigation.
+      const el = target as HTMLElement;
+      if (
+        el.isContentEditable ||
+        el.closest?.(
+          'a, button, [role="button"], [role="link"], [role="menuitem"], [role="tab"], [tabindex]'
+        )
+      ) {
+        return;
+      }
 
       if (key === "Escape") {
         setSearchRoute("");
@@ -151,7 +162,7 @@ const Header = () => {
       >
         {onlineStatus === "online" && <Box sx={appTitleSx} />}
         {onlineStatus === "offline" && (
-          <IconButton>
+          <IconButton aria-label={t("離線")}>
             <WifiOffIcon />
           </IconButton>
         )}
@@ -167,14 +178,16 @@ const Header = () => {
         value={searchRoute}
         placeholder={t("路線")}
         startAdornment={
+          // Decorative search affordance: clicking it toggles the on-screen
+          // keypad for mouse users, but it duplicates the text input next to
+          // it, so it is hidden from assistive tech and kept out of the tab
+          // order (the input itself is the real, labelled control).
           <Box
             onClick={() => {
               setIsSearching(!isSearching);
             }}
             sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-            role="button"
-            aria-label="Search Route"
-            tabIndex={0}
+            aria-hidden="true"
           >
             <SearchIcon fontSize="small" sx={{ opacity: 0.8 }} />
           </Box>
@@ -197,7 +210,7 @@ const Header = () => {
           }
           navigate(`/${language}/board`, { replace: true });
         }}
-        aria-label="search input, you may enter the route directly"
+        aria-label={t("輸入巴士路線號碼搜尋")}
       />
       <Box sx={weatherPanelSx}>
         {weatherCodes.slice(0, 2).map((code) => (

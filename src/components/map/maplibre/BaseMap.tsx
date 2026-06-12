@@ -1,5 +1,16 @@
-import { useContext, useMemo, type CSSProperties, type ReactNode } from "react";
-import { Map, NavigationControl, type MapProps } from "react-map-gl/maplibre";
+import {
+  useCallback,
+  useContext,
+  useMemo,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+import {
+  Map,
+  NavigationControl,
+  type MapProps,
+  type MapEvent,
+} from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
 import { PMTiles, Protocol } from "pmtiles";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -66,6 +77,16 @@ export interface BaseMapProps extends ForwardedProps {
    * Default true.
    */
   showZoomControl?: boolean;
+  /**
+   * When true (the default) the map is treated as a decorative,
+   * supplementary view: the whole subtree is hidden from assistive
+   * technology and every focusable descendant (the maplibre canvas and
+   * its control buttons) is removed from the tab order. Mouse / touch
+   * interaction is unaffected. Each map in this app is paired with an
+   * accessible text equivalent (the stop accordion list, the search
+   * results list), which is what screen-reader users should use.
+   */
+  decorative?: boolean;
 }
 
 const BaseMap = ({
@@ -74,10 +95,32 @@ const BaseMap = ({
   children,
   showLandsDepartmentBadge = true,
   showZoomControl = true,
+  decorative = true,
+  onLoad,
   ...rest
 }: BaseMapProps) => {
   const { colorMode } = useContext(AppContext);
   const language = useLanguage();
+
+  // Hide the decorative map from assistive tech and strip focusable
+  // descendants so we don't leave "aria-hidden but focusable" elements
+  // (an a11y violation) behind. Done imperatively because the canvas and
+  // control buttons are created inside maplibre, not by React.
+  const handleLoad = useCallback(
+    (e: MapEvent) => {
+      if (decorative) {
+        const container = e.target.getContainer();
+        container.setAttribute("aria-hidden", "true");
+        container
+          .querySelectorAll<HTMLElement>(
+            ".maplibregl-canvas, .maplibregl-ctrl button, [tabindex]"
+          )
+          .forEach((el) => el.setAttribute("tabindex", "-1"));
+      }
+      onLoad?.(e);
+    },
+    [decorative, onLoad]
+  );
 
   // Side effect on render is fine here — the guard makes it cheap
   // after the first call and we need the protocol registered before
@@ -102,6 +145,7 @@ const BaseMap = ({
       style={{ width: "100%", height: "100%", ...style }}
       maxZoom={20}
       attributionControl={{ compact: true }}
+      onLoad={handleLoad}
       {...rest}
     >
       {showZoomControl && <NavigationControl position="top-left" />}

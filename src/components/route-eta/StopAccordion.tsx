@@ -64,6 +64,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
     const language = useLanguage();
     const { route, co, fares, faresHoliday, dest } = routeList[routeId];
     const stop = stopList[stopId];
+    const stopName = toProperCase(stop.name[language]);
     const targetRouteId = `${routeId.toUpperCase()}/${idx}`;
     const isStarred = useMemo<boolean>(
       () =>
@@ -136,12 +137,14 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
             containerSx={accordionTimeReportSx}
             routeId={`${routeId.toUpperCase()}`}
             seq={idx}
+            announce
           />
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Box>
               {isStopAlarm && (
                 <IconButton
-                  aria-label="alert"
+                  aria-label={`${t("到站提示")} - ${stopName}`}
+                  aria-pressed={alarmStopId === stopId}
                   onClick={() => toggleStopAlarm(stopId)}
                   style={{ backgroundColor: "transparent" }}
                   size="large"
@@ -154,7 +157,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
                 </IconButton>
               )}
               <IconButton
-                aria-label="stop-info"
+                aria-label={`${t("車站資訊")} - ${stopName}`}
                 onClick={onStopInfoClick}
                 style={{ background: "transparent" }}
                 size="large"
@@ -162,7 +165,8 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
                 <InfoIcon />
               </IconButton>
               <IconButton
-                aria-label="pin"
+                aria-label={`${t("置頂")} - ${stopName}`}
+                aria-pressed={pinnedEtas.includes(targetRouteId)}
                 onClick={() => togglePinnedEta(targetRouteId)}
                 style={{ backgroundColor: "transparent" }}
                 size="large"
@@ -176,7 +180,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
             </Box>
             <Box>
               <IconButton
-                aria-label="share"
+                aria-label={`${t("分享")} - ${stopName}`}
                 onClick={handleShareClick}
                 style={{ backgroundColor: "transparent" }}
                 size="large"
@@ -184,7 +188,8 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
                 <ShareIcon />
               </IconButton>
               <IconButton
-                aria-label="favourite"
+                aria-label={`${t("收藏")} - ${stopName}`}
+                aria-pressed={isStarred}
                 onClick={() => {
                   setCollectionDrawerRoute(targetRouteId);
                 }}
