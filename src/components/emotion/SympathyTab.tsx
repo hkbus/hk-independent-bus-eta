@@ -11,7 +11,7 @@ const SympathyTab = () => {
 
   const differenceInMs = endDate.getTime() - startDate.getTime();
   const imgIdx =
-    `${(Math.floor(differenceInMs / (1000 * 60 * 60 * 24)) % SYMPATHY_IMAGE_COUNT) + 2}`.padStart(
+    `${(Math.floor(differenceInMs / (1000 * 60 * 60 * 24)) % SYMPATHY_IMAGE_COUNT) + 1}`.padStart(
       3,
       "0"
     );
