@@ -47,7 +47,7 @@ export default TimetableDrawer;
 const drawerSx: SxProps<Theme> = {
   width: "80%",
   maxWidth: "320px",
-  paddingTop: "56px",
+  paddingTop: "env(safe-area-inset-top)",
   paddingLeft: "20px",
   backgroundColor: (theme) => theme.palette.background.default,
   backgroundImage: "none",
@@ -61,8 +61,6 @@ const tabbarSx: SxProps<Theme> = {
     textTransform: "none",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 0,
-    paddingBottom: 0,
     minHeight: "32px",
   },
   [`& .MuiTabs-flexContainer`]: {

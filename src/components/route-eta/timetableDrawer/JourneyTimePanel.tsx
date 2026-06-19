@@ -199,7 +199,11 @@ const JourneyTimePanel = ({ routeId }: JourneyTimePanelProps) => {
         </Typography>
       </Box>
       <Divider sx={{ my: 2 }} />
-      <Box overflow="auto" flex={1}>
+      <Box
+        overflow="auto"
+        flex={1}
+        sx={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
         <Stepper orientation="vertical">
           {stops.map((stop, idx) => (
             <Step
