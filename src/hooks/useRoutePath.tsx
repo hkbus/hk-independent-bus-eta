@@ -31,31 +31,38 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
       // For light rail map
       waypointsFile = `${route}${dest.en.includes("Circular") ? "" : bound[co[0]] === "I" ? "_I" : "_O"}.json`;
     }
-    fetch(`https://hkbus.github.io/route-waypoints/${waypointsFile}`)
-      .then((r) => r.json())
-      .then((json) => {
-        setGeoJson(json);
-      })
-      .catch(() => {
-        setGeoJson({
-          features: [
-            {
-              type: "Feature",
-              geometry: {
-                type: "LineString",
-                coordinates: stops.reduce(
-                  (acc, { location: { lat, lng } }) => {
-                    acc.push([lng, lat]);
-                    return acc;
-                  },
-                  [] as [number, number][]
-                ),
-              },
+    const setFallbackGeoJson = () => {
+      setGeoJson({
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: stops.reduce(
+                (acc, { location: { lat, lng } }) => {
+                  acc.push([lng, lat]);
+                  return acc;
+                },
+                [] as [number, number][]
+              ),
             },
-          ],
-          type: "FeatureCollection",
-        });
+          },
+        ],
+        type: "FeatureCollection",
       });
+    };
+    if (waypointsFile === "") {
+      setFallbackGeoJson();
+    } else {
+      fetch(`https://hkbus.github.io/route-waypoints/${waypointsFile}`)
+        .then((r) => r.json())
+        .then((json) => {
+          setGeoJson(json);
+        })
+        .catch(() => {
+          setFallbackGeoJson();
+        });
+    }
     return () => {
       setGeoJson(null);
     };
