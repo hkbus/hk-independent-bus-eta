@@ -45,7 +45,6 @@ const TimetableDrawer = ({ routeId, open, onClose }: TimetableDrawerProps) => {
 export default TimetableDrawer;
 
 const drawerSx: SxProps<Theme> = {
-  height: "100vh",
   width: "80%",
   maxWidth: "320px",
   paddingTop: "56px",
