@@ -128,7 +128,6 @@ const ReverseButton = ({ routeId, stopId }: ReverseButtonProps) => {
   return (
     reverseRouteUrl && (
       <>
-        <Divider orientation="vertical" sx={buttonDividerSx} />
         <Button
           variant="text"
           aria-label="open-timetable"
@@ -139,6 +138,7 @@ const ReverseButton = ({ routeId, stopId }: ReverseButtonProps) => {
         >
           {t("對頭線")}
         </Button>
+        <Divider orientation="vertical" flexItem />
       </>
     )
   );
@@ -146,18 +146,9 @@ const ReverseButton = ({ routeId, stopId }: ReverseButtonProps) => {
 
 export default ReverseButton;
 
-const buttonDividerSx: SxProps<Theme> = {
-  position: "absolute",
-  top: "0",
-  left: "calc(64px + 2%)",
-};
-
 const buttonSx: SxProps<Theme> = {
   color: (theme) =>
     theme.palette.getContrastText(theme.palette.background.default),
-  position: "absolute",
-  top: 0,
-  left: "2%",
   flexDirection: "column",
   justifyContent: "center",
   "& > .MuiButton-label": {

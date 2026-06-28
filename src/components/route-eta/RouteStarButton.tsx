@@ -34,6 +34,8 @@ const buttonSx: SxProps<Theme> = {
     theme.palette.getContrastText(theme.palette.background.default),
   flexDirection: "column",
   justifyContent: "center",
+  position: "absolute",
+  right: 0,
   "& > .MuiButton-label": {
     flexDirection: "column",
     justifyContent: "center",

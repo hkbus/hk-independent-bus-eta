@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Box, Paper, SxProps, Theme, Typography } from "@mui/material";
+import { Box, Divider, Paper, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "../route-board/RouteNo";
 import { toProperCase } from "../../utils";
 import { useTranslation } from "react-i18next";
@@ -24,14 +24,19 @@ const RouteHeader = ({ routeId, stopId }: RouteHeaderProps) => {
 
   return (
     <Paper id="route-eta-header" sx={PaperSx} elevation={0}>
-      <RouteNo routeNo={t(route)} component="h1" align="center" />
-      <Typography component="h2" variant="caption" align="center">
-        {t("往")} {toProperCase(dest[language])}{" "}
-        {nlbId ? t("由") + " " + toProperCase(orig[language]) : ""}
-      </Typography>
       <ReverseButton routeId={routeId} stopId={stopId} />
-      <Box sx={rightBtnGroupSx}>
-        <RouteStarButton routeId={routeId} />
+      <Box sx={centerColumnSx}>
+        <Box sx={routeNoRowSx}>
+          <RouteNo routeNo={t(route)} component="h1" align="center" />
+          <RouteStarButton routeId={routeId} />
+        </Box>
+        <Typography component="h2" variant="caption" align="center">
+          {t("往")} {toProperCase(dest[language])}{" "}
+          {nlbId ? t("由") + " " + toProperCase(orig[language]) : ""}
+        </Typography>
+      </Box>
+      <Box sx={rightColumnSx}>
+        <Divider orientation="vertical" flexItem />
         <TimetableButton routeId={routeId} />
       </Box>
     </Paper>
@@ -41,13 +46,31 @@ const RouteHeader = ({ routeId, stopId }: RouteHeaderProps) => {
 export default RouteHeader;
 
 const PaperSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "stretch",
   textAlign: "center",
   background: "transparent",
-  position: "relative",
 };
 
-const rightBtnGroupSx: SxProps<Theme> = {
-  position: "absolute",
-  top: 0,
-  right: "2%",
+const centerColumnSx: SxProps<Theme> = {
+  flex: 1,
+  position: "relative",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  minWidth: 0,
+};
+
+const routeNoRowSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+};
+
+const rightColumnSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "center",
+  flexShrink: 0,
 };
