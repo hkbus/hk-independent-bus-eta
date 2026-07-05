@@ -455,11 +455,11 @@ export const routeSortFunc = (
     return -1;
   }
 
-  // Sort by TRANSPORT_ORDER
-  const aCompany = a[1]["co"].sort(
+  // Sort by TRANSPORT_ORDER. Copy first — co is shared; in-place sort corrupts co[0].
+  const aCompany = [...a[1]["co"]].sort(
     (a, b) => transportOrder.indexOf(a) - transportOrder.indexOf(b)
   );
-  const bCompany = b[1]["co"].sort(
+  const bCompany = [...b[1]["co"]].sort(
     (a, b) => transportOrder.indexOf(a) - transportOrder.indexOf(b)
   );
 
