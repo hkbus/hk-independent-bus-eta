@@ -305,7 +305,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         geoWatcherId.current = null;
       }
 
-      if (geoPermission === "granted") {
+      // Don't re-arm the watch while hidden — keeps GPS off in the background.
+      if (geoPermission === "granted" && !document.hidden) {
         try {
           if (window.iOSRNWebView === true) return;
           navigator.geolocation.getCurrentPosition(
