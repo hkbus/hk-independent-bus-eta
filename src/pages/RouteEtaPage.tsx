@@ -7,6 +7,7 @@ import React, {
   Suspense,
 } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Box, type SxProps, type Theme } from "@mui/material";
 import RouteHeader from "../components/route-eta/RouteHeader";
 import StopAccordionList from "../components/route-eta/StopAccordionList";
 import StopDialog from "../components/route-eta/StopDialog";
@@ -233,26 +234,42 @@ const RouteEta = () => {
       <input hidden id="render" />
       <RouteHeader routeId={routeId} stopId={stopIds[stopIdx]} />
       <RouteUpdateNotice route={routeListEntry} />
-      {!energyMode && navigator.userAgent !== "prerendering" && (
-        <Suspense fallback={null}>
-          <RouteMap
+      {/*
+        POC(#196 landscape): two-pane split on md+ (≥900px) ONLY — stop list
+        left (~42%, scrolls independently), map right (~58%, fills height).
+        Below md every box here is `display: contents`, so the wrapper and the
+        two column boxes generate no box at all: the map + list fall back to
+        being direct children of <main> and stack vertically EXACTLY as before
+        (mobile is pixel-identical). The map box is DOM-first so that on mobile
+        (contents) it stays ABOVE the list; at md the row is `row-reverse`,
+        which places the map on the RIGHT and the list on the LEFT.
+      */}
+      <Box sx={landscapeSplitSx}>
+        <Box sx={mapPaneSx}>
+          {!energyMode && navigator.userAgent !== "prerendering" && (
+            <Suspense fallback={null}>
+              <RouteMap
+                routeId={routeId}
+                stopIds={stopIds}
+                stopIdx={stopIdx}
+                route={route}
+                companies={co}
+                onMarkerClick={onMarkerClick}
+              />
+            </Suspense>
+          )}
+        </Box>
+        <Box sx={listPaneSx}>
+          <StopAccordionList
             routeId={routeId}
-            stopIds={stopIds}
             stopIdx={stopIdx}
-            route={route}
-            companies={co}
-            onMarkerClick={onMarkerClick}
+            routeListEntry={routeListEntry}
+            stopIds={stopIds}
+            handleChange={handleChange}
+            onStopInfo={handleStopInfo}
           />
-        </Suspense>
-      )}
-      <StopAccordionList
-        routeId={routeId}
-        stopIdx={stopIdx}
-        routeListEntry={routeListEntry}
-        stopIds={stopIds}
-        handleChange={handleChange}
-        onStopInfo={handleStopInfo}
-      />
+        </Box>
+      </Box>
       <StopDialog
         open={isDialogOpen}
         stops={dialogStop}
@@ -260,6 +277,34 @@ const RouteEta = () => {
       />
     </>
   );
+};
+
+// POC(#196 landscape) — all rules md-gated; below md they collapse to
+// `display: contents` so the layout is identical to the plain vertical stack.
+const landscapeSplitSx: SxProps<Theme> = {
+  display: { xs: "contents", md: "flex" },
+  // row-reverse: map (DOM-first) → right pane; list (DOM-second) → left pane.
+  flexDirection: { md: "row-reverse" },
+  // Fill the remaining height of <main> (which is flex:1 + overflow:hidden),
+  // so the two panes get a bounded height to scroll/fill within.
+  flex: { md: 1 },
+  minHeight: { md: 0 },
+};
+
+// Map pane — right side, ~58%. Stretches to the row height; RouteMap fills it.
+const mapPaneSx: SxProps<Theme> = {
+  display: { xs: "contents", md: "block" },
+  flex: { md: 1 },
+  height: { md: "100%" },
+  minWidth: { md: 0 },
+};
+
+// List pane — left side, ~42%, scrolls independently in a fixed-height column.
+const listPaneSx: SxProps<Theme> = {
+  display: { xs: "contents", md: "block" },
+  flex: { md: "0 0 42%" },
+  height: { md: "100%" },
+  overflowY: { md: "auto" },
 };
 
 const getRouteEntry = (id: string, routeList: RouteList) => {
