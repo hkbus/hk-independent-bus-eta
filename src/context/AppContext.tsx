@@ -372,7 +372,6 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
           navigator.geolocation.getCurrentPosition(
             ({ coords: { latitude, longitude } }) => {
               updateGeolocation({ lat: latitude, lng: longitude });
-              console.log(latitude, longitude);
               setGeoPermission("granted");
             },
             (err) => console.error("Fresh fix failed", err),
@@ -644,7 +643,6 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         harmonyBridger.openUrl(url);
       }
     } else {
-      console.log(url);
       window.open(url, "_blank");
     }
   }, []);
