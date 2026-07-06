@@ -180,9 +180,8 @@ const Settings = () => {
               t("更新時間") +
               ": " +
               new Date(updateTime)
-                .toLocaleString()
-                .slice(0, 20)
-                .replace(",", " ")
+                .toLocaleString(undefined, { hour12: false })
+                .replace(/,\s*/, " ")
             }
           />
         </ListItemButton>
