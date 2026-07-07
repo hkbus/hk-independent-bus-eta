@@ -287,12 +287,14 @@ const mapPaneSx: SxProps<Theme> = {
   minWidth: { md: 0 },
 };
 
-// List pane — left, ~42%, scrolls independently.
+// List pane — left, ~42%, scrolls independently. `background.paper` so the
+// scrollbar's transparent track reveals the list surface, not the yellow page bg.
 const listPaneSx: SxProps<Theme> = {
   display: { xs: "contents", md: "block" },
   flex: { md: "0 0 42%" },
   height: { md: "100%" },
   overflowY: { md: "auto" },
+  bgcolor: { md: "background.paper" },
 };
 
 const getRouteEntry = (id: string, routeList: RouteList) => {

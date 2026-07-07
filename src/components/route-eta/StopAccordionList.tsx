@@ -78,5 +78,7 @@ const StopAccordions = ({
 export default StopAccordions;
 
 const rootSx: SxProps<Theme> = {
-  overflowY: "scroll",
+  // #196: mobile scrolls here; on md the list-pane wrapper is the single
+  // scroller, so don't reserve a second (dead) scrollbar gutter at the split.
+  overflowY: { xs: "scroll", md: "visible" },
 };
