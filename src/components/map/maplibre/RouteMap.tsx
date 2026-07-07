@@ -198,13 +198,8 @@ const RouteMap = ({
         // `cooperativeGestures` instead.
         onDragStart={handleDragStartOrEnd}
         onDragEnd={handleDragStartOrEnd}
-        // POC(#196 landscape): the map now always fills 100% of its container
-        // (the `rootSx` Box below), and that Box is what carries the responsive
-        // height — 35vh on mobile, 100% (fills the right pane) at md+. Height
-        // must live on the container rather than here, because BaseMap always
-        // sets an inline height on the maplibre element that would otherwise
-        // win over any responsive CSS. On mobile this is still 35vh (100% of a
-        // 35vh Box), so it is pixel-identical to before.
+        // #196: fill the container; responsive height lives on the rootSx Box
+        // below (BaseMap's inline height would override any responsive CSS here).
         style={{ height: "100%" }}
       >
         <MapEffects pending={pendingNav} onApplied={handleNavApplied} />
@@ -396,13 +391,10 @@ const classes = {
 // `<Marker>` mounts its children inside the map container, which is
 // itself inside this Box.
 const rootSx: SxProps<Theme> = {
-  // POC(#196 landscape): 35vh on mobile (unchanged), 100% at md+ so the map
-  // fills the right pane of the two-pane split. This Box is the single source
-  // of truth for the map's height (see the BaseMap `style` note above).
+  // #196: 35vh on mobile (unchanged), 100% at md+ to fill the right pane.
   height: { xs: "35vh", md: "100%" },
   filter: (theme) =>
     theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
-  // Inner map container follows the Box: 35vh on mobile, 100% at md+.
   "& .maplibregl-map": {
     height: { xs: "35vh", md: "100%" },
   },

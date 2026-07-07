@@ -39,11 +39,8 @@ const HomeRouteListDropDown = ({
           {routes.map(
             (selectedRoute, idx) =>
               Boolean(selectedRoute) && (
-                // POC (#196 landscape): wrap each row so the row's ListItem +
-                // its trailing Divider stay together as ONE grid cell. Without
-                // the wrapper the Divider (a sibling emitted by
-                // SuccinctTimeReport) would take its own grid cell and break
-                // the columns. SuccinctTimeReport itself is untouched.
+                // #196: wrap each row so its ListItem + trailing Divider stay
+                // one grid cell (else the Divider takes its own cell on md).
                 <Box key={`route-${name}-${idx}`}>
                   <SuccinctTimeReport routeId={selectedRoute} />
                 </Box>
@@ -66,9 +63,7 @@ const headerSx: SxProps<Theme> = {
   cursor: "pointer",
 };
 
-// POC (#196 landscape): on wide screens lay the rows out in a responsive grid
-// of 2-3 auto-fitted columns. Below `md` no `display: grid` is emitted, so the
-// rows stack in a single column exactly as before (mobile is untouched).
+// #196: responsive multi-column grid on md+; single column (unchanged) below md.
 const listSx: SxProps<Theme> = {
   display: { md: "grid" },
   gridTemplateColumns: {

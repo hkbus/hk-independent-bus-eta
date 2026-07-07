@@ -55,9 +55,7 @@ const rootSx: SxProps<Theme> = {
   flexDirection: "column",
   justifyContent: "space-between",
   height: "100%",
-  // POC (#196 landscape): let the app use more horizontal width on wide
-  // screens. Below `md` this rule is not emitted, so the container keeps its
-  // original `maxWidth="xs"` (444px) and mobile is pixel-identical.
+  // #196: widen on md+; below md keeps the original maxWidth="xs" (mobile unchanged).
   maxWidth: { md: "min(1200px, 100%)" },
 };
 
