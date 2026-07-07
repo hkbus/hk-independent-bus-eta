@@ -229,16 +229,30 @@ const RouteEta = () => {
     routeListEntry,
   ]);
 
+  const showMap = !energyMode && navigator.userAgent !== "prerendering";
+  const stopListEl = (
+    <StopAccordionList
+      routeId={routeId}
+      stopIdx={stopIdx}
+      routeListEntry={routeListEntry}
+      stopIds={stopIds}
+      handleChange={handleChange}
+      onStopInfo={handleStopInfo}
+    />
+  );
+
   return (
     <>
       <input hidden id="render" />
       <RouteHeader routeId={routeId} stopId={stopIds[stopIdx]} />
       <RouteUpdateNotice route={routeListEntry} />
       {/* #196: two-pane split (list-left / map-right) on md+; below md every box
-          is display:contents, so map+list stack as before (mobile unchanged). */}
-      <Box sx={landscapeSplitSx}>
-        <Box sx={mapPaneSx}>
-          {!energyMode && navigator.userAgent !== "prerendering" && (
+          is display:contents, so map+list stack as before (mobile unchanged).
+          Without a map (energyMode / prerender) we skip the split and render the
+          list full-width, exactly as before — no empty pane. */}
+      {showMap ? (
+        <Box sx={landscapeSplitSx}>
+          <Box sx={mapPaneSx}>
             <Suspense fallback={null}>
               <RouteMap
                 routeId={routeId}
@@ -249,19 +263,12 @@ const RouteEta = () => {
                 onMarkerClick={onMarkerClick}
               />
             </Suspense>
-          )}
+          </Box>
+          <Box sx={listPaneSx}>{stopListEl}</Box>
         </Box>
-        <Box sx={listPaneSx}>
-          <StopAccordionList
-            routeId={routeId}
-            stopIdx={stopIdx}
-            routeListEntry={routeListEntry}
-            stopIds={stopIds}
-            handleChange={handleChange}
-            onStopInfo={handleStopInfo}
-          />
-        </Box>
-      </Box>
+      ) : (
+        stopListEl
+      )}
       <StopDialog
         open={isDialogOpen}
         stops={dialogStop}

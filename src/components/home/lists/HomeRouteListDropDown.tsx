@@ -39,9 +39,15 @@ const HomeRouteListDropDown = ({
           {routes.map(
             (selectedRoute, idx) =>
               Boolean(selectedRoute) && (
-                // #196: wrap each row so its ListItem + trailing Divider stay
-                // one grid cell (else the Divider takes its own cell on md).
-                <Box key={`route-${name}-${idx}`}>
+                // #196: on md wrap each row so its ListItem + trailing Divider
+                // stay one grid cell (else the Divider takes its own cell).
+                // `display:contents` below md → the wrapper generates no box, so
+                // mobile layout/rendering is unchanged (the ListItem lays out as
+                // a direct child of the <ul>, as before).
+                <Box
+                  key={`route-${name}-${idx}`}
+                  sx={{ display: { xs: "contents", md: "block" } }}
+                >
                   <SuccinctTimeReport routeId={selectedRoute} />
                 </Box>
               )

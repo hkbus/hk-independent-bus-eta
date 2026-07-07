@@ -78,7 +78,8 @@ const StopAccordions = ({
 export default StopAccordions;
 
 const rootSx: SxProps<Theme> = {
-  // #196: mobile scrolls here; on md the list-pane wrapper is the single
-  // scroller, so don't reserve a second (dead) scrollbar gutter at the split.
-  overflowY: { xs: "scroll", md: "visible" },
+  // #196: `auto` (not the always-on `scroll`) so this doesn't reserve a second,
+  // dead scrollbar gutter next to the list pane's own scroller on md. Still
+  // self-scrolls when it IS the scroller (mobile, or md without a map).
+  overflowY: { xs: "scroll", md: "auto" },
 };
