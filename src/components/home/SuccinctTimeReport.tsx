@@ -258,6 +258,21 @@ const rootSx: SxProps<Theme> = {
   gridTemplateColumns: "15% 1fr minmax(18%, max-content)",
   padding: (theme) => `${theme.spacing(0.5)} ${theme.spacing(1)}`,
   color: "rgba(0,0,0,0.87)",
+  cursor: "pointer",
+  // Tap feedback in the brand yellow (#fedb00) so a press visibly responds
+  WebkitTapHighlightColor: "transparent",
+  transition: "background-color 0.12s ease-out",
+  "@media (hover: hover)": {
+    "&:hover": {
+      backgroundColor: "rgba(254, 219, 0, 0.06)",
+    },
+  },
+  "&:active": {
+    backgroundColor: "rgba(254, 219, 0, 0.1)",
+  },
+  "@media (prefers-reduced-motion: reduce)": {
+    transition: "none",
+  },
 };
 
 const routeDestSx: SxProps<Theme> = {
