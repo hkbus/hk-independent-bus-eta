@@ -3,6 +3,7 @@ import { Box, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "./RouteNo";
 import useLanguage from "../../hooks/useTranslation";
 import { RouteListEntry } from "hk-bus-eta";
+import CompanyColorDot from "../CompanyColorDot";
 
 interface RouteNoCompanyProps {
   route: [string, RouteListEntry];
@@ -25,6 +26,7 @@ const RouteNoCompany = ({ route }: RouteNoCompanyProps) => {
         </Typography>
       )}
       <Typography component="h4" variant="caption" sx={companySx}>
+        <CompanyColorDot companies={route[1].co} route={routeNo} />
         {Object.keys(route[1].stops)
           .map((co) => t(co))
           .join("+")}

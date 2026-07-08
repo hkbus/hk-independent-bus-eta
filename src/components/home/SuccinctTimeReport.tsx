@@ -26,6 +26,7 @@ import {
   vibrate,
 } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
+import CompanyColorDot from "../CompanyColorDot";
 import SuccinctEtas from "./SuccinctEtas";
 import useLanguage from "../../hooks/useTranslation";
 import DbContext from "../../context/DbContext";
@@ -151,6 +152,7 @@ const SuccinctTimeReport = ({
           }
           secondary={
             <Typography component="h4" variant="caption" sx={companySx}>
+              <CompanyColorDot companies={co} route={routeNo} />
               {co.map((co) => t(co)).join("+")}
             </Typography>
           }
