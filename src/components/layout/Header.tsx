@@ -174,6 +174,7 @@ const Header = () => {
         id="searchInput"
         sx={searchRouteInputSx}
         type="text"
+        inputProps={{ inputMode: "none" }}
         ref={inputRef}
         value={searchRoute}
         placeholder={t("路線")}
