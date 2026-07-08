@@ -231,6 +231,20 @@ const RouteMap = ({
               }}
               layout={{ "line-cap": "round", "line-join": "round" }}
             />
+            {/* Arrowheads along the path show the travel direction — so a
+                rider knows which side of the road to wait on. */}
+            <Layer
+              id="route-path-arrows"
+              type="symbol"
+              layout={{
+                "symbol-placement": "line",
+                "symbol-spacing": 70,
+                "icon-image": "route-arrow",
+                "icon-rotation-alignment": "map",
+                "icon-allow-overlap": true,
+                "icon-ignore-placement": true,
+              }}
+            />
           </Source>
         ) : null}
 
@@ -298,7 +312,50 @@ const MapEffects = ({
     else m.flyTo(pending.center);
     onApplied();
   }, [pending, onApplied, m]);
+
+  // Register the direction-arrow image via `styleimagemissing` so it survives
+  // light/dark restyles (which clear registered images) with no icon fetch.
+  useEffect(() => {
+    const map = m.getRawMap();
+    if (!map) return;
+    const ensure = (id?: string) => {
+      if (id && id !== ROUTE_ARROW_ID) return;
+      if (!map.hasImage(ROUTE_ARROW_ID)) {
+        map.addImage(ROUTE_ARROW_ID, makeRouteArrow(), { pixelRatio: 2 });
+      }
+    };
+    const onMissing = (e: { id: string }) => ensure(e.id);
+    map.on("styleimagemissing", onMissing);
+    ensure();
+    return () => {
+      map.off("styleimagemissing", onMissing);
+    };
+  }, [m]);
   return null;
+};
+
+const ROUTE_ARROW_ID = "route-arrow";
+
+const makeRouteArrow = (): ImageData => {
+  const s = 24; // source px; added at pixelRatio 2 → ~12px on screen
+  const cvs = document.createElement("canvas");
+  cvs.width = s;
+  cvs.height = s;
+  const ctx = cvs.getContext("2d");
+  if (!ctx) return new ImageData(s, s);
+  // Triangle pointing right (+x); the line layer rotates it to the path.
+  ctx.beginPath();
+  ctx.moveTo(s * 0.28, s * 0.18);
+  ctx.lineTo(s * 0.82, s * 0.5);
+  ctx.lineTo(s * 0.28, s * 0.82);
+  ctx.closePath();
+  ctx.fillStyle = "#ffffff";
+  ctx.strokeStyle = "rgba(0, 0, 0, 0.55)";
+  ctx.lineWidth = s * 0.09;
+  ctx.lineJoin = "round";
+  ctx.fill();
+  ctx.stroke();
+  return ctx.getImageData(0, 0, s, s);
 };
 
 interface StopMarkerInfo {
