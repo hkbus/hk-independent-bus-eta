@@ -111,6 +111,14 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
       [idx, onSummaryClick]
     );
 
+    // Fares can differ per stop (section fares), so keep every value — just
+    // present them compactly and surface the holiday fare only when it
+    // actually differs from the regular one.
+    const regularFare = fares && fares[idx] ? fares[idx] : "";
+    const holidayFare =
+      faresHoliday && faresHoliday[idx] ? faresHoliday[idx] : "";
+    const showHolidayFare = holidayFare !== "" && holidayFare !== regularFare;
+
     return (
       <Accordion
         id={`stop-${idx}`}
@@ -121,16 +129,16 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
         sx={accordionSx}
       >
         <AccordionSummary sx={accordionSummarySx}>
-          <Typography component="h3" variant="body1" sx={{ fontWeight: 700 }}>
+          <Typography component="h3" variant="body1" sx={stopNameSx}>
             {idx + 1}. {toProperCase(stop.name[language])}
           </Typography>
-          <Typography variant="body2">
-            {fares && fares[idx] ? t("車費") + ": $" + fares[idx] : ""}
-            {faresHoliday && faresHoliday[idx]
-              ? "　　" + t("假日車費") + ": $" + faresHoliday[idx]
-              : ""}
-            {joyYouFare ? "　　" + t("樂悠車費") + `: $${joyYouFare}` : ""}
-          </Typography>
+          {(regularFare || showHolidayFare || joyYouFare) && (
+            <Typography variant="body2" sx={fareSx}>
+              {regularFare && `$${regularFare}`}
+              {showHolidayFare && ` ${t("假日")} $${holidayFare}`}
+              {joyYouFare && ` ${t("樂悠")} $${joyYouFare}`}
+            </Typography>
+          )}
         </AccordionSummary>
         <AccordionDetails sx={accordionDetailsRootSx}>
           <TimeReport
@@ -229,16 +237,32 @@ const accordionSummarySx: SxProps<Theme> = {
       : "rgba(0, 0, 0, .03)",
   "&.Mui-expanded": {
     borderBottom: "1px solid rgba(0, 0, 0, .125)",
-    minHeight: 44,
+    minHeight: 60,
   },
-  minHeight: 44,
+  // Keep the previous 60px height even though the content is now one line —
+  // a smaller row would be harder for elderly users to tap.
+  minHeight: 60,
   "& .MuiAccordionSummary-content": {
     margin: "8px 0",
-    flexDirection: "column",
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 1,
     "&.Mui-expanded": {
       margin: "8px 0",
     },
   },
+};
+
+const stopNameSx: SxProps<Theme> = {
+  fontWeight: 700,
+  flex: 1,
+  minWidth: 0,
+};
+
+const fareSx: SxProps<Theme> = {
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  color: (theme) => theme.palette.text.secondary,
 };
 
 const accordionDetailsRootSx: SxProps<Theme> = {
