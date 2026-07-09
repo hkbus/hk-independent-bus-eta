@@ -101,8 +101,13 @@ const NoticeCard = () => {
           value={viewIdx}
           onChange={(_, v) => setViewIdx(v)}
         >
-          {state.map((_, idx) => (
-            <Tab key={`notice-tab-${idx}`} label={""} value={idx} />
+          {state.map((notice, idx) => (
+            <Tab
+              key={`notice-tab-${idx}`}
+              aria-label={notice.content[language][0] ?? String(idx + 1)}
+              label={""}
+              value={idx}
+            />
           ))}
         </Tabs>
         <SwipeableViews

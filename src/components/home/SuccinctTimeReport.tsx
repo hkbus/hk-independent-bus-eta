@@ -197,7 +197,10 @@ const SuccinctTimeReport = ({
         )}
         {mode === "edit" && (
           <Box sx={iconContainerSx}>
-            <IconButton onClick={(e) => onDelete && onDelete(e)}>
+            <IconButton
+              aria-label={t("移除")}
+              onClick={(e) => onDelete && onDelete(e)}
+            >
               <DeleteIcon />
             </IconButton>
           </Box>

@@ -67,6 +67,7 @@ const AddressInput = ({
       value={value}
       loadOptions={loadAddress}
       placeholder={placeholder}
+      aria-label={placeholder}
       onChange={onChange}
       classNamePrefix="react-select"
     />
