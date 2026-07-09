@@ -78,6 +78,7 @@ const SavedRouteList = ({ isFocus }: SavedRouteListProps) => {
             <SuccinctTimeReport
               key={`route-shortcut-${idx}`}
               routeId={selectedRoute}
+              nearestFrom={savedEtas}
             />
           )
       )}

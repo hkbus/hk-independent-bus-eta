@@ -135,6 +135,7 @@ const resources = {
       綜合: "All",
       常用: "Starred",
       附近: "Nearby",
+      最近車站: "The nearest stop",
       以鏈結分享: "Share Link",
       以圖片分享: "Share Image",
       隱私權聲明: "Privacy Policy",
