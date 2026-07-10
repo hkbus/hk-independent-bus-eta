@@ -24,6 +24,8 @@ const resources = {
       往: "To",
       分鐘: "min",
       移除: "Remove",
+      關閉通知: "Close notice",
+      對調起點及終點: "Swap origin and destination",
       跳至主要內容: "Skip to main content",
       輸入巴士路線號碼搜尋: "Search by entering a bus route number",
       離線: "Offline",

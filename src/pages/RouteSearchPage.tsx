@@ -327,7 +327,11 @@ const RouteSearch = () => {
             stopList={stopList}
           />
         </Box>
-        <Button sx={reverseIconSx} onClick={handleReverseClick}>
+        <Button
+          sx={reverseIconSx}
+          aria-label={t("對調起點及終點")}
+          onClick={handleReverseClick}
+        >
           <ChangeCircleIcon />
         </Button>
       </Box>

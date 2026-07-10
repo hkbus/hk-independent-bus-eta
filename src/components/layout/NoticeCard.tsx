@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import WarnIcon from "@mui/icons-material/Warning";
+import { useTranslation } from "react-i18next";
 import useLanguage from "../../hooks/useTranslation";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { iOSRNWebView } from "../../utils";
@@ -30,6 +31,7 @@ interface NoticeCardState {
 
 const NoticeCard = () => {
   const language = useLanguage();
+  const { t } = useTranslation();
   const [state, setState] = useState<NoticeCardState[]>([]);
   const [viewIdx, setViewIdx] = useState<number>(0);
   const [closeNoticeIds, setCloseNoticeIds] = useState<string[]>(
@@ -129,7 +131,11 @@ const NoticeCard = () => {
           ))}
         </SwipeableViews>
       </Box>
-      <IconButton size="small" onClick={closeNotice(state[viewIdx].id)}>
+      <IconButton
+        size="small"
+        aria-label={t("關閉通知")}
+        onClick={closeNotice(state[viewIdx].id)}
+      >
         <CloseIcon />
       </IconButton>
     </Paper>
