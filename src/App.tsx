@@ -190,7 +190,9 @@ const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
             contrastText: "rgba(0, 0, 0, 0.12)",
           },
           warning: {
-            main: "#3285e3",
+            // shared accent; deepened from #3285e3 so the highlighted ETA text
+            // (home + route-eta) meets WCAG AA (4.5:1) on white — ~5.3:1
+            main: "#1b6bc5",
           },
           secondary: {
             main: "#000",
