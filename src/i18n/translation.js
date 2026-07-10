@@ -26,6 +26,7 @@ const resources = {
       移除: "Remove",
       跳至主要內容: "Skip to main content",
       輸入巴士路線號碼搜尋: "Search by entering a bus route number",
+      天氣警告: "Weather warning",
       離線: "Offline",
       首頁: "Home",
       搜尋: "Search",
