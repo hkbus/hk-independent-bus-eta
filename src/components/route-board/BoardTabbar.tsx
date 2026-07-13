@@ -44,7 +44,8 @@ const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
         onChange={(_, v) => onChangeTab(v, true)}
         sx={tabbarSx}
         variant="scrollable"
-        scrollButtons={false}
+        scrollButtons
+        allowScrollButtonsMobile
       >
         {Object.keys(TRANSPORT_SEARCH_OPTIONS)
           .filter((option) => isRecentSearchShown || option !== "recent")
@@ -78,10 +79,6 @@ const tabbarSx: SxProps<Theme> = {
   minHeight: "36px",
   overflow: "auto",
   maxWidth: "100%",
-  maskImage:
-    "linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent)",
-  WebkitMaskImage:
-    "linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent)",
   [`& .MuiTab-root`]: {
     py: 0,
     minWidth: "85px",

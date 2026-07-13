@@ -26,7 +26,8 @@ const HomeTabbar = ({ homeTab, onChangeTab }: HomeTabbarProps) => {
       onChange={(_, v) => onChangeTab(v, true)}
       sx={tabbarSx}
       variant="scrollable"
-      scrollButtons={false}
+      scrollButtons
+      allowScrollButtonsMobile
     >
       <Tab
         iconPosition="start"
@@ -83,10 +84,6 @@ export const isHomeTab = (
 const tabbarSx: SxProps<Theme> = {
   background: (theme) => theme.palette.background.default,
   minHeight: "36px",
-  maskImage:
-    "linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent)",
-  WebkitMaskImage:
-    "linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent)",
   [`& .MuiTab-root`]: {
     textTransform: "none",
     alignItems: "center",
