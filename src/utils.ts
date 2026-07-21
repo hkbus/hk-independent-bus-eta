@@ -390,9 +390,28 @@ export const setSeoRouteFeature = ({
       ...(arrivalBusStop ? { arrivalBusStop } : {}),
     };
 
+    // WebPage + speakable: points voice / answer engines at the route heading
+    // (route number in the <h1> and the destination line in the <h2> inside
+    // #route-eta-header) as the section best suited to text-to-speech.
+    const webPage = {
+      "@type": "WebPage",
+      "@id": `${routeUrl}#webpage`,
+      url: routeUrl,
+      name:
+        lang === "en"
+          ? `Route ${route.route}: ${route.orig.en} → ${route.dest.en}`
+          : `${route.route} 路綫：${route.orig.zh} → ${route.dest.zh}`,
+      inLanguage: lang === "en" ? "en" : "zh-Hant",
+      isPartOf: { "@id": "https://hkbus.app/#website" },
+      speakable: {
+        "@type": "SpeakableSpecification",
+        cssSelector: ["#route-eta-header h1", "#route-eta-header h2"],
+      },
+    };
+
     jsonLd.textContent = JSON.stringify({
       "@context": "https://schema.org",
-      "@graph": [breadcrumb, faqPage, busTrip, ...schedules],
+      "@graph": [webPage, breadcrumb, faqPage, busTrip, ...schedules],
     });
   }
 };
