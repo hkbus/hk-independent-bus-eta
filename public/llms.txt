@@ -1,0 +1,31 @@
+# hkbus.app (巴士到站預報 App)
+
+> Free, ad-free, open-source real-time public-transport arrival (ETA) web app for Hong Kong. It covers franchised buses, green minibuses, MTR heavy rail, MTR Light Rail, MTR feeder buses and ferries, using open data from the HKSAR Government (data.gov.hk). Available in Traditional Chinese and English.
+
+hkbus.app is a client-rendered React PWA, but every route page is pre-rendered to static HTML and carries JSON-LD structured data (BusTrip, BusStop, Schedule, FAQPage, BreadcrumbList, WebPage/speakable). Route number, operator(s), origin and destination, stop list and timetable are therefore readable without executing JavaScript.
+
+URL patterns (`{lang}` is `zh` for Traditional Chinese or `en` for English):
+- Home: `https://hkbus.app/{lang}`
+- Route board — browse and find routes by number: `https://hkbus.app/{lang}/board`
+- Route detail — live ETA, stop sequence and timetable: `https://hkbus.app/{lang}/route/{route-slug}`
+- Journey planner — point-to-point trip search: `https://hkbus.app/{lang}/search`
+
+## Key pages
+- [Home (中文)](https://hkbus.app/zh)
+- [Home (English)](https://hkbus.app/en)
+- [Route board](https://hkbus.app/en/board)
+- [Privacy policy](https://hkbus.app/en/privacy)
+- [Terms and conditions](https://hkbus.app/en/terms)
+
+## Full route index
+- [XML sitemap](https://hkbus.app/sitemap.xml): every route URL in both languages, with hreflang alternates and last-modified dates.
+
+## Data source
+- [HKSAR Government open data (data.gov.hk)](https://data.gov.hk): source of route, stop and estimated-time-of-arrival data.
+
+## Project and native apps
+- [Source code — GitHub, GPL-3.0](https://github.com/hkbus/hk-independent-bus-eta/)
+- [iOS — App Store](https://apps.apple.com/hk/app/hkbus-app-%E5%B7%B4%E5%A3%AB%E5%88%B0%E7%AB%99%E9%A0%90%E5%A0%B1/id1612184906)
+- [Android — Google Play](https://play.google.com/store/apps/details?id=app.hkbus)
+- [Telegram](https://t.me/hkbusapp)
+- [Instagram](https://www.instagram.com/hkbus.app/)
