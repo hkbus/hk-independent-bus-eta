@@ -326,9 +326,73 @@ export const setSeoRouteFeature = ({
         })),
       ],
     };
+    // --- Transit-specific structured data (BusTrip + BusStop + Schedule) ----
+    // Machine-readable counterpart to the FAQ prose above. Lets answer /
+    // generative engines parse the route identity, its operator(s), its
+    // endpoints (with coordinates) and its timetable directly, instead of
+    // having to interpret free text.
+    const primaryStops = Object.values(route.stops)[0] ?? [];
+    const firstStopId = primaryStops[0];
+    const lastStopId = primaryStops[primaryStops.length - 1];
+
+    const toBusStop = (stopId: string | undefined) => {
+      const stop = stopId ? stopList[stopId] : undefined;
+      if (!stop) return undefined;
+      return {
+        "@type": "BusStop",
+        name: stop.name[lang as "zh" | "en"],
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: stop.location.lat,
+          longitude: stop.location.lng,
+        },
+      };
+    };
+
+    // "0630" -> "06:30" (schema.org Time). Leaves anything unexpected as-is.
+    const toIsoTime = (hhmm: string) =>
+      /^\d{4}$/.test(hhmm) ? `${hhmm.slice(0, 2)}:${hhmm.slice(2)}` : hhmm;
+
+    // Each service window becomes a Schedule node: a fixed departure when the
+    // headway is unknown, or a recurring window with an ISO-8601 headway.
+    const schedules = Object.entries(route.freq ?? {}).flatMap(
+      ([serviceId, dayFreq]) =>
+        Object.entries(dayFreq).map(([start, details]) => ({
+          "@type": "Schedule",
+          name: `${route.route} · ${t(ServiceIds[serviceId])}`,
+          startTime: toIsoTime(start),
+          ...(details
+            ? {
+                endTime: toIsoTime(details[0]),
+                repeatFrequency: `PT${parseInt(details[1], 10) / 60}M`,
+              }
+            : {}),
+        }))
+    );
+
+    const departureBusStop = toBusStop(firstStopId);
+    const arrivalBusStop = toBusStop(lastStopId);
+
+    const busTrip = {
+      "@type": "BusTrip",
+      "@id": `${routeUrl}#bustrip`,
+      name:
+        lang === "en"
+          ? `Route ${route.route}: ${route.orig.en} → ${route.dest.en}`
+          : `${route.route} 路綫：${route.orig.zh} → ${route.dest.zh}`,
+      busNumber: route.route,
+      url: routeUrl,
+      provider: route.co.map((co) => ({
+        "@type": "Organization",
+        name: t(co),
+      })),
+      ...(departureBusStop ? { departureBusStop } : {}),
+      ...(arrivalBusStop ? { arrivalBusStop } : {}),
+    };
+
     jsonLd.textContent = JSON.stringify({
       "@context": "https://schema.org",
-      "@graph": [breadcrumb, faqPage],
+      "@graph": [breadcrumb, faqPage, busTrip, ...schedules],
     });
   }
 };
