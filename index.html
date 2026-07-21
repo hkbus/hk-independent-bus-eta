@@ -113,7 +113,16 @@
             "@id": "https://hkbus.app/#organization",
             "name": "巴士到站預報 App",
             "url": "https://hkbus.app/",
-            "logo": "https://hkbus.app/img/logo512.png"
+            "logo": "https://hkbus.app/img/logo512.png",
+            "sameAs": [
+              "https://apps.apple.com/hk/app/hkbus-app-%E5%B7%B4%E5%A3%AB%E5%88%B0%E7%AB%99%E9%A0%90%E5%A0%B1/id1612184906",
+              "https://play.google.com/store/apps/details?id=app.hkbus",
+              "https://github.com/hkbus/hk-independent-bus-eta/",
+              "https://www.instagram.com/hkbus.app/",
+              "https://www.threads.com/@hkbus.app",
+              "https://github.com/hkbus/mobile-bus-app"
+              "https://t.me/hkbusapp"
+            ]
           },
           {
             "@type": "WebSite",
@@ -125,13 +134,35 @@
           },
           {
             "@type": "WebApplication",
+            "@id": "https://hkbus.app/#webapp",
             "name": "巴士到站預報 App",
             "url": "https://hkbus.app/",
             "applicationCategory": "TravelApplication",
             "operatingSystem": "Any",
             "browserRequirements": "Requires JavaScript",
+            "inLanguage": ["zh-Hant", "en"],
             "publisher": { "@id": "https://hkbus.app/#organization" },
-            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "HKD" }
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "HKD" },
+            "downloadUrl": [
+              "https://apps.apple.com/hk/app/hkbus-app-%E5%B7%B4%E5%A3%AB%E5%88%B0%E7%AB%99%E9%A0%90%E5%A0%B1/id1612184906",
+              "https://play.google.com/store/apps/details?id=app.hkbus"
+            ],
+            "screenshot": "https://hkbus.app/img/share.png",
+            "featureList": [
+              "Real-time bus, minibus, MTR and light rail arrival estimates (ETA)",
+              "Route and stop search across KMB, Long Win, Citybus, New Lantau Bus, green minibus, MTR, Light Rail and ferry operators",
+              "Point-to-point journey planning",
+              "Saveable route collections and bookmarks",
+              "Offline-capable installable PWA",
+              "Ad-free"
+            ],
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.7",
+              "ratingCount": "1457",
+              "bestRating": "5",
+              "worstRating": "1"
+            }
           }
         ]
       }
