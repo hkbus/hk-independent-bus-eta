@@ -20,6 +20,7 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
   const { gtfsId, bound, co, route, dest } = routeList[routeId];
 
   useEffect(() => {
+    let cancelled = false;
     let waypointsFile = "";
     if (gtfsId) {
       waypointsFile = `${gtfsId}-${
@@ -57,13 +58,16 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
       fetch(`https://hkbus.github.io/route-waypoints/${waypointsFile}`)
         .then((r) => r.json())
         .then((json) => {
+          if (cancelled) return;
           setGeoJson(json);
         })
         .catch(() => {
+          if (cancelled) return;
           setFallbackGeoJson();
         });
     }
     return () => {
+      cancelled = true;
       setGeoJson(null);
     };
   }, [routeId, gtfsId, bound, co, stops, dest, route]);
