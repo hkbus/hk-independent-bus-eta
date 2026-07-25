@@ -48,7 +48,7 @@ export const isRouteAvaliable = (
   Object.entries(freq).forEach(([serviceId, startTimes]) => {
     try {
       serviceDayMap[serviceId].forEach((validDay, idx: number) => {
-        if (validDay === "1") {
+        if (Number(validDay) === 1) {
           Object.entries(startTimes).forEach(([startTime, endTime]) => {
             let time_a = getWeeklyTimestamp(idx, startTime);
             let time_b = getWeeklyTimestamp(
