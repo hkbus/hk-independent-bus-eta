@@ -13,9 +13,10 @@ export const useEtas = (routeId: string, disable: boolean = false) => {
   const routeObj = routeList[routeKey] || DefaultRoute;
   const [etas, setEtas] = useState<Eta[] | null>(null);
   const language = useLanguage();
-  const isMounted = useRef<boolean>(false);
+  const runId = useRef<number>(0);
 
   const fetchData = useCallback(() => {
+    const id = runId.current;
     if (!isVisible || navigator.userAgent === "prerendering") {
       // skip if prerendering
       setEtas(null);
@@ -29,13 +30,13 @@ export const useEtas = (routeId: string, disable: boolean = false) => {
       holidays,
       serviceDayMap,
     }).then((_etas) => {
-      if (isMounted.current) setEtas(_etas);
+      if (id === runId.current) setEtas(_etas);
     });
   }, [isVisible, language, routeObj, seq, stopList, holidays, serviceDayMap]);
 
   useEffect(() => {
     if (disable) return;
-    isMounted.current = true;
+    setEtas(null);
     const fetchEtaInterval = setInterval(() => {
       fetchData();
     }, refreshInterval);
@@ -43,7 +44,7 @@ export const useEtas = (routeId: string, disable: boolean = false) => {
     fetchData();
 
     return () => {
-      isMounted.current = false;
+      runId.current += 1;
       clearInterval(fetchEtaInterval);
     };
   }, [routeId, fetchData, refreshInterval, disable]);
