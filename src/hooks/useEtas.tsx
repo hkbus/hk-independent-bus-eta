@@ -36,7 +36,6 @@ export const useEtas = (routeId: string, disable: boolean = false) => {
 
   useEffect(() => {
     if (disable) return;
-    setEtas(null);
     const fetchEtaInterval = setInterval(() => {
       fetchData();
     }, refreshInterval);
