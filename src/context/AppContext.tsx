@@ -159,6 +159,7 @@ const isGeoPermission = (input: unknown): input is GeoPermission => {
     input === "force-opening" ||
     input === "granted" ||
     input === "denied" ||
+    input === "closed" ||
     input === null
   );
 };
