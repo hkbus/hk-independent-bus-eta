@@ -7,6 +7,7 @@ import React, {
   Suspense,
 } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Box, type SxProps, type Theme } from "@mui/material";
 import RouteHeader from "../components/route-eta/RouteHeader";
 import StopAccordionList from "../components/route-eta/StopAccordionList";
 import StopDialog from "../components/route-eta/StopDialog";
@@ -228,31 +229,46 @@ const RouteEta = () => {
     routeListEntry,
   ]);
 
+  const showMap = !energyMode && navigator.userAgent !== "prerendering";
+  const stopListEl = (
+    <StopAccordionList
+      routeId={routeId}
+      stopIdx={stopIdx}
+      routeListEntry={routeListEntry}
+      stopIds={stopIds}
+      handleChange={handleChange}
+      onStopInfo={handleStopInfo}
+    />
+  );
+
   return (
     <>
       <input hidden id="render" />
       <RouteHeader routeId={routeId} stopId={stopIds[stopIdx]} />
       <RouteUpdateNotice route={routeListEntry} />
-      {!energyMode && navigator.userAgent !== "prerendering" && (
-        <Suspense fallback={null}>
-          <RouteMap
-            routeId={routeId}
-            stopIds={stopIds}
-            stopIdx={stopIdx}
-            route={route}
-            companies={co}
-            onMarkerClick={onMarkerClick}
-          />
-        </Suspense>
+      {/* #196: two-pane split (list-left / map-right) on md+; below md every box
+          is display:contents, so map+list stack as before (mobile unchanged).
+          Without a map (energyMode / prerender) we skip the split and render the
+          list full-width, exactly as before — no empty pane. */}
+      {showMap ? (
+        <Box sx={landscapeSplitSx}>
+          <Box sx={mapPaneSx}>
+            <Suspense fallback={null}>
+              <RouteMap
+                routeId={routeId}
+                stopIds={stopIds}
+                stopIdx={stopIdx}
+                route={route}
+                companies={co}
+                onMarkerClick={onMarkerClick}
+              />
+            </Suspense>
+          </Box>
+          <Box sx={listPaneSx}>{stopListEl}</Box>
+        </Box>
+      ) : (
+        stopListEl
       )}
-      <StopAccordionList
-        routeId={routeId}
-        stopIdx={stopIdx}
-        routeListEntry={routeListEntry}
-        stopIds={stopIds}
-        handleChange={handleChange}
-        onStopInfo={handleStopInfo}
-      />
       <StopDialog
         open={isDialogOpen}
         stops={dialogStop}
@@ -260,6 +276,32 @@ const RouteEta = () => {
       />
     </>
   );
+};
+
+// #196: md-gated; below md all collapse to display:contents → identical to the vertical stack.
+const landscapeSplitSx: SxProps<Theme> = {
+  display: { xs: "contents", md: "flex" },
+  flexDirection: { md: "row-reverse" }, // map (DOM-first) → right, list → left
+  flex: { md: 1 }, // fill remaining <main> height so panes have a bounded height
+  minHeight: { md: 0 },
+};
+
+// Map pane — right, ~58%; RouteMap fills it.
+const mapPaneSx: SxProps<Theme> = {
+  display: { xs: "contents", md: "block" },
+  flex: { md: 1 },
+  height: { md: "100%" },
+  minWidth: { md: 0 },
+};
+
+// List pane — left, ~42%, scrolls independently. `background.paper` so the
+// scrollbar's transparent track reveals the list surface, not the yellow page bg.
+const listPaneSx: SxProps<Theme> = {
+  display: { xs: "contents", md: "block" },
+  flex: { md: "0 0 42%" },
+  height: { md: "100%" },
+  overflowY: { md: "auto" },
+  bgcolor: { md: "background.paper" },
 };
 
 const getRouteEntry = (id: string, routeList: RouteList) => {

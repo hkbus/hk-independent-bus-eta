@@ -55,6 +55,8 @@ const rootSx: SxProps<Theme> = {
   flexDirection: "column",
   justifyContent: "space-between",
   height: "100%",
+  // #196: widen on md+; below md keeps the original maxWidth="xs" (mobile unchanged).
+  maxWidth: { md: "min(1200px, 100%)" },
 };
 
 // Visually hidden until it receives keyboard focus, then shown on top so

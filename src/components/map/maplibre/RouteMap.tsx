@@ -198,7 +198,9 @@ const RouteMap = ({
         // `cooperativeGestures` instead.
         onDragStart={handleDragStartOrEnd}
         onDragEnd={handleDragStartOrEnd}
-        style={{ height: "35vh" }}
+        // #196: fill the container; responsive height lives on the rootSx Box
+        // below (BaseMap's inline height would override any responsive CSS here).
+        style={{ height: "100%" }}
       >
         <MapEffects pending={pendingNav} onApplied={handleNavApplied} />
 
@@ -446,13 +448,12 @@ const classes = {
 // `<Marker>` mounts its children inside the map container, which is
 // itself inside this Box.
 const rootSx: SxProps<Theme> = {
-  height: "35vh",
+  // #196: 35vh on mobile (unchanged), 100% at md+ to fill the right pane.
+  height: { xs: "35vh", md: "100%" },
   filter: (theme) =>
     theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
-  // Two layers of explicit 35vh (on the Box and on the inner map
-  // container) keeps the map sized correctly even under flex parents.
   "& .maplibregl-map": {
-    height: "35vh",
+    height: { xs: "35vh", md: "100%" },
   },
   [`& .${classes.mtrMarker}`]: {
     backgroundImage: `url(/img/mtr.svg)`,

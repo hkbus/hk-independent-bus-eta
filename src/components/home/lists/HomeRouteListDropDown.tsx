@@ -35,14 +35,21 @@ const HomeRouteListDropDown = ({
       </Box>
       <Divider />
       {expaned && (
-        <List disablePadding>
+        <List disablePadding sx={listSx}>
           {routes.map(
             (selectedRoute, idx) =>
               Boolean(selectedRoute) && (
-                <SuccinctTimeReport
+                // #196: on md wrap each row so its ListItem + trailing Divider
+                // stay one grid cell (else the Divider takes its own cell).
+                // `display:contents` below md → the wrapper generates no box, so
+                // mobile layout/rendering is unchanged (the ListItem lays out as
+                // a direct child of the <ul>, as before).
+                <Box
                   key={`route-${name}-${idx}`}
-                  routeId={selectedRoute}
-                />
+                  sx={{ display: { xs: "contents", md: "block" } }}
+                >
+                  <SuccinctTimeReport routeId={selectedRoute} />
+                </Box>
               )
           )}
         </List>
@@ -60,4 +67,13 @@ const headerSx: SxProps<Theme> = {
   justifyContent: "space-between",
   mx: 1,
   cursor: "pointer",
+};
+
+// #196: responsive multi-column grid on md+; single column (unchanged) below md.
+const listSx: SxProps<Theme> = {
+  display: { md: "grid" },
+  gridTemplateColumns: {
+    md: "repeat(auto-fill, minmax(340px, 1fr))",
+  },
+  columnGap: { md: 1 },
 };
