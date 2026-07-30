@@ -40,6 +40,7 @@ const TermsAndConditionsPage = React.lazy(
 const SupportPage = React.lazy(() => import("./pages/SupportPage"));
 const DataImportPage = React.lazy(() => import("./pages/DataImportPage"));
 const DataExportPage = React.lazy(() => import("./pages/DataExportPage"));
+const SyncPairPage = React.lazy(() => import("./pages/SyncPairPage"));
 
 const App = () => {
   const { analytics, colorMode, fontSize } = useContext(AppContext);
@@ -78,6 +79,7 @@ const App = () => {
                   <Route path={"notice"} element={<NoticePage />} />
                   <Route path={`import/:data?`} element={<DataImportPage />} />
                   <Route path={`export`} element={<DataExportPage />} />
+                  <Route path={`sync/:token?`} element={<SyncPairPage />} />
                   <Route path={`board`} element={<RouteBoardPage />} />
                   <Route path={`stops`} element={<BookmarkedStopPage />} />
                   <Route path={`search`} element={<RouteSearchPage />} />

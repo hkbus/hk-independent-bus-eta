@@ -1,0 +1,13 @@
+name = "hkbus-sync"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+# Create with: wrangler kv namespace create SYNC_KV
+# then replace the id below with the one it prints.
+kv_namespaces = [
+  { binding = "SYNC_KV", id = "REPLACE_WITH_KV_NAMESPACE_ID" }
+]
+
+[vars]
+# Comma-separated list of origins allowed to call this API.
+ALLOWED_ORIGINS = "https://hkbus.app,https://alpha.hkbus.app,http://localhost:5173"

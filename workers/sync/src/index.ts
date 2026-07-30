@@ -1,0 +1,150 @@
+export interface Env {
+  SYNC_KV: KVNamespace;
+  ALLOWED_ORIGINS: string;
+}
+
+const MAX_BODY_BYTES = 200 * 1024; // 200KB
+const RATE_LIMIT_WINDOW_SECONDS = 60;
+const RATE_LIMIT_MAX_REQUESTS = 30;
+
+interface SyncMetadata {
+  updatedAt: number;
+}
+
+const allowedOrigin = (request: Request, env: Env): string | null => {
+  const origin = request.headers.get("Origin");
+  if (!origin) return null;
+  const allowed = env.ALLOWED_ORIGINS.split(",").map((o) => o.trim());
+  return allowed.includes(origin) ? origin : null;
+};
+
+const corsHeaders = (origin: string | null): HeadersInit => ({
+  ...(origin ? { "Access-Control-Allow-Origin": origin } : {}),
+  "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
+  "Access-Control-Allow-Headers": "Authorization, Content-Type",
+  "Access-Control-Max-Age": "86400",
+  Vary: "Origin",
+});
+
+const jsonResponse = (
+  body: unknown,
+  status: number,
+  origin: string | null,
+  extraHeaders: HeadersInit = {}
+): Response =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      ...corsHeaders(origin),
+      ...extraHeaders,
+    },
+  });
+
+const sha256Hex = async (input: string): Promise<string> => {
+  const data = new TextEncoder().encode(input);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+};
+
+const extractToken = (request: Request): string | null => {
+  const header = request.headers.get("Authorization");
+  if (!header || !header.startsWith("Bearer ")) return null;
+  const token = header.slice("Bearer ".length).trim();
+  // sanity bound: our client-generated tokens are ~32 base32 chars.
+  if (token.length < 16 || token.length > 128) return null;
+  return token;
+};
+
+// Best-effort fixed-window rate limit per token hash. KV is eventually
+// consistent, so this is a soft cap against abuse, not a strict guarantee.
+const checkRateLimit = async (
+  env: Env,
+  tokenHash: string
+): Promise<boolean> => {
+  const window = Math.floor(Date.now() / 1000 / RATE_LIMIT_WINDOW_SECONDS);
+  const key = `ratelimit:${tokenHash}:${window}`;
+  const current = parseInt((await env.SYNC_KV.get(key)) ?? "0", 10);
+  if (current >= RATE_LIMIT_MAX_REQUESTS) return false;
+  await env.SYNC_KV.put(key, String(current + 1), {
+    expirationTtl: RATE_LIMIT_WINDOW_SECONDS * 2,
+  });
+  return true;
+};
+
+const handleGet = async (
+  env: Env,
+  tokenHash: string,
+  origin: string | null
+): Promise<Response> => {
+  const { value, metadata } = await env.SYNC_KV.getWithMetadata<SyncMetadata>(
+    `doc:${tokenHash}`,
+    "arrayBuffer"
+  );
+  if (!value) {
+    return jsonResponse({ error: "not_found" }, 404, origin);
+  }
+  return new Response(value, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/octet-stream",
+      "X-Updated-At": String(metadata?.updatedAt ?? 0),
+      ...corsHeaders(origin),
+    },
+  });
+};
+
+const handlePut = async (
+  request: Request,
+  env: Env,
+  tokenHash: string,
+  origin: string | null
+): Promise<Response> => {
+  const body = await request.arrayBuffer();
+  if (body.byteLength === 0) {
+    return jsonResponse({ error: "empty_body" }, 400, origin);
+  }
+  if (body.byteLength > MAX_BODY_BYTES) {
+    return jsonResponse({ error: "payload_too_large" }, 413, origin);
+  }
+  const updatedAt = Date.now();
+  await env.SYNC_KV.put(`doc:${tokenHash}`, body, {
+    metadata: { updatedAt } satisfies SyncMetadata,
+  });
+  return jsonResponse({ updatedAt }, 200, origin);
+};
+
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const origin = allowedOrigin(request, env);
+    const url = new URL(request.url);
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    }
+
+    if (url.pathname !== "/v1/sync") {
+      return jsonResponse({ error: "not_found" }, 404, origin);
+    }
+
+    const token = extractToken(request);
+    if (!token) {
+      return jsonResponse({ error: "unauthorized" }, 401, origin);
+    }
+    const tokenHash = await sha256Hex(token);
+
+    if (!(await checkRateLimit(env, tokenHash))) {
+      return jsonResponse({ error: "rate_limited" }, 429, origin);
+    }
+
+    if (request.method === "GET") {
+      return handleGet(env, tokenHash, origin);
+    }
+    if (request.method === "PUT") {
+      return handlePut(request, env, tokenHash, origin);
+    }
+    return jsonResponse({ error: "method_not_allowed" }, 405, origin);
+  },
+};

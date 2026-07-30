@@ -35,6 +35,7 @@ import {
   QuestionAnswerOutlined as FaqIcon,
   Sync as SyncIcon,
   SyncDisabled as SyncDisabledIcon,
+  Devices as DevicesIcon,
   SecurityUpdate as SecurityUpdateIcon,
   Watch as WatchIcon,
   Map as MapIcon,
@@ -51,10 +52,12 @@ import {
 import InstallDialog from "../components/settings/InstallDialog";
 import Donations from "../Donations";
 import PersonalizeDialog from "../components/settings/PersonalizeDialog";
+import SyncDialog from "../components/settings/SyncDialog";
 import { useNavigate } from "react-router-dom";
 import ReactNativeContext from "../context/ReactNativeContext";
 import useLanguage from "../hooks/useTranslation";
 import DbContext from "../context/DbContext";
+import SyncContext from "../context/SyncContext";
 
 const Settings = () => {
   const {
@@ -74,11 +77,14 @@ const Settings = () => {
   } = useContext(AppContext);
   const { debug, toggleDebug } = useContext(ReactNativeContext);
   const { os } = useContext(ReactNativeContext);
+  const { isConfigured: isSyncConfigured, isEnabled: isSyncEnabled } =
+    useContext(SyncContext);
   const [updating, setUpdating] = useState(false);
   const [showGeoPermissionDenied, setShowGeoPermissionDenied] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isOpenInstallDialog, setIsOpenInstallDialog] = useState(false);
   const [isPersonalizeDialog, setIsPersonalizeDialog] = useState(false);
+  const [isSyncDialog, setIsSyncDialog] = useState(false);
 
   const { t } = useTranslation();
   const language = useLanguage();
@@ -280,6 +286,24 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText primary={t("資料匯入")} />
         </ListItemButton>
+        {isSyncConfigured && (
+          <ListItemButton
+            onClick={() => {
+              vibrate(vibrateDuration);
+              setIsSyncDialog(true);
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <DevicesIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={t("同步群組")}
+              secondary={t(isSyncEnabled ? "已加入" : "跨裝置同步收藏及設定")}
+            />
+          </ListItemButton>
+        )}
         <Divider />
         <ListItemButton
           onClick={() => {
@@ -548,6 +572,12 @@ const Settings = () => {
         open={isPersonalizeDialog}
         onClose={() => setIsPersonalizeDialog(false)}
       />
+      {isSyncConfigured && (
+        <SyncDialog
+          open={isSyncDialog}
+          onClose={() => setIsSyncDialog(false)}
+        />
+      )}
     </Paper>
   );
 };

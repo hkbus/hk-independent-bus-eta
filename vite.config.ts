@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react-swc";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
 import eslint from "vite-plugin-eslint"
+import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
 
 // https://vitejs.dev/config/
 
@@ -12,11 +14,15 @@ export default defineConfig(({mode}: ConfigEnv) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [
-      react(), 
+      react(),
       eslint({
-        
-      }), 
-      basicSsl(), 
+
+      }),
+      basicSsl(),
+      // Needed for @automerge/automerge (used by the cross-device sync
+      // feature), which ships a WASM module using the ESM Wasm proposal.
+      wasm(),
+      topLevelAwait(),
       VitePWA(getPwaOptions(env))
     ],
     server: {

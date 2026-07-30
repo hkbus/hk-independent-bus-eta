@@ -170,6 +170,31 @@ const PrivacyPolicy = () => {
         </p>
       </div>{" "}
       <p>
+        <strong>Cross-Device Sync</strong>
+      </p>{" "}
+      <p>
+        The app offers an optional “Sync Group” feature that lets you share
+        your saved stops, saved ETAs, collections, and personalization
+        settings across multiple devices. This feature does not use an
+        account, email address, or password of any kind. Instead, a device
+        generates a random token and displays it as a QR code; any device
+        that scans that QR code (or enters the code manually) joins the same
+        sync group and can read and write the same synced data.
+      </p>{" "}
+      <p>
+        Our server only ever stores a one-way cryptographic hash of this
+        token, together with the synced data itself, and cannot identify you
+        or link a sync group to any other personal information. Anyone who
+        has the QR code or text code has full access to that sync group’s
+        data — treat it like a password and only share it with your own
+        devices. Because there is no account or recovery email attached to a
+        sync group, if you lose every device that had joined it, or lose the
+        QR code/text code before joining an additional device, that data
+        cannot be recovered. You can leave a sync group at any time from the
+        app’s Settings without deleting the data still held by other member
+        devices.
+      </p>{" "}
+      <p>
         <strong>Changes to This Privacy Policy</strong>
       </p>{" "}
       <p>

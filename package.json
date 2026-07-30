@@ -18,6 +18,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@automerge/automerge": "^3.3.2",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
@@ -38,6 +39,7 @@
     "plotly.js-basic-dist": "^2.30.0",
     "pmtiles": "^4.3.0",
     "proj4": "^2.7.4",
+    "qrcode.react": "^4.2.0",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
@@ -100,7 +102,9 @@
     "typescript": "^5.3.3",
     "vite": "^5.1.5",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-pwa": "^0.19.2"
+    "vite-plugin-pwa": "^0.19.2",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.6.0"
   },
   "eslintConfig": {
     "extends": [

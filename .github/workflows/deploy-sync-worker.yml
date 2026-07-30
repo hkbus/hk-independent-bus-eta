@@ -1,0 +1,32 @@
+name: Deploy Sync Worker
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - "workers/sync/**"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workers/sync
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          cache: yarn
+          cache-dependency-path: workers/sync/yarn.lock
+      - run: yarn install --frozen-lockfile
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: workers/sync

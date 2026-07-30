@@ -10,6 +10,7 @@ import { CollectionContextProvider } from "./CollectionContext";
 import { ReactNativeContextProvider } from "./context/ReactNativeContext";
 import { EmotionContextProvider } from "./context/EmotionContext";
 import { PinnedEtasContextProvider } from "./context/PinnedEtasContext";
+import { SyncContextProvider } from "./context/SyncContext";
 const App = React.lazy(() => import("./App"));
 
 const AppWrapper = () => {
@@ -30,15 +31,17 @@ const AppWrapper = () => {
       <DbProvider initialDb={state}>
         <CollectionContextProvider>
           <AppContextProvider>
-            <EmotionContextProvider>
-              <PinnedEtasContextProvider>
-                <ReactNativeContextProvider>
-                  <Suspense fallback={null}>
-                    <App />
-                  </Suspense>
-                </ReactNativeContextProvider>
-              </PinnedEtasContextProvider>
-            </EmotionContextProvider>
+            <SyncContextProvider>
+              <EmotionContextProvider>
+                <PinnedEtasContextProvider>
+                  <ReactNativeContextProvider>
+                    <Suspense fallback={null}>
+                      <App />
+                    </Suspense>
+                  </ReactNativeContextProvider>
+                </PinnedEtasContextProvider>
+              </EmotionContextProvider>
+            </SyncContextProvider>
           </AppContextProvider>
         </CollectionContextProvider>
       </DbProvider>
