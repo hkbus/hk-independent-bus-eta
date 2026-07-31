@@ -52,9 +52,7 @@ interface SyncContextProviderProps {
   children: ReactNode;
 }
 
-export const SyncContextProvider = ({
-  children,
-}: SyncContextProviderProps) => {
+export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
   const appCtx = useContext(AppContext);
   const collectionCtx = useContext(CollectionContext);
   const language = useLanguage();
@@ -414,9 +412,7 @@ export const SyncContextProvider = ({
   );
 
   return (
-    <SyncContext.Provider value={contextValue}>
-      {children}
-    </SyncContext.Provider>
+    <SyncContext.Provider value={contextValue}>{children}</SyncContext.Provider>
   );
 };
 

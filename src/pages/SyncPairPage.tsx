@@ -52,9 +52,7 @@ const SyncPairPage = () => {
         <>
           {isEnabled && (
             <Typography variant="body2" color="text.secondary">
-              {t(
-                "此裝置已加入另一個同步群組，繼續將會轉為加入這個新群組。"
-              )}
+              {t("此裝置已加入另一個同步群組，繼續將會轉為加入這個新群組。")}
             </Typography>
           )}
           <Button

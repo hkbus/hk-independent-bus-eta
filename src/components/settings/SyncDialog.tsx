@@ -158,7 +158,14 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
               </ListItemButton>
               {confirmLeave ? (
                 <ListItem>
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1, width: "100%" }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                      width: "100%",
+                    }}
+                  >
                     <Typography variant="body2">
                       {t(
                         "離開後，此裝置的收藏及設定將不再與其他裝置同步，但不會刪除任何裝置上的資料。"

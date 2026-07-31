@@ -218,7 +218,8 @@ const resources = {
       跨裝置同步收藏及設定: "Sync favorites & settings across devices",
       尚未加入同步群組: "Not in a sync group yet",
       "同步中...": "Syncing...",
-      "同步失敗，請檢查網絡連線": "Sync failed, please check your network connection",
+      "同步失敗，請檢查網絡連線":
+        "Sync failed, please check your network connection",
       上次同步: "Last synced",
       從未同步: "Never synced",
       "讓多部裝置共用同一組收藏（車站、到站預報、集合）及個人化設定。掃描QR碼即可加入。":
@@ -231,10 +232,13 @@ const resources = {
       不離開: "Don't leave",
       離開同步群組: "Leave sync group",
       建立同步群組: "Create Sync Group",
-      "在這部裝置開始，之後可讓其他裝置加入": "Start here, then let other devices join",
+      "在這部裝置開始，之後可讓其他裝置加入":
+        "Start here, then let other devices join",
       加入同步群組: "Join Sync Group",
-      "掃描或貼上其他裝置的QR碼/代碼": "Scan or paste another device's QR code/code",
-      讓其他裝置掃描此QR碼以加入同步群組: "Let another device scan this QR code to join the sync group",
+      "掃描或貼上其他裝置的QR碼/代碼":
+        "Scan or paste another device's QR code/code",
+      讓其他裝置掃描此QR碼以加入同步群組:
+        "Let another device scan this QR code to join the sync group",
       或分享以下連結: "Or share the link below",
       複製連結: "Copy link",
       "在另一部裝置的「同步群組」中顯示QR碼，然後用相機應用程式掃描；或直接貼上連結/代碼。":
