@@ -475,19 +475,19 @@ const rootSx: SxProps<Theme> = {
     backgroundImage: `url(/img/minibus.svg)`,
   },
   [`& .${classes.ctbMarker}`]: {
-    backgroundImage: `url(/img/bus_ctb.svg)`,
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/bus_ctb.svg)`,
   },
   [`& .${classes.jointlyMarker}`]: {
-    backgroundImage: `url(/img/bus_jointly.svg)`,
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/bus_jointly.svg)`,
   },
   [`& .${classes.lrtfeederMarker}`]: {
-    backgroundImage: `url(/img/bus_lrtfeeder.svg)`,
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/bus_lrtfeeder.svg)`,
   },
   [`& .${classes.nlbMarker}`]: {
-    backgroundImage: `url(/img/bus_nlb.svg)`,
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/bus_nlb.svg)`,
   },
   [`& .${classes.kmbMarker}`]: {
-    backgroundImage: `url(/img/bus_kmb.svg)`,
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/bus_kmb.svg)`,
   },
   [`& .${classes.active}`]: {
     animation: "blinker 1.5s infinite",
