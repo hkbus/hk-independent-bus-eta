@@ -60,6 +60,7 @@ const TimeTable = ({ routeId }: TimeTableProps) => {
                     {details ? (
                       <Typography variant="body1">
                         {parseInt(details[1], 10) / 60}
+                        {details[2] ? `-${parseInt(details[2], 10) / 60}` : ""}
                         {t("分鐘")}
                       </Typography>
                     ) : (
@@ -178,7 +179,7 @@ const isMatchServiceId = (serviceId: string, isHoliday: boolean): boolean => {
 
 const isCurrentTimeslot = (
   start: string,
-  details: [string, string] | null,
+  details: [string, string, string?] | null,
   serviceId: string,
   isHoliday: boolean
 ): boolean => {
