@@ -317,7 +317,7 @@ export const setSeoRouteFeature = ({
                 .map(
                   ([start, details]) =>
                     "<li>" +
-                    `${start} ${details ? `- ${details[0]}    ${parseInt(details[1], 10) / 60}${t("分鐘")}` : ""}` +
+                    `${start} ${details ? `- ${details[0]}    ${parseInt(details[1], 10) / 60}${details[2] ? `-${parseInt(details[2], 10) / 60}` : ""}${t("分鐘")}` : ""}` +
                     "</li>"
                 )
                 .join("") +
