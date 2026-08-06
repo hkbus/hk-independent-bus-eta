@@ -103,7 +103,7 @@ const Settings = () => {
   const updateApp = useCallback(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register("/sw.js", { scope: "/" })
+        .register(`${import.meta.env.BASE_URL}sw.js`, { scope: "/" })
         .then((registration) => {
           // registration worked
           registration.update();
@@ -457,7 +457,11 @@ const Settings = () => {
           }}
         >
           <ListItemAvatar>
-            <Avatar sx={iconSx} src="/img/logo128.png" alt="App Logo"></Avatar>
+            <Avatar
+              sx={iconSx}
+              src={`${import.meta.env.BASE_URL}img/logo128.png`}
+              alt="App Logo"
+            ></Avatar>
           </ListItemAvatar>
           <ListItemText primary={t("圖標來源")} secondary={"陳瓜 Chan Gua"} />
         </ListItemButton>

@@ -290,7 +290,7 @@ const rootSx: SxProps<Theme> = {
 const appTitleSx: SxProps<Theme> = {
   backgroundImage: (t) =>
     t.palette.mode === "light"
-      ? "url(/img/logo128.png)"
+      ? `url(${import.meta.env.BASE_URL}img/logo128.png)`
       : "url(/img/dark-32.jpg)",
   backgroundSize: "contain",
   width: 32,
