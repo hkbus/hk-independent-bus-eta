@@ -38,7 +38,7 @@ const EmotionTabbar = () => {
         icon={
           <Box
             sx={{
-              backgroundImage: "url(/img/sympathy/tab-icon.png)",
+              backgroundImage: `url(${import.meta.env.BASE_URL}img/sympathy/tab-icon.png)`,
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
               backgroundSize: "contain",

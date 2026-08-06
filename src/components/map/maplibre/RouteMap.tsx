@@ -469,10 +469,10 @@ const rootSx: SxProps<Theme> = {
       theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
   },
   [`& .${classes.mtrMarker}`]: {
-    backgroundImage: `url(/img/mtr.svg)`,
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/mtr.svg)`,
   },
   [`& .${classes.gmbMarker}`]: {
-    backgroundImage: `url(/img/minibus.svg)`,
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/minibus.svg)`,
   },
   [`& .${classes.ctbMarker}`]: {
     backgroundImage: `url(${import.meta.env.BASE_URL}img/bus_ctb.svg)`,
@@ -496,7 +496,7 @@ const rootSx: SxProps<Theme> = {
     filter: "grayscale(100%)",
   },
   [`& .self-center`]: {
-    backgroundImage: "url(/img/self.svg)",
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/self.svg)`,
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
@@ -504,7 +504,7 @@ const rootSx: SxProps<Theme> = {
     transformOrigin: "center",
   },
   ["& .mtr-exit"]: {
-    backgroundImage: `url(/img/HK_MTR_logo.svg)`,
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/HK_MTR_logo.svg)`,
   },
   ["& .mtr-exit-label"]: {
     background: "transparent",
@@ -512,7 +512,7 @@ const rootSx: SxProps<Theme> = {
     fontWeight: 600,
   },
   ["& .mtr-exit-barrier-free"]: {
-    backgroundImage: `url(/img/Wheelchair_symbol.svg)`,
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/Wheelchair_symbol.svg)`,
     backgroundSize: "12px 11px",
   },
 };

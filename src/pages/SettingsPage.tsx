@@ -103,7 +103,9 @@ const Settings = () => {
   const updateApp = useCallback(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register(`${import.meta.env.BASE_URL}sw.js`, { scope: "/" })
+        .register(`${import.meta.env.BASE_URL}sw.js`, {
+          scope: import.meta.env.BASE_URL,
+        })
         .then((registration) => {
           // registration worked
           registration.update();
