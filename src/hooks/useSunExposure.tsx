@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Location as GeoLocation } from "hk-bus-eta";
 import {
+  getNextSunrise,
   getRouteSunExposure,
   getSunPosition,
   type RouteSunExposure,
@@ -23,18 +24,39 @@ const useSunClock = (enabled: boolean): number => {
 };
 
 /**
- * Where the sun is over a single point, or `null` once it has set.
- * Hong Kong is small enough that any point on a route will do.
+ * Where the sun is over a single point. Hong Kong is small enough that
+ * any point on a route will do.
+ *
+ * A sun that has set is reported with a negative altitude rather than
+ * as `null`, so the map can say so. Dropping the control after dark
+ * would make "no sun tonight" and "this app has no such feature" look
+ * exactly the same.
  */
 export const useSunPosition = (
   location: GeoLocation | undefined
 ): SunPosition | null => {
   const now = useSunClock(location !== undefined);
+  return useMemo(
+    () => (location ? getSunPosition(new Date(now), location) : null),
+    [location, now]
+  );
+};
+
+/**
+ * When the sun next rises, or `null` while it is already up. Used to
+ * tell a rider when the display will have something to say.
+ */
+export const useNextSunrise = (
+  location: GeoLocation | undefined,
+  enabled: boolean
+): Date | null => {
+  const now = useSunClock(enabled && location !== undefined);
   return useMemo(() => {
-    if (!location) return null;
-    const position = getSunPosition(new Date(now), location);
-    return position.altitude > 0 ? position : null;
-  }, [location, now]);
+    if (!enabled || !location) return null;
+    const at = new Date(now);
+    if (getSunPosition(at, location).altitude > 0) return null;
+    return getNextSunrise(location, at);
+  }, [enabled, location, now]);
 };
 
 /**

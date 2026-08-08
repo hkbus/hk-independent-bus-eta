@@ -54,6 +54,27 @@ const laneGradient = (sides: number[], lane: "left" | "right"): string => {
  * The lanes are driven purely by a number per stop, so the same strip
  * could later carry a different per-stop measure.
  */
+/**
+ * Stands in for the lanes after dark, when there is no sun to divide
+ * the bus into a hot side and a cool one. It says when the display
+ * will next mean something rather than leaving a blank where the
+ * strip was, which would read as a fault.
+ */
+export const SunAsleepNote = ({ sunriseAt }: { sunriseAt: Date | null }) => {
+  const { t } = useTranslation();
+  return (
+    <Box sx={{ ...(rootSx as object), ...(noteSx as object) }}>
+      {t("太陽已下山")}
+      {sunriseAt !== null &&
+        ` · ${t("日出")} ${sunriseAt.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })}`}
+    </Box>
+  );
+};
+
 const SunSideStrip = ({ sides, stopIdx, visibleRange }: SunSideStripProps) => {
   const { t } = useTranslation();
   if (sides.length < 2) return null;
@@ -104,6 +125,13 @@ const rootSx: SxProps<Theme> = {
   // orange lane disappears into.
   backgroundColor: (theme) => theme.palette.background.paper,
   borderBottom: "1px solid rgba(0, 0, 0, .125)",
+};
+
+const noteSx: SxProps<Theme> = {
+  py: 1,
+  fontSize: "0.75rem",
+  textAlign: "center",
+  opacity: 0.75,
 };
 
 const lanesSx: SxProps<Theme> = {

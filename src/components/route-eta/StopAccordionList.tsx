@@ -10,10 +10,10 @@ import { Box, Snackbar, SxProps, Theme } from "@mui/material";
 import type { RouteListEntry } from "hk-bus-eta";
 import throttle from "lodash.throttle";
 import StopAccordion from "./StopAccordion";
-import SunSideStrip from "./SunSideStrip";
+import SunSideStrip, { SunAsleepNote } from "./SunSideStrip";
 import { useTranslation } from "react-i18next";
 import DbContext from "../../context/DbContext";
-import { useSunExposure } from "../../hooks/useSunExposure";
+import { useNextSunrise, useSunExposure } from "../../hooks/useSunExposure";
 
 interface StopAccordionsProps {
   routeId: string;
@@ -49,6 +49,7 @@ const StopAccordions = ({
     [stopIds, stopList]
   );
   const sun = useSunExposure(stopLocations, sunMode);
+  const sunriseAt = useNextSunrise(stopLocations[0], sunMode);
 
   // Which stops the list is scrolled to, so the strip above can mark
   // the stretch of route being looked at.
@@ -109,13 +110,16 @@ const StopAccordions = ({
       ref={listRef}
       onScroll={sun ? syncVisibleRange : undefined}
     >
-      {sun !== null && (
-        <SunSideStrip
-          sides={sun.sides}
-          stopIdx={stopIdx}
-          visibleRange={visibleRange}
-        />
-      )}
+      {sunMode &&
+        (sun !== null ? (
+          <SunSideStrip
+            sides={sun.sides}
+            stopIdx={stopIdx}
+            visibleRange={visibleRange}
+          />
+        ) : (
+          <SunAsleepNote sunriseAt={sunriseAt} />
+        ))}
       {stopIds.map((stopId, idx) => (
         <StopAccordion
           routeId={routeId}

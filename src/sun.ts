@@ -86,6 +86,44 @@ export const getBearing = (a: GeoLocation, b: GeoLocation): number => {
   return (Math.atan2(y, x) / RAD + 360) % 360;
 };
 
+/**
+ * When the sun next clears the horizon at `location`, or `null` if it
+ * somehow does not within a day — which cannot happen at Hong Kong's
+ * latitude, but can inside the polar circles.
+ *
+ * Found by bisection on the altitude rather than by the closed-form
+ * sunrise equation: it is a dozen calls to `getSunPosition`, runs
+ * once when the sun is down, and cannot disagree with the altitude
+ * the rest of the feature is drawing from.
+ */
+export const getNextSunrise = (
+  location: GeoLocation,
+  from: Date = new Date()
+): Date | null => {
+  const MINUTE = 60 * 1000;
+  const altitudeAt = (t: number) =>
+    getSunPosition(new Date(t), location).altitude;
+
+  // Step forward in coarse jumps to bracket the crossing…
+  let lo = from.valueOf();
+  if (altitudeAt(lo) > 0) return from;
+  let hi = lo;
+  for (let step = 0; step < 24 * 4; ++step) {
+    hi = lo + 15 * MINUTE;
+    if (altitudeAt(hi) > 0) {
+      // …then bisect it to the nearest minute.
+      while (hi - lo > MINUTE) {
+        const mid = lo + (hi - lo) / 2;
+        if (altitudeAt(mid) > 0) hi = mid;
+        else lo = mid;
+      }
+      return new Date(hi);
+    }
+    lo = hi;
+  }
+  return null;
+};
+
 export interface RouteSunExposure {
   /** Bearing of the sun, degrees clockwise from true north. */
   azimuth: number;

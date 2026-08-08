@@ -7,6 +7,7 @@ import {
 } from "react";
 import { Box, type SxProps, type Theme } from "@mui/material";
 import {
+  NightsStay as NightsStayIcon,
   WbSunny as WbSunnyIcon,
   WbSunnyOutlined as WbSunnyOutlinedIcon,
 } from "@mui/icons-material";
@@ -70,6 +71,10 @@ const SunOverlay = ({
     return () => observer.disconnect();
   }, []);
 
+  // Below the horizon there is nothing to draw, but the badge stays —
+  // as a moon, saying so. Dropping it would leave "the sun is down"
+  // and "this app has no such feature" looking identical.
+  const isUp = altitude > 0;
   // Where the sun sits on screen: 0° = towards the top of the map.
   const screenAzimuth = (azimuth - bearing + 360) % 360;
   // A sun overhead lights both sides of the bus about equally; a low
@@ -79,28 +84,43 @@ const SunOverlay = ({
 
   return (
     <Box sx={rootSx} ref={rootRef}>
-      {active && (
+      {active && isUp && (
         <Box sx={washSx} style={falloffStyle(screenAzimuth)}>
           <Box sx={wavesSx} style={sunlightStyle(screenAzimuth, glare)} />
         </Box>
       )}
-      {badge !== null && (
-        <Box
-          sx={active ? activeBadgeSx : badgeSx}
-          style={{ left: badge.x, top: badge.y }}
-          onClick={onToggle}
-          role="switch"
-          aria-checked={active}
-          aria-label={t("防曬模式")}
-          title={t("防曬模式")}
-        >
-          {active ? (
-            <WbSunnyIcon sx={iconSx} />
-          ) : (
-            <WbSunnyOutlinedIcon sx={iconSx} />
-          )}
-        </Box>
-      )}
+      {badge !== null &&
+        (isUp ? (
+          <Box
+            sx={active ? activeBadgeSx : badgeSx}
+            style={{ left: badge.x, top: badge.y }}
+            onClick={onToggle}
+            role="switch"
+            aria-checked={active}
+            aria-label={t("防曬模式")}
+            title={t("防曬模式")}
+          >
+            {active ? (
+              <WbSunnyIcon sx={iconSx} />
+            ) : (
+              <WbSunnyOutlinedIcon sx={iconSx} />
+            )}
+          </Box>
+        ) : (
+          // Sun down: still say so, and still let it be switched on so
+          // the stop list can explain when it will next be of use.
+          <Box
+            sx={nightBadgeSx}
+            style={{ left: badge.x, top: badge.y }}
+            onClick={onToggle}
+            role="switch"
+            aria-checked={active}
+            aria-label={t("太陽已下山")}
+            title={t("太陽已下山")}
+          >
+            <NightsStayIcon sx={iconSx} />
+          </Box>
+        ))}
     </Box>
   );
 };
@@ -248,6 +268,12 @@ const activeBadgeSx: SxProps<Theme> = {
   ...(badgeSx as object),
   background: "#ffffff",
   boxShadow: "0 0 12px 3px rgba(255,167,38,0.85)",
+};
+
+const nightBadgeSx: SxProps<Theme> = {
+  ...(badgeSx as object),
+  background: "rgba(38, 50, 70, 0.92)",
+  color: "#cfd8dc",
 };
 
 const iconSx: SxProps<Theme> = {

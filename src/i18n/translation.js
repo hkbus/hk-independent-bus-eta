@@ -214,6 +214,8 @@ const resources = {
       地圖資源: "Map Resources",
       同感心: "Empathy",
       防曬模式: "Sun-side mode",
+      太陽已下山: "The sun has set",
+      日出: "Sunrise",
       陽光曬左邊: "Sun on the left side",
       陽光曬右邊: "Sun on the right side",
       左: "L",
