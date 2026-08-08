@@ -270,6 +270,7 @@ const RouteEta = () => {
         // no way back out — and power saving is exactly when an animated
         // overlay should stand down anyway.
         sunMode={sunMode && !energyMode}
+        onToggleSunMode={toggleSunMode}
       />
       <StopDialog
         open={isDialogOpen}

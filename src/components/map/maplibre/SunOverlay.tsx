@@ -95,9 +95,7 @@ const SunOverlay = ({
             sx={active ? activeBadgeSx : badgeSx}
             style={{ left: badge.x, top: badge.y }}
             onClick={onToggle}
-            role="switch"
-            aria-checked={active}
-            aria-label={t("防曬模式")}
+            aria-hidden="true"
             title={t("防曬模式")}
           >
             {active ? (
@@ -113,9 +111,7 @@ const SunOverlay = ({
             sx={nightBadgeSx}
             style={{ left: badge.x, top: badge.y }}
             onClick={onToggle}
-            role="switch"
-            aria-checked={active}
-            aria-label={t("太陽已下山")}
+            aria-hidden="true"
             title={t("太陽已下山")}
           >
             <NightsStayIcon sx={iconSx} />

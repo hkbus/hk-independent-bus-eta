@@ -7,6 +7,7 @@ import {
   useMemo,
 } from "react";
 import { Box, Snackbar, SxProps, Theme } from "@mui/material";
+import { visuallyHidden } from "@mui/utils";
 import type { RouteListEntry } from "hk-bus-eta";
 import throttle from "lodash.throttle";
 import StopAccordion from "./StopAccordion";
@@ -24,6 +25,7 @@ interface StopAccordionsProps {
   onStopInfo: () => void;
   /** Whether the sun-side display is switched on. */
   sunMode: boolean;
+  onToggleSunMode: () => void;
 }
 const StopAccordions = ({
   routeId,
@@ -32,6 +34,7 @@ const StopAccordions = ({
   handleChange,
   onStopInfo,
   sunMode,
+  onToggleSunMode,
 }: StopAccordionsProps) => {
   const accordionRef = useRef<HTMLDivElement[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
@@ -110,6 +113,21 @@ const StopAccordions = ({
       ref={listRef}
       onScroll={sun ? syncVisibleRange : undefined}
     >
+      {/* The real sun-mode switch. The badge on the map is the visible
+          one, but the map is deliberately aria-hidden and its controls
+          are taken out of the tab order, so on its own it would be
+          reachable by mouse only. This one carries the semantics and
+          the keyboard, and shows itself when focused. */}
+      <Box
+        component="button"
+        type="button"
+        role="switch"
+        aria-checked={sunMode}
+        onClick={onToggleSunMode}
+        sx={hiddenSwitchSx}
+      >
+        {t("防曬模式")}
+      </Box>
       {sunMode &&
         (sun !== null ? (
           <SunSideStrip
@@ -151,4 +169,25 @@ export default StopAccordions;
 
 const rootSx: SxProps<Theme> = {
   overflowY: "scroll",
+};
+
+// Out of the way until it is tabbed to, then shown — the map badge is
+// the visible affordance for everyone else.
+const hiddenSwitchSx: SxProps<Theme> = {
+  ...visuallyHidden,
+  "&:focus": {
+    position: "sticky",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "auto",
+    clip: "auto",
+    zIndex: (theme) => theme.zIndex.tooltip,
+    p: 1,
+    border: 0,
+    font: "inherit",
+    cursor: "pointer",
+    backgroundColor: (theme) => theme.palette.background.paper,
+    color: (theme) => theme.palette.text.primary,
+  },
 };
