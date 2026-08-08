@@ -48,8 +48,7 @@ const StopAccordions = ({
     () => stopIds.map((stopId) => stopList[stopId].location),
     [stopIds, stopList]
   );
-  const exposure = useSunExposure(stopLocations);
-  const sun = sunMode ? exposure : null;
+  const sun = useSunExposure(stopLocations, sunMode);
 
   // Which stops the list is scrolled to, so the strip above can mark
   // the stretch of route being looked at.

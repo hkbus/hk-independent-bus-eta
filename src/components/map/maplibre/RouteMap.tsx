@@ -16,7 +16,7 @@ import DbContext from "../../../context/DbContext";
 import useLanguage from "../../../hooks/useTranslation";
 import { useRoutePath } from "../../../hooks/useRoutePath";
 import { checkPosition, getLineColor, locationEqual } from "../../../utils";
-import { useSunExposure } from "../../../hooks/useSunExposure";
+import { useSunPosition } from "../../../hooks/useSunExposure";
 import BaseMap from "./BaseMap";
 import SelfCircle from "./SelfCircle";
 import MtrExits from "./MtrExits";
@@ -84,9 +84,9 @@ const RouteMap = ({
     [stopList, stopIds]
   );
   const routePath = useRoutePath(routeId, stops);
-  const stopLocations = useMemo(() => stops.map((s) => s.location), [stops]);
-  const exposure = useSunExposure(stopLocations);
-  const sun = sunMode ? exposure : null;
+  // Only the sun's own position is needed here — which side of the bus
+  // it falls on is the stop list's business.
+  const sun = useSunPosition(stops[0]?.location);
 
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
@@ -224,7 +224,7 @@ const RouteMap = ({
           >
             {/* Shadow cast away from the sun, lifting the route off the
                 map so the sunlit side of it is the side you can see. */}
-            {sun !== null ? (
+            {sunMode && sun !== null ? (
               <Layer
                 id="route-path-sun-shadow"
                 type="line"
@@ -305,10 +305,10 @@ const RouteMap = ({
 
         {/* Shown whenever the sun is up, switched on or not — it is the
             switch, and out on the rim it stays out of the way. */}
-        {exposure !== null ? (
+        {sun !== null ? (
           <SunOverlay
-            azimuth={exposure.azimuth}
-            altitude={exposure.altitude}
+            azimuth={sun.azimuth}
+            altitude={sun.altitude}
             active={sunMode}
             onToggle={onToggleSunMode}
           />

@@ -95,7 +95,12 @@ export interface RouteSunExposure {
    * One entry per stop, describing the leg that *starts* at that stop:
    * −1 means the sun is square on the left of the bus, +1 square on
    * the right, 0 straight ahead, straight behind, or directly
-   * overhead. The last stop repeats the leg before it.
+   * overhead.
+   *
+   * The last stop carries the leg that *arrives* instead, having no
+   * onward one — which is also what a rider wants there, and what
+   * circular routes need, since their stop lists run the loop right
+   * back round to the starting stop.
    */
   sides: number[];
 }
@@ -117,20 +122,24 @@ export const getRouteSunExposure = (
   if (altitude <= 0) return null;
 
   const glare = Math.cos(altitude * RAD);
+  // Walked backwards so that a stop repeated at the same coordinates —
+  // which has no heading of its own — takes the heading of the next
+  // leg that does move. Going forwards would hand it the leg it
+  // arrived on, and describe the bus's last turn instead of its next.
   const sides = locations.map(() => 0);
-  let last = 0;
-  for (let i = 0; i < locations.length - 1; ++i) {
-    // Skip legs of zero length — repeated coordinates carry no heading.
+  let ahead = 0;
+  for (let i = locations.length - 2; i >= 0; --i) {
     if (
       locations[i].lat !== locations[i + 1].lat ||
       locations[i].lng !== locations[i + 1].lng
     ) {
       const heading = getBearing(locations[i], locations[i + 1]);
-      last = Math.sin((azimuth - heading) * RAD) * glare;
+      ahead = Math.sin((azimuth - heading) * RAD) * glare;
     }
-    sides[i] = last;
+    sides[i] = ahead;
   }
-  sides[locations.length - 1] = last;
+  // The final stop has no onward leg, so it keeps the arriving one.
+  sides[locations.length - 1] = sides[locations.length - 2];
 
   return { azimuth, altitude, sides };
 };
