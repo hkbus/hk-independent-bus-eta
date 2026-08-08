@@ -16,11 +16,13 @@ import DbContext from "../../../context/DbContext";
 import useLanguage from "../../../hooks/useTranslation";
 import { useRoutePath } from "../../../hooks/useRoutePath";
 import { checkPosition, getLineColor, locationEqual } from "../../../utils";
+import { useSunExposure } from "../../../hooks/useSunExposure";
 import BaseMap from "./BaseMap";
 import SelfCircle from "./SelfCircle";
 import MtrExits from "./MtrExits";
 import CompassControl from "./CompassControl";
 import CenterControl from "./CenterControl";
+import SunOverlay from "./SunOverlay";
 import { useImperativeMap } from "./useImperativeMap";
 
 interface RouteMapProps {
@@ -30,6 +32,8 @@ interface RouteMapProps {
   route: string;
   companies: Company[];
   onMarkerClick: (idx: number) => void;
+  sunMode: boolean;
+  onToggleSunMode: () => void;
 }
 
 interface RouteMapRef {
@@ -66,6 +70,8 @@ const RouteMap = ({
   route,
   companies,
   onMarkerClick,
+  sunMode,
+  onToggleSunMode,
 }: RouteMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission } =
     useContext(AppContext);
@@ -78,6 +84,9 @@ const RouteMap = ({
     [stopList, stopIds]
   );
   const routePath = useRoutePath(routeId, stops);
+  const stopLocations = useMemo(() => stops.map((s) => s.location), [stops]);
+  const exposure = useSunExposure(stopLocations);
+  const sun = sunMode ? exposure : null;
 
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
@@ -213,6 +222,22 @@ const RouteMap = ({
             type="geojson"
             data={routePath as unknown as FeatureCollection}
           >
+            {/* Shadow cast away from the sun, lifting the route off the
+                map so the sunlit side of it is the side you can see. */}
+            {sun !== null ? (
+              <Layer
+                id="route-path-sun-shadow"
+                type="line"
+                paint={{
+                  "line-color": "rgba(0,0,0,0.45)",
+                  "line-width": 9,
+                  "line-blur": 5,
+                  "line-translate": sunShadowOffset(sun.azimuth, sun.altitude),
+                  "line-translate-anchor": "map",
+                }}
+                layout={{ "line-cap": "round", "line-join": "round" }}
+              />
+            ) : null}
             <Layer
               id="route-path-border"
               type="line"
@@ -277,6 +302,17 @@ const RouteMap = ({
             </Marker>
           );
         })}
+
+        {/* Shown whenever the sun is up, switched on or not — it is the
+            switch, and out on the rim it stays out of the way. */}
+        {exposure !== null ? (
+          <SunOverlay
+            azimuth={exposure.azimuth}
+            altitude={exposure.altitude}
+            active={sunMode}
+            onToggle={onToggleSunMode}
+          />
+        ) : null}
 
         <SelfCircle />
         <CenterControl onClick={onClickJumpToMyLocation} />
@@ -356,6 +392,21 @@ const makeRouteArrow = (): ImageData => {
   ctx.fill();
   ctx.stroke();
   return ctx.getImageData(0, 0, s, s);
+};
+
+/**
+ * Pixel offset for the route line's shadow: directly away from the
+ * sun, and longer the lower the sun sits — the same cue a real shadow
+ * gives. Returned in map-space, so MapLibre keeps it pointing the
+ * right way as the map is rotated.
+ */
+const sunShadowOffset = (
+  azimuth: number,
+  altitude: number
+): [number, number] => {
+  const rad = Math.PI / 180;
+  const length = Math.min(16, Math.max(4, 7 / Math.tan(altitude * rad)));
+  return [-Math.sin(azimuth * rad) * length, Math.cos(azimuth * rad) * length];
 };
 
 interface StopMarkerInfo {

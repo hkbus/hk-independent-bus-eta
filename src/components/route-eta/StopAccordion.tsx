@@ -20,7 +20,13 @@ import {
   PushPinOutlined as PushPinOutlinedIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { visuallyHidden } from "@mui/utils";
 import { getJoyYouFare, toProperCase, triggerShare } from "../../utils";
+import {
+  SUN_BAR_COLOUR,
+  SUN_SIDE_THRESHOLD,
+  sunSideStrength,
+} from "./sunSideStyle";
 import TimeReport from "./TimeReport";
 import ReactNativeContext from "../../context/ReactNativeContext";
 import useLanguage from "../../hooks/useTranslation";
@@ -37,6 +43,11 @@ interface StopAccordionProps {
   onShareClick: () => void;
   onStopInfoClick: () => void;
   onSummaryClick: (idx: number, expand: boolean) => void;
+  /**
+   * Which side of the bus the sun falls on over the leg leaving this
+   * stop: −1 hard left … +1 hard right. Undefined after dark.
+   */
+  sunSide?: number;
 }
 
 const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
@@ -50,6 +61,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
       onShareClick,
       onSummaryClick,
       onStopInfoClick,
+      sunSide,
     } = props;
     const {
       AppTitle,
@@ -79,6 +91,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
       () => getJoyYouFare(route, co, fares, idx),
       [co, fares, idx, route]
     );
+    const sunLabel = sunSideLabel(sunSide);
 
     const handleShareClick = useCallback(() => {
       triggerShare(
@@ -124,6 +137,12 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
           <Typography component="h3" variant="body1" sx={{ fontWeight: 700 }}>
             {idx + 1}. {toProperCase(stop.name[language])}
           </Typography>
+          {sunLabel !== null && (
+            <Typography variant="body2" style={visuallyHidden}>
+              {t(sunLabel)}
+            </Typography>
+          )}
+          <SunSideBar value={sunSide} />
           <Typography variant="body2">
             {fares && fares[idx] ? t("車費") + ": $" + fares[idx] : ""}
             {faresHoliday && faresHoliday[idx]
@@ -208,6 +227,49 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
 
 export default StopAccordion;
 
+const sunSideLabel = (sunSide?: number): string | null => {
+  if (sunSide === undefined || Math.abs(sunSide) < SUN_SIDE_THRESHOLD) {
+    return null;
+  }
+  return sunSide > 0 ? "陽光曬右邊" : "陽光曬左邊";
+};
+
+/**
+ * A bar along the bottom of the row, growing out from the middle
+ * towards whichever side of the bus the sun falls on over the leg
+ * leaving this stop, as long as the sun is square-on. Stacked down the
+ * list the bars read as a bar chart of the glare, so the stretch worth
+ * moving seat for is visible without reading a single stop name — and
+ * the side to sit on is simply the side the bars are *not* on.
+ *
+ * Along the bottom rather than down the edges: the row's left edge is
+ * already spoken for. Inside the summary rather than a direct child of
+ * `Accordion`, which reads its first child as the summary and hides
+ * everything after it inside the collapse.
+ */
+const SunSideBar = ({ value }: { value?: number }) => {
+  if (value === undefined || Math.abs(value) < SUN_SIDE_THRESHOLD) return null;
+  const half = sunSideStrength(value) * 50;
+  return (
+    <Box
+      sx={sunBarSx}
+      style={
+        value > 0
+          ? { left: "50%", width: `${half}%` }
+          : { right: "50%", width: `${half}%` }
+      }
+    />
+  );
+};
+
+const sunBarSx: SxProps<Theme> = {
+  position: "absolute",
+  bottom: 0,
+  height: "3px",
+  backgroundColor: SUN_BAR_COLOUR,
+  pointerEvents: "none",
+};
+
 const accordionSx: SxProps<Theme> = {
   border: "1px solid rgba(0, 0, 0, .125)",
   boxShadow: "none",
@@ -223,6 +285,8 @@ const accordionSx: SxProps<Theme> = {
 };
 
 const accordionSummarySx: SxProps<Theme> = {
+  // Anchors the sun bar to the bottom of the row.
+  position: "relative",
   backgroundColor: (theme) =>
     theme.palette.mode === "dark"
       ? theme.palette.background.default
