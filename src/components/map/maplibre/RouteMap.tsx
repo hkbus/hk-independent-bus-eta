@@ -15,14 +15,22 @@ import AppContext from "../../../context/AppContext";
 import DbContext from "../../../context/DbContext";
 import useLanguage from "../../../hooks/useTranslation";
 import { useRoutePath } from "../../../hooks/useRoutePath";
-import { checkPosition, getLineColor, locationEqual } from "../../../utils";
-import { useSunPosition } from "../../../hooks/useSunExposure";
+import {
+  checkPosition,
+  getDistance,
+  getLineColor,
+  locationEqual,
+} from "../../../utils";
+import { useSunExposure } from "../../../hooks/useSunExposure";
+import {
+  buildLaneGradient,
+  laneBoundaries,
+} from "../../route-eta/sunSideStyle";
 import BaseMap from "./BaseMap";
 import SelfCircle from "./SelfCircle";
 import MtrExits from "./MtrExits";
 import CompassControl from "./CompassControl";
 import CenterControl from "./CenterControl";
-import SunOverlay from "./SunOverlay";
 import { useImperativeMap } from "./useImperativeMap";
 
 interface RouteMapProps {
@@ -32,8 +40,6 @@ interface RouteMapProps {
   route: string;
   companies: Company[];
   onMarkerClick: (idx: number) => void;
-  sunMode: boolean;
-  onToggleSunMode: () => void;
 }
 
 interface RouteMapRef {
@@ -70,8 +76,6 @@ const RouteMap = ({
   route,
   companies,
   onMarkerClick,
-  sunMode,
-  onToggleSunMode,
 }: RouteMapProps) => {
   const { geolocation, geoPermission, updateGeoPermission } =
     useContext(AppContext);
@@ -84,9 +88,31 @@ const RouteMap = ({
     [stopList, stopIds]
   );
   const routePath = useRoutePath(routeId, stops);
-  // Only the sun's own position is needed here — which side of the bus
-  // it falls on is the stop list's business.
-  const sun = useSunPosition(stops[0]?.location);
+  const { sunSideStyle } = useContext(AppContext);
+  const stopLocations = useMemo(() => stops.map((s) => s.location), [stops]);
+  const sun = useSunExposure(stopLocations, sunSideStyle === "map");
+  /**
+   * Two bars down the map's edges, running from the stop you are
+   * looking at to the terminus — stops already behind you are dropped,
+   * so the bar's top edge *is* the current stop and it needs no marker
+   * saying where on it you are.
+   */
+  const edgeLanes = useMemo(() => {
+    if (sun === null) return null;
+    const ahead = sun.sides.slice(stopIdx);
+    if (ahead.length < 2) return null;
+    const locsAhead = stopLocations.slice(stopIdx);
+    const weights = locsAhead.map((loc, i) =>
+      i < locsAhead.length - 1
+        ? Math.max(1, getDistance(loc, locsAhead[i + 1]))
+        : 1
+    );
+    const edges = laneBoundaries(ahead.length, weights);
+    return {
+      left: buildLaneGradient(ahead, "left", edges),
+      right: buildLaneGradient(ahead, "right", edges),
+    };
+  }, [sun, stopIdx, stopLocations]);
 
   const mapRef = useRef<RouteMapRef>({
     initialCenter: stops[stopIdx] ? stops[stopIdx].location : checkPosition(),
@@ -287,15 +313,11 @@ const RouteMap = ({
           );
         })}
 
-        {/* Shown whenever the sun is up, switched on or not — it is the
-            switch, and out on the rim it stays out of the way. */}
-        {sun !== null ? (
-          <SunOverlay
-            azimuth={sun.azimuth}
-            altitude={sun.altitude}
-            active={sunMode}
-            onToggle={onToggleSunMode}
-          />
+        {edgeLanes !== null ? (
+          <>
+            <Box sx={edgeLaneLeftSx} style={{ background: edgeLanes.left }} />
+            <Box sx={edgeLaneRightSx} style={{ background: edgeLanes.right }} />
+          </>
         ) : null}
 
         <SelfCircle />
@@ -442,6 +464,18 @@ const stopMarkerInfo = (
     anchor: "bottom",
   };
 };
+
+const edgeLaneBaseSx = {
+  position: "absolute",
+  top: 0,
+  bottom: 0,
+  width: "10px",
+  pointerEvents: "none",
+  zIndex: 2,
+} as const;
+
+const edgeLaneLeftSx: SxProps<Theme> = { ...edgeLaneBaseSx, left: 0 };
+const edgeLaneRightSx: SxProps<Theme> = { ...edgeLaneBaseSx, right: 0 };
 
 const PREFIX = "map";
 

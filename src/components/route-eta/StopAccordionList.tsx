@@ -7,14 +7,14 @@ import {
   useMemo,
 } from "react";
 import { Box, Snackbar, SxProps, Theme } from "@mui/material";
-import { visuallyHidden } from "@mui/utils";
 import type { RouteListEntry } from "hk-bus-eta";
-import throttle from "lodash.throttle";
 import StopAccordion from "./StopAccordion";
-import SunSideStrip, { SunAsleepNote } from "./SunSideStrip";
+import { SunAsleepNote, SunSideSentence } from "./SunSideHint";
 import { useTranslation } from "react-i18next";
+import AppContext from "../../context/AppContext";
 import DbContext from "../../context/DbContext";
 import { useNextSunrise, useSunExposure } from "../../hooks/useSunExposure";
+import { getDistance } from "../../utils";
 
 interface StopAccordionsProps {
   routeId: string;
@@ -23,9 +23,6 @@ interface StopAccordionsProps {
   stopIds: string[];
   handleChange: (stopIdx: number, expanded: boolean) => void;
   onStopInfo: () => void;
-  /** Whether the sun-side display is switched on. */
-  sunMode: boolean;
-  onToggleSunMode: () => void;
 }
 const StopAccordions = ({
   routeId,
@@ -33,16 +30,11 @@ const StopAccordions = ({
   stopIds,
   handleChange,
   onStopInfo,
-  sunMode,
-  onToggleSunMode,
 }: StopAccordionsProps) => {
   const accordionRef = useRef<HTMLDivElement[]>([]);
-  const listRef = useRef<HTMLDivElement>(null);
   const [isCopied, setIsCopied] = useState<boolean>(false);
-  const [visibleRange, setVisibleRange] = useState<[number, number] | null>(
-    null
-  );
   const { t } = useTranslation();
+  const { sunSideStyle } = useContext(AppContext);
   const {
     db: { stopList },
   } = useContext(DbContext);
@@ -51,37 +43,21 @@ const StopAccordions = ({
     () => stopIds.map((stopId) => stopList[stopId].location),
     [stopIds, stopList]
   );
-  const sun = useSunExposure(stopLocations, sunMode);
-  const sunriseAt = useNextSunrise(stopLocations[0], sunMode);
+  // The map style draws on the map instead, so the list does no work
+  // for it — and "off" does no work at all.
+  const listWantsSun = sunSideStyle !== "off" && sunSideStyle !== "map";
+  const sun = useSunExposure(stopLocations, listWantsSun);
+  const sunriseAt = useNextSunrise(stopLocations[0], listWantsSun);
 
-  // Which stops the list is scrolled to, so the strip above can mark
-  // the stretch of route being looked at.
-  const syncVisibleRange = useMemo(
+  const legLengths = useMemo(
     () =>
-      throttle(() => {
-        const list = listRef.current;
-        if (!list) return;
-        const { top, bottom } = list.getBoundingClientRect();
-        let first = -1;
-        let last = -1;
-        accordionRef.current.forEach((el, idx) => {
-          if (!el) return;
-          const rect = el.getBoundingClientRect();
-          if (rect.bottom > top && rect.top < bottom) {
-            if (first === -1) first = idx;
-            last = idx;
-          }
-        });
-        setVisibleRange(first === -1 ? null : [first, last]);
-      }, 100),
-    []
+      stopLocations.map((loc, i) =>
+        i < stopLocations.length - 1
+          ? Math.max(1, getDistance(loc, stopLocations[i + 1]))
+          : 1
+      ),
+    [stopLocations]
   );
-
-  useEffect(() => {
-    if (!sun) return;
-    syncVisibleRange();
-    return () => syncVisibleRange.cancel();
-  }, [sun, stopIdx, syncVisibleRange]);
 
   useEffect(() => {
     // scroll to specific bus stop
@@ -108,36 +84,16 @@ const StopAccordions = ({
   );
 
   return (
-    <Box
-      sx={rootSx}
-      ref={listRef}
-      onScroll={sun ? syncVisibleRange : undefined}
-    >
-      {/* The real sun-mode switch. The badge on the map is the visible
-          one, but the map is deliberately aria-hidden and its controls
-          are taken out of the tab order, so on its own it would be
-          reachable by mouse only. This one carries the semantics and
-          the keyboard, and shows itself when focused. */}
-      <Box
-        component="button"
-        type="button"
-        role="switch"
-        aria-checked={sunMode}
-        onClick={onToggleSunMode}
-        sx={hiddenSwitchSx}
-      >
-        {t("防曬模式")}
-      </Box>
-      {sunMode &&
-        (sun !== null ? (
-          <SunSideStrip
-            sides={sun.sides}
-            stopIdx={stopIdx}
-            visibleRange={visibleRange}
-          />
-        ) : (
-          <SunAsleepNote sunriseAt={sunriseAt} />
-        ))}
+    <Box sx={rootSx}>
+      {listWantsSun && (
+        <Box sx={hintSx}>
+          {sun === null ? (
+            <SunAsleepNote sunriseAt={sunriseAt} />
+          ) : sunSideStyle === "text" ? (
+            <SunSideSentence sides={sun.sides} weights={legLengths} />
+          ) : null}
+        </Box>
+      )}
       {stopIds.map((stopId, idx) => (
         <StopAccordion
           routeId={routeId}
@@ -147,7 +103,8 @@ const StopAccordions = ({
           onShareClick={() => setIsCopied(true)}
           onSummaryClick={handleChange}
           onStopInfoClick={onStopInfo}
-          sunSide={sun?.sides[idx]}
+          sunSide={sunSideStyle === "text" ? undefined : sun?.sides[idx]}
+          sunSideStyle={sunSideStyle}
           key={"stop-" + idx}
           ref={handleRef(idx)}
         />
@@ -171,23 +128,12 @@ const rootSx: SxProps<Theme> = {
   overflowY: "scroll",
 };
 
-// Out of the way until it is tabbed to, then shown — the map badge is
-// the visible affordance for everyone else.
-const hiddenSwitchSx: SxProps<Theme> = {
-  ...visuallyHidden,
-  "&:focus": {
-    position: "sticky",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "auto",
-    clip: "auto",
-    zIndex: (theme) => theme.zIndex.tooltip,
-    p: 1,
-    border: 0,
-    font: "inherit",
-    cursor: "pointer",
-    backgroundColor: (theme) => theme.palette.background.paper,
-    color: (theme) => theme.palette.text.primary,
-  },
+/** Sticks to the top of the list so the verdict stays in view. */
+const hintSx: SxProps<Theme> = {
+  position: "sticky",
+  top: 0,
+  zIndex: 3,
+  backgroundColor: (theme) => theme.palette.background.paper,
+  borderBottom: "1px solid rgba(0, 0, 0, .125)",
+  "&:empty": { display: "none" },
 };

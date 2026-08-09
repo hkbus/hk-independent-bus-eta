@@ -24,12 +24,18 @@ import {
   EtaFormat,
   Language,
   NumPadOrder,
+  SunSideStyle,
 } from "../data";
 import { DeviceOrientationPermission } from "react-world-compass";
 import useLanguage from "../hooks/useTranslation";
 
 type GeoPermission =
-  "opening" | "force-opening" | "granted" | "denied" | "closed" | null;
+  | "opening"
+  | "force-opening"
+  | "granted"
+  | "denied"
+  | "closed"
+  | null;
 
 export interface AppState {
   searchRoute: string;
@@ -56,6 +62,7 @@ export interface AppState {
    * number pad order
    */
   numPadOrder: NumPadOrder;
+  sunSideStyle: SunSideStyle;
   /**
    * time display format
    */
@@ -128,6 +135,7 @@ interface AppContextValue extends AppState {
   toggleRouteFilter: () => void;
   toggleBusSortOrder: () => void;
   toggleNumPadOrder: () => void;
+  toggleSunSideStyle: () => void;
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
   toggleEnergyMode: () => void;
@@ -188,6 +196,13 @@ export const isBusSortOrder = (input: unknown): input is BusSortOrder => {
   return input === "KMB first" || input === "CTB first";
 };
 
+const isSunSideStyle = (input: unknown): input is SunSideStyle =>
+  input === "off" ||
+  input === "bar" ||
+  input === "icon" ||
+  input === "text" ||
+  input === "map";
+
 const isNumPadOrder = (input: unknown): input is NumPadOrder => {
   return input === "789456123c0b" || input === "123456789c0b";
 };
@@ -218,6 +233,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     const busSortOrder: unknown = localStorage.getItem("busSortOrder");
     const numPadOrder: unknown = localStorage.getItem("numPadOrder");
     const etaFormat: unknown = localStorage.getItem("etaFormat");
+    const sunSideStyle: unknown = localStorage.getItem("sunSideStyle");
     const routeSearchHistory: unknown = JSON.parse(
       localStorage.getItem("routeSearchHistory") ?? "null"
     );
@@ -236,6 +252,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       busSortOrder: isBusSortOrder(busSortOrder) ? busSortOrder : "KMB first",
       numPadOrder: isNumPadOrder(numPadOrder) ? numPadOrder : "123456789c0b",
       etaFormat: isEtaFormat(etaFormat) ? etaFormat : "diff",
+      sunSideStyle: isSunSideStyle(sunSideStyle) ? sunSideStyle : "off",
       routeSearchHistory:
         Array.isArray(routeSearchHistory) && isStrings(routeSearchHistory)
           ? routeSearchHistory
@@ -472,6 +489,17 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         const numPadOrder =
           prevOrder === "123456789c0b" ? "789456123c0b" : "123456789c0b";
         state.numPadOrder = numPadOrder;
+      })
+    );
+  }, []);
+
+  const toggleSunSideStyle = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        const order: SunSideStyle[] = ["off", "bar", "icon", "text", "map"];
+        const next =
+          order[(order.indexOf(state.sunSideStyle) + 1) % order.length];
+        state.sunSideStyle = next;
       })
     );
   }, []);
@@ -768,6 +796,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   }, [state.numPadOrder]);
 
   useEffect(() => {
+    localStorage.setItem("sunSideStyle", state.sunSideStyle);
+  }, [state.sunSideStyle]);
+
+  useEffect(() => {
     localStorage.setItem("etaFormat", state.etaFormat);
   }, [state.etaFormat]);
 
@@ -852,6 +884,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleRouteFilter,
       toggleBusSortOrder,
       toggleNumPadOrder,
+      toggleSunSideStyle,
       toggleEtaFormat,
       toggleColorMode,
       toggleEnergyMode,
@@ -885,6 +918,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleRouteFilter,
       toggleBusSortOrder,
       toggleNumPadOrder,
+      toggleSunSideStyle,
       toggleEtaFormat,
       toggleColorMode,
       toggleEnergyMode,

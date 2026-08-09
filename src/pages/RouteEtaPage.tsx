@@ -104,18 +104,6 @@ const RouteEta = () => {
     return defaultStopIdx;
   }, [panel, stops, defaultStopIdx]);
 
-  // Sun-side display is opt-in and remembered — someone who wants the
-  // shaded seat wants it every trip, and everyone else never sees it.
-  const [sunMode, setSunMode] = useState<boolean>(
-    () => localStorage.getItem("sunMode") === "true"
-  );
-  const toggleSunMode = useCallback(() => {
-    setSunMode((prev) => {
-      localStorage.setItem("sunMode", JSON.stringify(!prev));
-      return !prev;
-    });
-  }, []);
-
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dialogStop = useMemo(
     () => getDialogStops(co, stops, stopMap, stopIdx),
@@ -254,8 +242,6 @@ const RouteEta = () => {
             route={route}
             companies={co}
             onMarkerClick={onMarkerClick}
-            sunMode={sunMode}
-            onToggleSunMode={toggleSunMode}
           />
         </Suspense>
       )}
@@ -266,11 +252,6 @@ const RouteEta = () => {
         stopIds={stopIds}
         handleChange={handleChange}
         onStopInfo={handleStopInfo}
-        // The switch lives on the map, so without the map there would be
-        // no way back out — and power saving is exactly when an animated
-        // overlay should stand down anyway.
-        sunMode={sunMode && !energyMode}
-        onToggleSunMode={toggleSunMode}
       />
       <StopDialog
         open={isDialogOpen}

@@ -36,3 +36,47 @@ export const NEUTRAL_COLOUR = "rgba(130, 130, 130, 0.3)";
  * same thing twice and weaken both.
  */
 export const SUN_BAR_COLOUR = "rgba(230, 81, 0, 0.9)";
+
+/** The seat to take — the shaded side. */
+export const SEAT_COLOUR = "rgba(2, 119, 189, 0.9)";
+
+/**
+ * One lane of the map-side display, as a hard-stopped CSS gradient:
+ * one band per leg, so a lane stays a single element however many
+ * stops a route has.
+ */
+export const buildLaneGradient = (
+  sides: number[],
+  lane: "left" | "right",
+  edges: number[],
+  direction: "to right" | "to bottom" = "to bottom"
+): string => {
+  const bands = sides.map((side, i) => {
+    let colour: string;
+    if (Math.abs(side) < SUN_SIDE_THRESHOLD) {
+      colour = NEUTRAL_COLOUR;
+    } else {
+      const strength = sunSideStrength(side);
+      const sunOnThisLane = lane === "left" ? side < 0 : side > 0;
+      colour = sunOnThisLane ? sunlitColour(strength) : shadedColour(strength);
+    }
+    return `${colour} ${edges[i].toFixed(3)}% ${edges[i + 1].toFixed(3)}%`;
+  });
+  return `linear-gradient(${direction}, ${bands.join(", ")})`;
+};
+
+/** Cumulative share of the route's length at each leg boundary. */
+export const laneBoundaries = (count: number, weights?: number[]): number[] => {
+  const w =
+    weights && weights.length === count && weights.some((x) => x > 0)
+      ? weights
+      : new Array(count).fill(1);
+  const total = w.reduce((a, b) => a + b, 0);
+  const out = [0];
+  let acc = 0;
+  for (let i = 0; i < count; ++i) {
+    acc += w[i];
+    out.push((acc / total) * 100);
+  }
+  return out;
+};

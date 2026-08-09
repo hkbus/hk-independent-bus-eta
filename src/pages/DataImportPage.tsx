@@ -123,6 +123,7 @@ const DataImport = () => {
       isRouteFilter: obj.isRouteFilter ?? true,
       busSortOrder: obj.busSortOrder ?? "KMB first",
       numPadOrder: obj.numPadOrder ?? "123456789c0b",
+      sunSideStyle: obj.sunSideStyle ?? "off",
       etaFormat: obj.etaFormat ?? "diff",
       _colorMode: obj._colorMode ?? "system",
       energyMode: obj.energyMode ?? false,

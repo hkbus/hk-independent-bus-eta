@@ -20,6 +20,7 @@ import {
   DarkMode as DarkModeIcon,
   SettingsBrightness as SettingsBrightnessIcon,
   WbSunny as WbSunnyIcon,
+  EventSeat as EventSeatIcon,
   AllInclusive as AllInclusiveIcon,
   FilterAlt as FilterAltIcon,
   Vibration as VibrationIcon,
@@ -53,6 +54,8 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
     toggleBusSortOrder,
     numPadOrder,
     toggleNumPadOrder,
+    sunSideStyle,
+    toggleSunSideStyle,
     etaFormat,
     toggleEtaFormat,
     _colorMode: colorMode,
@@ -176,6 +179,22 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary={t("鍵盤格式")} secondary={numPadOrder} />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration);
+          toggleSunSideStyle();
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <EventSeatIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={t("防曬座位提示")}
+          secondary={t(`sun-side-${sunSideStyle}`)}
+        />
       </ListItemButton>
       <ListItemButton
         onClick={() => {
