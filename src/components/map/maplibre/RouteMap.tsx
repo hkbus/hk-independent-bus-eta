@@ -222,22 +222,6 @@ const RouteMap = ({
             type="geojson"
             data={routePath as unknown as FeatureCollection}
           >
-            {/* Shadow cast away from the sun, lifting the route off the
-                map so the sunlit side of it is the side you can see. */}
-            {sunMode && sun !== null ? (
-              <Layer
-                id="route-path-sun-shadow"
-                type="line"
-                paint={{
-                  "line-color": "rgba(0,0,0,0.45)",
-                  "line-width": 9,
-                  "line-blur": 5,
-                  "line-translate": sunShadowOffset(sun.azimuth, sun.altitude),
-                  "line-translate-anchor": "map",
-                }}
-                layout={{ "line-cap": "round", "line-join": "round" }}
-              />
-            ) : null}
             <Layer
               id="route-path-border"
               type="line"
@@ -392,21 +376,6 @@ const makeRouteArrow = (): ImageData => {
   ctx.fill();
   ctx.stroke();
   return ctx.getImageData(0, 0, s, s);
-};
-
-/**
- * Pixel offset for the route line's shadow: directly away from the
- * sun, and longer the lower the sun sits — the same cue a real shadow
- * gives. Returned in map-space, so MapLibre keeps it pointing the
- * right way as the map is rotated.
- */
-const sunShadowOffset = (
-  azimuth: number,
-  altitude: number
-): [number, number] => {
-  const rad = Math.PI / 180;
-  const length = Math.min(16, Math.max(4, 7 / Math.tan(altitude * rad)));
-  return [-Math.sin(azimuth * rad) * length, Math.cos(azimuth * rad) * length];
 };
 
 interface StopMarkerInfo {

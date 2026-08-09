@@ -27,7 +27,7 @@ interface SunOverlayProps {
 /**
  * Keeps a sun badge pinned to the edge of the map in the sun's real
  * direction, and — while switched on — washes that side of the map
- * warm. Read with the route line's shadow, which falls the other way,
+ * warm. Together with the stop list, which names the side in words,
  * it turns "which side of the bus gets the sun" into something you can
  * see rather than work out.
  *
