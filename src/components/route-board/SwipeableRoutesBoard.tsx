@@ -32,6 +32,7 @@ const SwipeableRoutesBoard = ({
   const {
     searchRoute,
     isRouteFilter,
+    toggleRouteFilter,
     busSortOrder,
     routeSearchHistory,
     vibrateDuration,
@@ -152,6 +153,23 @@ const SwipeableRoutesBoard = ({
                       <Typography variant="body1">
                         {t("suggest-update-database")}
                       </Typography>
+                      {isRouteFilter && (
+                        <Typography variant="body1" textAlign="center" px={2}>
+                          <Trans
+                            i18nKey="route-filter-may-hide-result"
+                            components={{
+                              TapHereLink: (
+                                <Typography
+                                  variant="body1"
+                                  component="span"
+                                  sx={clickableLinkSx}
+                                  onClick={() => toggleRouteFilter()}
+                                />
+                              ),
+                            }}
+                          />
+                        </Typography>
+                      )}
                     </>
                   ) : (
                     <Box display="flex" alignItems="center" gap={2}>
@@ -194,7 +212,16 @@ const SwipeableRoutesBoard = ({
         )}
       </React.Fragment>
     ),
-    [itemHeight, coItemDataList, searchRoute, t, availableBoardTab, onChangeTab]
+    [
+      itemHeight,
+      coItemDataList,
+      searchRoute,
+      t,
+      availableBoardTab,
+      onChangeTab,
+      isRouteFilter,
+      toggleRouteFilter,
+    ]
   );
 
   return useMemo(
@@ -258,7 +285,7 @@ const prerenderListSx: SxProps<Theme> = {
 };
 
 const noResultSx: SxProps<Theme> = {
-  height: "120px",
+  minHeight: "120px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
