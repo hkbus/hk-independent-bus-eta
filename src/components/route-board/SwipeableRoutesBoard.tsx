@@ -10,7 +10,7 @@ import { FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import memorize from "memoize-one";
 import { Trans, useTranslation } from "react-i18next";
-import { Box, SxProps, Theme, Typography } from "@mui/material";
+import { Box, Link, SxProps, Theme, Typography } from "@mui/material";
 
 import AppContext from "../../context/AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
@@ -159,9 +159,10 @@ const SwipeableRoutesBoard = ({
                             i18nKey="route-filter-may-hide-result"
                             components={{
                               TapHereLink: (
-                                <Typography
-                                  variant="body1"
-                                  component="span"
+                                <Link
+                                  component="button"
+                                  type="button"
+                                  color="inherit"
                                   sx={clickableLinkSx}
                                   onClick={() => toggleRouteFilter()}
                                 />
@@ -194,9 +195,10 @@ const SwipeableRoutesBoard = ({
                         i18nKey="tap-here-to-search-all-routes"
                         components={{
                           TapHereLink: (
-                            <Typography
-                              variant="h6"
-                              component="span"
+                            <Link
+                              component="button"
+                              type="button"
+                              color="inherit"
                               sx={clickableLinkSx}
                               onClick={() => onChangeTab("all")}
                             />
