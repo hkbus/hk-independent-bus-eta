@@ -213,6 +213,7 @@ const resources = {
       "支援 WearOS 及 WatchOS 平台": "Support WearOS & WatchOS",
       地圖資源: "Map Resources",
       同感心: "Empathy",
+      "部分營運商 ETA 被封鎖": "Some operators' ETAs are blocked",
     },
   },
   zh: {
