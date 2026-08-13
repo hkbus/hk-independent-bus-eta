@@ -53,7 +53,11 @@ const TimeReport = ({
     [etas]
   );
   const hasFetchError = fetchErrorEtas.length > 0;
-  const hasValidEtas = etas !== null && etas.some((e) => e.eta);
+  const validEtas = useMemo(
+    () => (etas ?? []).filter((e) => e.eta),
+    [etas]
+  );
+  const hasValidEtas = validEtas.length > 0;
 
   const noScheduleRemark = useMemo(() => {
     let isEndOfTrainLine = false;
@@ -114,7 +118,8 @@ const TimeReport = ({
           <WarningIcon
             sx={{ fontSize: 16, mr: 0.5, verticalAlign: "text-bottom" }}
           />
-          {fetchErrorEtas[0].remark[language]}
+          {fetchErrorEtas[0].remark?.[language] ??
+            t("ETA 請求被封鎖")}
         </Typography>
       )}
       {hasFetchError && hasValidEtas && (
@@ -129,9 +134,8 @@ const TimeReport = ({
         </Typography>
       )}
       {noScheduleRemark}
-      {etas.length > 0 &&
-        etas.every((e) => e.eta) &&
-        etas.map((eta, idx) => (
+      {validEtas.length > 0 &&
+        validEtas.map((eta, idx) => (
           <EtaLine
             key={`route-${idx}`}
             eta={eta}
