@@ -26,7 +26,7 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
         bound[co[0]] === "I" ? "I" : "O" // handling for pseudo circular route
       }.json`;
     } else if (co.includes("mtr")) {
-      waypointsFile = `${routeId.split("-")[0].toLowerCase()}.json`;
+      waypointsFile = `${routeId.split("+")[0].toLowerCase()}.json`;
     } else if (route && co.includes("lightRail")) {
       // For light rail map
       waypointsFile = `${route}${dest.en.includes("Circular") ? "" : bound[co[0]] === "I" ? "_I" : "_O"}.json`;
