@@ -53,10 +53,7 @@ const TimeReport = ({
     [etas]
   );
   const hasFetchError = fetchErrorEtas.length > 0;
-  const validEtas = useMemo(
-    () => (etas ?? []).filter((e) => e.eta),
-    [etas]
-  );
+  const validEtas = useMemo(() => (etas ?? []).filter((e) => e.eta), [etas]);
   const hasValidEtas = validEtas.length > 0;
 
   const noScheduleRemark = useMemo(() => {
@@ -118,8 +115,7 @@ const TimeReport = ({
           <WarningIcon
             sx={{ fontSize: 16, mr: 0.5, verticalAlign: "text-bottom" }}
           />
-          {fetchErrorEtas[0].remark?.[language] ??
-            t("ETA 請求被封鎖")}
+          {fetchErrorEtas[0].remark?.[language] ?? t("ETA 請求被封鎖")}
         </Typography>
       )}
       {hasFetchError && hasValidEtas && (
