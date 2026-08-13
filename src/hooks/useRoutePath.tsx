@@ -21,7 +21,11 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
 
   useEffect(() => {
     let waypointsFile = "";
-    if (gtfsId) {
+    const ferryOperators = ["fortuneferry", "sunferry", "hkkf"];
+    if (co.some((c) => ferryOperators.includes(c))) {
+      // Ferry routes: files are named by route code, no direction suffix
+      waypointsFile = `${route}.json`;
+    } else if (gtfsId) {
       waypointsFile = `${gtfsId}-${
         bound[co[0]] === "I" ? "I" : "O" // handling for pseudo circular route
       }.json`;
