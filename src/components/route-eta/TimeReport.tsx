@@ -1,5 +1,6 @@
 import { useContext, useMemo } from "react";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
+import { Warning as WarningIcon } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../context/AppContext";
 import { useEtas } from "../../hooks/useEtas";
@@ -47,6 +48,13 @@ const TimeReport = ({
     [routeList, routeId, stopList]
   );
 
+  const fetchErrorEtas = useMemo(
+    () => (etas ?? []).filter((e) => e.fetchError),
+    [etas]
+  );
+  const hasFetchError = fetchErrorEtas.length > 0;
+  const hasValidEtas = etas !== null && etas.some((e) => e.eta);
+
   const noScheduleRemark = useMemo(() => {
     let isEndOfTrainLine = false;
     if (co[0] === "mtr") {
@@ -58,6 +66,10 @@ const TimeReport = ({
     }
 
     if (etas === null) {
+      return null;
+    }
+
+    if (hasFetchError) {
       return null;
     }
 
@@ -73,7 +85,7 @@ const TimeReport = ({
       return t("未有班次資料");
     }
     return null;
-  }, [etas, co, stops, stopId, t, language]);
+  }, [etas, co, stops, stopId, t, language, hasFetchError]);
 
   const liveProps = announce
     ? { role: "status" as const, "aria-live": "polite" as const }
@@ -92,6 +104,24 @@ const TimeReport = ({
       {showStopName && (
         <Typography variant="caption">
           {stopList[stopId].name[language]}
+        </Typography>
+      )}
+      {hasFetchError && !hasValidEtas && (
+        <Typography
+          variant="body2"
+          sx={{ color: (theme) => theme.palette.warning.main }}
+        >
+          <WarningIcon sx={{ fontSize: 16, mr: 0.5, verticalAlign: "text-bottom" }} />
+          {fetchErrorEtas[0].remark[language]}
+        </Typography>
+      )}
+      {hasFetchError && hasValidEtas && (
+        <Typography
+          variant="caption"
+          sx={{ color: (theme) => theme.palette.warning.main }}
+        >
+          <WarningIcon sx={{ fontSize: 14, mr: 0.5, verticalAlign: "text-bottom" }} />
+          {t("部分營運商 ETA 被封鎖")}
         </Typography>
       )}
       {noScheduleRemark}
