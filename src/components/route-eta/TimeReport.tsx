@@ -111,7 +111,9 @@ const TimeReport = ({
           variant="body2"
           sx={{ color: (theme) => theme.palette.warning.main }}
         >
-          <WarningIcon sx={{ fontSize: 16, mr: 0.5, verticalAlign: "text-bottom" }} />
+          <WarningIcon
+            sx={{ fontSize: 16, mr: 0.5, verticalAlign: "text-bottom" }}
+          />
           {fetchErrorEtas[0].remark[language]}
         </Typography>
       )}
@@ -120,7 +122,9 @@ const TimeReport = ({
           variant="caption"
           sx={{ color: (theme) => theme.palette.warning.main }}
         >
-          <WarningIcon sx={{ fontSize: 14, mr: 0.5, verticalAlign: "text-bottom" }} />
+          <WarningIcon
+            sx={{ fontSize: 14, mr: 0.5, verticalAlign: "text-bottom" }}
+          />
           {t("部分營運商 ETA 被封鎖")}
         </Typography>
       )}
