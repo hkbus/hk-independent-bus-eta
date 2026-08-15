@@ -10,4 +10,4 @@ kv_namespaces = [
 
 [vars]
 # Comma-separated list of origins allowed to call this API.
-ALLOWED_ORIGINS = "https://hkbus.app,https://alpha.hkbus.app"
+ALLOWED_ORIGINS = "https://hkbus.app,https://alpha.hkbus.app,http://localhost:5173"
