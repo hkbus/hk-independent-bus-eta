@@ -334,8 +334,11 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
     await runSyncRef.current(token);
   }, [token]);
 
-  // Initial pull on mount/token-change, and again whenever the app becomes
-  // visible (e.g. switching back from another app) — not on every render.
+  // Initial pull on mount/token-change, again whenever the app becomes
+  // visible (e.g. switching back from another app), and periodically while
+  // visible — there's no push channel from the backend, so a device that
+  // stays open and idle would otherwise never see another device's changes.
+  const SYNC_POLL_INTERVAL_MS = 10_000;
   useEffect(() => {
     if (!token) return;
     runSyncRef.current(token);
@@ -343,8 +346,13 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
       if (!document.hidden) runSyncRef.current(token);
     };
     document.addEventListener("visibilitychange", onVisibilityChange);
-    return () =>
+    const intervalId = setInterval(() => {
+      if (!document.hidden) runSyncRef.current(token);
+    }, SYNC_POLL_INTERVAL_MS);
+    return () => {
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      clearInterval(intervalId);
+    };
   }, [token]);
 
   // Debounced push whenever the synced subset of local state changes. This
@@ -365,8 +373,16 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
     };
   }, [debouncedSync]);
 
+  // Skip firing when the tracked fields' *content* hasn't actually changed —
+  // applyMergedFields (after a pull) re-sets state to values that are often
+  // identical to what's already there, just as new object/array references,
+  // which would otherwise retrigger this effect and cause a pointless sync.
+  const lastFieldsSnapshotRef = useRef<string | null>(null);
   useEffect(() => {
     if (!token) return;
+    const snapshot = JSON.stringify(readCurrentFields());
+    if (snapshot === lastFieldsSnapshotRef.current) return;
+    lastFieldsSnapshotRef.current = snapshot;
     debouncedSync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

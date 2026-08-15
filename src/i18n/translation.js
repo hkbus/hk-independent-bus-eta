@@ -214,6 +214,7 @@ const resources = {
       地圖資源: "Map Resources",
       同感心: "Empathy",
       同步群組: "Sync Group",
+      同步代碼: "Sync code",
       已加入: "Joined",
       跨裝置同步收藏及設定: "Sync favorites & settings across devices",
       尚未加入同步群組: "Not in a sync group yet",

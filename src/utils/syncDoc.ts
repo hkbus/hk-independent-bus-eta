@@ -105,6 +105,26 @@ const reconcileListSinceBase = (
 // group) — never a second independently-created doc — otherwise
 // savedStops/savedEtas can't merge across devices (see
 // reconcileListSinceBase above).
+// Scalar (non-list) synced fields: last-write-wins, but only "wins" if this
+// device actually changed the field since its own last sync — otherwise a
+// device that hasn't touched a setting would keep re-stamping its stale
+// value over whatever another device just pushed, on every poll.
+const SCALAR_FIELDS = [
+  "collections",
+  "_colorMode",
+  "energyMode",
+  "platformMode",
+  "etaFormat",
+  "numPadOrder",
+  "isRouteFilter",
+  "busSortOrder",
+  "annotateScheduled",
+  "isRecentSearchShown",
+  "fontSize",
+  "searchRange",
+  "lang",
+] as const satisfies readonly (keyof SyncDocShape)[];
+
 export const applyFieldsSinceBase = async (
   doc: SyncDoc,
   base: SyncDocShape | null,
@@ -122,19 +142,14 @@ export const applyFieldsSinceBase = async (
       base?.savedEtas ?? [],
       current.savedEtas
     );
-    draft.collections = current.collections;
-    draft._colorMode = current._colorMode;
-    draft.energyMode = current.energyMode;
-    draft.platformMode = current.platformMode;
-    draft.etaFormat = current.etaFormat;
-    draft.numPadOrder = current.numPadOrder;
-    draft.isRouteFilter = current.isRouteFilter;
-    draft.busSortOrder = current.busSortOrder;
-    draft.annotateScheduled = current.annotateScheduled;
-    draft.isRecentSearchShown = current.isRecentSearchShown;
-    draft.fontSize = current.fontSize;
-    draft.searchRange = current.searchRange;
-    draft.lang = current.lang;
+    SCALAR_FIELDS.forEach((field) => {
+      if (
+        !base ||
+        JSON.stringify(current[field]) !== JSON.stringify(base[field])
+      ) {
+        (draft as SyncDocShape)[field] = current[field];
+      }
+    });
   });
 };
 

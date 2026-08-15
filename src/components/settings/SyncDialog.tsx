@@ -134,6 +134,29 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
           </Typography>
           {isEnabled ? (
             <List sx={{ py: 0 }}>
+              <ListItem sx={{ flexDirection: "column", alignItems: "flex-start" }}>
+                <Typography variant="caption" color="text.secondary">
+                  {t("同步代碼")}
+                </Typography>
+                <Box
+                  sx={{
+                    mt: 0.5,
+                    px: 1.5,
+                    py: 1,
+                    width: "100%",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: 1,
+                    fontFamily:
+                      "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace",
+                    fontSize: "0.95rem",
+                    letterSpacing: "0.06em",
+                    wordBreak: "break-all",
+                  }}
+                >
+                  {token}
+                </Box>
+              </ListItem>
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>{statusIcon}</Avatar>
@@ -259,6 +282,7 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
           <Button
             startIcon={<ContentCopyIcon />}
             variant="outlined"
+            fullWidth
             onClick={() => {
               if (navigator.share) {
                 navigator.share({ title: t("同步群組"), url: pairUrl });
@@ -290,6 +314,7 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
           />
           <Button
             variant="outlined"
+            fullWidth
             disabled={joinInput.trim() === ""}
             onClick={() => {
               joinSyncGroup(parseToken(joinInput));
