@@ -134,7 +134,9 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
           </Typography>
           {isEnabled ? (
             <List sx={{ py: 0 }}>
-              <ListItem sx={{ flexDirection: "column", alignItems: "flex-start" }}>
+              <ListItem
+                sx={{ flexDirection: "column", alignItems: "flex-start" }}
+              >
                 <Typography variant="caption" color="text.secondary">
                   {t("同步代碼")}
                 </Typography>
