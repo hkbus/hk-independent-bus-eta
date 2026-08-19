@@ -69,10 +69,7 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
   };
 
   const pairUrl = useMemo(
-    () =>
-      token
-        ? `${window.location.origin}/${language}/sync#${token}`
-        : "",
+    () => (token ? `${window.location.origin}/${language}/sync#${token}` : ""),
     [token, language]
   );
 
@@ -284,7 +281,9 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
               if (navigator.share) {
                 // Rejects when the user just dismisses the share sheet —
                 // not an error worth surfacing.
-                navigator.share({ title: t("同步群組"), url: pairUrl }).catch(() => {});
+                navigator
+                  .share({ title: t("同步群組"), url: pairUrl })
+                  .catch(() => {});
               } else {
                 navigator.clipboard?.writeText(pairUrl).then(() => {
                   setIsCopied(true);
