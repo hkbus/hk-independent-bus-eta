@@ -19,6 +19,14 @@ export const generateSyncToken = (): string => {
   return token;
 };
 
+// Accepts a bare token, a full pair URL, or a pair URL's #fragment and
+// returns just the token, uppercased.
+export const parseToken = (input: string): string => {
+  const trimmed = input.trim();
+  const match = trimmed.match(/\/sync#?([A-Z2-7]+)\/?$/i);
+  return (match ? match[1] : trimmed).toUpperCase();
+};
+
 export interface SyncPullResult {
   bytes: Uint8Array;
   updatedAt: number;

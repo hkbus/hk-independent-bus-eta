@@ -142,9 +142,16 @@ export const applyFieldsSinceBase = async (
       base?.savedEtas ?? [],
       current.savedEtas
     );
+    // base is only ever null when this device has no synced baseline for an
+    // *existing* group (joining, or a lost localStorage) — createSyncDoc
+    // handles the brand-new-group case directly and never calls this. With
+    // no baseline there's nothing to say "this device changed since", so
+    // scalars fall back to the group's current values rather than this
+    // device's (join adopts the group's settings/collections, not the
+    // reverse).
     SCALAR_FIELDS.forEach((field) => {
       if (
-        !base ||
+        base &&
         JSON.stringify(current[field]) !== JSON.stringify(base[field])
       ) {
         (draft as SyncDocShape)[field] = current[field];

@@ -8,20 +8,26 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Check as CheckIcon } from "@mui/icons-material";
 import SyncContext from "../context/SyncContext";
+import { parseToken } from "../utils/syncApi";
+
+// The token lives in the URL fragment (#TOKEN), never the path — GA and
+// most analytics/proxy logs record the path but not the fragment.
+const tokenFromHash = (): string =>
+  window.location.hash ? parseToken(window.location.hash.slice(1)) : "";
 
 const SyncPairPage = () => {
-  const { token: tokenParam } = useParams();
+  const [tokenParam] = useState<string>(tokenFromHash);
   const { t } = useTranslation();
-  const { isEnabled, joinSyncGroup } = useContext(SyncContext);
+  const { isConfigured, isEnabled, joinSyncGroup } = useContext(SyncContext);
   const navigate = useNavigate();
-  const [manualInput, setManualInput] = useState<string>(tokenParam ?? "");
+  const [manualInput, setManualInput] = useState<string>(tokenParam);
   const [joined, setJoined] = useState(false);
 
   const token = useMemo(
-    () => (tokenParam ?? manualInput).trim().toUpperCase(),
+    () => parseToken(tokenParam || manualInput),
     [tokenParam, manualInput]
   );
 
@@ -31,6 +37,16 @@ const SyncPairPage = () => {
     setJoined(true);
     setTimeout(() => navigate("/"), 1200);
   };
+
+  if (!isConfigured) {
+    return (
+      <Box sx={rootSx}>
+        <Typography variant="body2" color="text.secondary">
+          {t("同步功能尚未啟用")}
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={rootSx}>

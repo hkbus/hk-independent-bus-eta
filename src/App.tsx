@@ -79,7 +79,7 @@ const App = () => {
                   <Route path={"notice"} element={<NoticePage />} />
                   <Route path={`import/:data?`} element={<DataImportPage />} />
                   <Route path={`export`} element={<DataExportPage />} />
-                  <Route path={`sync/:token?`} element={<SyncPairPage />} />
+                  <Route path={`sync`} element={<SyncPairPage />} />
                   <Route path={`board`} element={<RouteBoardPage />} />
                   <Route path={`stops`} element={<BookmarkedStopPage />} />
                   <Route path={`search`} element={<RouteSearchPage />} />

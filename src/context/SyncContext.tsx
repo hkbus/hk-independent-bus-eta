@@ -156,27 +156,65 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
     ]
   );
 
+  // Device-local fields that importCollectionState/importAppState require as
+  // pass-through but that sync never touches. Read through a ref (updated on
+  // every render, below) rather than closed over directly: a pull can be
+  // in flight for a while, and closing over these would re-apply whatever
+  // value was current when the sync *started*, reverting any edit the user
+  // made to one of these fields while it was running.
+  const passthroughRef = useRef({
+    collectionDrawerRoute,
+    collectionIdx,
+    searchRoute,
+    selectedRoute,
+    geoPermission,
+    manualGeolocation,
+    compassPermission,
+    routeSearchHistory,
+    vibrateDuration,
+    isVisible,
+    analytics,
+    refreshInterval,
+    isSearching,
+  });
+  passthroughRef.current = {
+    collectionDrawerRoute,
+    collectionIdx,
+    searchRoute,
+    selectedRoute,
+    geoPermission,
+    manualGeolocation,
+    compassPermission,
+    routeSearchHistory,
+    vibrateDuration,
+    isVisible,
+    analytics,
+    refreshInterval,
+    isSearching,
+  };
+
   const applyMergedFields = useCallback(
     (merged: SyncDocShape) => {
+      const passthrough = passthroughRef.current;
       importCollectionState({
         savedStops: merged.savedStops,
         savedEtas: merged.savedEtas,
         collections: merged.collections,
-        collectionDrawerRoute,
-        collectionIdx,
+        collectionDrawerRoute: passthrough.collectionDrawerRoute,
+        collectionIdx: passthrough.collectionIdx,
       });
       importAppState({
-        searchRoute,
-        selectedRoute,
-        geoPermission,
-        manualGeolocation,
-        compassPermission,
-        routeSearchHistory,
-        vibrateDuration,
-        isVisible,
-        analytics,
-        refreshInterval,
-        isSearching,
+        searchRoute: passthrough.searchRoute,
+        selectedRoute: passthrough.selectedRoute,
+        geoPermission: passthrough.geoPermission,
+        manualGeolocation: passthrough.manualGeolocation,
+        compassPermission: passthrough.compassPermission,
+        routeSearchHistory: passthrough.routeSearchHistory,
+        vibrateDuration: passthrough.vibrateDuration,
+        isVisible: passthrough.isVisible,
+        analytics: passthrough.analytics,
+        refreshInterval: passthrough.refreshInterval,
+        isSearching: passthrough.isSearching,
         isRouteFilter: merged.isRouteFilter,
         busSortOrder: merged.busSortOrder,
         numPadOrder: merged.numPadOrder,
@@ -193,25 +231,7 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
         changeLanguage(merged.lang);
       }
     },
-    [
-      importCollectionState,
-      collectionDrawerRoute,
-      collectionIdx,
-      importAppState,
-      searchRoute,
-      selectedRoute,
-      geoPermission,
-      manualGeolocation,
-      compassPermission,
-      routeSearchHistory,
-      vibrateDuration,
-      isVisible,
-      analytics,
-      refreshInterval,
-      isSearching,
-      changeLanguage,
-      language,
-    ]
+    [importCollectionState, importAppState, changeLanguage, language]
   );
 
   // Pull-apply-push: pulls the group's current doc and layers exactly what
@@ -338,7 +358,12 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
   // visible (e.g. switching back from another app), and periodically while
   // visible — there's no push channel from the backend, so a device that
   // stays open and idle would otherwise never see another device's changes.
-  const SYNC_POLL_INTERVAL_MS = 10_000;
+  // 60s, not something snappier: each poll is a KV read+write pair on the
+  // worker, and the free tier's write quota is the binding constraint (see
+  // workers/sync/src/index.ts). The local-change debounce and the
+  // visibilitychange listener below already cover "I just changed something"
+  // and "I just switched back to this tab" faster than any poll interval would.
+  const SYNC_POLL_INTERVAL_MS = 60_000;
   useEffect(() => {
     if (!token) return;
     runSyncRef.current(token);

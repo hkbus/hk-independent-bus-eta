@@ -22,6 +22,7 @@ const corsHeaders = (origin: string | null): HeadersInit => ({
   ...(origin ? { "Access-Control-Allow-Origin": origin } : {}),
   "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
   "Access-Control-Allow-Headers": "Authorization, Content-Type",
+  "Access-Control-Expose-Headers": "X-Updated-At",
   "Access-Control-Max-Age": "86400",
   Vary: "Origin",
 });
@@ -58,19 +59,23 @@ const extractToken = (request: Request): string | null => {
   return token;
 };
 
-// Best-effort fixed-window rate limit per token hash. KV is eventually
-// consistent, so this is a soft cap against abuse, not a strict guarantee.
-const checkRateLimit = async (
-  env: Env,
-  tokenHash: string
-): Promise<boolean> => {
+// ponytail: in-memory per-isolate fixed-window counter, not a KV write per
+// request. A token's requests can land on multiple isolates/colos, so this
+// under-counts globally — it's a soft cap against a single runaway client,
+// not a hard quota. A KV-backed counter would be a real global cap but costs
+// a KV write per request, which is what blew the free-tier write quota here
+// in the first place (see MAX_BODY_BYTES-adjacent PUT below). Upgrade to
+// Cloudflare's Workers rate-limiting binding if a hard global cap is needed.
+const rateLimitCounters = new Map<string, { window: number; count: number }>();
+const checkRateLimit = (tokenHash: string): boolean => {
   const window = Math.floor(Date.now() / 1000 / RATE_LIMIT_WINDOW_SECONDS);
-  const key = `ratelimit:${tokenHash}:${window}`;
-  const current = parseInt((await env.SYNC_KV.get(key)) ?? "0", 10);
-  if (current >= RATE_LIMIT_MAX_REQUESTS) return false;
-  await env.SYNC_KV.put(key, String(current + 1), {
-    expirationTtl: RATE_LIMIT_WINDOW_SECONDS * 2,
-  });
+  const entry = rateLimitCounters.get(tokenHash);
+  if (!entry || entry.window !== window) {
+    rateLimitCounters.set(tokenHash, { window, count: 1 });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) return false;
+  entry.count += 1;
   return true;
 };
 
@@ -109,6 +114,11 @@ const handlePut = async (
   if (body.byteLength > MAX_BODY_BYTES) {
     return jsonResponse({ error: "payload_too_large" }, 413, origin);
   }
+  // ponytail: last-write-wins, no compare-and-swap. KV has no atomic
+  // conditional write, so two devices racing a GET-merge-PUT can still drop
+  // one's update — narrowed by the 60s client poll interval, not eliminated.
+  // A real fix needs a storage layer with actual serialization (Durable
+  // Object) — that's a bigger call than this endpoint should make on its own.
   const updatedAt = Date.now();
   await env.SYNC_KV.put(`doc:${tokenHash}`, body, {
     metadata: { updatedAt } satisfies SyncMetadata,
@@ -135,7 +145,7 @@ export default {
     }
     const tokenHash = await sha256Hex(token);
 
-    if (!(await checkRateLimit(env, tokenHash))) {
+    if (!checkRateLimit(tokenHash)) {
       return jsonResponse({ error: "rate_limited" }, 429, origin);
     }
 

@@ -34,6 +34,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useTranslation } from "react-i18next";
 import SyncContext from "../../context/SyncContext";
 import useLanguage from "../../hooks/useTranslation";
+import { parseToken } from "../../utils/syncApi";
 
 interface SyncDialogProps {
   open: boolean;
@@ -41,12 +42,6 @@ interface SyncDialogProps {
 }
 
 type TabType = "overview" | "create" | "join";
-
-const parseToken = (input: string): string => {
-  const trimmed = input.trim();
-  const match = trimmed.match(/\/sync\/([A-Z2-7]+)\/?$/i);
-  return (match ? match[1] : trimmed).toUpperCase();
-};
 
 const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
   const { t } = useTranslation();
@@ -76,7 +71,7 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
   const pairUrl = useMemo(
     () =>
       token
-        ? `https://${window.location.hostname}/${language}/sync/${token}`
+        ? `${window.location.origin}/${language}/sync#${token}`
         : "",
     [token, language]
   );
@@ -287,7 +282,9 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
             fullWidth
             onClick={() => {
               if (navigator.share) {
-                navigator.share({ title: t("同步群組"), url: pairUrl });
+                // Rejects when the user just dismisses the share sheet —
+                // not an error worth surfacing.
+                navigator.share({ title: t("同步群組"), url: pairUrl }).catch(() => {});
               } else {
                 navigator.clipboard?.writeText(pairUrl).then(() => {
                   setIsCopied(true);
