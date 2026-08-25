@@ -370,15 +370,18 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
     return runSyncRef.current(newToken);
   }, []);
 
-  const joinSyncGroup = useCallback(async (newToken: string): Promise<boolean> => {
-    // Any remembered baseline belongs to whatever group this device was
-    // previously in (or none) — irrelevant to the group being joined now.
-    localStorage.setItem(SYNC_TOKEN_STORAGE_KEY, newToken);
-    localStorage.removeItem(SYNC_LAST_FIELDS_STORAGE_KEY);
-    lastSyncedFieldsRef.current = null;
-    setToken(newToken);
-    return runSyncRef.current(newToken);
-  }, []);
+  const joinSyncGroup = useCallback(
+    async (newToken: string): Promise<boolean> => {
+      // Any remembered baseline belongs to whatever group this device was
+      // previously in (or none) — irrelevant to the group being joined now.
+      localStorage.setItem(SYNC_TOKEN_STORAGE_KEY, newToken);
+      localStorage.removeItem(SYNC_LAST_FIELDS_STORAGE_KEY);
+      lastSyncedFieldsRef.current = null;
+      setToken(newToken);
+      return runSyncRef.current(newToken);
+    },
+    []
+  );
 
   const leaveSyncGroup = useCallback(() => {
     activeTokenRef.current = null;
