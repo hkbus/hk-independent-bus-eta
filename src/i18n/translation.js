@@ -249,6 +249,7 @@ const resources = {
       "已加入同步群組，正在同步...": "Joined the sync group, syncing...",
       "此裝置已加入另一個同步群組，繼續將會轉為加入這個新群組。":
         "This device is already in another sync group. Continuing will switch it to this new group.",
+      同步功能尚未啟用: "Sync is not enabled",
     },
   },
   zh: {

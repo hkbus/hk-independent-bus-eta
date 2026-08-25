@@ -60,12 +60,14 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
   const [joinInput, setJoinInput] = useState("");
   const [isCopied, setIsCopied] = useState(false);
   const [confirmLeave, setConfirmLeave] = useState(false);
+  const [joinFailed, setJoinFailed] = useState(false);
 
   const handleClose = () => {
     onClose();
     setTab("overview");
     setJoinInput("");
     setConfirmLeave(false);
+    setJoinFailed(false);
   };
 
   const pairUrl = useMemo(
@@ -306,16 +308,28 @@ const SyncDialog = ({ open, onClose }: SyncDialogProps) => {
           <TextField
             variant="outlined"
             value={joinInput}
-            onChange={({ target: { value } }) => setJoinInput(value)}
+            onChange={({ target: { value } }) => {
+              setJoinInput(value);
+              setJoinFailed(false);
+            }}
             fullWidth
             label={t("連結或代碼")}
           />
+          {joinFailed && (
+            <Typography variant="body2" color="error">
+              {t("同步失敗，請檢查網絡連線")}
+            </Typography>
+          )}
           <Button
             variant="outlined"
             fullWidth
-            disabled={joinInput.trim() === ""}
-            onClick={() => {
-              joinSyncGroup(parseToken(joinInput));
+            disabled={parseToken(joinInput) === ""}
+            onClick={async () => {
+              const ok = await joinSyncGroup(parseToken(joinInput));
+              if (!ok) {
+                setJoinFailed(true);
+                return;
+              }
               setTab("overview");
               setJoinInput("");
             }}

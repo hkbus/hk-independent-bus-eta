@@ -31,6 +31,12 @@ export type SyncStatus = "off" | "syncing" | "synced" | "error";
 const SYNC_TOKEN_STORAGE_KEY = "syncToken";
 const SYNC_LAST_FIELDS_STORAGE_KEY = "syncLastFields";
 const SYNC_PUSH_DEBOUNCE_MS = 1500;
+// 60s, not something snappier: each poll is a KV read+write pair on the
+// worker, and the free tier's write quota is the binding constraint (see
+// workers/sync/src/index.ts). The local-change debounce and the
+// visibilitychange listener below already cover "I just changed something"
+// and "I just switched back to this tab" faster than any poll interval would.
+const SYNC_POLL_INTERVAL_MS = 60_000;
 
 interface SyncContextValue {
   isConfigured: boolean;
@@ -38,8 +44,8 @@ interface SyncContextValue {
   status: SyncStatus;
   lastSyncedAt: number | null;
   token: string | null;
-  createSyncGroup: () => Promise<void>;
-  joinSyncGroup: (token: string) => Promise<void>;
+  createSyncGroup: () => Promise<boolean>;
+  joinSyncGroup: (token: string) => Promise<boolean>;
   leaveSyncGroup: () => void;
   syncNow: () => Promise<void>;
 }
@@ -251,14 +257,31 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
   // could clobber each other's writes. inFlightRef/pendingRef below coalesce
   // concurrent calls into "run once more after the current run finishes"
   // instead of letting them execute in parallel.
-  const inFlightRef = useRef<Promise<void> | null>(null);
+  const inFlightRef = useRef<Promise<boolean> | null>(null);
   const pendingRef = useRef(false);
 
+  // Seeded after every successful sync (including the initial one on mount)
+  // so the local-change watcher near the bottom of this file doesn't treat
+  // "state I just pulled and applied" as a local edit and fire a pointless
+  // extra push right after mount/join.
+  const lastFieldsSnapshotRef = useRef<string | null>(null);
+
+  // The token a running/queued sync cycle should actually be talking to.
+  // runSync updates this on every call, including while a previous cycle for
+  // a *different* token is still in flight (e.g. join fires while the old
+  // group's poll hasn't returned yet) — so the coalesced retry below
+  // switches to the new token instead of silently continuing to retry
+  // against the old one. runSyncOnce re-checks this after every await and
+  // drops its own results if the active token moved on, so an abandoned
+  // cycle can't write another group's merge over the new group's baseline.
+  const activeTokenRef = useRef<string | null>(token);
+
   const runSyncOnce = useCallback(
-    async (syncToken: string) => {
+    async (syncToken: string): Promise<boolean> => {
       setStatus("syncing");
       try {
         const remote = await pullSyncDoc(syncToken);
+        if (activeTokenRef.current !== syncToken) return false;
         const currentFields = readCurrentFields();
         const doc = remote
           ? await applyFieldsSinceBase(
@@ -267,20 +290,25 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
               currentFields
             )
           : await createSyncDoc(currentFields);
+        if (activeTokenRef.current !== syncToken) return false;
         const merged = readFields(doc);
         applyMergedFields(merged);
         const bytes = await saveSyncDoc(doc);
         await pushSyncDoc(syncToken, bytes);
+        if (activeTokenRef.current !== syncToken) return false;
         lastSyncedFieldsRef.current = merged;
         localStorage.setItem(
           SYNC_LAST_FIELDS_STORAGE_KEY,
           JSON.stringify(merged)
         );
+        lastFieldsSnapshotRef.current = JSON.stringify(merged);
         setLastSyncedAt(Date.now());
         setStatus("synced");
+        return true;
       } catch (e) {
         console.error("Sync failed", e);
-        setStatus("error");
+        if (activeTokenRef.current === syncToken) setStatus("error");
+        return false;
       }
     },
     [readCurrentFields, applyMergedFields]
@@ -298,16 +326,28 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
     runSyncOnceRef.current = runSyncOnce;
   }, [runSyncOnce]);
 
-  const runSync = useCallback((syncToken: string): Promise<void> => {
+  const runSync = useCallback((syncToken: string): Promise<boolean> => {
+    activeTokenRef.current = syncToken;
     if (inFlightRef.current) {
       pendingRef.current = true;
       return inFlightRef.current;
     }
-    const exec = async () => {
+    // The loop always re-reads activeTokenRef rather than closing over
+    // `syncToken`, so if a later call retargets it (join firing while this
+    // cycle is still running) the coalesced retry follows the new token
+    // instead of finishing out a cycle for a group nobody asked for anymore.
+    // Every caller shares this one promise, so its resolved value reflects
+    // whichever token was active for the *last* iteration of the loop —
+    // exactly the token the most recent caller asked for.
+    const exec = async (): Promise<boolean> => {
+      let ok = false;
       do {
         pendingRef.current = false;
-        await runSyncOnceRef.current(syncToken);
+        const current = activeTokenRef.current;
+        if (!current) return false;
+        ok = await runSyncOnceRef.current(current);
       } while (pendingRef.current);
+      return ok;
     };
     const promise = exec().finally(() => {
       inFlightRef.current = null;
@@ -321,26 +361,27 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
     runSyncRef.current = runSync;
   }, [runSync]);
 
-  const createSyncGroup = useCallback(async () => {
+  const createSyncGroup = useCallback(async (): Promise<boolean> => {
     const newToken = generateSyncToken();
     localStorage.setItem(SYNC_TOKEN_STORAGE_KEY, newToken);
     localStorage.removeItem(SYNC_LAST_FIELDS_STORAGE_KEY);
     lastSyncedFieldsRef.current = null;
     setToken(newToken);
-    await runSyncRef.current(newToken);
+    return runSyncRef.current(newToken);
   }, []);
 
-  const joinSyncGroup = useCallback(async (newToken: string) => {
+  const joinSyncGroup = useCallback(async (newToken: string): Promise<boolean> => {
     // Any remembered baseline belongs to whatever group this device was
     // previously in (or none) — irrelevant to the group being joined now.
     localStorage.setItem(SYNC_TOKEN_STORAGE_KEY, newToken);
     localStorage.removeItem(SYNC_LAST_FIELDS_STORAGE_KEY);
     lastSyncedFieldsRef.current = null;
     setToken(newToken);
-    await runSyncRef.current(newToken);
+    return runSyncRef.current(newToken);
   }, []);
 
   const leaveSyncGroup = useCallback(() => {
+    activeTokenRef.current = null;
     localStorage.removeItem(SYNC_TOKEN_STORAGE_KEY);
     localStorage.removeItem(SYNC_LAST_FIELDS_STORAGE_KEY);
     lastSyncedFieldsRef.current = null;
@@ -358,12 +399,6 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
   // visible (e.g. switching back from another app), and periodically while
   // visible — there's no push channel from the backend, so a device that
   // stays open and idle would otherwise never see another device's changes.
-  // 60s, not something snappier: each poll is a KV read+write pair on the
-  // worker, and the free tier's write quota is the binding constraint (see
-  // workers/sync/src/index.ts). The local-change debounce and the
-  // visibilitychange listener below already cover "I just changed something"
-  // and "I just switched back to this tab" faster than any poll interval would.
-  const SYNC_POLL_INTERVAL_MS = 60_000;
   useEffect(() => {
     if (!token) return;
     runSyncRef.current(token);
@@ -402,7 +437,6 @@ export const SyncContextProvider = ({ children }: SyncContextProviderProps) => {
   // applyMergedFields (after a pull) re-sets state to values that are often
   // identical to what's already there, just as new object/array references,
   // which would otherwise retrigger this effect and cause a pointless sync.
-  const lastFieldsSnapshotRef = useRef<string | null>(null);
   useEffect(() => {
     if (!token) return;
     const snapshot = JSON.stringify(readCurrentFields());

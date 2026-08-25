@@ -25,15 +25,21 @@ const SyncPairPage = () => {
   const navigate = useNavigate();
   const [manualInput, setManualInput] = useState<string>(tokenParam);
   const [joined, setJoined] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   const token = useMemo(
     () => parseToken(tokenParam || manualInput),
     [tokenParam, manualInput]
   );
 
-  const confirm = () => {
+  const confirm = async () => {
     if (!token) return;
-    joinSyncGroup(token);
+    setFailed(false);
+    const ok = await joinSyncGroup(token);
+    if (!ok) {
+      setFailed(true);
+      return;
+    }
     setJoined(true);
     setTimeout(() => navigate("/"), 1200);
   };
@@ -69,6 +75,11 @@ const SyncPairPage = () => {
           {isEnabled && (
             <Typography variant="body2" color="text.secondary">
               {t("此裝置已加入另一個同步群組，繼續將會轉為加入這個新群組。")}
+            </Typography>
+          )}
+          {failed && (
+            <Typography variant="body2" color="error">
+              {t("同步失敗，請檢查網絡連線")}
             </Typography>
           )}
           <Button

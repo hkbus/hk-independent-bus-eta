@@ -6,6 +6,10 @@ export interface Env {
 const MAX_BODY_BYTES = 200 * 1024; // 200KB
 const RATE_LIMIT_WINDOW_SECONDS = 60;
 const RATE_LIMIT_MAX_REQUESTS = 30;
+// Per-token limiting alone doesn't stop a single client from minting an
+// unbounded number of fresh random tokens (each one a brand new KV entry
+// nobody else knows about) — this bounds that per source IP instead.
+const IP_RATE_LIMIT_MAX_REQUESTS = 60;
 
 interface SyncMetadata {
   updatedAt: number;
@@ -67,14 +71,31 @@ const extractToken = (request: Request): string | null => {
 // in the first place (see MAX_BODY_BYTES-adjacent PUT below). Upgrade to
 // Cloudflare's Workers rate-limiting binding if a hard global cap is needed.
 const rateLimitCounters = new Map<string, { window: number; count: number }>();
-const checkRateLimit = (tokenHash: string): boolean => {
+const ipRateLimitCounters = new Map<
+  string,
+  { window: number; count: number }
+>();
+// Bounds how many distinct token/IP keys an isolate accumulates: once a map
+// gets big, drop entries from any window older than the current one instead
+// of letting it grow forever for the isolate's lifetime.
+const MAX_TRACKED_KEYS = 5_000;
+const checkRateLimit = (
+  key: string,
+  max: number,
+  counters: Map<string, { window: number; count: number }>
+): boolean => {
   const window = Math.floor(Date.now() / 1000 / RATE_LIMIT_WINDOW_SECONDS);
-  const entry = rateLimitCounters.get(tokenHash);
+  if (counters.size > MAX_TRACKED_KEYS) {
+    for (const [k, v] of counters) {
+      if (v.window !== window) counters.delete(k);
+    }
+  }
+  const entry = counters.get(key);
   if (!entry || entry.window !== window) {
-    rateLimitCounters.set(tokenHash, { window, count: 1 });
+    counters.set(key, { window, count: 1 });
     return true;
   }
-  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) return false;
+  if (entry.count >= max) return false;
   entry.count += 1;
   return true;
 };
@@ -107,6 +128,17 @@ const handlePut = async (
   tokenHash: string,
   origin: string | null
 ): Promise<Response> => {
+  // ponytail: rejects on the declared Content-Length before buffering, but a
+  // chunked request with no/false header still gets fully buffered before
+  // the byteLength check below catches it — bounded by the platform's own
+  // request body cap (well above MAX_BODY_BYTES), not by this function.
+  const declaredLength = parseInt(
+    request.headers.get("Content-Length") ?? "",
+    10
+  );
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
+    return jsonResponse({ error: "payload_too_large" }, 413, origin);
+  }
   const body = await request.arrayBuffer();
   if (body.byteLength === 0) {
     return jsonResponse({ error: "empty_body" }, 400, origin);
@@ -139,13 +171,20 @@ export default {
       return jsonResponse({ error: "not_found" }, 404, origin);
     }
 
+    const clientIp = request.headers.get("CF-Connecting-IP") ?? "unknown";
+    if (
+      !checkRateLimit(clientIp, IP_RATE_LIMIT_MAX_REQUESTS, ipRateLimitCounters)
+    ) {
+      return jsonResponse({ error: "rate_limited" }, 429, origin);
+    }
+
     const token = extractToken(request);
     if (!token) {
       return jsonResponse({ error: "unauthorized" }, 401, origin);
     }
     const tokenHash = await sha256Hex(token);
 
-    if (!checkRateLimit(tokenHash)) {
+    if (!checkRateLimit(tokenHash, RATE_LIMIT_MAX_REQUESTS, rateLimitCounters)) {
       return jsonResponse({ error: "rate_limited" }, 429, origin);
     }
 

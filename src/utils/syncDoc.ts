@@ -105,11 +105,16 @@ const reconcileListSinceBase = (
 // group) — never a second independently-created doc — otherwise
 // savedStops/savedEtas can't merge across devices (see
 // reconcileListSinceBase above).
-// Scalar (non-list) synced fields: last-write-wins, but only "wins" if this
-// device actually changed the field since its own last sync — otherwise a
-// device that hasn't touched a setting would keep re-stamping its stale
-// value over whatever another device just pushed, on every poll.
-const SCALAR_FIELDS = [
+// Last-write-wins fields, but only "win" if this device actually changed the
+// field since its own last sync — otherwise a device that hasn't touched a
+// setting would keep re-stamping its stale value over whatever another
+// device just pushed, on every poll. `collections` lives here too even
+// though it's a list: unlike savedStops/savedEtas it isn't a flat set of
+// independent additions/removals (drag-reordering, renames, and per-route
+// stop edits all live inside it), so there's no add/remove delta to
+// reconcile — concurrent edits from two devices between syncs mean one
+// side's collections edit is discarded, same as any other field here.
+const LAST_WRITE_WINS_FIELDS = [
   "collections",
   "_colorMode",
   "energyMode",
@@ -149,12 +154,12 @@ export const applyFieldsSinceBase = async (
     // scalars fall back to the group's current values rather than this
     // device's (join adopts the group's settings/collections, not the
     // reverse).
-    SCALAR_FIELDS.forEach((field) => {
+    LAST_WRITE_WINS_FIELDS.forEach((field) => {
       if (
         base &&
         JSON.stringify(current[field]) !== JSON.stringify(base[field])
       ) {
-        (draft as SyncDocShape)[field] = current[field];
+        (draft as Record<string, unknown>)[field] = current[field];
       }
     });
   });

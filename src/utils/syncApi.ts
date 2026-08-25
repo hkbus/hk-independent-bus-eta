@@ -19,12 +19,16 @@ export const generateSyncToken = (): string => {
   return token;
 };
 
+const TOKEN_PATTERN = /^[A-Z2-7]{16,128}$/;
+
 // Accepts a bare token, a full pair URL, or a pair URL's #fragment and
-// returns just the token, uppercased.
+// returns just the token, uppercased — or "" if what's left over isn't a
+// well-formed token (garbage pasted in, or a URL without a fragment at all).
 export const parseToken = (input: string): string => {
-  const trimmed = input.trim();
+  const trimmed = input.trim().replace(/^#/, "");
   const match = trimmed.match(/\/sync#?([A-Z2-7]+)\/?$/i);
-  return (match ? match[1] : trimmed).toUpperCase();
+  const candidate = (match ? match[1] : trimmed).toUpperCase();
+  return TOKEN_PATTERN.test(candidate) ? candidate : "";
 };
 
 export interface SyncPullResult {
@@ -32,12 +36,15 @@ export interface SyncPullResult {
   updatedAt: number;
 }
 
+const SYNC_TIMEOUT_MS = 15_000;
+
 export const pullSyncDoc = async (
   token: string
 ): Promise<SyncPullResult | null> => {
   if (!SYNC_API_URL) throw new Error("Sync API is not configured");
   const res = await fetch(`${SYNC_API_URL}/v1/sync`, {
     headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(SYNC_TIMEOUT_MS),
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Sync pull failed: ${res.status}`);
@@ -55,6 +62,7 @@ export const pushSyncDoc = async (
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
     body: bytes,
+    signal: AbortSignal.timeout(SYNC_TIMEOUT_MS),
   });
   if (!res.ok) throw new Error(`Sync push failed: ${res.status}`);
   const { updatedAt } = (await res.json()) as { updatedAt: number };
