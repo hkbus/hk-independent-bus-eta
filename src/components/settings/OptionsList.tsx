@@ -20,6 +20,7 @@ import {
   DarkMode as DarkModeIcon,
   SettingsBrightness as SettingsBrightnessIcon,
   WbSunny as WbSunnyIcon,
+  EventSeat as EventSeatIcon,
   AllInclusive as AllInclusiveIcon,
   FilterAlt as FilterAltIcon,
   Vibration as VibrationIcon,
@@ -67,6 +68,8 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
     updateRefreshInterval,
     annotateScheduled,
     toggleAnnotateScheduled,
+    sunSideHint,
+    toggleSunSideHint,
     isRecentSearchShown,
     toggleIsRecentSearchShown,
   } = useContext(AppContext);
@@ -101,6 +104,22 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
         <ListItemText
           primary={t("路線篩選")}
           secondary={t(isRouteFilter ? "只顯示現時路線" : "顯示所有路線")}
+        />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration);
+          toggleSunSideHint();
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <EventSeatIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={t("防曬座位提示")}
+          secondary={t(sunSideHint ? "開啟" : "關閉")}
         />
       </ListItemButton>
       <ListItemButton

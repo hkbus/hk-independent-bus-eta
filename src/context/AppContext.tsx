@@ -90,6 +90,10 @@ export interface AppState {
    */
   annotateScheduled: boolean;
   /**
+   * Mark which side of the bus the sun falls on, along the stop list
+   */
+  sunSideHint: boolean;
+  /**
    * Show recently searched
    */
   isRecentSearchShown: boolean;
@@ -136,6 +140,7 @@ interface AppContextValue extends AppState {
   toggleAnalytics: () => void; // not
   updateRefreshInterval: (interval: number) => void;
   toggleAnnotateScheduled: () => void;
+  toggleSunSideHint: () => void;
   toggleIsRecentSearchShown: () => void;
   changeLanguage: (lang: Language) => void;
   setFontSize: (fontSize: number) => void;
@@ -264,6 +269,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       annotateScheduled: JSON.parse(
         localStorage.getItem("annotateScheduled") ?? "false"
       ),
+      sunSideHint: JSON.parse(localStorage.getItem("sunSideHint") ?? "false"),
       fontSize: JSON.parse(localStorage.getItem("fontSize") ?? "14"),
       searchRange: JSON.parse(
         localStorage.getItem("searchRange") ?? `${DEFAULT_SEARCH_RANGE}`
@@ -555,6 +561,14 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
+  const toggleSunSideHint = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        state.sunSideHint = !state.sunSideHint;
+      })
+    );
+  }, []);
+
   const toggleVibrateDuration = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
@@ -816,6 +830,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   }, [state.annotateScheduled]);
 
   useEffect(() => {
+    localStorage.setItem("sunSideHint", JSON.stringify(state.sunSideHint));
+  }, [state.sunSideHint]);
+
+  useEffect(() => {
     localStorage.setItem(
       "vibrateDuration",
       JSON.stringify(state.vibrateDuration)
@@ -860,6 +878,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleAnalytics,
       updateRefreshInterval,
       toggleAnnotateScheduled,
+      toggleSunSideHint,
       toggleIsRecentSearchShown,
       changeLanguage,
       setFontSize,
@@ -893,6 +912,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleAnalytics,
       updateRefreshInterval,
       toggleAnnotateScheduled,
+      toggleSunSideHint,
       toggleIsRecentSearchShown,
       changeLanguage,
       setFontSize,
