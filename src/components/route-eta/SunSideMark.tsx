@@ -68,7 +68,9 @@ const pillSx: SxProps<Theme> = {
   gap: "3px",
   px: "3px",
   py: "2px",
-  border: "1px solid rgba(0, 0, 0, .2)",
+  // Theme token, so the outline survives dark mode.
+  border: 1,
+  borderColor: "divider",
   borderRadius: "4px",
   pointerEvents: "none",
 };
