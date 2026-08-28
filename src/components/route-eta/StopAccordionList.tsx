@@ -38,8 +38,9 @@ const StopAccordions = ({
   } = useContext(DbContext);
 
   const stopLocations = useMemo(
-    () => stopIds.map((stopId) => stopList[stopId].location),
-    [stopIds, stopList]
+    () =>
+      sunSideHint ? stopIds.map((stopId) => stopList[stopId].location) : [],
+    [sunSideHint, stopIds, stopList]
   );
   const sun = useSunExposure(stopLocations, sunSideHint);
   const sunriseAt = useNextSunrise(stopLocations[0], sunSideHint);
