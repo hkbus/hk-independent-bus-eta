@@ -225,6 +225,7 @@ const Header = () => {
             key={code}
             variant="square"
             src={WeatherIcons[code]}
+            alt={t("天氣警告")}
             sx={weatherImg}
           />
         ))}
