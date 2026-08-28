@@ -81,7 +81,7 @@ const SuccinctEtas = ({
       const exactTimeJsx = (
         <Box
           component="span"
-          sx={{ fontSize: etaFormat !== "exact" ? "0.9em" : "1rem" }}
+          sx={{ fontSize: etaFormat !== "exact" ? "0.9em" : "1em" }}
         >
           {eta.eta.slice(11, 16)}
         </Box>

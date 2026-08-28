@@ -153,7 +153,7 @@ const SuccinctTimeReport = ({
             <Box overflow="hidden">
               <RouteNo
                 routeNo={language === "zh" ? t(routeNo) : routeNo}
-                fontSize={co[0] === "mtr" ? "1.1rem" : undefined}
+                fontSize={co[0] === "mtr" ? "1.4667em" : undefined}
               />
               {parseInt(serviceType, 10) >= 2 && (
                 <Typography variant="caption" sx={specialTripSx}>
@@ -282,7 +282,7 @@ const fromToWrapperSx: SxProps<Theme> = {
   display: "flex",
   alignItems: "baseline",
   "& > span": {
-    fontSize: "0.85rem",
+    fontSize: "0.68em",
     marginRight: (theme) => theme.spacing(0.5),
   },
 };
@@ -302,12 +302,12 @@ const companySx: SxProps<Theme> = {
 
 const specialTripSx: SxProps<Theme> = {
   color: (theme) => theme.palette.text.secondary,
-  fontSize: "0.6rem",
+  fontSize: "0.6em",
   marginLeft: "8px",
 };
 
 const nearestIconSx: SxProps<Theme> = {
-  fontSize: "1rem",
+  fontSize: "1.1429em",
   verticalAlign: "text-bottom",
   marginRight: "2px",
 };

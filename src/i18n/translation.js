@@ -17,6 +17,8 @@ const resources = {
       sunferry: "Sun",
       hkkf: "HKKF",
       fortuneferry: "Fortune",
+      左邊日照: "Sunlight on the left side of the vehicle",
+      右邊日照: "Sunlight on the right side of the vehicle",
       公里: "km",
       米: "m",
       秒: "s",

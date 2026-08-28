@@ -22,6 +22,7 @@ import MtrExits from "./MtrExits";
 import CompassControl from "./CompassControl";
 import CenterControl from "./CenterControl";
 import { useImperativeMap } from "./useImperativeMap";
+import SunStrip from "./SunStrip";
 
 interface RouteMapProps {
   routeId: string;
@@ -185,6 +186,12 @@ const RouteMap = ({
 
   return (
     <Box id="route-map" sx={rootSx}>
+      <SunStrip
+        routePath={routePath}
+        side="left"
+        stops={stops}
+        fromStopIdx={stopIdx}
+      />
       <BaseMap
         initialViewState={{
           longitude: mapRef.current.initialCenter.lng,
@@ -198,7 +205,7 @@ const RouteMap = ({
         // `cooperativeGestures` instead.
         onDragStart={handleDragStartOrEnd}
         onDragEnd={handleDragStartOrEnd}
-        style={{ height: "35vh" }}
+        style={{ height: "35vh", flex: 1, minWidth: 0 }}
       >
         <MapEffects pending={pendingNav} onApplied={handleNavApplied} />
 
@@ -282,6 +289,12 @@ const RouteMap = ({
         <CenterControl onClick={onClickJumpToMyLocation} />
         <CompassControl />
       </BaseMap>
+      <SunStrip
+        routePath={routePath}
+        side="right"
+        stops={stops}
+        fromStopIdx={stopIdx}
+      />
     </Box>
   );
 };
@@ -446,13 +459,14 @@ const classes = {
 // `<Marker>` mounts its children inside the map container, which is
 // itself inside this Box.
 const rootSx: SxProps<Theme> = {
+  display: "flex",
   height: "35vh",
-  filter: (theme) =>
-    theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
   // Two layers of explicit 35vh (on the Box and on the inner map
   // container) keeps the map sized correctly even under flex parents.
   "& .maplibregl-map": {
     height: "35vh",
+    filter: (theme: Theme) =>
+      theme.palette.mode === "dark" ? "brightness(0.8)" : "none",
   },
   [`& .${classes.mtrMarker}`]: {
     backgroundImage: `url(/img/mtr.svg)`,

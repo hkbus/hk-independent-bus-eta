@@ -17,7 +17,7 @@ const RouteNoCompany = ({ route }: RouteNoCompanyProps) => {
     <Box overflow="hidden">
       <RouteNo
         routeNo={language === "zh" ? t(routeNo) : routeNo}
-        fontSize={route[1].co[0] === "mtr" ? "1.2rem" : undefined}
+        fontSize={route[1].co[0] === "mtr" ? "1.6em" : undefined}
       />
       {parseInt(serviceType, 10) >= 2 && (
         <Typography variant="caption" sx={specialTripSx}>

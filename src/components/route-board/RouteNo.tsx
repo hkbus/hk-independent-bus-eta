@@ -48,11 +48,11 @@ const rootSx = (fontSize?: string): SxProps<Theme> => {
     lineHeight: "normal",
     display: "inline",
     "& > span:nth-of-type(1)": {
-      fontSize: fontSize || "1.5rem",
+      fontSize: fontSize || "2em",
       fontFamily: '"Oswald", sans-serif',
     },
     "& > span:nth-of-type(2)": {
-      fontSize: "1.2rem",
+      fontSize: "1.6em",
       fontFamily: '"Oswald", sans-serif',
     },
     whiteSpace: "nowrap",
