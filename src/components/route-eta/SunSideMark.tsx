@@ -10,6 +10,8 @@ import {
  * to sit on.
  */
 export const SUN_SIDE_THRESHOLD = 0.15;
+/** Room the mark needs at the row's right edge, in theme spacing units. */
+export const SUN_MARK_RESERVE = 7;
 
 /** The side taking the sun. */
 const SUN_COLOUR = "rgba(230, 81, 0, 0.9)";

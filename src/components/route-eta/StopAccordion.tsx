@@ -22,7 +22,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { visuallyHidden } from "@mui/utils";
 import { getJoyYouFare, toProperCase, triggerShare } from "../../utils";
-import SunSideMark, { sunSideLabel } from "./SunSideMark";
+import SunSideMark, { SUN_MARK_RESERVE, sunSideLabel } from "./SunSideMark";
 import TimeReport from "./TimeReport";
 import ReactNativeContext from "../../context/ReactNativeContext";
 import useLanguage from "../../hooks/useTranslation";
@@ -131,7 +131,15 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
         sx={accordionSx}
       >
         <AccordionSummary sx={accordionSummarySx}>
-          <Typography component="h3" variant="body1" sx={{ fontWeight: 700 }}>
+          <Typography
+            component="h3"
+            variant="body1"
+            sx={{
+              fontWeight: 700,
+              // Keep a long stop name clear of the sun mark, and only then.
+              pr: sunLabel !== null ? SUN_MARK_RESERVE : 0,
+            }}
+          >
             {idx + 1}. {toProperCase(stop.name[language])}
           </Typography>
           {sunLabel !== null && (
