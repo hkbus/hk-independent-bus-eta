@@ -189,7 +189,8 @@ segment (`/:lang`), so anything user-visible must go through `t()`.
 - PR body: a short statement of the user-visible problem, then the evidence —
   reproduction steps, before/after screenshots for anything visual. Host images
   outside the diff (e.g. a branch used only for assets) rather than committing
-  them.
+  them. Merged PRs here have a median body of ~650 characters; several times
+  that reads as cost, not as thoroughness.
 - Verify before claiming: build it, run it, look at the screen. "Should work" is
   not a verification.
 
