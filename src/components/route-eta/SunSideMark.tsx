@@ -1,4 +1,4 @@
-import { Box, type SxProps, type Theme } from "@mui/material";
+import { Box, useTheme, type SxProps, type Theme } from "@mui/material";
 
 /**
  * Below which the sun is too close to straight ahead, straight behind,
@@ -17,9 +17,16 @@ const SUN_SIDE_FULL = 0.6;
 const sunlitColour = (strength: number): string =>
   `rgba(230, 81, 0, ${(0.4 + 0.6 * strength).toFixed(2)})`;
 
-/** The side in shade — the one to sit on. */
-const shadedColour = (strength: number): string =>
-  `rgba(21, 58, 95, ${(0.35 + 0.55 * strength).toFixed(2)})`;
+/**
+ * The side in shade — the one to sit on. Navy on a white row, steel on
+ * a black one: a single colour dark enough to read against the light
+ * theme is all but invisible against the dark one, which would leave
+ * half the strokes unseen.
+ */
+const shadedColour = (strength: number, dark: boolean): string =>
+  dark
+    ? `rgba(96, 155, 214, ${(0.4 + 0.6 * strength).toFixed(2)})`
+    : `rgba(21, 58, 95, ${(0.35 + 0.55 * strength).toFixed(2)})`;
 
 /**
  * One stroke down the row's right edge, standing for the right-hand
@@ -40,6 +47,7 @@ const SunSideMark = ({
    */
   value?: number;
 }) => {
+  const dark = useTheme().palette.mode === "dark";
   if (value === undefined || Math.abs(value) < SUN_SIDE_THRESHOLD) return null;
   const strength = Math.min(1, Math.abs(value) / SUN_SIDE_FULL);
   return (
@@ -47,7 +55,7 @@ const SunSideMark = ({
       sx={strokeSx}
       style={{
         backgroundColor:
-          value > 0 ? sunlitColour(strength) : shadedColour(strength),
+          value > 0 ? sunlitColour(strength) : shadedColour(strength, dark),
       }}
       aria-hidden="true"
     />
