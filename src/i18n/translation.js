@@ -213,6 +213,11 @@ const resources = {
       "支援 WearOS 及 WatchOS 平台": "Support WearOS & WatchOS",
       地圖資源: "Map Resources",
       同感心: "Empathy",
+      防曬座位提示: "Sun-side seat hint",
+      太陽已下山: "The sun has set",
+      日出: "Sunrise",
+      陽光曬左邊: "Sun on the left side",
+      陽光曬右邊: "Sun on the right side",
     },
   },
   zh: {

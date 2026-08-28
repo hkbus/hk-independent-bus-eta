@@ -132,6 +132,7 @@ const DataImport = () => {
       analytics: obj.analytics ?? true,
       refreshInterval: obj.refreshInterval ?? 30,
       annotateScheduled: obj.annotateScheduled ?? true,
+      sunSideHint: obj.sunSideHint ?? false,
       isRecentSearchShown: obj.isRecentSearchShown ?? true,
       fontSize: obj.fontSize ?? 16,
       searchRange: obj.searchRange ?? DEFAULT_SEARCH_RANGE,

@@ -1,8 +1,18 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useContext,
+  useMemo,
+} from "react";
 import { Box, Snackbar, SxProps, Theme } from "@mui/material";
 import type { RouteListEntry } from "hk-bus-eta";
 import StopAccordion from "./StopAccordion";
 import { useTranslation } from "react-i18next";
+import AppContext from "../../context/AppContext";
+import DbContext from "../../context/DbContext";
+import { useNextSunrise, useSunExposure } from "../../hooks/useSunExposure";
 
 interface StopAccordionsProps {
   routeId: string;
@@ -22,6 +32,17 @@ const StopAccordions = ({
   const accordionRef = useRef<HTMLDivElement[]>([]);
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const { t } = useTranslation();
+  const { sunSideHint } = useContext(AppContext);
+  const {
+    db: { stopList },
+  } = useContext(DbContext);
+
+  const stopLocations = useMemo(
+    () => stopIds.map((stopId) => stopList[stopId].location),
+    [stopIds, stopList]
+  );
+  const sun = useSunExposure(stopLocations, sunSideHint);
+  const sunriseAt = useNextSunrise(stopLocations[0], sunSideHint);
 
   useEffect(() => {
     // scroll to specific bus stop
@@ -49,6 +70,16 @@ const StopAccordions = ({
 
   return (
     <Box sx={rootSx}>
+      {sunriseAt !== null && (
+        <Box sx={asleepSx}>
+          {t("太陽已下山")} · {t("日出")}{" "}
+          {sunriseAt.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })}
+        </Box>
+      )}
       {stopIds.map((stopId, idx) => (
         <StopAccordion
           routeId={routeId}
@@ -58,6 +89,7 @@ const StopAccordions = ({
           onShareClick={() => setIsCopied(true)}
           onSummaryClick={handleChange}
           onStopInfoClick={onStopInfo}
+          sunSide={sun?.sides[idx]}
           key={"stop-" + idx}
           ref={handleRef(idx)}
         />
@@ -79,4 +111,16 @@ export default StopAccordions;
 
 const rootSx: SxProps<Theme> = {
   overflowY: "scroll",
+};
+
+/**
+ * Stands in after dark. Says when the hint will next mean something,
+ * rather than leaving a blank that reads as a fault.
+ */
+const asleepSx: SxProps<Theme> = {
+  px: 1.5,
+  py: 1,
+  fontSize: "0.8rem",
+  textAlign: "center",
+  opacity: 0.75,
 };
