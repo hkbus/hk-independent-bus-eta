@@ -116,7 +116,9 @@ Do not "fix" this by migrating the lockfile — CI runs Classic.
   fixes into separate PRs. Do not reformat untouched code, bump dependencies, or
   fold in drive-by refactors.
 - **Comments are rare and terse.** One short line where the *why* is not obvious;
-  no block comments restating the code. Put your reasoning in the PR body.
+  no block comments restating the code. Put your reasoning in the PR body. The
+  median file in `src/` is 0.3% comment lines and the 90th percentile is 8% — a
+  new file that is a third comments is out of place here.
 - **Pitch first, then build.** New UI, new settings, new infrastructure and
   anything with a design trade-off should be raised as an issue and agreed before
   a PR appears.
