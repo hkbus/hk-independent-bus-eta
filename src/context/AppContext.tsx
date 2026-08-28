@@ -29,12 +29,7 @@ import { DeviceOrientationPermission } from "react-world-compass";
 import useLanguage from "../hooks/useTranslation";
 
 type GeoPermission =
-  | "opening"
-  | "force-opening"
-  | "granted"
-  | "denied"
-  | "closed"
-  | null;
+  "opening" | "force-opening" | "granted" | "denied" | "closed" | null;
 
 export interface AppState {
   searchRoute: string;

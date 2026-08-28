@@ -54,8 +54,7 @@ export const buildStyle = ({
   const style = JSON.parse(JSON.stringify(base)) as StyleSpecification;
 
   const protomapsSource = style.sources?.protomaps as
-    | VectorSourceSpecification
-    | undefined;
+    VectorSourceSpecification | undefined;
   if (protomapsSource && "url" in protomapsSource) {
     protomapsSource.url = `pmtiles://${VECTOR_PMTILES_URL}`;
     protomapsSource.attribution = OSM_ATTRIBUTION;

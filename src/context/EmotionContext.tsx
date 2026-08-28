@@ -79,21 +79,9 @@ const DEFAULT_STATE: EmotionContextState = {
 export interface EmotionCheckIn {
   happiness?: "😄" | "😊" | "🙂" | "😐" | "😟" | "😫" | "😭" | null;
   moodScene?:
-    | "Work"
-    | "Gathering"
-    | "Exercise"
-    | "Leisure"
-    | "Dining"
-    | "Rest"
-    | null;
+    "Work" | "Gathering" | "Exercise" | "Leisure" | "Dining" | "Rest" | null;
   gratitudeObj?:
-    | "Self"
-    | "Friend"
-    | "Family"
-    | "Partner"
-    | "Fellow"
-    | "Stranger"
-    | null;
+    "Self" | "Friend" | "Family" | "Partner" | "Fellow" | "Stranger" | null;
   gratitudeCnt?: "0" | "1" | "2" | "3" | "4" | "5+" | null;
   ts: number;
 }
