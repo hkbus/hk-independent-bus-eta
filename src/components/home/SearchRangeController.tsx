@@ -92,21 +92,4 @@ const rootSx: SxProps<Theme> = {
 const toggleButtonSx: SxProps<Theme> = {
   height: 30,
   px: 2,
-  // Selected range reads in the brand yellow (#fedb00) instead of plain grey
-  "&.Mui-selected": {
-    backgroundColor: (t) =>
-      t.palette.mode === "dark"
-        ? "rgba(254, 219, 0, 0.14)"
-        : "rgba(254, 219, 0, 0.2)",
-    color: (t) => t.palette.text.primary,
-    // Gate hover to pointer devices so it can't stick after a tap on old Android
-    "@media (hover: hover)": {
-      "&:hover": {
-        backgroundColor: (t) =>
-          t.palette.mode === "dark"
-            ? "rgba(254, 219, 0, 0.2)"
-            : "rgba(254, 219, 0, 0.28)",
-      },
-    },
-  },
 };

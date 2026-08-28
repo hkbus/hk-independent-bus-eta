@@ -227,26 +227,11 @@ const accordionSummarySx: SxProps<Theme> = {
     theme.palette.mode === "dark"
       ? theme.palette.background.default
       : "rgba(0, 0, 0, .03)",
-  transition: "background-color 0.12s ease-out",
-  "@media (hover: hover)": {
-    "&:hover": {
-      backgroundColor: "rgba(254, 219, 0, 0.06)",
-    },
-  },
   "&.Mui-expanded": {
     borderBottom: "1px solid rgba(0, 0, 0, .125)",
     minHeight: 44,
-    // Mark the open stop with a brand-yellow (#fedb00) rail; inset shadow so
-    // it adds no width and never nudges the row (matters on old devices)
-    boxShadow: (theme) =>
-      `inset 3px 0 0 0 ${
-        theme.palette.mode === "dark" ? theme.palette.primary.main : "#fedb00"
-      }`,
   },
   minHeight: 44,
-  "@media (prefers-reduced-motion: reduce)": {
-    transition: "none",
-  },
   "& .MuiAccordionSummary-content": {
     margin: "8px 0",
     flexDirection: "column",

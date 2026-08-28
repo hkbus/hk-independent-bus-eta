@@ -259,7 +259,6 @@ const rootSx: SxProps<Theme> = {
   padding: (theme) => `${theme.spacing(0.5)} ${theme.spacing(1)}`,
   color: "rgba(0,0,0,0.87)",
   cursor: "pointer",
-  // Tap feedback in the brand yellow (#fedb00) so a press visibly responds
   WebkitTapHighlightColor: "transparent",
   transition: "background-color 0.12s ease-out",
   "@media (hover: hover)": {

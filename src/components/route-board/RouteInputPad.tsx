@@ -125,23 +125,11 @@ const buttonSx: SxProps<Theme> = {
   width: "100%",
   fontSize: "1.8em",
   borderRadius: "unset",
-  // Each key lights up in the brand yellow (#fedb00) when pressed
-  transition: "background-color 0.1s ease-out",
   "&:selected": {
     color: (theme) => theme.palette.text.primary,
   },
-  "@media (hover: hover)": {
-    "&:hover": {
-      backgroundColor: (theme) =>
-        theme.palette.mode === "dark" ? "rgba(254, 219, 0, 0.08)" : "#fff6c4",
-    },
-  },
-  "&:active": {
-    backgroundColor: (theme) =>
-      theme.palette.mode === "dark" ? "rgba(254, 219, 0, 0.16)" : "#fdec9e",
-  },
-  "@media (prefers-reduced-motion: reduce)": {
-    transition: "none",
+  "&:hover": {
+    backgroundColor: (theme) => theme.palette.background.paper,
   },
 };
 

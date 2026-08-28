@@ -7,7 +7,8 @@ import { useMap } from "react-map-gl/maplibre";
  * MapLibre's `[lng, lat]` order before forwarding to the map.
  */
 export type LatLngLike =
-  [lat: number, lng: number] | { lat: number; lng: number };
+  | [lat: number, lng: number]
+  | { lat: number; lng: number };
 
 export type LatLngBoundsLike = [southWest: LatLngLike, northEast: LatLngLike];
 
@@ -23,7 +24,8 @@ export interface FlyToOpts {
 
 export interface FitBoundsOpts {
   padding?:
-    number | { top: number; bottom: number; left: number; right: number };
+    | number
+    | { top: number; bottom: number; left: number; right: number };
   animate?: boolean;
   duration?: number;
   maxZoom?: number;

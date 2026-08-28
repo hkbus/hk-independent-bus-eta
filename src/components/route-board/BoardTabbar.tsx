@@ -44,7 +44,7 @@ const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
         onChange={(_, v) => onChangeTab(v, true)}
         sx={tabbarSx}
         variant="scrollable"
-        scrollButtons={false}
+        scrollButtons
       >
         {Object.keys(TRANSPORT_SEARCH_OPTIONS)
           .filter((option) => isRecentSearchShown || option !== "recent")
