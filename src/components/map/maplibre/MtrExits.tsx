@@ -81,7 +81,7 @@ const MtrExits = () => {
   const hideOnCsdi = !!import.meta.env.VITE_IS_BASE_MAP_FROM_CSDI;
 
   // Skip everything under zoom 17 — nothing renders anyway.
-  const showIcon = !!viewport && viewport.zoom >= 17;
+  const showIcon = !!viewport && viewport.zoom >= 15;
   const showLabel = !!viewport && viewport.zoom >= 18;
 
   const visible = useMemo(() => {
