@@ -114,10 +114,7 @@ const rootSx: SxProps<Theme> = {
   overflowY: "scroll",
 };
 
-/**
- * Stands in after dark. Says when the hint will next mean something,
- * rather than leaving a blank that reads as a fault.
- */
+// After dark, says when the hint will next mean something.
 const asleepSx: SxProps<Theme> = {
   px: 1.5,
   py: 1,

@@ -4,40 +4,19 @@ import {
   WbSunny as WbSunnyIcon,
 } from "@mui/icons-material";
 
-/**
- * Below which the sun is too close to straight ahead, straight behind,
- * or straight overhead for either side of the bus to be the better one
- * to sit on.
- */
+// Below this the sun is too near head-on to call a side.
 export const SUN_SIDE_THRESHOLD = 0.15;
 /** Room the mark needs at the row's right edge, in theme spacing units. */
 export const SUN_MARK_RESERVE = 7;
 
-/** The side taking the sun. */
 const SUN_COLOUR = "rgba(230, 81, 0, 0.9)";
-/** The seat to take — the shaded side. */
 const SEAT_COLOUR = "rgba(2, 119, 189, 0.9)";
 
-/**
- * A pair of pictograms on the right of the row: the sun on the side it
- * falls on, a seat on the side to take, laid out left-to-right as if
- * looking along the bus. Nothing to read, so it works in any language.
- *
- * It sits in the right-hand half of the row, which is empty space in
- * the existing layout, and does not touch the left edge — that is
- * already spoken for by the selected-stop rail.
- *
- * Nothing is drawn where the sun is too near head-on to call a side.
- * That is deliberate: a mark on every row would imply a confidence the
- * arithmetic does not have.
- */
+// Sun on the side it falls on, seat on the side to take, as if looking along the bus.
 const SunSideMark = ({
   value,
 }: {
-  /**
-   * Which side of the bus the sun falls on over the leg leaving this
-   * stop: −1 hard left … +1 hard right. Undefined after dark.
-   */
+  /** −1 hard left … +1 hard right; undefined after dark. */
   value?: number;
 }) => {
   if (value === undefined || Math.abs(value) < SUN_SIDE_THRESHOLD) return null;
@@ -52,7 +31,6 @@ const SunSideMark = ({
 
 export default SunSideMark;
 
-/** In words, for anyone who cannot see the pictograms. */
 export const sunSideLabel = (value?: number): string | null => {
   if (value === undefined || Math.abs(value) < SUN_SIDE_THRESHOLD) return null;
   return value > 0 ? "陽光曬右邊" : "陽光曬左邊";

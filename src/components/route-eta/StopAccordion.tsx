@@ -39,10 +39,7 @@ interface StopAccordionProps {
   onShareClick: () => void;
   onStopInfoClick: () => void;
   onSummaryClick: (idx: number, expand: boolean) => void;
-  /**
-   * Which side of the bus the sun falls on over the leg leaving this
-   * stop: −1 hard left … +1 hard right. Undefined after dark.
-   */
+  /** −1 hard left … +1 hard right; undefined after dark. */
   sunSide?: number;
 }
 
