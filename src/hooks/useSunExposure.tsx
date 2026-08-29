@@ -7,10 +7,8 @@ import {
   type RouteSunExposure,
 } from "../sun";
 
-/** How often the sun's position is re-evaluated. */
 const REFRESH_MS = 5 * 60 * 1000;
 
-/** Ticks every few minutes so the sun is allowed to move. */
 const useSunClock = (enabled: boolean): number => {
   const [now, setNow] = useState<number>(() => Date.now());
   useEffect(() => {
@@ -22,10 +20,7 @@ const useSunClock = (enabled: boolean): number => {
   return now;
 };
 
-/**
- * When the sun next rises, or `null` while it is already up. Used to
- * tell a rider when the display will have something to say.
- */
+/** When the sun next rises, or `null` while it is already up. */
 export const useNextSunrise = (
   location: GeoLocation | undefined,
   enabled: boolean
@@ -39,12 +34,7 @@ export const useNextSunrise = (
   }, [enabled, location, now]);
 };
 
-/**
- * Where the sun currently falls along a route, refreshed every few
- * minutes. `null` while the sun is below the horizon, or whenever
- * `enabled` is false — switched off it starts no timer and does no
- * arithmetic, so a rider who never turns it on pays nothing for it.
- */
+// Disabled starts no timer and does no arithmetic, so it costs nothing when off.
 export const useSunExposure = (
   locations: GeoLocation[],
   enabled = true
