@@ -66,6 +66,7 @@ export const buildStyle = ({
       tiles: [labelTileUrl],
       tileSize: 256,
       attribution: LANDS_ATTRIBUTION,
+      maxzoom: 20,
     };
     style.sources[LABEL_SOURCE_ID] = rasterSource;
     style.layers.push({
