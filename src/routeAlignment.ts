@@ -194,7 +194,7 @@ export const flattenRouteGeoJson = (
       }
       if (isSameLocation(tail, part[0])) part = part.slice(1);
     }
-    points.push(...part);
+    part.forEach((point) => points.push(point));
   });
 
   return points;
