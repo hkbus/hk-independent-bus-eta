@@ -70,6 +70,7 @@ const CollectionRouteList = ({
             <SuccinctTimeReport
               key={`route-shortcut-${idx}`}
               routeId={selectedRoute}
+              nearestFrom={collection.list}
             />
           )
       )}
