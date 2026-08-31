@@ -1,6 +1,7 @@
 import { StopListEntry } from "hk-bus-eta";
 import { useContext, useEffect, useState } from "react";
 import DbContext from "../context/DbContext";
+import { coToType } from "../utils";
 
 export interface GeoJsonType extends GeoJSON.GeoJsonObject {
   features?: Array<{
@@ -21,7 +22,10 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
 
   useEffect(() => {
     let waypointsFile = "";
-    if (gtfsId) {
+    if (co.some((c) => coToType[c] === "ferry")) {
+      // ferry files are named by route code, with no direction suffix
+      waypointsFile = `${route}.json`;
+    } else if (gtfsId) {
       waypointsFile = `${gtfsId}-${
         bound[co[0]] === "I" ? "I" : "O" // handling for pseudo circular route
       }.json`;
