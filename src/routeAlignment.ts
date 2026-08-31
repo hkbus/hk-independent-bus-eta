@@ -181,20 +181,21 @@ export const flattenRouteGeoJson = (
 
   // route-waypoints stores MultiLineString parts head-to-tail in travel order.
   const points: GeoLocation[] = [];
-  parts.forEach((rawPart) => {
-    if (rawPart.length === 0) return;
-    let part = rawPart;
+  parts.forEach((part) => {
+    if (part.length === 0) return;
     const tail = points[points.length - 1];
-    if (tail !== undefined) {
-      if (
-        metresBetween(tail, part[part.length - 1]) <
-        metresBetween(tail, part[0])
-      ) {
-        part = part.slice().reverse();
-      }
-      if (isSameLocation(tail, part[0])) part = part.slice(1);
+    if (
+      tail !== undefined &&
+      metresBetween(tail, part[part.length - 1]) < metresBetween(tail, part[0])
+    ) {
+      part.reverse();
     }
-    points.push(...part);
+    // Some route give duplicated vertices, ~99% of them repeats, e.g., route-waypoints 1000393-O.
+    for (let i = 0; i < part.length; i += 1) {
+      const previous = points[points.length - 1];
+      if (previous !== undefined && isSameLocation(previous, part[i])) continue;
+      points.push(part[i]);
+    }
   });
 
   return points;
