@@ -33,7 +33,7 @@ declare global {
     /** Injected by hkbus.app app webview
      * @since Dec 2024
      */
-    systemColorSchemeCallbacks?: Function[];
+    systemColorSchemeCallbacks?: (() => void)[];
     /** Injected by hkbus.app app webview
      * @since Dec 2024
      * @see https://reactnative.dev/docs/usecolorscheme
