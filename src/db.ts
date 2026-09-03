@@ -117,7 +117,6 @@ export const fetchDbFunc = async (
       }
     }
     const updateTime = Date.now() + "";
-    localStorage.setItem("updateTime", updateTime);
     return new Promise((resolve_1) => {
       let servedCache = false;
       const timerId = setTimeout(async () => {
@@ -148,6 +147,7 @@ export const fetchDbFunc = async (
         }))
         .then((ret) => {
           if (servedCache) return;
+          localStorage.setItem("updateTime", updateTime);
           localStorage.setItem("schemaVersion", _schemaVersion);
           localStorage.setItem("versionMd5", _md5);
           clearTimeout(timerId);
