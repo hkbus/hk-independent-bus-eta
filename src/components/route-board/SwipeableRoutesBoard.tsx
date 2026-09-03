@@ -6,8 +6,8 @@ import {
   SlideRendererCallback,
 } from "react-swipeable-views-utils";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
-import { FixedSizeList } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
+import { List } from "react-window";
+import { AutoSizer } from "react-virtualized-auto-sizer";
 import memorize from "memoize-one";
 import { Trans, useTranslation } from "react-i18next";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
@@ -115,22 +115,20 @@ const SwipeableRoutesBoard = ({
     ({ key, index }) => (
       <React.Fragment key={key}>
         {coItemDataList[index].routeList.length > 0 ? (
-          <AutoSizer>
-            {({ height, width }) => (
-              <FixedSizeList
-                height={height * 0.98}
-                itemCount={coItemDataList[index].routeList.length}
-                itemSize={itemHeight}
-                width={width}
-                itemData={coItemDataList[index]}
-              >
-                {RouteRowList}
-              </FixedSizeList>
+          <AutoSizer
+            renderProp={({ height, width }) => (
+              <List
+                style={{ height: (height ?? 0) * 0.98, width }}
+                rowCount={coItemDataList[index].routeList.length}
+                rowHeight={itemHeight}
+                rowComponent={RouteRowList}
+                rowProps={coItemDataList[index]}
+              />
             )}
-          </AutoSizer>
+          />
         ) : (
-          <AutoSizer>
-            {({ width }) => (
+          <AutoSizer
+            renderProp={({ width }) => (
               <Box sx={noResultSx} width={width}>
                 <Box
                   display="flex"
@@ -190,7 +188,7 @@ const SwipeableRoutesBoard = ({
                 )}
               </Box>
             )}
-          </AutoSizer>
+          />
         )}
       </React.Fragment>
     ),
@@ -204,10 +202,15 @@ const SwipeableRoutesBoard = ({
           <Box sx={prerenderListSx}>
             {coItemDataList[0].routeList.map((_: any, idx: number) => (
               <RouteRowList
-                data={coItemDataList[0]}
+                {...coItemDataList[0]}
                 key={`route-${idx}`}
                 index={idx}
-                style={null} // required by react-window
+                style={{}}
+                ariaAttributes={{
+                  "aria-posinset": idx + 1,
+                  "aria-setsize": coItemDataList[0].routeList.length,
+                  role: "listitem",
+                }}
               />
             ))}
           </Box>

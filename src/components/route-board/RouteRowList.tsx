@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react";
-import { areEqual } from "react-window";
+import type { RowComponentProps } from "react-window";
 import { vibrate } from "../../utils";
 import RouteRow from "./RouteRow";
 import { RouteListEntry } from "hk-bus-eta";
@@ -7,19 +7,19 @@ import AppContext from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import useLanguage from "../../hooks/useTranslation";
 
-interface RouteRowListProps {
-  data: {
-    routeList: [string, RouteListEntry][];
-    vibrateDuration: number;
-    tab: "recent" | "all" | "bus" | "minibus" | "lightRail" | "mtr";
-  };
-  index: number;
-  style: React.CSSProperties | null;
+interface RouteRowListRowProps {
+  routeList: [string, RouteListEntry][];
+  vibrateDuration: number;
+  tab: "recent" | "all" | "bus" | "minibus" | "lightRail" | "mtr";
 }
 
-const RouteRowList = React.memo(
+type RouteRowListProps = RowComponentProps<RouteRowListRowProps>;
+
+const RouteRowListMemo = React.memo(
   ({
-    data: { routeList, vibrateDuration, tab },
+    routeList,
+    vibrateDuration,
+    tab,
     index,
     style,
   }: RouteRowListProps) => {
@@ -51,12 +51,19 @@ const RouteRowList = React.memo(
       <RouteRow
         onClick={handleClick}
         route={route}
-        style={style ?? {}}
+        style={style}
         onRemove={tab === "recent" ? handleRemove : undefined}
       />
     );
-  },
-  areEqual
+  }
+);
+
+// react-window's `rowComponent` prop requires a plain function returning
+// ReactElement | null; React.memo()'s type erases to ReactNode, so this
+// thin wrapper is what's passed to List -- RouteRowListMemo underneath
+// still skips re-renders on unchanged props.
+const RouteRowList = (props: RouteRowListProps): React.ReactElement => (
+  <RouteRowListMemo {...props} />
 );
 
 export default RouteRowList;
