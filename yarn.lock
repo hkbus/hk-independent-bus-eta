@@ -6188,12 +6188,10 @@ react-draggable@^4.4.6:
     clsx "^2.1.1"
     prop-types "^15.8.1"
 
-react-error-boundary@^4.0.13:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/react-error-boundary/-/react-error-boundary-4.1.2.tgz#bc750ad962edb8b135d6ae922c046051eb58f289"
-  integrity sha512-GQDxZ5Jd+Aq/qUxbCm1UtzmL/s++V7zKgE8yMktJiCQXCCFZnMZh9ng+6/Ne6PjNSXH0L9CjeOEREfRnq6Duag==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
+react-error-boundary@^6.1.4:
+  version "6.1.4"
+  resolved "https://registry.yarnpkg.com/react-error-boundary/-/react-error-boundary-6.1.4.tgz#cd690f51bde608b761130f2214e94d8b3ee4c3ab"
+  integrity sha512-7FgvbyjCFhu4dtKSZu807cW1MWG2nWAM4bwGqUByAtHVJXtlzoCJX0SSyZRyFrb+aBd7wtJkcOR4DsxXVEuDsA==
 
 react-event-listener@^0.6.0:
   version "0.6.7"

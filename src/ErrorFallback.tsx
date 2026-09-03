@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 interface Props {
-  error: Error;
+  error: unknown;
 }
 
 const RELOAD_KEY = "chunk-reload-attempted";
@@ -11,7 +11,9 @@ const isChunkError = (error: Error) =>
   /Loading chunk [\d]+ failed/.test(error.message) ||
   /Failed to fetch dynamically imported module/.test(error.message);
 
-const ErrorFallback = ({ error }: Props) => {
+const ErrorFallback = ({ error: rawError }: Props) => {
+  const error =
+    rawError instanceof Error ? rawError : new Error(String(rawError));
   const chunkErr = isChunkError(error);
   const alreadyTried = sessionStorage.getItem(RELOAD_KEY) === "1";
 
