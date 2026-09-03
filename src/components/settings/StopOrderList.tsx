@@ -1,5 +1,5 @@
 import { useState, useContext, useCallback } from "react";
-import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, DropResult } from "@hello-pangea/dnd";
 import Droppable from "../StrictModeDroppable";
 import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
 import { reorder } from "../../utils";

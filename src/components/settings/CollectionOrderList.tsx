@@ -1,5 +1,5 @@
 import { useContext, useCallback, useMemo } from "react";
-import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, DropResult } from "@hello-pangea/dnd";
 import {
   DragHandle as DragHandleIcon,
   EditOutlined as EditOutlinedIcon,
