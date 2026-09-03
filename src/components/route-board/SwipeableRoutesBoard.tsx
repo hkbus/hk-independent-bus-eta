@@ -116,15 +116,17 @@ const SwipeableRoutesBoard = ({
       <React.Fragment key={key}>
         {coItemDataList[index].routeList.length > 0 ? (
           <AutoSizer
-            renderProp={({ height, width }) => (
-              <List
-                style={{ height: (height ?? 0) * 0.98, width }}
-                rowCount={coItemDataList[index].routeList.length}
-                rowHeight={itemHeight}
-                rowComponent={RouteRowList}
-                rowProps={coItemDataList[index]}
-              />
-            )}
+            renderProp={({ height, width }) =>
+              !height || !width ? null : (
+                <List
+                  style={{ height: height * 0.98, width }}
+                  rowCount={coItemDataList[index].routeList.length}
+                  rowHeight={itemHeight}
+                  rowComponent={RouteRowList}
+                  rowProps={coItemDataList[index]}
+                />
+              )
+            }
           />
         ) : (
           <AutoSizer
