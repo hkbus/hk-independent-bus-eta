@@ -117,12 +117,13 @@ export const fetchDbFunc = async (
       }
     }
     const updateTime = Date.now() + "";
-    localStorage.setItem("updateTime", updateTime);
     return new Promise((resolve_1) => {
-      const timerId = setTimeout(() => {
+      let servedCache = false;
+      const timerId = setTimeout(async () => {
         if (!forceRenew) {
-          const _cachedDb = loadStoredDb();
+          const _cachedDb = await loadStoredDb().catch(() => null);
           if (isEtaDb(_cachedDb)) {
+            servedCache = true;
             resolve_1(_cachedDb);
           }
         }
@@ -145,6 +146,8 @@ export const fetchDbFunc = async (
           updateTime: parseInt(updateTime),
         }))
         .then((ret) => {
+          if (servedCache) return;
+          localStorage.setItem("updateTime", updateTime);
           localStorage.setItem("schemaVersion", _schemaVersion);
           localStorage.setItem("versionMd5", _md5);
           clearTimeout(timerId);
