@@ -44,7 +44,7 @@
     "react-error-boundary": "^4.0.13",
     "react-i18next": "^14.0.5",
     "react-map-gl": "^8.1.1",
-    "react-markdown": "^8.0.7",
+    "react-markdown": "^10.1.0",
     "react-plotly.js": "^2.6.0",
     "react-router-dom": "^7.18.3",
     "react-select": "^5.3.2",
@@ -52,7 +52,7 @@
     "react-virtualized-auto-sizer": "^1.0.24",
     "react-window": "^1.8.6",
     "react-world-compass": "^1.1.1",
-    "remark-gfm": "^3.0.1",
+    "remark-gfm": "^4.0.1",
     "string-similarity": "^4.0.4",
     "web-vitals": "^2.1.4"
   },
