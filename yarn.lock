@@ -6008,10 +6008,10 @@ pkg-dir@4.2.0, pkg-dir@^4.1.0:
   dependencies:
     find-up "^4.0.0"
 
-plotly.js-basic-dist@^2.30.0:
-  version "2.35.3"
-  resolved "https://registry.yarnpkg.com/plotly.js-basic-dist/-/plotly.js-basic-dist-2.35.3.tgz#18984311a5a7f90aaf937f0e4ef8653ac92910b1"
-  integrity sha512-mzRn/IMZa/iJJVur3VGqAAUD8J4oz0BoXI7f1FLtokIS8mJURIfgiIonh0G87eKlKnAPuy1jQzic2wLqcngQOA==
+plotly.js-basic-dist@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/plotly.js-basic-dist/-/plotly.js-basic-dist-4.0.0.tgz#7a6248e67573b46a73cd0b4f5a5b70a8e47da20b"
+  integrity sha512-9ryaboGcD0EpyFxqpNktl8MOyiMubm1iOdbFHEW/mj8R5PZlfGGDBCT/VIstozLyeIVZ25AdZYtJQHTmgHb4wQ==
 
 pmtiles@^4.3.0:
   version "4.5.0"
@@ -6308,12 +6308,10 @@ react-markdown@^10.1.0:
     unist-util-visit "^5.0.0"
     vfile "^6.0.0"
 
-react-plotly.js@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/react-plotly.js/-/react-plotly.js-2.6.0.tgz#ad6b68ee64f1b5cfa142ee92c59687f9c2c09209"
-  integrity sha512-g93xcyhAVCSt9kV1svqG1clAEdL6k3U+jjuSzfTV7owaSU9Go6Ph8bl25J+jKfKvIGAEYpe4qj++WHJuc9IaeA==
-  dependencies:
-    prop-types "^15.8.1"
+react-plotly.js@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-plotly.js/-/react-plotly.js-4.1.0.tgz#4600d25d3b87640fb914a265f0c5aea68c153486"
+  integrity sha512-+CJA9xOY4UjH1RnRqQnpBGoFSzsrB/e7CR4k8AMQ20RkBlXjqkiIVLdIA5N1hinEVdoTdhaS6krKEARyfSixXg==
 
 react-redux@^9.2.0:
   version "9.3.0"
