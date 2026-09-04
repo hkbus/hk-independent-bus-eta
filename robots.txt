@@ -1,0 +1,5 @@
+Sitemap: https://hkbus.app/sitemap.xml
+
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
