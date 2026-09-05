@@ -5866,9 +5866,9 @@ react-draggable@^4.4.6:
     prop-types "^15.8.1"
 
 react-error-boundary@^6.1.4:
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/react-error-boundary/-/react-error-boundary-6.1.4.tgz#cd690f51bde608b761130f2214e94d8b3ee4c3ab"
-  integrity sha512-7FgvbyjCFhu4dtKSZu807cW1MWG2nWAM4bwGqUByAtHVJXtlzoCJX0SSyZRyFrb+aBd7wtJkcOR4DsxXVEuDsA==
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/react-error-boundary/-/react-error-boundary-6.1.5.tgz#239cefdd181285377f2444461e254f07d2324927"
+  integrity sha512-l2nk+KhgM6e79tAiHEs3tXTdiTW4ARniKYMQN+cLY5vQFpDOkxuXKIC4uIwYuIKoMpFQ6jEbQz9wBArUmq7GWA==
 
 react-event-listener@^0.6.0:
   version "0.6.7"
@@ -6012,10 +6012,15 @@ react-virtualized-auto-sizer@*, react-virtualized-auto-sizer@^2.0.3:
   resolved "https://registry.yarnpkg.com/react-virtualized-auto-sizer/-/react-virtualized-auto-sizer-2.0.3.tgz#28b30f5dacc807ee6edc9116564cc3f815e88e97"
   integrity sha512-nonmCSUIh5HtbzazGcQ1NhnMFps/ZBu/UKJyhCt0Fhi7ondLAUZNETtRCWM8RWYZDzVlMYOQGgBmIxUutIhqgw==
 
-react-window@*, react-window@^2.3.0:
+react-window@*:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/react-window/-/react-window-2.3.0.tgz#92fefee75b7de56a31204dfffc492b84136e4783"
   integrity sha512-FW6TIpaOH646k51X7yE+LSCWGkt5Pfsnc1fVyq/sCI9h0pTqmMiBXM04pzFKg3Bt7NGkeV6kqbU8d/QjmFS7Ug==
+
+react-window@^2.3.0:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/react-window/-/react-window-2.3.1.tgz#92fd42d7a3704644f56f31a4e829ab74f87126f5"
+  integrity sha512-x/+N6b7FNVtlKE7ZQlfOY2bYdA7VXvT2B1Emo/ndAsFsSQ98FBIO88MsatNELbSIlYJgkCd7unBps5XMfv0Eyg==
 
 react-world-compass@^1.1.1:
   version "1.1.4"
