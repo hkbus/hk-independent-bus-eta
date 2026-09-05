@@ -5,7 +5,7 @@ import { Box, IconButton, SxProps, Theme, Typography } from "@mui/material";
 import { reorder } from "../../utils";
 import { useTranslation } from "react-i18next";
 import {
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   DragHandle as DragHandleIcon,
 } from "@mui/icons-material";
 import { ManageMode } from "../../data";

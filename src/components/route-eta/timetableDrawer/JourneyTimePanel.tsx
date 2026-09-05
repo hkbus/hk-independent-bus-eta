@@ -146,14 +146,19 @@ const JourneyTimePanel = ({ routeId }: JourneyTimePanelProps) => {
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      pt={1}
-      flex={1}
-      overflow="hidden"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        pt: 1,
+        flex: 1,
+        overflow: "hidden",
+      }}
     >
-      <Box display="flex" flexDirection="column" gap={1} p={1}>
-        <Box display="flex" gap={1} onClick={handlePickChoice("start")}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1, p: 1 }}>
+        <Box
+          sx={{ display: "flex", gap: 1 }}
+          onClick={handlePickChoice("start")}
+        >
           <Icon color={state.choice === "start" ? "primary" : undefined}>
             {state.choice === "start" ? <FlagIcon /> : <FlagOutlinedIcon />}
           </Icon>
@@ -170,7 +175,10 @@ const JourneyTimePanel = ({ routeId }: JourneyTimePanelProps) => {
             sx={{ pointerEvents: "none" }}
           />
         </Box>
-        <Box display="flex" gap={1} onClick={handlePickChoice("end")}>
+        <Box
+          sx={{ display: "flex", gap: 1 }}
+          onClick={handlePickChoice("end")}
+        >
           <Icon color={state.choice === "end" ? "primary" : undefined}>
             {state.choice === "end" ? <FlagIcon /> : <FlagOutlinedIcon />}
           </Icon>
@@ -200,9 +208,11 @@ const JourneyTimePanel = ({ routeId }: JourneyTimePanelProps) => {
       </Box>
       <Divider sx={{ my: 2 }} />
       <Box
-        overflow="auto"
-        flex={1}
-        sx={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        sx={{
+          overflow: "auto",
+          flex: 1,
+          paddingBottom: "env(safe-area-inset-bottom)",
+        }}
       >
         <Stepper orientation="vertical">
           {stops.map((stop, idx) => (
@@ -211,7 +221,7 @@ const JourneyTimePanel = ({ routeId }: JourneyTimePanelProps) => {
               active={isStepActive(idx, state.startSeq, state.endSeq)}
               onClick={handlePickStop(idx)}
             >
-              <StepLabel StepIconComponent={StepIcon}>
+              <StepLabel slots={{ stepIcon: StepIcon }}>
                 {stopList[stop].name[lang]}
               </StepLabel>
             </Step>

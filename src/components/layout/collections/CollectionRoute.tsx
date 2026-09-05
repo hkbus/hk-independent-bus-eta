@@ -72,7 +72,7 @@ const CollectionRoute = () => {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <Box display="flex" justifyContent="flex-end">
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <ToggleButtonGroup
           size="small"
           value={mode}

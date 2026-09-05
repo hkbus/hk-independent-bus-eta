@@ -34,8 +34,8 @@ const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
 
   return (
     <Dialog
-      PaperProps={{
-        sx: DialogSx,
+      slotProps={{
+        paper: { sx: DialogSx },
       }}
       open={open}
       onClose={handleClose}

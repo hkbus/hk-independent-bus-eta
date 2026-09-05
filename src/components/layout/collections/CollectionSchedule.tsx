@@ -15,7 +15,7 @@ import { MobileTimePicker as TimePicker } from "@mui/x-date-pickers/MobileTimePi
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
   AddCircle as AddIcon,
-  RemoveCircleOutline as RemoveCircleOutlineIcon,
+  RemoveCircleOutlined as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import dayjs from "dayjs";
 
@@ -141,7 +141,7 @@ const CollectionSchedule = () => {
             )}
           </>
         ) : (
-          <Typography sx={{ marginTop: 5 }} fontWeight={700}>
+          <Typography sx={{ marginTop: 5, fontWeight: 700 }}>
             {t("missing_schedule")}
           </Typography>
         )}

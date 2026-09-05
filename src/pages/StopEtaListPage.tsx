@@ -32,12 +32,14 @@ const StopEtaListPage = () => {
   }, [routeList, stopId, stopMap]);
 
   return (
-    <Box height="100%" display="flex" flexDirection="column">
-      <Box display="flex" alignItems="center" justifyContent="center">
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
         <Typography variant="h6">{stopList[stopId!].name[language]}</Typography>
       </Box>
       <Divider sx={{ my: 1 }} />
-      <Box overflow="scroll">
+      <Box sx={{ overflow: "scroll" }}>
         <StopRouteList stops={stops} isFocus={true} />
       </Box>
     </Box>

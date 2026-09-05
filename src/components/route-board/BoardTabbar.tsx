@@ -28,7 +28,7 @@ const BoardTabbar = ({ boardTab, onChangeTab }: BoardTabbarProps) => {
   useHorizontalWheelScroll();
 
   return (
-    <Box display="flex" alignItems="center">
+    <Box sx={{ display: "flex", alignItems: "center" }}>
       <IconButton
         onClick={() => {
           vibrate(vibrateDuration);

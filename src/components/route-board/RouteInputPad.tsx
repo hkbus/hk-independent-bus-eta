@@ -43,7 +43,7 @@ const RouteNumPad = ({ possibleChar }: { possibleChar: string[] }) => {
   return (
     <Grid container spacing={0}>
       {numPadOrder.split("").map((k) => (
-        <Grid item xs={4} key={"input-" + k}>
+        <Grid size={4} key={"input-" + k}>
           <KeyButton
             k={k}
             onClick={updateSearchRouteByButton}
@@ -68,7 +68,7 @@ const RouteAlphabetPad = ({ possibleChar }: { possibleChar: string[] }) => {
       {possibleChar
         .filter((k) => isNaN(parseInt(k, 10)))
         .map((k) => (
-          <Grid item xs={6} key={"input-" + k}>
+          <Grid size={6} key={"input-" + k}>
             <KeyButton
               k={k}
               onClick={updateSearchRouteByButton}
@@ -88,17 +88,16 @@ const RouteInputPad = ({ boardTab }: { boardTab: BoardTabType }) => {
 
   const possibleChar = getPossibleChar(searchRoute, routeList, boardTab);
 
-  const padding = 0;
   if (navigator.userAgent === "prerendering") {
     return <></>;
   }
 
   return (
-    <Box sx={rootSx} padding={padding}>
-      <Box sx={numPadContainerSx} padding={padding}>
+    <Box sx={{ ...rootSx, padding: 0 }}>
+      <Box sx={{ ...numPadContainerSx, padding: 0 }}>
         <RouteNumPad possibleChar={possibleChar} />
       </Box>
-      <Box sx={alphabetPadContainerSx} padding={padding}>
+      <Box sx={{ ...alphabetPadContainerSx, padding: 0 }}>
         <RouteAlphabetPad possibleChar={possibleChar} />
       </Box>
     </Box>

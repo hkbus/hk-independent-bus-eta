@@ -116,7 +116,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
         id={`stop-${idx}`}
         expanded={stopIdx === idx && navigator.userAgent !== "prerendering"}
         onChange={handleChangeInner}
-        TransitionProps={{ unmountOnExit: true }}
+        slotProps={{ transition: { unmountOnExit: true } }}
         ref={ref}
         sx={accordionSx}
       >
@@ -139,7 +139,9 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
             seq={idx}
             announce
           />
-          <Box display="flex" flexDirection="column" alignItems="flex-end">
+          <Box
+            sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}
+          >
             <Box>
               {isStopAlarm && (
                 <IconButton

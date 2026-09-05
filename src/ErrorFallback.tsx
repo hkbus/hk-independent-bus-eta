@@ -31,7 +31,7 @@ const ErrorFallback = ({ error: rawError }: Props) => {
       }
       window.location.reload();
     })();
-  }, [alreadyTried, chunkErr, error]);
+  }, [alreadyTried, chunkErr]);
 
   if (chunkErr && !alreadyTried) {
     return (

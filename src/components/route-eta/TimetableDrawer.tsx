@@ -29,7 +29,7 @@ const TimetableDrawer = ({ routeId, open, onClose }: TimetableDrawerProps) => {
     <Drawer
       open={open}
       ModalProps={modalProps}
-      PaperProps={paperProps}
+      slotProps={{ paper: paperProps }}
       anchor="right"
     >
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={tabbarSx}>

@@ -131,16 +131,18 @@ const SwipeableRoutesBoard = ({
         ) : (
           <AutoSizer
             renderProp={({ width }) => (
-              <Box sx={noResultSx} width={width}>
+              <Box sx={{ ...(noResultSx as object), width }}>
                 <Box
-                  display="flex"
-                  alignItems="center"
-                  flexDirection="column"
-                  gap={1}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    gap: 1,
+                  }}
                 >
                   {availableBoardTab[index] !== "recent" ? (
                     <>
-                      <Box display="flex" alignItems="center">
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
                         <SentimentVeryDissatisfiedIcon fontSize="small" />
                         <Typography variant="h6">
                           &quot;{searchRoute}&quot;
@@ -154,8 +156,8 @@ const SwipeableRoutesBoard = ({
                       </Typography>
                     </>
                   ) : (
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <Box display="flex" alignItems="center">
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
                         <SentimentVeryDissatisfiedIcon fontSize="small" />
                         {searchRoute.length > 0 && (
                           <Typography variant="h6">
@@ -170,7 +172,7 @@ const SwipeableRoutesBoard = ({
                   )}
                 </Box>
                 {availableBoardTab[index] !== "all" && (
-                  <Box display="flex">
+                  <Box sx={{ display: "flex" }}>
                     <Typography variant="h6">
                       <Trans
                         i18nKey="tap-here-to-search-all-routes"

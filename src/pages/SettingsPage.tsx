@@ -31,7 +31,7 @@ import {
   BarChart as BarChartIcon,
   Info as InfoIcon,
   SendToMobile as SendToMobileIcon,
-  HelpOutline as HelpIcon,
+  HelpOutlined as HelpIcon,
   QuestionAnswerOutlined as FaqIcon,
   Sync as SyncIcon,
   SyncDisabled as SyncDisabledIcon,

@@ -28,7 +28,7 @@ const HomeRouteListDropDown = ({
   return (
     <Box>
       <Box sx={headerSx} onClick={() => setExpanded((prev) => !prev)}>
-        <Typography variant="body1" m={1} fontWeight={700}>
+        <Typography variant="body1" sx={{ m: 1, fontWeight: 700 }}>
           {name}
         </Typography>
         <Box>{!expaned ? <ExpandMoreIcon /> : <ExpandLessIcon />}</Box>

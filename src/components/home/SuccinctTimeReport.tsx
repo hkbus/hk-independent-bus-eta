@@ -1,5 +1,5 @@
 import {
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   MyLocation as NearestIcon,
   Reorder as ReorderIcon,
 } from "@mui/icons-material";
@@ -150,7 +150,7 @@ const SuccinctTimeReport = ({
       <ListItem onClick={handleClick} sx={rootSx}>
         <ListItemText
           primary={
-            <Box overflow="hidden">
+            <Box sx={{ overflow: "hidden" }}>
               <RouteNo
                 routeNo={language === "zh" ? t(routeNo) : routeNo}
                 fontSize={co[0] === "mtr" ? "1.4667em" : undefined}
@@ -191,9 +191,11 @@ const SuccinctTimeReport = ({
               isNearest={isNearest}
             />
           }
-          secondaryTypographyProps={{
-            component: "h4",
-            variant: "subtitle2",
+          slotProps={{
+            secondary: {
+              component: "h4",
+              variant: "subtitle2",
+            },
           }}
           sx={routeDestSx}
         />

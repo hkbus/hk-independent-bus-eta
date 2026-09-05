@@ -63,7 +63,7 @@ const SearchResultList = ({
 
   return (
     <Accordion
-      TransitionProps={{ unmountOnExit: true }}
+      slotProps={{ transition: { unmountOnExit: true } }}
       sx={rootSx}
       onChange={() => handleRouteClick(idx)}
       expanded={expanded}
