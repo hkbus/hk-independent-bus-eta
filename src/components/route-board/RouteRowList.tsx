@@ -16,13 +16,7 @@ interface RouteRowListRowProps {
 type RouteRowListProps = RowComponentProps<RouteRowListRowProps>;
 
 const RouteRowListMemo = React.memo(
-  ({
-    routeList,
-    vibrateDuration,
-    tab,
-    index,
-    style,
-  }: RouteRowListProps) => {
+  ({ routeList, vibrateDuration, tab, index, style }: RouteRowListProps) => {
     const route = routeList[index];
     const { addSearchHistory, removeSearchHistoryByRouteId } =
       useContext(AppContext);

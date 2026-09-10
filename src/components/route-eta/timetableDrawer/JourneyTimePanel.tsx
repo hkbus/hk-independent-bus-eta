@@ -175,10 +175,7 @@ const JourneyTimePanel = ({ routeId }: JourneyTimePanelProps) => {
             sx={{ pointerEvents: "none" }}
           />
         </Box>
-        <Box
-          sx={{ display: "flex", gap: 1 }}
-          onClick={handlePickChoice("end")}
-        >
+        <Box sx={{ display: "flex", gap: 1 }} onClick={handlePickChoice("end")}>
           <Icon color={state.choice === "end" ? "primary" : undefined}>
             {state.choice === "end" ? <FlagIcon /> : <FlagOutlinedIcon />}
           </Icon>
