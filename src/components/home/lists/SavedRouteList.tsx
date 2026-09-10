@@ -63,7 +63,7 @@ const SavedRouteList = ({ isFocus }: SavedRouteListProps) => {
   if (noRoutes) {
     return (
       <Box sx={rootSx}>
-        <Typography sx={{ marginTop: 5 }} fontWeight="700">
+        <Typography sx={{ marginTop: 5, fontWeight: 700 }}>
           {t("未有收藏路線")}
         </Typography>
       </Box>

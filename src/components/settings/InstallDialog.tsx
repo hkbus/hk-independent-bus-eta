@@ -24,7 +24,11 @@ const InstallDialog = ({ open, handleClose }: InstallDialogProps) => {
   const [tab, setTab] = useState<"PWA" | "App">("App");
 
   return (
-    <Dialog open={open} onClose={handleClose} PaperProps={{ sx: dialogSx }}>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      slotProps={{ paper: { sx: dialogSx } }}
+    >
       <DialogTitle sx={titleSx}>{t("安裝步驟")}</DialogTitle>
       <DialogContent>
         <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={tabbarSx}>

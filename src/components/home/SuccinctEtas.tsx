@@ -121,7 +121,7 @@ const SuccinctEtas = ({
   };
 
   return (
-    <Box display="flex" flexDirection="column" textAlign="right">
+    <Box sx={{ display: "flex", flexDirection: "column", textAlign: "right" }}>
       <Typography component="h5" color="textPrimary" sx={primarySx}>
         {etas ? getEtaString(etas[0], 0, true) : ""}
       </Typography>

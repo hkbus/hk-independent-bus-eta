@@ -1,5 +1,5 @@
 import { useState, useContext, useCallback } from "react";
-import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, DropResult } from "@hello-pangea/dnd";
 import { useTranslation } from "react-i18next";
 import {
   Box,
@@ -72,7 +72,7 @@ const CollectionRoute = () => {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <Box display="flex" justifyContent="flex-end">
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <ToggleButtonGroup
           size="small"
           value={mode}

@@ -44,6 +44,6 @@ const rootSx: SxProps<Theme> = {
   my: 1,
   borderStyle: "solid",
   borderWidth: 1,
-  borderRadius: (theme) => theme.shape.borderRadius / 2,
+  borderRadius: (theme) => Number(theme.shape.borderRadius) / 2,
   cursor: "pointer",
 };

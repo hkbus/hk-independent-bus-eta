@@ -37,7 +37,7 @@ async function runStaticServer(port, routes, dir) {
     app = express();
     const resolvedPath = resolve(dir);
     app.use(express.static(resolvedPath));
-    app.get("/*", (req, res) => {
+    app.get("/*splat", (req, res) => {
       res.sendFile(`${resolvedPath}/index.html`);
     });
 

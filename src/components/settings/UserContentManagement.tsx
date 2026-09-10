@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import {
   Code as CodeIcon,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   EditOutlined as EditOutlinedIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";

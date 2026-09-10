@@ -171,8 +171,11 @@ const EtaLine = ({
     <Box component="span">
       <Box
         component="span"
-        sx={{ ...waitTimeSx, color: (theme) => theme.palette.warning.main }}
-        fontSize={trainTextUsed ? "0.9em" : undefined}
+        sx={{
+          ...waitTimeSx,
+          color: (theme) => theme.palette.warning.main,
+          fontSize: trainTextUsed ? "0.9em" : undefined,
+        }}
       >
         {waitTimeText}
       </Box>

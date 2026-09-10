@@ -55,7 +55,7 @@ const CollectionRouteList = ({
   if (noRoutes) {
     return (
       <Box sx={rootSx}>
-        <Typography sx={{ marginTop: 5 }} fontWeight={700}>
+        <Typography sx={{ marginTop: 5, fontWeight: 700 }}>
           <b>{t("收藏中未有路線")}</b>
         </Typography>
       </Box>

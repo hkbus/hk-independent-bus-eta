@@ -41,8 +41,10 @@ const Notice = () => {
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
-                p: ({ ...props }) => <Typography variant="body1" {...props} />,
-                a: ({ ...props }) => (
+                p: ({ ref: _ref, ...props }) => (
+                  <Typography variant="body1" {...props} />
+                ),
+                a: ({ ref: _ref, ...props }) => (
                   <Link sx={linkSx} target="_blank" {...props} />
                 ),
               }}

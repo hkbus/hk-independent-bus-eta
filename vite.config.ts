@@ -2,7 +2,6 @@ import { ConfigEnv, defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
-import eslint from "vite-plugin-eslint"
 
 // https://vitejs.dev/config/
 
@@ -12,11 +11,8 @@ export default defineConfig(({mode}: ConfigEnv) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [
-      react(), 
-      eslint({
-        
-      }), 
-      basicSsl(), 
+      react(),
+      basicSsl(),
       VitePWA(getPwaOptions(env))
     ],
     server: {

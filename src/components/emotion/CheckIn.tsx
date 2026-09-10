@@ -62,7 +62,10 @@ const CheckIn = () => {
           <u>{t(lastCheckIn.gratitudeObj as string)}</u>
         </Typography>
         <Box sx={questionContainerSx}>
-          <Typography variant="body1" alignSelf="flex-start" textAlign="start">
+          <Typography
+            variant="body1"
+            sx={{ alignSelf: "flex-start", textAlign: "start" }}
+          >
             {t("How many things are there to be grateful?")}
           </Typography>
           <ToggleButtonGroup
@@ -92,7 +95,10 @@ const CheckIn = () => {
   return (
     <Box sx={rootSx}>
       <Box sx={questionContainerSx}>
-        <Typography variant="body1" alignSelf="flex-start" textAlign="start">
+        <Typography
+          variant="body1"
+          sx={{ alignSelf: "flex-start", textAlign: "start" }}
+        >
           1. {t("How happy were you in the past 24 hours?")}
         </Typography>
         <ToggleButtonGroup
@@ -109,7 +115,10 @@ const CheckIn = () => {
         </ToggleButtonGroup>
       </Box>
       <Box sx={questionContainerSx}>
-        <Typography variant="body1" alignSelf="flex-start" textAlign="start">
+        <Typography
+          variant="body1"
+          sx={{ alignSelf: "flex-start", textAlign: "start" }}
+        >
           2.{" "}
           {t(
             "What environment made you feel most profound in the past 24 hours?"
@@ -134,7 +143,10 @@ const CheckIn = () => {
         </ToggleButtonGroup>
       </Box>
       <Box sx={questionContainerSx}>
-        <Typography variant="body1" alignSelf="flex-start" textAlign="start">
+        <Typography
+          variant="body1"
+          sx={{ alignSelf: "flex-start", textAlign: "start" }}
+        >
           3. {t("What are you most grateful for in the past 24 hours?")}
         </Typography>
         <ToggleButtonGroup

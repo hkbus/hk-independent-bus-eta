@@ -90,7 +90,7 @@ const NearbyRouteList = ({ isFocus }: NearbyRouteListProps) => {
   if (noNearbyRoutes) {
     return (
       <Box sx={rootSx}>
-        <Typography sx={{ marginTop: 5 }} fontWeight="700">
+        <Typography sx={{ marginTop: 5, fontWeight: 700 }}>
           {t("附近未有任何路線")}
         </Typography>
       </Box>

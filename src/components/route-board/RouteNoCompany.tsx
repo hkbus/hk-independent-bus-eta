@@ -14,7 +14,7 @@ const RouteNoCompany = ({ route }: RouteNoCompanyProps) => {
   const [routeNo, serviceType] = route[0].split("-").slice(0, 2);
 
   return (
-    <Box overflow="hidden">
+    <Box sx={{ overflow: "hidden" }}>
       <RouteNo
         routeNo={language === "zh" ? t(routeNo) : routeNo}
         fontSize={route[1].co[0] === "mtr" ? "1.6em" : undefined}

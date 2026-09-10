@@ -54,7 +54,7 @@ const SmartCollectionRouteList = ({
   if (collections.length === 0) {
     return (
       <Box sx={rootSx}>
-        <Typography sx={{ marginTop: 5 }} fontWeight={700}>
+        <Typography sx={{ marginTop: 5, fontWeight: 700 }}>
           {t("未有收藏路線")}
         </Typography>
       </Box>
@@ -76,7 +76,7 @@ const SmartCollectionRouteList = ({
           acc || routes.split("|").filter((v) => Boolean(v)).length > 0,
         false
       ) && (
-        <Typography sx={{ marginTop: 5 }} fontWeight={700}>
+        <Typography sx={{ marginTop: 5, fontWeight: 700 }}>
           {t("未有收藏路線")}
         </Typography>
       )}

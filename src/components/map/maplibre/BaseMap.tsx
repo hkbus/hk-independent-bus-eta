@@ -11,7 +11,7 @@ import {
   type MapProps,
   type MapEvent,
 } from "react-map-gl/maplibre";
-import maplibregl from "maplibre-gl";
+import { addProtocol } from "maplibre-gl";
 import { PMTiles, Protocol } from "pmtiles";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Box, type SxProps, type Theme } from "@mui/material";
@@ -33,7 +33,7 @@ const ensurePMTilesProtocol = () => {
   const protocol = new Protocol();
   const source = new CachedPMTilesSource(VECTOR_PMTILES_URL);
   protocol.add(new PMTiles(source));
-  maplibregl.addProtocol("pmtiles", protocol.tile);
+  addProtocol("pmtiles", protocol.tile);
   protocolRegistered = true;
 };
 
