@@ -109,9 +109,9 @@ const RouteMap = ({
   // portion of the route actually on screen instead of the whole remaining
   // journey. Updated once per gesture (moveend), not per frame, since each
   // update triggers a solar-position recompute.
-  const [mapBounds, setMapBounds] = useState<
-    [GeoLocation, GeoLocation] | null
-  >(null);
+  const [mapBounds, setMapBounds] = useState<[GeoLocation, GeoLocation] | null>(
+    null
+  );
   const applyBoundsFrom = useCallback((target: maplibregl.Map) => {
     const b = target.getBounds();
     const sw = b.getSouthWest();
