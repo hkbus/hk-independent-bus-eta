@@ -5,7 +5,7 @@ import React, {
   useImperativeHandle,
   useCallback,
 } from "react";
-import SwipeableViews from "react-swipeable-views";
+import SwipeableViews from "../../swipeableViewsCompat";
 import StopRouteList from "./StopRouteList";
 import { Company } from "hk-bus-eta";
 import DbContext from "../../context/DbContext";

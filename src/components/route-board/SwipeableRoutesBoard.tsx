@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useCallback } from "react";
-import SwipeableViews from "react-swipeable-views";
+import SwipeableViews from "../../swipeableViewsCompat";
 import {
   virtualize,
   bindKeyboard,

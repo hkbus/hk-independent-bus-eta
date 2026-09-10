@@ -16,7 +16,7 @@ import { iOSRNWebView } from "../../utils";
 import { Language } from "../../data";
 import { Close as CloseIcon } from "@mui/icons-material";
 import AppContext from "../../context/AppContext";
-import SwipeableViews from "react-swipeable-views";
+import SwipeableViews from "../../swipeableViewsCompat";
 
 interface NoticeCardState {
   id: string;
