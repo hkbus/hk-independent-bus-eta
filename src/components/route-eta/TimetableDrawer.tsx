@@ -6,11 +6,17 @@ import JourneyTimePanel from "./timetableDrawer/JourneyTimePanel";
 
 interface TimetableDrawerProps {
   routeId: string;
+  stopId: string;
   open: boolean;
   onClose: () => void;
 }
 
-const TimetableDrawer = ({ routeId, open, onClose }: TimetableDrawerProps) => {
+const TimetableDrawer = ({
+  routeId,
+  stopId,
+  open,
+  onClose,
+}: TimetableDrawerProps) => {
   const { t } = useTranslation();
   const [tab, setTab] = useState<"schedule" | "jt">("jt");
 
@@ -36,7 +42,7 @@ const TimetableDrawer = ({ routeId, open, onClose }: TimetableDrawerProps) => {
         <Tab label={t("車程")} value="jt" />
         <Tab value="schedule" label={t("時間表")} />
       </Tabs>
-      {tab === "jt" && <JourneyTimePanel routeId={routeId} />}
+      {tab === "jt" && <JourneyTimePanel routeId={routeId} stopId={stopId} />}
       {tab === "schedule" && <TimeTable routeId={routeId} />}
     </Drawer>
   );

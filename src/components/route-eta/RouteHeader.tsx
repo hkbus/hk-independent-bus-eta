@@ -37,7 +37,7 @@ const RouteHeader = ({ routeId, stopId }: RouteHeaderProps) => {
       </Box>
       <Box sx={rightColumnSx}>
         <Divider orientation="vertical" flexItem />
-        <TimetableButton routeId={routeId} />
+        <TimetableButton routeId={routeId} stopId={stopId} />
       </Box>
     </Paper>
   );

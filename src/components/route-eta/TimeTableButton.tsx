@@ -4,7 +4,13 @@ import { Schedule as ScheduleIcon } from "@mui/icons-material";
 import TimetableDrawer from "./TimetableDrawer";
 import { useTranslation } from "react-i18next";
 
-const TimeTableButton = ({ routeId }: { routeId: string }) => {
+const TimeTableButton = ({
+  routeId,
+  stopId,
+}: {
+  routeId: string;
+  stopId: string;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
 
@@ -22,6 +28,7 @@ const TimeTableButton = ({ routeId }: { routeId: string }) => {
       </Button>
       <TimetableDrawer
         routeId={routeId}
+        stopId={stopId}
         open={isOpen}
         onClose={() => setIsOpen(false)}
       />
