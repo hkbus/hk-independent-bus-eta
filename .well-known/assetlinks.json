@@ -1,0 +1,11 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.hkbus",
+      "sha256_cert_fingerprints":
+        ["2A:53:41:98:B6:E3:9E:FB:42:E7:3A:62:EF:A1:18:86:8C:2A:CB:D4:8E:7A:E7:84:CD:85:9F:55:97:46:33:04"]
+    }
+  }
+]
