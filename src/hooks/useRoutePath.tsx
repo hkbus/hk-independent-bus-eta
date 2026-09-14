@@ -20,6 +20,7 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
   const { gtfsId, bound, co, route, dest } = routeList[routeId];
 
   useEffect(() => {
+    const controller = new AbortController();
     let waypointsFile = "";
     if (gtfsId) {
       waypointsFile = `${gtfsId}-${
@@ -54,16 +55,19 @@ export const useRoutePath = (routeId: string, stops: StopListEntry[]) => {
     if (waypointsFile === "") {
       setFallbackGeoJson();
     } else {
-      fetch(`https://hkbus.github.io/route-waypoints/${waypointsFile}`)
+      fetch(`https://hkbus.github.io/route-waypoints/${waypointsFile}`, {
+        signal: controller.signal,
+      })
         .then((r) => r.json())
         .then((json) => {
           setGeoJson(json);
         })
         .catch(() => {
-          setFallbackGeoJson();
+          if (!controller.signal.aborted) setFallbackGeoJson();
         });
     }
     return () => {
+      controller.abort();
       setGeoJson(null);
     };
   }, [routeId, gtfsId, bound, co, stops, dest, route]);
