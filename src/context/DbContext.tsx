@@ -36,12 +36,14 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
 
   const renewDb = useCallback(
     () =>
-      fetchDbFunc(true).then((db) =>
+      fetchDbFunc(true).then((db) => {
+        // a failed renew resolves an empty db; do not clobber live state
+        if (isEmptyObj(db.routeList)) return;
         setState((prev) => ({
           ...prev,
           db,
-        }))
-      ),
+        }));
+      }),
     []
   );
 
