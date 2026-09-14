@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react-swc";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
 import eslint from "vite-plugin-eslint"
+import { readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 // https://vitejs.dev/config/
 
@@ -11,13 +13,15 @@ const mobile = !!/android|ios/.exec(process.env.TAURI_ENV_PLATFORM);
 export default defineConfig(({mode}: ConfigEnv) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
+    base: getBase(env),
     plugins: [
       react(), 
       eslint({
         
       }), 
       basicSsl(), 
-      VitePWA(getPwaOptions(env))
+      VitePWA(getPwaOptions(env)),
+      spaFallbackBase(getBase(env), "./build")
     ],
     server: {
       https: !mobile,
@@ -32,11 +36,35 @@ export default defineConfig(({mode}: ConfigEnv) => {
   }
 });
 
+// serve from a sub-path, e.g. BASE_PATH=/hkbus for user.github.io/hkbus
+const getBase = (env: Record<string, string>): string => {
+  const base = env.BASE_PATH || "/";
+  return base.endsWith("/") ? base : `${base}/`;
+};
+
+// public/404.html ships verbatim, so align its spa-github-pages segment
+// count with the base once the build is written
+const spaFallbackBase = (base: string, outDir: string) => ({
+  name: "spa-fallback-base",
+  closeBundle() {
+    const file = resolve(outDir, "404.html");
+    writeFileSync(file, readFileSync(file, "utf-8").replace(
+      /var pathSegmentsToKeep = \d+;/,
+      `var pathSegmentsToKeep = ${base.split("/").filter(Boolean).length};`));
+  },
+});
+
 const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => {
   const mapUrlPatternFunc = `(({url}) => url.origin.includes("${env.VITE_OSM_PROVIDER_HOST}"))`;
+  const base = getBase(env);
+  // inlined as source because workbox serialises these into sw.js
+  const prefixUrlPatternFunc = (...paths: string[]) =>
+    `(({url}) => url.origin === self.location.origin && (${paths
+      .map((p) => `url.pathname.startsWith("${base}${p}")`)
+      .join(" || ")}))`;
   return {
     mode: "production",
-    base: "/",
+    base,
     manifest: {
       short_name: "巴士預報",
       name: "巴士到站預報 App",
@@ -77,9 +105,8 @@ const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => 
         // for lazy caching anything
         // reference to https://vite-pwa-org.netlify.app/workbox/generate-sw.html#cache-external-resources 
         {
-          urlPattern: ({url}) => (
-            url.origin === self.location.origin && url.pathname.startsWith("/assets")
-          ),
+          urlPattern: new Function(
+            'return ' + prefixUrlPatternFunc("assets"))(),
           handler: "CacheFirst",
           options: {
             cacheName: "app-runtime",
@@ -89,10 +116,8 @@ const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => 
           }
         },
         {
-          urlPattern: ({ url }) =>
-            url.origin === self.location.origin &&
-            (url.pathname.startsWith("/zh/route/") ||
-              url.pathname.startsWith("/en/route/")),
+          urlPattern: new Function(
+            'return ' + prefixUrlPatternFunc("zh/route/", "en/route/"))(),
           handler: "StaleWhileRevalidate",
           options: {
             cacheName: "app-runtime-public",
@@ -106,9 +131,8 @@ const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => 
           }
         },
         {
-          urlPattern: ({ url }) =>
-            url.origin === self.location.origin &&
-            (url.pathname.startsWith("/fonts/") || url.pathname.startsWith("/img/")),
+          urlPattern: new Function(
+            'return ' + prefixUrlPatternFunc("fonts/", "img/"))(),
           handler: "CacheFirst",
           options: {
             cacheName: "font-and-asset",

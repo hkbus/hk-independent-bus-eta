@@ -41,7 +41,7 @@ const InstallDialog = ({ open, handleClose }: InstallDialogProps) => {
               }
             >
               <img
-                src="/img/google-play-badge.png"
+                src={`${import.meta.env.BASE_URL}img/google-play-badge.png`}
                 alt="Install via Google Play"
               />
             </Box>
@@ -53,7 +53,7 @@ const InstallDialog = ({ open, handleClose }: InstallDialogProps) => {
               }
             >
               <img
-                src="/img/app-store.svg"
+                src={`${import.meta.env.BASE_URL}img/app-store.svg`}
                 style={{ margin: "6%", width: "88%" }}
                 alt="Install via App Store"
               />
