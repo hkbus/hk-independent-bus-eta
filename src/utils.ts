@@ -532,9 +532,11 @@ export const routeSortFunc = (
   }
 
   // Remove all A-Z, smaller number should come first
-  if (parseInt(aRoute[0], 10) > parseInt(bRoute[0], 10)) {
+  const aNum = parseInt(aRoute[0].replace(/[a-z]/gi, ""), 10);
+  const bNum = parseInt(bRoute[0].replace(/[a-z]/gi, ""), 10);
+  if (aNum > bNum) {
     return 1;
-  } else if (parseInt(aRoute[0], 10) < parseInt(bRoute[0], 10)) {
+  } else if (aNum < bNum) {
     return -1;
   }
 
@@ -557,7 +559,7 @@ export const routeSortFunc = (
   }
 
   // Smaller service Type should come first
-  return aRoute[1] > bRoute[1] ? 1 : -1;
+  return parseInt(aRoute[1], 10) - parseInt(bRoute[1], 10) || 0;
 };
 
 export const iOSRNWebView = (): boolean => {
