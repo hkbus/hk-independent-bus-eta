@@ -54,7 +54,7 @@ pull:
     - if: $PULL == "true"
 
 pages:
-  image: node:18
+  image: node:24
   stage: deploy
   script:
     - yarn install
