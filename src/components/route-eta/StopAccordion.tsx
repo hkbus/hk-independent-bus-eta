@@ -140,7 +140,11 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
             announce
           />
           <Box
-            sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+            }}
           >
             <Box>
               {isStopAlarm && (

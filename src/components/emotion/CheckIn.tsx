@@ -63,9 +63,9 @@ const CheckIn = () => {
         </Typography>
         <Box sx={questionContainerSx}>
           <Typography
-          variant="body1"
-          sx={{ alignSelf: "flex-start", textAlign: "start" }}
-        >
+            variant="body1"
+            sx={{ alignSelf: "flex-start", textAlign: "start" }}
+          >
             {t("How many things are there to be grateful?")}
           </Typography>
           <ToggleButtonGroup
