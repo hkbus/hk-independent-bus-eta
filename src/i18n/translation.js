@@ -158,6 +158,8 @@ const resources = {
       "no-recent-search": "No Record",
       "tap-here-to-search-all-routes":
         "<TapHereLink>Tap here</TapHereLink> to search all routes",
+      "route-filter-may-hide-result":
+        "Route filtering is ON, showing ONLY operating routes. <TapHereLink>Tap here</TapHereLink> to show ALL routes.",
       對頭線: "REV",
       附近未有任何路線: "No available routes nearby",
       未有收藏路線: "No starred routes",
@@ -261,6 +263,8 @@ const resources = {
       "no-recent-search": "沒有記錄",
       "tap-here-to-search-all-routes":
         "<TapHereLink>按此</TapHereLink>以搜尋「全部」路綫",
+      "route-filter-may-hide-result":
+        "路線篩選已開啟，只顯示現時路線。<TapHereLink>按此</TapHereLink>顯示所有路線。",
       "Source code": "原始碼",
       "We'd like to set analytics cookies that help us improve hkbus.app by measuring how you use it.":
         "我們希望設置 cookie，了解你如何使用 hkbus.app 來幫助我們改進。",

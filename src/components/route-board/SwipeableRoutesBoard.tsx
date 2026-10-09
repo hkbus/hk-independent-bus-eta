@@ -10,7 +10,7 @@ import { FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import memorize from "memoize-one";
 import { Trans, useTranslation } from "react-i18next";
-import { Box, SxProps, Theme, Typography } from "@mui/material";
+import { Box, Link, SxProps, Theme, Typography } from "@mui/material";
 
 import AppContext from "../../context/AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
@@ -32,6 +32,7 @@ const SwipeableRoutesBoard = ({
   const {
     searchRoute,
     isRouteFilter,
+    toggleRouteFilter,
     busSortOrder,
     routeSearchHistory,
     vibrateDuration,
@@ -152,6 +153,24 @@ const SwipeableRoutesBoard = ({
                       <Typography variant="body1">
                         {t("suggest-update-database")}
                       </Typography>
+                      {isRouteFilter && (
+                        <Typography variant="body1" textAlign="center" px={2}>
+                          <Trans
+                            i18nKey="route-filter-may-hide-result"
+                            components={{
+                              TapHereLink: (
+                                <Link
+                                  component="button"
+                                  type="button"
+                                  color="inherit"
+                                  sx={clickableLinkSx}
+                                  onClick={() => toggleRouteFilter()}
+                                />
+                              ),
+                            }}
+                          />
+                        </Typography>
+                      )}
                     </>
                   ) : (
                     <Box display="flex" alignItems="center" gap={2}>
@@ -176,9 +195,10 @@ const SwipeableRoutesBoard = ({
                         i18nKey="tap-here-to-search-all-routes"
                         components={{
                           TapHereLink: (
-                            <Typography
-                              variant="h6"
-                              component="span"
+                            <Link
+                              component="button"
+                              type="button"
+                              color="inherit"
                               sx={clickableLinkSx}
                               onClick={() => onChangeTab("all")}
                             />
@@ -194,7 +214,16 @@ const SwipeableRoutesBoard = ({
         )}
       </React.Fragment>
     ),
-    [itemHeight, coItemDataList, searchRoute, t, availableBoardTab, onChangeTab]
+    [
+      itemHeight,
+      coItemDataList,
+      searchRoute,
+      t,
+      availableBoardTab,
+      onChangeTab,
+      isRouteFilter,
+      toggleRouteFilter,
+    ]
   );
 
   return useMemo(
@@ -258,7 +287,7 @@ const prerenderListSx: SxProps<Theme> = {
 };
 
 const noResultSx: SxProps<Theme> = {
-  height: "120px",
+  minHeight: "120px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
