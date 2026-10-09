@@ -73,6 +73,10 @@ const TimeTable = ({ routeId }: TimeTableProps) => {
       <Divider sx={{ width: "80%", my: 2 }} />
       <Box sx={{ mb: 6 }}>
         <RouteOffiicalUrlBtn routeId={routeId} />
+        {/* disclaimer: government open-data timetables can lag operator changes */}
+        <Typography variant="caption" sx={disclaimerSx}>
+          {t("timetable-disclaimer-text")}
+        </Typography>
       </Box>
       <Box sx={{ paddingBottom: "env(safe-area-inset-bottom)" }} />
     </>
@@ -149,6 +153,12 @@ const ServiceMaps: Record<
 const entriesSx: SxProps<Theme> = {
   flexDirection: "column",
   alignItems: "flex-start",
+};
+
+const disclaimerSx: SxProps<Theme> = {
+  display: "block",
+  mt: 1,
+  color: (theme) => theme.palette.text.secondary,
 };
 
 const freqContainerSx: SxProps<Theme> = {
