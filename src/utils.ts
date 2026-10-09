@@ -306,8 +306,8 @@ export const setSeoRouteFeature = ({
           "@type": "Question",
           name:
             lang === "en"
-              ? `What are the timetable for ${route.route} from ${t(ServiceIds[serviceId])}?`
-              : `${route.route} 在${t(ServiceIds[serviceId])}的服務時間表？`,
+              ? `What are the timetable for ${route.route} from ${t(ServiceIds[serviceId] ?? ServiceIds[999])}?`
+              : `${route.route} 在${t(ServiceIds[serviceId] ?? ServiceIds[999])}的服務時間表？`,
           acceptedAnswer: {
             "@type": "Answer",
             text:
