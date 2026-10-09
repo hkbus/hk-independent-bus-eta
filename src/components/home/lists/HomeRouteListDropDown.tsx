@@ -9,12 +9,14 @@ import {
 interface HomeRouteListDropDownProps {
   name: string;
   routeStrings: string;
+  nearestFrom?: string[];
   defaultExpanded?: boolean;
 }
 
 const HomeRouteListDropDown = ({
   name,
   routeStrings,
+  nearestFrom,
   defaultExpanded = true,
 }: HomeRouteListDropDownProps) => {
   const [expaned, setExpanded] = useState<boolean>(defaultExpanded);
@@ -42,6 +44,7 @@ const HomeRouteListDropDown = ({
                 <SuccinctTimeReport
                   key={`route-${name}-${idx}`}
                   routeId={selectedRoute}
+                  nearestFrom={nearestFrom}
                 />
               )
           )}

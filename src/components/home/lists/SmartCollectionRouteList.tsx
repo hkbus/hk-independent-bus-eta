@@ -63,14 +63,17 @@ const SmartCollectionRouteList = ({
 
   return (
     <Box sx={rootSx}>
-      {collections.map(({ name, routes, defaultExpanded }, idx) => (
-        <HomeRouteListDropDown
-          key={`collection-${idx}`}
-          name={name}
-          routeStrings={routes}
-          defaultExpanded={defaultExpanded}
-        />
-      ))}
+      {collections.map(
+        ({ name, routes, nearestFrom, defaultExpanded }, idx) => (
+          <HomeRouteListDropDown
+            key={`collection-${idx}`}
+            name={name}
+            routeStrings={routes}
+            nearestFrom={nearestFrom}
+            defaultExpanded={defaultExpanded}
+          />
+        )
+      )}
       {!collections.reduce(
         (acc, { routes }) =>
           acc || routes.split("|").filter((v) => Boolean(v)).length > 0,
@@ -89,6 +92,7 @@ export default SmartCollectionRouteList;
 interface ParsedCollection {
   name: string;
   routes: string;
+  nearestFrom: string[];
   defaultExpanded: boolean;
 }
 
@@ -132,6 +136,7 @@ const getCollections = ({
     }))
     .map((v) => ({
       ...v,
+      nearestFrom: v.routes,
       routes: formatHandling(
         v.routes,
         isTodayHoliday,
