@@ -6,7 +6,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { Marker, Source, Layer } from "react-map-gl/maplibre";
+import {
+  Marker,
+  Source,
+  Layer,
+  type MapEvent,
+  type ViewStateChangeEvent,
+} from "react-map-gl/maplibre";
+import type maplibregl from "maplibre-gl";
 import type { FeatureCollection } from "geojson";
 import { Box, type SxProps, type Theme } from "@mui/material";
 import type { Company, StopListEntry } from "hk-bus-eta";
@@ -97,6 +104,31 @@ const RouteMap = ({
     type: "setView" | "flyTo";
     center: GeoLocation;
   } | null>(null);
+
+  // Visible map bounds, so SunStrip can show only the sun exposure for the
+  // portion of the route actually on screen instead of the whole remaining
+  // journey. Updated once per gesture (moveend), not per frame, since each
+  // update triggers a solar-position recompute.
+  const [mapBounds, setMapBounds] = useState<[GeoLocation, GeoLocation] | null>(
+    null
+  );
+  const applyBoundsFrom = useCallback((target: maplibregl.Map) => {
+    const b = target.getBounds();
+    const sw = b.getSouthWest();
+    const ne = b.getNorthEast();
+    setMapBounds([
+      { lat: sw.lat, lng: sw.lng },
+      { lat: ne.lat, lng: ne.lng },
+    ]);
+  }, []);
+  const handleMoveEnd = useCallback(
+    (e: ViewStateChangeEvent) => applyBoundsFrom(e.target),
+    [applyBoundsFrom]
+  );
+  const handleLoad = useCallback(
+    (e: MapEvent) => applyBoundsFrom(e.target),
+    [applyBoundsFrom]
+  );
 
   // Compute next centre whenever props change.
   useEffect(() => {
@@ -191,6 +223,7 @@ const RouteMap = ({
         side="left"
         stops={stops}
         fromStopIdx={stopIdx}
+        mapBounds={mapBounds}
       />
       <BaseMap
         initialViewState={{
@@ -205,6 +238,8 @@ const RouteMap = ({
         // `cooperativeGestures` instead.
         onDragStart={handleDragStartOrEnd}
         onDragEnd={handleDragStartOrEnd}
+        onLoad={handleLoad}
+        onMoveEnd={handleMoveEnd}
         style={{ height: "35vh", flex: 1, minWidth: 0 }}
       >
         <MapEffects pending={pendingNav} onApplied={handleNavApplied} />
@@ -294,6 +329,7 @@ const RouteMap = ({
         side="right"
         stops={stops}
         fromStopIdx={stopIdx}
+        mapBounds={mapBounds}
       />
     </Box>
   );
