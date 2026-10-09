@@ -100,7 +100,9 @@ export const fetchDbFunc = async (
 
   try {
     const [_schemaVersion, _md5] = await Promise.all([
-      fetch("/schema-version.txt").then((res) => res.text()),
+      fetch(`${import.meta.env.BASE_URL}schema-version.txt`).then((res) =>
+        res.text()
+      ),
       fetchEtaDbMd5(),
     ]);
     let needRenew = forceRenew;

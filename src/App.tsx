@@ -61,7 +61,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CacheProvider value={emotionCache}>
           <SearchContextProvider>
-            <Router>
+            <Router basename={import.meta.env.BASE_URL}>
               <Routes>
                 <Route path="/" element={<Navigate to={`/${language}`} />} />
                 <Route path="/:lang" element={<Root />}>

@@ -183,7 +183,9 @@ const RouteSearch = () => {
         const startLocation = locations.start
           ? locations.start.location
           : geolocation.current;
-        worker.current = new Worker("/search-worker.js");
+        worker.current = new Worker(
+          `${import.meta.env.BASE_URL}search-worker.js`
+        );
         worker.current.postMessage({
           routeList,
           stopList,
