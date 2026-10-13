@@ -75,7 +75,10 @@ const NoticeCard = () => {
       .then((r: NoticeCardState[]) =>
         setState(
           r
-            .filter(({ id, probability }) => probability !== undefined || !closeNoticeIds.includes(id)) // backward compatability, remove "probability !== undefined" after 2027 (assume all apps updated)
+            .filter(
+              ({ id, probability }) =>
+                probability !== undefined || !closeNoticeIds.includes(id)
+            ) // backward compatability, remove "probability !== undefined" after 2027 (assume all apps updated)
             .map((notice) => ({
               ...notice,
               startDate: notice.startDate
