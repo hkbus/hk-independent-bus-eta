@@ -112,6 +112,7 @@ const NoticeCard = () => {
         justifyContent="flex-start"
         flexDirection="column"
         gap={0.5}
+        flex={1}
         overflow="scroll"
       >
         <Tabs
