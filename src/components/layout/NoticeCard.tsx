@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import WarnIcon from "@mui/icons-material/Warning";
+import InfoIcon from "@mui/icons-material/Info";
 import { useTranslation } from "react-i18next";
 import useLanguage from "../../hooks/useTranslation";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -27,7 +28,11 @@ interface NoticeCardState {
   startDate: Date;
   endDate: Date;
   isShown: boolean;
+  probability?: number;
+  icon?: "info" | "warning";
 }
+
+const rolled = new Map<string, boolean>();
 
 const NoticeCard = () => {
   const language = useLanguage();
@@ -51,10 +56,16 @@ const NoticeCard = () => {
   );
 
   const closeNotice = useCallback(
-    (id: string) => () => {
-      setViewIdx((prev) => Math.max(prev - 1, 0));
-      setCloseNoticeIds((prev) => [...prev, id]);
-    },
+    ({ id, probability }: NoticeCardState) =>
+      () => {
+        setViewIdx((prev) => Math.max(prev - 1, 0));
+        if (probability === undefined) {
+          setCloseNoticeIds((prev) => [...prev, id]);
+          return;
+        }
+        rolled.set(id, false);
+        setState((prev) => prev.filter((notice) => notice.id !== id));
+      },
     []
   );
 
@@ -64,7 +75,10 @@ const NoticeCard = () => {
       .then((r: NoticeCardState[]) =>
         setState(
           r
-            .filter(({ id }) => !closeNoticeIds.includes(id))
+            .filter(
+              ({ id, probability }) =>
+                probability !== undefined || !closeNoticeIds.includes(id)
+            ) // backward compatability, remove "probability !== undefined" after 2027 (assume all apps updated)
             .map((notice) => ({
               ...notice,
               startDate: notice.startDate
@@ -74,6 +88,11 @@ const NoticeCard = () => {
             }))
             .filter((notice) => notice.startDate <= new Date())
             .filter((notice) => notice.endDate >= new Date())
+            .filter(({ id, probability }) => {
+              if (!rolled.has(id))
+                rolled.set(id, Math.random() < (probability ?? 1));
+              return rolled.get(id);
+            })
         )
       )
       .finally(() => {
@@ -96,6 +115,7 @@ const NoticeCard = () => {
         justifyContent="flex-start"
         flexDirection="column"
         gap={0.5}
+        flex={1}
         overflow="scroll"
       >
         <Tabs
@@ -120,7 +140,11 @@ const NoticeCard = () => {
         >
           {state.map((notice) => (
             <Box display="flex" alignItems="center" gap={2} key={notice.id}>
-              <WarnIcon color="warning" />
+              {notice.icon === "info" ? (
+                <InfoIcon color="info" />
+              ) : (
+                <WarnIcon color="warning" />
+              )}
               <Box onClick={handleClick(viewIdx)} sx={{ cursor: "pointer" }}>
                 {notice.content[language].map((v, idx) => (
                   <Typography key={`_notice-${idx}`} variant="subtitle2">
@@ -135,7 +159,7 @@ const NoticeCard = () => {
       <IconButton
         size="small"
         aria-label={t("關閉通知")}
-        onClick={closeNotice(state[viewIdx].id)}
+        onClick={closeNotice(state[viewIdx])}
       >
         <CloseIcon />
       </IconButton>
