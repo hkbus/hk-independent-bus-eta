@@ -19,6 +19,7 @@ import { useCallback, useContext, useMemo } from "react";
 import StopRouteList from "../bookmarked-stop/StopRouteList";
 import { Company } from "hk-bus-eta";
 import useLanguage from "../../hooks/useTranslation";
+import { useTranslation } from "react-i18next";
 import DbContext from "../../context/DbContext";
 import CollectionContext from "../../CollectionContext";
 import AppContext from "../../context/AppContext";
@@ -37,6 +38,7 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
   const { savedStops, updateSavedStops } = useContext(CollectionContext);
   const { openUrl } = useContext(AppContext);
   const language = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const bookmarked = useMemo<boolean>(
@@ -68,25 +70,33 @@ const StopDialog = ({ open, stops, onClose }: StopDialogProps) => {
     <Dialog open={open} onClose={onClose} sx={rootSx}>
       <DialogTitle sx={titleSx}>
         <Box>
-          <IconButton onClick={() => updateSavedStops(stops[0].join("|"))}>
+          <IconButton
+            aria-label={t("收藏")}
+            aria-pressed={bookmarked}
+            onClick={() => updateSavedStops(stops[0].join("|"))}
+          >
             {bookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
           </IconButton>
           {stopList[stops[0][1]]?.name[language]}
           &nbsp;&nbsp;
-          <IconButton onClick={handleClickDirection}>
+          <IconButton aria-label={t("導航")} onClick={handleClickDirection}>
             <DirectionsIcon />
           </IconButton>
-          <IconButton onClick={handleClickLocation}>
+          <IconButton
+            aria-label={t("在地圖查看")}
+            onClick={handleClickLocation}
+          >
             <MapIcon />
           </IconButton>
           <IconButton
+            aria-label={t("前往車站頁面")}
             onClick={() => navigate(`/${language}/stop/${stops[0][1]}`)}
           >
             <ArrowOutwardIcon />
           </IconButton>
         </Box>
         <Box>
-          <IconButton onClick={onClose}>
+          <IconButton aria-label={t("關閉視窗")} onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </Box>

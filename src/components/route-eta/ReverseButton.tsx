@@ -130,7 +130,6 @@ const ReverseButton = ({ routeId, stopId }: ReverseButtonProps) => {
       <>
         <Button
           variant="text"
-          aria-label="open-timetable"
           sx={buttonSx}
           size="small"
           startIcon={<SyncAltIcon />}

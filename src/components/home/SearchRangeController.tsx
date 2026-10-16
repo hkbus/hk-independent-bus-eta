@@ -34,7 +34,7 @@ const SearchRangeController = () => {
             setOpen(true);
           }
         }}
-        aria-label="search range"
+        aria-label={t("搜尋範圍")}
         size="small"
         exclusive
       >
@@ -46,7 +46,6 @@ const SearchRangeController = () => {
               sx={toggleButtonSx}
               disableRipple
               value={range}
-              aria-label={range.toString()}
             >
               {distance}
             </ToggleButton>
@@ -57,7 +56,6 @@ const SearchRangeController = () => {
           sx={toggleButtonSx}
           disableRipple
           value={"custom"}
-          aria-label={"custom"}
         >
           {t("自訂")}
           {!DEFAULT_SEARCH_RANGE_OPTIONS.includes(searchRange) &&
