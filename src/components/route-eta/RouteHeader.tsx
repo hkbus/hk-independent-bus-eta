@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Box, Divider, Paper, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "../route-board/RouteNo";
-import { toProperCase } from "../../utils";
+import { getLineColor, toProperCase } from "../../utils";
 import { useTranslation } from "react-i18next";
 import ReverseButton from "./ReverseButton";
 import TimetableButton from "./TimeTableButton";
@@ -20,14 +20,19 @@ const RouteHeader = ({ routeId, stopId }: RouteHeaderProps) => {
   const {
     db: { routeList },
   } = useContext(DbContext);
-  const { route, orig, dest, nlbId } = routeList[routeId];
+  const { route, orig, dest, nlbId, co } = routeList[routeId];
 
   return (
     <Paper id="route-eta-header" sx={PaperSx} elevation={0}>
       <ReverseButton routeId={routeId} stopId={stopId} />
       <Box sx={centerColumnSx}>
         <Box sx={routeNoRowSx}>
-          <RouteNo routeNo={t(route)} component="h1" align="center" />
+          <RouteNo
+            routeNo={t(route)}
+            component="h1"
+            align="center"
+            lineColor={getLineColor(co, route)}
+          />
           <RouteStarButton routeId={routeId} />
         </Box>
         <Typography component="h2" variant="caption" align="center">

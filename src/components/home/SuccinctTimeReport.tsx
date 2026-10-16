@@ -23,6 +23,7 @@ import {
   getDistance,
   getDistanceWithUnit,
   getJoyYouFare,
+  getLineColor,
   toProperCase,
   vibrate,
 } from "../../utils";
@@ -154,6 +155,7 @@ const SuccinctTimeReport = ({
               <RouteNo
                 routeNo={language === "zh" ? t(routeNo) : routeNo}
                 fontSize={co[0] === "mtr" ? "1.4667em" : undefined}
+                lineColor={getLineColor(co, routeNo)}
               />
               {parseInt(serviceType, 10) >= 2 && (
                 <Typography variant="caption" sx={specialTripSx}>

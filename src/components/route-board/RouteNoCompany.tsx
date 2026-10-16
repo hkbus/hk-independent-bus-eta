@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "./RouteNo";
+import { getLineColor } from "../../utils";
 import useLanguage from "../../hooks/useTranslation";
 import { RouteListEntry } from "hk-bus-eta";
 
@@ -18,6 +19,7 @@ const RouteNoCompany = ({ route }: RouteNoCompanyProps) => {
       <RouteNo
         routeNo={language === "zh" ? t(routeNo) : routeNo}
         fontSize={route[1].co[0] === "mtr" ? "1.6em" : undefined}
+        lineColor={getLineColor(route[1].co, routeNo)}
       />
       {parseInt(serviceType, 10) >= 2 && (
         <Typography variant="caption" sx={specialTripSx}>

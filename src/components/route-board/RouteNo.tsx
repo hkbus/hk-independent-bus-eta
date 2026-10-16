@@ -6,9 +6,17 @@ interface RouteNoProps {
   component?: any;
   align?: "right" | "left" | "inherit" | "center" | "justify";
   fontSize?: string;
+  // operator line colour, drawn as a short rule under the number
+  lineColor?: string;
 }
 
-const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
+const RouteNo = ({
+  routeNo,
+  component,
+  align,
+  fontSize,
+  lineColor,
+}: RouteNoProps) => {
   // Suffix Examples: 962X=> X, 44A1 => A1, 25MS => MS, AEL => "", NA29 => ""
   let splitIdx = routeNo.length;
   for (let i = 1; i < routeNo.length; ++i) {
@@ -25,7 +33,7 @@ const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
   const prefix = routeNo.slice(0, splitIdx);
   const suffix = routeNo.slice(splitIdx);
 
-  const sx = useMemo(() => rootSx(fontSize), [fontSize]);
+  const sx = useMemo(() => rootSx(fontSize, lineColor), [fontSize, lineColor]);
 
   return (
     <Typography
@@ -43,10 +51,16 @@ const RouteNo = ({ routeNo, component, align, fontSize }: RouteNoProps) => {
 
 export default RouteNo;
 
-const rootSx = (fontSize?: string): SxProps<Theme> => {
+const rootSx = (fontSize?: string, lineColor?: string): SxProps<Theme> => {
   return {
-    lineHeight: "normal",
-    display: "inline",
+    ...(lineColor
+      ? {
+          display: "inline-block",
+          lineHeight: 1.1,
+          borderBottom: `3px solid ${lineColor}`,
+          borderRadius: "1px",
+        }
+      : { display: "inline", lineHeight: "normal" }),
     "& > span:nth-of-type(1)": {
       fontSize: fontSize || "2em",
       fontFamily: '"Oswald", sans-serif',

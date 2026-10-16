@@ -10,6 +10,7 @@ import {
   Theme,
 } from "@mui/material";
 import RouteNo from "../route-board/RouteNo";
+import { getLineColor } from "../../utils";
 import TimeReport from "../route-eta/TimeReport";
 import useLanguage from "../../hooks/useTranslation";
 import { SearchRoute } from "../../pages/RouteSearchPage";
@@ -72,11 +73,11 @@ const SearchResultList = ({
         <ListItemText
           primary={routes.map((selectedRoute, routeIdx) => {
             const { routeId } = selectedRoute;
-            const { route, serviceType } = routeList[routeId];
+            const { route, serviceType, co } = routeList[routeId];
 
             return (
               <span key={`search-${idx}-${routeIdx}`}>
-                <RouteNo routeNo={route} />
+                <RouteNo routeNo={route} lineColor={getLineColor(co, route)} />
                 {parseInt(serviceType, 10) >= 2 && (
                   <Typography variant="caption">{t("特別班")}</Typography>
                 )}
