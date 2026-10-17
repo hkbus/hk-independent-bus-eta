@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import StopRouteList from "../components/bookmarked-stop/StopRouteList";
 import { useContext, useMemo } from "react";
 import DbContext from "../context/DbContext";
@@ -30,6 +30,8 @@ const StopEtaListPage = () => {
 
     return ret;
   }, [routeList, stopId, stopMap]);
+
+  if (!stopList[stopId!]) return <Navigate to={`/${language}`} replace />;
 
   return (
     <Box height="100%" display="flex" flexDirection="column">
