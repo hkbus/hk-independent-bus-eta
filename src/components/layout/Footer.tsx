@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
-import NearMeIcon from "@mui/icons-material/NearMe";
+import RouteIcon from "@mui/icons-material/Route";
 import FlagCircleIcon from "@mui/icons-material/FlagCircle";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -75,7 +75,7 @@ const Footer = () => {
             handleClick(`/${language}/search`, e)
           }
           value={`/${language}/search`}
-          icon={<NearMeIcon />}
+          icon={<RouteIcon />}
         />
         <BottomNavigationAction
           label={t("通告")}

@@ -82,22 +82,22 @@ export const isHomeTab = (
 
 const tabbarSx: SxProps<Theme> = {
   background: (theme) => theme.palette.background.default,
-  minHeight: "36px",
+  minHeight: "44px",
   [`& .MuiTab-root`]: {
     textTransform: "none",
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 0,
     paddingBottom: 0,
-    minHeight: "32px",
+    minHeight: "44px",
   },
   [`& .MuiTabs-flexContainer`]: {
     justifyContent: "flex-start",
     "& svg": {
-      fontSize: "1rem",
+      fontSize: "1.125rem",
     },
     "& .MuiTab-root": {
-      fontSize: "0.8em",
+      fontSize: "0.9375em",
     },
   },
 };

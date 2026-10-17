@@ -193,6 +193,8 @@ const resources = {
       注釋預定班次: "Annotate Scheduled Bus",
       搜尋記錄: "Search History",
       自訂: "Custom",
+      重新定位: "Update my location",
+      切換語言: "Switch language",
       "搜尋範圍（米）": "Range (m)",
       自訂搜尋範圍: "Custom Search Range",
       確定: "Confirm",
