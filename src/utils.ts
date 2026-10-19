@@ -416,12 +416,14 @@ export const setSeoRouteFeature = ({
   }
 };
 
+const UPPERCASE_WORDS = ["BBI", "GTC", "HSBC", "II", "LR", "MTR"];
+
 export const toProperCase = (txt: string) =>
   txt.replace(
     /(^|[^\p{L}\p{N}])([A-Z]{2,}(?:'[A-Z]+)?)(?![\p{L}\p{N}])/gu,
     (_, pre, word) =>
       pre +
-      (["BBI", "GTC", "HSBC", "II", "LR", "MTR"].includes(word)
+      (UPPERCASE_WORDS.includes(word)
         ? word
         : word[0] + word.slice(1).toLowerCase())
   );
