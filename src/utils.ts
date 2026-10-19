@@ -750,6 +750,9 @@ export const getLineColor = (
 export const getLineColors = (companies: Company[], route: string) => {
   if (companies[0] === "mtr" || companies.includes("lightRail"))
     return [getLineColor(companies, route)];
+  // KMB+CTB mirrors the jointly bus-stop icon on the map: CTB yellow, then KMB red
+  if (companies.includes("kmb") && companies.includes("ctb"))
+    return ["#FDDC01", "#ED1D24"];
   return Array.from(new Set(companies.map((c) => getLineColor([c], route))));
 };
 
