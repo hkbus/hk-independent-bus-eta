@@ -746,6 +746,13 @@ export const getLineColor = (
   return color;
 };
 
+// joint routes get one colour per operator (like the jointly bus marker on the map)
+export const getLineColors = (companies: Company[], route: string) => {
+  if (companies[0] === "mtr" || companies.includes("lightRail"))
+    return [getLineColor(companies, route)];
+  return Array.from(new Set(companies.map((c) => getLineColor([c], route))));
+};
+
 export const distinctFilter = (
   value: any,
   index: number,

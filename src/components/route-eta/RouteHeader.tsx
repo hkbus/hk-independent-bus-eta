@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Box, Divider, Paper, SxProps, Theme, Typography } from "@mui/material";
 import RouteNo from "../route-board/RouteNo";
-import { getLineColor, toProperCase } from "../../utils";
+import { getLineColors, toProperCase } from "../../utils";
 import { useTranslation } from "react-i18next";
 import ReverseButton from "./ReverseButton";
 import TimetableButton from "./TimeTableButton";
@@ -31,7 +31,7 @@ const RouteHeader = ({ routeId, stopId }: RouteHeaderProps) => {
             routeNo={t(route)}
             component="h1"
             align="center"
-            lineColor={getLineColor(co, route)}
+            lineColor={getLineColors(co, route)}
           />
           <RouteStarButton routeId={routeId} />
         </Box>

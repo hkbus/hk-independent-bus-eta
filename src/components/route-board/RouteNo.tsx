@@ -7,7 +7,7 @@ interface RouteNoProps {
   align?: "right" | "left" | "inherit" | "center" | "justify";
   fontSize?: string;
   // operator line colour, drawn as a short rule under the number
-  lineColor?: string;
+  lineColor?: string | string[];
 }
 
 const RouteNo = ({
@@ -33,7 +33,11 @@ const RouteNo = ({
   const prefix = routeNo.slice(0, splitIdx);
   const suffix = routeNo.slice(splitIdx);
 
-  const sx = useMemo(() => rootSx(fontSize, lineColor), [fontSize, lineColor]);
+  const sx = useMemo(
+    () => rootSx(fontSize, lineColor),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [fontSize, String(lineColor)]
+  );
 
   return (
     <Typography
@@ -51,14 +55,26 @@ const RouteNo = ({
 
 export default RouteNo;
 
-const rootSx = (fontSize?: string, lineColor?: string): SxProps<Theme> => {
+// one colour is solid; joint routes split the rule evenly, one band per operator
+const lineGradient = (colors: string | string[]) => {
+  const list = [colors].flat();
+  const w = 100 / list.length;
+  return `linear-gradient(to right, ${list
+    .map((c, i) => `${c} ${i * w}% ${(i + 1) * w}%`)
+    .join(", ")})`;
+};
+
+const rootSx = (
+  fontSize?: string,
+  lineColor?: string | string[]
+): SxProps<Theme> => {
   return {
     ...(lineColor
       ? {
           display: "inline-block",
           lineHeight: 1.1,
-          borderBottom: `3px solid ${lineColor}`,
-          borderRadius: "1px",
+          borderBottom: "3px solid transparent",
+          borderImage: `${lineGradient(lineColor)} 1`,
         }
       : { display: "inline", lineHeight: "normal" }),
     "& > span:nth-of-type(1)": {
