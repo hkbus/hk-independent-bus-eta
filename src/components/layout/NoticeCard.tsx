@@ -31,6 +31,8 @@ interface NoticeCardState {
   startDate: Date;
   endDate: Date;
   isShown: boolean;
+  probability?: number;
+  icon?: "info" | "warning";
 }
 
 // One-line strip: costs the ETA list a single row. The full text opens in a
@@ -47,10 +49,16 @@ const NoticeCard = () => {
   const { openUrl } = useContext(AppContext);
 
   const closeNotice = useCallback(
-    (id: string) => () => {
-      setViewIdx((prev) => Math.max(prev - 1, 0));
-      setCloseNoticeIds((prev) => [...prev, id]);
-    },
+    ({ id, probability }: NoticeCardState) =>
+      () => {
+        setViewIdx((prev) => Math.max(prev - 1, 0));
+        if (probability === undefined) {
+          setCloseNoticeIds((prev) => [...prev, id]);
+          return;
+        }
+        rolled.set(id, false);
+        setState((prev) => prev.filter((notice) => notice.id !== id));
+      },
     []
   );
 
@@ -60,7 +68,10 @@ const NoticeCard = () => {
       .then((r: NoticeCardState[]) =>
         setState(
           r
-            .filter(({ id }) => !closeNoticeIds.includes(id))
+            .filter(
+              ({ id, probability }) =>
+                probability !== undefined || !closeNoticeIds.includes(id)
+            ) // backward compatability, remove "probability !== undefined" after 2027 (assume all apps updated)
             .map((notice) => ({
               ...notice,
               startDate: notice.startDate
@@ -70,6 +81,11 @@ const NoticeCard = () => {
             }))
             .filter((notice) => notice.startDate <= new Date())
             .filter((notice) => notice.endDate >= new Date())
+            .filter(({ id, probability }) => {
+              if (!rolled.has(id))
+                rolled.set(id, Math.random() < (probability ?? 1));
+              return rolled.get(id);
+            })
         )
       )
       .finally(() => {

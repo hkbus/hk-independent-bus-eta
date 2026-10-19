@@ -333,6 +333,7 @@ const MapEffects = ({
     if (!map) return;
     const ensure = (id?: string) => {
       if (id && id !== ROUTE_ARROW_ID) return;
+      if (!map.style) return;
       if (!map.hasImage(ROUTE_ARROW_ID)) {
         map.addImage(ROUTE_ARROW_ID, makeRouteArrow(), { pixelRatio: 2 });
       }

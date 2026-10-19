@@ -22,6 +22,8 @@ const Root = () => {
     t,
     i18n: { language },
   } = useTranslation();
+  const isIosStandalone =
+    (navigator as Navigator & { standalone?: boolean }).standalone === true;
 
   // Keep the document language in sync with the UI language so screen
   // readers announce content with the correct voice / pronunciation.
@@ -32,6 +34,7 @@ const Root = () => {
   return (
     <Container maxWidth="xs" disableGutters sx={rootSx}>
       <CssBaseline />
+      {isIosStandalone && <Box sx={safeAreaSx} />}
       <Link href="#main-content" sx={skipLinkSx}>
         {t("跳至主要內容")}
       </Link>
@@ -55,6 +58,17 @@ const rootSx: SxProps<Theme> = {
   flexDirection: "column",
   justifyContent: "space-between",
   height: "100%",
+};
+
+const safeAreaSx: SxProps<Theme> = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "max(11px, env(safe-area-inset-top, 0px))",
+  backgroundColor: "background.default",
+  zIndex: "appBar",
+  pointerEvents: "none",
 };
 
 // Visually hidden until it receives keyboard focus, then shown on top so
