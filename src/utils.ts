@@ -759,4 +759,4 @@ export const routeSlug = (id: string) =>
   id
     .normalize("NFKC")
     .toLowerCase()
-    .replace(/[\u0080-￿]+|\//g, "-");
+    .replace(/[\u0080-￿\s]+|\//g, "-");
