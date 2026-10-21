@@ -25,6 +25,7 @@ import {
   getJoyYouFare,
   toProperCase,
   vibrate,
+  routeSlug,
 } from "../../utils";
 import RouteNo from "../route-board/RouteNo";
 import SuccinctEtas from "./SuccinctEtas";
@@ -131,7 +132,7 @@ const SuccinctTimeReport = ({
       if (mode !== "time") return;
       vibrate(vibrateDuration);
       setTimeout(() => {
-        navigate(`/${language}/route/${routeId.toLowerCase()}`);
+        navigate(`/${language}/route/${routeSlug(routeId)}`);
       }, 0);
     },
     [vibrateDuration, navigate, routeId, language, mode]

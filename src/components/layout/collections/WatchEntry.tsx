@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import ReactNativeContext from "../../../context/ReactNativeContext";
 import CollectionContext from "../../../CollectionContext";
 import DbContext from "../../../context/DbContext";
+import { routeSlug } from "../../../utils";
 
 const WatchEntry = () => {
   const { collectionDrawerRoute } = useContext(CollectionContext);
@@ -31,14 +32,14 @@ const WatchEntry = () => {
       const stopId = seq
         ? routeList[routeId].stops[routeList[routeId].co[0]][Number(seq)]
         : undefined;
-      const url = `https://${subdomain}.hkbus.app/route/${routeId.toLowerCase()}/${
+      const url = `https://${subdomain}.hkbus.app/route/${routeSlug(routeId)}/${
         stopId ? stopId + "%2C" + seq : seq
       }`;
       console.log(url);
       window.open(url, "_blank");
     } catch (error) {
       console.error(error);
-      const url = `https://${subdomain}.hkbus.app/route/${routeId.toLowerCase()}`;
+      const url = `https://${subdomain}.hkbus.app/route/${routeSlug(routeId)}`;
       window.open(url, "_blank");
     }
   }, [os, collectionDrawerRoute, routeList]);

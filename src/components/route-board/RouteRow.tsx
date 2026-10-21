@@ -15,7 +15,7 @@ import { grey } from "@mui/material/colors";
 import { RouteListEntry } from "hk-bus-eta";
 import { useTranslation } from "react-i18next";
 import useLanguage from "../../hooks/useTranslation";
-import { toProperCase } from "../../utils";
+import { toProperCase, routeSlug } from "../../utils";
 
 interface RouteRowProps {
   route: [string, RouteListEntry];
@@ -40,7 +40,7 @@ const RouteRow = ({ route, onClick, style, onRemove }: RouteRowProps) => {
     <Link
       // for SEO, not for click — hidden from the a11y tree to avoid a
       // duplicate, unlabelled tab stop over the same row.
-      to={`/${language}/route/${route[0].toLowerCase()}`}
+      to={`/${language}/route/${routeSlug(route[0])}`}
       style={style}
       tabIndex={-1}
       aria-hidden="true"
