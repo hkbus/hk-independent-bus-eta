@@ -45,7 +45,10 @@ const RouteOffiicalUrlBtn = ({ routeId }: RouteOffiicalUrlBtnProps) => {
               }&route_id=${gtfsId}`,
             ];
           case "nlb":
-            return [c, `https://www.nlb.com.hk/route?q=${route}`];
+            return [c, `https://www.nlb.com.hk/${
+                language === "zh" ? "tc" : "en"
+              }/route?q=${route}`,
+            ];
           case "lrtfeeder":
             return [
               c,
