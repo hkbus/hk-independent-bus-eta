@@ -83,8 +83,9 @@ const BookmarkedStop = () => {
       square
       elevation={0}
     >
+      {savedStops.length === 0 && <NoticeCard />}
       <StopTabbar stopTab={stopTab} onChangeTab={handleTabChange} />
-      <NoticeCard />
+      {savedStops.length > 0 && <NoticeCard />}
       <BadWeatherCard />
       <DbRenewReminder />
       <Box sx={{ flex: 1, overflow: "scroll" }}>
