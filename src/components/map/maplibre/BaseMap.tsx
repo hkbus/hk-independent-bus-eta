@@ -152,7 +152,10 @@ const BaseMap = ({
       {children}
       {showLandsDepartmentBadge && (
         <Box sx={landsBadgeSx}>
-          <img src="/img/Lands_Department.svg" alt="Lands Department" />
+          <img
+            src={`${import.meta.env.BASE_URL}img/Lands_Department.svg`}
+            alt="Lands Department"
+          />
         </Box>
       )}
     </Map>

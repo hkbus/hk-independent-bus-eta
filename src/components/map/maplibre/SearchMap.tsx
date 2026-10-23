@@ -398,7 +398,7 @@ const rootSx: SxProps<Theme> = {
     filter: "grayscale(100%)",
   },
   [`& .self-center`]: {
-    backgroundImage: "url(/img/self.svg)",
+    backgroundImage: `url(${import.meta.env.BASE_URL}img/self.svg)`,
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
