@@ -753,3 +753,10 @@ export const distinctFilter = (
 ) => {
   return array.indexOf(value) === index;
 };
+
+// ASCII-only URL slug for a route id (e.g. full-width "／" would otherwise be percent-encoded)
+export const routeSlug = (id: string) =>
+  id
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[\u0080-￿\s]+|\//g, "-");

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from "react";
 import { areEqual } from "react-window";
-import { vibrate } from "../../utils";
+import { vibrate, routeSlug } from "../../utils";
 import RouteRow from "./RouteRow";
 import { RouteListEntry } from "hk-bus-eta";
 import AppContext from "../../context/AppContext";
@@ -35,7 +35,7 @@ const RouteRowList = React.memo(
         vibrate(vibrateDuration);
         addSearchHistory(route[0]);
         setTimeout(() => {
-          navigate(`/${language}/route/${route[0].toLowerCase()}`);
+          navigate(`/${language}/route/${routeSlug(route[0])}`);
         }, 0);
       },
       [vibrateDuration, addSearchHistory, route, navigate, language]
