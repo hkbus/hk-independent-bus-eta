@@ -74,7 +74,9 @@ export default Home;
 
 const paperSx: SxProps<Theme> = {
   background: (theme) =>
-    theme.palette.mode === "dark" ? theme.palette.background.default : "white",
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : theme.palette.background.paper,
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
