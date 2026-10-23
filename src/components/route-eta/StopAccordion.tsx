@@ -121,7 +121,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
         sx={accordionSx}
       >
         <AccordionSummary sx={accordionSummarySx}>
-          <Typography component="h3" variant="body1" sx={{ fontWeight: 700 }}>
+          <Typography component="div" variant="body1" sx={{ fontWeight: 700 }}>
             {idx + 1}. {toProperCase(stop.name[language])}
           </Typography>
           <Typography variant="body2">

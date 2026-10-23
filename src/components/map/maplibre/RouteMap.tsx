@@ -491,7 +491,8 @@ const rootSx: SxProps<Theme> = {
     backgroundImage: `url(/img/bus_kmb.svg)`,
   },
   [`& .${classes.active}`]: {
-    animation: "blinker 1.5s infinite",
+    animation: "blinker 1.5s ease-in-out infinite",
+    "@media (prefers-reduced-motion: reduce)": { animation: "none" },
   },
   [`& .${classes.passed}`]: {
     filter: "grayscale(100%)",

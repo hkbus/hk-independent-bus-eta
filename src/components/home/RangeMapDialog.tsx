@@ -87,7 +87,7 @@ const RangeMapDialog = ({ open, onClose }: RangeMapDialogProps) => {
         <Box sx={{ px: 4, py: 5 }}>
           <Slider
             sx={sliderSx}
-            aria-label="Range"
+            aria-label={t("搜尋範圍")}
             value={convertScale(
               state.searchRange,
               searchRangeScale,
