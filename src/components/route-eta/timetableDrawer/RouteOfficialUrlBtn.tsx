@@ -45,7 +45,9 @@ const RouteOffiicalUrlBtn = ({ routeId }: RouteOffiicalUrlBtnProps) => {
               }&route_id=${gtfsId}`,
             ];
           case "nlb":
-            return [c, `https://www.nlb.com.hk/${
+            return [
+              c,
+              `https://www.nlb.com.hk/${
                 language === "zh" ? "tc" : "en"
               }/route?q=${route}`,
             ];
