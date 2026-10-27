@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useContext, useRef } from "react";
 import {
   Avatar,
+  ButtonBase,
   Box,
   IconButton,
   Input,
@@ -14,9 +15,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Settings as SettingsIcon,
-  SettingsBrightness as SettingsBrightnessIcon,
-  WbSunny as WbSunnyIcon,
-  DarkMode as DarkModeIcon,
   WifiOff as WifiOffIcon,
   Search as SearchIcon,
 } from "@mui/icons-material";
@@ -37,8 +35,6 @@ const Header = () => {
     geoPermission,
     updateGeolocation,
     changeLanguage,
-    _colorMode,
-    toggleColorMode,
     isSearching,
     setIsSearching,
     openUrl,
@@ -158,7 +154,7 @@ const Header = () => {
           navigate(`/${language}`);
         }}
         rel="nofollow"
-        aria-label="Home"
+        aria-label={t("首頁")}
       >
         {onlineStatus === "online" && <Box sx={appTitleSx} />}
         {onlineStatus === "offline" && (
@@ -166,7 +162,7 @@ const Header = () => {
             <WifiOffIcon />
           </IconButton>
         )}
-        <Typography component="h1" style={visuallyHidden}>
+        <Typography component="span" style={visuallyHidden}>
           {t("巴士到站預報")}
         </Typography>
       </Link>
@@ -214,7 +210,9 @@ const Header = () => {
       />
       <Box sx={weatherPanelSx}>
         {weatherCodes.slice(0, 2).map((code) => (
-          <Avatar
+          <ButtonBase
+            key={code}
+            aria-label={t("天氣警告")}
             onClick={() =>
               openUrl(
                 `https://www.hko.gov.hk/${
@@ -222,18 +220,20 @@ const Header = () => {
                 }/detail.htm`
               )
             }
-            key={code}
-            variant="square"
-            src={WeatherIcons[code]}
-            alt={t("天氣警告")}
-            sx={weatherImg}
-          />
+          >
+            <Avatar
+              variant="square"
+              src={WeatherIcons[code]}
+              alt=""
+              sx={weatherImg}
+            />
+          </ButtonBase>
         ))}
       </Box>
       <Box sx={funcPanelSx}>
         {geoPermission === "granted" && (
           <IconButton
-            aria-label="relocate"
+            aria-label={t("重新定位")}
             onClick={() => relocateGeolocation()}
             size="small"
           >
@@ -247,28 +247,17 @@ const Header = () => {
           variant="text"
           disableElevation
           disableRipple
-          aria-label="Language button"
+          aria-label={t("切換語言")}
         >
-          {language !== "zh" ? "繁" : "En"}
+          <span lang={language !== "zh" ? "zh-Hant" : "en"}>
+            {language !== "zh" ? "繁" : "En"}
+          </span>
         </Button>
-        <IconButton
-          onClick={() => {
-            vibrate(vibrateDuration);
-            toggleColorMode();
-          }}
-          aria-label="color theme button"
-        >
-          {_colorMode === "system" && (
-            <SettingsBrightnessIcon fontSize="small" />
-          )}
-          {_colorMode === "light" && <WbSunnyIcon fontSize="small" />}
-          {_colorMode === "dark" && <DarkModeIcon fontSize="small" />}
-        </IconButton>
         <IconButton
           component={Link}
           to={`/${language}/settings`}
           rel="nofollow"
-          aria-label="settings button"
+          aria-label={t("設定")}
         >
           <SettingsIcon fontSize="small" />
         </IconButton>
@@ -299,6 +288,7 @@ const appTitleSx: SxProps<Theme> = {
 
 const searchRouteInputSx: SxProps<Theme> = {
   maxWidth: "100px",
+  minWidth: 0,
   "& input": {
     textAlign: "center",
   },
@@ -321,12 +311,17 @@ const weatherPanelSx: SxProps<Theme> = {
 const funcPanelSx: SxProps<Theme> = {
   display: "flex",
   alignItems: "center",
-  opacity: 0.7,
+  // 44px-tall touch targets; width stays 40px so the row still fits 360px phones
+  "& .MuiIconButton-root": {
+    minWidth: 40,
+    minHeight: 44,
+  },
 };
 
 const languageSx: SxProps<Theme> = {
   color: (theme) => theme.palette.text.primary,
   minWidth: "40px",
+  minHeight: "44px",
   p: 1,
   borderRadius: 5,
   fontWeight: 900,
