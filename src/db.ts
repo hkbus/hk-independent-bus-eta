@@ -111,7 +111,7 @@ export const fetchDbFunc = async (
       needRenew = true;
     }
     if (!needRenew) {
-      const db = await loadStoredDb();
+      const db = await loadStoredDb().catch(() => null);
       if (isEtaDb(db)) {
         return db;
       }
