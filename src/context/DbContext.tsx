@@ -76,6 +76,11 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
           let idb = (event.target as IDBOpenDBRequest).result;
           let transaction = idb.transaction(["etadb"], "readwrite");
           let store = transaction.objectStore("etadb");
+          transaction.onabort = transaction.onerror = () => {
+            // the write did not land, force a re-fetch on next launch
+            localStorage.removeItem("versionMd5");
+          };
+          store.clear();
           store.put(db);
         };
       }, 0);
