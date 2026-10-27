@@ -36,7 +36,7 @@ const TimeTable = ({ routeId }: TimeTableProps) => {
           Object.entries(freq).map(([serviceId, dayFreq]) => (
             <ListItem key={serviceId} sx={entriesSx}>
               <Typography variant="subtitle1">
-                {t(ServiceIds[serviceId])}
+                {t(ServiceIds[serviceId] ?? ServiceIds[999])}
               </Typography>
               {Object.entries(dayFreq)
                 .sort((a, b) => (a[0] < b[0] ? -1 : 1))
@@ -88,6 +88,7 @@ export const ServiceIds: Record<string, string> = {
   63: "星期一至六",
   319: "星期一至六",
   447: "星期一至六",
+  96: "星期六至日",
   416: "星期六至日",
   480: "星期六至日",
   266: "星期二至四",
@@ -96,6 +97,7 @@ export const ServiceIds: Record<string, string> = {
   288: "星期六",
   320: "星期日及公眾假期",
   448: "星期日及公眾假期",
+  127: "所有日子",
   511: "所有日子",
   111: "除星期三外",
   1: "星期一",
@@ -122,6 +124,7 @@ const ServiceMaps: Record<
   63: [false, true, true, true, true, true, true], // "星期一至六"
   319: [false, true, true, true, true, true, true], // "星期一至六"
   447: [false, true, true, true, true, true, true], // "星期一至六"
+  96: [true, false, false, false, false, false, true], // "星期六至日"
   416: [true, false, false, false, false, false, true], // "星期六至日"
   480: [true, false, false, false, false, false, true], // "星期六至日"
   266: [false, false, true, true, true, false, false], // "星期二至四",
@@ -130,6 +133,7 @@ const ServiceMaps: Record<
   288: [false, false, false, false, false, false, true], // "星期六",
   320: [true, false, false, false, false, false, false], // "星期日及公眾假期",
   448: [true, false, false, false, false, false, false], // "星期日及公眾假期",
+  127: [true, true, true, true, true, true, true], // "所有日子",
   511: [true, true, true, true, true, true, true], // "所有日子",
   111: [true, true, true, false, true, true, true], // "除星期三外",
   1: [false, true, false, false, false, false, false], // "星期一",
