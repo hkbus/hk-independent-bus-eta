@@ -10,7 +10,7 @@ import {
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import RouteOffiicalUrlBtn from "../timetableDrawer/RouteOfficialUrlBtn";
-import { isHoliday } from "../../../timetable";
+import { isHoliday, toHkt } from "../../../timetable";
 import DbContext from "../../../context/DbContext";
 
 interface TimeTableProps {
@@ -166,7 +166,7 @@ const highlightContainerSx: SxProps<Theme> = {
 };
 
 const isMatchServiceId = (serviceId: string, isHoliday: boolean): boolean => {
-  const day = new Date().getDay();
+  const day = toHkt(new Date()).getUTCDay();
   if (
     ServiceMaps[serviceId] &&
     (ServiceMaps[serviceId][day] || (ServiceMaps[serviceId][0] && isHoliday))
@@ -183,8 +183,8 @@ const isCurrentTimeslot = (
   isHoliday: boolean
 ): boolean => {
   if (!isMatchServiceId(serviceId, isHoliday)) return false;
-  const date = new Date();
-  const ts = `${date.getHours().toString().padStart(2, "0")}${date.getMinutes().toString().padStart(2, "0")}`;
+  const date = toHkt(new Date());
+  const ts = `${date.getUTCHours().toString().padStart(2, "0")}${date.getUTCMinutes().toString().padStart(2, "0")}`;
   if (details) {
     return start <= ts && ts <= details[0];
   }
