@@ -47,7 +47,9 @@ const DEFAULT_VIEW = {
 };
 
 /** Hong Kong + Greater Bay Area, [west, south, east, north]. */
-const HK_MAX_BOUNDS: [number, number, number, number] = [112.5, 21.2, 115.5, 23.2];
+const HK_MAX_BOUNDS: [number, number, number, number] = [
+  112.5, 21.2, 115.5, 23.2,
+];
 
 // Forward the most common <Map> props but make the style/protocol
 // concerns the wrapper's job. Anything else can be passed through
