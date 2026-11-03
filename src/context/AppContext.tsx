@@ -565,6 +565,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
           // start customising from the theme currently in use
           state.customTheme = getEditableThemeColors(state.themeId, null);
         }
+        if (themeId !== CUSTOM_THEME_ID) {
+          // copy the chosen preset into the custom palette (overwrites it)
+          state.customTheme = getEditableThemeColors(themeId, null);
+        }
         state.themeId = themeId;
       })
     );
