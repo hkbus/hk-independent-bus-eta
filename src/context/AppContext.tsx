@@ -27,9 +27,24 @@ import {
 } from "../data";
 import { DeviceOrientationPermission } from "react-world-compass";
 import useLanguage from "../hooks/useTranslation";
+import {
+  CUSTOM_THEME_ID,
+  DEFAULT_THEME_ID,
+  ModeThemeColors,
+  ThemeColorKey,
+  isHexColor,
+  isModeThemeColors,
+  isThemeId,
+  getEditableThemeColors,
+} from "../theme";
 
 type GeoPermission =
-  "opening" | "force-opening" | "granted" | "denied" | "closed" | null;
+  | "opening"
+  | "force-opening"
+  | "granted"
+  | "denied"
+  | "closed"
+  | null;
 
 export interface AppState {
   searchRoute: string;
@@ -61,6 +76,14 @@ export interface AppState {
    */
   etaFormat: EtaFormat;
   _colorMode: ColorMode;
+  /**
+   * selected colour theme (a preset id or "custom")
+   */
+  themeId: string;
+  /**
+   * user defined colours, used when themeId is "custom"
+   */
+  customTheme: ModeThemeColors | null;
   /**
    * energy saving mode
    */
@@ -130,6 +153,13 @@ interface AppContextValue extends AppState {
   toggleNumPadOrder: () => void;
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
+  setThemeId: (themeId: string) => void;
+  setCustomThemeColor: (
+    mode: "light" | "dark",
+    key: ThemeColorKey,
+    color: string
+  ) => void;
+  resetCustomTheme: () => void;
   toggleEnergyMode: () => void;
   togglePlatformMode: () => void;
   toggleVibrateDuration: () => void;
@@ -221,6 +251,13 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     const routeSearchHistory: unknown = JSON.parse(
       localStorage.getItem("routeSearchHistory") ?? "null"
     );
+    const themeId: unknown = localStorage.getItem("themeId");
+    let customTheme: unknown = null;
+    try {
+      customTheme = JSON.parse(localStorage.getItem("customTheme") ?? "null");
+    } catch {
+      customTheme = null;
+    }
 
     return {
       searchRoute: searchRoute,
@@ -243,6 +280,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       _colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
         : "dark",
+      themeId: isThemeId(themeId) ? themeId : DEFAULT_THEME_ID,
+      customTheme: isModeThemeColors(customTheme) ? customTheme : null,
       energyMode: !!JSON.parse(localStorage.getItem("energyMode") ?? "false"),
       platformMode: !!JSON.parse(
         localStorage.getItem("platformMode") ?? "false"
@@ -503,6 +542,43 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
             break;
         }
         state._colorMode = colorMode;
+      })
+    );
+  }, []);
+
+  const setThemeId = useCallback((themeId: string) => {
+    if (!isThemeId(themeId)) return;
+    setStateRaw(
+      produce((state: State) => {
+        if (themeId === CUSTOM_THEME_ID && state.customTheme === null) {
+          // start customising from the theme currently in use
+          state.customTheme = getEditableThemeColors(state.themeId, null);
+        }
+        state.themeId = themeId;
+      })
+    );
+  }, []);
+
+  const setCustomThemeColor = useCallback(
+    (mode: "light" | "dark", key: ThemeColorKey, color: string) => {
+      if (!isHexColor(color)) return;
+      setStateRaw(
+        produce((state: State) => {
+          if (state.customTheme === null) {
+            state.customTheme = getEditableThemeColors(state.themeId, null);
+          }
+          state.customTheme[mode][key] = color;
+          state.themeId = CUSTOM_THEME_ID;
+        })
+      );
+    },
+    []
+  );
+
+  const resetCustomTheme = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        state.customTheme = getEditableThemeColors(DEFAULT_THEME_ID, null);
       })
     );
   }, []);
@@ -776,6 +852,18 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   }, [state._colorMode]);
 
   useEffect(() => {
+    localStorage.setItem("themeId", state.themeId);
+  }, [state.themeId]);
+
+  useEffect(() => {
+    if (state.customTheme) {
+      localStorage.setItem("customTheme", JSON.stringify(state.customTheme));
+    } else {
+      localStorage.removeItem("customTheme");
+    }
+  }, [state.customTheme]);
+
+  useEffect(() => {
     localStorage.setItem("energyMode", JSON.stringify(state.energyMode));
   }, [state.energyMode]);
 
@@ -854,6 +942,9 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleNumPadOrder,
       toggleEtaFormat,
       toggleColorMode,
+      setThemeId,
+      setCustomThemeColor,
+      resetCustomTheme,
       toggleEnergyMode,
       togglePlatformMode,
       toggleVibrateDuration,
@@ -887,6 +978,9 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleNumPadOrder,
       toggleEtaFormat,
       toggleColorMode,
+      setThemeId,
+      setCustomThemeColor,
+      resetCustomTheme,
       toggleEnergyMode,
       togglePlatformMode,
       toggleVibrateDuration,

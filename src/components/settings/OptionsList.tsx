@@ -33,18 +33,21 @@ import {
   UpdateDisabled as UpdateDisabledIcon,
   FormatSize as FormatSizeIcon,
   LooksOneRounded as LooksOneRoundedIcon,
+  Palette as PaletteIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../context/AppContext";
 import { vibrate } from "../../utils";
 import { useTranslation } from "react-i18next";
 import FontSizeSlider from "./FontSizeSlider";
+import { CUSTOM_THEME_ID, getPreset } from "../../theme";
 
 interface OptionsListProps {
   goToManage: () => void;
+  goToTheme: () => void;
 }
 
-const OptionsList = ({ goToManage }: OptionsListProps) => {
+const OptionsList = ({ goToManage, goToTheme }: OptionsListProps) => {
   const {
     resetUsageRecord,
     isRouteFilter,
@@ -57,6 +60,7 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
     toggleEtaFormat,
     _colorMode: colorMode,
     toggleColorMode,
+    themeId,
     energyMode,
     toggleEnergyMode,
     platformMode,
@@ -155,6 +159,24 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary={t("外觀")} secondary={t(`color-${colorMode}`)} />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration);
+          goToTheme();
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <PaletteIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={t("主題配色")}
+          secondary={t(
+            themeId === CUSTOM_THEME_ID ? "自訂" : getPreset(themeId).name
+          )}
+        />
       </ListItemButton>
       <ListItem>
         <ListItemAvatar>
