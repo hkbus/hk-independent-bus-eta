@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../context/AppContext";
 
-const FontSizeSlider = () => {
+const FontSizeSlider = ({ hideLabel = false }: { hideLabel?: boolean }) => {
   const { fontSize: _fontSize, setFontSize: setAppFontSize } =
     useContext(AppContext);
   const { t } = useTranslation();
@@ -23,7 +23,11 @@ const FontSizeSlider = () => {
 
   return (
     <ListItemText
-      primary={<Typography sx={{ fontSize }}>{t("字體大小")}</Typography>}
+      primary={
+        <Typography sx={{ fontSize }}>
+          {hideLabel ? t("字體大小預覽") : t("字體大小")}
+        </Typography>
+      }
       secondary={
         <Slider
           step={2}

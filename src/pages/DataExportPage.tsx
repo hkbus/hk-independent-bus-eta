@@ -21,6 +21,8 @@ const DataExport = () => {
   const { savedStops, savedEtas, collections } = useContext(CollectionContext);
   const {
     _colorMode,
+    themeId,
+    customTheme,
     energyMode,
     platformMode,
     refreshInterval,
@@ -45,6 +47,8 @@ const DataExport = () => {
               savedEtas,
               collections,
               _colorMode,
+              themeId,
+              customTheme,
               energyMode,
               platformMode,
               refreshInterval,
@@ -68,6 +72,8 @@ const DataExport = () => {
       savedEtas,
       savedStops,
       _colorMode,
+      themeId,
+      customTheme,
       energyMode,
       platformMode,
       refreshInterval,
