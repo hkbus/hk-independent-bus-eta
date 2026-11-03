@@ -39,12 +39,7 @@ import {
 } from "../theme";
 
 type GeoPermission =
-  | "opening"
-  | "force-opening"
-  | "granted"
-  | "denied"
-  | "closed"
-  | null;
+  "opening" | "force-opening" | "granted" | "denied" | "closed" | null;
 
 export interface AppState {
   searchRoute: string;
