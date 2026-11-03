@@ -27,6 +27,7 @@ import {
 } from "../data";
 import { DeviceOrientationPermission } from "react-world-compass";
 import useLanguage from "../hooks/useTranslation";
+import { getDaylightState } from "../sunTimes";
 import {
   CUSTOM_THEME_ID,
   DEFAULT_THEME_ID,
@@ -39,7 +40,12 @@ import {
 } from "../theme";
 
 type GeoPermission =
-  "opening" | "force-opening" | "granted" | "denied" | "closed" | null;
+  | "opening"
+  | "force-opening"
+  | "granted"
+  | "denied"
+  | "closed"
+  | null;
 
 export interface AppState {
   searchRoute: string;
@@ -222,7 +228,12 @@ const isEtaFormat = (input: unknown): input is EtaFormat => {
 };
 
 const isColorMode = (input: unknown): input is ColorMode => {
-  return input === "dark" || input === "light" || input === "system";
+  return (
+    input === "dark" ||
+    input === "light" ||
+    input === "system" ||
+    input === "sun"
+  );
 };
 
 export const AppContextProvider = ({ children }: AppContextProviderProps) => {
@@ -532,6 +543,9 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
           case "light":
             colorMode = "system";
             break;
+          case "system":
+            colorMode = "sun";
+            break;
           default:
             colorMode = "dark";
             break;
@@ -755,6 +769,12 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const calculateColorMode = useCallback(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
       return state._colorMode;
+    } else if (state._colorMode === "sun") {
+      // light from sunrise to sunset, dark otherwise
+      const { lat, lng } = geolocation.current;
+      return getDaylightState(new Date(), lat, lng).isDaytime
+        ? "light"
+        : "dark";
     } else {
       if (
         window.systemColorScheme?.value &&
@@ -767,6 +787,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         : "dark";
     }
   }, [state._colorMode]);
+  // bumped at each sunrise / sunset to schedule the following switch
+  const [sunTick, setSunTick] = useState(0);
   const [colorMode, setColorMode] = useState<"light" | "dark">(
     calculateColorMode()
   );
@@ -799,6 +821,26 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       };
     }
   }, [state._colorMode, calculateColorMode]);
+
+  useEffect(() => {
+    if (state._colorMode !== "sun" || !state.isVisible) return;
+    // re-evaluate on resume (timers may be frozen in background) and switch
+    // again at the next sunrise / sunset
+    setColorMode(calculateColorMode());
+    const { lat, lng } = geolocation.current;
+    const { nextChange } = getDaylightState(new Date(), lat, lng);
+    if (nextChange === null) return;
+    // setTimeout overflows beyond ~24.8 days; sunrise/sunset is always sooner
+    const delay = Math.min(
+      nextChange.valueOf() - Date.now() + 1000,
+      2 ** 31 - 1
+    );
+    const timer = setTimeout(() => {
+      setColorMode(calculateColorMode());
+      setSunTick((v) => v + 1);
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [state._colorMode, state.isVisible, sunTick, calculateColorMode]);
 
   useEffect(() => {
     window.ReactNativeWebView?.postMessage(

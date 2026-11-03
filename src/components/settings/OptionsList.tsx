@@ -20,6 +20,7 @@ import {
   DarkMode as DarkModeIcon,
   SettingsBrightness as SettingsBrightnessIcon,
   WbSunny as WbSunnyIcon,
+  WbTwilight as WbTwilightIcon,
   AllInclusive as AllInclusiveIcon,
   FilterAlt as FilterAltIcon,
   Vibration as VibrationIcon,
@@ -156,6 +157,7 @@ const OptionsList = ({ goToManage, goToTheme }: OptionsListProps) => {
             {colorMode === "system" && <SettingsBrightnessIcon />}
             {colorMode === "light" && <WbSunnyIcon />}
             {colorMode === "dark" && <DarkModeIcon />}
+            {colorMode === "sun" && <WbTwilightIcon />}
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary={t("外觀")} secondary={t(`color-${colorMode}`)} />
