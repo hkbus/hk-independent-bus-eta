@@ -69,74 +69,74 @@ export const THEME_PRESETS: ThemePreset[] = [
     },
   },
   {
-    id: "ocean",
-    name: "海洋",
+    id: "mtr",
+    name: "港鐵",
     colors: {
       light: {
-        background: "#90caf9",
-        primary: "#0d47a1",
-        eta: "#c2185b",
-        secondary: "#0d47a1",
+        background: "#f5f5f5",
+        primary: "#b3130f",
+        eta: "#1b5aa6",
+        secondary: "#b3130f",
       },
       dark: {
-        background: "#0a1929",
-        primary: "#90caf9",
-        eta: "#90caf9",
-        secondary: "#90caf9",
-      },
-    },
-  },
-  {
-    id: "forest",
-    name: "森林",
-    colors: {
-      light: {
-        background: "#a5d6a7",
-        primary: "#1b5e20",
-        eta: "#1565c0",
-        secondary: "#1b5e20",
-      },
-      dark: {
-        background: "#0b1f0e",
-        primary: "#81c784",
-        eta: "#a5d6a7",
-        secondary: "#81c784",
-      },
-    },
-  },
-  {
-    id: "sakura",
-    name: "櫻花",
-    colors: {
-      light: {
-        background: "#f8bbd0",
-        primary: "#880e4f",
-        eta: "#1b6bc5",
-        secondary: "#880e4f",
-      },
-      dark: {
-        background: "#1a0a12",
-        primary: "#f48fb1",
-        eta: "#f48fb1",
-        secondary: "#f48fb1",
-      },
-    },
-  },
-  {
-    id: "mono",
-    name: "黑白",
-    colors: {
-      light: {
-        background: "#eeeeee",
-        primary: "#212121",
-        eta: "#1b6bc5",
-        secondary: "#000000",
-      },
-      dark: {
-        background: "#121212",
-        primary: "#e0e0e0",
+        background: "#1a0a0a",
+        primary: "#ff8a80",
         eta: "#ffffff",
-        secondary: "#e0e0e0",
+        secondary: "#ff8a80",
+      },
+    },
+  },
+  {
+    id: "tram",
+    name: "電車",
+    colors: {
+      light: {
+        background: "#f3ecc8",
+        primary: "#00573f",
+        eta: "#8a3b00",
+        secondary: "#00573f",
+      },
+      dark: {
+        background: "#0a1a14",
+        primary: "#7fd1b0",
+        eta: "#ffd54f",
+        secondary: "#7fd1b0",
+      },
+    },
+  },
+  {
+    id: "kcr",
+    name: "九鐵",
+    colors: {
+      light: {
+        background: "#fdd9a8",
+        primary: "#7a3e00",
+        eta: "#1565c0",
+        secondary: "#7a3e00",
+      },
+      dark: {
+        background: "#1a1208",
+        primary: "#ffb74d",
+        eta: "#5eb6e4",
+        secondary: "#ffb74d",
+      },
+    },
+  },
+  {
+    id: "starferry",
+    name: "天星小輪",
+    colors: {
+      light: {
+        background: "#e8f5ec",
+        primary: "#006b3f",
+        eta: "#b3261e",
+        secondary: "#006b3f",
+      },
+      dark: {
+        background: "#071a12",
+        primary: "#81c9a3",
+        eta: "#ffffff",
+        secondary: "#81c9a3",
       },
     },
   },
