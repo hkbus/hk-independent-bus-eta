@@ -188,6 +188,9 @@ const resources = {
       "color-dark": "Dark Theme",
       "color-light": "Light Theme",
       "color-sun": "Dark from Sunset to Sunrise",
+      自動切換: "Auto Switch",
+      "日間使用日照模式，日落後使用黑夜模式":
+        "Light theme during the day, dark theme after sunset",
       主題配色: "Colour Theme",
       預設主題: "Preset Themes",
       經典: "Classic",

@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemText,
   ListSubheader,
+  Switch,
   SxProps,
   Theme,
   ToggleButton,
@@ -17,6 +18,7 @@ import {
   Check as CheckIcon,
   Palette as PaletteIcon,
   RestartAlt as RestartAltIcon,
+  WbTwilight as WbTwilightIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../context/AppContext";
@@ -37,6 +39,8 @@ const ThemeSettings = () => {
     themeId,
     customTheme,
     colorMode,
+    _colorMode,
+    setSunColorMode,
     setThemeId,
     setCustomThemeColor,
     resetCustomTheme,
@@ -130,6 +134,32 @@ const ThemeSettings = () => {
         >
           {t("重設自訂顏色")}
         </Button>
+      </ListItem>
+
+      <ListSubheader sx={subheaderSx}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <WbTwilightIcon fontSize="small" />
+          {t("自動切換")}
+        </Box>
+      </ListSubheader>
+      <ListItem
+        secondaryAction={
+          <Switch
+            edge="end"
+            checked={_colorMode === "sun"}
+            inputProps={{ "aria-labelledby": "sun-color-mode-label" }}
+            onChange={(_, checked) => {
+              vibrate(vibrateDuration);
+              setSunColorMode(checked);
+            }}
+          />
+        }
+      >
+        <ListItemText
+          id="sun-color-mode-label"
+          primary={t("color-sun")}
+          secondary={t("日間使用日照模式，日落後使用黑夜模式")}
+        />
       </ListItem>
     </List>
   );
