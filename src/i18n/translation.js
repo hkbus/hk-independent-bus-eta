@@ -191,7 +191,8 @@ const resources = {
       自動切換: "Auto Switch",
       "日間使用日照模式，日落後使用黑夜模式":
         "Light theme during the day, dark theme after sunset",
-      主題配色: "Colour Theme",
+      字體大小預覽: "Font Size (preview)",
+      顯示模式: "Display Mode",
       預設主題: "Preset Themes",
       經典: "Classic",
       海洋: "Ocean",

@@ -9,7 +9,6 @@ import {
   SxProps,
   Theme,
   Slider,
-  ListItem,
 } from "@mui/material";
 import {
   SwipeUpOutlined as SwipeUpIcon,
@@ -32,23 +31,20 @@ import {
   PushPin as PinIcon,
   Update as UpdateIcon,
   UpdateDisabled as UpdateDisabledIcon,
-  FormatSize as FormatSizeIcon,
   LooksOneRounded as LooksOneRoundedIcon,
-  Palette as PaletteIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../context/AppContext";
 import { vibrate } from "../../utils";
 import { useTranslation } from "react-i18next";
-import FontSizeSlider from "./FontSizeSlider";
 import { CUSTOM_THEME_ID, getPreset } from "../../theme";
 
 interface OptionsListProps {
   goToManage: () => void;
-  goToTheme: () => void;
+  goToAppearance: () => void;
 }
 
-const OptionsList = ({ goToManage, goToTheme }: OptionsListProps) => {
+const OptionsList = ({ goToManage, goToAppearance }: OptionsListProps) => {
   const {
     resetUsageRecord,
     isRouteFilter,
@@ -60,7 +56,6 @@ const OptionsList = ({ goToManage, goToTheme }: OptionsListProps) => {
     etaFormat,
     toggleEtaFormat,
     _colorMode: colorMode,
-    toggleColorMode,
     themeId,
     energyMode,
     toggleEnergyMode,
@@ -149,7 +144,7 @@ const OptionsList = ({ goToManage, goToTheme }: OptionsListProps) => {
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);
-          toggleColorMode();
+          goToAppearance();
         }}
       >
         <ListItemAvatar>
@@ -160,34 +155,13 @@ const OptionsList = ({ goToManage, goToTheme }: OptionsListProps) => {
             {colorMode === "sun" && <WbTwilightIcon />}
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={t("外觀")} secondary={t(`color-${colorMode}`)} />
-      </ListItemButton>
-      <ListItemButton
-        onClick={() => {
-          vibrate(vibrateDuration);
-          goToTheme();
-        }}
-      >
-        <ListItemAvatar>
-          <Avatar>
-            <PaletteIcon />
-          </Avatar>
-        </ListItemAvatar>
         <ListItemText
-          primary={t("主題配色")}
-          secondary={t(
+          primary={t("外觀")}
+          secondary={`${t(`color-${colorMode}`)} · ${t(
             themeId === CUSTOM_THEME_ID ? "自訂" : getPreset(themeId).name
-          )}
+          )}`}
         />
       </ListItemButton>
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-            <FormatSizeIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <FontSizeSlider />
-      </ListItem>
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);

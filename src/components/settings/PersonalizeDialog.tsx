@@ -15,14 +15,14 @@ import {
 import { useTranslation } from "react-i18next";
 import OptionsList from "./OptionsList";
 import UserContentManagement from "./UserContentManagement";
-import ThemeSettings from "./ThemeSettings";
+import AppearanceSettings from "./AppearanceSettings";
 
 interface PersonalizeModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-type TabType = "options" | "manage" | "theme";
+type TabType = "options" | "manage" | "appearance";
 
 const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
   const [tab, setTab] = useState<TabType>("options");
@@ -52,7 +52,7 @@ const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
           )}
           {t(tab === "options" ? "個性化設定" : "")}
           {t(tab === "manage" ? "管理收藏" : "")}
-          {t(tab === "theme" ? "主題配色" : "")}
+          {t(tab === "appearance" ? "外觀" : "")}
         </Box>
         <IconButton onClick={handleClose}>
           <CloseIcon />
@@ -62,11 +62,11 @@ const PersonalizeDialog = ({ open, onClose }: PersonalizeModalProps) => {
       {tab === "options" && (
         <OptionsList
           goToManage={() => setTab("manage")}
-          goToTheme={() => setTab("theme")}
+          goToAppearance={() => setTab("appearance")}
         />
       )}
       {tab === "manage" && <UserContentManagement />}
-      {tab === "theme" && <ThemeSettings />}
+      {tab === "appearance" && <AppearanceSettings />}
     </Dialog>
   );
 };

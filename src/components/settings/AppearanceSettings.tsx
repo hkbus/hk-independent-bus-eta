@@ -16,11 +16,13 @@ import {
 } from "@mui/material";
 import {
   Check as CheckIcon,
+  FormatSize as FormatSizeIcon,
   Palette as PaletteIcon,
   RestartAlt as RestartAltIcon,
   WbTwilight as WbTwilightIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import FontSizeSlider from "./FontSizeSlider";
 import AppContext from "../../context/AppContext";
 import {
   CUSTOM_THEME_ID,
@@ -31,16 +33,17 @@ import {
   getEditableThemeColors,
 } from "../../theme";
 import { vibrate } from "../../utils";
+import { ColorMode } from "../../data";
 
 type Mode = "light" | "dark";
 
-const ThemeSettings = () => {
+const AppearanceSettings = () => {
   const {
     themeId,
     customTheme,
     colorMode,
     _colorMode,
-    setSunColorMode,
+    updateColorMode,
     setThemeId,
     setCustomThemeColor,
     resetCustomTheme,
@@ -65,7 +68,31 @@ const ThemeSettings = () => {
 
   return (
     <List sx={rootSx}>
-      <ListSubheader sx={subheaderSx}>{t("預設主題")}</ListSubheader>
+      <ListSubheader disableSticky sx={subheaderSx}>
+        {t("顯示模式")}
+      </ListSubheader>
+      <ListItem>
+        <ToggleButtonGroup
+          value={_colorMode === "sun" ? null : _colorMode}
+          exclusive
+          fullWidth
+          size="small"
+          onChange={(_, v: ColorMode | null) => {
+            if (v) {
+              vibrate(vibrateDuration);
+              updateColorMode(v);
+            }
+          }}
+        >
+          <ToggleButton value="system">{t("color-system")}</ToggleButton>
+          <ToggleButton value="light">{t("color-light")}</ToggleButton>
+          <ToggleButton value="dark">{t("color-dark")}</ToggleButton>
+        </ToggleButtonGroup>
+      </ListItem>
+
+      <ListSubheader disableSticky sx={subheaderSx}>
+        {t("預設主題")}
+      </ListSubheader>
       <Box sx={presetGridSx}>
         {options.map(({ id, name, colors }) => (
           <ButtonBase
@@ -92,7 +119,7 @@ const ThemeSettings = () => {
         ))}
       </Box>
 
-      <ListSubheader sx={subheaderSx}>
+      <ListSubheader disableSticky sx={subheaderSx}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <PaletteIcon fontSize="small" />
           {t("自訂顏色")}
@@ -136,7 +163,17 @@ const ThemeSettings = () => {
         </Button>
       </ListItem>
 
-      <ListSubheader sx={subheaderSx}>
+      <ListSubheader disableSticky sx={subheaderSx}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <FormatSizeIcon fontSize="small" />
+          {t("字體大小")}
+        </Box>
+      </ListSubheader>
+      <ListItem>
+        <FontSizeSlider hideLabel />
+      </ListItem>
+
+      <ListSubheader disableSticky sx={subheaderSx}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <WbTwilightIcon fontSize="small" />
           {t("自動切換")}
@@ -150,7 +187,7 @@ const ThemeSettings = () => {
             inputProps={{ "aria-labelledby": "sun-color-mode-label" }}
             onChange={(_, checked) => {
               vibrate(vibrateDuration);
-              setSunColorMode(checked);
+              updateColorMode(checked ? "sun" : "system");
             }}
           />
         }
@@ -165,7 +202,7 @@ const ThemeSettings = () => {
   );
 };
 
-export default ThemeSettings;
+export default AppearanceSettings;
 
 const Swatch = ({ colors }: { colors: ThemeColors }) => (
   <Box sx={{ flex: 1, bgcolor: colors.background, position: "relative" }}>

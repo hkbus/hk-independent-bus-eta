@@ -40,7 +40,12 @@ import {
 } from "../theme";
 
 type GeoPermission =
-  "opening" | "force-opening" | "granted" | "denied" | "closed" | null;
+  | "opening"
+  | "force-opening"
+  | "granted"
+  | "denied"
+  | "closed"
+  | null;
 
 export interface AppState {
   searchRoute: string;
@@ -149,8 +154,8 @@ interface AppContextValue extends AppState {
   toggleNumPadOrder: () => void;
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
-  /** turn "dark from sunset to sunrise" on, or back to following the system */
-  setSunColorMode: (enabled: boolean) => void;
+  /** pick the appearance directly: light, dark, system or sunset-to-sunrise */
+  updateColorMode: (colorMode: ColorMode) => void;
   setThemeId: (themeId: string) => void;
   setCustomThemeColor: (
     mode: "light" | "dark",
@@ -528,10 +533,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
-  const setSunColorMode = useCallback((enabled: boolean) => {
+  const updateColorMode = useCallback((colorMode: ColorMode) => {
     setStateRaw(
       produce((state: State) => {
-        state._colorMode = enabled ? "sun" : "system";
+        state._colorMode = colorMode;
       })
     );
   }, []);
@@ -981,7 +986,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleNumPadOrder,
       toggleEtaFormat,
       toggleColorMode,
-      setSunColorMode,
+      updateColorMode,
       setThemeId,
       setCustomThemeColor,
       resetCustomTheme,
@@ -1018,7 +1023,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleNumPadOrder,
       toggleEtaFormat,
       toggleColorMode,
-      setSunColorMode,
+      updateColorMode,
       setThemeId,
       setCustomThemeColor,
       resetCustomTheme,
