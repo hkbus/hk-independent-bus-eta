@@ -1,3 +1,4 @@
+import { sanitizeCollections } from "./utils/collectionOps";
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { DaySchedule, RouteCollection } from "./@types/types";
 import { isStrings } from "./utils";
@@ -43,25 +44,40 @@ interface CollectionContextProviderProps {
   children: React.ReactNode;
 }
 
+// Never let a full/blocked storage crash the app; tell the editor instead.
+const persist = (key: string, value: unknown) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.error(`Failed to save ${key}`, e);
+    window.dispatchEvent(new Event("collection-save-failed"));
+  }
+};
+
 export const CollectionContextProvider = ({
   children,
 }: CollectionContextProviderProps) => {
   type State = CollectionState;
+  // Corrupt/unreadable storage must not crash the provider.
+  const readJson = (key: string): unknown => {
+    try {
+      return JSON.parse(localStorage.getItem(key) ?? "null");
+    } catch {
+      return null;
+    }
+  };
   const getInitialState = (): CollectionState => {
-    const savedStops: unknown = JSON.parse(
-      localStorage.getItem("savedStops") ?? "null"
-    );
-    const savedEtas: unknown = JSON.parse(
-      localStorage.getItem("savedEtas") ?? "null"
-    );
+    const savedStops: unknown = readJson("savedStops");
+    const savedEtas: unknown = readJson("savedEtas");
+    const storedCollections = readJson("collections");
     return {
       savedStops:
         Array.isArray(savedStops) && isStrings(savedStops) ? savedStops : [],
       savedEtas:
         Array.isArray(savedEtas) && isStrings(savedEtas) ? savedEtas : [],
-      collections: JSON.parse(
-        localStorage.getItem("collections") ?? "null"
-      ) ?? [
+      collections: (Array.isArray(storedCollections)
+        ? sanitizeCollections(storedCollections)
+        : null) ?? [
         {
           name: "Home",
           list: [],
@@ -296,15 +312,15 @@ export const CollectionContextProvider = ({
   );
 
   useEffect(() => {
-    localStorage.setItem("savedEtas", JSON.stringify(state.savedEtas));
+    persist("savedEtas", state.savedEtas);
   }, [state.savedEtas]);
 
   useEffect(() => {
-    localStorage.setItem("savedStops", JSON.stringify(state.savedStops));
+    persist("savedStops", state.savedStops);
   }, [state.savedStops]);
 
   useEffect(() => {
-    localStorage.setItem("collections", JSON.stringify(state.collections));
+    persist("collections", state.collections);
   }, [state.collections]);
 
   const contextValue: CollectionContextValue = useMemo(
