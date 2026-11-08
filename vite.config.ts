@@ -70,9 +70,10 @@ const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => 
       type: "module",
       navigateFallback: "index.html"
     },
-    registerType: "autoUpdate",
+    registerType: "prompt",
+    injectRegister: false,
     workbox: {
-      globPatterns: ['**/*.{css,html,ico,png,svg}'],
+      globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
       runtimeCaching: [
         // for lazy caching anything
         // reference to https://vite-pwa-org.netlify.app/workbox/generate-sw.html#cache-external-resources 
@@ -101,7 +102,7 @@ const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => 
             },
             expiration: {
               maxEntries: 50,
-              maxAgeSeconds: 60 * 24 * 30,
+              maxAgeSeconds: 60 * 60 * 24 * 30,
             }
           }
         },
@@ -116,7 +117,7 @@ const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => 
               statuses: [0, 200],
             },
             expiration: {
-              maxAgeSeconds: 60 * 24 * 365,
+              maxAgeSeconds: 60 * 60 * 24 * 365,
             }
           }
         },
@@ -129,7 +130,7 @@ const getPwaOptions = (env: Record<string, string>): Partial<VitePWAOptions> => 
               statuses: [200],
             },
             expiration: {
-              maxAgeSeconds: 60 * 24 * 30,
+              maxAgeSeconds: 60 * 60 * 24 * 30,
               purgeOnQuotaError: true,
             }
           }

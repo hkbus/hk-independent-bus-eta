@@ -100,20 +100,31 @@ const Settings = () => {
     setUpdating(false);
   }, [updateTime, language, t, AppTitle]);
 
-  const updateApp = useCallback(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/sw.js", { scope: "/" })
-        .then((registration) => {
-          // registration worked
-          registration.update();
-          window.location.reload();
-        })
-        .catch(() => {
-          // registration failed
-          console.error(`Not registrated`);
-        });
+  const updateApp = useCallback(async () => {
+    const registration = await navigator.serviceWorker?.getRegistration();
+    if (!registration) {
+      window.location.reload();
+      return;
     }
+    await registration.update().catch(() => {});
+    const installing = registration.installing;
+    if (installing) {
+      await new Promise<void>((resolve) => {
+        installing.addEventListener("statechange", () => {
+          if (installing.state !== "installing") resolve();
+        });
+      });
+    }
+    if (!registration.waiting) {
+      window.location.reload();
+      return;
+    }
+    navigator.serviceWorker.addEventListener(
+      "controllerchange",
+      () => window.location.reload(),
+      { once: true }
+    );
+    registration.waiting.postMessage({ type: "SKIP_WAITING" });
   }, []);
 
   return (
