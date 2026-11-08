@@ -65,6 +65,7 @@ export const fetchDbFunc = async (
         let store = transaction.objectStore("etadb");
         let req = store.get(versionMd5);
         req.onsuccess = () => {
+          idb.close();
           if (req.result) {
             resolve({
               schemaVersion,
@@ -76,6 +77,7 @@ export const fetchDbFunc = async (
           reject();
         };
         req.onerror = () => {
+          idb.close();
           reject();
         };
       };
@@ -111,7 +113,7 @@ export const fetchDbFunc = async (
       needRenew = true;
     }
     if (!needRenew) {
-      const db = await loadStoredDb();
+      const db = await loadStoredDb().catch(() => null);
       if (isEtaDb(db)) {
         return db;
       }

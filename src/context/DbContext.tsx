@@ -22,6 +22,9 @@ interface DbProviderProps {
   children: ReactNode;
 }
 
+const IDB_RESET_KEY = "idbReset";
+const IDB_RESET_VERSION = "1";
+
 const DbContext = React.createContext<DatabaseContextValue>(
   {} as DatabaseContextValue
 );
@@ -67,6 +70,12 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
 
       // make costly compression async
       setTimeout(() => {
+        // WebKit never shrinks the IndexedDB file after clear(); only deleteDatabase frees the space. Verified on iOS Simulator.
+        if (localStorage.getItem(IDB_RESET_KEY) !== IDB_RESET_VERSION) {
+          indexedDB.deleteDatabase("hkbus").onsuccess = () => {
+            localStorage.setItem(IDB_RESET_KEY, IDB_RESET_VERSION);
+          }
+        }
         let request = indexedDB.open("hkbus", 1);
         request.onupgradeneeded = (event) => {
           let idb = (event.target as IDBOpenDBRequest).result;
@@ -78,6 +87,7 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
           let store = transaction.objectStore("etadb");
           store.clear();
           store.put(db);
+          idb.close();
         };
       }, 0);
     }
