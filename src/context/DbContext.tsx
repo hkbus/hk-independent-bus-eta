@@ -76,6 +76,7 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
           let idb = (event.target as IDBOpenDBRequest).result;
           let transaction = idb.transaction(["etadb"], "readwrite");
           let store = transaction.objectStore("etadb");
+          store.clear();
           store.put(db);
         };
       }, 0);
