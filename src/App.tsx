@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
-import { PaletteMode } from "@mui/material";
+import { PaletteMode, type SnackbarProps } from "@mui/material";
 import {
   StyledEngineProvider,
   ThemeProvider,
   createTheme,
+  type Theme,
 } from "@mui/material/styles";
 import { useContext, useMemo } from "react";
 import {
@@ -165,6 +166,10 @@ declare module "@mui/material/styles" {
   }
 }
 
+// Android WebView misreports env(); hkbus-app injects --rn-safe-area-inset-bottom instead.
+const SAFE_AREA_INSET_BOTTOM =
+  "var(--rn-safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))";
+
 const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
   typography: {
     fontFamily: "'Chiron Hei HK WS'",
@@ -217,6 +222,27 @@ const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
             main: "#fedb00",
           },
         }),
+  },
+  components: {
+    MuiSnackbar: {
+      styleOverrides: {
+        root: ({
+          ownerState,
+          theme,
+        }: {
+          ownerState: SnackbarProps;
+          theme: Theme;
+        }) =>
+          ownerState.anchorOrigin?.vertical === "bottom"
+            ? {
+                bottom: `calc(8px + ${SAFE_AREA_INSET_BOTTOM})`,
+                [theme.breakpoints.up("sm")]: {
+                  bottom: `calc(24px + ${SAFE_AREA_INSET_BOTTOM})`,
+                },
+              }
+            : {},
+      },
+    },
   },
   elements: {
     MuiCssBaseline: {
