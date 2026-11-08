@@ -74,7 +74,7 @@ export const DbProvider = ({ initialDb, children }: DbProviderProps) => {
         if (localStorage.getItem(IDB_RESET_KEY) !== IDB_RESET_VERSION) {
           indexedDB.deleteDatabase("hkbus").onsuccess = () => {
             localStorage.setItem(IDB_RESET_KEY, IDB_RESET_VERSION);
-          }
+          };
         }
         let request = indexedDB.open("hkbus", 1);
         request.onupgradeneeded = (event) => {
