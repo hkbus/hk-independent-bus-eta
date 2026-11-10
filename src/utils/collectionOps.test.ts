@@ -3,6 +3,7 @@ import {
   addItem,
   duplicateCollection,
   moveBetween,
+  moveBetweenAt,
   moveWithin,
   removeItem,
   sanitizeCollections,
@@ -41,5 +42,22 @@ describe("collectionOps", () => {
       null,
     ]);
     expect(r).toEqual([{ name: "ok", list: ["1/1"], schedules: [] }]);
+  });
+  it("moveBetweenAt inserts at index, clamps, and never drops an item on duplicate", () => {
+    const cs = [c("a", ["1/1", "2/1"]), c("b", ["3/1", "4/1"])];
+    expect(moveBetweenAt(cs, "1/1", 0, 1, 1)[1].list).toEqual([
+      "3/1",
+      "1/1",
+      "4/1",
+    ]);
+    expect(moveBetweenAt(cs, "1/1", 0, 1, 1)[0].list).toEqual(["2/1"]);
+    expect(moveBetweenAt(cs, "1/1", 0, 1, 99)[1].list).toEqual([
+      "3/1",
+      "4/1",
+      "1/1",
+    ]);
+    const dup = [c("a", ["1/1"]), c("b", ["1/1"])];
+    expect(moveBetweenAt(dup, "1/1", 0, 1, 0)).toBe(dup);
+    expect(moveBetweenAt(cs, "9/9", 0, 1, 0)).toBe(cs);
   });
 });

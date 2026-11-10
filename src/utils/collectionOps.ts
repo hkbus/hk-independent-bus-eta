@@ -40,6 +40,26 @@ export const moveBetween = (
         i === from ? removeItem(c, item) : i === to ? addItem(c, item) : c
       );
 
+/** Like moveBetween but inserts at `toIndex` (clamped). No-op if the target already has the item. */
+export const moveBetweenAt = (
+  cs: RouteCollection[],
+  item: string,
+  from: number,
+  to: number,
+  toIndex: number
+): RouteCollection[] => {
+  if (from === to || !cs[from]?.list.includes(item) || !cs[to]) return cs;
+  if (cs[to].list.includes(item)) return cs;
+  const at = Math.max(0, Math.min(cs[to].list.length, toIndex));
+  return cs.map((c, i) =>
+    i === from
+      ? removeItem(c, item)
+      : i === to
+        ? { ...c, list: [...c.list.slice(0, at), item, ...c.list.slice(at)] }
+        : c
+  );
+};
+
 /** Duplicate with a unique name ("X copy", "X copy 2", ...) inserted after the original. */
 export const duplicateCollection = (
   cs: RouteCollection[],

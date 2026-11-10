@@ -22,6 +22,7 @@ import {
   ExpandMore as ExpandIcon,
   MoreVert as MoreIcon,
 } from "@mui/icons-material";
+import { DragDropContext, DragStart, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import CollectionContext from "../CollectionContext";
 import { RouteCollection } from "../@types/types";
@@ -30,6 +31,7 @@ import {
   addItem,
   duplicateCollection,
   moveBetween,
+  moveBetweenAt,
   moveWithin,
   removeItem,
 } from "../utils/collectionOps";
@@ -72,6 +74,11 @@ const CollectionEditorPage = () => {
     null
   );
   const [saveFailed, setSaveFailed] = useState(false);
+  // item being dragged + its source list; other groups already holding it refuse the drop
+  const [dragging, setDragging] = useState<{
+    item: string;
+    from: string;
+  } | null>(null);
   const pendingRename = useRef<number | null>(null);
   const latest = useRef<Snapshot>({ savedEtas, savedStops, collections });
   latest.current = { savedEtas, savedStops, collections };
@@ -175,6 +182,53 @@ const CollectionEditorPage = () => {
       .map((_, i) => ({ index: i, name: displayName(i) }))
       .filter((x) => x.index !== index);
 
+  const handleDragStart = ({ draggableId, source }: DragStart) => {
+    const list =
+      source.droppableId === "stops"
+        ? latest.current.savedStops
+        : [
+            latest.current.savedEtas,
+            ...latest.current.collections.map((c) => c.list),
+          ][Number(source.droppableId.slice(2))];
+    setDragging({
+      item: list?.[source.index] ?? draggableId,
+      from: source.droppableId,
+    });
+  };
+
+  const handleDragEnd = ({ source, destination }: DropResult) => {
+    setDragging(null);
+    if (!destination) return;
+    const { droppableId: from, index: fromIndex } = source;
+    const { droppableId: to, index: toIndex } = destination;
+    if (from === to) {
+      if (fromIndex === toIndex) return;
+      if (from === "stops") {
+        commit(all, null, moveWithin(savedStops, fromIndex, toIndex));
+      } else {
+        const gi = Number(from.slice(2));
+        commit(
+          all.map((x, i) =>
+            i === gi
+              ? { ...x, list: moveWithin(x.list, fromIndex, toIndex) }
+              : x
+          ),
+          null
+        );
+      }
+      return;
+    }
+    if (from === "stops" || to === "stops") return; // routes and stops don't mix
+    const fi = Number(from.slice(2));
+    const ti = Number(to.slice(2));
+    const item = all[fi]?.list[fromIndex];
+    if (item === undefined) return;
+    commit(
+      moveBetweenAt(all, item, fi, ti, toIndex),
+      t("已移動路線至 {{name}}", { name: displayName(ti) })
+    );
+  };
+
   const renderGroup = (c: RouteCollection, index: number) => {
     const isFav = index === 0;
     const expanded = !!open[c.name];
@@ -275,6 +329,12 @@ const CollectionEditorPage = () => {
         {expanded && (
           <ItemList
             droppableId={`c-${index}`}
+            type="route"
+            isDropDisabled={
+              !!dragging &&
+              dragging.from !== `c-${index}` &&
+              c.list.includes(dragging.item)
+            }
             items={c.list}
             emptyText={t("此收藏未有路線，按「+」新增")}
             onMove={(from, to) =>
@@ -351,84 +411,87 @@ const CollectionEditorPage = () => {
         </Alert>
       )}
 
-      {all.map(renderGroup)}
+      <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        {all.map(renderGroup)}
 
-      {collections.length === 0 && (
-        <Paper variant="outlined" sx={{ p: 3, textAlign: "center", mb: 1.5 }}>
-          <Typography gutterBottom>{t("未有自訂收藏")}</Typography>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            {t("建立收藏，把常搭的路線分組，例如「返工」、「回家」。")}
-          </Typography>
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            onClick={createCollection}
-          >
-            {t("新增收藏")}
-          </Button>
-        </Paper>
-      )}
-
-      <Paper variant="outlined" sx={{ overflow: "hidden" }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0.5,
-            p: 0.5,
-            pl: 1,
-          }}
-        >
-          <IconButton
-            aria-label={stopsOpen ? t("收合") : t("展開")}
-            aria-expanded={stopsOpen}
-            onClick={() => setOpen((o) => ({ ...o, __stops: !stopsOpen }))}
-          >
-            <ExpandIcon
-              sx={{ transform: stopsOpen ? "rotate(180deg)" : undefined }}
-            />
-          </IconButton>
-          <Box
-            sx={{ flex: 1, cursor: "pointer" }}
-            onClick={() => setOpen((o) => ({ ...o, __stops: !stopsOpen }))}
-          >
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-              {t("車站")}
+        {collections.length === 0 && (
+          <Paper variant="outlined" sx={{ p: 3, textAlign: "center", mb: 1.5 }}>
+            <Typography gutterBottom>{t("未有自訂收藏")}</Typography>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              {t("建立收藏，把常搭的路線分組，例如「返工」、「回家」。")}
             </Typography>
-            <Chip
-              size="small"
-              label={t("{{count}} 個車站", { count: savedStops.length })}
-            />
-          </Box>
-          <IconButton
-            aria-label={t("收藏車站")}
-            color="primary"
-            onClick={() => {
-              setOpen((o) => ({ ...o, __stops: true }));
-              setAdding(STOPS);
+            <Button
+              variant="outlined"
+              startIcon={<AddIcon />}
+              onClick={createCollection}
+            >
+              {t("新增收藏")}
+            </Button>
+          </Paper>
+        )}
+
+        <Paper variant="outlined" sx={{ overflow: "hidden" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              p: 0.5,
+              pl: 1,
             }}
           >
-            <AddIcon />
-          </IconButton>
-        </Box>
-        {stopsOpen && (
-          <ItemList
-            droppableId="stops"
-            items={savedStops}
-            emptyText={t("未有收藏車站，按「+」搜尋車站")}
-            onMove={(from, to) =>
-              commit(all, null, moveWithin(savedStops, from, to))
-            }
-            onRemove={(item) =>
-              commit(
-                all,
-                t("已移除車站"),
-                savedStops.filter((s) => s !== item)
-              )
-            }
-          />
-        )}
-      </Paper>
+            <IconButton
+              aria-label={stopsOpen ? t("收合") : t("展開")}
+              aria-expanded={stopsOpen}
+              onClick={() => setOpen((o) => ({ ...o, __stops: !stopsOpen }))}
+            >
+              <ExpandIcon
+                sx={{ transform: stopsOpen ? "rotate(180deg)" : undefined }}
+              />
+            </IconButton>
+            <Box
+              sx={{ flex: 1, cursor: "pointer" }}
+              onClick={() => setOpen((o) => ({ ...o, __stops: !stopsOpen }))}
+            >
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                {t("車站")}
+              </Typography>
+              <Chip
+                size="small"
+                label={t("{{count}} 個車站", { count: savedStops.length })}
+              />
+            </Box>
+            <IconButton
+              aria-label={t("收藏車站")}
+              color="primary"
+              onClick={() => {
+                setOpen((o) => ({ ...o, __stops: true }));
+                setAdding(STOPS);
+              }}
+            >
+              <AddIcon />
+            </IconButton>
+          </Box>
+          {stopsOpen && (
+            <ItemList
+              droppableId="stops"
+              type="stop"
+              items={savedStops}
+              emptyText={t("未有收藏車站，按「+」搜尋車站")}
+              onMove={(from, to) =>
+                commit(all, null, moveWithin(savedStops, from, to))
+              }
+              onRemove={(item) =>
+                commit(
+                  all,
+                  t("已移除車站"),
+                  savedStops.filter((s) => s !== item)
+                )
+              }
+            />
+          )}
+        </Paper>
+      </DragDropContext>
 
       {/* disableRestoreFocus: otherwise closing the menu steals focus back from the rename field */}
       <Menu

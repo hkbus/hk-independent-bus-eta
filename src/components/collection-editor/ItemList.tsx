@@ -1,5 +1,5 @@
 import { memo, useCallback, useRef, useState } from "react";
-import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
+import { Draggable } from "react-beautiful-dnd";
 import {
   Box,
   IconButton,
@@ -25,6 +25,9 @@ export interface MoveTarget {
 
 interface Props {
   droppableId: string;
+  /** droppables of different types do not accept each other's items */
+  type?: string;
+  isDropDisabled?: boolean;
   items: string[];
   emptyText: string;
   onMove: (from: number, to: number) => void;
@@ -106,6 +109,8 @@ const Row = memo(function Row({
 
 const ItemList = ({
   droppableId,
+  type,
+  isDropDisabled,
   items,
   emptyText,
   onMove,
@@ -118,11 +123,6 @@ const ItemList = ({
     null
   );
 
-  const handleDragEnd = ({ source, destination }: DropResult) => {
-    if (destination && destination.index !== source.index) {
-      onMove(source.index, destination.index);
-    }
-  };
   // stable callbacks so memoised rows don't re-render on every pointer move while dragging
   const latest = useRef({ onRemove });
   latest.current = { onRemove };
@@ -137,39 +137,43 @@ const ItemList = ({
   const close = () => setMenu(null);
   const current = menu ? items[menu.index] : undefined;
 
-  if (!items.length) {
-    return (
-      <Typography color="text.secondary" align="center" sx={{ py: 3 }}>
-        {emptyText}
-      </Typography>
-    );
-  }
-
   return (
     <>
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId={droppableId}>
-          {(provided) => (
-            <Box ref={provided.innerRef} {...provided.droppableProps}>
-              {items.map((item, index) => (
-                <Row
-                  key={`${item}#${items.indexOf(item) === index ? 0 : index}`}
-                  // occurrence suffix keeps ids unique if legacy data has duplicates
-                  dragId={`${item}#${items.indexOf(item) === index ? 0 : index}`}
-                  item={item}
-                  index={index}
-                  onRemove={remove}
-                  onMenu={openMenu}
-                  removeLabel={t("移除")}
-                  moreLabel={t("更多操作")}
-                  dragLabel={t("拖曳排序")}
-                />
-              ))}
-              {provided.placeholder}
-            </Box>
-          )}
-        </Droppable>
-      </DragDropContext>
+      {/* the DragDropContext lives in the page so items can move between lists */}
+      <Droppable
+        droppableId={droppableId}
+        type={type}
+        isDropDisabled={isDropDisabled}
+      >
+        {(provided) => (
+          <Box
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            sx={{ minHeight: 56 }}
+          >
+            {!items.length && (
+              <Typography color="text.secondary" align="center" sx={{ py: 3 }}>
+                {emptyText}
+              </Typography>
+            )}
+            {items.map((item, index) => (
+              <Row
+                key={`${droppableId}:${item}#${items.indexOf(item) === index ? 0 : index}`}
+                // list prefix: the same route may sit in two groups; occurrence suffix covers legacy duplicates
+                dragId={`${droppableId}:${item}#${items.indexOf(item) === index ? 0 : index}`}
+                item={item}
+                index={index}
+                onRemove={remove}
+                onMenu={openMenu}
+                removeLabel={t("移除")}
+                moreLabel={t("更多操作")}
+                dragLabel={t("拖曳排序")}
+              />
+            ))}
+            {provided.placeholder}
+          </Box>
+        )}
+      </Droppable>
       <Menu anchorEl={menu?.el} open={!!menu} onClose={close}>
         <MenuItem
           disabled={!menu || menu.index === 0}
