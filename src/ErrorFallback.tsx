@@ -65,7 +65,8 @@ const ErrorFallback = ({ error }: FallbackProps) => {
       <pre style={{ whiteSpace: "pre-wrap" }}>
         {describeError(error)}
         {"\n\n"}
-        {import.meta.env.VITE_VERSION ?? ""} {import.meta.env.VITE_COMMIT_HASH ?? ""}
+        {import.meta.env.VITE_VERSION ?? ""}{" "}
+        {import.meta.env.VITE_COMMIT_HASH ?? ""}
         {"\n"}
         {navigator.userAgent}
       </pre>
