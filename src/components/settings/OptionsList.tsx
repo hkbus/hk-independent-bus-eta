@@ -12,7 +12,6 @@ import {
   ListItem,
 } from "@mui/material";
 import {
-  SwipeUpOutlined as SwipeUpIcon,
   Battery20 as Battery20Icon,
   BatteryStd as BatteryStdIcon,
   Delete as DeleteIcon,
@@ -40,11 +39,7 @@ import { vibrate } from "../../utils";
 import { useTranslation } from "react-i18next";
 import FontSizeSlider from "./FontSizeSlider";
 
-interface OptionsListProps {
-  goToManage: () => void;
-}
-
-const OptionsList = ({ goToManage }: OptionsListProps) => {
+const OptionsList = () => {
   const {
     resetUsageRecord,
     isRouteFilter,
@@ -74,19 +69,6 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
 
   return (
     <List sx={ListSx}>
-      <ListItemButton
-        onClick={() => {
-          vibrate(vibrateDuration);
-          goToManage();
-        }}
-      >
-        <ListItemAvatar>
-          <Avatar>
-            <SwipeUpIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary={t("管理收藏")} />
-      </ListItemButton>
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);

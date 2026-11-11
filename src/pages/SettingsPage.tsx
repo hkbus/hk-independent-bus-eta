@@ -38,6 +38,7 @@ import {
   SecurityUpdate as SecurityUpdateIcon,
   Watch as WatchIcon,
   Map as MapIcon,
+  Bookmarks as BookmarksIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -263,6 +264,22 @@ const Settings = () => {
           <ListItemText
             primary={t("個性化設定")}
             secondary={t("日夜模式、時間格式、路線次序等")}
+          />
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            vibrate(vibrateDuration);
+            navigate(`/${language}/collections-edit`);
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <BookmarksIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={t("管理收藏")}
+            secondary={t("新增、排序及整理路線與車站")}
           />
         </ListItemButton>
         <ListItemButton
