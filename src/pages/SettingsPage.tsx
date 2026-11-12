@@ -38,6 +38,7 @@ import {
   SecurityUpdate as SecurityUpdateIcon,
   Watch as WatchIcon,
   Map as MapIcon,
+  Science as ScienceIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
@@ -49,12 +50,14 @@ import {
   iOSRNWebView,
 } from "../utils";
 import InstallDialog from "../components/settings/InstallDialog";
+import AlphaSwitchDialog from "../components/settings/AlphaSwitchDialog";
 import Donations from "../Donations";
 import PersonalizeDialog from "../components/settings/PersonalizeDialog";
 import { useNavigate } from "react-router-dom";
 import ReactNativeContext from "../context/ReactNativeContext";
 import useLanguage from "../hooks/useTranslation";
 import DbContext from "../context/DbContext";
+import { onTestSite, siteSwitchAvailable, switchSite } from "../site";
 
 const Settings = () => {
   const {
@@ -79,6 +82,7 @@ const Settings = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [isOpenInstallDialog, setIsOpenInstallDialog] = useState(false);
   const [isPersonalizeDialog, setIsPersonalizeDialog] = useState(false);
+  const [isAlphaDialog, setIsAlphaDialog] = useState(false);
 
   const { t } = useTranslation();
   const language = useLanguage();
@@ -516,6 +520,24 @@ const Settings = () => {
           </ListItemAvatar>
           <ListItemText primary={t("條款")} />
         </ListItemButton>
+        {siteSwitchAvailable() && (
+          <ListItemButton
+            onClick={() => {
+              if (onTestSite()) switchSite();
+              else setIsAlphaDialog(true);
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <ScienceIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={t("使用實驗版本")}
+              secondary={t(onTestSite() ? "開啟" : "關閉")}
+            />
+          </ListItemButton>
+        )}
         <ListItem onClick={toggleDebug}>
           <ListItemAvatar>
             <Avatar>
@@ -550,6 +572,11 @@ const Settings = () => {
           setIsCopied(false);
         }}
         message={t("鏈結已複製到剪貼簿")}
+      />
+      <AlphaSwitchDialog
+        open={isAlphaDialog}
+        handleClose={() => setIsAlphaDialog(false)}
+        handleConfirm={switchSite}
       />
       <InstallDialog
         open={isOpenInstallDialog}

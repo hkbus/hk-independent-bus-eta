@@ -62,6 +62,20 @@ const resources = {
       無法獲得地理位置定位功能權限: "Permission denied: Geolocation",
       一鍵清空用戶記錄: "Clear Usage Records",
       "確定清空？": "Confirm delete?",
+      "使用實驗版本": "Use experimental version",
+      "切換至實驗版本？": "Switch to experimental version?",
+      切換至實驗版本: "Switch to experimental version",
+      取消切換: "Cancel",
+      "實驗版本是此應用程式的早期版本，用於在正式推出前試用新改動。":
+        "The experimental version is an early build of this app, used to try out new changes before they are released.",
+      "實驗版本可能包含重大改動：路線可能無法載入、到站時間可能不準確，或部分功能可能失效。請勿在趕時間的行程中依賴它。":
+        "The experimental version may contain breaking changes: routes may fail to load, arrival times may be wrong, or features may stop working. Do not rely on it for time-critical trips.",
+      "切換後，開啟 {{stable}} 會帶你前往實驗版本，直至你在其設定中關閉此選項。":
+        "Once you switch, opening {{stable}} takes you to the experimental version until you turn this option off in its Settings.",
+      "實驗版本一開始是空白的，並有獨立的設定和收藏。你在其中的更改只會保留在實驗版本。":
+        "The experimental version starts empty and keeps its own settings and collections. What you change there stays there.",
+      "切換不會刪除或改動你在 {{stable}} 上已儲存的路線、收藏及設定；切換回來時，它們會保持原樣。":
+        "Your saved routes, collections and settings on {{stable}} are not deleted or changed by switching, and switching back brings you to them as you left them.",
       "確定刪除 ": "Confirm remove ",
       包括鎖定和常用報時: "Includes saved and commonly used ETA",
       交通資料來源: "ETA Data Source",
