@@ -44,12 +44,15 @@ const DataImportPage = React.lazy(() => import("./pages/DataImportPage"));
 const DataExportPage = React.lazy(() => import("./pages/DataExportPage"));
 
 const App = () => {
-  const { analytics, colorMode, fontSize } = useContext(AppContext);
+  const { analytics, colorMode, fontSize, reduceMotion } =
+    useContext(AppContext);
   const language = useLanguage();
 
   const theme = useMemo(() => {
-    return createTheme(getThemeTokens(colorMode, fontSize), [colorMode]);
-  }, [colorMode, fontSize]);
+    return createTheme(getThemeTokens(colorMode, fontSize, reduceMotion), [
+      colorMode,
+    ]);
+  }, [colorMode, fontSize, reduceMotion]);
 
   useEffect(() => {
     // If you want to start measuring performance in your app, pass a function
@@ -170,7 +173,25 @@ declare module "@mui/material/styles" {
 const SAFE_AREA_INSET_BOTTOM =
   "var(--rn-safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))";
 
-const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
+const getThemeTokens = (
+  mode: PaletteMode,
+  fontSize: number,
+  reduceMotion: boolean
+) => ({
+  ...(reduceMotion && {
+    transitions: {
+      // MUI transition components (Collapse, Fade, Slide...) read these durations
+      duration: {
+        shortest: 0,
+        shorter: 0,
+        short: 0,
+        standard: 0,
+        complex: 0,
+        enteringScreen: 0,
+        leavingScreen: 0,
+      },
+    },
+  }),
   typography: {
     fontFamily: "'Chiron Hei HK WS'",
     h6: {
@@ -224,6 +245,20 @@ const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
         }),
   },
   components: {
+    ...(reduceMotion && {
+      MuiButtonBase: { defaultProps: { disableRipple: true } },
+      MuiCssBaseline: {
+        styleOverrides: {
+          "*, *::before, *::after": {
+            animationDuration: "0s !important",
+            animationDelay: "0s !important",
+            transitionDuration: "0s !important",
+            transitionDelay: "0s !important",
+            scrollBehavior: "auto !important",
+          },
+        },
+      },
+    }),
     MuiSnackbar: {
       styleOverrides: {
         root: ({
