@@ -62,7 +62,7 @@ const resources = {
       無法獲得地理位置定位功能權限: "Permission denied: Geolocation",
       一鍵清空用戶記錄: "Clear Usage Records",
       "確定清空？": "Confirm delete?",
-      "使用實驗版本": "Use experimental version",
+      使用實驗版本: "Use experimental version",
       "切換至實驗版本？": "Switch to experimental version?",
       切換至實驗版本: "Switch to experimental version",
       取消切換: "Cancel",

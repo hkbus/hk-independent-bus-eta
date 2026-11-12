@@ -9,12 +9,19 @@ const mem = () => {
     removeItem: (k: string) => void m.delete(k),
   };
 };
-const loc = (search = "") => ({ origin: STABLE_SITE, pathname: "/en/route/1", search, hash: "#x" });
+const loc = (search = "") => ({
+  origin: STABLE_SITE,
+  pathname: "/en/route/1",
+  search,
+  hash: "#x",
+});
 
 describe("bootRedirectTarget", () => {
   it("sticks after ?site=test, clears on ?site=stable", () => {
     const s = mem();
-    expect(bootRedirectTarget(loc("?site=test"), s)).toBe(TEST_SITE + "/en/route/1#x");
+    expect(bootRedirectTarget(loc("?site=test"), s)).toBe(
+      TEST_SITE + "/en/route/1#x"
+    );
     expect(bootRedirectTarget(loc(), s)).toBe(TEST_SITE + "/en/route/1#x");
     expect(bootRedirectTarget(loc("?site=stable"), s)).toBeNull();
     expect(bootRedirectTarget(loc(), s)).toBeNull();
