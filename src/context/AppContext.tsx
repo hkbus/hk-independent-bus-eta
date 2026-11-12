@@ -94,6 +94,10 @@ export interface AppState {
    */
   isRecentSearchShown: boolean;
   /**
+   * Disable UI transitions and animations
+   */
+  reduceMotion: boolean;
+  /**
    * Font size
    */
   fontSize: number;
@@ -137,6 +141,7 @@ interface AppContextValue extends AppState {
   updateRefreshInterval: (interval: number) => void;
   toggleAnnotateScheduled: () => void;
   toggleIsRecentSearchShown: () => void;
+  toggleReduceMotion: () => void;
   changeLanguage: (lang: Language) => void;
   setFontSize: (fontSize: number) => void;
   importAppState: (appState: AppState) => void;
@@ -252,6 +257,13 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       ),
       isRecentSearchShown: !!JSON.parse(
         localStorage.getItem("isRecentSearchShown") ?? "true"
+      ),
+      reduceMotion: JSON.parse(
+        localStorage.getItem("reduceMotion") ??
+          JSON.stringify(
+            window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
+              false
+          )
       ),
       isVisible: true,
       analytics:
@@ -635,6 +647,14 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
+  const toggleReduceMotion = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        state.reduceMotion = !state.reduceMotion;
+      })
+    );
+  }, []);
+
   const changeLanguage = useCallback(
     (lang: Language) => {
       i18n.changeLanguage(lang);
@@ -791,6 +811,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   }, [state.isRecentSearchShown]);
 
   useEffect(() => {
+    localStorage.setItem("reduceMotion", JSON.stringify(state.reduceMotion));
+  }, [state.reduceMotion]);
+
+  useEffect(() => {
     localStorage.setItem("analytics", JSON.stringify(state.analytics));
   }, [state.analytics]);
 
@@ -861,6 +885,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       updateRefreshInterval,
       toggleAnnotateScheduled,
       toggleIsRecentSearchShown,
+      toggleReduceMotion,
       changeLanguage,
       setFontSize,
       importAppState,
@@ -894,6 +919,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       updateRefreshInterval,
       toggleAnnotateScheduled,
       toggleIsRecentSearchShown,
+      toggleReduceMotion,
       changeLanguage,
       setFontSize,
       importAppState,

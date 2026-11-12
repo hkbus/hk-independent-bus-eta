@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useMap } from "react-map-gl/maplibre";
+import AppContext from "../../../context/AppContext";
 
 /**
  * Lat/lng coordinate input. Either an `[lat, lng]` tuple or an
@@ -42,6 +43,7 @@ export interface FitBoundsOpts {
  */
 export const useImperativeMap = (mapId?: string) => {
   const maps = useMap();
+  const { reduceMotion } = useContext(AppContext);
   const ref = mapId ? maps[mapId] : maps.current;
   // `.getMap()` returns the underlying maplibre-gl `Map`, which has
   // the richer API surface (flyTo/fitBounds/etc are also on the ref
@@ -51,18 +53,28 @@ export const useImperativeMap = (mapId?: string) => {
   return useMemo(
     () => ({
       flyTo: (center: LatLngLike, opts: FlyToOpts = {}) => {
-        map?.flyTo({ center: toLngLat(center), ...opts });
+        map?.flyTo({
+          center: toLngLat(center),
+          ...opts,
+          ...(reduceMotion && { animate: false }),
+        });
       },
       fitBounds: (bounds: LatLngBoundsLike, opts: FitBoundsOpts = {}) => {
         const [sw, ne] = bounds;
-        map?.fitBounds([toLngLat(sw), toLngLat(ne)], opts);
+        map?.fitBounds([toLngLat(sw), toLngLat(ne)], {
+          ...opts,
+          ...(reduceMotion && { animate: false }),
+        });
       },
       /** Set center (and optionally zoom) without animation. */
       setView: (center: LatLngLike, zoom?: number) => {
         map?.jumpTo({ center: toLngLat(center), zoom });
       },
       panTo: (center: LatLngLike, opts?: { duration?: number }) => {
-        map?.panTo(toLngLat(center), opts);
+        map?.panTo(toLngLat(center), {
+          ...opts,
+          ...(reduceMotion && { animate: false }),
+        });
       },
       getCenter: (): { lat: number; lng: number } | null => {
         const c = map?.getCenter();
@@ -91,6 +103,6 @@ export const useImperativeMap = (mapId?: string) => {
       /** True iff the map is mounted and ready. */
       isReady: () => map !== undefined,
     }),
-    [map]
+    [map, reduceMotion]
   );
 };

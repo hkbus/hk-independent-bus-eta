@@ -31,6 +31,8 @@ import {
   PushPin as PinIcon,
   Update as UpdateIcon,
   UpdateDisabled as UpdateDisabledIcon,
+  Animation as AnimationIcon,
+  MotionPhotosOff as MotionPhotosOffIcon,
   FormatSize as FormatSizeIcon,
   LooksOneRounded as LooksOneRoundedIcon,
 } from "@mui/icons-material";
@@ -69,6 +71,8 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
     toggleAnnotateScheduled,
     isRecentSearchShown,
     toggleIsRecentSearchShown,
+    reduceMotion,
+    toggleReduceMotion,
   } = useContext(AppContext);
   const { t } = useTranslation();
 
@@ -253,6 +257,22 @@ const OptionsList = ({ goToManage }: OptionsListProps) => {
         <ListItemText
           primary={t("搜尋記錄")}
           secondary={t(isRecentSearchShown ? "開啟" : "關閉")}
+        />
+      </ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          vibrate(vibrateDuration ^ 1); // tricky, vibrate when switch on and vice versa
+          toggleReduceMotion();
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            {reduceMotion ? <MotionPhotosOffIcon /> : <AnimationIcon />}
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={t("動畫效果")}
+          secondary={t(reduceMotion ? "關閉" : "開啟")}
         />
       </ListItemButton>
       <ListItemButton

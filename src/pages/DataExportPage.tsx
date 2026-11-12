@@ -32,6 +32,7 @@ const DataExport = () => {
     busSortOrder,
     analytics,
     isRecentSearchShown,
+    reduceMotion,
   } = useContext(AppContext);
 
   const exportUrl = useMemo<string>(
@@ -56,6 +57,7 @@ const DataExport = () => {
               busSortOrder,
               analytics,
               isRecentSearchShown,
+              reduceMotion,
             },
             null,
             0
@@ -80,6 +82,7 @@ const DataExport = () => {
       language,
       analytics,
       isRecentSearchShown,
+      reduceMotion,
     ]
   );
   const [isCopied, setIsCopied] = useState<boolean>(false);
