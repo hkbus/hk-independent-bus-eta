@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Button, Snackbar } from "@mui/material";
+import { Button, IconButton, Snackbar } from "@mui/material";
+import { Close as CloseIcon } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
@@ -42,13 +43,31 @@ const AppUpdatePrompt = () => {
         if (reason !== "clickaway") setNeedRefresh(false);
       }}
       action={
-        <Button
-          color="error"
-          size="small"
-          onClick={() => updateServiceWorker(true)}
-        >
-          {t("立即更新")}
-        </Button>
+        <>
+          <Button
+            color="error"
+            size="small"
+            onClick={() => {
+              // vite-plugin-pwa reloads only when controlling.isUpdate is true; the Workbox recipe reloads on any controller change.
+              navigator.serviceWorker.addEventListener(
+                "controllerchange",
+                () => window.location.reload(),
+                { once: true }
+              );
+              updateServiceWorker();
+            }}
+          >
+            {t("立即更新")}
+          </Button>
+          <IconButton
+            size="small"
+            color="inherit"
+            aria-label={t("關閉通知")}
+            onClick={() => setNeedRefresh(false)}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </>
       }
     />
   );
