@@ -9,6 +9,7 @@ import {
   SxProps,
   Theme,
   Slider,
+  ListItem,
 } from "@mui/material";
 import {
   SwipeUpOutlined as SwipeUpIcon,
@@ -31,12 +32,14 @@ import {
   PushPin as PinIcon,
   Update as UpdateIcon,
   UpdateDisabled as UpdateDisabledIcon,
+  FormatSize as FormatSizeIcon,
   LooksOneRounded as LooksOneRoundedIcon,
 } from "@mui/icons-material";
 import { ETA_FORMAT_STR } from "../../constants";
 import AppContext from "../../context/AppContext";
 import { vibrate } from "../../utils";
 import { useTranslation } from "react-i18next";
+import FontSizeSlider from "./FontSizeSlider";
 import { CUSTOM_THEME_ID, getPreset } from "../../theme";
 
 interface OptionsListProps {
@@ -162,6 +165,14 @@ const OptionsList = ({ goToManage, goToAppearance }: OptionsListProps) => {
           )}`}
         />
       </ListItemButton>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+            <FormatSizeIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <FontSizeSlider />
+      </ListItem>
       <ListItemButton
         onClick={() => {
           vibrate(vibrateDuration);

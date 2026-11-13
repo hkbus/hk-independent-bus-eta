@@ -1,3 +1,4 @@
+import { alpha, darken, lighten } from "@mui/material";
 import type { PaletteMode, ThemeOptions } from "@mui/material";
 
 /**
@@ -224,7 +225,28 @@ export const getThemeTokens = (
       background: {
         default: colors.background,
         contrast: "rgba(255, 255, 255, 0.12)",
+        // cards / keypad / notice: background nudged so they stay distinct
+        ...(isClassic
+          ? {}
+          : {
+              paper:
+                mode === "light"
+                  ? darken(colors.background, 0.04)
+                  : lighten(colors.background, 0.06),
+            }),
       },
+      // classic keeps MUI's default text colours
+      ...(isClassic
+        ? {}
+        : {
+            text: {
+              // neutral text for legibility (elderly users); brand colour stays
+              // on icons / accents. Secondary >= 4.5:1 on every preset surface
+              primary: mode === "light" ? "#1a1a1a" : "#f5f5f5",
+              secondary: mode === "light" ? "#4d4d4d" : "#c4c4c4",
+            },
+            divider: alpha(colors.primary, 0.2),
+          }),
       primary: {
         main: colors.primary,
         // keep the long-standing look of the classic theme, let MUI compute a

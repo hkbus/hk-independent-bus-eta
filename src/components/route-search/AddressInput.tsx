@@ -123,7 +123,9 @@ export default AddressInput;
 const AddressAsyncSelect = styled(AsyncSelect<Address>)(({ theme }) => ({
   ".react-select__control": {
     background: `${
-      theme.palette.mode === "dark" ? theme.palette.background.default : "white"
+      theme.palette.mode === "dark"
+        ? theme.palette.background.default
+        : theme.palette.background.paper
     } !important`,
     border: "none !important",
     borderRadius: "unset !important",
@@ -155,12 +157,16 @@ const AddressAsyncSelect = styled(AsyncSelect<Address>)(({ theme }) => ({
   },
   ".react-select__option--is-focused": {
     background: `${
-      theme.palette.mode === "dark" ? theme.palette.background.default : "white"
+      theme.palette.mode === "dark"
+        ? theme.palette.background.default
+        : theme.palette.background.paper
     } !important`,
   },
   ".react-select__option--is-selected": {
     background: `${
-      theme.palette.mode === "dark" ? theme.palette.background.default : "white"
+      theme.palette.mode === "dark"
+        ? theme.palette.background.default
+        : theme.palette.background.paper
     } !important`,
     color: `${
       theme.palette.mode === "dark"
@@ -170,7 +176,9 @@ const AddressAsyncSelect = styled(AsyncSelect<Address>)(({ theme }) => ({
   },
   ".react-select__menu": {
     background: `${
-      theme.palette.mode === "dark" ? theme.palette.background.default : "white"
+      theme.palette.mode === "dark"
+        ? theme.palette.background.default
+        : theme.palette.background.paper
     } !important`,
     color: `${
       theme.palette.mode === "dark"
@@ -180,7 +188,9 @@ const AddressAsyncSelect = styled(AsyncSelect<Address>)(({ theme }) => ({
   },
   ".react-select__meauList": {
     background: `${
-      theme.palette.mode === "dark" ? theme.palette.background.default : "white"
+      theme.palette.mode === "dark"
+        ? theme.palette.background.default
+        : theme.palette.background.paper
     } !important`,
     color: `${
       theme.palette.mode === "dark"

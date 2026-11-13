@@ -16,13 +16,11 @@ import {
 } from "@mui/material";
 import {
   Check as CheckIcon,
-  FormatSize as FormatSizeIcon,
   Palette as PaletteIcon,
   RestartAlt as RestartAltIcon,
   WbTwilight as WbTwilightIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import FontSizeSlider from "./FontSizeSlider";
 import AppContext from "../../context/AppContext";
 import {
   CUSTOM_THEME_ID,
@@ -161,16 +159,6 @@ const AppearanceSettings = () => {
         >
           {t("重設自訂顏色")}
         </Button>
-      </ListItem>
-
-      <ListSubheader disableSticky sx={subheaderSx}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <FormatSizeIcon fontSize="small" />
-          {t("字體大小")}
-        </Box>
-      </ListSubheader>
-      <ListItem>
-        <FontSizeSlider hideLabel />
       </ListItem>
 
       <ListSubheader disableSticky sx={subheaderSx}>

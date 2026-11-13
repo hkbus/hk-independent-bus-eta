@@ -209,7 +209,7 @@ const StopAccordion = React.forwardRef<HTMLDivElement, StopAccordionProps>(
 export default StopAccordion;
 
 const accordionSx: SxProps<Theme> = {
-  border: "1px solid rgba(0, 0, 0, .125)",
+  border: (theme) => `1px solid ${theme.palette.divider}`,
   boxShadow: "none",
   "&:not(:last-child)": {
     borderBottom: 0,
@@ -226,9 +226,9 @@ const accordionSummarySx: SxProps<Theme> = {
   backgroundColor: (theme) =>
     theme.palette.mode === "dark"
       ? theme.palette.background.default
-      : "rgba(0, 0, 0, .03)",
+      : theme.palette.background.paper,
   "&.Mui-expanded": {
-    borderBottom: "1px solid rgba(0, 0, 0, .125)",
+    borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
     minHeight: 44,
   },
   minHeight: 44,

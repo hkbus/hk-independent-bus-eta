@@ -556,7 +556,9 @@ export default Settings;
 
 const rootSx: SxProps<Theme> = {
   background: (theme) =>
-    theme.palette.mode === "dark" ? theme.palette.background.default : "white",
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : theme.palette.background.paper,
   height: "calc(100vh - 120px)",
   overflowY: "scroll",
   "& .MuiAvatar-colorDefault": {
