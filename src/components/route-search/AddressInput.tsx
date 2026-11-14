@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import debounce from "lodash.debounce";
 import AsyncSelect from "react-select/async";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import proj4 from "proj4";
 import { Location, StopList } from "hk-bus-eta";
 import useLanguage from "../../hooks/useTranslation";
@@ -120,82 +120,54 @@ const loadAddressFromGeodata = async (
 
 export default AddressInput;
 
-const AddressAsyncSelect = styled(AsyncSelect<Address>)(({ theme }) => ({
-  ".react-select__control": {
-    background: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : theme.palette.background.paper
-    } !important`,
-    border: "none !important",
-    borderRadius: "unset !important",
-    borderBottom: "1px hsl(0, 0%, 80%) solid !important",
-  },
-  ".react-select__input": {
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
-  },
-  ".react-select__valueContainer": {
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
-  },
-  ".react-select__single-value": {
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
-  },
-  ".react-select__option:hover": {
-    filter: "grayscale(1) !important",
-  },
-  ".react-select__option--is-focused": {
-    background: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : theme.palette.background.paper
-    } !important`,
-  },
-  ".react-select__option--is-selected": {
-    background: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : theme.palette.background.paper
-    } !important`,
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
-  },
-  ".react-select__menu": {
-    background: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : theme.palette.background.paper
-    } !important`,
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
-  },
-  ".react-select__meauList": {
-    background: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : theme.palette.background.paper
-    } !important`,
-    color: `${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.text.primary
-    } !important`,
-  },
-}));
+const AddressAsyncSelect = styled(AsyncSelect<Address>)(({ theme }) => {
+  const { palette } = theme;
+  const bg =
+    palette.mode === "dark"
+      ? palette.background.default
+      : palette.background.paper;
+  const fg =
+    palette.mode === "dark" ? palette.primary.main : palette.text.primary;
+  return {
+    ".react-select__control": {
+      background: `${bg} !important`,
+      border: "none !important",
+      borderRadius: "unset !important",
+      borderBottom: `1px solid ${palette.divider} !important`,
+      boxShadow: "none !important",
+    },
+    ".react-select__input-container, .react-select__input, .react-select__single-value":
+      { color: `${fg} !important` },
+    ".react-select__placeholder": {
+      color: `${palette.text.secondary} !important`,
+    },
+    ".react-select__indicator": {
+      color: `${palette.text.secondary} !important`,
+    },
+    ".react-select__indicator-separator": {
+      backgroundColor: `${palette.divider} !important`,
+    },
+    ".react-select__menu": {
+      background: `${bg} !important`,
+      color: `${fg} !important`,
+      border: `1px solid ${palette.divider}`,
+    },
+    ".react-select__menu-list": {
+      background: `${bg} !important`,
+      color: `${fg} !important`,
+    },
+    ".react-select__menu-notice--no-options, .react-select__menu-notice--loading":
+      { color: `${palette.text.secondary} !important` },
+    ".react-select__option": {
+      background: "transparent !important",
+      color: `${fg} !important`,
+    },
+    ".react-select__option--is-focused": {
+      background: `${alpha(palette.primary.main, 0.12)} !important`,
+    },
+    ".react-select__option--is-selected": {
+      background: `${alpha(palette.primary.main, 0.2)} !important`,
+      color: `${fg} !important`,
+    },
+  };
+});
