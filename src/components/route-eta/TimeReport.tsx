@@ -289,5 +289,5 @@ export default TimeReport;
 
 const waitTimeSx: SxProps<Theme> = {
   fontWeight: "700",
-  color: "#088bce",
+  color: (theme) => theme.palette.warning.main,
 };

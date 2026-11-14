@@ -1,12 +1,10 @@
 import React, { useEffect } from "react";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
-import { PaletteMode, type SnackbarProps } from "@mui/material";
 import {
   StyledEngineProvider,
   ThemeProvider,
   createTheme,
-  type Theme,
 } from "@mui/material/styles";
 import { useContext, useMemo } from "react";
 import {
@@ -23,6 +21,7 @@ import RedirectPage from "./pages/RedirectPagePage";
 import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import useLanguage from "./hooks/useTranslation";
 import StopEtaListPage from "./pages/StopEtaListPage";
+import { DEFAULT_THEME_ID, getThemeTokens, resolveThemeColors } from "./theme";
 import AppUpdatePrompt from "./components/layout/AppUpdatePrompt";
 
 const HomePage = React.lazy(() => import("./pages/HomePage"));
@@ -44,12 +43,35 @@ const DataImportPage = React.lazy(() => import("./pages/DataImportPage"));
 const DataExportPage = React.lazy(() => import("./pages/DataExportPage"));
 
 const App = () => {
-  const { analytics, colorMode, fontSize } = useContext(AppContext);
+  const { analytics, colorMode, fontSize, themeId, customTheme } =
+    useContext(AppContext);
   const language = useLanguage();
 
+  const themeColors = useMemo(
+    () => resolveThemeColors(themeId, customTheme)[colorMode],
+    [themeId, customTheme, colorMode]
+  );
+
   const theme = useMemo(() => {
-    return createTheme(getThemeTokens(colorMode, fontSize), [colorMode]);
-  }, [colorMode, fontSize]);
+    return createTheme(
+      getThemeTokens(
+        colorMode,
+        fontSize,
+        themeColors,
+        themeId === DEFAULT_THEME_ID
+      )
+    );
+  }, [colorMode, fontSize, themeColors, themeId]);
+
+  useEffect(() => {
+    // keep the browser / PWA chrome in sync with a non-classic background
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute(
+        "content",
+        themeId === DEFAULT_THEME_ID ? "#000000" : themeColors.background
+      );
+  }, [themeId, themeColors.background]);
 
   useEffect(() => {
     // If you want to start measuring performance in your app, pass a function
@@ -158,102 +180,4 @@ export default App;
 const emotionCache = createCache({
   key: "hkbus",
   speedy: !(import.meta.env.DEV || navigator.userAgent === "prerendering"),
-});
-
-declare module "@mui/material/styles" {
-  interface TypeBackground {
-    contrast: string;
-  }
-}
-
-// Android WebView misreports env(); hkbus-app injects --rn-safe-area-inset-bottom instead.
-const SAFE_AREA_INSET_BOTTOM =
-  "var(--rn-safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))";
-
-const getThemeTokens = (mode: PaletteMode, fontSize: number) => ({
-  typography: {
-    fontFamily: "'Chiron Hei HK WS'",
-    h6: {
-      fontWeight: 700,
-    },
-    fontSize,
-  },
-  avatar: {
-    default: {
-      color: mode === "light" ? "#000" : "white",
-    },
-  },
-  palette: {
-    mode,
-    ...(mode === "light"
-      ? {
-          // light mode
-          background: {
-            default: "#fedb00", // yellow
-            contrast: "rgba(255, 255, 255, 0.12)",
-          },
-          primary: {
-            main: "#444",
-            contrastText: "rgba(0, 0, 0, 0.12)",
-          },
-          warning: {
-            // shared accent; deepened from #3285e3 so the highlighted ETA text
-            // (home + route-eta) meets WCAG AA (4.5:1) on white — ~5.3:1
-            main: "#1b6bc5",
-          },
-          secondary: {
-            main: "#000",
-          },
-        }
-      : {
-          //dark mode
-          background: {
-            default: "#000",
-            contrast: "rgba(255, 255, 255, 0.12)",
-          },
-          primary: {
-            main: "#fedb00", // yellow
-            contrastText: "#000",
-          },
-          warning: {
-            main: "#fedb00",
-          },
-          secondary: {
-            main: "#fedb00",
-          },
-        }),
-  },
-  components: {
-    MuiSnackbar: {
-      styleOverrides: {
-        root: ({
-          ownerState,
-          theme,
-        }: {
-          ownerState: SnackbarProps;
-          theme: Theme;
-        }) =>
-          ownerState.anchorOrigin?.vertical === "bottom"
-            ? {
-                bottom: `calc(8px + ${SAFE_AREA_INSET_BOTTOM})`,
-                [theme.breakpoints.up("sm")]: {
-                  bottom: `calc(24px + ${SAFE_AREA_INSET_BOTTOM})`,
-                },
-              }
-            : {},
-      },
-    },
-  },
-  elements: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          fontSize: "0.875rem",
-          lineHeight: 1.43,
-          scrollbarColor: "#3f3f3f",
-          scrollbarWidth: "thin",
-        },
-      },
-    },
-  },
 });

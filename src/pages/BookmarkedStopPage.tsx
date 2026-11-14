@@ -55,7 +55,7 @@ const BookmarkedStop = () => {
       if (stopTab === "") return "unset";
       return theme.palette.mode === "dark"
         ? theme.palette.background.default
-        : "white";
+        : theme.palette.background.paper;
     },
     [stopTab]
   );
