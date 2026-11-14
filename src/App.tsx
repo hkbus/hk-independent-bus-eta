@@ -22,6 +22,7 @@ import reportWebVitals, { sendToGoogleAnalytics } from "./reportWebVitals";
 import useLanguage from "./hooks/useTranslation";
 import StopEtaListPage from "./pages/StopEtaListPage";
 import { DEFAULT_THEME_ID, getThemeTokens, resolveThemeColors } from "./theme";
+import AppUpdatePrompt from "./components/layout/AppUpdatePrompt";
 
 const HomePage = React.lazy(() => import("./pages/HomePage"));
 const RouteEtaPage = React.lazy(() => import("./pages/RouteEtaPage"));
@@ -166,6 +167,7 @@ const App = () => {
                 />
               </Routes>
             </Router>
+            <AppUpdatePrompt />
           </SearchContextProvider>
         </CacheProvider>
       </ThemeProvider>

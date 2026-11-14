@@ -45,6 +45,8 @@ const resources = {
       已複製到剪貼簿: "Copied to clipboard",
       鏈結已複製到剪貼簿: "Link copied to clipboard",
       資料更新中: "Data updating",
+      有新版本: "A new version is available",
+      立即更新: "Update",
       未有班次資料: "No information is available",
       版本: "Version",
       更新路線資料庫: "Update Route Database",

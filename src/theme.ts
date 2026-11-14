@@ -1,5 +1,10 @@
 import { alpha, darken, lighten } from "@mui/material";
-import type { PaletteMode, ThemeOptions } from "@mui/material";
+import type {
+  PaletteMode,
+  SnackbarProps,
+  Theme,
+  ThemeOptions,
+} from "@mui/material";
 
 /**
  * Colour slots exposed to users for customisation. Each slot maps onto the
@@ -201,6 +206,10 @@ declare module "@mui/material/styles" {
   }
 }
 
+// Android WebView misreports env(); hkbus-app injects --rn-safe-area-inset-bottom instead.
+const SAFE_AREA_INSET_BOTTOM =
+  "var(--rn-safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))";
+
 export const getThemeTokens = (
   mode: PaletteMode,
   fontSize: number,
@@ -260,6 +269,27 @@ export const getThemeTokens = (
       },
       secondary: {
         main: colors.secondary,
+      },
+    },
+    components: {
+      MuiSnackbar: {
+        styleOverrides: {
+          root: ({
+            ownerState,
+            theme,
+          }: {
+            ownerState: SnackbarProps;
+            theme: Theme;
+          }) =>
+            ownerState.anchorOrigin?.vertical === "bottom"
+              ? {
+                  bottom: `calc(8px + ${SAFE_AREA_INSET_BOTTOM})`,
+                  [theme.breakpoints.up("sm")]: {
+                    bottom: `calc(24px + ${SAFE_AREA_INSET_BOTTOM})`,
+                  },
+                }
+              : {},
+        },
       },
     },
     elements: {
