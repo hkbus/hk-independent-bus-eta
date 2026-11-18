@@ -1,11 +1,11 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { Box, Button, Grid, SxProps, Theme } from "@mui/material";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
 import AppContext from "../../context/AppContext";
 import { type BoardTabType } from "../../@types/types";
 import { TRANSPORT_SEARCH_OPTIONS } from "../../constants";
-import { RouteList } from "hk-bus-eta";
+import { buildRouteTrie, nextChars } from "../../utils/routeTrie";
 import DbContext from "../../context/DbContext";
 
 interface KeyButtonProps {
@@ -86,7 +86,11 @@ const RouteInputPad = ({ boardTab }: { boardTab: BoardTabType }) => {
     db: { routeList },
   } = useContext(DbContext);
 
-  const possibleChar = getPossibleChar(searchRoute, routeList, boardTab);
+  const trie = useMemo(
+    () => buildRouteTrie(routeList, TRANSPORT_SEARCH_OPTIONS[boardTab]),
+    [routeList, boardTab]
+  );
+  const possibleChar = nextChars(trie, searchRoute);
 
   const padding = 0;
   if (navigator.userAgent === "prerendering") {
@@ -153,27 +157,4 @@ const numPadContainerSx: SxProps<Theme> = {
   height: "auto",
   overflowX: "hidden",
   overflowY: "scroll",
-};
-
-const getPossibleChar = (
-  searchRoute: string,
-  routeList: RouteList,
-  boardTab: BoardTabType
-) => {
-  if (routeList == null) return [];
-  let possibleChar: Record<string, number> = {};
-  Object.entries(routeList).forEach(([routeNo, meta]) => {
-    if (
-      routeNo.startsWith(searchRoute.toUpperCase()) &&
-      meta["co"].some((c) =>
-        TRANSPORT_SEARCH_OPTIONS[boardTab as BoardTabType].includes(c)
-      )
-    ) {
-      let c = routeNo.slice(searchRoute.length, searchRoute.length + 1);
-      possibleChar[c] = isNaN(possibleChar[c]) ? 1 : possibleChar[c] + 1;
-    }
-  });
-  return Object.entries(possibleChar)
-    .map((k) => k[0])
-    .filter((k) => k !== "-");
 };
