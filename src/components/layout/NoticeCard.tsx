@@ -1,23 +1,26 @@
 import {
   Box,
+  Button,
+  ButtonBase,
+  Drawer,
   IconButton,
   Paper,
   SxProps,
-  Tab,
-  Tabs,
   Theme,
   Typography,
 } from "@mui/material";
 import WarnIcon from "@mui/icons-material/Warning";
-import InfoIcon from "@mui/icons-material/Info";
+import {
+  ChevronLeft as PrevIcon,
+  ChevronRight as NextIcon,
+  Close as CloseIcon,
+} from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import useLanguage from "../../hooks/useTranslation";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { iOSRNWebView } from "../../utils";
 import { Language } from "../../data";
-import { Close as CloseIcon } from "@mui/icons-material";
 import AppContext from "../../context/AppContext";
-import SwipeableViews from "react-swipeable-views";
 
 interface NoticeCardState {
   id: string;
@@ -32,28 +35,18 @@ interface NoticeCardState {
   icon?: "info" | "warning";
 }
 
-const rolled = new Map<string, boolean>();
-
+// One-line strip: costs the ETA list a single row. The full text opens in a
+// sheet, so there is no carousel to compete with the home tabs' own swipe.
 const NoticeCard = () => {
   const language = useLanguage();
   const { t } = useTranslation();
   const [state, setState] = useState<NoticeCardState[]>([]);
   const [viewIdx, setViewIdx] = useState<number>(0);
+  const [open, setOpen] = useState<boolean>(false);
   const [closeNoticeIds, setCloseNoticeIds] = useState<string[]>(
     JSON.parse(localStorage.getItem("closeNoticeIds") ?? "[]")
   );
   const { openUrl } = useContext(AppContext);
-
-  const handleClick = useCallback(
-    (idx: number) => () => {
-      if (idx >= state.length) return;
-      if (iOSRNWebView() && !state[idx].enableLinkInIos) {
-        return;
-      }
-      openUrl(state[idx].link[language]);
-    },
-    [language, openUrl, state]
-  );
 
   const closeNotice = useCallback(
     ({ id, probability }: NoticeCardState) =>
@@ -100,6 +93,11 @@ const NoticeCard = () => {
       });
   }, [closeNoticeIds]);
 
+  // nothing left to show: make sure a sheet that was open goes away with it
+  useEffect(() => {
+    if (state.length === 0) setOpen(false);
+  }, [state.length]);
+
   if (
     state.length === 0 ||
     viewIdx >= state.length ||
@@ -108,86 +106,156 @@ const NoticeCard = () => {
     return null;
   }
 
+  const notice = state[viewIdx];
+  const lines = notice.content[language] ?? [];
+  const link = notice.link?.[language];
+  const canOpenLink =
+    Boolean(link) && !(iOSRNWebView() && !notice.enableLinkInIos);
+
   return (
-    <Paper variant="outlined" sx={rootSx}>
-      <Box
-        display="flex"
-        justifyContent="flex-start"
-        flexDirection="column"
-        gap={0.5}
-        flex={1}
-        overflow="scroll"
-      >
-        <Tabs
-          sx={noticeTabsSx}
-          value={viewIdx}
-          onChange={(_, v) => setViewIdx(v)}
+    <>
+      <Paper variant="outlined" sx={stripSx}>
+        <ButtonBase
+          onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+          sx={stripButtonSx}
         >
-          {state.map((notice, idx) => (
-            <Tab
-              key={`notice-tab-${idx}`}
-              aria-label={notice.content[language][0] ?? String(idx + 1)}
-              label={""}
-              value={idx}
-            />
-          ))}
-        </Tabs>
-        <SwipeableViews
-          index={viewIdx}
-          onChangeIndex={(idx) => {
-            setViewIdx(idx);
-          }}
+          <WarnIcon color="warning" fontSize="small" />
+          <Typography variant="subtitle2" noWrap sx={{ flex: 1, minWidth: 0 }}>
+            {lines[0]}
+          </Typography>
+          {state.length > 1 && (
+            <Typography
+              variant="caption"
+              color="textSecondary"
+              sx={{ fontVariantNumeric: "tabular-nums" }}
+            >
+              {viewIdx + 1}/{state.length}
+            </Typography>
+          )}
+          <NextIcon fontSize="small" />
+        </ButtonBase>
+        <IconButton
+          aria-label={t("關閉通知")}
+          onClick={closeNotice(notice.id)}
+          sx={closeSx}
         >
-          {state.map((notice) => (
-            <Box display="flex" alignItems="center" gap={2} key={notice.id}>
-              {notice.icon === "info" ? (
-                <InfoIcon color="info" />
-              ) : (
-                <WarnIcon color="warning" />
-              )}
-              <Box onClick={handleClick(viewIdx)} sx={{ cursor: "pointer" }}>
-                {notice.content[language].map((v, idx) => (
-                  <Typography key={`_notice-${idx}`} variant="subtitle2">
-                    {v}
-                  </Typography>
-                ))}
-              </Box>
-            </Box>
-          ))}
-        </SwipeableViews>
-      </Box>
-      <IconButton
-        size="small"
-        aria-label={t("關閉通知")}
-        onClick={closeNotice(state[viewIdx])}
-      >
-        <CloseIcon />
-      </IconButton>
-    </Paper>
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </Paper>
+      <Drawer anchor="bottom" open={open} onClose={() => setOpen(false)}>
+        <Box sx={sheetSx}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <WarnIcon color="warning" fontSize="small" />
+            <Typography variant="subtitle1" sx={{ flex: 1, fontWeight: 700 }}>
+              {t("通告")}
+            </Typography>
+            {state.length > 1 && (
+              <Typography
+                variant="caption"
+                color="textSecondary"
+                sx={{ fontVariantNumeric: "tabular-nums" }}
+              >
+                {viewIdx + 1}/{state.length}
+              </Typography>
+            )}
+          </Box>
+          <Box sx={{ overflow: "auto" }}>
+            {lines.map((v, idx) => (
+              <Typography key={`_notice-${idx}`} variant="body2" paragraph>
+                {v}
+              </Typography>
+            ))}
+          </Box>
+          <Box sx={actionsSx}>
+            {state.length > 1 && (
+              <>
+                <IconButton
+                  aria-label={t("上一則")}
+                  disabled={viewIdx === 0}
+                  onClick={() => setViewIdx((i) => Math.max(i - 1, 0))}
+                  sx={navSx}
+                >
+                  <PrevIcon />
+                </IconButton>
+                <IconButton
+                  aria-label={t("下一則")}
+                  disabled={viewIdx >= state.length - 1}
+                  onClick={() =>
+                    setViewIdx((i) => Math.min(i + 1, state.length - 1))
+                  }
+                  sx={navSx}
+                >
+                  <NextIcon />
+                </IconButton>
+              </>
+            )}
+            <Box sx={{ flex: 1 }} />
+            {canOpenLink && (
+              <Button
+                variant="outlined"
+                sx={{ minHeight: 44 }}
+                onClick={() => openUrl(link)}
+              >
+                {t("開啟連結")}
+              </Button>
+            )}
+            <Button
+              sx={{ minHeight: 44 }}
+              onClick={() => {
+                closeNotice(notice.id)();
+                if (state.length <= 1) setOpen(false);
+              }}
+            >
+              {t("關閉通知")}
+            </Button>
+          </Box>
+        </Box>
+      </Drawer>
+    </>
   );
 };
 
 export default NoticeCard;
 
-const rootSx: SxProps<Theme> = {
+const stripSx: SxProps<Theme> = {
   borderRadius: (theme) => theme.shape.borderRadius,
-  px: 2,
-  py: 1,
+  display: "flex",
   alignItems: "center",
   textAlign: "left",
-  gap: 2,
-  display: "flex",
+  pl: 2,
 };
 
-const noticeTabsSx: SxProps<Theme> = {
-  minHeight: 5,
-  ["& .MuiTab-root"]: {
-    px: 0,
-    py: 0,
-    height: 5,
-    borderBottom: "#7777 1px solid",
-    minHeight: 5,
-    mx: 1,
-    minWidth: 45,
-  },
+const stripButtonSx: SxProps<Theme> = {
+  flex: 1,
+  minWidth: 0,
+  minHeight: 44,
+  display: "flex",
+  justifyContent: "flex-start",
+  gap: 1,
+};
+
+const closeSx: SxProps<Theme> = {
+  minWidth: 44,
+  minHeight: 44,
+};
+
+const sheetSx: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 1.5,
+  p: 2,
+  pb: "max(16px, env(safe-area-inset-bottom))",
+  maxHeight: "70dvh",
+};
+
+const actionsSx: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "center",
+  gap: 1,
+};
+
+const navSx: SxProps<Theme> = {
+  minWidth: 44,
+  minHeight: 44,
 };
