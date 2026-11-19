@@ -392,7 +392,8 @@ const rootSx: SxProps<Theme> = {
     },
   },
   [`& .${classes.active}`]: {
-    animation: "blinker 2s cubic-bezier(0,1.5,1,1.5) infinite",
+    animation: "blinker 2s ease-in-out infinite",
+    "@media (prefers-reduced-motion: reduce)": { animation: "none" },
   },
   [`& .${classes.passed}`]: {
     filter: "grayscale(100%)",

@@ -122,13 +122,13 @@ const SuccinctEtas = ({
 
   return (
     <Box display="flex" flexDirection="column" textAlign="right">
-      <Typography component="h5" color="textPrimary" sx={primarySx}>
+      <Typography component="div" color="textPrimary" sx={primarySx}>
         {etas ? getEtaString(etas[0], 0, true) : ""}
       </Typography>
-      <Typography component="h6" color="textSecondary" sx={secondarySx}>
+      <Typography component="div" color="textSecondary" sx={secondarySx}>
         {etas ? getEtaString(etas[1], 1) : ""}
       </Typography>
-      <Typography component="h6" color="textSecondary" sx={secondarySx}>
+      <Typography component="div" color="textSecondary" sx={secondarySx}>
         {etas ? getEtaString(etas[2], 2) : ""}
       </Typography>
     </Box>
@@ -139,6 +139,7 @@ export const SingleTrainIcon = () => (
   // https://pictogrammers.com/library/mdi/icon/train-car-passenger-door/
   <svg
     xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
     viewBox="0 0 24 24"
     style={{
       marginRight: 8,
@@ -148,7 +149,6 @@ export const SingleTrainIcon = () => (
       fill: "currentcolor",
     }}
   >
-    <title>train-car-passenger-door</title>
     <path d="M21 7H3C1.9 7 1 7.9 1 9V17H2C2 18.11 2.9 19 4 19S6 18.11 6 17H18C18 18.11 18.9 19 20 19S22 18.11 22 17H23V9C23 7.9 22.11 7 21 7M7 12H3V9H7V12M11 16H9V9H11V16M15 16H13V9H15V16M21 12H17V9H21V12Z" />
   </svg>
 );
@@ -158,6 +158,7 @@ export const DoubleTrainIcon = () => (
   <>
     <svg
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
       viewBox="0 0 24 24"
       style={{
         width: "1em",
@@ -166,11 +167,11 @@ export const DoubleTrainIcon = () => (
         fill: "currentcolor",
       }}
     >
-      <title>train-car-passenger-door</title>
       <path d="M21 7H3C1.9 7 1 7.9 1 9V17H2C2 18.11 2.9 19 4 19S6 18.11 6 17H18C18 18.11 18.9 19 20 19S22 18.11 22 17H23V9C23 7.9 22.11 7 21 7M7 12H3V9H7V12M11 16H9V9H11V16M15 16H13V9H15V16M21 12H17V9H21V12Z" />
     </svg>
     <svg
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
       viewBox="0 0 24 24"
       style={{
         marginRight: 8,
@@ -180,7 +181,6 @@ export const DoubleTrainIcon = () => (
         fill: "currentcolor",
       }}
     >
-      <title>train-car-passenger-door</title>
       <path d="M21 7H3C1.9 7 1 7.9 1 9V17H2C2 18.11 2.9 19 4 19S6 18.11 6 17H18C18 18.11 18.9 19 20 19S22 18.11 22 17H23V9C23 7.9 22.11 7 21 7M7 12H3V9H7V12M11 16H9V9H11V16M15 16H13V9H15V16M21 12H17V9H21V12Z" />
     </svg>
   </>

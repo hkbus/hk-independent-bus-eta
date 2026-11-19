@@ -18,7 +18,6 @@ const TimeTableButton = ({
     <>
       <Button
         variant="text"
-        aria-label="open-timetable"
         sx={buttonSx}
         size="small"
         startIcon={<ScheduleIcon />}

@@ -127,6 +127,15 @@ const JourneyTimePanel = ({ routeId, stopId }: JourneyTimePanelProps) => {
                 }}
                 active={idx >= startSeq}
                 onClick={() => setStartSeq(idx)}
+                // the step is a div; make it operable from the keyboard too
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e: React.KeyboardEvent) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setStartSeq(idx);
+                  }
+                }}
               >
                 <StepLabel
                   StepIconComponent={StepIcon}

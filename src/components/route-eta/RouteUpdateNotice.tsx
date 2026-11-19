@@ -1,4 +1,4 @@
-import { Box, SxProps, Theme, Typography } from "@mui/material";
+import { ButtonBase, SxProps, Theme, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import DbContext from "../../context/DbContext";
 import { fetchRouteUpdatedAt, RouteListEntry } from "hk-bus-eta";
@@ -27,9 +27,9 @@ const RouteUpdateNotice = ({ route }: RouteUpdateNoticeProps) => {
   }
 
   return (
-    <Box sx={rootSx} onClick={renewDb}>
-      <Typography>⁉️ {t("db-renew-text")}</Typography>
-    </Box>
+    <ButtonBase sx={rootSx} onClick={renewDb}>
+      <Typography component="span">⁉️ {t("db-renew-text")}</Typography>
+    </ButtonBase>
   );
 };
 
