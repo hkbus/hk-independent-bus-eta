@@ -3,7 +3,7 @@ import { Button, Divider, SxProps, Theme } from "@mui/material";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { RouteListEntry } from "hk-bus-eta";
 import { useNavigate } from "react-router-dom";
-import { vibrate, getDistance } from "../../utils";
+import { vibrate, getDistance, routeSlug } from "../../utils";
 import { useTranslation } from "react-i18next";
 import AppContext from "../../context/AppContext";
 import { isHoliday, isRouteAvaliable } from "../../timetable";
@@ -99,7 +99,7 @@ const ReverseButton = ({ routeId, stopId }: ReverseButtonProps) => {
         stopIdx = i;
       }
     }
-    return `/${language}/route/${reverseRoute[0].toLowerCase()}/${stopIds[stopIdx]}%2C${stopIdx}`;
+    return `/${language}/route/${routeSlug(reverseRoute[0])}/${stopIds[stopIdx]}%2C${stopIdx}`;
   }, [
     route,
     co,

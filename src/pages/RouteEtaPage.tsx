@@ -17,6 +17,7 @@ import {
   toProperCase,
   getDistance,
   setSeoRouteFeature,
+  routeSlug,
 } from "../utils";
 import StrSim from "string-similarity";
 import {
@@ -160,8 +161,8 @@ const RouteEta = () => {
   }, [id, updateSelectedRoute]);
 
   useEffect(() => {
-    if (id!.toUpperCase() !== routeId.toUpperCase()) {
-      navigate(`/${language}/route/${routeId.toLowerCase()}`);
+    if (routeSlug(id!) !== routeSlug(routeId)) {
+      navigate(`/${language}/route/${routeSlug(routeId)}`);
     }
   }, [id, routeId, language, navigate]);
 
@@ -264,6 +265,10 @@ const RouteEta = () => {
 
 const getRouteEntry = (id: string, routeList: RouteList) => {
   if (routeList[id] !== undefined) return id;
+  const bySlug = Object.keys(routeList).find(
+    (k) => routeSlug(k) === routeSlug(id)
+  );
+  if (bySlug) return bySlug;
   const prefix = id.split("-")[0];
   try {
     return StrSim.findBestMatch(

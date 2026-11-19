@@ -22,7 +22,7 @@ import {
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import AppContext from "../../context/AppContext";
-import { vibrate, checkMobile } from "../../utils";
+import { vibrate, checkMobile, routeSlug } from "../../utils";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useWeatherCode, WeatherIcons } from "../Weather";
 import useOnline from "../../hooks/useOnline";
@@ -198,7 +198,7 @@ const Header = () => {
             e.target.value in routeList
           ) {
             (document.activeElement as HTMLElement).blur();
-            navigate(`/${language}/route/${e.target.value}`);
+            navigate(`/${language}/route/${routeSlug(e.target.value)}`);
           }
           setSearchRoute(e.target.value);
         }}
