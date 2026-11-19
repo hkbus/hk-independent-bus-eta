@@ -20,7 +20,7 @@ import { toProperCase } from "../../utils";
 interface RouteRowProps {
   route: [string, RouteListEntry];
   style: React.CSSProperties;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onClick: MouseEventHandler<HTMLAnchorElement>;
   onRemove?: MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -37,28 +37,26 @@ const RouteRow = ({ route, onClick, style, onRemove }: RouteRowProps) => {
   )}, ${t("由")} ${toProperCase(route[1].orig[language])}`;
 
   return (
-    <Link
-      // for SEO, not for click — hidden from the a11y tree to avoid a
-      // duplicate, unlabelled tab stop over the same row.
-      to={`/${language}/route/${route[0].toLowerCase()}`}
-      style={style}
-      tabIndex={-1}
-      aria-hidden="true"
-    >
-      <Card variant="outlined" key={route[0]} square sx={rootSx}>
-        <CardActionArea onClick={onClick} aria-label={routeLabel}>
-          <CardContent sx={cardContentSx}>
-            <RouteNoCompany route={route} />
-            <RouteTerminus terminus={route[1]} />
-          </CardContent>
-        </CardActionArea>
-        {onRemove && (
-          <IconButton onClick={onRemove} aria-label={`${t("移除")} ${routeNo}`}>
-            <CloseIcon />
-          </IconButton>
-        )}
-      </Card>
-    </Link>
+    <Card variant="outlined" key={route[0]} square sx={rootSx} style={style}>
+      {/* the CardActionArea is the row's single accessible control: an
+          anchor (SEO href) that is focusable and labelled. */}
+      <CardActionArea
+        component={Link}
+        to={`/${language}/route/${route[0].toLowerCase()}`}
+        onClick={onClick}
+        aria-label={routeLabel}
+      >
+        <CardContent sx={cardContentSx}>
+          <RouteNoCompany route={route} />
+          <RouteTerminus terminus={route[1]} />
+        </CardContent>
+      </CardActionArea>
+      {onRemove && (
+        <IconButton onClick={onRemove} aria-label={`${t("移除")} ${routeNo}`}>
+          <CloseIcon />
+        </IconButton>
+      )}
+    </Card>
   );
 };
 
