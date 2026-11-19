@@ -46,6 +46,11 @@ const DEFAULT_VIEW = {
   zoom: 13,
 };
 
+/** Hong Kong + Greater Bay Area, [west, south, east, north]. */
+const HK_MAX_BOUNDS: [number, number, number, number] = [
+  112.5, 21.2, 115.5, 23.2,
+];
+
 // Forward the most common <Map> props but make the style/protocol
 // concerns the wrapper's job. Anything else can be passed through
 // via `...rest`.
@@ -144,6 +149,11 @@ const BaseMap = ({
       initialViewState={{ ...DEFAULT_VIEW, ...initialViewState }}
       style={{ width: "100%", height: "100%", ...style }}
       maxZoom={20}
+      // All data is in Hong Kong; stop the world repeating (and HTML
+      // markers wrapping onto different copies) when zoomed far out.
+      minZoom={9}
+      maxBounds={HK_MAX_BOUNDS}
+      renderWorldCopies={false}
       attributionControl={{ compact: true }}
       onLoad={handleLoad}
       {...rest}

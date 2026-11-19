@@ -54,8 +54,16 @@ export const useImperativeMap = (mapId?: string) => {
         map?.flyTo({ center: toLngLat(center), ...opts });
       },
       fitBounds: (bounds: LatLngBoundsLike, opts: FitBoundsOpts = {}) => {
-        const [sw, ne] = bounds;
-        map?.fitBounds([toLngLat(sw), toLngLat(ne)], opts);
+        // Callers pass two corners in any order; maplibre does not
+        // normalise them, and inverted bounds make the zoom blow up.
+        const [a, b] = bounds.map(toLngLat);
+        map?.fitBounds(
+          [
+            [Math.min(a[0], b[0]), Math.min(a[1], b[1])],
+            [Math.max(a[0], b[0]), Math.max(a[1], b[1])],
+          ],
+          opts
+        );
       },
       /** Set center (and optionally zoom) without animation. */
       setView: (center: LatLngLike, zoom?: number) => {

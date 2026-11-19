@@ -47,7 +47,7 @@ const MapEffects = ({ center, start, end }: MapEffectsProps) => {
     if (center) {
       m.flyTo(center);
     } else if (end) {
-      m.fitBounds([start, end], { padding: 40 });
+      m.fitBounds([start, checkPosition(end)], { padding: 40, maxZoom: 17 });
     }
   }, [center, start, end, m]);
   return null;
