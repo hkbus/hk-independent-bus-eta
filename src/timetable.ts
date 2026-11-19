@@ -22,10 +22,15 @@ const checkValueBetween = (
   return false;
 };
 
+// shift so getUTC* reads Hong Kong wall time, whatever the device timezone
+export const toHkt = (date: Date): Date =>
+  new Date(date.getTime() + 8 * 60 * 60 * 1000);
+
 export const isHoliday = (holidays: string[], date: Date): boolean => {
+  const hkt = toHkt(date);
   return holidays.includes(
-    `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, "0")}${date
-      .getDate()
+    `${hkt.getUTCFullYear()}${(hkt.getUTCMonth() + 1).toString().padStart(2, "0")}${hkt
+      .getUTCDate()
       .toString()
       .padStart(2, "0")}`
   );
@@ -39,8 +44,7 @@ export const isRouteAvaliable = (
 ): boolean => {
   if (!freq) return true;
   let isAvailable = false;
-  let now = new Date();
-  now.setTime(now.getTime() + 8 * 60 * 60 * 1000);
+  let now = toHkt(new Date());
   let currentWts = getWeeklyTimestamp(
     isHoliday ? 0 : now.getUTCDay(),
     ("0" + now.getUTCHours()).slice(-2) + ("0" + now.getUTCMinutes()).slice(-2)
