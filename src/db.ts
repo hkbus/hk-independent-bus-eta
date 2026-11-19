@@ -120,7 +120,7 @@ export const fetchDbFunc = async (
     }
     const updateTime = Date.now() + "";
     localStorage.setItem("updateTime", updateTime);
-    return new Promise((resolve_1) => {
+    return await new Promise((resolve_1, reject_1) => {
       const timerId = setTimeout(() => {
         if (!forceRenew) {
           const _cachedDb = loadStoredDb();
@@ -151,7 +151,8 @@ export const fetchDbFunc = async (
           localStorage.setItem("versionMd5", _md5);
           clearTimeout(timerId);
           resolve_1(ret);
-        });
+        })
+        .catch(reject_1);
     });
   } catch (e) {
     console.error("cannot get db", e);
