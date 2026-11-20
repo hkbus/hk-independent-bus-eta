@@ -203,6 +203,8 @@ export const getEditableThemeColors = (
 declare module "@mui/material/styles" {
   interface TypeBackground {
     contrast: string;
+    /** raised card that must stand out from the page (e.g. notices) */
+    card: string;
   }
 }
 
@@ -234,13 +236,17 @@ export const getThemeTokens = (
       background: {
         default: colors.background,
         contrast: "rgba(255, 255, 255, 0.12)",
+        card:
+          mode === "light"
+            ? darken(colors.background, 0.06)
+            : lighten(colors.background, 0.06),
         // cards / keypad / notice: background nudged so they stay distinct
         ...(isClassic
           ? {}
           : {
               paper:
                 mode === "light"
-                  ? darken(colors.background, 0.04)
+                  ? colors.background
                   : lighten(colors.background, 0.06),
             }),
       },
