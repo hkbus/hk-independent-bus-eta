@@ -27,6 +27,17 @@ import {
 } from "../data";
 import { DeviceOrientationPermission } from "react-world-compass";
 import useLanguage from "../hooks/useTranslation";
+import { getDaylightState } from "../sunTimes";
+import {
+  CUSTOM_THEME_ID,
+  DEFAULT_THEME_ID,
+  ModeThemeColors,
+  ThemeColorKey,
+  isHexColor,
+  isModeThemeColors,
+  isThemeId,
+  getEditableThemeColors,
+} from "../theme";
 
 type GeoPermission =
   "opening" | "force-opening" | "granted" | "denied" | "closed" | null;
@@ -61,6 +72,14 @@ export interface AppState {
    */
   etaFormat: EtaFormat;
   _colorMode: ColorMode;
+  /**
+   * selected colour theme (a preset id or "custom")
+   */
+  themeId: string;
+  /**
+   * user defined colours, used when themeId is "custom"
+   */
+  customTheme: ModeThemeColors | null;
   /**
    * energy saving mode
    */
@@ -130,6 +149,15 @@ interface AppContextValue extends AppState {
   toggleNumPadOrder: () => void;
   toggleEtaFormat: () => void;
   toggleColorMode: () => void;
+  /** pick the appearance directly: light, dark, system or sunset-to-sunrise */
+  updateColorMode: (colorMode: ColorMode) => void;
+  setThemeId: (themeId: string) => void;
+  setCustomThemeColor: (
+    mode: "light" | "dark",
+    key: ThemeColorKey,
+    color: string
+  ) => void;
+  resetCustomTheme: () => void;
   toggleEnergyMode: () => void;
   togglePlatformMode: () => void;
   toggleVibrateDuration: () => void;
@@ -197,7 +225,12 @@ const isEtaFormat = (input: unknown): input is EtaFormat => {
 };
 
 const isColorMode = (input: unknown): input is ColorMode => {
-  return input === "dark" || input === "light" || input === "system";
+  return (
+    input === "dark" ||
+    input === "light" ||
+    input === "system" ||
+    input === "sun"
+  );
 };
 
 export const AppContextProvider = ({ children }: AppContextProviderProps) => {
@@ -221,6 +254,13 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     const routeSearchHistory: unknown = JSON.parse(
       localStorage.getItem("routeSearchHistory") ?? "null"
     );
+    const themeId: unknown = localStorage.getItem("themeId");
+    let customTheme: unknown = null;
+    try {
+      customTheme = JSON.parse(localStorage.getItem("customTheme") ?? "null");
+    } catch {
+      customTheme = null;
+    }
 
     return {
       searchRoute: searchRoute,
@@ -243,6 +283,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       _colorMode: isColorMode(devicePreferColorScheme)
         ? devicePreferColorScheme
         : "dark",
+      themeId: isThemeId(themeId) ? themeId : DEFAULT_THEME_ID,
+      customTheme: isModeThemeColors(customTheme) ? customTheme : null,
       energyMode: !!JSON.parse(localStorage.getItem("energyMode") ?? "false"),
       platformMode: !!JSON.parse(
         localStorage.getItem("platformMode") ?? "false"
@@ -486,6 +528,14 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     );
   }, []);
 
+  const updateColorMode = useCallback((colorMode: ColorMode) => {
+    setStateRaw(
+      produce((state: State) => {
+        state._colorMode = colorMode;
+      })
+    );
+  }, []);
+
   const toggleColorMode = useCallback(() => {
     setStateRaw(
       produce((state: State) => {
@@ -503,6 +553,47 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
             break;
         }
         state._colorMode = colorMode;
+      })
+    );
+  }, []);
+
+  const setThemeId = useCallback((themeId: string) => {
+    if (!isThemeId(themeId)) return;
+    setStateRaw(
+      produce((state: State) => {
+        if (themeId === CUSTOM_THEME_ID && state.customTheme === null) {
+          // start customising from the theme currently in use
+          state.customTheme = getEditableThemeColors(state.themeId, null);
+        }
+        if (themeId !== CUSTOM_THEME_ID) {
+          // copy the chosen preset into the custom palette (overwrites it)
+          state.customTheme = getEditableThemeColors(themeId, null);
+        }
+        state.themeId = themeId;
+      })
+    );
+  }, []);
+
+  const setCustomThemeColor = useCallback(
+    (mode: "light" | "dark", key: ThemeColorKey, color: string) => {
+      if (!isHexColor(color)) return;
+      setStateRaw(
+        produce((state: State) => {
+          if (state.customTheme === null) {
+            state.customTheme = getEditableThemeColors(state.themeId, null);
+          }
+          state.customTheme[mode][key] = color;
+          state.themeId = CUSTOM_THEME_ID;
+        })
+      );
+    },
+    []
+  );
+
+  const resetCustomTheme = useCallback(() => {
+    setStateRaw(
+      produce((state: State) => {
+        state.customTheme = getEditableThemeColors(DEFAULT_THEME_ID, null);
       })
     );
   }, []);
@@ -684,6 +775,12 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const calculateColorMode = useCallback(() => {
     if (state._colorMode === "light" || state._colorMode === "dark") {
       return state._colorMode;
+    } else if (state._colorMode === "sun") {
+      // light from sunrise to sunset, dark otherwise
+      const { lat, lng } = geolocation.current;
+      return getDaylightState(new Date(), lat, lng).isDaytime
+        ? "light"
+        : "dark";
     } else {
       if (
         window.systemColorScheme?.value &&
@@ -696,6 +793,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         : "dark";
     }
   }, [state._colorMode]);
+  // bumped at each sunrise / sunset to schedule the following switch
+  const [sunTick, setSunTick] = useState(0);
   const [colorMode, setColorMode] = useState<"light" | "dark">(
     calculateColorMode()
   );
@@ -728,6 +827,26 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       };
     }
   }, [state._colorMode, calculateColorMode]);
+
+  useEffect(() => {
+    if (state._colorMode !== "sun" || !state.isVisible) return;
+    // re-evaluate on resume (timers may be frozen in background) and switch
+    // again at the next sunrise / sunset
+    setColorMode(calculateColorMode());
+    const { lat, lng } = geolocation.current;
+    const { nextChange } = getDaylightState(new Date(), lat, lng);
+    if (nextChange === null) return;
+    // setTimeout overflows beyond ~24.8 days; sunrise/sunset is always sooner
+    const delay = Math.min(
+      nextChange.valueOf() - Date.now() + 1000,
+      2 ** 31 - 1
+    );
+    const timer = setTimeout(() => {
+      setColorMode(calculateColorMode());
+      setSunTick((v) => v + 1);
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [state._colorMode, state.isVisible, sunTick, calculateColorMode]);
 
   useEffect(() => {
     window.ReactNativeWebView?.postMessage(
@@ -774,6 +893,18 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   useEffect(() => {
     localStorage.setItem("colorMode", state._colorMode);
   }, [state._colorMode]);
+
+  useEffect(() => {
+    localStorage.setItem("themeId", state.themeId);
+  }, [state.themeId]);
+
+  useEffect(() => {
+    if (state.customTheme) {
+      localStorage.setItem("customTheme", JSON.stringify(state.customTheme));
+    } else {
+      localStorage.removeItem("customTheme");
+    }
+  }, [state.customTheme]);
 
   useEffect(() => {
     localStorage.setItem("energyMode", JSON.stringify(state.energyMode));
@@ -854,6 +985,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleNumPadOrder,
       toggleEtaFormat,
       toggleColorMode,
+      updateColorMode,
+      setThemeId,
+      setCustomThemeColor,
+      resetCustomTheme,
       toggleEnergyMode,
       togglePlatformMode,
       toggleVibrateDuration,
@@ -887,6 +1022,10 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       toggleNumPadOrder,
       toggleEtaFormat,
       toggleColorMode,
+      updateColorMode,
+      setThemeId,
+      setCustomThemeColor,
+      resetCustomTheme,
       toggleEnergyMode,
       togglePlatformMode,
       toggleVibrateDuration,

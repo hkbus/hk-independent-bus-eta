@@ -1,4 +1,11 @@
-import { Box, SxProps, Theme, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  SxProps,
+  Theme,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import Plotly from "plotly.js-basic-dist";
@@ -10,6 +17,37 @@ const Plot = createPlotlyComponent(Plotly);
 const EmotionChart = () => {
   const { t } = useTranslation();
   const { checkIns } = useContext(EmotionContext);
+  const { palette } = useTheme();
+
+  // slice colours derived from the active theme
+  const marker = useMemo(
+    () => ({
+      colors: [
+        palette.primary.main,
+        palette.secondary.main,
+        palette.warning.main,
+        alpha(palette.primary.main, 0.6),
+        alpha(palette.warning.main, 0.6),
+        alpha(palette.secondary.main, 0.6),
+        alpha(palette.primary.main, 0.35),
+        alpha(palette.warning.main, 0.35),
+        alpha(palette.secondary.main, 0.35),
+      ],
+      line: {
+        color:
+          palette.mode === "dark"
+            ? palette.background.default
+            : palette.background.paper,
+        width: 2,
+      },
+    }),
+    [palette]
+  );
+  const layoutBase = {
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    font: { color: palette.text.primary },
+  };
 
   const countData = useMemo(() => {
     const tmp = checkIns.filter(
@@ -53,11 +91,13 @@ const EmotionChart = () => {
             hoverinfo: "label+percent",
             hole: 0.4,
             showlegend: false,
+            marker,
             textposition: "inside",
             domain: { column: 1 },
           },
         ]}
         layout={{
+          ...layoutBase,
           width: 380,
           height: 340,
           title: t("How happy were you?"),
@@ -86,11 +126,13 @@ const EmotionChart = () => {
             hoverinfo: "label+percent",
             hole: 0.4,
             showlegend: false,
+            marker,
             textposition: "inside",
             domain: { column: 1 },
           },
         ]}
         layout={{
+          ...layoutBase,
           width: 380,
           height: 340,
           title: t("What environment made you feel most profound?"),
@@ -121,11 +163,13 @@ const EmotionChart = () => {
             hoverinfo: "label+percent",
             hole: 0.4,
             showlegend: false,
+            marker,
             textposition: "inside",
             domain: { column: 1 },
           },
         ]}
         layout={{
+          ...layoutBase,
           width: 380,
           height: 340,
           title: t("What are you most grateful for?"),

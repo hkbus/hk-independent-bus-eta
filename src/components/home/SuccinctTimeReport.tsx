@@ -4,6 +4,7 @@ import {
   Reorder as ReorderIcon,
 } from "@mui/icons-material";
 import {
+  alpha,
   Box,
   Divider,
   IconButton,
@@ -257,17 +258,17 @@ const rootSx: SxProps<Theme> = {
   gap: (theme) => theme.spacing(1),
   gridTemplateColumns: "15% 1fr minmax(18%, max-content)",
   padding: (theme) => `${theme.spacing(0.5)} ${theme.spacing(1)}`,
-  color: "rgba(0,0,0,0.87)",
+  color: (theme) => theme.palette.text.primary,
   cursor: "pointer",
   WebkitTapHighlightColor: "transparent",
   transition: "background-color 0.12s ease-out",
   "@media (hover: hover)": {
     "&:hover": {
-      backgroundColor: "rgba(254, 219, 0, 0.06)",
+      backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.06),
     },
   },
   "&:active": {
-    backgroundColor: "rgba(254, 219, 0, 0.1)",
+    backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.1),
   },
   "@media (prefers-reduced-motion: reduce)": {
     transition: "none",

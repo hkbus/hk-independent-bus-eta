@@ -105,7 +105,7 @@ const SearchResultList = ({
 export default SearchResultList;
 
 const rootSx: SxProps<Theme> = {
-  border: "1px solid rgba(0, 0, 0, .125)",
+  border: (theme) => `1px solid ${theme.palette.divider}`,
   boxShadow: "none",
   "&:not(:last-child)": {
     borderBottom: 0,
@@ -122,8 +122,8 @@ const summaryRootSx: SxProps<Theme> = {
   backgroundColor: (theme) =>
     theme.palette.mode === "dark"
       ? theme.palette.background.default
-      : "rgba(0, 0, 0, .03)",
-  borderBottom: "1px solid rgba(0, 0, 0, .125)",
+      : theme.palette.background.paper,
+  borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
   marginBottom: -1,
   minHeight: 44,
   "&.Mui-expanded": {

@@ -1,4 +1,4 @@
-export type ColorMode = "light" | "dark" | "system";
+export type ColorMode = "light" | "dark" | "system" | "sun";
 
 export type NumPadOrder = "789456123c0b" | "123456789c0b";
 

@@ -76,11 +76,14 @@ const noticeContainerSx: SxProps<Theme> = {
   flexDirection: "column",
   gap: 2,
   wordBreak: "break-word",
+  bgcolor: (t) => t.palette.background.card,
+  backgroundImage: "none",
+  border: (t) => `1px solid ${t.palette.divider}`,
+  boxShadow: "none",
 };
 
 const linkSx: SxProps<Theme> = {
-  color: (t) =>
-    t.palette.mode === "dark" ? t.palette.primary.main : t.palette.primary.dark,
+  color: (t) => t.palette.primary.main,
 };
 
 const xmlToJson = (root: Document): NoticeType[] => {

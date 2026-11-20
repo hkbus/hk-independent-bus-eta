@@ -185,7 +185,7 @@ const noticeTabsSx: SxProps<Theme> = {
     px: 0,
     py: 0,
     height: 5,
-    borderBottom: "#7777 1px solid",
+    borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
     minHeight: 5,
     mx: 1,
     minWidth: 45,

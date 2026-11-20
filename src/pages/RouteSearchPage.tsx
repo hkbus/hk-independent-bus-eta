@@ -396,7 +396,9 @@ const DEFAULT_STATE: RouteSearchState = {
 
 const rootSx: SxProps<Theme> = {
   background: (theme) =>
-    theme.palette.mode === "dark" ? theme.palette.background.default : "white",
+    theme.palette.mode === "dark"
+      ? theme.palette.background.default
+      : theme.palette.background.paper,
   overflowY: "hidden",
   textAlign: "left",
   width: "100%",

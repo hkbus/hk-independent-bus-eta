@@ -16,6 +16,7 @@ import { Check as CheckIcon } from "@mui/icons-material";
 import throttle from "lodash.throttle";
 import AppContext, { AppState } from "../context/AppContext";
 import { DEFAULT_SEARCH_RANGE, isStrings } from "../utils";
+import { DEFAULT_THEME_ID, isModeThemeColors, isThemeId } from "../theme";
 import CollectionContext, { CollectionState } from "../CollectionContext";
 
 const DataImport = () => {
@@ -125,6 +126,8 @@ const DataImport = () => {
       numPadOrder: obj.numPadOrder ?? "123456789c0b",
       etaFormat: obj.etaFormat ?? "diff",
       _colorMode: obj._colorMode ?? "system",
+      themeId: isThemeId(obj.themeId) ? obj.themeId : DEFAULT_THEME_ID,
+      customTheme: isModeThemeColors(obj.customTheme) ? obj.customTheme : null,
       energyMode: obj.energyMode ?? false,
       platformMode: obj.platformMode ?? false,
       vibrateDuration: obj.vibrateDuration ?? 1,

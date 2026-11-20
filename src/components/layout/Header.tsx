@@ -16,6 +16,7 @@ import {
   Settings as SettingsIcon,
   SettingsBrightness as SettingsBrightnessIcon,
   WbSunny as WbSunnyIcon,
+  WbTwilight as WbTwilightIcon,
   DarkMode as DarkModeIcon,
   WifiOff as WifiOffIcon,
   Search as SearchIcon,
@@ -263,6 +264,7 @@ const Header = () => {
           )}
           {_colorMode === "light" && <WbSunnyIcon fontSize="small" />}
           {_colorMode === "dark" && <DarkModeIcon fontSize="small" />}
+          {_colorMode === "sun" && <WbTwilightIcon fontSize="small" />}
         </IconButton>
         <IconButton
           component={Link}
