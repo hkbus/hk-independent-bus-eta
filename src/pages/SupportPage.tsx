@@ -87,8 +87,7 @@ const Support = () => {
 export default Support;
 
 const paperSx: SxProps<Theme> = {
-  background: (theme) =>
-    theme.palette.background.default,
+  background: (theme) => theme.palette.background.default,
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
