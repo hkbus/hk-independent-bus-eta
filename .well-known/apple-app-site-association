@@ -1,0 +1,22 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["NKU7GHZSG9.app.hkbus"],
+        "components": [
+          {
+            "/": "/*",
+            "comment": "Matches all URLs"
+          }
+        ]
+      }
+    ]
+  },
+  "activitycontinuation": {
+    "apps": ["NKU7GHZSG9.app.hkbus"]
+  },
+  "webcredentials": {
+    "apps": ["NKU7GHZSG9.app.hkbus"]
+  }
+}
