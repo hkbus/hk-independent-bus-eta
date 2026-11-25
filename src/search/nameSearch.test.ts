@@ -5,16 +5,25 @@ const route = (orig: [string, string], dest: [string, string]) =>
   ({
     orig: { zh: orig[0], en: orig[1] },
     dest: { zh: dest[0], en: dest[1] },
-  } as any);
+  }) as any;
 
 const search = buildNameIndex({
   routeList: {
-    "1A-1-STAR-FERRY": route(["尖沙咀碼頭", "Star Ferry"], ["竹園邨", "Chuk Yuen Estate"]),
+    "1A-1-STAR-FERRY": route(
+      ["尖沙咀碼頭", "Star Ferry"],
+      ["竹園邨", "Chuk Yuen Estate"]
+    ),
     "2-1-LAM-TIN": route(["藍田", "Lam Tin"], ["中環", "Central"]),
   },
   stopList: {
-    s1: { location: { lat: 0, lng: 0 }, name: { zh: "尖沙咀碼頭", en: "Star Ferry" } },
-    s2: { location: { lat: 0, lng: 0 }, name: { zh: "竹園邨", en: "Chuk Yuen Estate" } },
+    s1: {
+      location: { lat: 0, lng: 0 },
+      name: { zh: "尖沙咀碼頭", en: "Star Ferry" },
+    },
+    s2: {
+      location: { lat: 0, lng: 0 },
+      name: { zh: "竹園邨", en: "Chuk Yuen Estate" },
+    },
   },
 });
 

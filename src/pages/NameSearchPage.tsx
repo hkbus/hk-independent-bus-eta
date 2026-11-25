@@ -105,7 +105,10 @@ const NameSearchPage = () => {
         </Typography>
       )}
       {routes.length > 0 && (
-        <List disablePadding subheader={<ListSubheader>{t("路線列表")}</ListSubheader>}>
+        <List
+          disablePadding
+          subheader={<ListSubheader>{t("路線列表")}</ListSubheader>}
+        >
           {routes.map((id) => (
             <Box key={id} sx={{ height: 60 }}>
               <RouteRow
@@ -122,7 +125,10 @@ const NameSearchPage = () => {
         </List>
       )}
       {stops.length > 0 && (
-        <List disablePadding subheader={<ListSubheader>{t("車站")}</ListSubheader>}>
+        <List
+          disablePadding
+          subheader={<ListSubheader>{t("車站")}</ListSubheader>}
+        >
           {stops.map((id) => (
             <Box key={id} sx={{ height: 60 }}>
               <Card variant="outlined" square sx={stopCardSx}>
@@ -132,7 +138,9 @@ const NameSearchPage = () => {
                 >
                   <CardContent sx={stopContentSx}>
                     <PinDropIcon color="action" />
-                    <Typography noWrap>{stopList[id].name[language]}</Typography>
+                    <Typography noWrap>
+                      {stopList[id].name[language]}
+                    </Typography>
                   </CardContent>
                 </CardActionArea>
               </Card>
