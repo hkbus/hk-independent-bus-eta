@@ -32,6 +32,7 @@ const BookmarkedStopPage = React.lazy(
 );
 const RouteBoardPage = React.lazy(() => import("./pages/RouteBoardPage"));
 const RouteSearchPage = React.lazy(() => import("./pages/RouteSearchPage"));
+const NameSearchPage = React.lazy(() => import("./pages/NameSearchPage"));
 const NoticePage = React.lazy(() => import("./pages/NoticePage"));
 const SettingsPage = React.lazy(() => import("./pages/SettingsPage"));
 const EmotionPage = React.lazy(() => import("./pages/EmotionPage"));
@@ -83,6 +84,7 @@ const App = () => {
                   <Route path={`board`} element={<RouteBoardPage />} />
                   <Route path={`stops`} element={<BookmarkedStopPage />} />
                   <Route path={`search`} element={<RouteSearchPage />} />
+                  <Route path={`find`} element={<NameSearchPage />} />
                   <Route path="emotion/:tab?" element={<EmotionPage />} />
                   <Route path={`privacy`} element={<PrivacyPolicyPage />} />
                   <Route path={`terms`} element={<TermsAndConditionsPage />} />

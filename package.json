@@ -5,6 +5,7 @@
   "scripts": {
     "start": "./scripts/start-all-platforms.cmd",
     "build": "./scripts/build-all-platforms.cmd",
+    "test": "vitest run",
     "production-build": "yarn build && node scripts/sitemap-generator.js && node scripts/inject-app-rating.js && node scripts/pre-rendering.js",
     "render": "node scripts/pre-rendering.js",
     "deploy": "yarn build && node scripts/inject-app-rating.js && gh-pages -d build -t -f -a",
