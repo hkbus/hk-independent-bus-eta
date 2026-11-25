@@ -37,6 +37,7 @@ const resources = {
       名稱搜尋: "Search by name",
       輸入路線或車站名稱: "Enter a route or stop name",
       找不到結果: "No results found",
+      路線列表: "Routes",
       車站: "Stops",
       規劃: "P2P",
       設定: "Settings",

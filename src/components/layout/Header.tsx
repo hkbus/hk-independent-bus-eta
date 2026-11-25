@@ -19,6 +19,7 @@ import {
   DarkMode as DarkModeIcon,
   WifiOff as WifiOffIcon,
   Search as SearchIcon,
+  ManageSearch as ManageSearchIcon,
 } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import AppContext from "../../context/AppContext";
@@ -191,6 +192,25 @@ const Header = () => {
           >
             <SearchIcon fontSize="small" sx={{ opacity: 0.8 }} />
           </Box>
+        }
+        endAdornment={
+          <IconButton
+            aria-label={t("名稱搜尋")}
+            size="small"
+            edge="end"
+            onClick={(e) => {
+              e.stopPropagation();
+              vibrate(vibrateDuration);
+              setIsSearching(false);
+              navigate(
+                `/${language}/find${
+                  searchRoute ? `?q=${encodeURIComponent(searchRoute)}` : ""
+                }`
+              );
+            }}
+          >
+            <ManageSearchIcon fontSize="small" />
+          </IconButton>
         }
         onChange={(e) => {
           if (

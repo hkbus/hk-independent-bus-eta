@@ -1,6 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Paper, SxProps, Theme, Typography } from "@mui/material";
-import { Search as SearchIcon } from "@mui/icons-material";
+import { Paper, SxProps, Theme, Typography } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +11,7 @@ import SwipeableList, {
   SwipeableListRef,
 } from "../components/home/SwipeableList";
 import DbRenewReminder from "../components/layout/DbRenewReminder";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useLanguage from "../hooks/useTranslation";
 import CollectionContext from "../CollectionContext";
 import DbContext from "../context/DbContext";
@@ -58,14 +57,6 @@ const Home = () => {
       <Typography component="h2" style={visuallyHidden}>
         {t("home-page-description")}
       </Typography>
-      <Button
-        component={Link}
-        to={`/${language}/find`}
-        startIcon={<SearchIcon />}
-        sx={{ justifyContent: "flex-start", px: 2, py: 1 }}
-      >
-        {t("名稱搜尋")}
-      </Button>
       <HomeTabbar homeTab={homeTab} onChangeTab={handleTabChange} />
       <NoticeCard />
       <BadWeatherCard />
