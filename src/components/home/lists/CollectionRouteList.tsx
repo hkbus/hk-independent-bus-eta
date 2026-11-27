@@ -7,6 +7,7 @@ import { useContext, useMemo } from "react";
 import AppContext from "../../../context/AppContext";
 import { RouteCollection } from "../../../@types/types";
 import DbContext from "../../../context/DbContext";
+import useGeolocation from "../../../hooks/useGeolocation";
 
 interface CollectionRouteListProps {
   collection: RouteCollection;
@@ -18,7 +19,8 @@ const CollectionRouteList = ({
   isFocus,
 }: CollectionRouteListProps) => {
   const { t } = useTranslation();
-  const { geolocation, isRouteFilter } = useContext(AppContext);
+  const { isRouteFilter } = useContext(AppContext);
+  const geolocation = useGeolocation();
   const {
     db: { routeList, stopList, serviceDayMap },
     isTodayHoliday,
@@ -28,7 +30,7 @@ const CollectionRouteList = ({
     () =>
       getRoutes({
         savedEtas: collection.list,
-        geolocation: geolocation.current,
+        geolocation,
         stopList,
         routeList,
         isRouteFilter,

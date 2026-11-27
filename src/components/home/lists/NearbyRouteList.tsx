@@ -1,7 +1,7 @@
 import { Box, SxProps, Theme, Typography } from "@mui/material";
 import HomeRouteListDropDown from "./HomeRouteListDropDown";
 import { useTranslation } from "react-i18next";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo } from "react";
 import { TransportType } from "../../../@types/types";
 import {
   Company,
@@ -13,8 +13,8 @@ import {
 } from "hk-bus-eta";
 import { coToType, formatHandling, getDistance } from "../../../utils";
 import AppContext from "../../../context/AppContext";
-import throttle from "lodash.throttle";
 import DbContext from "../../../context/DbContext";
+import useGeolocation from "../../../hooks/useGeolocation";
 
 interface NearbyRouteListProps {
   isFocus: boolean;
@@ -22,34 +22,12 @@ interface NearbyRouteListProps {
 
 const NearbyRouteList = ({ isFocus }: NearbyRouteListProps) => {
   const { t } = useTranslation();
-  const { manualGeolocation, geolocation, isRouteFilter, searchRange } =
-    useContext(AppContext);
+  const { isRouteFilter, searchRange } = useContext(AppContext);
   const {
     db: { routeList, stopList, serviceDayMap },
     isTodayHoliday,
   } = useContext(DbContext);
-
-  // throttle to avoid rapidly UI changes due to geolocation changes
-  const [state, setState] = useState<Location>(
-    manualGeolocation ?? geolocation.current
-  );
-  const throttleUpdateGeolocation = useMemo(
-    () =>
-      throttle((geolocation: Location) => {
-        setState(geolocation);
-      }, 500),
-    []
-  );
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      throttleUpdateGeolocation(manualGeolocation ?? geolocation.current);
-    }, 1000);
-    throttleUpdateGeolocation(manualGeolocation ?? geolocation.current);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [manualGeolocation, geolocation, throttleUpdateGeolocation]);
+  const state = useGeolocation();
 
   const routes = useMemo(
     () =>
