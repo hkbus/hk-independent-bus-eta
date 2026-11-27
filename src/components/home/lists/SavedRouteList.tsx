@@ -15,6 +15,7 @@ import { formatHandling, getDistance } from "../../../utils";
 // Context
 import AppContext from "../../../context/AppContext";
 import DbContext from "../../../context/DbContext";
+import useGeolocation from "../../../hooks/useGeolocation";
 import CollectionContext from "../../../CollectionContext";
 
 interface SavedRouteListProps {
@@ -23,7 +24,8 @@ interface SavedRouteListProps {
 
 const SavedRouteList = ({ isFocus }: SavedRouteListProps) => {
   const { t } = useTranslation();
-  const { geolocation, isRouteFilter } = useContext(AppContext);
+  const { isRouteFilter } = useContext(AppContext);
+  const geolocation = useGeolocation();
   const { savedEtas } = useContext(CollectionContext);
   const {
     db: { routeList, stopList, serviceDayMap },
@@ -34,7 +36,7 @@ const SavedRouteList = ({ isFocus }: SavedRouteListProps) => {
     () =>
       getRoutes({
         savedEtas,
-        geolocation: geolocation.current,
+        geolocation,
         stopList,
         routeList,
         isRouteFilter,
